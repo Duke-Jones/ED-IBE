@@ -34,6 +34,7 @@ namespace RegulatedNoise
         private Thread _eddnSubscriberThread;
         private FileSystemWatcher _fileSystemWatcher;
         private SingleThreadLogger _logger;
+        private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
 
         public Form1()
         {
@@ -688,16 +689,15 @@ namespace RegulatedNoise
 
             CsvRow currentRow = new CsvRow();
 
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             currentRow.SystemName = values[0];
-            currentRow.StationName = textInfo.ToTitleCase(values[1].ToLower()) + " [" + currentRow.SystemName + "]";
-            currentRow.CommodityName = textInfo.ToTitleCase(values[2].ToLower());
+            currentRow.StationName = _textInfo.ToTitleCase(values[1].ToLower()) + " [" + currentRow.SystemName + "]";
+            currentRow.CommodityName = _textInfo.ToTitleCase(values[2].ToLower());
             Decimal.TryParse(values[3], out currentRow.SellPrice);
             Decimal.TryParse(values[4], out currentRow.BuyPrice);
             Decimal.TryParse(values[5], out currentRow.Demand);
-            currentRow.DemandLevel = textInfo.ToTitleCase(values[6].ToLower());
+            currentRow.DemandLevel = _textInfo.ToTitleCase(values[6].ToLower());
             Decimal.TryParse(values[7], out currentRow.Supply);
-            currentRow.SupplyLevel = textInfo.ToTitleCase(values[8].ToLower());
+            currentRow.SupplyLevel = _textInfo.ToTitleCase(values[8].ToLower());
             DateTime.TryParse(values[9], out currentRow.SampleDate);
 
             #region Extended CSV Information
@@ -1801,7 +1801,6 @@ namespace RegulatedNoise
 
         private void ContinueDisplayingResults()
         {
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             Levenshtein l = new Levenshtein();
             do
             {
@@ -1819,21 +1818,21 @@ namespace RegulatedNoise
                 if (_correctionColumn == 0) // hacks for commodity name
                 {
                     var currentTextCamelCase =
-                        textInfo.ToTitleCase(_commodityTexts[_correctionRow, _correctionColumn].ToLower());
+                        _textInfo.ToTitleCase(_commodityTexts[_correctionRow, _correctionColumn].ToLower()); // There *was* a reason why I did this...
 
                     if (KnownCommodityNames.Contains(
                         currentTextCamelCase))
                         _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
                     else
                     {
-                        var replacedCamelCase = currentTextCamelCase.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", "").ToUpper(); // ignore spaces when using levenshtein to find commodity names
+                        var replacedCamelCase = StripPunctuationFromScannedText(currentTextCamelCase); // ignore spaces when using levenshtein to find commodity names
                         var lowestLevenshteinNumber = 10000;
                         var nextLowestLevenshteinNumber = 10000;
                         var lowestMatchingCommodity = "";
                         var lowestMatchingCommodityRef = "";
                         foreach (var reference in KnownCommodityNames)
                         {
-                            var upperRef = reference.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", "").ToUpper();
+                            var upperRef = StripPunctuationFromScannedText(reference);
                             var levenshteinNumber = l.LD(upperRef, replacedCamelCase);
 
                             if (upperRef != lowestMatchingCommodityRef)
@@ -1868,6 +1867,38 @@ namespace RegulatedNoise
                     {
                         _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]); // If we're doing a batch of screenshots, don't keep doing the same commodity when we keep finding it
                     }
+                }
+                else if (_correctionColumn == 5 || _correctionColumn == 7) // hacks for LOW/MED/HIGH
+                {
+	                var commodityLevelUpperCase = StripPunctuationFromScannedText(_commodityTexts[_correctionRow, _correctionColumn]);
+
+	                var levenshteinLow = l.LD("LOW", commodityLevelUpperCase);
+	                var levenshteinMed = l.LD("MED", commodityLevelUpperCase);
+	                var levenshteinHigh = l.LD("HIGH", commodityLevelUpperCase);
+	                var levenshteinBlank = l.LD("", commodityLevelUpperCase);
+
+	                //Pick the lowest levenshtein number
+	                var lowestLevenshtein = Math.Min(Math.Min(levenshteinLow, levenshteinMed), Math.Min(levenshteinHigh, levenshteinBlank));
+
+                    if (lowestLevenshtein == levenshteinLow)
+	                {
+		                _commodityTexts[_correctionRow, _correctionColumn] = "LOW";
+	                }
+	                else if (lowestLevenshtein == levenshteinMed)
+	                {
+		                _commodityTexts[_correctionRow, _correctionColumn] = "MED";
+	                }
+	                else if (lowestLevenshtein == levenshteinHigh)
+	                {
+		                _commodityTexts[_correctionRow, _correctionColumn] = "HIGH";
+	                }
+	                else // lowestLevenshtein == levenshteinBlank
+	                {
+		                _commodityTexts[_correctionRow, _correctionColumn] = "";
+	                }
+
+                    // we will never be challenged on low/med/high again.  this doesn't get internationalized on foreign-language installs... does it? :)
+                    _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
                 }
             }
             // Don't pause for cells which have a high confidence, or have no commodity name
@@ -1944,6 +1975,10 @@ namespace RegulatedNoise
             }
         }
 
+        private string StripPunctuationFromScannedText(string input)
+        {
+            return _textInfo.ToUpper(input.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
+        }
         #endregion
 
         #region Generic Delegates
