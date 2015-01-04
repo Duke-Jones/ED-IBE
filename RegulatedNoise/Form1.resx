@@ -1502,7 +1502,12 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.32
+    <value>v1.33
+* Fix station name needs a space when you rename it error
+* Throw away exceptions when cloning main captured-screenshot bitmap for display purposes LOL
+* Create Brainerous images directory if it doesn't exist
+
+v1.32
 * Another bug fix via iAmLegion, hopefully fixes a lot of crash-during-OCR problems
 
 v1.31
