@@ -73,9 +73,12 @@ namespace RegulatedNoise
                 if (_bOriginal != null) _bOriginal.Dispose();
                 if (_bOriginalClone != null) _bOriginalClone.Dispose();
 
-                _bOriginal = new Bitmap(CurrentScreenshot);
-                _bOriginalClone = new Bitmap(CurrentScreenshot);
+                // Well, we can get the bitmap without locking its file, like this... maybe it will help 
+                using (Stream s = File.OpenRead(CurrentScreenshot))
+                    _bOriginal = (Bitmap)Bitmap.FromStream(s);
 
+                using (Stream s = File.OpenRead(CurrentScreenshot))
+                    _bOriginalClone = (Bitmap)Bitmap.FromStream(s);
             }
             catch (Exception ex)
             {
@@ -93,7 +96,6 @@ namespace RegulatedNoise
             }
 
             Bitmap _bAnotherClone = null;
-
             // I apologise for what comes next.
             try
             {
