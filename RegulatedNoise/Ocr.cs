@@ -92,7 +92,19 @@ namespace RegulatedNoise
                 Application.Exit();
             }
 
-            _calibrationPoints = _callingForm.UpdateOriginalImage((Bitmap)(_bOriginal.Clone()));
+            Bitmap _bAnotherClone = null;
+
+            // I apologise for what comes next.
+            try
+            {
+                if(_bOriginal != null)
+                    _bAnotherClone = (Bitmap) (_bOriginal.Clone());
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Ignoring _bOriginal.Clone() error...\r\n"+ex);
+            }
+            _calibrationPoints = _callingForm.UpdateOriginalImage(_bAnotherClone);
 
             var trim = new Rectangle(_calibrationPoints[2].X, _calibrationPoints[2].Y,
                 _calibrationPoints[10].X - _calibrationPoints[2].X, _calibrationPoints[11].Y - _calibrationPoints[2].Y);
@@ -272,6 +284,10 @@ namespace RegulatedNoise
                     {   //If it's a numeric column write it out for Brainerous to process later
                         var brainerousOut = Crop(bTrimmedContrast,
                             new Rectangle(left, startRow, width, heightRow));
+
+                        if (!Directory.Exists("./Brainerous/images"))
+                            Directory.CreateDirectory("./Brainerous/images");
+
                         brainerousOut.Save("./Brainerous/images/" + bitmapCtr + ".png");
                         bitmapCtr++;
                     }

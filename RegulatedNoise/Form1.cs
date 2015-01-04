@@ -891,7 +891,7 @@ namespace RegulatedNoise
             var start = stationName.IndexOf("[", StringComparison.Ordinal);
             var end = stationName.IndexOf("]", StringComparison.Ordinal);
 
-            tbStationRename.Text = stationName.Substring(0, start);
+            tbStationRename.Text = stationName.Substring(0, start-1);
             tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
 
             foreach (var row in StationDirectory[stationName])
@@ -1267,7 +1267,7 @@ namespace RegulatedNoise
         {
             var existingStationName = (cbStation.SelectedItem.ToString());
 
-            var newStationName = tbStationRename.Text + "[" + tbSystemRename.Text + "]";
+            var newStationName = tbStationRename.Text + " [" + tbSystemRename.Text + "]";
 
             List<CsvRow> newRows = new List<CsvRow>();
 
@@ -2628,11 +2628,11 @@ namespace RegulatedNoise
 
             if (RegulatedNoiseSettings.UseEddnTestSchema)
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.31""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.33""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.31""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.33""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
 
 
