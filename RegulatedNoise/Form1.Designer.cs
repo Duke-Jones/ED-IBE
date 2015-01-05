@@ -220,6 +220,8 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
             this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
+            this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
+            this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -619,6 +621,8 @@
             // 
             // tabPriceAnalysis
             // 
+            this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
+            this.tabPriceAnalysis.Controls.Add(this.cbIncludeWithinRegionOfStation);
             this.tabPriceAnalysis.Controls.Add(this.label43);
             this.tabPriceAnalysis.Controls.Add(this.checkboxLightYears);
             this.tabPriceAnalysis.Controls.Add(this.cbLightYears);
@@ -635,9 +639,9 @@
             this.label43.AutoSize = true;
             this.label43.Location = new System.Drawing.Point(222, 9);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(54, 13);
+            this.label43.Size = new System.Drawing.Size(66, 13);
             this.label43.TabIndex = 13;
-            this.label43.Text = "light years";
+            this.label43.Text = "light years of";
             // 
             // checkboxLightYears
             // 
@@ -2346,6 +2350,25 @@
             this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
             this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
             // 
+            // cbIncludeWithinRegionOfStation
+            // 
+            this.cbIncludeWithinRegionOfStation.FormattingEnabled = true;
+            this.cbIncludeWithinRegionOfStation.Location = new System.Drawing.Point(294, 6);
+            this.cbIncludeWithinRegionOfStation.Name = "cbIncludeWithinRegionOfStation";
+            this.cbIncludeWithinRegionOfStation.Size = new System.Drawing.Size(200, 21);
+            this.cbIncludeWithinRegionOfStation.TabIndex = 14;
+            this.cbIncludeWithinRegionOfStation.SelectedIndexChanged += new System.EventHandler(this.cbIncludeWithinRegionOfStation_SelectedIndexChanged);
+            // 
+            // bShowStationRestrictionAtStarchartDotClub
+            // 
+            this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
+            this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
+            this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
+            this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
+            this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
+            this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2623,6 +2646,8 @@
         private System.Windows.Forms.Label ForegroundSet;
         private System.Windows.Forms.Button bShowStationToStationRouteAtStarchartDotClub;
         private System.Windows.Forms.Button bShowStationAtStarchartDotInfo;
+        private System.Windows.Forms.ComboBox cbIncludeWithinRegionOfStation;
+        private System.Windows.Forms.Button bShowStationRestrictionAtStarchartDotClub;
     }
 }
 

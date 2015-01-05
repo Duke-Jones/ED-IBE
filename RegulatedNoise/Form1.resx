@@ -1587,6 +1587,17 @@ v0.8:
 * Commodities and Commander's Log autosaved and autoloaded on exit and start;
 * EDDN Export now defaults to Off</value>
   </data>
+  <data name="bShowStationRestrictionAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
+        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
+        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
+        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
+        E38FHr4WWU6iAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="bShowStationAtStarchartDotInfo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

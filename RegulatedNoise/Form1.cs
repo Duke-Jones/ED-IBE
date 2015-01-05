@@ -763,11 +763,21 @@ namespace RegulatedNoise
             {
                 Point3D currentSystemLocation;
 
-                if (_cachedSystemName != tbCurrentSystemFromLogs.Text)
+                string localSystem;
+
+                if (cbLightYears.Text == "")
+                    return false;
+
+                if (cbIncludeWithinRegionOfStation.SelectedItem != null)
+                    localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>" ? tbCurrentSystemFromLogs.Text : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
+                else
+                    localSystem = tbCurrentSystemFromLogs.Text;
+
+                if (_cachedSystemName != localSystem)
                 {
                     _cachedRemoteSystemDistances = new Dictionary<string, double>();
-                    _cachedSystemName = tbCurrentSystemFromLogs.Text;
-                    _cachedSystemLocation = SystemLocations[tbCurrentSystemFromLogs.Text.ToUpper()].Item1;
+                    _cachedSystemName = localSystem.ToString();
+                    _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
                 }
 
                 currentSystemLocation = _cachedSystemLocation;
@@ -792,7 +802,7 @@ namespace RegulatedNoise
                     var yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
                     var zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
 
-                    dist = Math.Sqrt(Math.Pow((currentSystemLocation.X - remoteSystemLocation.X), 2) + Math.Pow((currentSystemLocation.Y - remoteSystemLocation.Y), 2) + Math.Pow((currentSystemLocation.Z - remoteSystemLocation.Z), 2));
+                    dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
                     _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
                 }
 
@@ -836,8 +846,21 @@ namespace RegulatedNoise
                 cbStation.Items.Add(station.Key);
                 cbStationToStationFrom.Items.Add(station.Key);
                 cbStationToStationTo.Items.Add(station.Key);
-
             }
+
+            cbIncludeWithinRegionOfStation.SelectedIndexChanged -= cbIncludeWithinRegionOfStation_SelectedIndexChanged;
+            var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
+            cbIncludeWithinRegionOfStation.Items.Clear();
+            var systems = StationDirectory.Keys.Select(x => (object)(CombinedNameToSystemName(x))).Distinct().ToArray();
+            cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
+            cbIncludeWithinRegionOfStation.Items.AddRange(systems);
+            //cbIncludeWithinRegionOfStation.SelectedIndex = 0;
+            cbIncludeWithinRegionOfStation.DropDownStyle = ComboBoxStyle.DropDownList;
+            if (previouslySelectedValue != null)
+                cbIncludeWithinRegionOfStation.SelectedItem = previouslySelectedValue;
+            else
+                cbIncludeWithinRegionOfStation.SelectedItem = "<Current System>";
+            cbIncludeWithinRegionOfStation.SelectedIndexChanged += cbIncludeWithinRegionOfStation_SelectedIndexChanged;
 
             cbStation.SelectedItem = null;
 
@@ -3572,6 +3595,16 @@ namespace RegulatedNoise
         private void bShowStationToStationRouteAtStarchartDotClub_Click(object sender, EventArgs e)
         {
             Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbStationToStationFrom.Text) + @"/" + CombinedNameToSystemName(cbStationToStationTo.Text) + @"/@" + CombinedNameToSystemName(cbStationToStationFrom.Text));
+        }
+
+        private void cbIncludeWithinRegionOfStation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetupGui();
+        }
+
+        private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text) + @"/" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text) + @"/@" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text));
         }
     }
 }
