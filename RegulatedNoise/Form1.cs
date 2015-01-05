@@ -449,6 +449,17 @@ namespace RegulatedNoise
         private System.Threading.Timer _preOcrBufferTimer;
         private void ScreenshotCreated(object sender, FileSystemEventArgs fileSystemEventArgs)
         {
+            Thread.Sleep(1000);
+
+            while (!File.Exists(fileSystemEventArgs.FullPath))
+            {
+                //MessageBox.Show("File created... but it doesn't exist?!  Hit OK and I'll retry...");
+                Thread.Sleep(100);
+            }
+
+            //MessageBox.Show("Good news! " + fileSystemEventArgs.FullPath +
+            //                " exists!  Let's pause for a moment before opening it...");
+
             ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
             var s = CommoditiesText("");
 
