@@ -811,10 +811,16 @@ namespace RegulatedNoise
             }
         }
 
-        private string StationToSystem(string stationName)
+        private string CombinedNameToSystemName(string combinedName)
         {
-            var ret = stationName.Substring(stationName.IndexOf("[") + 1);
+            var ret = combinedName.Substring(combinedName.IndexOf("[") + 1);
             ret = ret.TrimEnd(']');
+            return ret;
+        }
+
+        private string CombinedNameToStationName(string combinedName)
+        {
+            var ret = combinedName.Substring(0, combinedName.IndexOf("[")-1);
             return ret;
         }
 
@@ -825,7 +831,7 @@ namespace RegulatedNoise
             cbStationToStationFrom.Items.Clear();
             cbStationToStationTo.Items.Clear();
 
-            foreach (var station in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.Key))).OrderBy(x => x.Key))
+            foreach (var station in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))).OrderBy(x => x.Key))
             {
                 cbStation.Items.Add(station.Key);
                 cbStationToStationFrom.Items.Add(station.Key);
@@ -957,7 +963,7 @@ namespace RegulatedNoise
             bestSell = "";
 
 
-            var l = CommodityDirectory[commodityName].Where(x => x.Supply != 0 && x.BuyPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+            var l = CommodityDirectory[commodityName].Where(x => x.Supply != 0 && x.BuyPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
             buyers = l.Count();
 
             if (l.Count() != 0)
@@ -967,7 +973,7 @@ namespace RegulatedNoise
                 bestBuy = string.Join(" ", l.Where(x => x.BuyPrice == bestBuyPriceCopy).Select(x => x.StationName + " (" + x.BuyPrice + ")"));
             }
 
-            var m = CommodityDirectory[commodityName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+            var m = CommodityDirectory[commodityName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
             sellers = m.Count();
             if (m.Count() != 0)
             {
@@ -1089,7 +1095,7 @@ namespace RegulatedNoise
         private void cbCommodity_SelectedIndexChanged(object sender, EventArgs e)
         {
             lbCommodities.Items.Clear();
-            foreach (var row in CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))))
+            foreach (var row in CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))))
             {
                 lbCommodities.Items.Add(new ListViewItem(new[] 
                 {   row.StationName,
@@ -1103,7 +1109,7 @@ namespace RegulatedNoise
                 }));
             }
 
-            var l = CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+            var l = CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
             if (l.Count() > 0)
             {
                 lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
@@ -1117,7 +1123,7 @@ namespace RegulatedNoise
                 lblAvg.Text = "N/A";
             }
 
-            l = CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+            l = CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
             if (l.Count() > 0)
             {
                 lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
@@ -1137,7 +1143,7 @@ namespace RegulatedNoise
         {
             if (lblMin.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Min(y => y.BuyPrice));
                 MessageBox.Show(string.Join(", ", m.Select(x => x.StationName)));
             }
@@ -1147,7 +1153,7 @@ namespace RegulatedNoise
         {
             if (lblMinSell.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
                 var m = l.Where(x => x.SellPrice == l.Min(y => y.SellPrice));
                 MessageBox.Show(string.Join(", ", m.Select(x => x.StationName)));
             }
@@ -1157,7 +1163,7 @@ namespace RegulatedNoise
         {
             if (lblMax.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Max(y => y.BuyPrice));
                 MessageBox.Show(string.Join(", ", m.Select(x => x.StationName)));
             }
@@ -1167,7 +1173,7 @@ namespace RegulatedNoise
         {
             if (lblMaxSell.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).ToList();
+                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
                 var m = l.Where(x => x.SellPrice == l.Max(y => y.SellPrice));
                 MessageBox.Show(string.Join(", ", m.Select(x => x.StationName)));
             }
@@ -1198,7 +1204,7 @@ namespace RegulatedNoise
 
             chart1.Series.Add(series1);
 
-            foreach (var price in CommodityDirectory[senderName].Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).OrderBy(x => x.BuyPrice))
+            foreach (var price in CommodityDirectory[senderName].Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).OrderBy(x => x.BuyPrice))
             {
                 series1.Points.AddXY(price.StationName, price.BuyPrice);
             }
@@ -1220,7 +1226,7 @@ namespace RegulatedNoise
 
             chart2.Series.Add(series2);
 
-            foreach (var price in CommodityDirectory[senderName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.SystemName))).OrderByDescending(x => x.SellPrice))
+            foreach (var price in CommodityDirectory[senderName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).OrderByDescending(x => x.SellPrice))
             {
                 series2.Points.AddXY(price.StationName, price.SellPrice);
             }
@@ -3334,8 +3340,8 @@ namespace RegulatedNoise
             int bestRoundTrip = -1;
             string stationA = "", stationB = "";
 
-            foreach (var a in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.Key))))
-                foreach (var b in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(StationToSystem(x.Key))))
+            foreach (var a in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
+                foreach (var b in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
                 {
                     int bestThisTrip;
                     GetBestRoundTripForTwoStations(a.Key, b.Key, out bestThisTrip);
@@ -3556,6 +3562,16 @@ namespace RegulatedNoise
                 ShowSelectedUiColours();
                 Retheme();
             }
+        }
+
+        private void bShowStationAtStarchartDotInfo_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://starchart.club/map/system/" + CombinedNameToSystemName(cbStation.Text));
+        }
+
+        private void bShowStationToStationRouteAtStarchartDotClub_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbStationToStationFrom.Text) + @"/" + CombinedNameToSystemName(cbStationToStationTo.Text) + @"/@" + CombinedNameToSystemName(cbStationToStationFrom.Text));
         }
     }
 }

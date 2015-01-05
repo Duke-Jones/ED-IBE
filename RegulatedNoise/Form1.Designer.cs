@@ -105,6 +105,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.lbCommodities = new System.Windows.Forms.ListView();
             this.tabStationToStation = new System.Windows.Forms.TabPage();
+            this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.lblStationToStationMax = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
@@ -218,6 +219,7 @@
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -285,7 +287,7 @@
             this.cbStation.FormattingEnabled = true;
             this.cbStation.Location = new System.Drawing.Point(71, 14);
             this.cbStation.Name = "cbStation";
-            this.cbStation.Size = new System.Drawing.Size(228, 21);
+            this.cbStation.Size = new System.Drawing.Size(201, 21);
             this.cbStation.TabIndex = 1;
             this.cbStation.SelectedIndexChanged += new System.EventHandler(this.cbStation_SelectedIndexChanged);
             // 
@@ -747,7 +749,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(180, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(176, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -774,7 +776,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(175, 213);
+            this.chart1.Size = new System.Drawing.Size(171, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -801,13 +803,14 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(170, 191);
+            this.chart2.Size = new System.Drawing.Size(166, 187);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.bStationDeleteRow);
             this.tabPage1.Controls.Add(this.bStationEditRow);
             this.tabPage1.Controls.Add(this.groupBox5);
@@ -1123,6 +1126,7 @@
             // 
             // tabStationToStation
             // 
+            this.tabStationToStation.Controls.Add(this.bShowStationToStationRouteAtStarchartDotClub);
             this.tabStationToStation.Controls.Add(this.button12);
             this.tabStationToStation.Controls.Add(this.lblStationToStationMax);
             this.tabStationToStation.Controls.Add(this.label26);
@@ -1139,6 +1143,16 @@
             this.tabStationToStation.Text = "Station-To-Station";
             this.tabStationToStation.UseVisualStyleBackColor = true;
             // 
+            // bShowStationToStationRouteAtStarchartDotClub
+            // 
+            this.bShowStationToStationRouteAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationToStationRouteAtStarchartDotClub.Image")));
+            this.bShowStationToStationRouteAtStarchartDotClub.Location = new System.Drawing.Point(535, 3);
+            this.bShowStationToStationRouteAtStarchartDotClub.Name = "bShowStationToStationRouteAtStarchartDotClub";
+            this.bShowStationToStationRouteAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationToStationRouteAtStarchartDotClub.TabIndex = 13;
+            this.bShowStationToStationRouteAtStarchartDotClub.UseVisualStyleBackColor = true;
+            this.bShowStationToStationRouteAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationToStationRouteAtStarchartDotClub_Click);
+            // 
             // button12
             // 
             this.button12.Location = new System.Drawing.Point(918, 5);
@@ -1152,7 +1166,7 @@
             // lblStationToStationMax
             // 
             this.lblStationToStationMax.AutoSize = true;
-            this.lblStationToStationMax.Location = new System.Drawing.Point(654, 12);
+            this.lblStationToStationMax.Location = new System.Drawing.Point(678, 10);
             this.lblStationToStationMax.Name = "lblStationToStationMax";
             this.lblStationToStationMax.Size = new System.Drawing.Size(13, 13);
             this.lblStationToStationMax.TabIndex = 11;
@@ -1161,7 +1175,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(547, 12);
+            this.label26.Location = new System.Drawing.Point(571, 10);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(101, 13);
             this.label26.TabIndex = 10;
@@ -2322,10 +2336,21 @@
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
             // 
+            // bShowStationAtStarchartDotInfo
+            // 
+            this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
+            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(277, 12);
+            this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
+            this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationAtStarchartDotInfo.TabIndex = 14;
+            this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
+            this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1095, 626);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
@@ -2333,8 +2358,8 @@
             this.Controls.Add(this.button5);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.bOpen);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "RegulatedNoise v1.33";
             this.Load += new System.EventHandler(this.Form_Load);
             this.tabControl1.ResumeLayout(false);
@@ -2596,6 +2621,8 @@
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.Label BackgroundSet;
         private System.Windows.Forms.Label ForegroundSet;
+        private System.Windows.Forms.Button bShowStationToStationRouteAtStarchartDotClub;
+        private System.Windows.Forms.Button bShowStationAtStarchartDotInfo;
     }
 }
 
