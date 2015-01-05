@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -773,13 +773,13 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series5.ChartArea = "ChartArea1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(171, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -800,13 +800,13 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
+            series6.ChartArea = "ChartArea1";
+            series6.Name = "Series1";
+            this.chart2.Series.Add(series6);
             this.chart2.Size = new System.Drawing.Size(166, 187);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
@@ -1433,6 +1433,11 @@
             // nbCurrentCredits
             // 
             this.nbCurrentCredits.Location = new System.Drawing.Point(116, 190);
+            this.nbCurrentCredits.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
+            0,
+            0});
             this.nbCurrentCredits.Name = "nbCurrentCredits";
             this.nbCurrentCredits.Size = new System.Drawing.Size(120, 20);
             this.nbCurrentCredits.TabIndex = 31;
@@ -1449,6 +1454,11 @@
             // nbTransactionAmount
             // 
             this.nbTransactionAmount.Location = new System.Drawing.Point(116, 165);
+            this.nbTransactionAmount.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
+            0,
+            0});
             this.nbTransactionAmount.Name = "nbTransactionAmount";
             this.nbTransactionAmount.Size = new System.Drawing.Size(120, 20);
             this.nbTransactionAmount.TabIndex = 30;
@@ -2383,7 +2393,7 @@
             this.Controls.Add(this.bOpen);
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "RegulatedNoise v1.4";
+            this.Text = "RegulatedNoise v1.41";
             this.Load += new System.EventHandler(this.Form_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
