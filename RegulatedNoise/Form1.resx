@@ -118,10 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBox2.Text" xml:space="preserve">
-    <value>* matching the closest of "HIGH/MED/LOW"
-* Can it remember last selected station instead of always selecting the first in the list? (when SetupGUI is called)
+    <value>* Can it remember last selected station instead of always selecting the first in the list? (when SetupGUI is called)
 * is there a way also to indicate if a station has medium or large landing docks?
-* route-finding
 * update system info json button?
 * [steelyeyed] tickbox that means "this station buys even with zero demand"?
 * [Treb42] Pause between OCR and Import
@@ -1502,7 +1500,12 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.33
+    <value>v1.4
+* Add "within x light years of arbitrary system"
+* Add buttons linking to system maps and routes at http://starchart.info - with thanks to Biteketkergetek
+* Goosem@n's fix
+
+v1.33
 * Fix station name needs a space when you rename it error
 * Throw away exceptions when cloning main captured-screenshot bitmap for display purposes LOL
 * Create Brainerous images directory if it doesn't exist

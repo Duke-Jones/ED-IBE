@@ -2383,7 +2383,7 @@
             this.Controls.Add(this.bOpen);
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "RegulatedNoise v1.33";
+            this.Text = "RegulatedNoise v1.4";
             this.Load += new System.EventHandler(this.Form_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);

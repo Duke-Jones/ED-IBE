@@ -2668,11 +2668,11 @@ namespace RegulatedNoise
 
             if (RegulatedNoiseSettings.UseEddnTestSchema)
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.33""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.4""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.33""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.4""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
 
 
@@ -3604,7 +3604,7 @@ namespace RegulatedNoise
 
         private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text) + @"/" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text) + @"/@" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text));
+            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text) + @"/" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text) + @"/@" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text));
         }
     }
 }
