@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -64,6 +64,8 @@
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPriceAnalysis = new System.Windows.Forms.TabPage();
+            this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
+            this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.checkboxLightYears = new System.Windows.Forms.CheckBox();
             this.cbLightYears = new System.Windows.Forms.ComboBox();
@@ -77,6 +79,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.bStationDeleteRow = new System.Windows.Forms.Button();
             this.bStationEditRow = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -219,9 +222,6 @@
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
-            this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
-            this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -634,6 +634,25 @@
             this.tabPriceAnalysis.Text = "Price Analysis";
             this.tabPriceAnalysis.UseVisualStyleBackColor = true;
             // 
+            // bShowStationRestrictionAtStarchartDotClub
+            // 
+            this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
+            this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
+            this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
+            this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
+            this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
+            this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
+            // 
+            // cbIncludeWithinRegionOfStation
+            // 
+            this.cbIncludeWithinRegionOfStation.FormattingEnabled = true;
+            this.cbIncludeWithinRegionOfStation.Location = new System.Drawing.Point(294, 6);
+            this.cbIncludeWithinRegionOfStation.Name = "cbIncludeWithinRegionOfStation";
+            this.cbIncludeWithinRegionOfStation.Size = new System.Drawing.Size(200, 21);
+            this.cbIncludeWithinRegionOfStation.TabIndex = 14;
+            this.cbIncludeWithinRegionOfStation.SelectedIndexChanged += new System.EventHandler(this.cbIncludeWithinRegionOfStation_SelectedIndexChanged);
+            // 
             // label43
             // 
             this.label43.AutoSize = true;
@@ -753,7 +772,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(176, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(210, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -773,14 +792,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea5.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea5);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series5.ChartArea = "ChartArea1";
-            series5.Name = "Series1";
-            this.chart1.Series.Add(series5);
-            this.chart1.Size = new System.Drawing.Size(171, 213);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(205, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -800,14 +819,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea6.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea6);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series6.ChartArea = "ChartArea1";
-            series6.Name = "Series1";
-            this.chart2.Series.Add(series6);
-            this.chart2.Size = new System.Drawing.Size(166, 187);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(200, 185);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -828,6 +847,16 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "By Station";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // bShowStationAtStarchartDotInfo
+            // 
+            this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
+            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(277, 12);
+            this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
+            this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationAtStarchartDotInfo.TabIndex = 14;
+            this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
+            this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
             // 
             // bStationDeleteRow
             // 
@@ -2349,35 +2378,6 @@
             this.label37.Size = new System.Drawing.Size(145, 13);
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
-            // 
-            // bShowStationAtStarchartDotInfo
-            // 
-            this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
-            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(277, 12);
-            this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
-            this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
-            this.bShowStationAtStarchartDotInfo.TabIndex = 14;
-            this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
-            this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
-            // 
-            // cbIncludeWithinRegionOfStation
-            // 
-            this.cbIncludeWithinRegionOfStation.FormattingEnabled = true;
-            this.cbIncludeWithinRegionOfStation.Location = new System.Drawing.Point(294, 6);
-            this.cbIncludeWithinRegionOfStation.Name = "cbIncludeWithinRegionOfStation";
-            this.cbIncludeWithinRegionOfStation.Size = new System.Drawing.Size(200, 21);
-            this.cbIncludeWithinRegionOfStation.TabIndex = 14;
-            this.cbIncludeWithinRegionOfStation.SelectedIndexChanged += new System.EventHandler(this.cbIncludeWithinRegionOfStation_SelectedIndexChanged);
-            // 
-            // bShowStationRestrictionAtStarchartDotClub
-            // 
-            this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
-            this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
-            this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
-            this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
-            this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
-            this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
-            this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
             // 
             // Form1
             // 
