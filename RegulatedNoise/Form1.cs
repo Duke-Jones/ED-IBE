@@ -761,51 +761,14 @@ namespace RegulatedNoise
         {
             try
             {
-                Point3D currentSystemLocation;
-
-                string localSystem;
+                double dist;
 
                 if (cbLightYears.Text == "")
                     return false;
 
-                if (cbIncludeWithinRegionOfStation.SelectedItem != null)
-                    localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>" ? tbCurrentSystemFromLogs.Text : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
-                else
-                    localSystem = tbCurrentSystemFromLogs.Text;
-
-                if (_cachedSystemName != localSystem)
-                {
-                    _cachedRemoteSystemDistances = new Dictionary<string, double>();
-                    _cachedSystemName = localSystem.ToString();
-                    _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
-                }
-
-                currentSystemLocation = _cachedSystemLocation;
-
-                remoteSystemName = remoteSystemName.ToUpper();
-
-                double dist;
+                dist = DistanceInLightYears(remoteSystemName);
 
                 var limit = float.Parse(cbLightYears.Text);
-
-                if (_cachedRemoteSystemDistances.ContainsKey(remoteSystemName))
-                {
-                    dist = _cachedRemoteSystemDistances[remoteSystemName];
-                }
-                else
-                {
-                    if (!SystemLocations.ContainsKey(remoteSystemName)) return false;
-
-                    var remoteSystemLocation = SystemLocations[remoteSystemName].Item1;
-
-                    var xDelta = currentSystemLocation.X - remoteSystemLocation.X;
-                    var yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
-                    var zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
-
-                    dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
-                    _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
-                }
-
                 if (dist < limit)
                 {
                     return true;
@@ -819,6 +782,60 @@ namespace RegulatedNoise
             {
                 return false;
             }
+        }
+
+        private double DistanceInLightYears(string remoteSystemName)
+        {
+            double dist;
+            Point3D currentSystemLocation;
+
+            string localSystem;
+
+
+            if (cbIncludeWithinRegionOfStation.SelectedItem != null)
+                localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>"
+                    ? tbCurrentSystemFromLogs.Text
+                    : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
+            else
+                localSystem = tbCurrentSystemFromLogs.Text;
+
+            if (_cachedSystemName != localSystem)
+            {
+                _cachedRemoteSystemDistances = new Dictionary<string, double>();
+                _cachedSystemName = localSystem.ToString();
+                _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
+            }
+
+            currentSystemLocation = _cachedSystemLocation;
+
+            remoteSystemName = remoteSystemName.ToUpper();
+
+
+            if (_cachedRemoteSystemDistances.ContainsKey(remoteSystemName))
+            {
+                dist = _cachedRemoteSystemDistances[remoteSystemName];
+            }
+            else
+            {
+                if (!SystemLocations.ContainsKey(remoteSystemName))
+                {
+                    dist = double.MaxValue;
+                }
+                else
+                {
+                    var remoteSystemLocation = SystemLocations[remoteSystemName].Item1;
+
+                    var xDelta = currentSystemLocation.X - remoteSystemLocation.X;
+                    var yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
+                    var zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
+
+                    dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
+                    _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
+                }
+            }
+            if (remoteSystemName.Contains("LTT"))
+                Debug.WriteLine(remoteSystemName + " - " + dist);
+            return dist;
         }
 
         private string CombinedNameToSystemName(string combinedName)
@@ -841,7 +858,13 @@ namespace RegulatedNoise
             cbStationToStationFrom.Items.Clear();
             cbStationToStationTo.Items.Clear();
 
-            foreach (var station in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))).OrderBy(x => x.Key))
+            var a =
+                StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key)))
+                    .ToList();
+
+            var b = a.OrderBy(x => DistanceInLightYears(CombinedNameToSystemName(x.Key))).ToList();
+
+            foreach (var station in b)
             {
                 cbStation.Items.Add(station.Key);
                 cbStationToStationFrom.Items.Add(station.Key);
@@ -851,7 +874,7 @@ namespace RegulatedNoise
             cbIncludeWithinRegionOfStation.SelectedIndexChanged -= cbIncludeWithinRegionOfStation_SelectedIndexChanged;
             var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
             cbIncludeWithinRegionOfStation.Items.Clear();
-            var systems = StationDirectory.Keys.Select(x => (object)(CombinedNameToSystemName(x))).Distinct().ToArray();
+            var systems = StationDirectory.Keys.Select(x => (object)(CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
             cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
             cbIncludeWithinRegionOfStation.Items.AddRange(systems);
             //cbIncludeWithinRegionOfStation.SelectedIndex = 0;
