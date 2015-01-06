@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -222,6 +222,7 @@
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -287,7 +288,7 @@
             // cbStation
             // 
             this.cbStation.FormattingEnabled = true;
-            this.cbStation.Location = new System.Drawing.Point(71, 14);
+            this.cbStation.Location = new System.Drawing.Point(52, 15);
             this.cbStation.Name = "cbStation";
             this.cbStation.Size = new System.Drawing.Size(201, 21);
             this.cbStation.TabIndex = 1;
@@ -772,7 +773,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(210, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(208, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -792,14 +793,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(205, 213);
+            series3.ChartArea = "ChartArea1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(203, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -819,20 +820,21 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(200, 185);
+            series4.ChartArea = "ChartArea1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(198, 183);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblLightYearsFromCurrentSystem);
             this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.bStationDeleteRow);
             this.tabPage1.Controls.Add(this.bStationEditRow);
@@ -851,7 +853,7 @@
             // bShowStationAtStarchartDotInfo
             // 
             this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
-            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(277, 12);
+            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(259, 12);
             this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
             this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
             this.bShowStationAtStarchartDotInfo.TabIndex = 14;
@@ -887,34 +889,34 @@
             this.groupBox5.Controls.Add(this.tbStationRename);
             this.groupBox5.Controls.Add(this.tbSystemRename);
             this.groupBox5.Controls.Add(this.button6);
-            this.groupBox5.Location = new System.Drawing.Point(312, 4);
+            this.groupBox5.Location = new System.Drawing.Point(567, 1);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(720, 37);
+            this.groupBox5.Size = new System.Drawing.Size(475, 41);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Rename";
             // 
             // tbStationRename
             // 
-            this.tbStationRename.Location = new System.Drawing.Point(6, 12);
+            this.tbStationRename.Location = new System.Drawing.Point(6, 14);
             this.tbStationRename.Name = "tbStationRename";
-            this.tbStationRename.Size = new System.Drawing.Size(283, 20);
+            this.tbStationRename.Size = new System.Drawing.Size(177, 20);
             this.tbStationRename.TabIndex = 6;
             // 
             // tbSystemRename
             // 
-            this.tbSystemRename.Location = new System.Drawing.Point(295, 12);
+            this.tbSystemRename.Location = new System.Drawing.Point(189, 14);
             this.tbSystemRename.Name = "tbSystemRename";
-            this.tbSystemRename.Size = new System.Drawing.Size(282, 20);
+            this.tbSystemRename.Size = new System.Drawing.Size(177, 20);
             this.tbSystemRename.TabIndex = 5;
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(583, 10);
+            this.button6.Location = new System.Drawing.Point(372, 12);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(131, 23);
+            this.button6.Size = new System.Drawing.Size(97, 23);
             this.button6.TabIndex = 4;
-            this.button6.Text = "Change System To";
+            this.button6.Text = "Apply Changes";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.RenameStation);
             // 
@@ -2379,6 +2381,15 @@
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
             // 
+            // lblLightYearsFromCurrentSystem
+            // 
+            this.lblLightYearsFromCurrentSystem.AutoSize = true;
+            this.lblLightYearsFromCurrentSystem.Location = new System.Drawing.Point(290, 19);
+            this.lblLightYearsFromCurrentSystem.Name = "lblLightYearsFromCurrentSystem";
+            this.lblLightYearsFromCurrentSystem.Size = new System.Drawing.Size(63, 13);
+            this.lblLightYearsFromCurrentSystem.TabIndex = 15;
+            this.lblLightYearsFromCurrentSystem.Text = "( light years)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2658,6 +2669,7 @@
         private System.Windows.Forms.Button bShowStationAtStarchartDotInfo;
         private System.Windows.Forms.ComboBox cbIncludeWithinRegionOfStation;
         private System.Windows.Forms.Button bShowStationRestrictionAtStarchartDotClub;
+        private System.Windows.Forms.Label lblLightYearsFromCurrentSystem;
     }
 }
 

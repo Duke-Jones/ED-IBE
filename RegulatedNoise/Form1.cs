@@ -99,6 +99,10 @@ namespace RegulatedNoise
 
             _logger.Log("  - updated Commander's Log List View");
 
+            ImportSystemLocations();
+
+            _logger.Log("  - system locations imported");
+
             if (File.Exists("AutoSave.csv"))
             {
                 _logger.Log("  - found autosaved CSV");
@@ -113,10 +117,6 @@ namespace RegulatedNoise
             ApplySettings();
 
             _logger.Log("  - applied settings");
-
-            ImportSystemLocations();
-
-            _logger.Log("  - system locations imported");
 
             _logger.Log("Initialisation complete");
         }
@@ -133,6 +133,8 @@ namespace RegulatedNoise
             CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
+            var stationCount = 0;
+
             foreach (var x in systems)
             {
                 var stationNames = new List<string>();
@@ -144,12 +146,13 @@ namespace RegulatedNoise
                 if (x.Contains("stations"))
                 {
                     var stationTag = x.Substring(x.IndexOf("stations\":[") + 11);
-                    stationTag = stationTag.Substring(0, stationTag.IndexOf("]"));
+                    //stationTag = stationTag.Substring(0, stationTag.IndexOf("]"));
                     var stations = stationTag.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
 
                     // Well, I guess we might use this one day...
                     foreach (var y in stations)
                     {
+                        stationCount++;
                         var stationNameParse1 = y.Substring(y.IndexOf(":\"") + 2);
                         var stationNameParse2 = stationNameParse1.Substring(0, stationNameParse1.IndexOf("\""));
                         stationNames.Add(stationNameParse2);
@@ -168,6 +171,8 @@ namespace RegulatedNoise
                     throw;
                 }
             }
+
+            Debug.WriteLine(SystemLocations.Count + " systems, "+stationCount+" stations...");
         }
 
         private void CheckAndRequestVerboseLogging()
@@ -792,12 +797,7 @@ namespace RegulatedNoise
             string localSystem;
 
 
-            if (cbIncludeWithinRegionOfStation.SelectedItem != null)
-                localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>"
-                    ? tbCurrentSystemFromLogs.Text
-                    : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
-            else
-                localSystem = tbCurrentSystemFromLogs.Text;
+            localSystem = SystemToMeasureDistancesFrom();
 
             if (_cachedSystemName != localSystem)
             {
@@ -836,6 +836,18 @@ namespace RegulatedNoise
             if (remoteSystemName.Contains("LTT"))
                 Debug.WriteLine(remoteSystemName + " - " + dist);
             return dist;
+        }
+
+        private string SystemToMeasureDistancesFrom()
+        {
+            string localSystem;
+            if (cbIncludeWithinRegionOfStation.SelectedItem != null)
+                localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>"
+                    ? tbCurrentSystemFromLogs.Text
+                    : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
+            else
+                localSystem = tbCurrentSystemFromLogs.Text;
+            return localSystem;
         }
 
         private string CombinedNameToSystemName(string combinedName)
@@ -948,6 +960,9 @@ namespace RegulatedNoise
 
         private void cbStation_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //
+            lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}",DistanceInLightYears(CombinedNameToSystemName(cbStation.SelectedItem.ToString()))) + " light years)";
+
             lbPrices.Items.Clear();
             var stationName = (((ComboBox)sender).SelectedItem.ToString());
 
