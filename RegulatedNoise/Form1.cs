@@ -792,7 +792,6 @@ namespace RegulatedNoise
         private double DistanceInLightYears(string remoteSystemName)
         {
             double dist;
-            Point3D currentSystemLocation;
 
             string localSystem;
 
@@ -806,7 +805,6 @@ namespace RegulatedNoise
                 _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
             }
 
-            currentSystemLocation = _cachedSystemLocation;
 
             remoteSystemName = remoteSystemName.ToUpper();
 
@@ -823,18 +821,26 @@ namespace RegulatedNoise
                 }
                 else
                 {
-                    var remoteSystemLocation = SystemLocations[remoteSystemName].Item1;
-
-                    var xDelta = currentSystemLocation.X - remoteSystemLocation.X;
-                    var yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
-                    var zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
-
-                    dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
+                    var currentSystemLocation = _cachedSystemLocation;
+                    dist = DistanceBetweenNameAndLocation(remoteSystemName, currentSystemLocation);
                     _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
                 }
             }
             if (remoteSystemName.Contains("LTT"))
                 Debug.WriteLine(remoteSystemName + " - " + dist);
+            return dist;
+        }
+
+        private double DistanceBetweenNameAndLocation(string remoteSystemName, Point3D currentSystemLocation)
+        {
+            double dist;
+            var remoteSystemLocation = SystemLocations[remoteSystemName].Item1;
+
+            var xDelta = currentSystemLocation.X - remoteSystemLocation.X;
+            var yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
+            var zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
+
+            dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
             return dist;
         }
 
@@ -2583,7 +2589,7 @@ namespace RegulatedNoise
 
         private void UpdateStationToStation()
         {
-            if (cbStationToStationTo.SelectedItem == null || cbStationToStationFrom == null)
+            if (cbStationToStationTo.SelectedItem == null || cbStationToStationFrom.SelectedItem == null)
                 return;
 
             lvStationToStation.Items.Clear();
@@ -2605,7 +2611,14 @@ namespace RegulatedNoise
             if (_stationToStationColumnSorter.SortColumn != 7)
                 lvStationToStation_ColumnClick(null, new ColumnClickEventArgs(7));
 
-            // lblStationToStationMax
+            if (SystemLocations.ContainsKey(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()))
+                lblStationToStationLightYears.Text = "(" +
+                                                 String.Format("{0:0.00}",
+                                                 DistanceBetweenNameAndLocation(
+                                                     CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
+                                                     SystemLocations[CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()]
+                                                         .Item1)) + " light years each way)";
+            else lblStationToStationLightYears.Text = "(system not recognised)";
         }
 
         private List<ListViewItem> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
@@ -3312,8 +3325,8 @@ namespace RegulatedNoise
             var csvrow2 =
                 CommodityDirectory[lbPrices.SelectedItems[0].Text].First(
                     x => x.StationName == cbStation.SelectedItem.ToString());
-
-            var f = new EditPriceData(csvrow);
+            
+            var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
             var q = f.ShowDialog();
 
             if (q == DialogResult.OK)
@@ -3335,7 +3348,7 @@ namespace RegulatedNoise
                 CommodityDirectory[cbCommodity.SelectedItem.ToString()].First(
                     x => x.StationName == lbCommodities.SelectedItems[0].Text);
 
-            var f = new EditPriceData(csvrow);
+            var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
             var q = f.ShowDialog();
 
             if (q == DialogResult.OK)

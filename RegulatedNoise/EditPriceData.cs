@@ -14,7 +14,7 @@ namespace RegulatedNoise
     {
         public Form1.CsvRow RowToEdit;
 
-        public EditPriceData(Form1.CsvRow csvRow)
+        public EditPriceData(Form1.CsvRow csvRow, List<string> commodities)
         {
             InitializeComponent();
 
@@ -22,7 +22,7 @@ namespace RegulatedNoise
 
             tbEditSystem.Text        = RowToEdit.SystemName;
             tbEditStation.Text       = RowToEdit.StationName.Substring(0,RowToEdit.StationName.IndexOf("[")-1);
-            tbEditCommodityName.Text = RowToEdit.CommodityName;
+            cbEditCommodityName.Text = RowToEdit.CommodityName;
             nEditSell.Value          = RowToEdit.SellPrice;
             nEditBuy.Value           = RowToEdit.BuyPrice;
             nEditDemand.Value        = RowToEdit.Demand;
@@ -31,6 +31,9 @@ namespace RegulatedNoise
             tbEditSupplyLevel.Text   = RowToEdit.SupplyLevel;
             dtpEditSampleDate.Value  = RowToEdit.SampleDate;
             tbEditFilename.Text      = RowToEdit.SourceFileName;
+
+            foreach (var x in commodities.OrderBy(y => y))
+                cbEditCommodityName.Items.Add(x);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,7 +44,7 @@ namespace RegulatedNoise
             {
                 SystemName = tbEditSystem.Text,
                 StationName = tbEditStation.Text + " ["+tbEditSystem.Text+"]",
-                CommodityName = tbEditCommodityName.Text,
+                CommodityName = cbEditCommodityName.Text,
                 SellPrice = nEditSell.Value,
                 BuyPrice = nEditBuy.Value,
                 Demand = nEditDemand.Value,

@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -223,6 +223,7 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
             this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
+            this.lblStationToStationLightYears = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -793,13 +794,13 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(203, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -820,13 +821,13 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
             this.chart2.Size = new System.Drawing.Size(198, 183);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
@@ -1161,6 +1162,7 @@
             // 
             // tabStationToStation
             // 
+            this.tabStationToStation.Controls.Add(this.lblStationToStationLightYears);
             this.tabStationToStation.Controls.Add(this.bShowStationToStationRouteAtStarchartDotClub);
             this.tabStationToStation.Controls.Add(this.button12);
             this.tabStationToStation.Controls.Add(this.lblStationToStationMax);
@@ -1201,7 +1203,7 @@
             // lblStationToStationMax
             // 
             this.lblStationToStationMax.AutoSize = true;
-            this.lblStationToStationMax.Location = new System.Drawing.Point(678, 10);
+            this.lblStationToStationMax.Location = new System.Drawing.Point(866, 10);
             this.lblStationToStationMax.Name = "lblStationToStationMax";
             this.lblStationToStationMax.Size = new System.Drawing.Size(13, 13);
             this.lblStationToStationMax.TabIndex = 11;
@@ -1210,7 +1212,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(571, 10);
+            this.label26.Location = new System.Drawing.Point(759, 10);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(101, 13);
             this.label26.TabIndex = 10;
@@ -2390,6 +2392,15 @@
             this.lblLightYearsFromCurrentSystem.TabIndex = 15;
             this.lblLightYearsFromCurrentSystem.Text = "( light years)";
             // 
+            // lblStationToStationLightYears
+            // 
+            this.lblStationToStationLightYears.AutoSize = true;
+            this.lblStationToStationLightYears.Location = new System.Drawing.Point(570, 10);
+            this.lblStationToStationLightYears.Name = "lblStationToStationLightYears";
+            this.lblStationToStationLightYears.Size = new System.Drawing.Size(112, 13);
+            this.lblStationToStationLightYears.TabIndex = 16;
+            this.lblStationToStationLightYears.Text = "( light years each way)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2670,6 +2681,7 @@
         private System.Windows.Forms.ComboBox cbIncludeWithinRegionOfStation;
         private System.Windows.Forms.Button bShowStationRestrictionAtStarchartDotClub;
         private System.Windows.Forms.Label lblLightYearsFromCurrentSystem;
+        private System.Windows.Forms.Label lblStationToStationLightYears;
     }
 }
 
