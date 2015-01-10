@@ -52,6 +52,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfig.cs" />
+    <Compile Include="EdDisplayConfig.cs" />
     <Compile Include="EDDN.cs" />
     <Compile Include="CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
@@ -66,6 +68,7 @@
     <Compile Include="EditPriceData.Designer.cs">
       <DependentUpon>EditPriceData.cs</DependentUpon>
     </Compile>
+    <Compile Include="EdNetwork.cs" />
     <Compile Include="Enums and Utility Classes\Hyperlinks.cs">
       <SubType>Form</SubType>
     </Compile>

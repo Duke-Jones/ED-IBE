@@ -316,7 +316,14 @@ namespace RegulatedNoise
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
                                              Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
 
-            return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+            var returnValue = (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+
+            if (returnValue != null) return returnValue;
+
+            if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
+                return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
+
+            return null;
         }
         private string getProductPathManually()
         {
@@ -336,8 +343,9 @@ namespace RegulatedNoise
                 }
 
                 MessageBox.Show(
-                    "Hm, that doesn't seem right, " + dialog.SelectedPath +
-                    " is not the Frontier 'Products' directory, Please try again", "", MessageBoxButtons.OK);
+                    "Hm, that doesn't seem right" +
+                    (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
+                + ". Please try again...", "", MessageBoxButtons.OK);
             }
         }
         private void SetProductPath()
@@ -351,7 +359,7 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                MessageBox.Show("Automatic discovery of Frontier directory Failed, please point me to your Frontier 'Products' directory.");
+                MessageBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.");
                 path = getProductPathManually();
 
             }
@@ -379,7 +387,7 @@ namespace RegulatedNoise
                     continue;
                 }
                 
-                MessageBox.Show("Couldn't find a FORC-FDEV.. Directory in the Frontier Products dir, Please try again");
+                MessageBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...");
                 path = getProductPathManually();
                 dirs = Directory.GetDirectories(path);
             }
@@ -394,7 +402,7 @@ namespace RegulatedNoise
         }
         private string getProductAppDataPathManually()
         {
-            var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory. typically: C:\Users\{username}\AppData\Roaming\Frontier Developments\Elite Dangerous\Options\Graphics" };
+            var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory, typically C:\Users\{username}\AppData\{Local or Roaming}\Frontier Developments\Elite Dangerous\Options\Graphics" };
 
             while (true)
             {
@@ -425,7 +433,7 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it. typically: C:\Users\{username}\AppData\Roaming\Frontier Developments\Elite Dangerous\Options\Graphics");
+                MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...");
                 path = getProductAppDataPathManually();
             }
 
