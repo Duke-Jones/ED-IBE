@@ -25,15 +25,15 @@ namespace RegulatedNoise
         public PropertyInfo[] LogEventProperties;
         public static RegulatedNoiseSettings RegulatedNoiseSettings;
         public CommandersLog CommandersLog;
-        public Dictionary<string, List<CsvRow>> StationDirectory = new Dictionary<string, List<CsvRow>>();
-        public Dictionary<string, List<CsvRow>> CommodityDirectory = new Dictionary<string, List<CsvRow>>();
+        public ObjectDirectory StationDirectory = new StationDirectory();
+        public ObjectDirectory CommodityDirectory = new CommodityDirectory();
         public Dictionary<string, Tuple<Point3D, List<string>>> SystemLocations = new Dictionary<string, Tuple<Point3D, List<string>>>();
         public List<Station> StationReferenceList = new List<Station>();
         public Station CurrentStation = null;
         public static GameSettings GameSettings;
 
         private Ocr ocr;
-        private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _commandersLogColumnSorter;
+        private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _stationToStationReturnColumnSorter, _commandersLogColumnSorter;
         private Thread _eddnSubscriberThread;
         private FileSystemWatcher _fileSystemWatcher;
         private SingleThreadLogger _logger;
@@ -272,14 +272,8 @@ namespace RegulatedNoise
             lvAllComms.Columns.Add("Sell Locations");
             lvAllComms.Columns.Add("Difference").Width = 70;
 
-            lvStationToStation.Columns.Add("Commodity Name").Width = 150;
-            lvStationToStation.Columns.Add("Sell Price");
-            lvStationToStation.Columns.Add("Supply");
-            lvStationToStation.Columns.Add("Supply Level");
-            lvStationToStation.Columns.Add("Buy Price");
-            lvStationToStation.Columns.Add("Demand");
-            lvStationToStation.Columns.Add("Demand Level");
-            lvStationToStation.Columns.Add("Difference").Width = 70;
+            AddColumnsToStationToStationListView(lvStationToStation);
+            AddColumnsToStationToStationListView(lvStationToStationReturn);
 
             var c = new ColumnHeader("EventDate") { Text = "EventDate", Name = "EventDate", ImageKey = "EventDate" };
             lvCommandersLog.Columns.Add(c);
@@ -302,13 +296,27 @@ namespace RegulatedNoise
             _commodityColumnSorter = new ListViewColumnSorter(1);
             _allCommodityColumnSorter = new ListViewColumnSorter(2);
             _stationToStationColumnSorter = new ListViewColumnSorter(3);
+            _stationToStationReturnColumnSorter = new ListViewColumnSorter(3);
             _commandersLogColumnSorter = new ListViewColumnSorter(4);
 
             lbPrices.ListViewItemSorter = _stationColumnSorter;
             lbCommodities.ListViewItemSorter = _commodityColumnSorter;
             lvAllComms.ListViewItemSorter = _allCommodityColumnSorter;
             lvStationToStation.ListViewItemSorter = _stationToStationColumnSorter;
+            lvStationToStationReturn.ListViewItemSorter = _stationToStationReturnColumnSorter;
             lvCommandersLog.ListViewItemSorter = _commandersLogColumnSorter;
+        }
+
+        private static void AddColumnsToStationToStationListView(ListView listView)
+        {
+            listView.Columns.Add("Commodity Name").Width = 150;
+            listView.Columns.Add("Sell Price");
+            listView.Columns.Add("Supply");
+            listView.Columns.Add("Supply Level");
+            listView.Columns.Add("Buy Price");
+            listView.Columns.Add("Demand");
+            listView.Columns.Add("Demand Level");
+            listView.Columns.Add("Difference").Width = 70;
         }
 
         private string getProductPathAutomatically()
@@ -721,18 +729,11 @@ namespace RegulatedNoise
 
         private void bOpen_Click(object sender, EventArgs e)
         {
-            //StationDirectory = new Dictionary<string, List<CsvRow>>();
-            //CommodityDirectory = new Dictionary<string, List<CsvRow>>();
-
-
             OpenFileDialog openFile = new OpenFileDialog();
             openFile.DefaultExt = "csv";
             openFile.Multiselect = true;
             openFile.Filter = "CSV (*.csv)|*.csv";
             openFile.ShowDialog();
-
-
-
 
             if (openFile.FileNames.Length > 0)
             {
@@ -895,7 +896,7 @@ namespace RegulatedNoise
                 else
                 {
                     var currentSystemLocation = _cachedSystemLocation;
-                    dist = DistanceBetweenNameAndLocation(remoteSystemName, currentSystemLocation);
+                    dist = DistanceInLightYears(remoteSystemName, currentSystemLocation);
                     _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
                 }
             }
@@ -904,7 +905,7 @@ namespace RegulatedNoise
             return dist;
         }
 
-        private double DistanceBetweenNameAndLocation(string remoteSystemName, Point3D currentSystemLocation)
+        private double DistanceInLightYears(string remoteSystemName, Point3D currentSystemLocation)
         {
             double dist;
             if (!SystemLocations.ContainsKey(remoteSystemName))
@@ -918,6 +919,15 @@ namespace RegulatedNoise
 
             dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
             return dist;
+        }
+
+        private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
+        {
+            double dist;
+            if (!SystemLocations.ContainsKey(homeSystemName))
+                return double.MaxValue;
+
+            return DistanceInLightYears(remoteSystemName, SystemLocations[homeSystemName].Item1);
         }
 
         private string SystemToMeasureDistancesFrom()
@@ -1451,7 +1461,8 @@ namespace RegulatedNoise
                     StationName = newStationName,
                     Supply = row.Supply,
                     SupplyLevel = row.SupplyLevel,
-                    SystemName = tbSystemRename.Text
+                    SystemName = tbSystemRename.Text,
+                    SourceFileName = row.SourceFileName
                 };
 
                 newRows.Add(newRow);
@@ -1464,7 +1475,7 @@ namespace RegulatedNoise
                 StationDirectory.Add(newStationName, newRows);
             else StationDirectory[newStationName].AddRange(newRows);
 
-            var newCommodityDirectory = new Dictionary<string, List<CsvRow>>();
+            var newCommodityDirectory = new CommodityDirectory();
 
             foreach (var collectionOfRows in CommodityDirectory)
             {
@@ -1508,7 +1519,7 @@ namespace RegulatedNoise
 
             StationDirectory[newStationName] = newStationDirectory;
 
-            var newCommodityDirectory2 = new Dictionary<string, List<CsvRow>>();
+            var newCommodityDirectory2 = new CommodityDirectory();
 
             for (int i = 0; i < CommodityDirectory.Keys.Count; i++)
             {
@@ -2696,27 +2707,34 @@ namespace RegulatedNoise
                 return;
 
             lvStationToStation.Items.Clear();
-
+            lvStationToStationReturn.Items.Clear();
 
 
             var stationFrom = (string)(cbStationToStationFrom.SelectedItem);
             var stationTo = (string)(cbStationToStationTo.SelectedItem);
 
             int bestRoundTrip;
-            var resultsOutbound = GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestRoundTrip);
+            var results = GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestRoundTrip);
 
             lblStationToStationMax.Text = bestRoundTrip.ToString();
 
-            if (resultsOutbound != null)
-                foreach (var lvi in resultsOutbound)
+            if (results.Item1 != null)
+                foreach (var lvi in results.Item1)
                     lvStationToStation.Items.Add(lvi);
+
+            if (results.Item2 != null)
+                foreach (var lvi in results.Item2)
+                    lvStationToStationReturn.Items.Add(lvi);
 
             if (_stationToStationColumnSorter.SortColumn != 7)
                 lvStationToStation_ColumnClick(null, new ColumnClickEventArgs(7));
 
+            if (_stationToStationReturnColumnSorter.SortColumn != 7)
+                lvStationToStationReturn_ColumnClick(null, new ColumnClickEventArgs(7));
+
             if (SystemLocations.ContainsKey(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()))
             {
-                var dist = DistanceBetweenNameAndLocation(
+                var dist = DistanceInLightYears(
                                                      CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
                                                      SystemLocations[CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()]
                                                          .Item1);
@@ -2729,7 +2747,7 @@ namespace RegulatedNoise
             else lblStationToStationLightYears.Text = "(system(s) not recognised)";
         }
 
-        private List<ListViewItem> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
+        private Tuple<List<ListViewItem>,List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
         {
             if (stationFrom == null || stationTo == null) { bestRoundTrip = 0; return null; }
             var resultsOutbound = new List<ListViewItem>();
@@ -2814,7 +2832,7 @@ namespace RegulatedNoise
             var r = resultsReturn.Count > 0 ? resultsReturn.Max(x => int.Parse(x.SubItems[7].Text)) : 0;
 
             bestRoundTrip = q + r;
-            return resultsOutbound;
+            return new Tuple<List<ListViewItem>, List<ListViewItem>>(resultsOutbound, resultsReturn);
         }
 
         #endregion
@@ -3458,43 +3476,89 @@ namespace RegulatedNoise
 
         private void button12_Click_2(object sender, EventArgs e)
         {
+            lbAllRoundTrips.Items.Clear();
             int bestRoundTrip = -1;
             string stationA = "", stationB = "";
+            List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
 
             foreach (var a in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
                 foreach (var b in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
                 {
                     int bestThisTrip;
                     GetBestRoundTripForTwoStations(a.Key, b.Key, out bestThisTrip);
-                    if (bestThisTrip > bestRoundTrip)
+                    if (bestThisTrip > 0)
                     {
-                        bestRoundTrip = bestThisTrip;
-                        stationA = a.Key;
-                        stationB = b.Key;
-                    }
+                        string key1, key2;
 
+                        if (string.Compare(a.Key, b.Key) < 0)
+                        {
+                            key1 = a.Key;
+                            key2 = b.Key;
+                        }
+                        else
+                        {
+                            key1 = b.Key;
+                            key2 = a.Key;                            
+                        }
+
+                        string credits;
+                        double creditsDouble;
+                        double distance = 1d;
+                        if (checkboxPerLightYearRoundTrip.Checked)
+                        {
+                            distance = 2 * DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
+                            creditsDouble = bestThisTrip / distance;
+                            credits = String.Format("{0:0.000}", creditsDouble / distance) + " Cr/Ly";
+                        }
+                        else
+                        {
+                            creditsDouble = bestThisTrip;
+                            credits = (bestThisTrip + " Cr");
+                        }
+
+                        allRoundTrips.Add(
+                            new Tuple<string, double>(
+                                credits.PadRight(13) + " :" + 
+                                key1
+                                + "..." + 
+                                key2
+                                , creditsDouble));
+
+                        if (bestThisTrip > bestRoundTrip)
+                        {
+                            bestRoundTrip = bestThisTrip;
+                            stationA = a.Key;
+                            stationB = b.Key;
+                        }
+                    }
                 }
 
-            if (bestRoundTrip > 0)
-            {
-                for (int i = 0; i < cbStationToStationFrom.Items.Count; i++)
-                {
-                    if ((string)(cbStationToStationFrom.Items[i]) == stationA)
-                    {
-                        cbStationToStationFrom.SelectedIndex = i;
-                        break;
-                    }
-                }
+            var ordered = allRoundTrips.OrderByDescending(x => x.Item2).Select(x => x.Item1).Distinct().ToList().Cast<object>().ToArray();
 
-                for (int i = 0; i < cbStationToStationTo.Items.Count; i++)
-                {
-                    if ((string)(cbStationToStationTo.Items[i]) == stationB)
-                    {
-                        cbStationToStationTo.SelectedIndex = i;
-                        break;
-                    }
-                }
-            }
+            lbAllRoundTrips.Items.AddRange(ordered);
+            if(lbAllRoundTrips.Items.Count > 0)
+                lbAllRoundTrips.SelectedIndex = 0;
+
+            //if (bestRoundTrip > 0)
+            //{
+            //    for (int i = 0; i < cbStationToStationFrom.Items.Count; i++)
+            //    {
+            //        if ((string)(cbStationToStationFrom.Items[i]) == stationA)
+            //        {
+            //            cbStationToStationFrom.SelectedIndex = i;
+            //            break;
+            //        }
+            //    }
+            //
+            //    for (int i = 0; i < cbStationToStationTo.Items.Count; i++)
+            //    {
+            //        if ((string)(cbStationToStationTo.Items[i]) == stationB)
+            //        {
+            //            cbStationToStationTo.SelectedIndex = i;
+            //            break;
+            //        }
+            //    }
+            //}
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -3559,14 +3623,20 @@ namespace RegulatedNoise
 
         private void button24_Click(object sender, EventArgs e)
         {
-            StationDirectory = PurgeEDDNFromDirectory(StationDirectory);
-            CommodityDirectory = PurgeEDDNFromDirectory(CommodityDirectory);
+            StationDirectory = PurgeEddnFromDirectory(StationDirectory);
+            CommodityDirectory = PurgeEddnFromDirectory(CommodityDirectory);
             SetupGui();
         }
 
-        private static Dictionary<string, List<CsvRow>> PurgeEDDNFromDirectory(Dictionary<string, List<CsvRow>> directory)
+        private static ObjectDirectory PurgeEddnFromDirectory(ObjectDirectory directory)
         {
-            Dictionary<string, List<CsvRow>> newDirectory = new Dictionary<string, List<CsvRow>>();
+            ObjectDirectory newDirectory;
+            
+            if(directory.GetType() == typeof(StationDirectory))
+                newDirectory = new StationDirectory();
+            else
+                newDirectory = new CommodityDirectory();
+
             foreach (var x in directory)
             {
                 var newList = new List<CsvRow>();
@@ -3574,7 +3644,8 @@ namespace RegulatedNoise
                     if (y.SourceFileName != "<From EDDN>")
                         newList.Add(y);
 
-                newDirectory.Add(x.Key, newList);
+                if(newList.Count > 0)
+                    newDirectory.Add(x.Key, newList);
             }
             return newDirectory;
         }
@@ -3588,6 +3659,44 @@ namespace RegulatedNoise
             {
                 tbFinalOcrOutput.Text = f.ReturnValue;
             }
+        }
+
+        private void lbAllRoundTrips_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var t = lbAllRoundTrips.Text;
+            var fromStation = t.Substring(t.IndexOf(':') + 1);
+            fromStation = fromStation.Substring(0, fromStation.IndexOf("..."));
+            var toStation = t.Substring(t.IndexOf("...") + 3);
+
+            cbStationToStationFrom.Text = fromStation;
+            cbStationToStationTo.Text = toStation;
+            UpdateStationToStation();
+        }
+
+        private void lvStationToStationReturn_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Determine if clicked column is already the column that is being sorted.
+            if (e.Column == _stationToStationReturnColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (_stationToStationReturnColumnSorter.Order == SortOrder.Ascending)
+                {
+                    _stationToStationReturnColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    _stationToStationReturnColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                _stationToStationReturnColumnSorter.SortColumn = e.Column;
+                _stationToStationReturnColumnSorter.Order = e.Column == 7 ? SortOrder.Descending : SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            lvStationToStationReturn.Sort();
         }
 
         //
