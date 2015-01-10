@@ -1019,6 +1019,8 @@ namespace RegulatedNoise
                     bestBuyPrice != 0 && bestSellPrice != 0 ? (bestSellPrice - bestBuyPrice).ToString(CultureInfo.InvariantCulture) : ""
                 }));
             }
+
+            UpdateStationToStation();
         }
 
         private void PopulateNetworkInterfaces()
