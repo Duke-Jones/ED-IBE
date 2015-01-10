@@ -134,7 +134,7 @@ namespace RegulatedNoise
 
         private void ImportSystemLocations()
         {
-            var reader = new StreamReader(File.OpenRead(".//elite.json"));
+            var reader = new StreamReader(File.OpenRead(".//Data//elite.json"));
 
             var strContent = reader.ReadToEnd();
 
@@ -185,7 +185,7 @@ namespace RegulatedNoise
 
             Debug.WriteLine(SystemLocations.Count + " systems, "+stationCount+" stations...");
 
-            var csvReader = new StreamReader(File.OpenRead(".//station.csv"));
+            var csvReader = new StreamReader(File.OpenRead(".//Data//station.csv"));
 
             while (!csvReader.EndOfStream)
             {
