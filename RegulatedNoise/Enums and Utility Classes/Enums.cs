@@ -22,4 +22,18 @@ namespace RegulatedNoise
         EddnSubscriber,
         App
     }
+
+    public enum StationHasBlackMarket
+    {
+        Unknown,
+        No,
+        Yes
+    }
+
+    public enum StationPadSize
+    {
+        Unknown,
+        Medium,
+        Large
+    }
 }

@@ -28,6 +28,8 @@ namespace RegulatedNoise
         public Dictionary<string, List<CsvRow>> StationDirectory = new Dictionary<string, List<CsvRow>>();
         public Dictionary<string, List<CsvRow>> CommodityDirectory = new Dictionary<string, List<CsvRow>>();
         public Dictionary<string, Tuple<Point3D, List<string>>> SystemLocations = new Dictionary<string, Tuple<Point3D, List<string>>>();
+        public List<Station> StationReferenceList = new List<Station>();
+        public Station CurrentStation = null;
 
         private Ocr ocr;
         private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _commandersLogColumnSorter;
@@ -35,6 +37,7 @@ namespace RegulatedNoise
         private FileSystemWatcher _fileSystemWatcher;
         private SingleThreadLogger _logger;
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+        private Levenshtein _levenshtein = new Levenshtein();
 
         public Form1()
         {
@@ -173,6 +176,59 @@ namespace RegulatedNoise
             }
 
             Debug.WriteLine(SystemLocations.Count + " systems, "+stationCount+" stations...");
+
+            var csvReader = new StreamReader(File.OpenRead(".//station.csv"));
+
+            while (!csvReader.EndOfStream)
+            {
+                var csvLine = csvReader.ReadLine();
+                var values = csvLine.Split(',');
+                values[0] = values[0].Substring(1, values[0].Length - 2);
+                values[1] = values[1].Substring(1, values[1].Length - 2);
+                values[3] = values[3].Substring(1, values[3].Length - 2);
+                values[4] = values[4].Substring(1, values[4].Length - 2);
+
+                long lightYearsFromStar;
+                long.TryParse(values[2], out lightYearsFromStar);
+
+                StationHasBlackMarket stationHasBlackMarket;
+                switch (values[3])
+                {
+                    case "N":
+                        stationHasBlackMarket = StationHasBlackMarket.No;
+                        break;
+                    case "Y":
+                        stationHasBlackMarket = StationHasBlackMarket.Yes;
+                        break;
+                    default:
+                        stationHasBlackMarket = StationHasBlackMarket.Unknown;
+                        break;
+                }
+
+                StationPadSize stationPadSize;
+                switch (values[4])
+                {
+                    case "M":
+                        stationPadSize = StationPadSize.Medium;
+                        break;
+                    case "L":
+                        stationPadSize = StationPadSize.Large;
+                        break;
+                    default:
+                        stationPadSize = StationPadSize.Unknown;
+                        break;
+                }
+
+                StationReferenceList.Add(new Station
+                    {
+                        System = values[0],
+                        Name = values[1],
+                        LightSecondsFromStar =  lightYearsFromStar,
+                        StationHasBlackMarket =  stationHasBlackMarket,
+                        StationPadSize = stationPadSize
+                    });
+                
+            }
         }
 
         private void CheckAndRequestVerboseLogging()
@@ -468,14 +524,14 @@ namespace RegulatedNoise
             ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
             var s = CommoditiesText("");
 
-            if (s == "Imported!" || s == "" || s == "No rows found...")
+            if (s == "Imported!" || s == "Finished!" || s == "" || s == "No rows found...")
                 CommoditiesText("Working...");
 
 
 
             if (_ocrThread == null || !_ocrThread.IsAlive)
             {
-                _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath));
+                _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, tbCurrentSystemFromLogs.Text));
                 _ocrThread.Start();
             }
             else
@@ -498,7 +554,7 @@ namespace RegulatedNoise
                 {
                     var s = _preOcrBuffer[0];
                     _preOcrBuffer.RemoveAt(0);
-                    _ocrThread = new Thread(() => ocr.ScreenshotCreated(s));
+                    _ocrThread = new Thread(() => ocr.ScreenshotCreated(s, tbCurrentSystemFromLogs.Text));
                     _ocrThread.Start();
                     ScreenshotsQueued("(" +
                                       (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) +
@@ -753,7 +809,7 @@ namespace RegulatedNoise
                     CommodityDirectory[currentRow.CommodityName].Add(currentRow);
                 }
 
-                if (postToEddn && cbPostOnImport.Checked && currentRow.StationName != "SomeSystem")
+                if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
                     PostJsonToEddn(currentRow);
             }
         }
@@ -1880,12 +1936,13 @@ namespace RegulatedNoise
             _correctionColumn = 0;
             _correctionRow = -1;
             bContinueOcr.Text = "Continue";
+            tbFinalOcrOutput.Enabled = false;
             ContinueDisplayingResults();
         }
 
         private void ContinueDisplayingResults()
         {
-            Levenshtein l = new Levenshtein();
+            
             do
             {
                 _correctionRow++;
@@ -1917,7 +1974,7 @@ namespace RegulatedNoise
                         foreach (var reference in KnownCommodityNames)
                         {
                             var upperRef = StripPunctuationFromScannedText(reference);
-                            var levenshteinNumber = l.LD(upperRef, replacedCamelCase);
+                            var levenshteinNumber = _levenshtein.LD(upperRef, replacedCamelCase);
 
                             if (upperRef != lowestMatchingCommodityRef)
                             {
@@ -1956,10 +2013,10 @@ namespace RegulatedNoise
                 {
 	                var commodityLevelUpperCase = StripPunctuationFromScannedText(_commodityTexts[_correctionRow, _correctionColumn]);
 
-	                var levenshteinLow = l.LD("LOW", commodityLevelUpperCase);
-	                var levenshteinMed = l.LD("MED", commodityLevelUpperCase);
-	                var levenshteinHigh = l.LD("HIGH", commodityLevelUpperCase);
-	                var levenshteinBlank = l.LD("", commodityLevelUpperCase);
+	                var levenshteinLow = _levenshtein.LD("LOW", commodityLevelUpperCase);
+                    var levenshteinMed = _levenshtein.LD("MED", commodityLevelUpperCase);
+                    var levenshteinHigh = _levenshtein.LD("HIGH", commodityLevelUpperCase);
+                    var levenshteinBlank = _levenshtein.LD("", commodityLevelUpperCase);
 
 	                //Pick the lowest levenshtein number
 	                var lowestLevenshtein = Math.Min(Math.Min(levenshteinLow, levenshteinMed), Math.Min(levenshteinHigh, levenshteinBlank));
@@ -1999,7 +2056,7 @@ namespace RegulatedNoise
             {
                 bContinueOcr.Enabled = false;
 
-                string finalOutput = "";
+                string finalOutput = _csvOutputSoFar;
 
                 for (int row = 0; row < _commodityTexts.GetLength(0); row++)
                 {
@@ -2042,12 +2099,27 @@ namespace RegulatedNoise
 
                     pbOcrCurrent.Image = null;
                     if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
-                        tbCommoditiesOcrOutput.Text = "Imported!";
+                    {
+                        
+                        tbFinalOcrOutput.Enabled = true;
+
+                        if (RegulatedNoiseSettings.AutoImport)
+                        {
+                            tbCommoditiesOcrOutput.Text = "Imported!";
+                            ImportFinalOcrOutput();
+                            tbFinalOcrOutput.Text = "";
+                            _csvOutputSoFar = "";
+                        }
+                        else
+                        {
+                            tbCommoditiesOcrOutput.Text = "Finished!";
+                            bContinueOcr.Text = "Import";
+                            bContinueOcr.Enabled = true;
+                        }
+                    }
                     else
                         tbCommoditiesOcrOutput.Text = "Working...!";
 
-                    ImportFinalOcrOutput();
-                    tbFinalOcrOutput.Text = "";
                 }
                 else
                 {
@@ -2336,6 +2408,7 @@ namespace RegulatedNoise
                 {
                     ImportFinalOcrOutput();
                     tbFinalOcrOutput.Text = "";
+                    bContinueOcr.Enabled = false;
                 }
             }
             else
@@ -2518,7 +2591,9 @@ namespace RegulatedNoise
                                               ";" +
                                               messageDictionary["stationStock"] + ";" +
                                               ";" +
-                                              messageDictionary["timestamp"] + ";";
+                                              messageDictionary["timestamp"] + ";"
+                                              +
+                                              "<From EDDN>" + ";";
                         ImportCsvString(csvFormatted);
 
                         if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
@@ -3198,74 +3273,10 @@ namespace RegulatedNoise
 
         #endregion
 
-        private void cbStartWebserverOnLoad_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.StartWebserverOnLoad = cbStartWebserverOnLoad.Checked;
-        }
-
-        private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbStartOCROnLoad.Checked && RegulatedNoiseSettings.MostRecentOCRFolder == "")
-            {
-                MessageBox.Show("You need to pick a directory first, using the Monitor Directory button.  Once you've done that, you can enable Start OCR On Load.");
-                RegulatedNoiseSettings.StartOCROnLoad = false;
-                cbStartOCROnLoad.Checked = false;
-            }
-            else
-            {
-                RegulatedNoiseSettings.StartOCROnLoad = cbStartOCROnLoad.Checked;
-            }
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"https://forums.frontier.co.uk/showthread.php?t=68771");
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"http://www.apache.org/licenses/LICENSE-2.0");
-        }
-
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"http://www.codeproject.com/Articles/452052/Build-Your-Own-Web-Server");
-        }
-
-        private void linkLabel4_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"https://github.com/zeromq/libzmq/blob/master/COPYING.LESSER");
-        }
-
-        private void linkLabel6_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"https://forums.frontier.co.uk/showthread.php?t=76190");
-        }
-
-        private void tbUsername_TextChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.UserName = tbUsername.Text;
-        }
-
-        private void cbExtendedInfoInCSV_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.IncludeExtendedCSVInfo = cbExtendedInfoInCSV.Checked;
-        }
-
-        private void cbPostOnImport_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.PostToEddnOnImport = cbPostOnImport.Checked;
-        }
-
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"https://github.com/zeromq/clrzmq/blob/master/LICENSE");
-        }
-
         private List<string> _knownCommodityNames = new List<string>
         {
             "Gallite", "Indite", "Lepidolite", "Rutile", "Uraninite", "Imperial Slaves", "Slaves", "Bioreducing Lichen",
-            "He Suits", "Biowaste", "Non-Lethal Weapons", "Personal Weapons", "Reactive Armour", "Wine",
+            "H.E. Suits", "Biowaste", "Non-Lethal Weapons", "Personal Weapons", "Reactive Armour", "Wine",
             "Mineral Extractors", "Power Generators", "Water Purifiers", "Basic Medicines", "Combat Stabilisers",
             "Performance Enhancers", "Progenitor Cells", "Cobalt", "Gold", "Palladium", "Silver", "Bauxite",
             "Bertrandite", "Explosives", "Hydrogen Fuel", "Clothing", "Consumer Technology", "Domestic Appliances",
@@ -3275,7 +3286,7 @@ namespace RegulatedNoise
             "Aquaponic Systems", "Land Enrichment Systems", "Leather", "Natural Fabrics", "Polymers", "Semiconductors",
             "Superconductors", "Aluminium", "Beryllium", "Copper", "Gallium", "Lithium", "Platinum", "Tantalum",
             "Titanium", "Uranium", "Auto-Fabricators", "Computer Components", "Robotics", "Synthetic Fabrics", "Scrap",
-            "Battle Weapons", "Indium"
+            "Battle Weapons", "Indium", "Resonating Separators"
         };
 
         private int keysInDirectory = -1;
@@ -3450,36 +3461,6 @@ namespace RegulatedNoise
             }
         }
 
-        private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.DeleteScreenshotOnImport = cbDeleteScreenshotOnImport.Checked;
-        }
-
-        private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
-        {
-            if (RegulatedNoiseSettings.WarnedAboutEddnSchema == false)
-            {
-                var result = MessageBox.Show(
-                    "Are you sure?  It's very important to get your System Names correct before uploading to the live schema...", "Are you sure?",
-                    MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
-                {
-                    RegulatedNoiseSettings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
-                    RegulatedNoiseSettings.WarnedAboutEddnSchema = true;
-                }
-                else
-                {
-                    RegulatedNoiseSettings.UseEddnTestSchema = true;
-                    cbUseEddnTestSchema.CheckedChanged -= cbUseEddnTestSchema_CheckedChanged;
-                    cbUseEddnTestSchema.Checked = true;
-                    cbUseEddnTestSchema.CheckedChanged += cbUseEddnTestSchema_CheckedChanged;
-                }
-            }
-            else
-                RegulatedNoiseSettings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
-        }
-
         private void button13_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
@@ -3534,128 +3515,36 @@ namespace RegulatedNoise
             SetupGui();
         }
 
-        private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"http://starchart.club/map/");
-        }
-
-        private void pbForegroundColour_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2");
-
-                ShowSelectedUiColours();
-                Retheme();
-            }
-
-        }
-
-        private void pbBackgroundColour_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2");
-                ShowSelectedUiColours();
-                Retheme();
-            }
-        }
-
-        private void ShowSelectedUiColours()
-        {
-            if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
-            if (RegulatedNoiseSettings.ForegroundColour != null)
-            {
-                ForegroundSet.Visible = false;
-                Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(RegulatedNoiseSettings.ForegroundColour.Substring(1, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(RegulatedNoiseSettings.ForegroundColour.Substring(3, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(RegulatedNoiseSettings.ForegroundColour.Substring(5, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-
-                using (var g = Graphics.FromImage(b))
-                {
-                    g.Clear(Color.FromArgb(red, green, blue));
-                }
-                pbForegroundColour.Image = b;
-            }
-            else ForegroundSet.Visible = true;
-
-            if (RegulatedNoiseSettings.BackgroundColour != null)
-            {
-                BackgroundSet.Visible = false;
-                if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
-                Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(RegulatedNoiseSettings.BackgroundColour.Substring(1, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(RegulatedNoiseSettings.BackgroundColour.Substring(3, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(RegulatedNoiseSettings.BackgroundColour.Substring(5, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                using (var g = Graphics.FromImage(b))
-                {
-                    g.Clear(Color.FromArgb(red, green, blue));
-                }
-                pbBackgroundColour.Image = b;
-            }
-            else BackgroundSet.Visible = true;
-        }
-
-        private void button20_Click(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.ForegroundColour = null;
-            RegulatedNoiseSettings.BackgroundColour = null;
-        }
-
-        private void ForegroundSet_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2");
-
-                ShowSelectedUiColours();
-                Retheme();
-            }
-        }
-
-        private void BackgroundSet_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2");
-                ShowSelectedUiColours();
-                Retheme();
-            }
-        }
-
-        private void bShowStationAtStarchartDotInfo_Click(object sender, EventArgs e)
-        {
-            Process.Start(@"http://starchart.club/map/system/" + CombinedNameToSystemName(cbStation.Text));
-        }
-
-        private void bShowStationToStationRouteAtStarchartDotClub_Click(object sender, EventArgs e)
-        {
-            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbStationToStationFrom.Text) + @"/" + CombinedNameToSystemName(cbStationToStationTo.Text) + @"/@" + CombinedNameToSystemName(cbStationToStationFrom.Text));
-        }
 
         private void cbIncludeWithinRegionOfStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetupGui();
         }
 
-        private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)
+        private void button24_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text) + @"/" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text) + @"/@" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text));
+            StationDirectory = PurgeEDDNFromDirectory(StationDirectory);
+            CommodityDirectory = PurgeEDDNFromDirectory(CommodityDirectory);
+            SetupGui();
         }
+
+        private static Dictionary<string, List<CsvRow>> PurgeEDDNFromDirectory(Dictionary<string, List<CsvRow>> directory)
+        {
+            Dictionary<string, List<CsvRow>> newDirectory = new Dictionary<string, List<CsvRow>>();
+            foreach (var x in directory)
+            {
+                var newList = new List<CsvRow>();
+                foreach (var y in x.Value)
+                    if (y.SourceFileName != "<From EDDN>")
+                        newList.Add(y);
+
+                newDirectory.Add(x.Key, newList);
+            }
+            return newDirectory;
+        }
+
+        //
+
+
     }
 }

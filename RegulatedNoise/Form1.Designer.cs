@@ -29,16 +29,18 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lbPrices = new System.Windows.Forms.ListView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
+            this.linkLabel9 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel8 = new System.Windows.Forms.LinkLabel();
             this.BackgroundSet = new System.Windows.Forms.Label();
             this.ForegroundSet = new System.Windows.Forms.Label();
             this.button20 = new System.Windows.Forms.Button();
@@ -79,6 +81,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
             this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.bStationDeleteRow = new System.Windows.Forms.Button();
             this.bStationEditRow = new System.Windows.Forms.Button();
@@ -108,6 +111,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.lbCommodities = new System.Windows.Forms.ListView();
             this.tabStationToStation = new System.Windows.Forms.TabPage();
+            this.lblStationToStationLightYears = new System.Windows.Forms.Label();
             this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.lblStationToStationMax = new System.Windows.Forms.Label();
@@ -150,6 +154,7 @@
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cbAutoImport = new System.Windows.Forms.CheckBox();
             this.cbUseEddnTestSchema = new System.Windows.Forms.CheckBox();
             this.cbDeleteScreenshotOnImport = new System.Windows.Forms.CheckBox();
             this.cbStartOCROnLoad = new System.Windows.Forms.CheckBox();
@@ -209,6 +214,7 @@
             this.lblURL = new System.Windows.Forms.Label();
             this.tabEDDN = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.bPurgeAllEddnData = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -222,8 +228,6 @@
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
-            this.lblStationToStationLightYears = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -342,6 +346,8 @@
             // 
             // tabHelpAndChangeLog
             // 
+            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel9);
+            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel8);
             this.tabHelpAndChangeLog.Controls.Add(this.BackgroundSet);
             this.tabHelpAndChangeLog.Controls.Add(this.ForegroundSet);
             this.tabHelpAndChangeLog.Controls.Add(this.button20);
@@ -372,6 +378,29 @@
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
+            // 
+            // linkLabel9
+            // 
+            this.linkLabel9.AutoSize = true;
+            this.linkLabel9.Location = new System.Drawing.Point(545, 489);
+            this.linkLabel9.Name = "linkLabel9";
+            this.linkLabel9.Size = new System.Drawing.Size(509, 13);
+            this.linkLabel9.TabIndex = 32;
+            this.linkLabel9.TabStop = true;
+            this.linkLabel9.Text = "System Location information kindly provided by Maddavo\'s Market Share at http://w" +
+    "ww.davek.com.au/td/";
+            this.linkLabel9.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel9_LinkClicked);
+            // 
+            // linkLabel8
+            // 
+            this.linkLabel8.AutoSize = true;
+            this.linkLabel8.Location = new System.Drawing.Point(3, 489);
+            this.linkLabel8.Name = "linkLabel8";
+            this.linkLabel8.Size = new System.Drawing.Size(94, 13);
+            this.linkLabel8.TabIndex = 31;
+            this.linkLabel8.TabStop = true;
+            this.linkLabel8.Text = "Json.NET License";
+            this.linkLabel8.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel8_LinkClicked);
             // 
             // BackgroundSet
             // 
@@ -446,7 +475,7 @@
             // linkLabel7
             // 
             this.linkLabel7.AutoSize = true;
-            this.linkLabel7.Location = new System.Drawing.Point(303, 489);
+            this.linkLabel7.Location = new System.Drawing.Point(100, 489);
             this.linkLabel7.Name = "linkLabel7";
             this.linkLabel7.Size = new System.Drawing.Size(445, 13);
             this.linkLabel7.TabIndex = 23;
@@ -478,7 +507,7 @@
             // linkLabel6
             // 
             this.linkLabel6.AutoSize = true;
-            this.linkLabel6.Location = new System.Drawing.Point(700, 508);
+            this.linkLabel6.Location = new System.Drawing.Point(704, 508);
             this.linkLabel6.Name = "linkLabel6";
             this.linkLabel6.Size = new System.Drawing.Size(339, 13);
             this.linkLabel6.TabIndex = 20;
@@ -499,7 +528,7 @@
             // linkLabel5
             // 
             this.linkLabel5.AutoSize = true;
-            this.linkLabel5.Location = new System.Drawing.Point(616, 508);
+            this.linkLabel5.Location = new System.Drawing.Point(620, 508);
             this.linkLabel5.Name = "linkLabel5";
             this.linkLabel5.Size = new System.Drawing.Size(78, 13);
             this.linkLabel5.TabIndex = 18;
@@ -774,7 +803,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(208, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(198, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -794,14 +823,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(203, 213);
+            series5.ChartArea = "ChartArea1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(193, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -821,21 +850,20 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(198, 183);
+            series6.ChartArea = "ChartArea1";
+            series6.Name = "Series1";
+            this.chart2.Series.Add(series6);
+            this.chart2.Size = new System.Drawing.Size(188, 173);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.lblLightYearsFromCurrentSystem);
             this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.bStationDeleteRow);
             this.tabPage1.Controls.Add(this.bStationEditRow);
@@ -843,6 +871,7 @@
             this.tabPage1.Controls.Add(this.lbPrices);
             this.tabPage1.Controls.Add(this.cbStation);
             this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.lblLightYearsFromCurrentSystem);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -850,6 +879,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "By Station";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lblLightYearsFromCurrentSystem
+            // 
+            this.lblLightYearsFromCurrentSystem.AutoSize = true;
+            this.lblLightYearsFromCurrentSystem.Location = new System.Drawing.Point(294, 18);
+            this.lblLightYearsFromCurrentSystem.Name = "lblLightYearsFromCurrentSystem";
+            this.lblLightYearsFromCurrentSystem.Size = new System.Drawing.Size(63, 13);
+            this.lblLightYearsFromCurrentSystem.TabIndex = 15;
+            this.lblLightYearsFromCurrentSystem.Text = "( light years)";
             // 
             // bShowStationAtStarchartDotInfo
             // 
@@ -1179,6 +1217,15 @@
             this.tabStationToStation.TabIndex = 8;
             this.tabStationToStation.Text = "Station-To-Station";
             this.tabStationToStation.UseVisualStyleBackColor = true;
+            // 
+            // lblStationToStationLightYears
+            // 
+            this.lblStationToStationLightYears.AutoSize = true;
+            this.lblStationToStationLightYears.Location = new System.Drawing.Point(570, 10);
+            this.lblStationToStationLightYears.Name = "lblStationToStationLightYears";
+            this.lblStationToStationLightYears.Size = new System.Drawing.Size(112, 13);
+            this.lblStationToStationLightYears.TabIndex = 16;
+            this.lblStationToStationLightYears.Text = "( light years each way)";
             // 
             // bShowStationToStationRouteAtStarchartDotClub
             // 
@@ -1632,6 +1679,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.cbAutoImport);
             this.groupBox4.Controls.Add(this.cbUseEddnTestSchema);
             this.groupBox4.Controls.Add(this.cbDeleteScreenshotOnImport);
             this.groupBox4.Controls.Add(this.cbStartOCROnLoad);
@@ -1658,6 +1706,17 @@
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
+            // 
+            // cbAutoImport
+            // 
+            this.cbAutoImport.AutoSize = true;
+            this.cbAutoImport.Location = new System.Drawing.Point(261, 431);
+            this.cbAutoImport.Name = "cbAutoImport";
+            this.cbAutoImport.Size = new System.Drawing.Size(80, 17);
+            this.cbAutoImport.TabIndex = 31;
+            this.cbAutoImport.Text = "Auto Import";
+            this.cbAutoImport.UseVisualStyleBackColor = true;
+            this.cbAutoImport.CheckedChanged += new System.EventHandler(this.cbAutoImport_CheckedChanged);
             // 
             // cbUseEddnTestSchema
             // 
@@ -2244,6 +2303,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
             this.groupBox2.Controls.Add(this.button17);
             this.groupBox2.Controls.Add(this.label28);
             this.groupBox2.Controls.Add(this.label27);
@@ -2259,6 +2319,16 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
+            // 
+            // bPurgeAllEddnData
+            // 
+            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 473);
+            this.bPurgeAllEddnData.Name = "bPurgeAllEddnData";
+            this.bPurgeAllEddnData.Size = new System.Drawing.Size(129, 23);
+            this.bPurgeAllEddnData.TabIndex = 12;
+            this.bPurgeAllEddnData.Text = "Purge all EDDN data";
+            this.bPurgeAllEddnData.UseVisualStyleBackColor = true;
+            this.bPurgeAllEddnData.Click += new System.EventHandler(this.button24_Click);
             // 
             // button17
             // 
@@ -2333,7 +2403,7 @@
             this.tbEDDNOutput.Location = new System.Drawing.Point(6, 155);
             this.tbEDDNOutput.Multiline = true;
             this.tbEDDNOutput.Name = "tbEDDNOutput";
-            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 341);
+            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 312);
             this.tbEDDNOutput.TabIndex = 3;
             // 
             // button15
@@ -2382,24 +2452,6 @@
             this.label37.Size = new System.Drawing.Size(145, 13);
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
-            // 
-            // lblLightYearsFromCurrentSystem
-            // 
-            this.lblLightYearsFromCurrentSystem.AutoSize = true;
-            this.lblLightYearsFromCurrentSystem.Location = new System.Drawing.Point(290, 19);
-            this.lblLightYearsFromCurrentSystem.Name = "lblLightYearsFromCurrentSystem";
-            this.lblLightYearsFromCurrentSystem.Size = new System.Drawing.Size(63, 13);
-            this.lblLightYearsFromCurrentSystem.TabIndex = 15;
-            this.lblLightYearsFromCurrentSystem.Text = "( light years)";
-            // 
-            // lblStationToStationLightYears
-            // 
-            this.lblStationToStationLightYears.AutoSize = true;
-            this.lblStationToStationLightYears.Location = new System.Drawing.Point(570, 10);
-            this.lblStationToStationLightYears.Name = "lblStationToStationLightYears";
-            this.lblStationToStationLightYears.Size = new System.Drawing.Size(112, 13);
-            this.lblStationToStationLightYears.TabIndex = 16;
-            this.lblStationToStationLightYears.Text = "( light years each way)";
             // 
             // Form1
             // 
@@ -2682,6 +2734,10 @@
         private System.Windows.Forms.Button bShowStationRestrictionAtStarchartDotClub;
         private System.Windows.Forms.Label lblLightYearsFromCurrentSystem;
         private System.Windows.Forms.Label lblStationToStationLightYears;
+        private System.Windows.Forms.LinkLabel linkLabel8;
+        private System.Windows.Forms.CheckBox cbAutoImport;
+        private System.Windows.Forms.LinkLabel linkLabel9;
+        private System.Windows.Forms.Button bPurgeAllEddnData;
     }
 }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
@@ -20,21 +22,27 @@ namespace RegulatedNoise
         public List<string> ScreenshotBuffer = new List<string>(); 
         public string CurrentScreenshot;
         public DateTime CurrentScreenshotDateTime;
+        public string SystemAtTimeOfScreenshot;
         
         private readonly Form1 _callingForm;
         private Point[] _calibrationPoints;
         private readonly SingleThreadLogger _logger;
+        private Levenshtein _levenshtein = new Levenshtein();
+        private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
 
         Bitmap _bTrimmedHeader, _bTrimmed, _bOriginal, _bOriginalClone;
 
         public Ocr(Form1 callingForm)
         {
             _callingForm = callingForm;
+            
             _logger = new SingleThreadLogger(ThreadLoggerType.Ocr);
         }
 
-        public void ScreenshotCreated(string filePath)
+        public void ScreenshotCreated(string filePath, string systemAtTimeOfScreenshot)
         {
+            SystemAtTimeOfScreenshot = systemAtTimeOfScreenshot;
+
             try
             { 
                 Debug.WriteLine("Screenshot created: OCR is "+Working);
@@ -220,8 +228,20 @@ namespace RegulatedNoise
                 using (var page = engine.Process(p))
                 {
                     var text = page.GetText();
-                    headerResult = text.Replace("\n\n","");// (text + " {" + page.GetMeanConfidence() + "}\r\n");
+                    headerResult = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
                 }
+            }
+
+            var matchesInStationReferenceList =
+                _callingForm.StationReferenceList.Where(x => x.System == SystemAtTimeOfScreenshot.ToUpper()).OrderBy(x => _levenshtein.LD(headerResult, x.Name)).ToList();
+
+            var q = _callingForm.StationReferenceList.Where(x => x.Name.Contains("'"));
+
+            if(matchesInStationReferenceList.Count > 0)
+            {
+                var ld = _levenshtein.LD(headerResult, matchesInStationReferenceList[0].Name.ToUpper());
+                if (ld < 50)
+                    headerResult = matchesInStationReferenceList[0].Name.ToUpper();
             }
 
             _callingForm.DisplayResults(headerResult);
@@ -424,6 +444,11 @@ namespace RegulatedNoise
             Debug.WriteLine("set to " + Working);
 
             
+        }
+
+        private string StripPunctuationFromScannedText(string input)
+        {
+            return _textInfo.ToUpper(input.Replace("\n\n", "").Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
         }
 
         private static string AnalyseFrameUsingTesseract(Bitmap c1, TesseractEngine engine, out float cf1)
