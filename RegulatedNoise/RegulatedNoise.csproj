@@ -54,6 +54,12 @@
   <ItemGroup>
     <Compile Include="EDDN.cs" />
     <Compile Include="CommandersLog.cs" />
+    <Compile Include="EditOcrResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditOcrResults.Designer.cs">
+      <DependentUpon>EditOcrResults.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditPriceData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +100,9 @@
     <Compile Include="Enums and Utility Classes\SortableBindingList.cs" />
     <Compile Include="Station.cs" />
     <Compile Include="Webserver.cs" />
+    <EmbeddedResource Include="EditOcrResults.resx">
+      <DependentUpon>EditOcrResults.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditPriceData.resx">
       <DependentUpon>EditPriceData.cs</DependentUpon>
     </EmbeddedResource>

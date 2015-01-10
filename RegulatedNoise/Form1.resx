@@ -1499,7 +1499,10 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.5
+    <value>v1.6
+* Add new OCR Corrections form ("Edit" button on Corrections tab)
+
+v1.5
 * add Maddavo's stations data (static copy) to auto-fix station name OCR errors (thanks to Maddavo) - this also gives us pad-size information, but not using that yet
 * Move a bunch of code to make Form1.cs a less-depressing place to be
 * Add an auto-import checkbox and setting - this defaults to Off at the moment
@@ -1507,6 +1510,7 @@
 * Remove improbable punctuation from station names (but not apostrophes...)
 * Data imported from EDDN now has "&lt;From EDDN&gt;" as the "Screenshot Name"
 * He Suits is now H.E. Suits... also added Resonating Separators to the hard-coded list of commodity names
+
 v1.41
 * Fix Transaction credits does not accept numbers &gt;100 (GitHub issue #1)
 

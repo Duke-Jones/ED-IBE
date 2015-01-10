@@ -81,7 +81,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
             this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.bStationDeleteRow = new System.Windows.Forms.Button();
             this.bStationEditRow = new System.Windows.Forms.Button();
@@ -89,6 +88,7 @@
             this.tbStationRename = new System.Windows.Forms.TextBox();
             this.tbSystemRename = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
+            this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.bCommodityDeleteRow = new System.Windows.Forms.Button();
             this.bEditCommodity = new System.Windows.Forms.Button();
@@ -154,6 +154,7 @@
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.bEditResults = new System.Windows.Forms.Button();
             this.cbAutoImport = new System.Windows.Forms.CheckBox();
             this.cbUseEddnTestSchema = new System.Windows.Forms.CheckBox();
             this.cbDeleteScreenshotOnImport = new System.Windows.Forms.CheckBox();
@@ -803,7 +804,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(198, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(192, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -830,7 +831,7 @@
             series5.ChartArea = "ChartArea1";
             series5.Name = "Series1";
             this.chart1.Series.Add(series5);
-            this.chart1.Size = new System.Drawing.Size(193, 213);
+            this.chart1.Size = new System.Drawing.Size(187, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -857,7 +858,7 @@
             series6.ChartArea = "ChartArea1";
             series6.Name = "Series1";
             this.chart2.Series.Add(series6);
-            this.chart2.Size = new System.Drawing.Size(188, 173);
+            this.chart2.Size = new System.Drawing.Size(182, 167);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -879,15 +880,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "By Station";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // lblLightYearsFromCurrentSystem
-            // 
-            this.lblLightYearsFromCurrentSystem.AutoSize = true;
-            this.lblLightYearsFromCurrentSystem.Location = new System.Drawing.Point(294, 18);
-            this.lblLightYearsFromCurrentSystem.Name = "lblLightYearsFromCurrentSystem";
-            this.lblLightYearsFromCurrentSystem.Size = new System.Drawing.Size(63, 13);
-            this.lblLightYearsFromCurrentSystem.TabIndex = 15;
-            this.lblLightYearsFromCurrentSystem.Text = "( light years)";
             // 
             // bShowStationAtStarchartDotInfo
             // 
@@ -958,6 +950,15 @@
             this.button6.Text = "Apply Changes";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.RenameStation);
+            // 
+            // lblLightYearsFromCurrentSystem
+            // 
+            this.lblLightYearsFromCurrentSystem.AutoSize = true;
+            this.lblLightYearsFromCurrentSystem.Location = new System.Drawing.Point(294, 18);
+            this.lblLightYearsFromCurrentSystem.Name = "lblLightYearsFromCurrentSystem";
+            this.lblLightYearsFromCurrentSystem.Size = new System.Drawing.Size(63, 13);
+            this.lblLightYearsFromCurrentSystem.TabIndex = 15;
+            this.lblLightYearsFromCurrentSystem.Text = "( light years)";
             // 
             // tabPage2
             // 
@@ -1679,6 +1680,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.bEditResults);
             this.groupBox4.Controls.Add(this.cbAutoImport);
             this.groupBox4.Controls.Add(this.cbUseEddnTestSchema);
             this.groupBox4.Controls.Add(this.cbDeleteScreenshotOnImport);
@@ -1706,6 +1708,16 @@
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
+            // 
+            // bEditResults
+            // 
+            this.bEditResults.Location = new System.Drawing.Point(6, 402);
+            this.bEditResults.Name = "bEditResults";
+            this.bEditResults.Size = new System.Drawing.Size(570, 23);
+            this.bEditResults.TabIndex = 32;
+            this.bEditResults.Text = "Edit Results";
+            this.bEditResults.UseVisualStyleBackColor = true;
+            this.bEditResults.Click += new System.EventHandler(this.bEditResults_Click);
             // 
             // cbAutoImport
             // 
@@ -1865,7 +1877,7 @@
             this.tbFinalOcrOutput.Multiline = true;
             this.tbFinalOcrOutput.Name = "tbFinalOcrOutput";
             this.tbFinalOcrOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbFinalOcrOutput.Size = new System.Drawing.Size(571, 245);
+            this.tbFinalOcrOutput.Size = new System.Drawing.Size(571, 219);
             this.tbFinalOcrOutput.TabIndex = 15;
             this.tbFinalOcrOutput.WordWrap = false;
             // 
@@ -2467,7 +2479,7 @@
             this.Controls.Add(this.bOpen);
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "RegulatedNoise v1.41";
+            this.Text = "RegulatedNoise v1.6";
             this.Load += new System.EventHandler(this.Form_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
@@ -2738,6 +2750,7 @@
         private System.Windows.Forms.CheckBox cbAutoImport;
         private System.Windows.Forms.LinkLabel linkLabel9;
         private System.Windows.Forms.Button bPurgeAllEddnData;
+        private System.Windows.Forms.Button bEditResults;
     }
 }
 

@@ -121,6 +121,9 @@ namespace RegulatedNoise
 
             _logger.Log("  - applied settings");
 
+            if (!Directory.Exists(".//OCR Correction Images"))
+                Directory.CreateDirectory(".//OCR Correction Images");
+
             _logger.Log("Initialisation complete");
         }
 
@@ -1893,46 +1896,48 @@ namespace RegulatedNoise
             }
         }
 
-        public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string screenshotName);
+        public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName);
 
         int _correctionRow, _correctionColumn;
 
         string[,] _commodityTexts;
         Bitmap[,] _originalBitmaps;
         float[,] _originalBitmapConfidences;
+        string[] _rowIds;
         string _screenshotName;
 
         List<ScreeenshotResults> _screenshotResultsBuffer = new List<ScreeenshotResults>();
         string _csvOutputSoFar;
         List<string> _commoditiesSoFar = new List<string>();
 
-        public void DisplayCommodityResults(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string screenshotName)
+        public void DisplayCommodityResults(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName)
         {
             if (InvokeRequired)
             {
-                Invoke(new DisplayCommodityResultsDelegate(DisplayCommodityResults), s, originalBitmaps, originalBitmapConfidences, screenshotName);
+                Invoke(new DisplayCommodityResultsDelegate(DisplayCommodityResults), s, originalBitmaps, originalBitmapConfidences, rowIds, screenshotName);
                 return;
             }
 
             if (_commodityTexts != null && _correctionColumn < _commodityTexts.GetLength(1)) // there is an existing screenshot being processed...
             {
-                _screenshotResultsBuffer.Add(new ScreeenshotResults { originalBitmapConfidences = originalBitmapConfidences, originalBitmaps = originalBitmaps, s = s, screenshotName = screenshotName });
+                _screenshotResultsBuffer.Add(new ScreeenshotResults { originalBitmapConfidences = originalBitmapConfidences, originalBitmaps = originalBitmaps, s = s, rowIds = rowIds, screenshotName = screenshotName });
                 ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
                 return;
             }
 
             if (originalBitmaps.GetLength(0) != 0)
-                BeginCorrectingScreenshot(s, originalBitmaps, originalBitmapConfidences, screenshotName);
+                BeginCorrectingScreenshot(s, originalBitmaps, originalBitmapConfidences, rowIds, screenshotName);
             else
                 tbCommoditiesOcrOutput.Text = "No rows found...";
         }
 
-        private void BeginCorrectingScreenshot(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string screenshotName)
+        private void BeginCorrectingScreenshot(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName)
         {
             _commodityTexts = s;
             _originalBitmaps = originalBitmaps;
             _originalBitmapConfidences = originalBitmapConfidences;
             _screenshotName = screenshotName;
+            _rowIds = rowIds;
             _correctionColumn = 0;
             _correctionRow = -1;
             bContinueOcr.Text = "Continue";
@@ -2076,7 +2081,7 @@ namespace RegulatedNoise
                         if (cbExtendedInfoInCSV.Checked)
                             finalOutput += Path.GetFileName(_screenshotName) + ";";
 
-                        finalOutput += "\r\n";
+                        finalOutput += _rowIds[row]+"\r\n";
                     }
                 }
 
@@ -2126,7 +2131,7 @@ namespace RegulatedNoise
                     var nextScreenshot = _screenshotResultsBuffer[0];
                     _screenshotResultsBuffer.Remove(nextScreenshot);
                     ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
-                    BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.screenshotName);
+                    BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
                 }
             }
         }
@@ -2794,11 +2799,11 @@ namespace RegulatedNoise
 
             if (RegulatedNoiseSettings.UseEddnTestSchema)
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.5""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.6""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.5""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.6""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
 
 
@@ -3541,6 +3546,17 @@ namespace RegulatedNoise
                 newDirectory.Add(x.Key, newList);
             }
             return newDirectory;
+        }
+
+        private void bEditResults_Click(object sender, EventArgs e)
+        {
+            var f = new EditOcrResults(tbFinalOcrOutput.Text);
+            var q = f.ShowDialog();
+
+            if (q == DialogResult.OK)
+            {
+                tbFinalOcrOutput.Text = f.ReturnValue;
+            }
         }
 
         //
