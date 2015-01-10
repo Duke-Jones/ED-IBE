@@ -48,8 +48,8 @@ namespace RegulatedNoise
 
             decimal maxVersion = -1;
 
-           // try
-           // {
+            try
+            {
                 using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
                     response = responseReader.ReadToEnd();
 
@@ -57,6 +57,8 @@ namespace RegulatedNoise
 
                 var ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
                 ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                dynamic releaseDetails = null;
 
                 foreach (var x in data)
                 {
@@ -70,12 +72,13 @@ namespace RegulatedNoise
                     if (maxVersion < thisVersion)
                     {
                         maxVersion = thisVersion;
+                        releaseDetails = x;
                     }
                 }
 
                 if (Version < maxVersion)
                 {
-                    var dialogResult = MessageBox.Show("Newer version found! Quit RegulatedNoise and browse to GitHub to download it?","Update?",
+                    var dialogResult = MessageBox.Show("Newer version found! Quit RegulatedNoise and browse to GitHub to download it?\r\n\r\nv"+maxVersion+":\r\n"+releaseDetails.body,"Update?",
                         MessageBoxButtons.YesNo);
 
                     if (dialogResult == DialogResult.Yes)
@@ -84,11 +87,12 @@ namespace RegulatedNoise
                         Application.Exit();
                     }
                 }
-          //  }
-            //catch
-            //{
-            //    return;
-            //}
+            }
+            catch
+            {
+                // Not a disaster if we can't do the version check...
+                return;
+            }
 
         }
     }
