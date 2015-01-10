@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Mime;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace RegulatedNoise
 {
     [Serializable]
     public class RegulatedNoiseSettings
     {
+        public readonly decimal Version = 1.6m;
+
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
         public string ProductAppData = ""; //2nd location for game configuration files
@@ -26,6 +34,63 @@ namespace RegulatedNoise
         public string ForegroundColour = null;
         public string BackgroundColour = null;
         public bool AutoImport = false;
+
+        public void CheckVersion()
+        {
+            string sURL;
+            sURL = @"https://api.github.com/repos/stringandstickytape/RegulatedNoise/releases";
+            string response;
+
+            HttpWebRequest webRequest = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
+            webRequest.Method = "GET";
+            webRequest.ServicePoint.Expect100Continue = false;
+            webRequest.UserAgent = "YourAppName";
+
+            decimal maxVersion = -1;
+
+           // try
+           // {
+                using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
+                    response = responseReader.ReadToEnd();
+
+                dynamic data = JsonConvert.DeserializeObject<dynamic>(response);
+
+                var ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                foreach (var x in data)
+                {
+                    string release = x.name;
+                    release = release.Replace("v", "");
+
+                    if (release == "")
+                        continue;
+
+                    var thisVersion = decimal.Parse(release, NumberStyles.Any, ci);
+                    if (maxVersion < thisVersion)
+                    {
+                        maxVersion = thisVersion;
+                    }
+                }
+
+                if (Version < maxVersion)
+                {
+                    var dialogResult = MessageBox.Show("Newer version found! Quit RegulatedNoise and browse to GitHub to download it?","Update?",
+                        MessageBoxButtons.YesNo);
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Process.Start(@"https://github.com/stringandstickytape/RegulatedNoise/releases");
+                        Application.Exit();
+                    }
+                }
+          //  }
+            //catch
+            //{
+            //    return;
+            //}
+
+        }
     }
 
     public partial class Form1
