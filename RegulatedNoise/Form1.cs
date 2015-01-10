@@ -861,7 +861,11 @@ namespace RegulatedNoise
             {
                 _cachedRemoteSystemDistances = new Dictionary<string, double>();
                 _cachedSystemName = localSystem.ToString();
-                _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
+
+                if(SystemLocations.ContainsKey(localSystem.ToUpper()))
+                    _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
+                else
+                    _cachedSystemLocation = null;
             }
 
 
@@ -874,7 +878,7 @@ namespace RegulatedNoise
             }
             else
             {
-                if (!SystemLocations.ContainsKey(remoteSystemName))
+                if (!SystemLocations.ContainsKey(remoteSystemName) || _cachedSystemLocation == null)
                 {
                     dist = double.MaxValue;
                 }
@@ -893,6 +897,9 @@ namespace RegulatedNoise
         private double DistanceBetweenNameAndLocation(string remoteSystemName, Point3D currentSystemLocation)
         {
             double dist;
+            if (!SystemLocations.ContainsKey(remoteSystemName))
+                return double.MaxValue;
+
             var remoteSystemLocation = SystemLocations[remoteSystemName].Item1;
 
             var xDelta = currentSystemLocation.X - remoteSystemLocation.X;
@@ -1026,7 +1033,11 @@ namespace RegulatedNoise
         private void cbStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             //
-            lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}",DistanceInLightYears(CombinedNameToSystemName(cbStation.SelectedItem.ToString()))) + " light years)";
+            var dist = DistanceInLightYears(CombinedNameToSystemName(cbStation.SelectedItem.ToString()));
+            if (dist < double.MaxValue)
+                lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
+            else
+                lblLightYearsFromCurrentSystem.Text = "(system location unknown)";
 
             lbPrices.Items.Clear();
             var stationName = (((ComboBox)sender).SelectedItem.ToString());
@@ -2692,13 +2703,18 @@ namespace RegulatedNoise
                 lvStationToStation_ColumnClick(null, new ColumnClickEventArgs(7));
 
             if (SystemLocations.ContainsKey(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()))
-                lblStationToStationLightYears.Text = "(" +
-                                                 String.Format("{0:0.00}",
-                                                 DistanceBetweenNameAndLocation(
+            {
+                var dist = DistanceBetweenNameAndLocation(
                                                      CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
                                                      SystemLocations[CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()]
-                                                         .Item1)) + " light years each way)";
-            else lblStationToStationLightYears.Text = "(system not recognised)";
+                                                         .Item1);
+                if(dist < double.MaxValue)
+                    lblStationToStationLightYears.Text = "(" +
+                                                     String.Format("{0:0.00}",dist
+                                                     ) + " light years each way)";
+                else lblStationToStationLightYears.Text = "(system(s) not recognised)";
+            }
+            else lblStationToStationLightYears.Text = "(system(s) not recognised)";
         }
 
         private List<ListViewItem> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)

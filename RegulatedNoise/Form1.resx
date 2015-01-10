@@ -1499,7 +1499,9 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.6
+    <value>* Don't crash when calculating distances to systems that we don't know the location of
+
+v1.6
 * Add new OCR Corrections form ("Edit" button on Corrections tab)
 
 v1.5
