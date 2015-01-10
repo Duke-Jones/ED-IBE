@@ -558,7 +558,7 @@ namespace RegulatedNoise
 
             var p = (byte*)(void*)scan0;
 
-            var uiColour = _callingForm.RegulatedNoiseSettings.UiColour;
+            var uiColour = Form1.RegulatedNoiseSettings.UiColour;
             int red = int.Parse(uiColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
             int green = int.Parse(uiColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
             int blue = int.Parse(uiColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);

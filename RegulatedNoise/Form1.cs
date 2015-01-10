@@ -23,13 +23,14 @@ namespace RegulatedNoise
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
-        public RegulatedNoiseSettings RegulatedNoiseSettings;
+        public static RegulatedNoiseSettings RegulatedNoiseSettings;
         public CommandersLog CommandersLog;
         public Dictionary<string, List<CsvRow>> StationDirectory = new Dictionary<string, List<CsvRow>>();
         public Dictionary<string, List<CsvRow>> CommodityDirectory = new Dictionary<string, List<CsvRow>>();
         public Dictionary<string, Tuple<Point3D, List<string>>> SystemLocations = new Dictionary<string, Tuple<Point3D, List<string>>>();
         public List<Station> StationReferenceList = new List<Station>();
         public Station CurrentStation = null;
+        public static GameSettings GameSettings;
 
         private Ocr ocr;
         private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _commandersLogColumnSorter;
@@ -51,12 +52,20 @@ namespace RegulatedNoise
             SetProductPath();
 
             _logger.Log("  - product path set");
+            
+            SetProductAppDataPath();
+
+            _logger.Log("  - product appdata set");
 
             //if (Control.ModifierKeys == Keys.Shift)
 
             InitializeComponent();
 
             _logger.Log("  - initialised component");
+
+            GameSettings = new GameSettings();
+            
+            _logger.Log("  - loaded game settings");
 
             SetListViewColumnsAndSorters();
 
@@ -85,10 +94,6 @@ namespace RegulatedNoise
             LoadCalibration();
 
             _logger.Log("  - created EDDN object");
-
-            CheckAndRequestVerboseLogging();
-
-            _logger.Log("  - set up verbose logging");
 
             UpdateSystemNameFromLogFile();
 
@@ -231,85 +236,6 @@ namespace RegulatedNoise
             }
         }
 
-        private void CheckAndRequestVerboseLogging()
-        {
-            var appConfigPath = RegulatedNoiseSettings.ProductsPath;
-
-            if (Directory.Exists(appConfigPath))
-            {
-                var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
-
-                if (versions.Count == 0)
-                {
-
-                    return;
-                }
-
-                if (versions[0].Contains("FORC-FDEV"))
-                {
-                    appConfigPath = versions[0] + "\\AppConfig.xml";
-
-                    if (File.Exists(appConfigPath))
-                    {
-                        bool foundVerboseLogging = false;
-                        var reader = new StreamReader(File.OpenRead(appConfigPath));
-
-                        while (!reader.EndOfStream)
-                        {
-                            var line = reader.ReadLine();
-                            if (line != null && line.Replace(" ", "").Contains("VerboseLogging=\"1\""))
-                            {
-                                foundVerboseLogging = true;
-                                break;
-                            }
-                        }
-                        reader.Close();
-                        if (!foundVerboseLogging)
-                        {
-                            var setLog =
-                                MessageBox.Show(
-                                    "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
-                                    "Set verbose logging?", MessageBoxButtons.YesNo);
-
-                            if (setLog == DialogResult.Yes)
-                            {
-                                var backupConfig = appConfigPath + ".bak";
-
-                                if (File.Exists(backupConfig))
-                                    File.Delete(backupConfig);
-
-                                File.Copy(appConfigPath, backupConfig);
-
-                                MessageBox.Show("Existing config backed up to .BAK file...");
-
-                                var writer = new StreamWriter(File.OpenWrite(appConfigPath + ".new"));
-                                reader = new StreamReader(File.OpenRead(appConfigPath));
-
-                                while (!reader.EndOfStream)
-                                {
-                                    var s = reader.ReadLine();
-
-                                    if (s != null && s.Contains("<Network"))
-                                        s = s + "\r\nVerboseLogging=\"1\"";
-
-                                    writer.WriteLine(s);
-                                }
-
-                                reader.Close();
-                                writer.Close();
-
-                                File.Delete(appConfigPath);
-                                File.Move(appConfigPath + ".new", appConfigPath);
-
-                                MessageBox.Show(
-                                    "AppConfig.xml updated.  You'll need to restart Elite Dangerous if it's already running.");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private void SetListViewColumnsAndSorters()
         {
             lbPrices.Columns.Add("Commodity Name").Width = 150;
@@ -389,7 +315,6 @@ namespace RegulatedNoise
 
             return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
         }
-
         private string getProductPathManually()
         {
             var dialog = new FolderBrowserDialog { Description = "Please point me to your Frontier 'Products' directory." };
@@ -398,7 +323,6 @@ namespace RegulatedNoise
             {
                 var dialogResult = dialog.ShowDialog();
 
-                List<string> versions = null; //skal vekk
                 if (dialogResult == DialogResult.OK)
                 {
                     if (Path.GetFileName(dialog.SelectedPath) == "Products")
@@ -416,8 +340,8 @@ namespace RegulatedNoise
         private void SetProductPath()
         {
             //Already set, no reason to set it again :)
-            if (RegulatedNoiseSettings.ProductsPath != "") return;
-
+            if (RegulatedNoiseSettings.ProductsPath != "" && RegulatedNoiseSettings.GamePath != "") return;
+            
             //Automatic
             var path = getProductPathAutomatically();
 
@@ -435,19 +359,74 @@ namespace RegulatedNoise
             var b = false;
             while(!b)
             {
-                if (dirs.Any(dir => Path.GetFileName(dir).StartsWith("FORC-FDEV")))
+                var gamedirs = new List<string>();
+                foreach (var dir in dirs)
                 {
-                    b = true;
+                    if (Path.GetFileName(dir).StartsWith("FORC-FDEV"))
+                    {
+                        gamedirs.Add(dir);
+                    }
                 }
-                if (b) continue;
-                    
+
+                if (gamedirs.Count > 0)
+                {
+                    //Get highest Forc-fdev dir.
+                    RegulatedNoiseSettings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
+                    b = true;
+                    continue;
+                }
+                
                 MessageBox.Show("Couldn't find a FORC-FDEV.. Directory in the Frontier Products dir, Please try again");
                 path = getProductPathManually();
                 dirs = Directory.GetDirectories(path);
             }
 
-            //Save
             RegulatedNoiseSettings.ProductsPath = path;
+        }
+        private string getProductAppDataPathAutomatically()
+        {
+            string[] autoSearchdir = { Environment.GetEnvironmentVariable("LOCALAPPDATA") };
+
+            return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier Developments" select Path.Combine(dir, "Elite Dangerous", "Options") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+        }
+        private string getProductAppDataPathManually()
+        {
+            var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory. typically: C:\Users\{username}\AppData\Roaming\Frontier Developments\Elite Dangerous\Options\Graphics" };
+
+            while (true)
+            {
+                var dialogResult = dialog.ShowDialog();
+
+                if (dialogResult == DialogResult.OK)
+                {
+                    if (Path.GetFileName(dialog.SelectedPath) == "Options")
+                    {
+                        return dialog.SelectedPath;
+
+                    }
+                }
+
+                MessageBox.Show(
+                    "Hm, that doesn't seem right, " + dialog.SelectedPath +
+                    " is not the Game Options directory, Please try again", "", MessageBoxButtons.OK);
+            }
+        }
+        private void SetProductAppDataPath()
+        {
+            //Already set, no reason to set it again :)
+            if (RegulatedNoiseSettings.ProductAppData != "") return;
+
+            //Automatic
+            var path = getProductAppDataPathAutomatically();
+
+            //Automatic failed, Ask user to find it manually
+            if (path == null)
+            {
+                MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it. typically: C:\Users\{username}\AppData\Roaming\Frontier Developments\Elite Dangerous\Options\Graphics");
+                path = getProductAppDataPathManually();
+            }
+
+            RegulatedNoiseSettings.ProductAppData = path;
         }
 
         private void LoadSettings()

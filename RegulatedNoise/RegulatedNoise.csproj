@@ -75,6 +75,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\Levenshtein.cs" />
+    <Compile Include="GameSettings.cs" />
     <Compile Include="Help Forms\HelpCommodities.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -8,6 +8,8 @@ namespace RegulatedNoise
     public class RegulatedNoiseSettings
     {
         public string ProductsPath = "";
+        public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
+        public string ProductAppData = ""; //2nd location for game configuration files
         public string WebserverIpAddress = "";
         public bool StartWebserverOnLoad = false;
         public string WebserverBackgroundColor = "#FFFFFF";
