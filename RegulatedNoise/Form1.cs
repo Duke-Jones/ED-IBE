@@ -382,49 +382,72 @@ namespace RegulatedNoise
             lvCommandersLog.ListViewItemSorter = _commandersLogColumnSorter;
         }
 
+        private string getProductPathAutomatically()
+        {
+            string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
+                                             Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
+
+            return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+        }
+
+        private string getProductPathManually()
+        {
+            var dialog = new FolderBrowserDialog { Description = "Please point me to your Frontier 'Products' directory." };
+
+            while (true)
+            {
+                var dialogResult = dialog.ShowDialog();
+
+                List<string> versions = null; //skal vekk
+                if (dialogResult == DialogResult.OK)
+                {
+                    if (Path.GetFileName(dialog.SelectedPath) == "Products")
+                    {
+                        return dialog.SelectedPath;
+                        
+                    }
+                }
+
+                MessageBox.Show(
+                    "Hm, that doesn't seem right, " + dialog.SelectedPath +
+                    " is not the Frontier 'Products' directory, Please try again", "", MessageBoxButtons.OK);
+            }
+        }
         private void SetProductPath()
         {
-            if (RegulatedNoiseSettings.ProductsPath == "")
+            //Already set, no reason to set it again :)
+            if (RegulatedNoiseSettings.ProductsPath != "") return;
+
+            //Automatic
+            var path = getProductPathAutomatically();
+
+            //Automatic failed, Ask user to find it manually
+            if (path == null)
             {
-                MessageBox.Show(
-                    "Please point me to your Frontier Products directory - the one which CONTAINS the FORC-FDEV-... folders.  You only need to do this once.");
-
-                bool escape = false;
-
-                var dialog = new FolderBrowserDialog();
-                do
-                {
-                    dialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
-                                          @"\Frontier_Developments\Products\";
-                    dialog.ShowDialog();
-
-                    var versions =
-                        Directory.GetDirectories(dialog.SelectedPath)
-                            .Where(x => x.Contains("FORC-FDEV"))
-                            .ToList()
-                            .OrderByDescending(x => x)
-                            .ToList();
-
-                    if (versions.Count == 0)
-                    {
-                        var dialogResult2 =
-                            MessageBox.Show(
-                                "Hm, that doesn't seem right, " + dialog.SelectedPath +
-                                " doesn't contain any FORC-FDEV... folders.  Do you want to try again?", "Hm.",
-                                MessageBoxButtons.YesNo);
-                        if (dialogResult2 == DialogResult.No)
-                        {
-                            MessageBox.Show(
-                                "If you change your mind, delete your RegulatedNoiseSettings.xml file and re-run the app, and I'll ask again.  In the meantime you won't get automatic system names.");
-                            escape = true;
-                        }
-                    }
-                    else escape = true;
-                } while (!escape);
-
-                RegulatedNoiseSettings.ProductsPath = dialog.SelectedPath;
+                MessageBox.Show("Automatic discovery of Frontier directory Failed, please point me to your Frontier 'Products' directory.");
+                path = getProductPathManually();
 
             }
+
+            //Verify that path contains FORC-FDEV
+            var dirs = Directory.GetDirectories(path);
+                
+            var b = false;
+            while(!b)
+            {
+                if (dirs.Any(dir => Path.GetFileName(dir).StartsWith("FORC-FDEV")))
+                {
+                    b = true;
+                }
+                if (b) continue;
+                    
+                MessageBox.Show("Couldn't find a FORC-FDEV.. Directory in the Frontier Products dir, Please try again");
+                path = getProductPathManually();
+                dirs = Directory.GetDirectories(path);
+            }
+
+            //Save
+            RegulatedNoiseSettings.ProductsPath = path;
         }
 
         private void LoadSettings()
