@@ -323,8 +323,18 @@ namespace RegulatedNoise
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
                                              Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
 
-            var returnValue = (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
-
+            string returnValue = null;
+            foreach (var directory in autoSearchdir)
+            { 
+                if (directory == null) continue;
+                foreach (var dir in Directory.GetDirectories(directory))
+                {
+                    if (Path.GetFileName(dir) != "Frontier") continue;
+                    var p = Path.Combine(dir, "EDLaunch", "Products");
+                    returnValue = Directory.Exists(p) ? p : null;
+                    break;
+                }
+            }
             if (returnValue != null) return returnValue;
 
             if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
@@ -2281,6 +2291,9 @@ namespace RegulatedNoise
         private bool setUIColourMode = false;
         private void pbCalibrationImage_Click(object sender, EventArgs e)
         {
+            if (pbCalibrationImage.Image == null)
+                return;
+
             var eventArgs = (MouseEventArgs)e;
 
             if (!setUIColourMode)
@@ -3709,8 +3722,23 @@ namespace RegulatedNoise
             lvStationToStationReturn.Sort();
         }
 
-        //
-
-
+        private void btn_autocal_Click(object sender, EventArgs e)
+        {
+            if (GameSettings.Display == null)
+            {
+                MessageBox.Show("Unable to calibrate automatically. Please use the manual calibration tool.");
+                return;
+            }
+            tb_resx.Text = GameSettings.Display.Resolution.X.ToString();
+            tb_resy.Text = GameSettings.Display.Resolution.Y.ToString();
+            
+            lbCalibrationPoints.Items.Clear();
+            var points = new OcrCalibrator().getCalculatedCalibrationPoints(GameSettings.Display.Resolution);
+            foreach (var point in points)
+            {
+                lbCalibrationPoints.Items.Add(point);
+            }
+            SaveCalibration();
+        }
     }
 }

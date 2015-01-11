@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -191,6 +191,10 @@
             this.pbOriginalImage = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tabOCRCalibration = new System.Windows.Forms.TabPage();
+            this.label48 = new System.Windows.Forms.Label();
+            this.tb_resy = new System.Windows.Forms.TextBox();
+            this.tb_resx = new System.Windows.Forms.TextBox();
+            this.btn_autocal = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.pbUiColour = new System.Windows.Forms.PictureBox();
             this.tbUiColour = new System.Windows.Forms.TextBox();
@@ -646,7 +650,7 @@
             this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold);
             this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 0);
             this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(639, 106);
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(641, 106);
             this.lblRegulatedNoise.TabIndex = 2;
             this.lblRegulatedNoise.Text = "RegulatedNoise";
             // 
@@ -814,7 +818,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(168, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(162, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -834,14 +838,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(163, 213);
+            series5.ChartArea = "ChartArea1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(157, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -861,14 +865,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(158, 143);
+            series6.ChartArea = "ChartArea1";
+            series6.Name = "Series1";
+            this.chart2.Series.Add(series6);
+            this.chart2.Size = new System.Drawing.Size(152, 137);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2107,6 +2111,10 @@
             // 
             // tabOCRCalibration
             // 
+            this.tabOCRCalibration.Controls.Add(this.label48);
+            this.tabOCRCalibration.Controls.Add(this.tb_resy);
+            this.tabOCRCalibration.Controls.Add(this.tb_resx);
+            this.tabOCRCalibration.Controls.Add(this.btn_autocal);
             this.tabOCRCalibration.Controls.Add(this.groupBox6);
             this.tabOCRCalibration.Controls.Add(this.button13);
             this.tabOCRCalibration.Controls.Add(this.pbCalibrationInstructions);
@@ -2121,6 +2129,43 @@
             this.tabOCRCalibration.TabIndex = 5;
             this.tabOCRCalibration.Text = "OCR Calibration";
             this.tabOCRCalibration.UseVisualStyleBackColor = true;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(987, 21);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(12, 13);
+            this.label48.TabIndex = 19;
+            this.label48.Text = "x";
+            // 
+            // tb_resy
+            // 
+            this.tb_resy.Location = new System.Drawing.Point(1001, 15);
+            this.tb_resy.MaxLength = 4;
+            this.tb_resy.Name = "tb_resy";
+            this.tb_resy.ReadOnly = true;
+            this.tb_resy.Size = new System.Drawing.Size(38, 20);
+            this.tb_resy.TabIndex = 18;
+            // 
+            // tb_resx
+            // 
+            this.tb_resx.Location = new System.Drawing.Point(947, 15);
+            this.tb_resx.MaxLength = 4;
+            this.tb_resx.Name = "tb_resx";
+            this.tb_resx.ReadOnly = true;
+            this.tb_resx.Size = new System.Drawing.Size(38, 20);
+            this.tb_resx.TabIndex = 17;
+            // 
+            // btn_autocal
+            // 
+            this.btn_autocal.Location = new System.Drawing.Point(676, 12);
+            this.btn_autocal.Name = "btn_autocal";
+            this.btn_autocal.Size = new System.Drawing.Size(261, 23);
+            this.btn_autocal.TabIndex = 16;
+            this.btn_autocal.Text = "Automatic Calibration (Highly Experimental!)";
+            this.btn_autocal.UseVisualStyleBackColor = true;
+            this.btn_autocal.Click += new System.EventHandler(this.btn_autocal_Click);
             // 
             // groupBox6
             // 
@@ -2849,6 +2894,10 @@
         private System.Windows.Forms.CheckBox checkboxPerLightYearRoundTrip;
         private System.Windows.Forms.ListView lvStationToStationReturn;
         private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.TextBox tb_resx;
+        private System.Windows.Forms.Button btn_autocal;
+        private System.Windows.Forms.TextBox tb_resy;
+        private System.Windows.Forms.Label label48;
     }
 }
 

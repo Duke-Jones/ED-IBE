@@ -27,18 +27,6 @@ namespace RegulatedNoise
 
             //Check and Request for Verbose Logging
             CheckAndRequestVerboseLogging();
-            /*watcher.Path = @"C:\Program Files (x86)\Frontier";
-            watcher.Filter = ".";
-            watcher.NotifyFilter = NotifyFilters.LastAccess |
-                         NotifyFilters.LastWrite |
-                         NotifyFilters.FileName |
-                         NotifyFilters.DirectoryName;
-            watcher.IncludeSubdirectories = true;
-
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-
-            watcher.EnableRaisingEvents = true;*/
-/*            */
         }
 
         void CheckAndRequestVerboseLogging()
@@ -106,6 +94,10 @@ namespace RegulatedNoise
         void LoadDisplaySettings()
         {
             var configFile = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
+            if (!File.Exists(configFile))
+            {
+                return;
+            }
             var serializer = new XmlSerializer(typeof(EdDisplayConfig));
             using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -121,7 +113,11 @@ namespace RegulatedNoise
         private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();
         void WatcherDisplaySettings()
         {
-            _displayWatcher.Path = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics");
+            var path = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics");
+            if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "DisplaySettings.xml")))
+                return;
+
+            _displayWatcher.Path = path;
             _displayWatcher.Filter = "DisplaySettings.xml";
             _displayWatcher.NotifyFilter = NotifyFilters.LastWrite;
             _displayWatcher.Changed += LoadDisplaySettings;

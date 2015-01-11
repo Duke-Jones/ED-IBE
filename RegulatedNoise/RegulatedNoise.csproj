@@ -57,7 +57,7 @@
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
     <Compile Include="CommodityDirectory.cs" />
-    <Compile Include="EdDisplayConfig.cs" />
+    <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN.cs" />
     <Compile Include="CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
@@ -72,7 +72,7 @@
     <Compile Include="EditPriceData.Designer.cs">
       <DependentUpon>EditPriceData.cs</DependentUpon>
     </Compile>
-    <Compile Include="EdNetwork.cs" />
+    <Compile Include="Elite Dangerous Specifics\EdNetwork.cs" />
     <Compile Include="Enums and Utility Classes\Hyperlinks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,7 +88,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\Levenshtein.cs" />
-    <Compile Include="GameSettings.cs" />
+    <Compile Include="Elite Dangerous Specifics\GameSettings.cs" />
     <Compile Include="Help Forms\HelpCommodities.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\ListViewItemComparer.cs" />
     <Compile Include="Ocr.cs" />
+    <Compile Include="OcrCalibrator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enums and Utility Classes\SortableBindingList.cs" />
