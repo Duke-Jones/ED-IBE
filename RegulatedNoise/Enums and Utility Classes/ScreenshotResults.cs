@@ -8,5 +8,6 @@ namespace RegulatedNoise
         public Bitmap[,] originalBitmaps;
         public float[,] originalBitmapConfidences;
         public string screenshotName;
+        public string[] rowIds;
     }
 }

@@ -25,15 +25,15 @@ namespace RegulatedNoise
         public PropertyInfo[] LogEventProperties;
         public static RegulatedNoiseSettings RegulatedNoiseSettings;
         public CommandersLog CommandersLog;
-        public Dictionary<string, List<CsvRow>> StationDirectory = new Dictionary<string, List<CsvRow>>();
-        public Dictionary<string, List<CsvRow>> CommodityDirectory = new Dictionary<string, List<CsvRow>>();
+        public ObjectDirectory StationDirectory = new StationDirectory();
+        public ObjectDirectory CommodityDirectory = new CommodityDirectory();
         public Dictionary<string, Tuple<Point3D, List<string>>> SystemLocations = new Dictionary<string, Tuple<Point3D, List<string>>>();
         public List<Station> StationReferenceList = new List<Station>();
         public Station CurrentStation = null;
         public static GameSettings GameSettings;
 
         private Ocr ocr;
-        private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _commandersLogColumnSorter;
+        private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _stationToStationReturnColumnSorter, _commandersLogColumnSorter;
         private Thread _eddnSubscriberThread;
         private FileSystemWatcher _fileSystemWatcher;
         private SingleThreadLogger _logger;
@@ -126,12 +126,15 @@ namespace RegulatedNoise
 
             _logger.Log("  - applied settings");
 
+            if (!Directory.Exists(".//OCR Correction Images"))
+                Directory.CreateDirectory(".//OCR Correction Images");
+
             _logger.Log("Initialisation complete");
         }
 
         private void ImportSystemLocations()
         {
-            var reader = new StreamReader(File.OpenRead(".//elite.json"));
+            var reader = new StreamReader(File.OpenRead(".//Data//elite.json"));
 
             var strContent = reader.ReadToEnd();
 
@@ -182,7 +185,7 @@ namespace RegulatedNoise
 
             Debug.WriteLine(SystemLocations.Count + " systems, "+stationCount+" stations...");
 
-            var csvReader = new StreamReader(File.OpenRead(".//station.csv"));
+            var csvReader = new StreamReader(File.OpenRead(".//Data//station.csv"));
 
             while (!csvReader.EndOfStream)
             {
@@ -269,14 +272,8 @@ namespace RegulatedNoise
             lvAllComms.Columns.Add("Sell Locations");
             lvAllComms.Columns.Add("Difference").Width = 70;
 
-            lvStationToStation.Columns.Add("Commodity Name").Width = 150;
-            lvStationToStation.Columns.Add("Sell Price");
-            lvStationToStation.Columns.Add("Supply");
-            lvStationToStation.Columns.Add("Supply Level");
-            lvStationToStation.Columns.Add("Buy Price");
-            lvStationToStation.Columns.Add("Demand");
-            lvStationToStation.Columns.Add("Demand Level");
-            lvStationToStation.Columns.Add("Difference").Width = 70;
+            AddColumnsToStationToStationListView(lvStationToStation);
+            AddColumnsToStationToStationListView(lvStationToStationReturn);
 
             var c = new ColumnHeader("EventDate") { Text = "EventDate", Name = "EventDate", ImageKey = "EventDate" };
             lvCommandersLog.Columns.Add(c);
@@ -299,13 +296,27 @@ namespace RegulatedNoise
             _commodityColumnSorter = new ListViewColumnSorter(1);
             _allCommodityColumnSorter = new ListViewColumnSorter(2);
             _stationToStationColumnSorter = new ListViewColumnSorter(3);
+            _stationToStationReturnColumnSorter = new ListViewColumnSorter(3);
             _commandersLogColumnSorter = new ListViewColumnSorter(4);
 
             lbPrices.ListViewItemSorter = _stationColumnSorter;
             lbCommodities.ListViewItemSorter = _commodityColumnSorter;
             lvAllComms.ListViewItemSorter = _allCommodityColumnSorter;
             lvStationToStation.ListViewItemSorter = _stationToStationColumnSorter;
+            lvStationToStationReturn.ListViewItemSorter = _stationToStationReturnColumnSorter;
             lvCommandersLog.ListViewItemSorter = _commandersLogColumnSorter;
+        }
+
+        private static void AddColumnsToStationToStationListView(ListView listView)
+        {
+            listView.Columns.Add("Commodity Name").Width = 150;
+            listView.Columns.Add("Sell Price");
+            listView.Columns.Add("Supply");
+            listView.Columns.Add("Supply Level");
+            listView.Columns.Add("Buy Price");
+            listView.Columns.Add("Demand");
+            listView.Columns.Add("Demand Level");
+            listView.Columns.Add("Difference").Width = 70;
         }
 
         private string getProductPathAutomatically()
@@ -313,7 +324,14 @@ namespace RegulatedNoise
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
                                              Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
 
-            return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+            var returnValue = (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier" select Path.Combine(dir, "EDLaunch", "Products") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+
+            if (returnValue != null) return returnValue;
+
+            if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
+                return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
+
+            return null;
         }
         private string getProductPathManually()
         {
@@ -333,8 +351,9 @@ namespace RegulatedNoise
                 }
 
                 MessageBox.Show(
-                    "Hm, that doesn't seem right, " + dialog.SelectedPath +
-                    " is not the Frontier 'Products' directory, Please try again", "", MessageBoxButtons.OK);
+                    "Hm, that doesn't seem right" +
+                    (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
+                + ". Please try again...", "", MessageBoxButtons.OK);
             }
         }
         private void SetProductPath()
@@ -348,7 +367,7 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                MessageBox.Show("Automatic discovery of Frontier directory Failed, please point me to your Frontier 'Products' directory.");
+                MessageBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.");
                 path = getProductPathManually();
 
             }
@@ -376,7 +395,7 @@ namespace RegulatedNoise
                     continue;
                 }
                 
-                MessageBox.Show("Couldn't find a FORC-FDEV.. Directory in the Frontier Products dir, Please try again");
+                MessageBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...");
                 path = getProductPathManually();
                 dirs = Directory.GetDirectories(path);
             }
@@ -391,7 +410,7 @@ namespace RegulatedNoise
         }
         private string getProductAppDataPathManually()
         {
-            var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory. typically: C:\Users\{username}\AppData\Roaming\Frontier Developments\Elite Dangerous\Options\Graphics" };
+            var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory, typically C:\Users\{username}\AppData\{Local or Roaming}\Frontier Developments\Elite Dangerous\Options\Graphics" };
 
             while (true)
             {
@@ -422,7 +441,7 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it. typically: C:\Users\{username}\AppData\Roaming\Frontier Developments\Elite Dangerous\Options\Graphics");
+                MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...");
                 path = getProductAppDataPathManually();
             }
 
@@ -710,18 +729,11 @@ namespace RegulatedNoise
 
         private void bOpen_Click(object sender, EventArgs e)
         {
-            //StationDirectory = new Dictionary<string, List<CsvRow>>();
-            //CommodityDirectory = new Dictionary<string, List<CsvRow>>();
-
-
             OpenFileDialog openFile = new OpenFileDialog();
             openFile.DefaultExt = "csv";
             openFile.Multiselect = true;
             openFile.Filter = "CSV (*.csv)|*.csv";
             openFile.ShowDialog();
-
-
-
 
             if (openFile.FileNames.Length > 0)
             {
@@ -860,7 +872,11 @@ namespace RegulatedNoise
             {
                 _cachedRemoteSystemDistances = new Dictionary<string, double>();
                 _cachedSystemName = localSystem.ToString();
-                _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
+
+                if(SystemLocations.ContainsKey(localSystem.ToUpper()))
+                    _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
+                else
+                    _cachedSystemLocation = null;
             }
 
 
@@ -873,14 +889,14 @@ namespace RegulatedNoise
             }
             else
             {
-                if (!SystemLocations.ContainsKey(remoteSystemName))
+                if (!SystemLocations.ContainsKey(remoteSystemName) || _cachedSystemLocation == null)
                 {
                     dist = double.MaxValue;
                 }
                 else
                 {
                     var currentSystemLocation = _cachedSystemLocation;
-                    dist = DistanceBetweenNameAndLocation(remoteSystemName, currentSystemLocation);
+                    dist = DistanceInLightYears(remoteSystemName, currentSystemLocation);
                     _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
                 }
             }
@@ -889,9 +905,12 @@ namespace RegulatedNoise
             return dist;
         }
 
-        private double DistanceBetweenNameAndLocation(string remoteSystemName, Point3D currentSystemLocation)
+        private double DistanceInLightYears(string remoteSystemName, Point3D currentSystemLocation)
         {
             double dist;
+            if (!SystemLocations.ContainsKey(remoteSystemName))
+                return double.MaxValue;
+
             var remoteSystemLocation = SystemLocations[remoteSystemName].Item1;
 
             var xDelta = currentSystemLocation.X - remoteSystemLocation.X;
@@ -900,6 +919,14 @@ namespace RegulatedNoise
 
             dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
             return dist;
+        }
+
+        private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
+        {
+            if (!SystemLocations.ContainsKey(homeSystemName))
+                return double.MaxValue;
+
+            return DistanceInLightYears(remoteSystemName, SystemLocations[homeSystemName].Item1);
         }
 
         private string SystemToMeasureDistancesFrom()
@@ -1001,6 +1028,8 @@ namespace RegulatedNoise
                     bestBuyPrice != 0 && bestSellPrice != 0 ? (bestSellPrice - bestBuyPrice).ToString(CultureInfo.InvariantCulture) : ""
                 }));
             }
+
+            UpdateStationToStation();
         }
 
         private void PopulateNetworkInterfaces()
@@ -1025,7 +1054,11 @@ namespace RegulatedNoise
         private void cbStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             //
-            lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}",DistanceInLightYears(CombinedNameToSystemName(cbStation.SelectedItem.ToString()))) + " light years)";
+            var dist = DistanceInLightYears(CombinedNameToSystemName(cbStation.SelectedItem.ToString()));
+            if (dist < double.MaxValue)
+                lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
+            else
+                lblLightYearsFromCurrentSystem.Text = "(system location unknown)";
 
             lbPrices.Items.Clear();
             var stationName = (((ComboBox)sender).SelectedItem.ToString());
@@ -1427,7 +1460,8 @@ namespace RegulatedNoise
                     StationName = newStationName,
                     Supply = row.Supply,
                     SupplyLevel = row.SupplyLevel,
-                    SystemName = tbSystemRename.Text
+                    SystemName = tbSystemRename.Text,
+                    SourceFileName = row.SourceFileName
                 };
 
                 newRows.Add(newRow);
@@ -1440,7 +1474,7 @@ namespace RegulatedNoise
                 StationDirectory.Add(newStationName, newRows);
             else StationDirectory[newStationName].AddRange(newRows);
 
-            var newCommodityDirectory = new Dictionary<string, List<CsvRow>>();
+            var newCommodityDirectory = new CommodityDirectory();
 
             foreach (var collectionOfRows in CommodityDirectory)
             {
@@ -1484,7 +1518,7 @@ namespace RegulatedNoise
 
             StationDirectory[newStationName] = newStationDirectory;
 
-            var newCommodityDirectory2 = new Dictionary<string, List<CsvRow>>();
+            var newCommodityDirectory2 = new CommodityDirectory();
 
             for (int i = 0; i < CommodityDirectory.Keys.Count; i++)
             {
@@ -1895,46 +1929,48 @@ namespace RegulatedNoise
             }
         }
 
-        public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string screenshotName);
+        public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName);
 
         int _correctionRow, _correctionColumn;
 
         string[,] _commodityTexts;
         Bitmap[,] _originalBitmaps;
         float[,] _originalBitmapConfidences;
+        string[] _rowIds;
         string _screenshotName;
 
         List<ScreeenshotResults> _screenshotResultsBuffer = new List<ScreeenshotResults>();
         string _csvOutputSoFar;
         List<string> _commoditiesSoFar = new List<string>();
 
-        public void DisplayCommodityResults(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string screenshotName)
+        public void DisplayCommodityResults(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName)
         {
             if (InvokeRequired)
             {
-                Invoke(new DisplayCommodityResultsDelegate(DisplayCommodityResults), s, originalBitmaps, originalBitmapConfidences, screenshotName);
+                Invoke(new DisplayCommodityResultsDelegate(DisplayCommodityResults), s, originalBitmaps, originalBitmapConfidences, rowIds, screenshotName);
                 return;
             }
 
             if (_commodityTexts != null && _correctionColumn < _commodityTexts.GetLength(1)) // there is an existing screenshot being processed...
             {
-                _screenshotResultsBuffer.Add(new ScreeenshotResults { originalBitmapConfidences = originalBitmapConfidences, originalBitmaps = originalBitmaps, s = s, screenshotName = screenshotName });
+                _screenshotResultsBuffer.Add(new ScreeenshotResults { originalBitmapConfidences = originalBitmapConfidences, originalBitmaps = originalBitmaps, s = s, rowIds = rowIds, screenshotName = screenshotName });
                 ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
                 return;
             }
 
             if (originalBitmaps.GetLength(0) != 0)
-                BeginCorrectingScreenshot(s, originalBitmaps, originalBitmapConfidences, screenshotName);
+                BeginCorrectingScreenshot(s, originalBitmaps, originalBitmapConfidences, rowIds, screenshotName);
             else
                 tbCommoditiesOcrOutput.Text = "No rows found...";
         }
 
-        private void BeginCorrectingScreenshot(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string screenshotName)
+        private void BeginCorrectingScreenshot(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName)
         {
             _commodityTexts = s;
             _originalBitmaps = originalBitmaps;
             _originalBitmapConfidences = originalBitmapConfidences;
             _screenshotName = screenshotName;
+            _rowIds = rowIds;
             _correctionColumn = 0;
             _correctionRow = -1;
             bContinueOcr.Text = "Continue";
@@ -2078,7 +2114,7 @@ namespace RegulatedNoise
                         if (cbExtendedInfoInCSV.Checked)
                             finalOutput += Path.GetFileName(_screenshotName) + ";";
 
-                        finalOutput += "\r\n";
+                        finalOutput += _rowIds[row]+"\r\n";
                     }
                 }
 
@@ -2128,7 +2164,7 @@ namespace RegulatedNoise
                     var nextScreenshot = _screenshotResultsBuffer[0];
                     _screenshotResultsBuffer.Remove(nextScreenshot);
                     ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
-                    BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.screenshotName);
+                    BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
                 }
             }
         }
@@ -2670,35 +2706,47 @@ namespace RegulatedNoise
                 return;
 
             lvStationToStation.Items.Clear();
-
+            lvStationToStationReturn.Items.Clear();
 
 
             var stationFrom = (string)(cbStationToStationFrom.SelectedItem);
             var stationTo = (string)(cbStationToStationTo.SelectedItem);
 
             int bestRoundTrip;
-            var resultsOutbound = GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestRoundTrip);
+            var results = GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestRoundTrip);
 
             lblStationToStationMax.Text = bestRoundTrip.ToString();
 
-            if (resultsOutbound != null)
-                foreach (var lvi in resultsOutbound)
+            if (results.Item1 != null)
+                foreach (var lvi in results.Item1)
                     lvStationToStation.Items.Add(lvi);
+
+            if (results.Item2 != null)
+                foreach (var lvi in results.Item2)
+                    lvStationToStationReturn.Items.Add(lvi);
 
             if (_stationToStationColumnSorter.SortColumn != 7)
                 lvStationToStation_ColumnClick(null, new ColumnClickEventArgs(7));
 
+            if (_stationToStationReturnColumnSorter.SortColumn != 7)
+                lvStationToStationReturn_ColumnClick(null, new ColumnClickEventArgs(7));
+
             if (SystemLocations.ContainsKey(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()))
-                lblStationToStationLightYears.Text = "(" +
-                                                 String.Format("{0:0.00}",
-                                                 DistanceBetweenNameAndLocation(
+            {
+                var dist = DistanceInLightYears(
                                                      CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
                                                      SystemLocations[CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()]
-                                                         .Item1)) + " light years each way)";
-            else lblStationToStationLightYears.Text = "(system not recognised)";
+                                                         .Item1);
+                if(dist < double.MaxValue)
+                    lblStationToStationLightYears.Text = "(" +
+                                                     String.Format("{0:0.00}",dist
+                                                     ) + " light years each way)";
+                else lblStationToStationLightYears.Text = "(system(s) not recognised)";
+            }
+            else lblStationToStationLightYears.Text = "(system(s) not recognised)";
         }
 
-        private List<ListViewItem> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
+        private Tuple<List<ListViewItem>,List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
         {
             if (stationFrom == null || stationTo == null) { bestRoundTrip = 0; return null; }
             var resultsOutbound = new List<ListViewItem>();
@@ -2783,7 +2831,7 @@ namespace RegulatedNoise
             var r = resultsReturn.Count > 0 ? resultsReturn.Max(x => int.Parse(x.SubItems[7].Text)) : 0;
 
             bestRoundTrip = q + r;
-            return resultsOutbound;
+            return new Tuple<List<ListViewItem>, List<ListViewItem>>(resultsOutbound, resultsReturn);
         }
 
         #endregion
@@ -2796,11 +2844,11 @@ namespace RegulatedNoise
 
             if (RegulatedNoiseSettings.UseEddnTestSchema)
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.5""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v"+RegulatedNoiseSettings.Version+@"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v1.5""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v"+RegulatedNoiseSettings.Version+@"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
 
 
@@ -3156,6 +3204,9 @@ namespace RegulatedNoise
 
         private void Form_Load(object sender, EventArgs e)
         {
+            RegulatedNoiseSettings.CheckVersion();
+            Text += RegulatedNoiseSettings.Version;
+
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
                  DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
                 (DateTime.Now.Day == 1 && DateTime.Now.Month == 1))
@@ -3424,43 +3475,89 @@ namespace RegulatedNoise
 
         private void button12_Click_2(object sender, EventArgs e)
         {
+            lbAllRoundTrips.Items.Clear();
             int bestRoundTrip = -1;
             string stationA = "", stationB = "";
+            List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
 
             foreach (var a in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
                 foreach (var b in StationDirectory.Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
                 {
                     int bestThisTrip;
                     GetBestRoundTripForTwoStations(a.Key, b.Key, out bestThisTrip);
-                    if (bestThisTrip > bestRoundTrip)
+                    if (bestThisTrip > 0)
                     {
-                        bestRoundTrip = bestThisTrip;
-                        stationA = a.Key;
-                        stationB = b.Key;
-                    }
+                        string key1, key2;
 
+                        if (string.Compare(a.Key, b.Key) < 0)
+                        {
+                            key1 = a.Key;
+                            key2 = b.Key;
+                        }
+                        else
+                        {
+                            key1 = b.Key;
+                            key2 = a.Key;                            
+                        }
+
+                        string credits;
+                        double creditsDouble;
+                        double distance = 1d;
+                        if (checkboxPerLightYearRoundTrip.Checked)
+                        {
+                            distance = 2 * DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
+                            creditsDouble = bestThisTrip / distance;
+                            credits = String.Format("{0:0.000}", creditsDouble / distance) + " Cr/Ly";
+                        }
+                        else
+                        {
+                            creditsDouble = bestThisTrip;
+                            credits = (bestThisTrip + " Cr");
+                        }
+
+                        allRoundTrips.Add(
+                            new Tuple<string, double>(
+                                credits.PadRight(13) + " :" + 
+                                key1
+                                + "..." + 
+                                key2
+                                , creditsDouble));
+
+                        if (bestThisTrip > bestRoundTrip)
+                        {
+                            bestRoundTrip = bestThisTrip;
+                            stationA = a.Key;
+                            stationB = b.Key;
+                        }
+                    }
                 }
 
-            if (bestRoundTrip > 0)
-            {
-                for (int i = 0; i < cbStationToStationFrom.Items.Count; i++)
-                {
-                    if ((string)(cbStationToStationFrom.Items[i]) == stationA)
-                    {
-                        cbStationToStationFrom.SelectedIndex = i;
-                        break;
-                    }
-                }
+            var ordered = allRoundTrips.OrderByDescending(x => x.Item2).Select(x => x.Item1).Distinct().ToList().Cast<object>().ToArray();
 
-                for (int i = 0; i < cbStationToStationTo.Items.Count; i++)
-                {
-                    if ((string)(cbStationToStationTo.Items[i]) == stationB)
-                    {
-                        cbStationToStationTo.SelectedIndex = i;
-                        break;
-                    }
-                }
-            }
+            lbAllRoundTrips.Items.AddRange(ordered);
+            if(lbAllRoundTrips.Items.Count > 0)
+                lbAllRoundTrips.SelectedIndex = 0;
+
+            //if (bestRoundTrip > 0)
+            //{
+            //    for (int i = 0; i < cbStationToStationFrom.Items.Count; i++)
+            //    {
+            //        if ((string)(cbStationToStationFrom.Items[i]) == stationA)
+            //        {
+            //            cbStationToStationFrom.SelectedIndex = i;
+            //            break;
+            //        }
+            //    }
+            //
+            //    for (int i = 0; i < cbStationToStationTo.Items.Count; i++)
+            //    {
+            //        if ((string)(cbStationToStationTo.Items[i]) == stationB)
+            //        {
+            //            cbStationToStationTo.SelectedIndex = i;
+            //            break;
+            //        }
+            //    }
+            //}
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -3525,14 +3622,20 @@ namespace RegulatedNoise
 
         private void button24_Click(object sender, EventArgs e)
         {
-            StationDirectory = PurgeEDDNFromDirectory(StationDirectory);
-            CommodityDirectory = PurgeEDDNFromDirectory(CommodityDirectory);
+            StationDirectory = PurgeEddnFromDirectory(StationDirectory);
+            CommodityDirectory = PurgeEddnFromDirectory(CommodityDirectory);
             SetupGui();
         }
 
-        private static Dictionary<string, List<CsvRow>> PurgeEDDNFromDirectory(Dictionary<string, List<CsvRow>> directory)
+        private static ObjectDirectory PurgeEddnFromDirectory(ObjectDirectory directory)
         {
-            Dictionary<string, List<CsvRow>> newDirectory = new Dictionary<string, List<CsvRow>>();
+            ObjectDirectory newDirectory;
+            
+            if(directory.GetType() == typeof(StationDirectory))
+                newDirectory = new StationDirectory();
+            else
+                newDirectory = new CommodityDirectory();
+
             foreach (var x in directory)
             {
                 var newList = new List<CsvRow>();
@@ -3540,9 +3643,59 @@ namespace RegulatedNoise
                     if (y.SourceFileName != "<From EDDN>")
                         newList.Add(y);
 
-                newDirectory.Add(x.Key, newList);
+                if(newList.Count > 0)
+                    newDirectory.Add(x.Key, newList);
             }
             return newDirectory;
+        }
+
+        private void bEditResults_Click(object sender, EventArgs e)
+        {
+            var f = new EditOcrResults(tbFinalOcrOutput.Text);
+            var q = f.ShowDialog();
+
+            if (q == DialogResult.OK)
+            {
+                tbFinalOcrOutput.Text = f.ReturnValue;
+            }
+        }
+
+        private void lbAllRoundTrips_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var t = lbAllRoundTrips.Text;
+            var fromStation = t.Substring(t.IndexOf(':') + 1);
+            fromStation = fromStation.Substring(0, fromStation.IndexOf("..."));
+            var toStation = t.Substring(t.IndexOf("...") + 3);
+
+            cbStationToStationFrom.Text = fromStation;
+            cbStationToStationTo.Text = toStation;
+            UpdateStationToStation();
+        }
+
+        private void lvStationToStationReturn_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Determine if clicked column is already the column that is being sorted.
+            if (e.Column == _stationToStationReturnColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (_stationToStationReturnColumnSorter.Order == SortOrder.Ascending)
+                {
+                    _stationToStationReturnColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    _stationToStationReturnColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                _stationToStationReturnColumnSorter.SortColumn = e.Column;
+                _stationToStationReturnColumnSorter.Order = e.Column == 7 ? SortOrder.Descending : SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            lvStationToStationReturn.Sort();
         }
 
         //

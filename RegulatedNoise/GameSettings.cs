@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace RegulatedNoise
@@ -18,22 +11,22 @@ namespace RegulatedNoise
     public class GameSettings
     {
         public AppConfig AppConfig;
-        public EDDisplayConfig Display;
+        public EdDisplayConfig Display;
         
         public GameSettings()
         {
             //Load DisplaySettings from AppData
-            loadDisplaySettings();
+            LoadDisplaySettings();
 
             //Load AppConfig
-            loadAppConfig();
+            LoadAppConfig();
 
             //Set up some filewatchers, If user changes config its reflected here
-            watcherDisplaySettings();
-            watcherAppDataSettings(); //Currently disabled as we only check Verbose logging and that cant be changed from the game
+            WatcherDisplaySettings();
+            WatcherAppDataSettings(); //Currently disabled as we only check Verbose logging and that cant be changed from the game
 
             //Check and Request for Verbose Logging
-            checkAndRequestVerboseLogging();
+            CheckAndRequestVerboseLogging();
             /*watcher.Path = @"C:\Program Files (x86)\Frontier";
             watcher.Filter = ".";
             watcher.NotifyFilter = NotifyFilters.LastAccess |
@@ -48,7 +41,7 @@ namespace RegulatedNoise
 /*            */
         }
 
-        void checkAndRequestVerboseLogging()
+        void CheckAndRequestVerboseLogging()
         {
             if (AppConfig.Network.VerboseLogging != 1)
             {
@@ -92,76 +85,59 @@ namespace RegulatedNoise
                 }
 
                 //Update config
-                loadAppConfig();
+                LoadAppConfig();
             }
         }
 
-        void loadAppConfig()
+        void LoadAppConfig()
         {
             var configFile = Path.Combine(Form1.RegulatedNoiseSettings.GamePath, "AppConfig.xml");
             var serializer = new XmlSerializer(typeof (AppConfig));
-            using (var myFileStream = new FileStream(configFile, FileMode.Open))
+            using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 AppConfig = (AppConfig) serializer.Deserialize(myFileStream);    
             }
         }
 
-        void loadDisplaySettings()
+        private void LoadAppConfig(object sender, FileSystemEventArgs e)
+        {
+            LoadAppConfig();
+        }
+
+        void LoadDisplaySettings()
         {
             var configFile = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
-            var serializer = new XmlSerializer(typeof(EDDisplayConfig));
-            using (var myFileStream = new FileStream(configFile, FileMode.Open))
+            var serializer = new XmlSerializer(typeof(EdDisplayConfig));
+            using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                Display = (EDDisplayConfig)serializer.Deserialize(myFileStream);
+                Display = (EdDisplayConfig)serializer.Deserialize(myFileStream);
             }
         }
-       
-        private readonly FileSystemWatcher displayWatcher = new FileSystemWatcher();
-        void watcherDisplaySettings()
-        {
-            displayWatcher.Path = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics");
-            displayWatcher.Filter = "DisplaySettings.xml";
-            displayWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            displayWatcher.Changed += new FileSystemEventHandler(loadDisplaySettings);
-            displayWatcher.EnableRaisingEvents = true;
-        }
-        private readonly FileSystemWatcher appdataWatcher = new FileSystemWatcher();
-        void watcherAppDataSettings()
-        {
-            appdataWatcher.Path = Form1.RegulatedNoiseSettings.GamePath;
-            appdataWatcher.Filter = "AppConfig.xml";
-            appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            appdataWatcher.Changed += new FileSystemEventHandler(loadAppConfig);
-            appdataWatcher.EnableRaisingEvents = false; //Set to TRUE to enable watching!
-        }
-        private void loadAppConfig(object sender, FileSystemEventArgs e)
-        {
-            loadAppConfig();
-        }
-        private void loadDisplaySettings(object sender, FileSystemEventArgs e)
-        {
-            loadDisplaySettings();
-        }
-    }
 
-    [System.Xml.Serialization.XmlRoot("AppConfig")]
-    public class AppConfig
-    {
-         
-        public EDNetwork Network { get; set; }
-    }
+        private void LoadDisplaySettings(object sender, FileSystemEventArgs e)
+        {
+            LoadDisplaySettings();
+        }
 
-    public class EDNetwork
-    {
-        [XmlAttribute("VerboseLogging")]
-        public int VerboseLogging { get; set; }
-    }
+        private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();
+        void WatcherDisplaySettings()
+        {
+            _displayWatcher.Path = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics");
+            _displayWatcher.Filter = "DisplaySettings.xml";
+            _displayWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            _displayWatcher.Changed += LoadDisplaySettings;
+            _displayWatcher.EnableRaisingEvents = true;
+        }
 
-     [System.Xml.Serialization.XmlRoot("DisplayConfig")]
-    public class EDDisplayConfig
-    {
-        public int ScreenWidth { get; set; }
-        public int ScreenHeight { get; set; }
-        public int FullScreen { get; set; }
+        private readonly FileSystemWatcher _appdataWatcher = new FileSystemWatcher();
+        void WatcherAppDataSettings()
+        {
+            _appdataWatcher.Path = Form1.RegulatedNoiseSettings.GamePath;
+            _appdataWatcher.Filter = "AppConfig.xml";
+            _appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            _appdataWatcher.Changed += LoadAppConfig;
+            _appdataWatcher.EnableRaisingEvents = false; //Set to TRUE to enable watching!
+        }
+
     }
 }

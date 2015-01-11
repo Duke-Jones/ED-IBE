@@ -249,6 +249,7 @@ namespace RegulatedNoise
             var commodityColumnText = new string[textRowLocations.Count(), 8]; ;
             var originalBitmaps = new Bitmap[textRowLocations.Count(),8];
             var originalBitmapConfidences = new float[textRowLocations.Count(), 8];
+            var rowIds = new string[textRowLocations.Count()];
 
             var rowCtr = 0;
 
@@ -263,6 +264,13 @@ namespace RegulatedNoise
 
                 if (startRow < 0) startRow = 0;
                 if (heightRow + startRow > bTrimmedContrast.Height) heightRow = bTrimmedContrast.Height - startRow;
+
+                // We'll use this later to identify the right correction image
+                rowIds[rowCtr] = Guid.NewGuid().ToString();
+                using (Bitmap b = Crop(bTrimmedContrast, new Rectangle(0, startRow, bTrimmedContrast.Width, heightRow)))
+                {
+                    b.Save(".//OCR Correction Images//" + rowIds[rowCtr] + ".png");
+                }
 
                 int columnCounter = 0;
                 while (columnCounter < 8)
@@ -298,7 +306,7 @@ namespace RegulatedNoise
                             left = 0; width = _calibrationPoints[3].X - _calibrationPoints[2].X;
                             break;
                     }
-                    var fudgeFactor = _bOriginal.Height*6/1440;
+                    var fudgeFactor = 0;// _bOriginal.Height * 6 / 1440;
                     left = left + fudgeFactor;
                     width = width - fudgeFactor;
 
@@ -429,7 +437,7 @@ namespace RegulatedNoise
             _bOriginal.Dispose();
             _bOriginalClone.Dispose();
             // Send the results for this screenshot back to the Form
-            _callingForm.DisplayCommodityResults(commodityColumnText, originalBitmaps, originalBitmapConfidences, CurrentScreenshot);
+            _callingForm.DisplayCommodityResults(commodityColumnText, originalBitmaps, originalBitmapConfidences, rowIds, CurrentScreenshot);
 
             // ...and if we've got any buffered screenshots waiting to be processed, process the next one
             if (ScreenshotBuffer.Count > 0)
