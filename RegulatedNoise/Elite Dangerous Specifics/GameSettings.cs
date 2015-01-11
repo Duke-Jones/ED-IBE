@@ -27,18 +27,6 @@ namespace RegulatedNoise
 
             //Check and Request for Verbose Logging
             CheckAndRequestVerboseLogging();
-            /*watcher.Path = @"C:\Program Files (x86)\Frontier";
-            watcher.Filter = ".";
-            watcher.NotifyFilter = NotifyFilters.LastAccess |
-                         NotifyFilters.LastWrite |
-                         NotifyFilters.FileName |
-                         NotifyFilters.DirectoryName;
-            watcher.IncludeSubdirectories = true;
-
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-
-            watcher.EnableRaisingEvents = true;*/
-/*            */
         }
 
         void CheckAndRequestVerboseLogging()
@@ -62,7 +50,6 @@ namespace RegulatedNoise
                     doc.Load(appconfig);
                     var ie = doc.SelectNodes("/AppConfig/Network").GetEnumerator();
 
-                    bool exist = false;
                     while (ie.MoveNext())
                     {
                         if ((ie.Current as XmlNode).Attributes["VerboseLogging"] != null)
