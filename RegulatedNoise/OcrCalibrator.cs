@@ -52,24 +52,12 @@ namespace RegulatedNoise
             foreach (var point in _calibrationTemplate)
             {
                 var p = new Point();
-                if (resolution.X > _resolutionTemplate.X)
-                {
-                    //Get percentage increase and update point
-                    var incr = ((((float)(_resolutionTemplate.X - resolution.X)) / resolution.X) * 100) + 100;
-                    p.X = (int)(point.X * incr) / 100;
+                //Get percentage increase/decrease and update point
+                var incr = ((((float)(resolution.X - _resolutionTemplate.X)) / _resolutionTemplate.X) * 100) + 100;
+                p.X = (int)(point.X * incr) / 100;
 
-                    incr = ((((float)(_resolutionTemplate.Y - resolution.Y)) / resolution.Y) * 100) + 100;
-                    p.Y = (int)(point.Y * incr) / 100;
-                }
-                else
-                {
-                    //Get percentage decrease and update point
-                    var incr = ((((float)(resolution.X - _resolutionTemplate.X)) / _resolutionTemplate.X) * 100)+100;
-                    p.X = (int)(point.X * incr) / 100;
-
-                    incr = ((((float)(resolution.Y - _resolutionTemplate.Y)) / _resolutionTemplate.Y) * 100) + 100;
-                    p.Y = (int)(point.Y * incr) / 100;
-                }
+                incr = ((((float)(resolution.Y - _resolutionTemplate.Y)) / _resolutionTemplate.Y) * 100) + 100;
+                p.Y = (int)(point.Y * incr) / 100;
                 calibration.Add(p);
             }
 
