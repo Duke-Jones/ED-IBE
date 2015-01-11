@@ -2023,11 +2023,13 @@ namespace RegulatedNoise
                         foreach (var reference in KnownCommodityNames)
                         {
                             var upperRef = StripPunctuationFromScannedText(reference);
-                            var levenshteinNumber = _levenshtein.LD(upperRef, replacedCamelCase);
+                            var levenshteinNumber = _levenshtein.LD2(upperRef, replacedCamelCase);
+                            //if(levenshteinNumber != _levenshtein.LD(upperRef, replacedCamelCase))
+                            //    Debug.WriteLine("Doh!");
 
                             if (upperRef != lowestMatchingCommodityRef)
                             {
-                                if (levenshteinNumber <= lowestLevenshteinNumber)
+                                if (levenshteinNumber < lowestLevenshteinNumber)
                                 {
                                     nextLowestLevenshteinNumber = lowestLevenshteinNumber;
                                     lowestLevenshteinNumber = levenshteinNumber;
@@ -2040,12 +2042,14 @@ namespace RegulatedNoise
                                 }
                             }
                         }
-
-                        if (lowestLevenshteinNumber + 16 < nextLowestLevenshteinNumber)
+                        if (lowestLevenshteinNumber < 5)
                         {
+                            _originalBitmapConfidences[_correctionRow, _correctionColumn] = .9f;
                             _commodityTexts[_correctionRow, _correctionColumn] = lowestMatchingCommodity;
-                            _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
                         }
+
+                        if (lowestLevenshteinNumber < 5 && lowestLevenshteinNumber + 3 < nextLowestLevenshteinNumber) // INDIUM versus INDITE... could factor length in here
+                            _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
                     }
 
                     if (_commoditiesSoFar.Contains(_commodityTexts[_correctionRow, _correctionColumn]))
@@ -2062,10 +2066,10 @@ namespace RegulatedNoise
                 {
 	                var commodityLevelUpperCase = StripPunctuationFromScannedText(_commodityTexts[_correctionRow, _correctionColumn]);
 
-	                var levenshteinLow = _levenshtein.LD("LOW", commodityLevelUpperCase);
-                    var levenshteinMed = _levenshtein.LD("MED", commodityLevelUpperCase);
-                    var levenshteinHigh = _levenshtein.LD("HIGH", commodityLevelUpperCase);
-                    var levenshteinBlank = _levenshtein.LD("", commodityLevelUpperCase);
+	                var levenshteinLow = _levenshtein.LD2("LOW", commodityLevelUpperCase);
+                    var levenshteinMed = _levenshtein.LD2("MED", commodityLevelUpperCase);
+                    var levenshteinHigh = _levenshtein.LD2("HIGH", commodityLevelUpperCase);
+                    var levenshteinBlank = _levenshtein.LD2("", commodityLevelUpperCase);
 
 	                //Pick the lowest levenshtein number
 	                var lowestLevenshtein = Math.Min(Math.Min(levenshteinLow, levenshteinMed), Math.Min(levenshteinHigh, levenshteinBlank));

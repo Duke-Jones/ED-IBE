@@ -199,14 +199,14 @@ namespace RegulatedNoise
             }
 
             var matchesInStationReferenceList =
-                _callingForm.StationReferenceList.Where(x => x.System == SystemAtTimeOfScreenshot.ToUpper()).OrderBy(x => _levenshtein.LD(headerResult, x.Name)).ToList();
+                _callingForm.StationReferenceList.Where(x => x.System == SystemAtTimeOfScreenshot.ToUpper()).OrderBy(x => _levenshtein.LD2(headerResult, x.Name)).ToList();
 
             var q = _callingForm.StationReferenceList.Where(x => x.Name.Contains("'"));
 
             if(matchesInStationReferenceList.Count > 0)
             {
-                var ld = _levenshtein.LD(headerResult, matchesInStationReferenceList[0].Name.ToUpper());
-                if (ld < 50)
+                var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].Name.ToUpper());
+                if (ld < 5)
                     headerResult = matchesInStationReferenceList[0].Name.ToUpper();
             }
 
