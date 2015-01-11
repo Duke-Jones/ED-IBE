@@ -3713,6 +3713,11 @@ namespace RegulatedNoise
 
         private void btn_autocal_Click(object sender, EventArgs e)
         {
+            if (GameSettings.Display == null)
+            {
+                MessageBox.Show("Unable to calibrate automatically. Please use the manual calibration tool.");
+                return;
+            }
             tb_resx.Text = GameSettings.Display.Resolution.X.ToString();
             tb_resy.Text = GameSettings.Display.Resolution.Y.ToString();
             
