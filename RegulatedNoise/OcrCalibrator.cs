@@ -14,34 +14,63 @@ namespace RegulatedNoise
 
         public OcrCalibrator()
         {
-            _resolutionTemplate.X = 1920;
-            _resolutionTemplate.Y = 1080;
-            
+           //_resolutionTemplate.X = 1920;
+           //_resolutionTemplate.Y = 1080;
+           //
+           //_calibrationTemplate = new Point[12];
+           //_calibrationTemplate[0].X = 80;
+           //_calibrationTemplate[0].Y = 67;
+           //_calibrationTemplate[1].X = 401;
+           //_calibrationTemplate[1].Y = 91;
+           //_calibrationTemplate[2].X = 80;
+           //_calibrationTemplate[2].Y = 249;
+           //_calibrationTemplate[3].X = 439;
+           //_calibrationTemplate[3].Y = 249;
+           //_calibrationTemplate[4].X = 528;
+           //_calibrationTemplate[4].Y = 249;
+           //_calibrationTemplate[5].X = 616;
+           //_calibrationTemplate[5].Y = 249;
+           //_calibrationTemplate[6].X = 708;
+           //_calibrationTemplate[6].Y = 249;
+           //_calibrationTemplate[7].X = 822;
+           //_calibrationTemplate[7].Y = 249;
+           //_calibrationTemplate[8].X = 892;
+           //_calibrationTemplate[8].Y = 249;
+           //_calibrationTemplate[9].X = 1007;
+           //_calibrationTemplate[9].Y = 249;
+           //_calibrationTemplate[10].X = 1093;
+           //_calibrationTemplate[10].Y = 249;
+           //_calibrationTemplate[11].X = 80;
+           //_calibrationTemplate[11].Y = 974;
+
+            _resolutionTemplate.X = 2560;
+            _resolutionTemplate.Y = 1440;
+
             _calibrationTemplate = new Point[12];
-            _calibrationTemplate[0].X = 80;
-            _calibrationTemplate[0].Y = 67;
-            _calibrationTemplate[1].X = 401;
-            _calibrationTemplate[1].Y = 91;
-            _calibrationTemplate[2].X = 80;
-            _calibrationTemplate[2].Y = 249;
-            _calibrationTemplate[3].X = 439;
-            _calibrationTemplate[3].Y = 249;
-            _calibrationTemplate[4].X = 528;
-            _calibrationTemplate[4].Y = 249;
-            _calibrationTemplate[5].X = 616;
-            _calibrationTemplate[5].Y = 249;
-            _calibrationTemplate[6].X = 708;
-            _calibrationTemplate[6].Y = 249;
-            _calibrationTemplate[7].X = 822;
-            _calibrationTemplate[7].Y = 249;
-            _calibrationTemplate[8].X = 892;
-            _calibrationTemplate[8].Y = 249;
-            _calibrationTemplate[9].X = 1007;
-            _calibrationTemplate[9].Y = 249;
-            _calibrationTemplate[10].X = 1093;
-            _calibrationTemplate[10].Y = 249;
-            _calibrationTemplate[11].X = 80;
-            _calibrationTemplate[11].Y = 974;
+            _calibrationTemplate[0].X = 108;
+            _calibrationTemplate[0].Y = 90;
+            _calibrationTemplate[1].X = 600;
+            _calibrationTemplate[1].Y = 126;
+            _calibrationTemplate[2].X = 106;
+            _calibrationTemplate[2].Y = 326;
+            _calibrationTemplate[3].X = 590;
+            _calibrationTemplate[3].Y = 326;
+            _calibrationTemplate[4].X = 706;
+            _calibrationTemplate[4].Y = 326;
+            _calibrationTemplate[5].X = 823;
+            _calibrationTemplate[5].Y = 326;
+            _calibrationTemplate[6].X = 948;
+            _calibrationTemplate[6].Y = 326;
+            _calibrationTemplate[7].X = 1098;
+            _calibrationTemplate[7].Y = 326;
+            _calibrationTemplate[8].X = 1191;
+            _calibrationTemplate[8].Y = 326;
+            _calibrationTemplate[9].X = 1346;
+            _calibrationTemplate[9].Y = 326;
+            _calibrationTemplate[10].X = 1460;
+            _calibrationTemplate[10].Y = 326;
+            _calibrationTemplate[11].X = 109;
+            _calibrationTemplate[11].Y = 1300;
         }
         public Point[] getCalculatedCalibrationPoints(Point resolution)
         {

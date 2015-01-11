@@ -492,6 +492,7 @@ namespace RegulatedNoise
             if (RegulatedNoiseSettings.WebserverForegroundColor != "") tbForegroundColour.Text = RegulatedNoiseSettings.WebserverForegroundColor;
             if (RegulatedNoiseSettings.WebserverBackgroundColor != "") tbBackgroundColour.Text = RegulatedNoiseSettings.WebserverBackgroundColor;
             if (RegulatedNoiseSettings.WebserverIpAddress != "") cbInterfaces.Text = RegulatedNoiseSettings.WebserverIpAddress;
+            cbAutoImport.Checked = RegulatedNoiseSettings.AutoImport;
             ShowSelectedUiColours();
             cbExtendedInfoInCSV.Checked = RegulatedNoiseSettings.IncludeExtendedCSVInfo;
             cbDeleteScreenshotOnImport.Checked = RegulatedNoiseSettings.DeleteScreenshotOnImport;
