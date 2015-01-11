@@ -62,7 +62,6 @@ namespace RegulatedNoise
                     doc.Load(appconfig);
                     var ie = doc.SelectNodes("/AppConfig/Network").GetEnumerator();
 
-                    bool exist = false;
                     while (ie.MoveNext())
                     {
                         if ((ie.Current as XmlNode).Attributes["VerboseLogging"] != null)

@@ -43,32 +43,15 @@ namespace RegulatedNoise
         {
             SystemAtTimeOfScreenshot = systemAtTimeOfScreenshot;
 
-            try
-            { 
-                Debug.WriteLine("Screenshot created: OCR is "+Working);
-                if (Working)
-                {
-                    ScreenshotBuffer.Add(filePath);
-                    return;
-                }
-                Working = true;
-                ProcessNewScreenshot(filePath);
-            }
-            catch (Exception ex)
+            Debug.WriteLine("Screenshot created: OCR is "+Working);
+            if (Working)
             {
-                _logger.Log("Error in ScreenshotCreated:", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
-                if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
-
-                MessageBox.Show(
-                    "Application has encountered an error and will close.\r\n\r\nException details:\r\n\r\n" + ex.Message +
-                    "\r\n\r\nInner exception:\r\n" + ex.InnerException + "\r\nStack:\r\n" + ex.StackTrace);
-
-                Application.Exit();
+                ScreenshotBuffer.Add(filePath);
+                return;
             }
+            Working = true;
+            ProcessNewScreenshot(filePath);
+
         }
 
         private void ProcessNewScreenshot(string screenshot)
@@ -76,32 +59,15 @@ namespace RegulatedNoise
             CurrentScreenshot = screenshot;
             CurrentScreenshotDateTime = File.GetCreationTime(CurrentScreenshot);
 
-            try
-            {
-                if (_bOriginal != null) _bOriginal.Dispose();
-                if (_bOriginalClone != null) _bOriginalClone.Dispose();
+            if (_bOriginal != null) _bOriginal.Dispose();
+            if (_bOriginalClone != null) _bOriginalClone.Dispose();
 
-                // Well, we can get the bitmap without locking its file, like this... maybe it will help 
-                using (Stream s = File.OpenRead(CurrentScreenshot))
-                    _bOriginal = (Bitmap)Bitmap.FromStream(s);
+            // Well, we can get the bitmap without locking its file, like this... maybe it will help 
+            using (Stream s = File.OpenRead(CurrentScreenshot))
+                _bOriginal = (Bitmap)Bitmap.FromStream(s);
 
-                using (Stream s = File.OpenRead(CurrentScreenshot))
-                    _bOriginalClone = (Bitmap)Bitmap.FromStream(s);
-            }
-            catch (Exception ex)
-            {
-                _logger.Log("Error in ProcessNewScreenshot:", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
-                if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
-
-                MessageBox.Show(
-                    "Application has encountered an error and will close.\r\n\r\nException details:\r\n\r\n" + ex.Message +
-                    "\r\n\r\nInner exception:\r\n" + ex.InnerException + "\r\nStack:\r\n" + ex.StackTrace);
-                Application.Exit();
-            }
+            using (Stream s = File.OpenRead(CurrentScreenshot))
+                _bOriginalClone = (Bitmap)Bitmap.FromStream(s);
 
             Bitmap _bAnotherClone = null;
             // I apologise for what comes next.
@@ -450,8 +416,6 @@ namespace RegulatedNoise
             Working = false;
 
             Debug.WriteLine("set to " + Working);
-
-            
         }
 
         private string StripPunctuationFromScannedText(string input)
@@ -476,35 +440,12 @@ namespace RegulatedNoise
         #region Image-Processing Utilities
         public Bitmap Crop(Bitmap b, Rectangle r)
         {
-        // From http://stackoverflow.com/questions/734930/how-to-crop-an-image-using-c
-            int checkpoint = 0;
-            try
-            {
-                checkpoint++;
-                var nb = new Bitmap(r.Width, r.Height);
-                checkpoint++;
-                var g = Graphics.FromImage(nb);
-                checkpoint++;
-                g.DrawImage(b, -r.X, -r.Y);
-                checkpoint++;
-                return nb;
-            }
-            catch (Exception ex)
-            {
-                _logger.Log("Error in Crop:", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
-                if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
-
-                MessageBox.Show(
-                    "Application has encountered an error in Crop() and will close.\r\nWidth = "+r.Width+"; Height = "+r.Height+"; checkpoint = "+checkpoint+"\r\n\r\nException details:\r\n\r\n" + ex.Message +
-                    "\r\n\r\nInner exception:\r\n" + ex.InnerException + "\r\nStack:\r\n" + ex.StackTrace);
-
-                Application.Exit();
-            }
-            return null;
+         // From http://stackoverflow.com/questions/734930/how-to-crop-an-image-using-c
+            
+            var nb = new Bitmap(r.Width, r.Height);
+            var g = Graphics.FromImage(nb);
+            g.DrawImage(b, -r.X, -r.Y);
+            return nb;
         }
 
         #region Deleted but might be useful

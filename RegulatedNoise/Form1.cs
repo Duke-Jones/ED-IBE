@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -40,6 +42,7 @@ namespace RegulatedNoise
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         private Levenshtein _levenshtein = new Levenshtein();
 
+        [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
         {
             _logger = new SingleThreadLogger(ThreadLoggerType.Form);
@@ -170,17 +173,13 @@ namespace RegulatedNoise
                     }
                 }
 
-                try
-                {
+
                     if (!SystemLocations.ContainsKey(systemName.ToUpper()))
-                        SystemLocations.Add(systemName.ToUpper(), new Tuple<Point3D, List<string>>(new Point3D(float.Parse(individualCoords[0], NumberStyles.Any, ci), float.Parse(individualCoords[1], NumberStyles.Any, ci), float.Parse(individualCoords[2], NumberStyles.Any, ci)), stationNames));
-                }
-                catch (Exception)
-                {
-                    _logger.Log("B0rked in ImportSystemLocations -> SystemLocations.Add.  Values are " + individualCoords[0] + " , " + individualCoords[1] + " , " + individualCoords[2] + " , " + systemName);
-                    MessageBox.Show("B0rked in ImportSystemLocations -> SystemLocations.Add.  Values are " + individualCoords[0] + " , " + individualCoords[1] + " , " + individualCoords[2] + " , " + systemName);
-                    throw;
-                }
+                        SystemLocations.Add(systemName.ToUpper(),
+                            new Tuple<Point3D, List<string>>(
+                                new Point3D(float.Parse(individualCoords[0], NumberStyles.Any, ci),
+                                    float.Parse(individualCoords[1], NumberStyles.Any, ci),
+                                    float.Parse(individualCoords[2], NumberStyles.Any, ci)), stationNames));
             }
 
             Debug.WriteLine(SystemLocations.Count + " systems, "+stationCount+" stations...");
@@ -1401,7 +1400,7 @@ namespace RegulatedNoise
         private readonly ToolTip _tooltip2 = new ToolTip();
         #endregion
 
-        void chart1_MouseMove(object sender, MouseEventArgs e)
+        private void chart1_MouseMove(object sender, MouseEventArgs e)
         {
             var pos = e.Location;
             if (_prevPosition.HasValue && pos == _prevPosition.Value)
@@ -1565,7 +1564,8 @@ namespace RegulatedNoise
                 _logger.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
                     _logger.Log(ex.InnerException.ToString(), true);
-                MessageBox.Show("Couldn't start webserver.  You probably need to run the app as Administrator, or maybe something is already using port 8080...?");
+                MessageBox.Show(
+                    "Couldn't start webserver.  Maybe something is already using port 8080...?");
             }
         }
 
@@ -1931,17 +1931,17 @@ namespace RegulatedNoise
 
         public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName);
 
-        int _correctionRow, _correctionColumn;
+        private int _correctionRow, _correctionColumn;
 
-        string[,] _commodityTexts;
-        Bitmap[,] _originalBitmaps;
-        float[,] _originalBitmapConfidences;
-        string[] _rowIds;
-        string _screenshotName;
+        private string[,] _commodityTexts;
+        private Bitmap[,] _originalBitmaps;
+        private float[,] _originalBitmapConfidences;
+        private string[] _rowIds;
+        private string _screenshotName;
 
-        List<ScreeenshotResults> _screenshotResultsBuffer = new List<ScreeenshotResults>();
-        string _csvOutputSoFar;
-        List<string> _commoditiesSoFar = new List<string>();
+        private List<ScreeenshotResults> _screenshotResultsBuffer = new List<ScreeenshotResults>();
+        private string _csvOutputSoFar;
+        private List<string> _commoditiesSoFar = new List<string>();
 
         public void DisplayCommodityResults(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName)
         {
@@ -2173,6 +2173,7 @@ namespace RegulatedNoise
         {
             return _textInfo.ToUpper(input.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
         }
+
         #endregion
 
         #region Generic Delegates
@@ -2470,7 +2471,8 @@ namespace RegulatedNoise
             SetupGui();
         }
 
-        string _oldOcrName;
+        private string _oldOcrName;
+
         private void tbOcrStationName_TextChanged(object sender, EventArgs e)
         {
             if (tbOcrStationName.Text != _oldOcrName && _oldOcrName != null)
@@ -2479,7 +2481,8 @@ namespace RegulatedNoise
             _oldOcrName = tbOcrStationName.Text;
         }
 
-        string _oldOcrSystemName;
+        private string _oldOcrSystemName;
+
         private void tbOcrSystemName_TextChanged(object sender, EventArgs e)
         {
             if (tbOcrSystemName.Text != _oldOcrSystemName && _oldOcrSystemName != null)
@@ -2560,11 +2563,13 @@ namespace RegulatedNoise
 
         #region EDDN Delegates
         private DateTime _lastGuiUpdate;
-        delegate void SetTextCallback(object text);
+
+        private delegate void SetTextCallback(object text);
 
         private bool harvestStations = false;
         private int harvestStationsCount = -1;
         private int harvestCommsCount = -1;
+
         public void OutputEddnRawData(object text)
         {
             if (InvokeRequired)
@@ -2649,7 +2654,9 @@ namespace RegulatedNoise
 
                     TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
                     foreach (var x in StationDirectory.OrderBy(x => x.Key))
-                    { f.WriteLine(x.Key); }
+                    {
+                        f.WriteLine(x.Key);
+                    }
                     f.Close();
                     harvestStationsCount = StationDirectory.Count;
                 }
@@ -2661,14 +2668,17 @@ namespace RegulatedNoise
 
                     TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
                     foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
-                    { f.WriteLine(x.Key); }
+                    {
+                        f.WriteLine(x.Key);
+                    }
                     f.Close();
                     harvestCommsCount = CommodityDirectory.Count;
                 }
             }
         }
 
-        delegate void SetListeningDelegate();
+        private delegate void SetListeningDelegate();
+
         public void SetListening()
         {
             if (tbEDDNOutput.InvokeRequired)
@@ -2933,7 +2943,7 @@ namespace RegulatedNoise
 
         private List<string> _filesFound;
 
-        void DirSearch(string sDir)
+        private void DirSearch(string sDir)
         {
 
             try
@@ -2960,6 +2970,7 @@ namespace RegulatedNoise
         }
 
         private System.Threading.Timer stateTimer;
+
         public void UpdateSystemNameFromLogFile(bool updateCommandersLogUi = true)
         {
             var appConfigPath = RegulatedNoiseSettings.ProductsPath;
