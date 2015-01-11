@@ -73,7 +73,7 @@ namespace RegulatedNoise
                 calibration.Add(p);
             }
 
-            return _calibrationTemplate.ToArray();
+            return calibration.ToArray();
         }
     }
 }
