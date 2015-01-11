@@ -3713,8 +3713,8 @@ namespace RegulatedNoise
 
         private void btn_autocal_Click(object sender, EventArgs e)
         {
-            tb_resy.Text = GameSettings.Display.Resolution.X.ToString();
-            tb_resx.Text = GameSettings.Display.Resolution.Y.ToString();
+            tb_resx.Text = GameSettings.Display.Resolution.X.ToString();
+            tb_resy.Text = GameSettings.Display.Resolution.Y.ToString();
             
             lbCalibrationPoints.Items.Clear();
             var points = new OcrCalibrator().getCalculatedCalibrationPoints(GameSettings.Display.Resolution);
