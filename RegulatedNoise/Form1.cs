@@ -2280,6 +2280,9 @@ namespace RegulatedNoise
         private bool setUIColourMode = false;
         private void pbCalibrationImage_Click(object sender, EventArgs e)
         {
+            if (pbCalibrationImage.Image == null)
+                return;
+
             var eventArgs = (MouseEventArgs)e;
 
             if (!setUIColourMode)
@@ -3698,8 +3701,18 @@ namespace RegulatedNoise
             lvStationToStationReturn.Sort();
         }
 
-        //
-
-
+        private void btn_autocal_Click(object sender, EventArgs e)
+        {
+            tb_resy.Text = GameSettings.Display.Resolution.X.ToString();
+            tb_resx.Text = GameSettings.Display.Resolution.Y.ToString();
+            
+            lbCalibrationPoints.Items.Clear();
+            var points = new OcrCalibrator().getCalculatedCalibrationPoints(GameSettings.Display.Resolution);
+            foreach (var point in points)
+            {
+                lbCalibrationPoints.Items.Add(point);
+            }
+            SaveCalibration();
+        }
     }
 }
