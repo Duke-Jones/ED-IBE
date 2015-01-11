@@ -923,7 +923,6 @@ namespace RegulatedNoise
 
         private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
         {
-            double dist;
             if (!SystemLocations.ContainsKey(homeSystemName))
                 return double.MaxValue;
 

@@ -93,7 +93,7 @@ namespace RegulatedNoise
         {
             var configFile = Path.Combine(Form1.RegulatedNoiseSettings.GamePath, "AppConfig.xml");
             var serializer = new XmlSerializer(typeof (AppConfig));
-            using (var myFileStream = new FileStream(configFile, FileMode.Open))
+            using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 AppConfig = (AppConfig) serializer.Deserialize(myFileStream);    
             }
@@ -108,7 +108,7 @@ namespace RegulatedNoise
         {
             var configFile = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
             var serializer = new XmlSerializer(typeof(EdDisplayConfig));
-            using (var myFileStream = new FileStream(configFile, FileMode.Open))
+            using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 Display = (EdDisplayConfig)serializer.Deserialize(myFileStream);
             }
