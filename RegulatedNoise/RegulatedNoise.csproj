@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\ListViewItemComparer.cs" />
     <Compile Include="Ocr.cs" />
+    <Compile Include="OcrCalibrator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enums and Utility Classes\SortableBindingList.cs" />
