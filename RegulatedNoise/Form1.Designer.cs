@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -650,7 +650,7 @@
             this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold);
             this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 0);
             this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(641, 106);
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(639, 106);
             this.lblRegulatedNoise.TabIndex = 2;
             this.lblRegulatedNoise.Text = "RegulatedNoise";
             // 
@@ -818,7 +818,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(162, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(160, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -838,14 +838,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea5.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea5);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series5.ChartArea = "ChartArea1";
-            series5.Name = "Series1";
-            this.chart1.Series.Add(series5);
-            this.chart1.Size = new System.Drawing.Size(157, 213);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(155, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -865,14 +865,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea6.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea6);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series6.ChartArea = "ChartArea1";
-            series6.Name = "Series1";
-            this.chart2.Series.Add(series6);
-            this.chart2.Size = new System.Drawing.Size(152, 137);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(150, 135);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1326,8 +1326,6 @@
             // 
             // button12
             // 
-            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.button12.Location = new System.Drawing.Point(6, 19);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(117, 23);

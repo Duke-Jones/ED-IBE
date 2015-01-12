@@ -1499,7 +1499,21 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.71
+    <value>v1.73
+* Update Station.csv and Elite.json.
+* Swap the Levenshtein algorithm for one that works (!) and tweak parameters it compares to
+* Fix button on station-to-station tab
+
+v1.72
+* Include MRmP's (experimental) automatic calibration.  Please feed back to the forum or GitHub if this works well - or not - for your resolution.  Likely will not work at all if you have changed your FOV settings.
+* Crashes now generate a RegulatedNoiseDump.dmp file.  Passing this to the developers is INCREDIBLY helpful in fixing the problems.
+* Fix auto-import checkbox not set on load
+* capture some game settings e.g. resolution
+* fix automatic directory detection on 32-bit
+* fix can't start without DisplaySettings.xml
+
+
+v1.71
 * Fix RegulatedNoise crash on Elite Dangerous startup
 * Fix version history
 
