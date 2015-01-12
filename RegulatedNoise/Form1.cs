@@ -2601,68 +2601,10 @@ namespace RegulatedNoise
 
                 if (checkboxImportEDDN.Checked)
                 {
-                    string txt = text.ToString();
-                    // .. we're here because we've received some data from EDDN
-
-                    // ReSharper disable StringIndexOfIsCultureSpecific.1
-                    var headerRawStart = txt.IndexOf(@"""header""") + 12;
-                    var headerRawLength = txt.Substring(headerRawStart).IndexOf("}");
-                    var headerRawData = txt.Substring(headerRawStart, headerRawLength);
-
-                    var messageRawStart = txt.IndexOf(@"""message"":") + 12;
-                    var messageRawLength = txt.Substring(messageRawStart).IndexOf("}");
-                    var messageRawData = txt.Substring(messageRawStart, messageRawLength);
-                    // ReSharper restore StringIndexOfIsCultureSpecific.1
-                    var headerRawPairs = headerRawData.Replace(@"""", "").Split(',');
-                    var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
-
                     var headerDictionary = new Dictionary<string, string>();
                     var messageDictionary = new Dictionary<string, string>();
 
-                    foreach (var rawHeaderPair in headerRawPairs)
-                    {
-                        var splitPair = new string[2];
-                        splitPair[0] = rawHeaderPair.Substring(0, rawHeaderPair.IndexOf(':'));
-                        splitPair[1] = rawHeaderPair.Substring(splitPair[0].Length + 1);
-                        if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
-                        if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
-                        headerDictionary.Add(splitPair[0], splitPair[1]);
-                    }
-
-                    foreach (var rawMessagePair in messageRawPairs)
-                    {
-                        var splitPair = new string[2];
-                        splitPair[0] = rawMessagePair.Substring(0, rawMessagePair.IndexOf(':'));
-                        splitPair[1] = rawMessagePair.Substring(splitPair[0].Length + 1);
-                        if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
-                        if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
-                        messageDictionary.Add(splitPair[0], splitPair[1]);
-                    }
-
-                    //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
-                    if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
-                    {
-
-                        string csvFormatted = messageDictionary["systemName"] + ";" +
-                                              messageDictionary["stationName"] + ";" +
-                                              messageDictionary["itemName"] + ";" +
-                                              messageDictionary["sellPrice"] + ";" +
-                                              messageDictionary["buyPrice"] + ";" +
-                                              messageDictionary["demand"] + ";" +
-                                              ";" +
-                                              messageDictionary["stationStock"] + ";" +
-                                              ";" +
-                                              messageDictionary["timestamp"] + ";"
-                                              +
-                                              "<From EDDN>" + ";";
-                        ImportCsvString(csvFormatted);
-
-                        if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
-                        {
-                            SetupGui();
-                            _lastGuiUpdate = DateTime.Now;
-                        }
-                    }
+                    ParseEddnJson(text, headerDictionary, messageDictionary);
                 }
 
                 if (harvestStations && StationDirectory.Count > harvestStationsCount)
@@ -2693,6 +2635,77 @@ namespace RegulatedNoise
                     harvestCommsCount = CommodityDirectory.Count;
                 }
             }
+        }
+
+        private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, Dictionary<string, string> messageDictionary)
+        {
+            string txt = text.ToString();
+            // .. we're here because we've received some data from EDDN
+
+            if(txt!="")
+                try
+                {
+                    // ReSharper disable StringIndexOfIsCultureSpecific.1
+                    var headerRawStart = txt.IndexOf(@"""header""") + 12;
+                    var headerRawLength = txt.Substring(headerRawStart).IndexOf("}");
+                    var headerRawData = txt.Substring(headerRawStart, headerRawLength);
+
+                    var messageRawStart = txt.IndexOf(@"""message"":") + 12;
+                    var messageRawLength = txt.Substring(messageRawStart).IndexOf("}");
+                    var messageRawData = txt.Substring(messageRawStart, messageRawLength);
+                    // ReSharper restore StringIndexOfIsCultureSpecific.1
+                    var headerRawPairs = headerRawData.Replace(@"""", "").Split(',');
+                    var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
+
+
+                    foreach (var rawHeaderPair in headerRawPairs)
+                    {
+                        var splitPair = new string[2];
+                        splitPair[0] = rawHeaderPair.Substring(0, rawHeaderPair.IndexOf(':'));
+                        splitPair[1] = rawHeaderPair.Substring(splitPair[0].Length + 1);
+                        if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
+                        if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
+                        headerDictionary.Add(splitPair[0], splitPair[1]);
+                    }
+
+                    foreach (var rawMessagePair in messageRawPairs)
+                    {
+                        var splitPair = new string[2];
+                        splitPair[0] = rawMessagePair.Substring(0, rawMessagePair.IndexOf(':'));
+                        splitPair[1] = rawMessagePair.Substring(splitPair[0].Length + 1);
+                        if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
+                        if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
+                        messageDictionary.Add(splitPair[0], splitPair[1]);
+                    }
+
+                    //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
+                    if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                    {
+                        string csvFormatted = messageDictionary["systemName"] + ";" +
+                                              messageDictionary["stationName"] + ";" +
+                                              messageDictionary["itemName"] + ";" +
+                                              messageDictionary["sellPrice"] + ";" +
+                                              messageDictionary["buyPrice"] + ";" +
+                                              messageDictionary["demand"] + ";" +
+                                              ";" +
+                                              messageDictionary["stationStock"] + ";" +
+                                              ";" +
+                                              messageDictionary["timestamp"] + ";"
+                                              +
+                                              "<From EDDN>" + ";";
+                        ImportCsvString(csvFormatted);
+
+                        if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
+                        {
+                            SetupGui();
+                            _lastGuiUpdate = DateTime.Now;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    tbEDDNOutput.Text = "Couldn't parse JSON!\r\n\r\n" + tbEDDNOutput.Text;
+                }
         }
 
         private delegate void SetListeningDelegate();
