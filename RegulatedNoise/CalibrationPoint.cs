@@ -8,8 +8,8 @@ namespace RegulatedNoise
         public CalibrationPoint(int i, Point position)
         {
             Hitbox = new Rectangle(position.X - Offset.X, position.Y - Offset.Y, HitboxSize.X, HitboxSize.Y);
-            ID = i;
-            Description = _calibrationDescriptions[i];
+            Id = i;
+            Description = CalibrationDescriptions[i];
             Example = new Bitmap("Calibration Examples\\" + (i+1) + ".png");
         }
 
@@ -38,25 +38,25 @@ namespace RegulatedNoise
             get { return new Point(HitboxSize.X / 2, HitboxSize.Y/2); }
         }
 
-        public void setPosition(Point pos)
+        public void SetPosition(Point pos)
         {
             Hitbox = new Rectangle(pos.X, pos.Y, Hitbox.Width, Hitbox.Height);
         }
 
-        public void setX(int x)
+        public void SetX(int x)
         {
             Hitbox = new Rectangle(x, Hitbox.Y, Hitbox.Width, Hitbox.Height);
         }
-        public void setY(int y)
+        public void SetY(int y)
         {
             Hitbox = new Rectangle(Hitbox.X, y, Hitbox.Width, Hitbox.Height);
         }
 
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Description { get; set; }
         public Bitmap Example { get; set; }
 
-        public readonly List<string> _calibrationDescriptions = new List<string>{
+        public readonly List<string> CalibrationDescriptions = new List<string>{
             "Select just to the top-left of the Station Name.",
             "Select to the bottom-right of the Station Name.  Don't worry if it's a short station name, we'll compensate for that.",
             "Select just to the bottom-left of the dividing line between the column headers and the commodities",

@@ -102,7 +102,7 @@ namespace RegulatedNoise
             OcrCalibratorTabPage.Controls.Add(oct);
             tabControl3.Controls.Add(OcrCalibratorTabPage);
 
-            _logger.Log("  - initiated Ocr Calibrator");
+            _logger.Log("  - initialised Ocr Calibrator");
 
             _logger.Log("  - created EDDN object");
 
@@ -1723,7 +1723,7 @@ namespace RegulatedNoise
 
         private void button7_Click(object sender, EventArgs e)
         {
-            if (OcrCalibrator.calibrationBoxes == null || OcrCalibrator.calibrationBoxes.Count < 10)
+            if (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 10)
             {
                 MessageBox.Show("You need to calibrate first.  Go to the OCR Calibration tab to do so...");
                 return;
@@ -1776,7 +1776,7 @@ namespace RegulatedNoise
                 Point[] returnValue = new Point[12];
 
                 int ctr = 0;
-                foreach (CalibrationPoint o in Form1.OcrCalibrator.calibrationBoxes)
+                foreach (CalibrationPoint o in Form1.OcrCalibrator.CalibrationBoxes)
                 {
                     returnValue[ctr] = ((Point)o.Position);
                     ctr++;

@@ -420,7 +420,7 @@ namespace RegulatedNoise
 
         private string StripPunctuationFromScannedText(string input)
         {
-            return _textInfo.ToUpper(input.Replace("\n\n", "").Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
+            return _textInfo.ToUpper(input.Replace("\n\n", "").Replace("-", "").Replace(".", "").Replace(",", ""));
         }
 
         private static string AnalyseFrameUsingTesseract(Bitmap c1, TesseractEngine engine, out float cf1)
@@ -441,7 +441,8 @@ namespace RegulatedNoise
         public Bitmap Crop(Bitmap b, Rectangle r)
         {
          // From http://stackoverflow.com/questions/734930/how-to-crop-an-image-using-c
-            
+            if (r.Width < 1 || r.Height < 1)
+                Debug.WriteLine("Yikes!");
             var nb = new Bitmap(r.Width, r.Height);
             var g = Graphics.FromImage(nb);
             g.DrawImage(b, -r.X, -r.Y);
