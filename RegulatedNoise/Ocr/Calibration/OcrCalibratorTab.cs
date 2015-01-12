@@ -318,6 +318,7 @@ namespace RegulatedNoise
                 DrawCalibrationPoints(calibrations);
                 FillRawData();
                 pb_calibratorBox.Refresh();
+                Form1.OcrCalibrator.SaveCalibration();
                 return;
             }
 
