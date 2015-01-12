@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="CalibrationPoint.cs" />
     <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN.cs" />
@@ -103,7 +104,13 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\ListViewItemComparer.cs" />
     <Compile Include="Ocr.cs" />
-    <Compile Include="OcrCalibrator.cs" />
+    <Compile Include="Ocr\Calibration\OcrCalibrator.cs" />
+    <Compile Include="Ocr\Calibration\OcrCalibratorTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Ocr\Calibration\OcrCalibratorTab.Designer.cs">
+      <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enums and Utility Classes\SortableBindingList.cs" />
@@ -126,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Help Forms\HelpOCR.resx">
       <DependentUpon>HelpOCR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ocr\Calibration\OcrCalibratorTab.resx">
+      <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

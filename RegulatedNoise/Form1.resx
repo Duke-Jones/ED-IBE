@@ -129,7 +129,7 @@
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAOUAAAD5CAIAAABXv2WhAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAA/7JJREFUeF7s/eVjW1m67ovWhtVdldgWywxx4hgFFjPLki0zhmM7ZpBFZoc5jtmW
+        vAAADrwBlbxySQAA/7JJREFUeF7s/eVjW1m67ovWhtVdldgWywxx4hgFFjPLki0zhmM7ZpBFZoc5jtmW
         LCYzhqHCXFVd1bx67X0+nT/lvmPKcaUL1mq85+57evTTs4ampgzxT8983jHGnPoM/89qOBwh5q8SvGTn
         pf9q/2o/0/5ZvAJ/MeSoaPKev1BwMJ6II6BGxOMJPxbsJxJJP9bH4//V/l/R/om84khRMQjEv0hw8Ce8
         /oQIBKCT/GPB/n/x+v+e9k/MA0RCDIkQ/RcKDiYQkIv+i9d/tf+k/bN4JeDwZByBgsP/hYKDiRFc/8Xr
@@ -1634,7 +1634,7 @@ v0.8:
   <data name="bShowStationRestrictionAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
         NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
         wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
         XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
@@ -1645,7 +1645,7 @@ v0.8:
   <data name="bShowStationAtStarchartDotInfo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
         NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
         wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
         XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
@@ -1656,7 +1656,7 @@ v0.8:
   <data name="bShowStationToStationRouteAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
         NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
         wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
         XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
