@@ -1,48 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RegulatedNoise
 {
-    class OcrCalibrator
+    public class OcrCalibrator
     {
         private readonly Point[] _calibrationTemplate;
         private readonly Point _resolutionTemplate;
 
+        public List<CalibrationPoint> calibrationBoxes;
+
+        public void SaveCalibration()
+        {
+            if (File.Exists("Calibration.txt"))
+                File.Delete("Calibration.txt");
+
+            using (var writer = new StreamWriter(File.OpenWrite("Calibration.txt")))
+            {
+                foreach (var calibrationPoint in calibrationBoxes)
+                {
+                    writer.Write(calibrationPoint.Position.X + ";" + calibrationPoint.Position.Y + ";");
+                }
+
+            }
+        }
+        public void LoadCalibration()
+        {
+            if (!File.Exists("Calibration.txt")) return;
+
+            using (var reader = new StreamReader(File.OpenRead("Calibration.txt")))
+            {
+                var readLine = reader.ReadLine();
+                if (readLine == null) return;
+                var coords = readLine.Split(';');
+
+                if (calibrationBoxes == null)
+                    calibrationBoxes = new List<CalibrationPoint>();
+
+                calibrationBoxes.Clear();
+                if (coords.GetLength(0) > 23) // new calibration
+                {
+                    for (var i = 0; i < 12; i++)
+                    {
+                        var r = new CalibrationPoint(i, new Point(int.Parse(coords[i * 2]), int.Parse(coords[i * 2 + 1])));
+                        calibrationBoxes.Add(r);
+
+                    }
+                }
+            }
+        }
+
         public OcrCalibrator()
         {
-           //_resolutionTemplate.X = 1920;
-           //_resolutionTemplate.Y = 1080;
-           //
-           //_calibrationTemplate = new Point[12];
-           //_calibrationTemplate[0].X = 80;
-           //_calibrationTemplate[0].Y = 67;
-           //_calibrationTemplate[1].X = 401;
-           //_calibrationTemplate[1].Y = 91;
-           //_calibrationTemplate[2].X = 80;
-           //_calibrationTemplate[2].Y = 249;
-           //_calibrationTemplate[3].X = 439;
-           //_calibrationTemplate[3].Y = 249;
-           //_calibrationTemplate[4].X = 528;
-           //_calibrationTemplate[4].Y = 249;
-           //_calibrationTemplate[5].X = 616;
-           //_calibrationTemplate[5].Y = 249;
-           //_calibrationTemplate[6].X = 708;
-           //_calibrationTemplate[6].Y = 249;
-           //_calibrationTemplate[7].X = 822;
-           //_calibrationTemplate[7].Y = 249;
-           //_calibrationTemplate[8].X = 892;
-           //_calibrationTemplate[8].Y = 249;
-           //_calibrationTemplate[9].X = 1007;
-           //_calibrationTemplate[9].Y = 249;
-           //_calibrationTemplate[10].X = 1093;
-           //_calibrationTemplate[10].Y = 249;
-           //_calibrationTemplate[11].X = 80;
-           //_calibrationTemplate[11].Y = 974;
-
             _resolutionTemplate.X = 2560;
             _resolutionTemplate.Y = 1440;
 

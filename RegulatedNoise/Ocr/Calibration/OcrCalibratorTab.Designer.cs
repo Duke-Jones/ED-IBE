@@ -1,0 +1,248 @@
+﻿namespace RegulatedNoise
+{
+    partial class OcrCalibratorTab
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.btn_calibrate = new System.Windows.Forms.Button();
+            this.pb_calibratorBox = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tb_resolution = new System.Windows.Forms.TextBox();
+            this.tb_fov = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pl_calibrationWindow = new System.Windows.Forms.Panel();
+            this.tb_description = new System.Windows.Forms.TextBox();
+            this.pb_example = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tb_rawdata = new System.Windows.Forms.TextBox();
+            this.pb_uicolor = new System.Windows.Forms.PictureBox();
+            this.tb_uicolor = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_calibratorBox)).BeginInit();
+            this.pl_calibrationWindow.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_example)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_uicolor)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // btn_calibrate
+            // 
+            this.btn_calibrate.Location = new System.Drawing.Point(4, 4);
+            this.btn_calibrate.Name = "btn_calibrate";
+            this.btn_calibrate.Size = new System.Drawing.Size(185, 23);
+            this.btn_calibrate.TabIndex = 0;
+            this.btn_calibrate.Text = "Calibrate!";
+            this.btn_calibrate.UseVisualStyleBackColor = true;
+            this.btn_calibrate.Click += new System.EventHandler(this.btn_calibrate_Click);
+            // 
+            // pb_calibratorBox
+            // 
+            this.pb_calibratorBox.Location = new System.Drawing.Point(0, 0);
+            this.pb_calibratorBox.Name = "pb_calibratorBox";
+            this.pb_calibratorBox.Size = new System.Drawing.Size(823, 468);
+            this.pb_calibratorBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_calibratorBox.TabIndex = 1;
+            this.pb_calibratorBox.TabStop = false;
+            this.pb_calibratorBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pb_calibratorBox_Paint);
+            this.pb_calibratorBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_calibratorBox_MouseDown);
+            this.pb_calibratorBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_calibratorBox_MouseMove);
+            this.pb_calibratorBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_calibratorBox_MouseUp);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(197, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Resolution:";
+            // 
+            // tb_resolution
+            // 
+            this.tb_resolution.Location = new System.Drawing.Point(263, 6);
+            this.tb_resolution.Name = "tb_resolution";
+            this.tb_resolution.ReadOnly = true;
+            this.tb_resolution.Size = new System.Drawing.Size(75, 20);
+            this.tb_resolution.TabIndex = 3;
+            this.tb_resolution.Text = "1920x1080";
+            this.tb_resolution.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tb_fov
+            // 
+            this.tb_fov.Enabled = false;
+            this.tb_fov.Location = new System.Drawing.Point(381, 6);
+            this.tb_fov.Name = "tb_fov";
+            this.tb_fov.ReadOnly = true;
+            this.tb_fov.Size = new System.Drawing.Size(75, 20);
+            this.tb_fov.TabIndex = 5;
+            this.tb_fov.Text = "---";
+            this.tb_fov.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Enabled = false;
+            this.label2.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label2.Location = new System.Drawing.Point(344, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "FOV:";
+            // 
+            // pl_calibrationWindow
+            // 
+            this.pl_calibrationWindow.AutoScroll = true;
+            this.pl_calibrationWindow.Controls.Add(this.pb_calibratorBox);
+            this.pl_calibrationWindow.Location = new System.Drawing.Point(4, 36);
+            this.pl_calibrationWindow.Name = "pl_calibrationWindow";
+            this.pl_calibrationWindow.Size = new System.Drawing.Size(823, 468);
+            this.pl_calibrationWindow.TabIndex = 6;
+            // 
+            // tb_description
+            // 
+            this.tb_description.Location = new System.Drawing.Point(833, 212);
+            this.tb_description.Multiline = true;
+            this.tb_description.Name = "tb_description";
+            this.tb_description.ReadOnly = true;
+            this.tb_description.Size = new System.Drawing.Size(207, 81);
+            this.tb_description.TabIndex = 7;
+            // 
+            // pb_example
+            // 
+            this.pb_example.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pb_example.Location = new System.Drawing.Point(833, 36);
+            this.pb_example.Name = "pb_example";
+            this.pb_example.Size = new System.Drawing.Size(207, 170);
+            this.pb_example.TabIndex = 8;
+            this.pb_example.TabStop = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(937, 313);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Rawdata:";
+            // 
+            // tb_rawdata
+            // 
+            this.tb_rawdata.Location = new System.Drawing.Point(940, 332);
+            this.tb_rawdata.Multiline = true;
+            this.tb_rawdata.Name = "tb_rawdata";
+            this.tb_rawdata.ReadOnly = true;
+            this.tb_rawdata.Size = new System.Drawing.Size(100, 169);
+            this.tb_rawdata.TabIndex = 10;
+            // 
+            // pb_uicolor
+            // 
+            this.pb_uicolor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pb_uicolor.Location = new System.Drawing.Point(833, 332);
+            this.pb_uicolor.Name = "pb_uicolor";
+            this.pb_uicolor.Size = new System.Drawing.Size(101, 142);
+            this.pb_uicolor.TabIndex = 11;
+            this.pb_uicolor.TabStop = false;
+            // 
+            // tb_uicolor
+            // 
+            this.tb_uicolor.Location = new System.Drawing.Point(834, 480);
+            this.tb_uicolor.Name = "tb_uicolor";
+            this.tb_uicolor.Size = new System.Drawing.Size(100, 20);
+            this.tb_uicolor.TabIndex = 12;
+            this.tb_uicolor.TextChanged += new System.EventHandler(this.tb_uicolor_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(834, 313);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(48, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "UI Color:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(479, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(187, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "The Calibration is saved automatically!";
+            // 
+            // OcrCalibratorTab
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Window;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.tb_uicolor);
+            this.Controls.Add(this.pb_uicolor);
+            this.Controls.Add(this.tb_rawdata);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.pb_example);
+            this.Controls.Add(this.tb_description);
+            this.Controls.Add(this.pl_calibrationWindow);
+            this.Controls.Add(this.tb_fov);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.tb_resolution);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btn_calibrate);
+            this.Name = "OcrCalibratorTab";
+            this.Size = new System.Drawing.Size(1047, 504);
+            this.Load += new System.EventHandler(this.OcrCalibratorTab_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pb_calibratorBox)).EndInit();
+            this.pl_calibrationWindow.ResumeLayout(false);
+            this.pl_calibrationWindow.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_example)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_uicolor)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button btn_calibrate;
+        private System.Windows.Forms.PictureBox pb_calibratorBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tb_resolution;
+        private System.Windows.Forms.TextBox tb_fov;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel pl_calibrationWindow;
+        private System.Windows.Forms.TextBox tb_description;
+        private System.Windows.Forms.PictureBox pb_example;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tb_rawdata;
+        private System.Windows.Forms.PictureBox pb_uicolor;
+        private System.Windows.Forms.TextBox tb_uicolor;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+
+
+    }
+}

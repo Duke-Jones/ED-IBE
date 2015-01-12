@@ -156,57 +156,6 @@
             this.button9 = new System.Windows.Forms.Button();
             this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker();
             this.tabOCRGroup = new System.Windows.Forms.TabPage();
-            this.tabControl3 = new System.Windows.Forms.TabControl();
-            this.tabOCR = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.bEditResults = new System.Windows.Forms.Button();
-            this.cbAutoImport = new System.Windows.Forms.CheckBox();
-            this.cbUseEddnTestSchema = new System.Windows.Forms.CheckBox();
-            this.cbDeleteScreenshotOnImport = new System.Windows.Forms.CheckBox();
-            this.cbStartOCROnLoad = new System.Windows.Forms.CheckBox();
-            this.cbExtendedInfoInCSV = new System.Windows.Forms.CheckBox();
-            this.button18 = new System.Windows.Forms.Button();
-            this.label36 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.tbUsername = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.cbPostOnImport = new System.Windows.Forms.CheckBox();
-            this.tbOcrSystemName = new System.Windows.Forms.TextBox();
-            this.tbFinalOcrOutput = new System.Windows.Forms.TextBox();
-            this.bContinueOcr = new System.Windows.Forms.Button();
-            this.tbConfidence = new System.Windows.Forms.TextBox();
-            this.tbCommoditiesOcrOutput = new System.Windows.Forms.TextBox();
-            this.pbOcrCurrent = new System.Windows.Forms.PictureBox();
-            this.tbOcrStationName = new System.Windows.Forms.TextBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.lblScreenshotsQueued = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
-            this.pbStation = new System.Windows.Forms.PictureBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.pbTrimmed = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pbOriginalImage = new System.Windows.Forms.PictureBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.tabOCRCalibration = new System.Windows.Forms.TabPage();
-            this.label48 = new System.Windows.Forms.Label();
-            this.tb_resy = new System.Windows.Forms.TextBox();
-            this.tb_resx = new System.Windows.Forms.TextBox();
-            this.btn_autocal = new System.Windows.Forms.Button();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.pbUiColour = new System.Windows.Forms.PictureBox();
-            this.tbUiColour = new System.Windows.Forms.TextBox();
-            this.button14 = new System.Windows.Forms.Button();
-            this.button13 = new System.Windows.Forms.Button();
-            this.pbCalibrationInstructions = new System.Windows.Forms.PictureBox();
-            this.tbCalibrationInstructions = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pbCalibrationImage = new System.Windows.Forms.PictureBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.lbCalibrationPoints = new System.Windows.Forms.ListBox();
             this.tabWebserver = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbStartWebserverOnLoad = new System.Windows.Forms.CheckBox();
@@ -238,6 +187,40 @@
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.tabOCR = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.pbOriginalImage = new System.Windows.Forms.PictureBox();
+            this.pbTrimmed = new System.Windows.Forms.PictureBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.pbStation = new System.Windows.Forms.PictureBox();
+            this.button7 = new System.Windows.Forms.Button();
+            this.lblScreenshotsQueued = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.tbOcrStationName = new System.Windows.Forms.TextBox();
+            this.pbOcrCurrent = new System.Windows.Forms.PictureBox();
+            this.tbCommoditiesOcrOutput = new System.Windows.Forms.TextBox();
+            this.tbConfidence = new System.Windows.Forms.TextBox();
+            this.bContinueOcr = new System.Windows.Forms.Button();
+            this.tbFinalOcrOutput = new System.Windows.Forms.TextBox();
+            this.tbOcrSystemName = new System.Windows.Forms.TextBox();
+            this.cbPostOnImport = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.tbUsername = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label36 = new System.Windows.Forms.Label();
+            this.button18 = new System.Windows.Forms.Button();
+            this.cbExtendedInfoInCSV = new System.Windows.Forms.CheckBox();
+            this.cbStartOCROnLoad = new System.Windows.Forms.CheckBox();
+            this.cbDeleteScreenshotOnImport = new System.Windows.Forms.CheckBox();
+            this.cbUseEddnTestSchema = new System.Windows.Forms.CheckBox();
+            this.cbAutoImport = new System.Windows.Forms.CheckBox();
+            this.bEditResults = new System.Windows.Forms.Button();
+            this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -274,25 +257,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbLogQuantity)).BeginInit();
             this.tabOCRGroup.SuspendLayout();
-            this.tabControl3.SuspendLayout();
-            this.tabOCR.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStation)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).BeginInit();
-            this.tabOCRCalibration.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbUiColour)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCalibrationInstructions)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCalibrationImage)).BeginInit();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabEDDN.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabOCR.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStation)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).BeginInit();
+            this.tabControl3.SuspendLayout();
             this.SuspendLayout();
             // 
             // bOpen
@@ -650,7 +627,7 @@
             this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold);
             this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 0);
             this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(639, 106);
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(641, 106);
             this.lblRegulatedNoise.TabIndex = 2;
             this.lblRegulatedNoise.Text = "RegulatedNoise";
             // 
@@ -818,7 +795,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(160, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(144, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -845,7 +822,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(155, 213);
+            this.chart1.Size = new System.Drawing.Size(139, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -872,7 +849,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(150, 135);
+            this.chart2.Size = new System.Drawing.Size(134, 119);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1746,536 +1723,6 @@
             this.tabOCRGroup.Text = "Optical Character Recognition";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
             // 
-            // tabControl3
-            // 
-            this.tabControl3.Controls.Add(this.tabOCR);
-            this.tabControl3.Controls.Add(this.tabOCRCalibration);
-            this.tabControl3.Location = new System.Drawing.Point(0, 0);
-            this.tabControl3.Name = "tabControl3";
-            this.tabControl3.SelectedIndex = 0;
-            this.tabControl3.Size = new System.Drawing.Size(1057, 529);
-            this.tabControl3.TabIndex = 0;
-            // 
-            // tabOCR
-            // 
-            this.tabOCR.Controls.Add(this.groupBox4);
-            this.tabOCR.Controls.Add(this.groupBox3);
-            this.tabOCR.Location = new System.Drawing.Point(4, 22);
-            this.tabOCR.Name = "tabOCR";
-            this.tabOCR.Size = new System.Drawing.Size(1049, 503);
-            this.tabOCR.TabIndex = 4;
-            this.tabOCR.Text = "Capture and Correct";
-            this.tabOCR.UseVisualStyleBackColor = true;
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.bEditResults);
-            this.groupBox4.Controls.Add(this.cbAutoImport);
-            this.groupBox4.Controls.Add(this.cbUseEddnTestSchema);
-            this.groupBox4.Controls.Add(this.cbDeleteScreenshotOnImport);
-            this.groupBox4.Controls.Add(this.cbStartOCROnLoad);
-            this.groupBox4.Controls.Add(this.cbExtendedInfoInCSV);
-            this.groupBox4.Controls.Add(this.button18);
-            this.groupBox4.Controls.Add(this.label36);
-            this.groupBox4.Controls.Add(this.label35);
-            this.groupBox4.Controls.Add(this.label34);
-            this.groupBox4.Controls.Add(this.label33);
-            this.groupBox4.Controls.Add(this.label32);
-            this.groupBox4.Controls.Add(this.tbUsername);
-            this.groupBox4.Controls.Add(this.label31);
-            this.groupBox4.Controls.Add(this.cbPostOnImport);
-            this.groupBox4.Controls.Add(this.tbOcrSystemName);
-            this.groupBox4.Controls.Add(this.tbFinalOcrOutput);
-            this.groupBox4.Controls.Add(this.bContinueOcr);
-            this.groupBox4.Controls.Add(this.tbConfidence);
-            this.groupBox4.Controls.Add(this.tbCommoditiesOcrOutput);
-            this.groupBox4.Controls.Add(this.pbOcrCurrent);
-            this.groupBox4.Controls.Add(this.tbOcrStationName);
-            this.groupBox4.Location = new System.Drawing.Point(432, 12);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(583, 491);
-            this.groupBox4.TabIndex = 22;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "OCR Corrections";
-            // 
-            // bEditResults
-            // 
-            this.bEditResults.Location = new System.Drawing.Point(6, 402);
-            this.bEditResults.Name = "bEditResults";
-            this.bEditResults.Size = new System.Drawing.Size(570, 23);
-            this.bEditResults.TabIndex = 32;
-            this.bEditResults.Text = "Edit Results";
-            this.bEditResults.UseVisualStyleBackColor = true;
-            this.bEditResults.Click += new System.EventHandler(this.bEditResults_Click);
-            // 
-            // cbAutoImport
-            // 
-            this.cbAutoImport.AutoSize = true;
-            this.cbAutoImport.Location = new System.Drawing.Point(261, 431);
-            this.cbAutoImport.Name = "cbAutoImport";
-            this.cbAutoImport.Size = new System.Drawing.Size(80, 17);
-            this.cbAutoImport.TabIndex = 31;
-            this.cbAutoImport.Text = "Auto Import";
-            this.cbAutoImport.UseVisualStyleBackColor = true;
-            this.cbAutoImport.CheckedChanged += new System.EventHandler(this.cbAutoImport_CheckedChanged);
-            // 
-            // cbUseEddnTestSchema
-            // 
-            this.cbUseEddnTestSchema.AutoSize = true;
-            this.cbUseEddnTestSchema.Checked = true;
-            this.cbUseEddnTestSchema.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbUseEddnTestSchema.Location = new System.Drawing.Point(169, 471);
-            this.cbUseEddnTestSchema.Name = "cbUseEddnTestSchema";
-            this.cbUseEddnTestSchema.Size = new System.Drawing.Size(89, 17);
-            this.cbUseEddnTestSchema.TabIndex = 30;
-            this.cbUseEddnTestSchema.Text = "Test Schema";
-            this.cbUseEddnTestSchema.UseVisualStyleBackColor = true;
-            this.cbUseEddnTestSchema.CheckedChanged += new System.EventHandler(this.cbUseEddnTestSchema_CheckedChanged);
-            // 
-            // cbDeleteScreenshotOnImport
-            // 
-            this.cbDeleteScreenshotOnImport.AutoSize = true;
-            this.cbDeleteScreenshotOnImport.Location = new System.Drawing.Point(355, 431);
-            this.cbDeleteScreenshotOnImport.Name = "cbDeleteScreenshotOnImport";
-            this.cbDeleteScreenshotOnImport.Size = new System.Drawing.Size(222, 17);
-            this.cbDeleteScreenshotOnImport.TabIndex = 29;
-            this.cbDeleteScreenshotOnImport.Text = "Delete screenshot automatically on import";
-            this.cbDeleteScreenshotOnImport.UseVisualStyleBackColor = true;
-            this.cbDeleteScreenshotOnImport.CheckedChanged += new System.EventHandler(this.cbDeleteScreenshotOnImport_CheckedChanged);
-            // 
-            // cbStartOCROnLoad
-            // 
-            this.cbStartOCROnLoad.AutoSize = true;
-            this.cbStartOCROnLoad.Location = new System.Drawing.Point(6, 431);
-            this.cbStartOCROnLoad.Name = "cbStartOCROnLoad";
-            this.cbStartOCROnLoad.Size = new System.Drawing.Size(252, 17);
-            this.cbStartOCROnLoad.TabIndex = 28;
-            this.cbStartOCROnLoad.Text = "Start OCR automatically when this app is started";
-            this.cbStartOCROnLoad.UseVisualStyleBackColor = true;
-            this.cbStartOCROnLoad.CheckedChanged += new System.EventHandler(this.cbStartOCROnLoad_CheckedChanged);
-            // 
-            // cbExtendedInfoInCSV
-            // 
-            this.cbExtendedInfoInCSV.AutoSize = true;
-            this.cbExtendedInfoInCSV.Checked = true;
-            this.cbExtendedInfoInCSV.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbExtendedInfoInCSV.Location = new System.Drawing.Point(6, 452);
-            this.cbExtendedInfoInCSV.Name = "cbExtendedInfoInCSV";
-            this.cbExtendedInfoInCSV.Size = new System.Drawing.Size(552, 17);
-            this.cbExtendedInfoInCSV.TabIndex = 27;
-            this.cbExtendedInfoInCSV.Text = "Include extended info in CSV (extra functionality in RegulatedNoise, but may brea" +
-    "k compatibility with other apps)";
-            this.cbExtendedInfoInCSV.UseVisualStyleBackColor = true;
-            this.cbExtendedInfoInCSV.CheckedChanged += new System.EventHandler(this.cbExtendedInfoInCSV_CheckedChanged);
-            // 
-            // button18
-            // 
-            this.button18.ForeColor = System.Drawing.Color.Crimson;
-            this.button18.Location = new System.Drawing.Point(426, 49);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(150, 23);
-            this.button18.TabIndex = 26;
-            this.button18.Text = "Really Useful Tip";
-            this.button18.UseVisualStyleBackColor = true;
-            this.button18.Click += new System.EventHandler(this.button18_Click_1);
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(7, 162);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(112, 13);
-            this.label36.TabIndex = 25;
-            this.label36.Text = "CSV Output from OCR";
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(11, 137);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(71, 13);
-            this.label35.TabIndex = 24;
-            this.label35.Text = "Correct Value";
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(11, 94);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(85, 13);
-            this.label34.TabIndex = 23;
-            this.label34.Text = "Image to Correct";
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(11, 52);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(72, 13);
-            this.label33.TabIndex = 22;
-            this.label33.Text = "System Name";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(11, 29);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(71, 13);
-            this.label32.TabIndex = 21;
-            this.label32.Text = "Station Name";
-            // 
-            // tbUsername
-            // 
-            this.tbUsername.Location = new System.Drawing.Point(347, 469);
-            this.tbUsername.Name = "tbUsername";
-            this.tbUsername.Size = new System.Drawing.Size(230, 20);
-            this.tbUsername.TabIndex = 20;
-            this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(286, 472);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(55, 13);
-            this.label31.TabIndex = 19;
-            this.label31.Text = "Username";
-            // 
-            // cbPostOnImport
-            // 
-            this.cbPostOnImport.AutoSize = true;
-            this.cbPostOnImport.Location = new System.Drawing.Point(6, 471);
-            this.cbPostOnImport.Name = "cbPostOnImport";
-            this.cbPostOnImport.Size = new System.Drawing.Size(163, 17);
-            this.cbPostOnImport.TabIndex = 18;
-            this.cbPostOnImport.Text = "Post data to EDDN on import";
-            this.cbPostOnImport.UseVisualStyleBackColor = true;
-            this.cbPostOnImport.CheckedChanged += new System.EventHandler(this.cbPostOnImport_CheckedChanged);
-            // 
-            // tbOcrSystemName
-            // 
-            this.tbOcrSystemName.Location = new System.Drawing.Point(110, 53);
-            this.tbOcrSystemName.Name = "tbOcrSystemName";
-            this.tbOcrSystemName.Size = new System.Drawing.Size(231, 20);
-            this.tbOcrSystemName.TabIndex = 16;
-            this.tbOcrSystemName.TextChanged += new System.EventHandler(this.tbOcrSystemName_TextChanged);
-            // 
-            // tbFinalOcrOutput
-            // 
-            this.tbFinalOcrOutput.Location = new System.Drawing.Point(6, 180);
-            this.tbFinalOcrOutput.Multiline = true;
-            this.tbFinalOcrOutput.Name = "tbFinalOcrOutput";
-            this.tbFinalOcrOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbFinalOcrOutput.Size = new System.Drawing.Size(571, 219);
-            this.tbFinalOcrOutput.TabIndex = 15;
-            this.tbFinalOcrOutput.WordWrap = false;
-            // 
-            // bContinueOcr
-            // 
-            this.bContinueOcr.Enabled = false;
-            this.bContinueOcr.Location = new System.Drawing.Point(423, 132);
-            this.bContinueOcr.Name = "bContinueOcr";
-            this.bContinueOcr.Size = new System.Drawing.Size(154, 23);
-            this.bContinueOcr.TabIndex = 14;
-            this.bContinueOcr.Text = "Continue";
-            this.bContinueOcr.UseVisualStyleBackColor = true;
-            this.bContinueOcr.Click += new System.EventHandler(this.bContinueOcr_Click);
-            // 
-            // tbConfidence
-            // 
-            this.tbConfidence.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbConfidence.Location = new System.Drawing.Point(347, 128);
-            this.tbConfidence.Name = "tbConfidence";
-            this.tbConfidence.Size = new System.Drawing.Size(62, 29);
-            this.tbConfidence.TabIndex = 13;
-            // 
-            // tbCommoditiesOcrOutput
-            // 
-            this.tbCommoditiesOcrOutput.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCommoditiesOcrOutput.Location = new System.Drawing.Point(110, 128);
-            this.tbCommoditiesOcrOutput.Name = "tbCommoditiesOcrOutput";
-            this.tbCommoditiesOcrOutput.Size = new System.Drawing.Size(231, 29);
-            this.tbCommoditiesOcrOutput.TabIndex = 12;
-            // 
-            // pbOcrCurrent
-            // 
-            this.pbOcrCurrent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbOcrCurrent.Location = new System.Drawing.Point(110, 79);
-            this.pbOcrCurrent.Name = "pbOcrCurrent";
-            this.pbOcrCurrent.Size = new System.Drawing.Size(231, 43);
-            this.pbOcrCurrent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbOcrCurrent.TabIndex = 11;
-            this.pbOcrCurrent.TabStop = false;
-            // 
-            // tbOcrStationName
-            // 
-            this.tbOcrStationName.Location = new System.Drawing.Point(110, 27);
-            this.tbOcrStationName.Name = "tbOcrStationName";
-            this.tbOcrStationName.Size = new System.Drawing.Size(231, 20);
-            this.tbOcrStationName.TabIndex = 10;
-            this.tbOcrStationName.TextChanged += new System.EventHandler(this.tbOcrStationName_TextChanged);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.lblScreenshotsQueued);
-            this.groupBox3.Controls.Add(this.button7);
-            this.groupBox3.Controls.Add(this.pbStation);
-            this.groupBox3.Controls.Add(this.label13);
-            this.groupBox3.Controls.Add(this.pbTrimmed);
-            this.groupBox3.Controls.Add(this.panel1);
-            this.groupBox3.Controls.Add(this.label11);
-            this.groupBox3.Location = new System.Drawing.Point(3, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(423, 486);
-            this.groupBox3.TabIndex = 21;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Capture Price Screenshots";
-            // 
-            // lblScreenshotsQueued
-            // 
-            this.lblScreenshotsQueued.AutoSize = true;
-            this.lblScreenshotsQueued.Location = new System.Drawing.Point(43, 52);
-            this.lblScreenshotsQueued.Name = "lblScreenshotsQueued";
-            this.lblScreenshotsQueued.Size = new System.Drawing.Size(58, 13);
-            this.lblScreenshotsQueued.TabIndex = 10;
-            this.lblScreenshotsQueued.Text = "(0 queued)";
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(8, 24);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(400, 23);
-            this.button7.TabIndex = 0;
-            this.button7.Text = "Monitor Directory for Commodity Screenshots";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // pbStation
-            // 
-            this.pbStation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbStation.Location = new System.Drawing.Point(8, 314);
-            this.pbStation.Name = "pbStation";
-            this.pbStation.Size = new System.Drawing.Size(205, 19);
-            this.pbStation.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStation.TabIndex = 9;
-            this.pbStation.TabStop = false;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(2, 298);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(47, 13);
-            this.label13.TabIndex = 8;
-            this.label13.Text = "Trimmed";
-            // 
-            // pbTrimmed
-            // 
-            this.pbTrimmed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbTrimmed.Location = new System.Drawing.Point(8, 339);
-            this.pbTrimmed.Name = "pbTrimmed";
-            this.pbTrimmed.Size = new System.Drawing.Size(205, 129);
-            this.pbTrimmed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbTrimmed.TabIndex = 7;
-            this.pbTrimmed.TabStop = false;
-            // 
-            // panel1
-            // 
-            this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.pbOriginalImage);
-            this.panel1.Location = new System.Drawing.Point(5, 68);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(406, 231);
-            this.panel1.TabIndex = 3;
-            // 
-            // pbOriginalImage
-            // 
-            this.pbOriginalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbOriginalImage.Location = new System.Drawing.Point(3, 3);
-            this.pbOriginalImage.Name = "pbOriginalImage";
-            this.pbOriginalImage.Size = new System.Drawing.Size(400, 225);
-            this.pbOriginalImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pbOriginalImage.TabIndex = 1;
-            this.pbOriginalImage.TabStop = false;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(2, 52);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(42, 13);
-            this.label11.TabIndex = 2;
-            this.label11.Text = "Original";
-            // 
-            // tabOCRCalibration
-            // 
-            this.tabOCRCalibration.Controls.Add(this.label48);
-            this.tabOCRCalibration.Controls.Add(this.tb_resy);
-            this.tabOCRCalibration.Controls.Add(this.tb_resx);
-            this.tabOCRCalibration.Controls.Add(this.btn_autocal);
-            this.tabOCRCalibration.Controls.Add(this.groupBox6);
-            this.tabOCRCalibration.Controls.Add(this.button13);
-            this.tabOCRCalibration.Controls.Add(this.pbCalibrationInstructions);
-            this.tabOCRCalibration.Controls.Add(this.tbCalibrationInstructions);
-            this.tabOCRCalibration.Controls.Add(this.panel2);
-            this.tabOCRCalibration.Controls.Add(this.button8);
-            this.tabOCRCalibration.Controls.Add(this.label12);
-            this.tabOCRCalibration.Controls.Add(this.lbCalibrationPoints);
-            this.tabOCRCalibration.Location = new System.Drawing.Point(4, 22);
-            this.tabOCRCalibration.Name = "tabOCRCalibration";
-            this.tabOCRCalibration.Size = new System.Drawing.Size(1049, 503);
-            this.tabOCRCalibration.TabIndex = 5;
-            this.tabOCRCalibration.Text = "OCR Calibration";
-            this.tabOCRCalibration.UseVisualStyleBackColor = true;
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(987, 21);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(12, 13);
-            this.label48.TabIndex = 19;
-            this.label48.Text = "x";
-            // 
-            // tb_resy
-            // 
-            this.tb_resy.Location = new System.Drawing.Point(1001, 15);
-            this.tb_resy.MaxLength = 4;
-            this.tb_resy.Name = "tb_resy";
-            this.tb_resy.ReadOnly = true;
-            this.tb_resy.Size = new System.Drawing.Size(38, 20);
-            this.tb_resy.TabIndex = 18;
-            // 
-            // tb_resx
-            // 
-            this.tb_resx.Location = new System.Drawing.Point(947, 15);
-            this.tb_resx.MaxLength = 4;
-            this.tb_resx.Name = "tb_resx";
-            this.tb_resx.ReadOnly = true;
-            this.tb_resx.Size = new System.Drawing.Size(38, 20);
-            this.tb_resx.TabIndex = 17;
-            // 
-            // btn_autocal
-            // 
-            this.btn_autocal.Location = new System.Drawing.Point(676, 12);
-            this.btn_autocal.Name = "btn_autocal";
-            this.btn_autocal.Size = new System.Drawing.Size(261, 23);
-            this.btn_autocal.TabIndex = 16;
-            this.btn_autocal.Text = "Automatic Calibration (Highly Experimental!)";
-            this.btn_autocal.UseVisualStyleBackColor = true;
-            this.btn_autocal.Click += new System.EventHandler(this.btn_autocal_Click);
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.pbUiColour);
-            this.groupBox6.Controls.Add(this.tbUiColour);
-            this.groupBox6.Controls.Add(this.button14);
-            this.groupBox6.Location = new System.Drawing.Point(681, 342);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(329, 141);
-            this.groupBox6.TabIndex = 15;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "UI Colour";
-            // 
-            // pbUiColour
-            // 
-            this.pbUiColour.Location = new System.Drawing.Point(6, 19);
-            this.pbUiColour.Name = "pbUiColour";
-            this.pbUiColour.Size = new System.Drawing.Size(317, 87);
-            this.pbUiColour.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbUiColour.TabIndex = 2;
-            this.pbUiColour.TabStop = false;
-            // 
-            // tbUiColour
-            // 
-            this.tbUiColour.Location = new System.Drawing.Point(6, 114);
-            this.tbUiColour.Name = "tbUiColour";
-            this.tbUiColour.Size = new System.Drawing.Size(142, 20);
-            this.tbUiColour.TabIndex = 1;
-            this.tbUiColour.TextChanged += new System.EventHandler(this.tbUiColour_TextChanged);
-            // 
-            // button14
-            // 
-            this.button14.Location = new System.Drawing.Point(154, 112);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(169, 23);
-            this.button14.TabIndex = 0;
-            this.button14.Text = "This is the correct colour";
-            this.button14.UseVisualStyleBackColor = true;
-            this.button14.Click += new System.EventHandler(this.button14_Click);
-            // 
-            // button13
-            // 
-            this.button13.Location = new System.Drawing.Point(259, 12);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(397, 23);
-            this.button13.TabIndex = 14;
-            this.button13.Text = "I\'ve messed about with the Elite Dangerous UI and it\'s not orange any more...";
-            this.button13.UseVisualStyleBackColor = true;
-            this.button13.Click += new System.EventHandler(this.button13_Click);
-            // 
-            // pbCalibrationInstructions
-            // 
-            this.pbCalibrationInstructions.Location = new System.Drawing.Point(675, 119);
-            this.pbCalibrationInstructions.Name = "pbCalibrationInstructions";
-            this.pbCalibrationInstructions.Size = new System.Drawing.Size(207, 191);
-            this.pbCalibrationInstructions.TabIndex = 13;
-            this.pbCalibrationInstructions.TabStop = false;
-            // 
-            // tbCalibrationInstructions
-            // 
-            this.tbCalibrationInstructions.Location = new System.Drawing.Point(675, 51);
-            this.tbCalibrationInstructions.Multiline = true;
-            this.tbCalibrationInstructions.Name = "tbCalibrationInstructions";
-            this.tbCalibrationInstructions.Size = new System.Drawing.Size(181, 62);
-            this.tbCalibrationInstructions.TabIndex = 12;
-            // 
-            // panel2
-            // 
-            this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.pbCalibrationImage);
-            this.panel2.Location = new System.Drawing.Point(22, 47);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(637, 440);
-            this.panel2.TabIndex = 11;
-            // 
-            // pbCalibrationImage
-            // 
-            this.pbCalibrationImage.Location = new System.Drawing.Point(3, 3);
-            this.pbCalibrationImage.Name = "pbCalibrationImage";
-            this.pbCalibrationImage.Size = new System.Drawing.Size(631, 434);
-            this.pbCalibrationImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pbCalibrationImage.TabIndex = 0;
-            this.pbCalibrationImage.TabStop = false;
-            this.pbCalibrationImage.Click += new System.EventHandler(this.pbCalibrationImage_Click);
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(17, 12);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(236, 23);
-            this.button8.TabIndex = 10;
-            this.button8.Text = "Begin Calibration";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(890, 50);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(88, 13);
-            this.label12.TabIndex = 9;
-            this.label12.Text = "Calibration Points";
-            // 
-            // lbCalibrationPoints
-            // 
-            this.lbCalibrationPoints.FormattingEnabled = true;
-            this.lbCalibrationPoints.Location = new System.Drawing.Point(893, 66);
-            this.lbCalibrationPoints.Name = "lbCalibrationPoints";
-            this.lbCalibrationPoints.Size = new System.Drawing.Size(118, 225);
-            this.lbCalibrationPoints.TabIndex = 8;
-            // 
             // tabWebserver
             // 
             this.tabWebserver.Controls.Add(this.groupBox1);
@@ -2595,6 +2042,366 @@
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
             // 
+            // tabOCR
+            // 
+            this.tabOCR.Controls.Add(this.groupBox4);
+            this.tabOCR.Controls.Add(this.groupBox3);
+            this.tabOCR.Location = new System.Drawing.Point(4, 22);
+            this.tabOCR.Name = "tabOCR";
+            this.tabOCR.Size = new System.Drawing.Size(1049, 503);
+            this.tabOCR.TabIndex = 4;
+            this.tabOCR.Text = "Capture and Correct";
+            this.tabOCR.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.lblScreenshotsQueued);
+            this.groupBox3.Controls.Add(this.button7);
+            this.groupBox3.Controls.Add(this.pbStation);
+            this.groupBox3.Controls.Add(this.label13);
+            this.groupBox3.Controls.Add(this.pbTrimmed);
+            this.groupBox3.Controls.Add(this.panel1);
+            this.groupBox3.Controls.Add(this.label11);
+            this.groupBox3.Location = new System.Drawing.Point(3, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(423, 486);
+            this.groupBox3.TabIndex = 21;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Capture Price Screenshots";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(2, 52);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(42, 13);
+            this.label11.TabIndex = 2;
+            this.label11.Text = "Original";
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.pbOriginalImage);
+            this.panel1.Location = new System.Drawing.Point(5, 68);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(406, 231);
+            this.panel1.TabIndex = 3;
+            // 
+            // pbOriginalImage
+            // 
+            this.pbOriginalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbOriginalImage.Location = new System.Drawing.Point(3, 3);
+            this.pbOriginalImage.Name = "pbOriginalImage";
+            this.pbOriginalImage.Size = new System.Drawing.Size(400, 225);
+            this.pbOriginalImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pbOriginalImage.TabIndex = 1;
+            this.pbOriginalImage.TabStop = false;
+            // 
+            // pbTrimmed
+            // 
+            this.pbTrimmed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbTrimmed.Location = new System.Drawing.Point(8, 339);
+            this.pbTrimmed.Name = "pbTrimmed";
+            this.pbTrimmed.Size = new System.Drawing.Size(205, 129);
+            this.pbTrimmed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbTrimmed.TabIndex = 7;
+            this.pbTrimmed.TabStop = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(2, 298);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(47, 13);
+            this.label13.TabIndex = 8;
+            this.label13.Text = "Trimmed";
+            // 
+            // pbStation
+            // 
+            this.pbStation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbStation.Location = new System.Drawing.Point(8, 314);
+            this.pbStation.Name = "pbStation";
+            this.pbStation.Size = new System.Drawing.Size(205, 19);
+            this.pbStation.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStation.TabIndex = 9;
+            this.pbStation.TabStop = false;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(8, 24);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(400, 23);
+            this.button7.TabIndex = 0;
+            this.button7.Text = "Monitor Directory for Commodity Screenshots";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // lblScreenshotsQueued
+            // 
+            this.lblScreenshotsQueued.AutoSize = true;
+            this.lblScreenshotsQueued.Location = new System.Drawing.Point(43, 52);
+            this.lblScreenshotsQueued.Name = "lblScreenshotsQueued";
+            this.lblScreenshotsQueued.Size = new System.Drawing.Size(58, 13);
+            this.lblScreenshotsQueued.TabIndex = 10;
+            this.lblScreenshotsQueued.Text = "(0 queued)";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.bEditResults);
+            this.groupBox4.Controls.Add(this.cbAutoImport);
+            this.groupBox4.Controls.Add(this.cbUseEddnTestSchema);
+            this.groupBox4.Controls.Add(this.cbDeleteScreenshotOnImport);
+            this.groupBox4.Controls.Add(this.cbStartOCROnLoad);
+            this.groupBox4.Controls.Add(this.cbExtendedInfoInCSV);
+            this.groupBox4.Controls.Add(this.button18);
+            this.groupBox4.Controls.Add(this.label36);
+            this.groupBox4.Controls.Add(this.label35);
+            this.groupBox4.Controls.Add(this.label34);
+            this.groupBox4.Controls.Add(this.label33);
+            this.groupBox4.Controls.Add(this.label32);
+            this.groupBox4.Controls.Add(this.tbUsername);
+            this.groupBox4.Controls.Add(this.label31);
+            this.groupBox4.Controls.Add(this.cbPostOnImport);
+            this.groupBox4.Controls.Add(this.tbOcrSystemName);
+            this.groupBox4.Controls.Add(this.tbFinalOcrOutput);
+            this.groupBox4.Controls.Add(this.bContinueOcr);
+            this.groupBox4.Controls.Add(this.tbConfidence);
+            this.groupBox4.Controls.Add(this.tbCommoditiesOcrOutput);
+            this.groupBox4.Controls.Add(this.pbOcrCurrent);
+            this.groupBox4.Controls.Add(this.tbOcrStationName);
+            this.groupBox4.Location = new System.Drawing.Point(432, 12);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(583, 491);
+            this.groupBox4.TabIndex = 22;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "OCR Corrections";
+            // 
+            // tbOcrStationName
+            // 
+            this.tbOcrStationName.Location = new System.Drawing.Point(110, 27);
+            this.tbOcrStationName.Name = "tbOcrStationName";
+            this.tbOcrStationName.Size = new System.Drawing.Size(231, 20);
+            this.tbOcrStationName.TabIndex = 10;
+            this.tbOcrStationName.TextChanged += new System.EventHandler(this.tbOcrStationName_TextChanged);
+            // 
+            // pbOcrCurrent
+            // 
+            this.pbOcrCurrent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbOcrCurrent.Location = new System.Drawing.Point(110, 79);
+            this.pbOcrCurrent.Name = "pbOcrCurrent";
+            this.pbOcrCurrent.Size = new System.Drawing.Size(231, 43);
+            this.pbOcrCurrent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbOcrCurrent.TabIndex = 11;
+            this.pbOcrCurrent.TabStop = false;
+            // 
+            // tbCommoditiesOcrOutput
+            // 
+            this.tbCommoditiesOcrOutput.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCommoditiesOcrOutput.Location = new System.Drawing.Point(110, 128);
+            this.tbCommoditiesOcrOutput.Name = "tbCommoditiesOcrOutput";
+            this.tbCommoditiesOcrOutput.Size = new System.Drawing.Size(231, 29);
+            this.tbCommoditiesOcrOutput.TabIndex = 12;
+            // 
+            // tbConfidence
+            // 
+            this.tbConfidence.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbConfidence.Location = new System.Drawing.Point(347, 128);
+            this.tbConfidence.Name = "tbConfidence";
+            this.tbConfidence.Size = new System.Drawing.Size(62, 29);
+            this.tbConfidence.TabIndex = 13;
+            // 
+            // bContinueOcr
+            // 
+            this.bContinueOcr.Enabled = false;
+            this.bContinueOcr.Location = new System.Drawing.Point(423, 132);
+            this.bContinueOcr.Name = "bContinueOcr";
+            this.bContinueOcr.Size = new System.Drawing.Size(154, 23);
+            this.bContinueOcr.TabIndex = 14;
+            this.bContinueOcr.Text = "Continue";
+            this.bContinueOcr.UseVisualStyleBackColor = true;
+            this.bContinueOcr.Click += new System.EventHandler(this.bContinueOcr_Click);
+            // 
+            // tbFinalOcrOutput
+            // 
+            this.tbFinalOcrOutput.Location = new System.Drawing.Point(6, 180);
+            this.tbFinalOcrOutput.Multiline = true;
+            this.tbFinalOcrOutput.Name = "tbFinalOcrOutput";
+            this.tbFinalOcrOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbFinalOcrOutput.Size = new System.Drawing.Size(571, 219);
+            this.tbFinalOcrOutput.TabIndex = 15;
+            this.tbFinalOcrOutput.WordWrap = false;
+            // 
+            // tbOcrSystemName
+            // 
+            this.tbOcrSystemName.Location = new System.Drawing.Point(110, 53);
+            this.tbOcrSystemName.Name = "tbOcrSystemName";
+            this.tbOcrSystemName.Size = new System.Drawing.Size(231, 20);
+            this.tbOcrSystemName.TabIndex = 16;
+            this.tbOcrSystemName.TextChanged += new System.EventHandler(this.tbOcrSystemName_TextChanged);
+            // 
+            // cbPostOnImport
+            // 
+            this.cbPostOnImport.AutoSize = true;
+            this.cbPostOnImport.Location = new System.Drawing.Point(6, 471);
+            this.cbPostOnImport.Name = "cbPostOnImport";
+            this.cbPostOnImport.Size = new System.Drawing.Size(163, 17);
+            this.cbPostOnImport.TabIndex = 18;
+            this.cbPostOnImport.Text = "Post data to EDDN on import";
+            this.cbPostOnImport.UseVisualStyleBackColor = true;
+            this.cbPostOnImport.CheckedChanged += new System.EventHandler(this.cbPostOnImport_CheckedChanged);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(286, 472);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(55, 13);
+            this.label31.TabIndex = 19;
+            this.label31.Text = "Username";
+            // 
+            // tbUsername
+            // 
+            this.tbUsername.Location = new System.Drawing.Point(347, 469);
+            this.tbUsername.Name = "tbUsername";
+            this.tbUsername.Size = new System.Drawing.Size(230, 20);
+            this.tbUsername.TabIndex = 20;
+            this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(11, 29);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(71, 13);
+            this.label32.TabIndex = 21;
+            this.label32.Text = "Station Name";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(11, 52);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(72, 13);
+            this.label33.TabIndex = 22;
+            this.label33.Text = "System Name";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(11, 94);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(85, 13);
+            this.label34.TabIndex = 23;
+            this.label34.Text = "Image to Correct";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(11, 137);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(71, 13);
+            this.label35.TabIndex = 24;
+            this.label35.Text = "Correct Value";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(7, 162);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(112, 13);
+            this.label36.TabIndex = 25;
+            this.label36.Text = "CSV Output from OCR";
+            // 
+            // button18
+            // 
+            this.button18.ForeColor = System.Drawing.Color.Crimson;
+            this.button18.Location = new System.Drawing.Point(426, 49);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(150, 23);
+            this.button18.TabIndex = 26;
+            this.button18.Text = "Really Useful Tip";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click_1);
+            // 
+            // cbExtendedInfoInCSV
+            // 
+            this.cbExtendedInfoInCSV.AutoSize = true;
+            this.cbExtendedInfoInCSV.Checked = true;
+            this.cbExtendedInfoInCSV.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbExtendedInfoInCSV.Location = new System.Drawing.Point(6, 452);
+            this.cbExtendedInfoInCSV.Name = "cbExtendedInfoInCSV";
+            this.cbExtendedInfoInCSV.Size = new System.Drawing.Size(552, 17);
+            this.cbExtendedInfoInCSV.TabIndex = 27;
+            this.cbExtendedInfoInCSV.Text = "Include extended info in CSV (extra functionality in RegulatedNoise, but may brea" +
+    "k compatibility with other apps)";
+            this.cbExtendedInfoInCSV.UseVisualStyleBackColor = true;
+            this.cbExtendedInfoInCSV.CheckedChanged += new System.EventHandler(this.cbExtendedInfoInCSV_CheckedChanged);
+            // 
+            // cbStartOCROnLoad
+            // 
+            this.cbStartOCROnLoad.AutoSize = true;
+            this.cbStartOCROnLoad.Location = new System.Drawing.Point(6, 431);
+            this.cbStartOCROnLoad.Name = "cbStartOCROnLoad";
+            this.cbStartOCROnLoad.Size = new System.Drawing.Size(252, 17);
+            this.cbStartOCROnLoad.TabIndex = 28;
+            this.cbStartOCROnLoad.Text = "Start OCR automatically when this app is started";
+            this.cbStartOCROnLoad.UseVisualStyleBackColor = true;
+            this.cbStartOCROnLoad.CheckedChanged += new System.EventHandler(this.cbStartOCROnLoad_CheckedChanged);
+            // 
+            // cbDeleteScreenshotOnImport
+            // 
+            this.cbDeleteScreenshotOnImport.AutoSize = true;
+            this.cbDeleteScreenshotOnImport.Location = new System.Drawing.Point(355, 431);
+            this.cbDeleteScreenshotOnImport.Name = "cbDeleteScreenshotOnImport";
+            this.cbDeleteScreenshotOnImport.Size = new System.Drawing.Size(222, 17);
+            this.cbDeleteScreenshotOnImport.TabIndex = 29;
+            this.cbDeleteScreenshotOnImport.Text = "Delete screenshot automatically on import";
+            this.cbDeleteScreenshotOnImport.UseVisualStyleBackColor = true;
+            this.cbDeleteScreenshotOnImport.CheckedChanged += new System.EventHandler(this.cbDeleteScreenshotOnImport_CheckedChanged);
+            // 
+            // cbUseEddnTestSchema
+            // 
+            this.cbUseEddnTestSchema.AutoSize = true;
+            this.cbUseEddnTestSchema.Checked = true;
+            this.cbUseEddnTestSchema.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbUseEddnTestSchema.Location = new System.Drawing.Point(169, 471);
+            this.cbUseEddnTestSchema.Name = "cbUseEddnTestSchema";
+            this.cbUseEddnTestSchema.Size = new System.Drawing.Size(89, 17);
+            this.cbUseEddnTestSchema.TabIndex = 30;
+            this.cbUseEddnTestSchema.Text = "Test Schema";
+            this.cbUseEddnTestSchema.UseVisualStyleBackColor = true;
+            this.cbUseEddnTestSchema.CheckedChanged += new System.EventHandler(this.cbUseEddnTestSchema_CheckedChanged);
+            // 
+            // cbAutoImport
+            // 
+            this.cbAutoImport.AutoSize = true;
+            this.cbAutoImport.Location = new System.Drawing.Point(261, 431);
+            this.cbAutoImport.Name = "cbAutoImport";
+            this.cbAutoImport.Size = new System.Drawing.Size(80, 17);
+            this.cbAutoImport.TabIndex = 31;
+            this.cbAutoImport.Text = "Auto Import";
+            this.cbAutoImport.UseVisualStyleBackColor = true;
+            this.cbAutoImport.CheckedChanged += new System.EventHandler(this.cbAutoImport_CheckedChanged);
+            // 
+            // bEditResults
+            // 
+            this.bEditResults.Location = new System.Drawing.Point(6, 402);
+            this.bEditResults.Name = "bEditResults";
+            this.bEditResults.Size = new System.Drawing.Size(570, 23);
+            this.bEditResults.TabIndex = 32;
+            this.bEditResults.Text = "Edit Results";
+            this.bEditResults.UseVisualStyleBackColor = true;
+            this.bEditResults.Click += new System.EventHandler(this.bEditResults_Click);
+            // 
+            // tabControl3
+            // 
+            this.tabControl3.Controls.Add(this.tabOCR);
+            this.tabControl3.Location = new System.Drawing.Point(0, 0);
+            this.tabControl3.Name = "tabControl3";
+            this.tabControl3.SelectedIndex = 0;
+            this.tabControl3.Size = new System.Drawing.Size(1057, 529);
+            this.tabControl3.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2657,33 +2464,24 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbLogQuantity)).EndInit();
             this.tabOCRGroup.ResumeLayout(false);
-            this.tabControl3.ResumeLayout(false);
-            this.tabOCR.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStation)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).EndInit();
-            this.tabOCRCalibration.ResumeLayout(false);
-            this.tabOCRCalibration.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbUiColour)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCalibrationInstructions)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCalibrationImage)).EndInit();
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabEDDN.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabOCR.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStation)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).EndInit();
+            this.tabControl3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2733,29 +2531,6 @@
         private System.Windows.Forms.ComboBox cbInterfaces;
         private System.Windows.Forms.Label lblURL;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TabPage tabOCR;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Label label11;
-        public System.Windows.Forms.PictureBox pbOriginalImage;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.PictureBox pbTrimmed;
-        private System.Windows.Forms.PictureBox pbStation;
-        private System.Windows.Forms.TextBox tbOcrStationName;
-        private System.Windows.Forms.PictureBox pbOcrCurrent;
-        private System.Windows.Forms.TextBox tbCommoditiesOcrOutput;
-        private System.Windows.Forms.TextBox tbConfidence;
-        private System.Windows.Forms.Button bContinueOcr;
-        private System.Windows.Forms.TextBox tbFinalOcrOutput;
-        private System.Windows.Forms.TabPage tabOCRCalibration;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.ListBox lbCalibrationPoints;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.PictureBox pbCalibrationImage;
-        private System.Windows.Forms.PictureBox pbCalibrationInstructions;
-        private System.Windows.Forms.TextBox tbCalibrationInstructions;
-        private System.Windows.Forms.TextBox tbOcrSystemName;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
@@ -2800,17 +2575,6 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Button button17;
-        private System.Windows.Forms.CheckBox cbPostOnImport;
-        private System.Windows.Forms.TextBox tbUsername;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button button18;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Button button19;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label39;
@@ -2838,12 +2602,8 @@
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.TabPage tabOCRGroup;
-        private System.Windows.Forms.TabControl tabControl3;
-        private System.Windows.Forms.Label lblScreenshotsQueued;
-        private System.Windows.Forms.CheckBox cbExtendedInfoInCSV;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox cbStartWebserverOnLoad;
-        private System.Windows.Forms.CheckBox cbStartOCROnLoad;
         private System.Windows.Forms.LinkLabel linkLabel6;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.GroupBox groupBox5;
@@ -2856,15 +2616,8 @@
         private System.Windows.Forms.Label lblStationToStationMax;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.CheckBox cbDeleteScreenshotOnImport;
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.CheckBox cbUseEddnTestSchema;
-        private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.TextBox tbUiColour;
-        private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.PictureBox pbUiColour;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.CheckBox checkboxLightYears;
         private System.Windows.Forms.ComboBox cbLightYears;
@@ -2883,19 +2636,47 @@
         private System.Windows.Forms.Label lblLightYearsFromCurrentSystem;
         private System.Windows.Forms.Label lblStationToStationLightYears;
         private System.Windows.Forms.LinkLabel linkLabel8;
-        private System.Windows.Forms.CheckBox cbAutoImport;
         private System.Windows.Forms.LinkLabel linkLabel9;
         private System.Windows.Forms.Button bPurgeAllEddnData;
-        private System.Windows.Forms.Button bEditResults;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.ListBox lbAllRoundTrips;
         private System.Windows.Forms.CheckBox checkboxPerLightYearRoundTrip;
         private System.Windows.Forms.ListView lvStationToStationReturn;
         private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.TextBox tb_resx;
-        private System.Windows.Forms.Button btn_autocal;
-        private System.Windows.Forms.TextBox tb_resy;
-        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TabControl tabControl3;
+        private System.Windows.Forms.TabPage tabOCR;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button bEditResults;
+        private System.Windows.Forms.CheckBox cbAutoImport;
+        private System.Windows.Forms.CheckBox cbUseEddnTestSchema;
+        private System.Windows.Forms.CheckBox cbDeleteScreenshotOnImport;
+        private System.Windows.Forms.CheckBox cbStartOCROnLoad;
+        private System.Windows.Forms.CheckBox cbExtendedInfoInCSV;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox tbUsername;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.CheckBox cbPostOnImport;
+        private System.Windows.Forms.TextBox tbOcrSystemName;
+        private System.Windows.Forms.TextBox tbFinalOcrOutput;
+        private System.Windows.Forms.Button bContinueOcr;
+        private System.Windows.Forms.TextBox tbConfidence;
+        private System.Windows.Forms.TextBox tbCommoditiesOcrOutput;
+        private System.Windows.Forms.PictureBox pbOcrCurrent;
+        private System.Windows.Forms.TextBox tbOcrStationName;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label lblScreenshotsQueued;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.PictureBox pbStation;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.PictureBox pbTrimmed;
+        private System.Windows.Forms.Panel panel1;
+        public System.Windows.Forms.PictureBox pbOriginalImage;
+        private System.Windows.Forms.Label label11;
     }
 }
 
