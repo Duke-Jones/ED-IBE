@@ -2401,6 +2401,7 @@ namespace RegulatedNoise
         private bool harvestStations = false;
         private int harvestStationsCount = -1;
         private int harvestCommsCount = -1;
+        private StreamWriter _eddnSpooler = null;
 
         public void OutputEddnRawData(object text)
         {
@@ -2412,6 +2413,19 @@ namespace RegulatedNoise
             else
             {
                 tbEDDNOutput.Text = text.ToString();
+
+                if (checkboxSpoolEddnToFile.Checked)
+                {
+                    if (_eddnSpooler == null)
+                    {
+                        if (!File.Exists(".//EddnOutput.txt"))
+                            _eddnSpooler = File.CreateText(".//EddnOutput.txt");
+                        else
+                            _eddnSpooler = File.AppendText(".//EddnOutput.txt");
+                    }
+
+                    _eddnSpooler.WriteLine(text);
+                }
 
                 if (checkboxImportEDDN.Checked)
                 {
@@ -2699,11 +2713,17 @@ namespace RegulatedNoise
 
             if (RegulatedNoiseSettings.UseEddnTestSchema)
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v"+RegulatedNoiseSettings.Version+@"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json =
+                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v" +
+                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) +
+                    @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
-                json = @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v"+RegulatedNoiseSettings.Version+@"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                json =
+                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v" +
+                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) +
+                    @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
 
 
@@ -3061,7 +3081,7 @@ namespace RegulatedNoise
         private void Form_Load(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.CheckVersion();
-            Text += RegulatedNoiseSettings.Version;
+            Text += RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
 
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
                  DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
