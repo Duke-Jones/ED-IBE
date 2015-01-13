@@ -13,7 +13,7 @@ namespace RegulatedNoise
     [Serializable]
     public class RegulatedNoiseSettings
     {
-        public readonly decimal Version = 1.73m;
+        public readonly decimal Version = 1.8m;
 
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.

@@ -1499,7 +1499,13 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.73
+    <value>v1.8
+* Add MRmP's editable calibration system
+* Add magnifier for calibration purposes
+* Remove incredibly-dumb bug that has been eating the spaces in station names... d'oh...
+* Check for empty string from EDDN, and at least don't crash on general malformed data
+
+v1.73
 * Update Station.csv and Elite.json.
 * Swap the Levenshtein algorithm for one that works (!) and tweak parameters it compares to
 * Fix button on station-to-station tab
