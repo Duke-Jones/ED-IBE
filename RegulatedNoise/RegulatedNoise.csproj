@@ -56,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="MRmPTestTab\MRmPTestTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MRmPTestTab\MRmPTestTab.Designer.cs">
+      <DependentUpon>MRmPTestTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
     <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
@@ -133,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Help Forms\HelpOCR.resx">
       <DependentUpon>HelpOCR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MRmPTestTab\MRmPTestTab.resx">
+      <DependentUpon>MRmPTestTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ocr\Calibration\OcrCalibratorTab.resx">
       <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
@@ -595,6 +604,12 @@
     <Folder Include="Brainerous\images\" />
     <Folder Include="Brainerous\nn_training_images\already_processed\" />
     <Folder Include="Brainerous\nn_training_images\split_training_images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EdClasses\EdClasses.csproj">
+      <Project>{236a934b-5543-4751-baa2-018dfa825271}</Project>
+      <Name>EdClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdClasses", "EdClasses\EdClasses.csproj", "{236A934B-5543-4751-BAA2-018DFA825271}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
