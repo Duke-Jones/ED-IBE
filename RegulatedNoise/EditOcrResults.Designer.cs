@@ -150,6 +150,7 @@
             // 
             this.EditOcrResultsSplit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EditOcrResultsSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.EditOcrResultsSplit.IsSplitterFixed = true;
             this.EditOcrResultsSplit.Location = new System.Drawing.Point(0, 0);
             this.EditOcrResultsSplit.Name = "EditOcrResultsSplit";
             this.EditOcrResultsSplit.Orientation = System.Windows.Forms.Orientation.Horizontal;
