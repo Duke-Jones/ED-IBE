@@ -16,6 +16,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Reflection;
+using EdClasses.ClassDefinitions;
 
 namespace RegulatedNoise
 {
@@ -31,7 +32,7 @@ namespace RegulatedNoise
         public ObjectDirectory CommodityDirectory = new CommodityDirectory();
         public Dictionary<string, Tuple<Point3D, List<string>>> SystemLocations = new Dictionary<string, Tuple<Point3D, List<string>>>();
         public List<Station> StationReferenceList = new List<Station>();
-        public Station CurrentStation = null;
+        //public Station CurrentStation = null; //Not in use, replaced by EdStation
         public static GameSettings GameSettings;
         public static OcrCalibrator OcrCalibrator;
 
@@ -42,6 +43,11 @@ namespace RegulatedNoise
         private SingleThreadLogger _logger;
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         private Levenshtein _levenshtein = new Levenshtein();
+
+        
+        //Implementation of the new classlibrary
+        public EdSystem CurrentSystem;
+//        public EdStation CurrentStation; //Old Station CurrentStation = null; was not in use so i took its name
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -108,6 +114,8 @@ namespace RegulatedNoise
 
             UpdateSystemNameFromLogFile();
 
+
+
             _logger.Log("  - fetched system name from file");
 
             CommandersLog.LoadLog(true);
@@ -152,7 +160,36 @@ namespace RegulatedNoise
             };
             testtab.Controls.Add(testtb);
             tabControl1.Controls.Add(testtab);
+
+            var edl = new EdLogWatcher();
+            
+            //subscribe to edlogwatcherevents
+            edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
+
+            //After event subscriptino we can initialize
+            edl.Initialize();
+            edl.StartWatcher();
+
         }
+
+        private void OnClientArrivedtoNewSystem(object sender, EdLogLineSystemArgs args)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<EdSystem>(ClientArrivedtoNewSystem), new object[] { args.System });
+                return;
+            }
+            ClientArrivedtoNewSystem(args.System);
+            
+        }
+
+        private void ClientArrivedtoNewSystem(EdSystem System)
+        {
+            CurrentSystem = System;
+            tbCurrentSystemFromLogs.Text  = System.Name;
+            //replace UpdateSystemNameFromLogFile
+        }
+       
 
         private void ImportSystemLocations()
         {
@@ -2880,7 +2917,7 @@ namespace RegulatedNoise
                             {
                                 CommandersLog.CreateEvent("Jumped to", "", systemName, "", "", 0, "", DateTime.Now);
 
-                                tbCurrentSystemFromLogs.Text = systemName;
+                                //tbCurrentSystemFromLogs.Text = systemName;
                             }
                             if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
                             {
