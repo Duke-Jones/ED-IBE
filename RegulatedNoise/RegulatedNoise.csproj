@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="Elite Dangerous Specifics\EdLogLine.cs" />
+    <Compile Include="Elite Dangerous Specifics\EdLogWatcher.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
