@@ -207,6 +207,7 @@
             this.lblURL = new System.Windows.Forms.Label();
             this.tabEDDN = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkboxSpoolEddnToFile = new System.Windows.Forms.CheckBox();
             this.bPurgeAllEddnData = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
@@ -221,7 +222,6 @@
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.checkboxSpoolEddnToFile = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -796,7 +796,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(142, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(140, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -823,7 +823,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(137, 213);
+            this.chart1.Size = new System.Drawing.Size(135, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -850,7 +850,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(132, 117);
+            this.chart2.Size = new System.Drawing.Size(130, 115);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2271,6 +2271,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
             // 
+            // checkboxSpoolEddnToFile
+            // 
+            this.checkboxSpoolEddnToFile.AutoSize = true;
+            this.checkboxSpoolEddnToFile.Location = new System.Drawing.Point(10, 45);
+            this.checkboxSpoolEddnToFile.Name = "checkboxSpoolEddnToFile";
+            this.checkboxSpoolEddnToFile.Size = new System.Drawing.Size(139, 17);
+            this.checkboxSpoolEddnToFile.TabIndex = 13;
+            this.checkboxSpoolEddnToFile.Text = "Spool to EddnOutput.txt";
+            this.checkboxSpoolEddnToFile.UseVisualStyleBackColor = true;
+            // 
             // bPurgeAllEddnData
             // 
             this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 473);
@@ -2403,16 +2413,6 @@
             this.label37.Size = new System.Drawing.Size(145, 13);
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
-            // 
-            // checkboxSpoolEddnToFile
-            // 
-            this.checkboxSpoolEddnToFile.AutoSize = true;
-            this.checkboxSpoolEddnToFile.Location = new System.Drawing.Point(10, 45);
-            this.checkboxSpoolEddnToFile.Name = "checkboxSpoolEddnToFile";
-            this.checkboxSpoolEddnToFile.Size = new System.Drawing.Size(198, 17);
-            this.checkboxSpoolEddnToFile.TabIndex = 13;
-            this.checkboxSpoolEddnToFile.Text = "Spool to Documents\\EddnOutput.txt";
-            this.checkboxSpoolEddnToFile.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
