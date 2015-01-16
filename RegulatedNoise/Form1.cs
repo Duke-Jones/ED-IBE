@@ -2202,7 +2202,7 @@ namespace RegulatedNoise
                 {
                     tbFinalOcrOutput.Text += _csvOutputSoFar;
                     _csvOutputSoFar = null;
-                    _commoditiesSoFar = new List<string>();
+                    
 
                     pbOcrCurrent.Image = null;
                     if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
@@ -2216,6 +2216,7 @@ namespace RegulatedNoise
                             ImportFinalOcrOutput();
                             tbFinalOcrOutput.Text = "";
                             _csvOutputSoFar = "";
+                            _commoditiesSoFar = new List<string>();
                         }
                         else
                         {
@@ -2327,6 +2328,7 @@ namespace RegulatedNoise
                     ImportFinalOcrOutput();
                     tbFinalOcrOutput.Text = "";
                     bContinueOcr.Enabled = false;
+                    _commoditiesSoFar = new List<string>();
                 }
             }
             else
