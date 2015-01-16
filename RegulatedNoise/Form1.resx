@@ -1499,7 +1499,16 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.8
+    <value>v1.81
+* Add EDDN message counting by app and version
+* EditOcrResults window fixes
+* Fix No way to clear ORC corrections if you don't want to import #14
+* Add EDDN Spool to File
+* Fix Can't cancel the "load a calibration screenshot" window #41
+* Fix Manual calibration doesn't let you set the 12th point correctly, according to user feedback. #39
+* Fix Item duplication in the Edit Results window #13
+
+v1.8
 * Add MRmP's editable calibration system
 * Add magnifier for calibration purposes
 * Remove incredibly-dumb bug that has been eating the spaces in station names... d'oh...
