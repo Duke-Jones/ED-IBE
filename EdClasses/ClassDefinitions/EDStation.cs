@@ -9,6 +9,7 @@ namespace EdClasses.ClassDefinitions
         string Name { get; set; }
         List<IEdCommodity> Commodities { get; set; }
     }
+    
     public class EdStation : IEdStation
     {
         public EdStation()

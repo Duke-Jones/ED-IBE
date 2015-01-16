@@ -40,8 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="ClassDefinitions\EdCommodity.cs" />
-    <Compile Include="ClassDefinitions\EDStation.cs" />
+    <Compile Include="ClassDefinitions\Commodities\EdCommodity.cs" />
+    <Compile Include="ClassDefinitions\EdStation.cs" />
     <Compile Include="ClassDefinitions\EdSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

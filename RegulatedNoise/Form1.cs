@@ -143,15 +143,14 @@ namespace RegulatedNoise
             _logger.Log("Initialisation complete");
 
 
-
-            //Testing
-            var testtab = new TabPage("MRmP Test Tab");
-            var testtb = new MRmPTestTab.MRmPTestTab();
+            if (RegulatedNoiseSettings.TestMode)
             {
-                Dock = DockStyle.Fill;
-            };
-            testtab.Controls.Add(testtb);
-            tabControl1.Controls.Add(testtab);
+                //Testing
+                var testtab = new TabPage("MRmP Test Tab");
+                var testtb = new MRmPTestTab.MRmPTestTab { Dock = DockStyle.Fill };
+                testtab.Controls.Add(testtb);
+                tabControl1.Controls.Add(testtab);
+            }
         }
 
         private void ImportSystemLocations()

@@ -14,40 +14,40 @@ namespace EdClasses
 
         public EdSystem Test()
         {
-            var System = new EdSystem();
-            System.Name = "LS 3482";
-            System.Id = 1;
+            var system = new EdSystem {Name = "LS 3482", Id = 1};
 
-            var stationA = new EdStation();
-            stationA.Id = 1;
-            stationA.Name = "Eudoxus Dock";
+            var stationA = new EdStation {Id = 1, Name = "Eudoxus Dock"};
 
-            var CBeer = new EdCommodity();
-            CBeer.Id = 1;
-            CBeer.Name = "Beer";
-            CBeer.Sell = 176;
-            CBeer.Buy = 0;
-            CBeer.Demand = 9755;
-            CBeer.DemandRate = DemandSupplyRate.High;
-            CBeer.Supply = 0;
-            CBeer.SupplyRate = DemandSupplyRate.None;
+            var cBeer = new EdCommodity
+            {
+                Id = 1,
+                Name = "Beer",
+                Sell = 176,
+                Buy = 0,
+                Demand = 9755,
+                DemandRate = DemandSupplyRate.High,
+                Supply = 0,
+                SupplyRate = DemandSupplyRate.None
+            };
 
-            var CCrop = new EdCommodity();
-            CCrop.Id = 2;
-            CCrop.Name = "Crop Harvesters";
-            CCrop.Sell = 1997;
-            CCrop.Buy = 2023;
-            CCrop.Demand = 0;
-            CCrop.DemandRate = DemandSupplyRate.None;
-            CCrop.Supply = 10655;
-            CCrop.SupplyRate = DemandSupplyRate.Medium;
+            var cCrop = new EdCommodity
+            {
+                Id = 2,
+                Name = "Crop Harvesters",
+                Sell = 1997,
+                Buy = 2023,
+                Demand = 0,
+                DemandRate = DemandSupplyRate.None,
+                Supply = 10655,
+                SupplyRate = DemandSupplyRate.Medium
+            };
 
-            stationA.Commodities.Add(CBeer);
-            stationA.Commodities.Add(CCrop);
+            stationA.Commodities.Add(cBeer);
+            stationA.Commodities.Add(cCrop);
 
-            System.Stations.Add(stationA);
+            system.Stations.Add(stationA);
 
-            return System;
+            return system;
 
         }
     }

@@ -62,7 +62,12 @@ namespace RegulatedNoise
 
         private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text) + @"/" + CombinedNameToSystemName(tbCurrentSystemFromLogs.Text) + @"/@" + CombinedNameToSystemName(cbIncludeWithinRegionOfStation.Text));
+            var systemName = cbIncludeWithinRegionOfStation.Text;
+            if (systemName == "<Current System>")
+            {
+                systemName = tbCurrentSystemFromLogs.Text;
+            }
+            Process.Start(@"http://starchart.club/map/system/" + systemName);
         }
 
         private void linkLabel9_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

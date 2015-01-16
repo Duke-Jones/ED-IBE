@@ -34,6 +34,7 @@ namespace RegulatedNoise
         public string ForegroundColour = null;
         public string BackgroundColour = null;
         public bool AutoImport = false;
+        public bool TestMode = false;
 
         public void CheckVersion()
         {
