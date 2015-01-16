@@ -159,6 +159,7 @@
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.bClearOcrOutput = new System.Windows.Forms.Button();
             this.bEditResults = new System.Windows.Forms.Button();
             this.cbAutoImport = new System.Windows.Forms.CheckBox();
             this.cbUseEddnTestSchema = new System.Windows.Forms.CheckBox();
@@ -796,7 +797,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(140, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(136, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -823,7 +824,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(135, 213);
+            this.chart1.Size = new System.Drawing.Size(131, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -850,7 +851,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(130, 115);
+            this.chart2.Size = new System.Drawing.Size(126, 111);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1746,6 +1747,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.bClearOcrOutput);
             this.groupBox4.Controls.Add(this.bEditResults);
             this.groupBox4.Controls.Add(this.cbAutoImport);
             this.groupBox4.Controls.Add(this.cbUseEddnTestSchema);
@@ -1774,6 +1776,16 @@
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
+            // 
+            // bClearOcrOutput
+            // 
+            this.bClearOcrOutput.Location = new System.Drawing.Point(422, 152);
+            this.bClearOcrOutput.Name = "bClearOcrOutput";
+            this.bClearOcrOutput.Size = new System.Drawing.Size(154, 23);
+            this.bClearOcrOutput.TabIndex = 33;
+            this.bClearOcrOutput.Text = "Clear";
+            this.bClearOcrOutput.UseVisualStyleBackColor = true;
+            this.bClearOcrOutput.Click += new System.EventHandler(this.bClearOcrOutput_Click);
             // 
             // bEditResults
             // 
@@ -1950,7 +1962,7 @@
             // bContinueOcr
             // 
             this.bContinueOcr.Enabled = false;
-            this.bContinueOcr.Location = new System.Drawing.Point(423, 132);
+            this.bContinueOcr.Location = new System.Drawing.Point(422, 128);
             this.bContinueOcr.Name = "bContinueOcr";
             this.bContinueOcr.Size = new System.Drawing.Size(154, 23);
             this.bContinueOcr.TabIndex = 14;
@@ -2690,6 +2702,7 @@
         public System.Windows.Forms.PictureBox pbOriginalImage;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox checkboxSpoolEddnToFile;
+        private System.Windows.Forms.Button bClearOcrOutput;
     }
 }
 

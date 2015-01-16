@@ -2357,7 +2357,22 @@ namespace RegulatedNoise
         private void tbOcrStationName_TextChanged(object sender, EventArgs e)
         {
             if (tbOcrStationName.Text != _oldOcrName && _oldOcrName != null)
-                tbFinalOcrOutput.Text = tbFinalOcrOutput.Text.Replace(_oldOcrName, tbOcrStationName.Text);
+            {
+                var rows = tbFinalOcrOutput.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+
+                string newRows = "";
+
+                foreach (var row in rows)
+                {
+                    var newRow1 = row.Substring(0, row.IndexOf(";"));
+                    var newRow2 = tbOcrStationName.Text;
+                    var newRow3 = row.Substring(row.IndexOf(";", 1));
+                    newRow3 = newRow3.Substring(newRow3.IndexOf(";", 1));
+                    newRows = newRows + newRow1 +";"+ newRow2 + newRow3 + "\r\n";
+
+                }
+                tbFinalOcrOutput.Text = newRows;
+            }
 
             _oldOcrName = tbOcrStationName.Text;
         }
@@ -2367,7 +2382,18 @@ namespace RegulatedNoise
         private void tbOcrSystemName_TextChanged(object sender, EventArgs e)
         {
             if (tbOcrSystemName.Text != _oldOcrSystemName && _oldOcrSystemName != null)
-                tbFinalOcrOutput.Text = tbFinalOcrOutput.Text.Replace(_oldOcrSystemName, tbOcrSystemName.Text);
+            {
+                var rows = tbFinalOcrOutput.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+                string newRows = "";
+
+                foreach (var row in rows)
+                {
+                    var newRow1 = row.Substring(row.IndexOf(";"));
+                    newRows += tbOcrSystemName.Text + newRow1+"\r\n";
+
+                }
+                tbFinalOcrOutput.Text = newRows;
+            }
 
             _oldOcrSystemName = tbOcrSystemName.Text;
         }
@@ -3578,6 +3604,11 @@ namespace RegulatedNoise
 
             // Perform the sort with these new sort options.
             lvStationToStationReturn.Sort();
+        }
+
+        private void bClearOcrOutput_Click(object sender, EventArgs e)
+        {
+            tbFinalOcrOutput.Text = "";
         }
     }
 }
