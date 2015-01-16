@@ -76,7 +76,7 @@ namespace RegulatedNoise
             tb_rawdata.Text = string.Join(Environment.NewLine, Form1.OcrCalibrator.CalibrationBoxes.Select(p => p.Position.X + ";" + p.Position.Y));
         }
 
-        private Bitmap getReferenceScreenshot(bool necessarily)
+        private Bitmap getReferenceScreenshot()
         {
             var openFile = new OpenFileDialog
             {
@@ -86,10 +86,7 @@ namespace RegulatedNoise
                 InitialDirectory =
                     Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) +
                     @"\Frontier Developments\Elite Dangerous",
-                Title =
-                    necessarily
-                        ? "Open a screenshot for calibration verification? (not essential)"
-                        : "Open a screenshot for calibration"
+                Title = "Open a screenshot for calibration"
             };
 
             if (openFile.ShowDialog() == DialogResult.OK)
@@ -101,7 +98,7 @@ namespace RegulatedNoise
                 var wrongres = MessageBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
                 if (wrongres == DialogResult.Yes)
                 {
-                    return getReferenceScreenshot(necessarily);
+                    return getReferenceScreenshot();
                 }
                 
                 // Force resolution from input bmp
@@ -113,7 +110,7 @@ namespace RegulatedNoise
 
                 return bmp;
             }
-            return getReferenceScreenshot(necessarily);
+            return null;
         }
 
         private Bitmap _refbmp;
@@ -126,12 +123,15 @@ namespace RegulatedNoise
             if (_refbmp != null)
                 _refbmp.Dispose();
 
-            _refbmp = getReferenceScreenshot(true);
+            _refbmp = getReferenceScreenshot();
+
+            if (_refbmp == null)
+            {
+                return;
+            }
 
             btn_calibration_reset.Enabled = true;
-
-            if (_refbmp != null)
-                pb_calibratorBox.Image = _refbmp;
+            pb_calibratorBox.Image = _refbmp;
 
             if (Form1.OcrCalibrator.CalibrationBoxes == null)
             {
@@ -142,10 +142,7 @@ namespace RegulatedNoise
             else
             {
                 FillRawData();
-                if (_refbmp != null)
-                {
-                    _drawPoints = true;
-                }
+                _drawPoints = true;
                 Form1.OcrCalibrator.SaveCalibration();
             }
 
@@ -273,7 +270,7 @@ namespace RegulatedNoise
             if (pb_calibratorMagnifier.Image != null)
                 pb_calibratorMagnifier.Image.Dispose();
 
-            if (pb_calibratorBox.Image != null)
+            if (pb_calibratorBox.Image != null && _refbmp != null)
                 pb_calibratorMagnifier.Image = Crop(_refbmp, new Rectangle(e.X - 25, e.Y - 17, 50, 31));
         }
 
