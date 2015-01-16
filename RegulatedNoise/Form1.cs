@@ -2502,13 +2502,10 @@ namespace RegulatedNoise
                     _eddnSpooler.WriteLine(text);
                 }
 
-                if (checkboxImportEDDN.Checked)
-                {
-                    var headerDictionary = new Dictionary<string, string>();
-                    var messageDictionary = new Dictionary<string, string>();
+                var headerDictionary = new Dictionary<string, string>();
+                var messageDictionary = new Dictionary<string, string>();
 
-                    ParseEddnJson(text, headerDictionary, messageDictionary);
-                }
+                ParseEddnJson(text, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
 
                 if (harvestStations && StationDirectory.Count > harvestStationsCount)
                 {
@@ -2540,7 +2537,8 @@ namespace RegulatedNoise
             }
         }
 
-        private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, Dictionary<string, string> messageDictionary)
+        private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
+        private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
         {
             string txt = text.ToString();
             // .. we're here because we've received some data from EDDN
@@ -2581,8 +2579,21 @@ namespace RegulatedNoise
                         messageDictionary.Add(splitPair[0], splitPair[1]);
                     }
 
+                    var nameAndVersion = (headerDictionary["softwareName"] + " / " + headerDictionary["softwareVersion"]);
+                    if (!_eddnPublisherStats.ContainsKey(nameAndVersion))
+                        _eddnPublisherStats.Add(nameAndVersion, new EddnPublisherVersionStats());
+
+                    _eddnPublisherStats[nameAndVersion].MessagesReceived++;
+
+                    var output = "";
+                    foreach (var appVersion in _eddnPublisherStats)
+                    {
+                        output = output + appVersion.Key + " : " + appVersion.Value.MessagesReceived + " messages\r\n";
+                    }
+                    tbEddnStats.Text = output;
+
                     //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
-                    if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                    if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
                     {
                         string csvFormatted = messageDictionary["systemName"] + ";" +
                                               messageDictionary["stationName"] + ";" +

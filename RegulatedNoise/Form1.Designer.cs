@@ -207,6 +207,7 @@
             this.cbInterfaces = new System.Windows.Forms.ComboBox();
             this.lblURL = new System.Windows.Forms.Label();
             this.tabEDDN = new System.Windows.Forms.TabPage();
+            this.tbEddnStats = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkboxSpoolEddnToFile = new System.Windows.Forms.CheckBox();
             this.bPurgeAllEddnData = new System.Windows.Forms.Button();
@@ -797,7 +798,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(136, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(210, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -824,7 +825,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(131, 213);
+            this.chart1.Size = new System.Drawing.Size(205, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -851,7 +852,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(126, 111);
+            this.chart2.Size = new System.Drawing.Size(200, 107);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2255,6 +2256,7 @@
             // 
             // tabEDDN
             // 
+            this.tabEDDN.Controls.Add(this.tbEddnStats);
             this.tabEDDN.Controls.Add(this.groupBox2);
             this.tabEDDN.Location = new System.Drawing.Point(4, 22);
             this.tabEDDN.Name = "tabEDDN";
@@ -2262,6 +2264,17 @@
             this.tabEDDN.TabIndex = 7;
             this.tabEDDN.Text = "EDDN";
             this.tabEDDN.UseVisualStyleBackColor = true;
+            // 
+            // tbEddnStats
+            // 
+            this.tbEddnStats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbEddnStats.Location = new System.Drawing.Point(459, 3);
+            this.tbEddnStats.Multiline = true;
+            this.tbEddnStats.Name = "tbEddnStats";
+            this.tbEddnStats.Size = new System.Drawing.Size(595, 523);
+            this.tbEddnStats.TabIndex = 1;
             // 
             // groupBox2
             // 
@@ -2504,6 +2517,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabEDDN.ResumeLayout(false);
+            this.tabEDDN.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
@@ -2703,6 +2717,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox checkboxSpoolEddnToFile;
         private System.Windows.Forms.Button bClearOcrOutput;
+        private System.Windows.Forms.TextBox tbEddnStats;
     }
 }
 
