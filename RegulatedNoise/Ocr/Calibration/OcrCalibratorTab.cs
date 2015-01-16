@@ -99,7 +99,19 @@ namespace RegulatedNoise
                 if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
                     bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
                 var wrongres = MessageBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
-                return wrongres == DialogResult.Yes ? getReferenceScreenshot(necessarily) : bmp;
+                if (wrongres == DialogResult.Yes)
+                {
+                    return getReferenceScreenshot(necessarily);
+                }
+                
+                // Force resolution from input bmp
+                Form1.GameSettings.Display.ScreenHeight = bmp.Height;
+                Form1.GameSettings.Display.ScreenWidth = bmp.Width;
+                SetResolutionValues();
+                var calibrations = Form1.OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                DrawCalibrationPoints(calibrations);
+
+                return bmp;
             }
             return getReferenceScreenshot(necessarily);
         }
