@@ -133,7 +133,7 @@ namespace RegulatedNoise
             byte[] buffer = new byte[BUFLEN];
             long pos = BUFLEN;
             if (pos > filelen - validpos + 1) pos = filelen - validpos + 1;
-            byte[] midbuffer = new byte[1000];
+            byte[] midbuffer = new byte[100000];
             int mindex = midbuffer.Length;
             while (true)
             {

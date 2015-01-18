@@ -1499,7 +1499,10 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.81
+    <value>v1.82
+* Fix Crash on Startup (if you had a log file line longer than 1000 characters)
+
+v1.81
 * Add EDDN message counting by app and version
 * EditOcrResults window fixes
 * Fix No way to clear ORC corrections if you don't want to import #14
