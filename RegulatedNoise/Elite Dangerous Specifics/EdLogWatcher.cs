@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using EdClasses.ClassDefinitions;
 
 namespace RegulatedNoise
@@ -89,6 +90,8 @@ namespace RegulatedNoise
                             
                         }
                     }
+
+                    Thread.Sleep(10000);
 
                 } while (!e.Cancel);
             }
