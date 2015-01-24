@@ -1499,7 +1499,10 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.82
+    <value>v1.83
+* Don't flatline one CPU core scanning log files (sorry 'bout that...)
+
+v1.82
 * Fix Crash on Startup (if you had a log file line longer than 1000 characters)
 
 v1.81
