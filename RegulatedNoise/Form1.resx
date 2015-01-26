@@ -1499,7 +1499,11 @@
 </value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.83
+    <value>v1.84
+* Fix system name not updating from log files
+* Update elite.json and station.csv
+
+v1.83
 * Don't flatline one CPU core scanning log files (sorry 'bout that...)
 
 v1.82

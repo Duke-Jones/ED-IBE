@@ -90,8 +90,8 @@ namespace RegulatedNoise
                             
                         }
                     }
-
-                    Thread.Sleep(10000);
+                    else
+                        Thread.Sleep(5000);
 
                 } while (!e.Cancel);
             }
