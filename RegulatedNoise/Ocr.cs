@@ -173,11 +173,14 @@ namespace RegulatedNoise
 
         public Bitmap PreprocessScreenshot(Bitmap b)
         {
-            b = MakeGrayscale(b);
-            b = MakeBrighter(b, -.10f);
-            b = Contrast(b, 100);
-            b = Contrast(b, 50);
+			// tested with default ED gui setting
+            // it's much!! better than v1.82 and I think better than v1.84, too
+
             b = Invert(b);
+            b = MakeGrayscale(b);
+            b = MakeBrighter(b, .20f);
+            b = Contrast(b, 100);
+
             return b;
         }
 
@@ -188,8 +191,9 @@ namespace RegulatedNoise
             Pix p = conv.Convert(_bTrimmedHeader);
 
             string headerResult;
-
-            using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
+			
+            // using the "big.traineddata" from EliteOCR results in clearly better ocr
+            using (var engine = new TesseractEngine(@"./tessdata", "big", EngineMode.Default))
             {
                 using (var page = engine.Process(p))
                 {
@@ -206,7 +210,11 @@ namespace RegulatedNoise
             if(matchesInStationReferenceList.Count > 0)
             {
                 var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].Name.ToUpper());
-                if (ld < 5)
+                
+                // this depends on the length of the word - this factor works really good
+                double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Name.Length * 0.7), 0);
+
+                if (ld < LevenshteinLimit)
                     headerResult = matchesInStationReferenceList[0].Name.ToUpper();
             }
 
@@ -218,8 +226,10 @@ namespace RegulatedNoise
             var rowIds = new string[textRowLocations.Count()];
 
             var rowCtr = 0;
-
-            var bTrimmedContrast = Contrast(MakeGrayscale(MakeBrighter((Bitmap)(_bTrimmed.Clone()),.25f)),60);
+			
+			// don't do more "optimization" - it's the best I think. don't cchange it here again
+            //var bTrimmedContrast = Contrast(MakeGrayscale(MakeBrighter((Bitmap)(_bTrimmed.Clone()),.25f)),60);
+            var bTrimmedContrast = (Bitmap)_bTrimmed.Clone();
 
             var bitmapCtr = 0;
             
@@ -303,7 +313,7 @@ namespace RegulatedNoise
                         var t = new string[c.Length];
                         var cf = new float[c.Length];
 
-                        using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
+                        using (var engine = new TesseractEngine(@"./tessdata", "big", EngineMode.Default))
                         {
                             for (int i = 0; i < c.Length; i++)
                             {
@@ -372,8 +382,18 @@ namespace RegulatedNoise
                     var o2 = outputFromBrainerous.IndexOf("Failed to ");
                     var o3 = outputFromBrainerous.Substring(0, o2);
                     var o4 = outputFromBrainerous.Substring(o2).IndexOf("./images");
+
+					// I had a string with "Failed to pad successfully" and only some trash behind but no "./images"
+                    // so "o4" was "-1" and this results in strange behaviour
+                    if (o4 > 0)
+                    {
                     var o5 = outputFromBrainerous.Substring(o2 + o4);
                     outputFromBrainerous = o3 + "\r\n" + o5;
+                }
+                    else
+                    {
+                        outputFromBrainerous = o3; 
+                    }
                 }
 
                 pr.WaitForExit();

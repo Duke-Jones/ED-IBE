@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -159,6 +159,8 @@
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cbAutoUppercase = new System.Windows.Forms.CheckBox();
+            this.bIgnoreTrash = new System.Windows.Forms.Button();
             this.bClearOcrOutput = new System.Windows.Forms.Button();
             this.bEditResults = new System.Windows.Forms.Button();
             this.cbAutoImport = new System.Windows.Forms.CheckBox();
@@ -630,7 +632,7 @@
             this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold);
             this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 0);
             this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(639, 106);
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(641, 106);
             this.lblRegulatedNoise.TabIndex = 2;
             this.lblRegulatedNoise.Text = "RegulatedNoise";
             // 
@@ -798,7 +800,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(210, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(208, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -818,14 +820,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(205, 213);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(203, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -845,14 +847,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
-            this.chart2.Size = new System.Drawing.Size(200, 221);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(198, 219);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1748,6 +1750,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.cbAutoUppercase);
+            this.groupBox4.Controls.Add(this.bIgnoreTrash);
             this.groupBox4.Controls.Add(this.bClearOcrOutput);
             this.groupBox4.Controls.Add(this.bEditResults);
             this.groupBox4.Controls.Add(this.cbAutoImport);
@@ -1778,21 +1782,47 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
             // 
+            // cbAutoUppercase
+            // 
+            this.cbAutoUppercase.AutoSize = true;
+            this.cbAutoUppercase.Checked = true;
+            this.cbAutoUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbAutoUppercase.Location = new System.Drawing.Point(125, 161);
+            this.cbAutoUppercase.Name = "cbAutoUppercase";
+            this.cbAutoUppercase.Size = new System.Drawing.Size(103, 17);
+            this.cbAutoUppercase.TabIndex = 35;
+            this.cbAutoUppercase.Text = "Auto-Uppercase";
+            this.cbAutoUppercase.UseVisualStyleBackColor = true;
+            this.cbAutoUppercase.CheckedChanged += new System.EventHandler(this.cbAutoUppercase_CheckedChanged);
+            // 
+            // bIgnoreTrash
+            // 
+            this.bIgnoreTrash.Enabled = false;
+            this.bIgnoreTrash.Location = new System.Drawing.Point(422, 152);
+            this.bIgnoreTrash.Name = "bIgnoreTrash";
+            this.bIgnoreTrash.Size = new System.Drawing.Size(154, 23);
+            this.bIgnoreTrash.TabIndex = 34;
+            this.bIgnoreTrash.Text = "&Ignore as Trash";
+            this.bIgnoreTrash.UseVisualStyleBackColor = true;
+            this.bIgnoreTrash.Click += new System.EventHandler(this.cmdIgnore_Click);
+            // 
             // bClearOcrOutput
             // 
-            this.bClearOcrOutput.Location = new System.Drawing.Point(422, 152);
+            this.bClearOcrOutput.Enabled = false;
+            this.bClearOcrOutput.Location = new System.Drawing.Point(295, 402);
             this.bClearOcrOutput.Name = "bClearOcrOutput";
-            this.bClearOcrOutput.Size = new System.Drawing.Size(154, 23);
+            this.bClearOcrOutput.Size = new System.Drawing.Size(281, 23);
             this.bClearOcrOutput.TabIndex = 33;
-            this.bClearOcrOutput.Text = "Clear";
+            this.bClearOcrOutput.Text = "Clear Results";
             this.bClearOcrOutput.UseVisualStyleBackColor = true;
             this.bClearOcrOutput.Click += new System.EventHandler(this.bClearOcrOutput_Click);
             // 
             // bEditResults
             // 
+            this.bEditResults.Enabled = false;
             this.bEditResults.Location = new System.Drawing.Point(6, 402);
             this.bEditResults.Name = "bEditResults";
-            this.bEditResults.Size = new System.Drawing.Size(570, 23);
+            this.bEditResults.Size = new System.Drawing.Size(283, 23);
             this.bEditResults.TabIndex = 32;
             this.bEditResults.Text = "Edit Results";
             this.bEditResults.UseVisualStyleBackColor = true;
@@ -2718,6 +2748,8 @@
         private System.Windows.Forms.CheckBox checkboxSpoolEddnToFile;
         private System.Windows.Forms.Button bClearOcrOutput;
         private System.Windows.Forms.TextBox tbEddnStats;
+        private System.Windows.Forms.Button bIgnoreTrash;
+        private System.Windows.Forms.CheckBox cbAutoUppercase;
     }
 }
 

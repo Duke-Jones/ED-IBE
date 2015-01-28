@@ -168,6 +168,16 @@ namespace RegulatedNoise
             //After event subscriptino we can initialize
             edl.Initialize();
             edl.StartWatcher();
+			
+			// it's nice to write automatically uppercase
+            if (cbAutoUppercase.Checked)
+            {
+                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
+        }
+            else
+            {
+                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
+            }
 
         }
 
@@ -548,6 +558,12 @@ namespace RegulatedNoise
             if (RegulatedNoiseSettings.WebserverBackgroundColor != "") tbBackgroundColour.Text = RegulatedNoiseSettings.WebserverBackgroundColor;
             if (RegulatedNoiseSettings.WebserverIpAddress != "") cbInterfaces.Text = RegulatedNoiseSettings.WebserverIpAddress;
             cbAutoImport.Checked = RegulatedNoiseSettings.AutoImport;
+
+			// it's nice to write automatically uppercase
+            cbAutoUppercase.Checked = RegulatedNoiseSettings.AutoUppercase;
+
+            RegulatedNoiseSettings.AutoImport = cbAutoImport.Checked;
+
             ShowSelectedUiColours();
             cbExtendedInfoInCSV.Checked = RegulatedNoiseSettings.IncludeExtendedCSVInfo;
             cbDeleteScreenshotOnImport.Checked = RegulatedNoiseSettings.DeleteScreenshotOnImport;
@@ -588,6 +604,8 @@ namespace RegulatedNoise
 
                 ocr.IsMonitoring = true;
             }
+
+
         }
 
         private Thread _ocrThread;
@@ -616,6 +634,10 @@ namespace RegulatedNoise
 
             if (_ocrThread == null || !_ocrThread.IsAlive)
             {
+				// some stateful enabling for the buttons
+                bClearOcrOutput.Enabled = false;
+                bEditResults.Enabled = false;
+
                 _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, tbCurrentSystemFromLogs.Text));
                 _ocrThread.Start();
             }
@@ -637,6 +659,10 @@ namespace RegulatedNoise
             {
                 if (_preOcrBuffer.Count > 0)
                 {
+    				// some stateful enabling for the buttons
+                    bClearOcrOutput.Enabled = false;
+                    bEditResults.Enabled = false;
+
                     var s = _preOcrBuffer[0];
                     _preOcrBuffer.RemoveAt(0);
                     _ocrThread = new Thread(() => ocr.ScreenshotCreated(s, tbCurrentSystemFromLogs.Text));
@@ -2039,6 +2065,8 @@ namespace RegulatedNoise
             _correctionColumn = 0;
             _correctionRow = -1;
             bContinueOcr.Text = "Continue";
+            bClearOcrOutput.Enabled = false;
+            bEditResults.Enabled = false;
             tbFinalOcrOutput.Enabled = false;
             ContinueDisplayingResults();
         }
@@ -2064,6 +2092,10 @@ namespace RegulatedNoise
                     var currentTextCamelCase =
                         _textInfo.ToTitleCase(_commodityTexts[_correctionRow, _correctionColumn].ToLower()); // There *was* a reason why I did this...
 
+					
+					// if the ocr have found no char so we dont need to ask Mr. Levenshtein 
+                    if (currentTextCamelCase.Trim().Length > 0)
+                    {
                     if (KnownCommodityNames.Contains(
                         currentTextCamelCase))
                         _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
@@ -2074,6 +2106,8 @@ namespace RegulatedNoise
                         var nextLowestLevenshteinNumber = 10000;
                         var lowestMatchingCommodity = "";
                         var lowestMatchingCommodityRef = "";
+                            double LevenshteinLimit = 0;
+
                         foreach (var reference in KnownCommodityNames)
                         {
                             var upperRef = StripPunctuationFromScannedText(reference);
@@ -2096,13 +2130,17 @@ namespace RegulatedNoise
                                 }
                             }
                         }
-                        if (lowestLevenshteinNumber < 5)
+
+                            // it's better if this depends on the length of the word - this factor works pretty good
+                            LevenshteinLimit = Math.Round((currentTextCamelCase.Length * 0.7), 0);
+
+                            if (lowestLevenshteinNumber <= LevenshteinLimit)
                         {
                             _originalBitmapConfidences[_correctionRow, _correctionColumn] = .9f;
                             _commodityTexts[_correctionRow, _correctionColumn] = lowestMatchingCommodity;
                         }
 
-                        if (lowestLevenshteinNumber < 5 && lowestLevenshteinNumber + 3 < nextLowestLevenshteinNumber) // INDIUM versus INDITE... could factor length in here
+                            if (lowestLevenshteinNumber <= LevenshteinLimit && lowestLevenshteinNumber + 3 < nextLowestLevenshteinNumber) // INDIUM versus INDITE... could factor length in here
                             _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
                     }
 
@@ -2114,6 +2152,13 @@ namespace RegulatedNoise
                     else
                     {
                         _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]); // If we're doing a batch of screenshots, don't keep doing the same commodity when we keep finding it
+                    }
+                }
+                    else
+                    {
+                        // that was nothing 
+                        _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
+                        _commodityTexts[_correctionRow, _correctionColumn] = "";
                     }
                 }
                 else if (_correctionColumn == 5 || _correctionColumn == 7) // hacks for LOW/MED/HIGH
@@ -2155,13 +2200,16 @@ namespace RegulatedNoise
 
             if (_correctionColumn < _commodityTexts.GetLength(1))
             {
+                // doing again some stateful enabling
                 tbCommoditiesOcrOutput.Text = _commodityTexts[_correctionRow, _correctionColumn];
                 tbConfidence.Text = _originalBitmapConfidences[_correctionRow, _correctionColumn].ToString(CultureInfo.InvariantCulture);
                 bContinueOcr.Enabled = true;
+                bIgnoreTrash.Enabled = true;
             }
             else
             {
                 bContinueOcr.Enabled = false;
+                bIgnoreTrash.Enabled = false;
 
                 string finalOutput = _csvOutputSoFar;
 
@@ -2217,16 +2265,25 @@ namespace RegulatedNoise
                             tbFinalOcrOutput.Text = "";
                             _csvOutputSoFar = "";
                             _commoditiesSoFar = new List<string>();
+                            bClearOcrOutput.Enabled = false;
+                            bEditResults.Enabled = false;
                         }
                         else
                         {
                             tbCommoditiesOcrOutput.Text = "Finished!";
                             bContinueOcr.Text = "Import";
                             bContinueOcr.Enabled = true;
+                            bIgnoreTrash.Enabled = false;
+                            bClearOcrOutput.Enabled = true;
+                            bEditResults.Enabled = true;
                         }
                     }
                     else
+                    {
                         tbCommoditiesOcrOutput.Text = "Working...!";
+                        bClearOcrOutput.Enabled = false;
+                        bEditResults.Enabled = false;
+                    }
 
                 }
                 else
@@ -2328,7 +2385,10 @@ namespace RegulatedNoise
                     ImportFinalOcrOutput();
                     tbFinalOcrOutput.Text = "";
                     bContinueOcr.Enabled = false;
+                    bIgnoreTrash.Enabled = false;
                     _commoditiesSoFar = new List<string>();
+                    bClearOcrOutput.Enabled = false;
+                    bEditResults.Enabled = false;
                 }
             }
             else
@@ -3167,6 +3227,7 @@ namespace RegulatedNoise
         private void Form_Load(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.CheckVersion();
+
             Text += RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
 
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
@@ -3619,7 +3680,50 @@ namespace RegulatedNoise
 
         private void bClearOcrOutput_Click(object sender, EventArgs e)
         {
+			// when we do clear so we must consider all dependences (!->_commoditiesSoFar)
+            // doing some stateful enabling of button again
             tbFinalOcrOutput.Text = "";
+            bContinueOcr.Enabled = false;
+            bIgnoreTrash.Enabled = false;
+            _commoditiesSoFar = new List<string>();
+            bClearOcrOutput.Enabled = false;
+            bEditResults.Enabled = false;
+
         }
+
+        /// <summary>
+        /// Perform an "ignoring" of the current value (it's cosier)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdIgnore_Click(object sender, EventArgs e)
+        {
+
+            tbCommoditiesOcrOutput.Text = "";
+
+            bContinueOcr_Click(sender, e);
+
     }
+
+		
+        private void cbAutoUppercase_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbAutoUppercase.Checked)
+	        {
+		        tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
+        	} else
+        	{
+                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
+}
+
+            RegulatedNoiseSettings.AutoUppercase = cbAutoUppercase.Checked;
+
+        }
+
+
+    }
+
+
+		  
+	
 }
