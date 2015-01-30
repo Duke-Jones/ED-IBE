@@ -176,7 +176,7 @@ namespace RegulatedNoise
         }
             else
             {
-                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
+                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
             }
 
         }
@@ -625,9 +625,10 @@ namespace RegulatedNoise
             //                " exists!  Let's pause for a moment before opening it...");
 
             ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
-            var s = CommoditiesText("");
+			// if the textfield support auto-uppercase we must consider
+            string s = CommoditiesText("").ToString().ToUpper();
 
-            if (s == "Imported!" || s == "Finished!" || s == "" || s == "No rows found...")
+            if (s == "Imported!".ToUpper() || s == "Finished!".ToUpper() || s == "" || s == "No rows found...".ToUpper())
                 CommoditiesText("Working...");
 
 
@@ -3714,16 +3715,30 @@ namespace RegulatedNoise
         	} else
         	{
                 tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
-}
+            }
 
             RegulatedNoiseSettings.AutoUppercase = cbAutoUppercase.Checked;
 
         }
+         
+   
+        /// <summary>
+        /// direct submitting of the commodities with "Enter" if changed 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbCommoditiesOcrOutput_Keypress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == (char)Keys.Return)
+            {
+                if (bContinueOcr.Enabled)
+                { 
+                    bContinueOcr_Click(sender, new EventArgs());
+                }
+            }
 
+         }
 
     }
 
-
-		  
-	
 }
