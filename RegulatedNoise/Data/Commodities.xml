@@ -1,0 +1,406 @@
+<?xml version="1.0" standalone="yes"?>
+<dsCommodities xmlns="http://tempuri.org/dsCommodities.xsd">
+  <Names>
+    <eng>Gallite</eng>
+    <ger>Gallit</ger>
+    <fra>Gallite</fra>
+  </Names>
+  <Names>
+    <eng>Indite</eng>
+    <ger>Indit</ger>
+    <fra>Indite</fra>
+  </Names>
+  <Names>
+    <eng>Lepidolite</eng>
+    <ger>Lepidolith</ger>
+    <fra>Lépidolite</fra>
+  </Names>
+  <Names>
+    <eng>Rutile</eng>
+    <ger>Rutil</ger>
+    <fra>Rutile</fra>
+  </Names>
+  <Names>
+    <eng>Uraninite</eng>
+    <ger>Uraninit</ger>
+    <fra>Uraninite</fra>
+  </Names>
+  <Names>
+    <eng>Imperial Slaves</eng>
+    <ger>Imperiale Sklaven</ger>
+    <fra>Empire Esclaves</fra>
+  </Names>
+  <Names>
+    <eng>Slaves</eng>
+    <ger>Sklaven</ger>
+    <fra>Esclaves</fra>
+  </Names>
+  <Names>
+    <eng>Bioreducing Lichen</eng>
+    <ger>Bioreduzierende Flechten</ger>
+    <fra>Lichen Bioréducteur</fra>
+  </Names>
+  <Names>
+    <eng>H.E. Suits</eng>
+    <ger>Schutzanzüge</ger>
+    <fra>Combinaisons de Protection</fra>
+  </Names>
+  <Names>
+    <eng>Biowaste</eng>
+    <ger>Biomüll</ger>
+    <fra>Déchets Organiques</fra>
+  </Names>
+  <Names>
+    <eng>Non-Lethal Weapons</eng>
+    <ger>Nichtletale Waffen</ger>
+    <fra>Armes Incapacitantes</fra>
+  </Names>
+  <Names>
+    <eng>Personal Weapons</eng>
+    <ger>Persönliche Waffen</ger>
+    <fra>Armes de Poing</fra>
+  </Names>
+  <Names>
+    <eng>Reactive Armour</eng>
+    <ger>Reaktivrüstung</ger>
+    <fra>Protection Réactive</fra>
+  </Names>
+  <Names>
+    <eng>Wine</eng>
+    <ger>Wein</ger>
+    <fra>Vin</fra>
+  </Names>
+  <Names>
+    <eng>Mineral Extractors</eng>
+    <ger>Mineralextraktoren</ger>
+    <fra>Extracteurs de Minerai</fra>
+  </Names>
+  <Names>
+    <eng>Power Generators</eng>
+    <ger>Stromerzeuger</ger>
+    <fra>Générateurs</fra>
+  </Names>
+  <Names>
+    <eng>Water Purifiers</eng>
+    <ger>Wasserreiniger</ger>
+    <fra>Purificateurs d'eau</fra>
+  </Names>
+  <Names>
+    <eng>Basic Medicines</eng>
+    <ger>Allgemeine Medikamente</ger>
+    <fra>Médicaments Simples</fra>
+  </Names>
+  <Names>
+    <eng>Combat Stabilisers</eng>
+    <ger>Kampfstabilisatoren</ger>
+    <fra>Stabilisateurs de Combat</fra>
+  </Names>
+  <Names>
+    <eng>Performance Enhancers</eng>
+    <ger>Leistungssteigerer</ger>
+    <fra>Produits Dopants</fra>
+  </Names>
+  <Names>
+    <eng>Progenitor Cells</eng>
+    <ger>Vorläuferzellen</ger>
+    <fra>Cellules Souches</fra>
+  </Names>
+  <Names>
+    <eng>Cobalt</eng>
+    <ger>Cobalt</ger>
+    <fra>Cobalt</fra>
+  </Names>
+  <Names>
+    <eng>Gold</eng>
+    <ger>Gold</ger>
+    <fra>Or</fra>
+  </Names>
+  <Names>
+    <eng>Palladium</eng>
+    <ger>Palladium</ger>
+    <fra>Palladium</fra>
+  </Names>
+  <Names>
+    <eng>Silver</eng>
+    <ger>Silber</ger>
+    <fra>Argent</fra>
+  </Names>
+  <Names>
+    <eng>Bauxite</eng>
+    <ger>Bauxit</ger>
+    <fra>Bauxite</fra>
+  </Names>
+  <Names>
+    <eng>Bertrandite</eng>
+    <ger>Bertrandit</ger>
+    <fra>Bertrandite</fra>
+  </Names>
+  <Names>
+    <eng>Explosives</eng>
+    <ger>Sprengstoffe</ger>
+    <fra>Explosifs</fra>
+  </Names>
+  <Names>
+    <eng>Hydrogen Fuel</eng>
+    <ger>Wasserstoff-Treibstoff</ger>
+    <fra>Carburant à Base d'Hydrogène</fra>
+  </Names>
+  <Names>
+    <eng>Clothing</eng>
+    <ger>Kleidung</ger>
+    <fra>Maquillage</fra>
+  </Names>
+  <Names>
+    <eng>Consumer Technology</eng>
+    <ger>Unterhaltungselektronik</ger>
+    <fra>Vêtements</fra>
+  </Names>
+  <Names>
+    <eng>Domestic Appliances</eng>
+    <ger>Haushaltsgeräte</ger>
+    <fra>Équipement de Loisir</fra>
+  </Names>
+  <Names>
+    <eng>Animal Meat</eng>
+    <ger>Tierfleisch</ger>
+    <fra>Viande</fra>
+  </Names>
+  <Names>
+    <eng>Coffee</eng>
+    <ger>Kaffee</ger>
+    <fra>Café</fra>
+  </Names>
+  <Names>
+    <eng>Fish</eng>
+    <ger>Fisch</ger>
+    <fra>Poisson</fra>
+  </Names>
+  <Names>
+    <eng>Food Cartridges</eng>
+    <ger>Nahrungskartuschen</ger>
+    <fra>Cartouches Alimentaires</fra>
+  </Names>
+  <Names>
+    <eng>Fruit And Vegetables</eng>
+    <ger>Obst Und Gemüse</ger>
+    <fra>Fruits et Légumes</fra>
+  </Names>
+  <Names>
+    <eng>Grain</eng>
+    <ger>Getreide</ger>
+    <fra>Céréales</fra>
+  </Names>
+  <Names>
+    <eng>Synthetic Meat</eng>
+    <ger>Künstliches Fleisch</ger>
+    <fra>Viande Synthétique</fra>
+  </Names>
+  <Names>
+    <eng>Tea</eng>
+    <ger>Tee</ger>
+    <fra>Thé</fra>
+  </Names>
+  <Names>
+    <eng>Beer</eng>
+    <ger>Bier</ger>
+    <fra>Bière</fra>
+  </Names>
+  <Names>
+    <eng>Liquor</eng>
+    <ger>Spirituosen</ger>
+    <fra>Spiritueux</fra>
+  </Names>
+  <Names>
+    <eng>Narcotics</eng>
+    <ger>Drogen</ger>
+    <fra>Narcotiques</fra>
+  </Names>
+  <Names>
+    <eng>Tobacco</eng>
+    <ger>Tabak</ger>
+    <fra>Tabac</fra>
+  </Names>
+  <Names>
+    <eng>Coltan</eng>
+    <ger>Coltan</ger>
+    <fra>Coltan</fra>
+  </Names>
+  <Names>
+    <eng>Mineral Oil</eng>
+    <ger>Mineralöl</ger>
+    <fra>Huile Minérale</fra>
+  </Names>
+  <Names>
+    <eng>Pesticides</eng>
+    <ger>Pestizide</ger>
+    <fra>Pesticides</fra>
+  </Names>
+  <Names>
+    <eng>Algae</eng>
+    <ger>Algen</ger>
+    <fra>Algues</fra>
+  </Names>
+  <Names>
+    <eng>Atmospheric Processors</eng>
+    <ger>Atmosphärenprozessoren</ger>
+    <fra>Processeurs Atmosphériques</fra>
+  </Names>
+  <Names>
+    <eng>Crop Harvesters</eng>
+    <ger>Erntemaschinen</ger>
+    <fra>Moissonneuses</fra>
+  </Names>
+  <Names>
+    <eng>Marine Equipment</eng>
+    <ger>Maritimausstattung</ger>
+    <fra>Équipement Aquamarin</fra>
+  </Names>
+  <Names>
+    <eng>Agri-Medicines</eng>
+    <ger>Agrar-Medikamente</ger>
+    <fra>Agri-Médicaments</fra>
+  </Names>
+  <Names>
+    <eng>Animal Monitors</eng>
+    <ger>Tierüberwachung</ger>
+    <fra>Systèmes de Surveillance</fra>
+  </Names>
+  <Names>
+    <eng>Aquaponic Systems</eng>
+    <ger>Aquaponiksysteme</ger>
+    <fra>Systèmes Aquaponiques</fra>
+  </Names>
+  <Names>
+    <eng>Land Enrichment Systems</eng>
+    <ger>Landanreicherungssysteme</ger>
+    <fra>Systèmes d'Enrichissement Des</fra>
+  </Names>
+  <Names>
+    <eng>Leather</eng>
+    <ger>Leder</ger>
+    <fra>Cuir</fra>
+  </Names>
+  <Names>
+    <eng>Natural Fabrics</eng>
+    <ger>Naturfasern</ger>
+    <fra>Fibre Textile Naturelle</fra>
+  </Names>
+  <Names>
+    <eng>Polymers</eng>
+    <ger>Polymere</ger>
+    <fra>Polymères</fra>
+  </Names>
+  <Names>
+    <eng>Semiconductors</eng>
+    <ger>Halbleiter</ger>
+    <fra>Semi-Conducteurs</fra>
+  </Names>
+  <Names>
+    <eng>Superconductors</eng>
+    <ger>Supraleiter</ger>
+    <fra>Supraconducteurs</fra>
+  </Names>
+  <Names>
+    <eng>Aluminium</eng>
+    <ger>Aluminium</ger>
+    <fra>Aluminium</fra>
+  </Names>
+  <Names>
+    <eng>Beryllium</eng>
+    <ger>Beryllium</ger>
+    <fra>Béryllium</fra>
+  </Names>
+  <Names>
+    <eng>Copper</eng>
+    <ger>Kupfer</ger>
+    <fra>Cuivre</fra>
+  </Names>
+  <Names>
+    <eng>Gallium</eng>
+    <ger>Gallium</ger>
+    <fra>Gallium</fra>
+  </Names>
+  <Names>
+    <eng>Lithium</eng>
+    <ger>Lithium</ger>
+    <fra>Lithium</fra>
+  </Names>
+  <Names>
+    <eng>Platinum</eng>
+    <ger>Platin</ger>
+    <fra>Platine</fra>
+  </Names>
+  <Names>
+    <eng>Tantalum</eng>
+    <ger>Tantal</ger>
+    <fra>Tantale</fra>
+  </Names>
+  <Names>
+    <eng>Titanium</eng>
+    <ger>Titan</ger>
+    <fra>Titane</fra>
+  </Names>
+  <Names>
+    <eng>Uranium</eng>
+    <ger>Uran</ger>
+    <fra>Uranium</fra>
+  </Names>
+  <Names>
+    <eng>Auto-Fabricators</eng>
+    <ger>Fabrikatoren</ger>
+    <fra>Dispositifs d'Autofabrication</fra>
+  </Names>
+  <Names>
+    <eng>Computer Components</eng>
+    <ger>Computerteile</ger>
+    <fra>Combinaisons Hazmat</fra>
+  </Names>
+  <Names>
+    <eng>Robotics</eng>
+    <ger>Roboter</ger>
+    <fra>Robots</fra>
+  </Names>
+  <Names>
+    <eng>Synthetic Fabrics</eng>
+    <ger>Chemiefasern</ger>
+    <fra>Tissu Synthétique</fra>
+  </Names>
+  <Names>
+    <eng>Chemical Waste</eng>
+    <ger>Chemiemüll</ger>
+    <fra>Matériaux Radioactifs</fra>
+  </Names>
+  <Names>
+    <eng>Scrap</eng>
+    <ger>Schrott</ger>
+    <fra>Ferraille</fra>
+  </Names>
+  <Names>
+    <eng>Battle Weapons</eng>
+    <ger>Kriegswaffen</ger>
+    <fra>Armes Militaires</fra>
+  </Names>
+  <Names>
+    <eng>Indium</eng>
+    <ger>Indium</ger>
+    <fra>Indium</fra>
+  </Names>
+  <Levels>
+    <ID>0</ID>
+    <eng>low</eng>
+    <ger>niedrig</ger>
+    <fra>faible</fra>
+  </Levels>
+  <Levels>
+    <ID>1</ID>
+    <eng>med</eng>
+    <ger>mittel</ger>
+    <fra>moyen</fra>
+  </Levels>
+  <Levels>
+    <ID>2</ID>
+    <eng>high</eng>
+    <ger>hoch</ger>
+    <fra>élevé</fra>
+  </Levels>
+</dsCommodities>

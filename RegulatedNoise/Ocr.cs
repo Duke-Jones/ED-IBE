@@ -192,8 +192,7 @@ namespace RegulatedNoise
 
             string headerResult;
 			
-            // using the "big.traineddata" from EliteOCR results in clearly better ocr
-            using (var engine = new TesseractEngine(@"./tessdata", "big", EngineMode.Default))
+            using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
             {
                 using (var page = engine.Process(p))
                 {
@@ -313,7 +312,7 @@ namespace RegulatedNoise
                         var t = new string[c.Length];
                         var cf = new float[c.Length];
 
-                        using (var engine = new TesseractEngine(@"./tessdata", "big", EngineMode.Default))
+                        using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
                         {
                             for (int i = 0; i < c.Length; i++)
                             {

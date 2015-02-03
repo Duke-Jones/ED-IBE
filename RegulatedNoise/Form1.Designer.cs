@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -219,13 +220,24 @@
             this.label25 = new System.Windows.Forms.Label();
             this.checkboxImportEDDN = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.button16 = new System.Windows.Forms.Button();
+            this.cmdStopEDDNListening = new System.Windows.Forms.Button();
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.button15 = new System.Windows.Forms.Button();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.cmbLanguage = new System.Windows.Forms.ComboBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.txtTraineddataFile = new System.Windows.Forms.TextBox();
+            this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
+            this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -275,6 +287,11 @@
             this.groupBox1.SuspendLayout();
             this.tabEDDN.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // bOpen
@@ -334,6 +351,7 @@
             this.tabControl1.Controls.Add(this.tabOCRGroup);
             this.tabControl1.Controls.Add(this.tabWebserver);
             this.tabControl1.Controls.Add(this.tabEDDN);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(18, 54);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -800,7 +818,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(206, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(186, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -827,7 +845,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(201, 213);
+            this.chart1.Size = new System.Drawing.Size(181, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -854,7 +872,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(196, 217);
+            this.chart2.Size = new System.Drawing.Size(176, 197);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1811,7 +1829,7 @@
             this.bClearOcrOutput.Enabled = false;
             this.bClearOcrOutput.Location = new System.Drawing.Point(295, 402);
             this.bClearOcrOutput.Name = "bClearOcrOutput";
-            this.bClearOcrOutput.Size = new System.Drawing.Size(281, 23);
+            this.bClearOcrOutput.Size = new System.Drawing.Size(282, 23);
             this.bClearOcrOutput.TabIndex = 33;
             this.bClearOcrOutput.Text = "Clear Results";
             this.bClearOcrOutput.UseVisualStyleBackColor = true;
@@ -1822,7 +1840,7 @@
             this.bEditResults.Enabled = false;
             this.bEditResults.Location = new System.Drawing.Point(6, 402);
             this.bEditResults.Name = "bEditResults";
-            this.bEditResults.Size = new System.Drawing.Size(283, 23);
+            this.bEditResults.Size = new System.Drawing.Size(282, 23);
             this.bEditResults.TabIndex = 32;
             this.bEditResults.Text = "Edit Results";
             this.bEditResults.UseVisualStyleBackColor = true;
@@ -1986,7 +2004,7 @@
             this.tbFinalOcrOutput.Multiline = true;
             this.tbFinalOcrOutput.Name = "tbFinalOcrOutput";
             this.tbFinalOcrOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbFinalOcrOutput.Size = new System.Drawing.Size(571, 219);
+            this.tbFinalOcrOutput.Size = new System.Drawing.Size(571, 216);
             this.tbFinalOcrOutput.TabIndex = 15;
             this.tbFinalOcrOutput.WordWrap = false;
             // 
@@ -2317,7 +2335,7 @@
             this.groupBox2.Controls.Add(this.label25);
             this.groupBox2.Controls.Add(this.checkboxImportEDDN);
             this.groupBox2.Controls.Add(this.label24);
-            this.groupBox2.Controls.Add(this.button16);
+            this.groupBox2.Controls.Add(this.cmdStopEDDNListening);
             this.groupBox2.Controls.Add(this.tbEDDNOutput);
             this.groupBox2.Controls.Add(this.button15);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
@@ -2405,15 +2423,15 @@
             this.label24.TabIndex = 5;
             this.label24.Text = "Raw Output";
             // 
-            // button16
+            // cmdStopEDDNListening
             // 
-            this.button16.Location = new System.Drawing.Point(351, 93);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(93, 23);
-            this.button16.TabIndex = 4;
-            this.button16.Text = "Stop Listening";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
+            this.cmdStopEDDNListening.Location = new System.Drawing.Point(351, 93);
+            this.cmdStopEDDNListening.Name = "cmdStopEDDNListening";
+            this.cmdStopEDDNListening.Size = new System.Drawing.Size(93, 23);
+            this.cmdStopEDDNListening.TabIndex = 4;
+            this.cmdStopEDDNListening.Text = "Stop Listening";
+            this.cmdStopEDDNListening.UseVisualStyleBackColor = true;
+            this.cmdStopEDDNListening.Click += new System.EventHandler(this.cmdStopEDDNListening_Click);
             // 
             // tbEDDNOutput
             // 
@@ -2432,6 +2450,87 @@
             this.button15.Text = "Start Listening";
             this.button15.UseVisualStyleBackColor = true;
             this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.groupBox8);
+            this.tabPage4.Controls.Add(this.groupBox6);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1057, 529);
+            this.tabPage4.TabIndex = 12;
+            this.tabPage4.Text = "Settings";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.label48);
+            this.groupBox8.Controls.Add(this.cmbLanguage);
+            this.groupBox8.Location = new System.Drawing.Point(6, 127);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(336, 115);
+            this.groupBox8.TabIndex = 10;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Language";
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(6, 27);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(308, 26);
+            this.label48.TabIndex = 1;
+            this.label48.Text = "Select the language of your Elite Dangerous version.\r\n(EDDN is - at the moment - " +
+    "only with english language available)";
+            // 
+            // cmbLanguage
+            // 
+            this.cmbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLanguage.FormattingEnabled = true;
+            this.cmbLanguage.Location = new System.Drawing.Point(9, 59);
+            this.cmbLanguage.Name = "cmbLanguage";
+            this.cmbLanguage.Size = new System.Drawing.Size(275, 21);
+            this.cmbLanguage.TabIndex = 0;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.txtTraineddataFile);
+            this.groupBox6.Controls.Add(this.cmdSelectTraineddataFile);
+            this.groupBox6.Controls.Add(this.label12);
+            this.groupBox6.Location = new System.Drawing.Point(6, 6);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(336, 115);
+            this.groupBox6.TabIndex = 9;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "OCR-Settings";
+            // 
+            // txtTraineddataFile
+            // 
+            this.txtTraineddataFile.Location = new System.Drawing.Point(6, 36);
+            this.txtTraineddataFile.Name = "txtTraineddataFile";
+            this.txtTraineddataFile.ReadOnly = true;
+            this.txtTraineddataFile.Size = new System.Drawing.Size(197, 20);
+            this.txtTraineddataFile.TabIndex = 6;
+            // 
+            // cmdSelectTraineddataFile
+            // 
+            this.cmdSelectTraineddataFile.Location = new System.Drawing.Point(209, 34);
+            this.cmdSelectTraineddataFile.Name = "cmdSelectTraineddataFile";
+            this.cmdSelectTraineddataFile.Size = new System.Drawing.Size(75, 23);
+            this.cmdSelectTraineddataFile.TabIndex = 8;
+            this.cmdSelectTraineddataFile.Text = "Select";
+            this.cmdSelectTraineddataFile.UseVisualStyleBackColor = true;
+            this.cmdSelectTraineddataFile.Click += new System.EventHandler(this.cmdSelectTraineddataFile_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 20);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(115, 13);
+            this.label12.TabIndex = 7;
+            this.label12.Text = "used \"traineddata\"-File";
             // 
             // button5
             // 
@@ -2469,6 +2568,23 @@
             this.label37.Size = new System.Drawing.Size(145, 13);
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System (from log files)";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.DefaultExt = "traineddata";
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
+            this.openFileDialog1.Title = "select Tesseract Traineddata-File";
+            // 
+            // dsCommodities
+            // 
+            this.dsCommodities.DataSetName = "dsCommodities";
+            this.dsCommodities.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // namesBindingSource
+            // 
+            this.namesBindingSource.DataMember = "Names";
+            this.namesBindingSource.DataSource = this.dsCommodities;
             // 
             // Form1
             // 
@@ -2551,6 +2667,13 @@
             this.tabEDDN.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2631,7 +2754,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button15;
         public System.Windows.Forms.TextBox tbEDDNOutput;
-        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button cmdStopEDDNListening;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkboxImportEDDN;
         private System.Windows.Forms.Label label28;
@@ -2751,6 +2874,17 @@
         private System.Windows.Forms.TextBox tbEddnStats;
         private System.Windows.Forms.Button bIgnoreTrash;
         private System.Windows.Forms.CheckBox cbAutoUppercase;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.ComboBox cmbLanguage;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox txtTraineddataFile;
+        private System.Windows.Forms.Button cmdSelectTraineddataFile;
+        private System.Windows.Forms.Label label12;
+        private RegulatedNoise.Enums_and_Utility_Classes.dsCommodities dsCommodities;
+        private System.Windows.Forms.BindingSource namesBindingSource;
     }
 }
 
