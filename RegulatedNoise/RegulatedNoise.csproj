@@ -616,8 +616,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Resources\m.png" />
-    <Compile Include="Enums and Utility Classes\EnumBinder.cs" />
-    <Content Include="newOfDuke\ToDo.txt" />
+    <Compile Include="Enums and Utility Classes\enumBindTo.cs" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

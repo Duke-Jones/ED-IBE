@@ -385,6 +385,21 @@
     <ger>Indium</ger>
     <fra>Indium</fra>
   </Names>
+  <Names>
+    <eng>Microbial Furnaces</eng>
+    <ger>Mikrobielle Öfen</ger>
+    <fra>Hauts Fourneaux Microbiens</fra>
+  </Names>
+  <Names>
+    <eng>Advanced Catalysers</eng>
+    <ger>Fortschr. Katalysatoren</ger>
+    <fra>Catalyseurs Complexes</fra>
+  </Names>
+  <Names>
+    <eng>Resonating Separators</eng>
+    <ger>Resonanzbegrenzer</ger>
+    <fra>Séparateurs à Résonance</fra>
+  </Names>
   <Levels>
     <ID>0</ID>
     <eng>low</eng>

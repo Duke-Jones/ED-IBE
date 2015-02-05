@@ -623,7 +623,7 @@ namespace RegulatedNoise
             cbAutoUppercase.Checked = RegulatedNoiseSettings.AutoUppercase;
             if (RegulatedNoiseSettings.TraineddataFile == String.Empty)
             {
-                RegulatedNoiseSettings.TraineddataFile = "eng";
+                RegulatedNoiseSettings.TraineddataFile = "big";
             }
             txtTraineddataFile.Text = RegulatedNoiseSettings.TraineddataFile;
 

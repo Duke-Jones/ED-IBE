@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsCommodities" targetNamespace="http://tempuri.org/dsCommodities.xsd" xmlns:mstns="http://tempuri.org/dsCommodities.xsd" xmlns="http://tempuri.org/dsCommodities.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsCommodities" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsCommodities" msprop:Generator_UserDSName="dsCommodities">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Names" msprop:Generator_TableClassName="NamesDataTable" msprop:Generator_TableVarName="tableNames" msprop:Generator_RowChangedName="NamesRowChanged" msprop:Generator_TablePropName="Names" msprop:Generator_RowDeletingName="NamesRowDeleting" msprop:Generator_RowChangingName="NamesRowChanging" msprop:Generator_RowEvHandlerName="NamesRowChangeEventHandler" msprop:Generator_RowDeletedName="NamesRowDeleted" msprop:Generator_RowClassName="NamesRow" msprop:Generator_UserTableName="Names" msprop:Generator_RowEvArgName="NamesRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="eng" msprop:nullValue="_empty" msprop:Generator_ColumnPropNameInRow="eng" msprop:Generator_ColumnVarNameInTable="columneng" msprop:Generator_ColumnPropNameInTable="engColumn" msprop:Generator_UserColumnName="eng" type="xs:string" minOccurs="0" />
+              <xs:element name="ger" msprop:nullValue="_empty" msprop:Generator_ColumnPropNameInRow="ger" msprop:Generator_ColumnVarNameInTable="columnger" msprop:Generator_ColumnPropNameInTable="gerColumn" msprop:Generator_UserColumnName="ger" type="xs:string" minOccurs="0" />
+              <xs:element name="fra" msprop:nullValue="_empty" msprop:Generator_ColumnPropNameInRow="fra" msprop:Generator_ColumnVarNameInTable="columnfra" msprop:Generator_ColumnPropNameInTable="fraColumn" msprop:Generator_UserColumnName="fra" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Levels" msprop:Generator_TableClassName="LevelsDataTable" msprop:Generator_TableVarName="tableLevels" msprop:Generator_RowChangedName="LevelsRowChanged" msprop:Generator_TablePropName="Levels" msprop:Generator_RowDeletingName="LevelsRowDeleting" msprop:Generator_RowChangingName="LevelsRowChanging" msprop:Generator_RowEvHandlerName="LevelsRowChangeEventHandler" msprop:Generator_RowDeletedName="LevelsRowDeleted" msprop:Generator_RowClassName="LevelsRow" msprop:Generator_UserTableName="Levels" msprop:Generator_RowEvArgName="LevelsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:unsignedByte" />
+              <xs:element name="eng" msprop:Generator_ColumnVarNameInTable="columneng" msprop:Generator_ColumnPropNameInRow="eng" msprop:Generator_ColumnPropNameInTable="engColumn" msprop:Generator_UserColumnName="eng" type="xs:string" minOccurs="0" />
+              <xs:element name="ger" msprop:Generator_ColumnVarNameInTable="columnger" msprop:Generator_ColumnPropNameInRow="ger" msprop:Generator_ColumnPropNameInTable="gerColumn" msprop:Generator_UserColumnName="ger" type="xs:string" minOccurs="0" />
+              <xs:element name="fra" msprop:Generator_ColumnVarNameInTable="columnfra" msprop:Generator_ColumnPropNameInRow="fra" msprop:Generator_ColumnPropNameInTable="fraColumn" msprop:Generator_UserColumnName="fra" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="LevelsKey1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Levels" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

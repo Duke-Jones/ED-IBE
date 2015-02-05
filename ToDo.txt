@@ -1,0 +1,51 @@
+todo:
+   * suppress "working..." as unknown commodity
+
+
+***********************************************************************************
+
+
+-------------------------------------------------------------------------------------
+1.8.4-0.0.2
+   * added "Microbial Furnaces", "Advanced Catalysers" and "Resonating Separators" as commodity
+   * added missing Dataset "dsCommodities" and class "enumBindTo" to repositiory (relevant for compiling source)
+-------------------------------------------------------------------------------------
+1.8.4-0.0.1
+   * language selection (english-german-french)
+   * immediately autosave if data changed (prices, commodities, some settings)
+   * invoking crash bug fixed while OCR 
+   * used traineddata-file vom OCR is selectable
+   * EDDN reactivated if language is english
+   * fixed commodity base for better OCR (language dependent), possibility to add new commodities if confirmed 
+   * bug fixed while ocr notification
+   * recognition of levels "high/medium/low" corrected (language dependent)
+   * behavior of "AutoUppercase"-Checkbox corrected
+-------------------------------------------------------------------------------------
+1.8.4-0.0.0
+   * changes merged based on 1.8.4
+   * update-hint of original added again
+------------------------------------------------------------------------------------- 
+1.8.2-1.0.4
+   * update-hint of original removed
+   * EDDN deactivated (please use english original due to different language dependent names)
+   * behavior of "clear Results" button after ocr corrected
+   * stateful enabling of ocr buttons
+   * recognition of stations: level for Levenshtein algorithm depends on the length of the name
+-------------------------------------------------------------------------------------
+1.8.2-1.0.3
+   * optimized filter-processing for screenshots before ocr (tested on commandline tesseractOCR)
+   * bug while procesing the results from EliteBrainerous removed
+   * "really" empty strings will be ignored
+   * level for Levenshtein algorithm depends on the length of the word
+   * base dictionary adapted ffor german
+-------------------------------------------------------------------------------------
+1.8.2-1.0.2
+   * optional "auto-uppercasing" saved in global settings
+   * added personal changelog/todo
+-------------------------------------------------------------------------------------
+1.8.2-1.0.1 
+   * optional "auto-uppercasing" checkbox during ocr-correction added
+   * button "Ignore As Trash" during ocr-correction added
+-------------------------------------------------------------------------------------
+1.8.2-1.0.0 
+   * initial version from Git-Hub 
