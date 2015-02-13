@@ -46,6 +46,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pb_calibratorMagnifier = new System.Windows.Forms.PictureBox();
             this.btn_calibration_reset = new System.Windows.Forms.Button();
+            this.lblWarning = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pb_calibratorBox)).BeginInit();
             this.pl_calibrationWindow.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_example)).BeginInit();
@@ -121,6 +122,7 @@
             // pl_calibrationWindow
             // 
             this.pl_calibrationWindow.AutoScroll = true;
+            this.pl_calibrationWindow.Controls.Add(this.lblWarning);
             this.pl_calibrationWindow.Controls.Add(this.pb_calibratorBox);
             this.pl_calibrationWindow.Location = new System.Drawing.Point(4, 36);
             this.pl_calibrationWindow.Name = "pl_calibrationWindow";
@@ -232,6 +234,18 @@
             this.btn_calibration_reset.UseVisualStyleBackColor = true;
             this.btn_calibration_reset.Click += new System.EventHandler(this.Btn_calibration_reset_Click);
             // 
+            // lblWarning
+            // 
+            this.lblWarning.AutoSize = true;
+            this.lblWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWarning.Location = new System.Drawing.Point(58, 175);
+            this.lblWarning.Name = "lblWarning";
+            this.lblWarning.Size = new System.Drawing.Size(654, 50);
+            this.lblWarning.TabIndex = 2;
+            this.lblWarning.Text = "No calibration possible because no display data has loaded. \r\nPlease check the ac" +
+    "cess to the ED display data.";
+            this.lblWarning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // OcrCalibratorTab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,6 +302,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pb_calibratorMagnifier;
         private System.Windows.Forms.Button btn_calibration_reset;
+        public System.Windows.Forms.Label lblWarning;
 
 
     }

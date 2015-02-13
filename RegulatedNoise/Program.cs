@@ -76,7 +76,12 @@ namespace RegulatedNoise
 
         public static void CreateMiniDump()
         {
-            using (FileStream fs = new FileStream(".//RegulatedNoiseDump.dmp", FileMode.Create))
+            CreateMiniDump("RegulatedNoiseDump.dmp");
+        }
+
+        public static void CreateMiniDump(string Filename)
+        {
+            using (FileStream fs = new FileStream(".//" + Filename, FileMode.Create))
             {
                 using (System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess())
                 {

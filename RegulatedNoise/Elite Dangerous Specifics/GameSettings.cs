@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -12,9 +13,14 @@ namespace RegulatedNoise
     {
         public AppConfig AppConfig;
         public EdDisplayConfig Display;
-        
-        public GameSettings()
+        private DateTime lastTry_Displaydata = DateTime.Now - new TimeSpan(1,0,0);
+
+        public Form1 _parent;
+
+        public GameSettings(Form1 parent)
         {
+            _parent = parent;
+
             //Load DisplaySettings from AppData
             LoadDisplaySettings();
 
@@ -78,30 +84,97 @@ namespace RegulatedNoise
 
         void LoadAppConfig()
         {
-            var configFile = Path.Combine(Form1.RegulatedNoiseSettings.GamePath, "AppConfig.xml");
-            var serializer = new XmlSerializer(typeof (AppConfig));
-            using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                AppConfig = (AppConfig) serializer.Deserialize(myFileStream);    
-            }
+            AppConfig locAppConfig;
+
+            DialogResult MBResult = DialogResult.Ignore;
+            string configFile = Path.Combine(Form1.RegulatedNoiseSettings.GamePath, "AppConfig.xml");
+            XmlSerializer serializer; 
+
+            do{
+
+                try
+                {
+                    serializer = new XmlSerializer(typeof(AppConfig)); 
+                    using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        locAppConfig = (AppConfig)serializer.Deserialize(myFileStream);
+                        AppConfig = locAppConfig;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    if (AppConfig == null)
+                    {
+                        // ignore if it was loaded before
+                        cErr.processError(ex, String.Format("Error while loading ED-Appconfig from file <{0}>", configFile));
+                    }
+
+                }
+            } while (MBResult == DialogResult.Retry);
+                
         }
 
-        private void LoadAppConfig(object sender, FileSystemEventArgs e)
+        private void AppData_Changed(object sender, FileSystemEventArgs e)
         {
-            LoadAppConfig();
+            try
+            {
+                LoadAppConfig();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in AppData_Changed()");
+            }
         }
 
         void LoadDisplaySettings()
         {
+            
+            TimeSpan delta;
+            DialogResult MBResult = DialogResult.Ignore;
+            EdDisplayConfig locDisplay;
+
             var configFile = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
             if (!File.Exists(configFile))
             {
                 return;
             }
             var serializer = new XmlSerializer(typeof(EdDisplayConfig));
-            using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+
+
+            do
             {
-                Display = (EdDisplayConfig)serializer.Deserialize(myFileStream);
+                try
+                {
+                    using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        locDisplay = (EdDisplayConfig)serializer.Deserialize(myFileStream);
+                        Display = locDisplay;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Display == null)
+                    {
+                        // ignore this if it was loaded short before
+                        delta = DateTime.Now - lastTry_Displaydata;
+                        if (delta.TotalMilliseconds > 1000)
+                        {
+                            // ignore this if it was asked before
+                            MBResult = MessageBox.Show(String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
+                            if (MBResult == DialogResult.Abort)
+                            {
+                                cErr.processError(ex, "Error in AppData_Changed()", true);
+                            }
+                            lastTry_Displaydata = DateTime.Now;
+                        }
+                    }
+                }
+            } while (MBResult == DialogResult.Retry);
+
+            if (_parent != null)
+            {
+                _parent.setOCRCalibrationTabVisibility();
             }
         }
 
@@ -130,7 +203,7 @@ namespace RegulatedNoise
             _appdataWatcher.Path = Form1.RegulatedNoiseSettings.GamePath;
             _appdataWatcher.Filter = "AppConfig.xml";
             _appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            _appdataWatcher.Changed += LoadAppConfig;
+            _appdataWatcher.Changed += AppData_Changed;
             _appdataWatcher.EnableRaisingEvents = false; //Set to TRUE to enable watching!
         }
 

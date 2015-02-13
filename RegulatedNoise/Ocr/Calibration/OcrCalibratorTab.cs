@@ -117,6 +117,7 @@ namespace RegulatedNoise
 
         private void btn_calibrate_Click(object sender, EventArgs e)
         {
+
             _drawPoints = false;
             DoCalibration();
 

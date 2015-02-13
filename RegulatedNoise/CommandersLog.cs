@@ -99,47 +99,82 @@ namespace RegulatedNoise
 
         public void SaveLog(bool force = false)
         {
-            string fileName;
+            string newFile, backupFile, currentFile;
+
             if (force)
-                fileName = "CommandersLogAutoSave.xml";
+                currentFile = "CommandersLogAutoSave.xml";
             else
-                fileName ="Commander's Log Events to "+DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")+".xml";
-            if (!File.Exists(fileName)) File.Delete(fileName);
-            Stream stream =new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                currentFile = "Commander's Log Events to " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".xml";
+
+            newFile     = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+            backupFile  = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+
+            Stream stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
             var x =new XmlSerializer(LogEvents.GetType());
             x.Serialize(stream, LogEvents);
             stream.Close();
+
+            // we delete the current file not until the new file is written without errors
+
+            if (force)
+            {
+                // delete old backup
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+
+                // rename current file to old backup
+                if (File.Exists(currentFile))
+                    File.Move(currentFile, backupFile);
+            }
+            else
+            {
+                // delete file if exists
+                if (File.Exists(currentFile))
+                    File.Delete(currentFile);
+
+            }
+
+            // rename new file to current file
+            File.Move(newFile, currentFile);
+
         }
 
         public void LoadLog(bool force = false)
         {
-            var openFile =new OpenFileDialog
+            try
             {
-                DefaultExt = "xml",
-                Multiselect = false,
-                Filter = "XML (*.xml)|*.xml",
-                InitialDirectory = Environment.CurrentDirectory
-            };
+                var openFile = new OpenFileDialog
+                {
+                    DefaultExt = "xml",
+                    Multiselect = false,
+                    Filter = "XML (*.xml)|*.xml",
+                    InitialDirectory = Environment.CurrentDirectory
+                };
 
-            if(!force)
-                openFile.ShowDialog();
+                if (!force)
+                    openFile.ShowDialog();
 
-            if (force || openFile.FileNames.Length > 0)
-            {
-                var serializer =new XmlSerializer(typeof(SortableBindingList<CommandersLogEvent>));
+                if (force || openFile.FileNames.Length > 0)
+                {
+                    var serializer = new XmlSerializer(typeof(SortableBindingList<CommandersLogEvent>));
 
-                if (force && !File.Exists("CommandersLogAutoSave.xml"))
-                    return;
+                    if (force && !File.Exists("CommandersLogAutoSave.xml"))
+                        return;
 
-                var fs =new FileStream(force ? "CommandersLogAutoSave.xml" : openFile.FileName, FileMode.Open);
-                var reader =XmlReader.Create(fs);
+                    var fs = new FileStream(force ? "CommandersLogAutoSave.xml" : openFile.FileName, FileMode.Open);
+                    var reader = XmlReader.Create(fs);
 
-                var logEvents2 = (SortableBindingList<CommandersLogEvent>)serializer.Deserialize(reader);
-                LogEvents =logEvents2;
-                fs.Close();
+                    var logEvents2 = (SortableBindingList<CommandersLogEvent>)serializer.Deserialize(reader);
+                    LogEvents = logEvents2;
+                    fs.Close();
+                }
+
+                UpdateCommandersLogListView();
             }
-
-            UpdateCommandersLogListView();
+            catch (Exception ex)
+            {
+                throw new Exception("Error loading CommandersLog", ex);
+            }
         }
 
         public void UpdateCommandersLogListView()

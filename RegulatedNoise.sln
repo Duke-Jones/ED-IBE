@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegulatedNoise", "RegulatedNoise\RegulatedNoise.csproj", "{D720EB9A-C879-4E3B-AA19-B820E8192B7A}"
 EndProject
@@ -14,14 +14,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdClasses", "EdClasses\EdCl
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug DJ|Any CPU = Debug DJ|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug DJ|Any CPU.ActiveCfg = Debug DJ|Any CPU
+		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug DJ|Any CPU.Build.0 = Debug DJ|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Debug DJ|Any CPU.ActiveCfg = Debug DJ|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Debug DJ|Any CPU.Build.0 = Debug DJ|Any CPU
 		{236A934B-5543-4751-BAA2-018DFA825271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{236A934B-5543-4751-BAA2-018DFA825271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{236A934B-5543-4751-BAA2-018DFA825271}.Release|Any CPU.ActiveCfg = Release|Any CPU

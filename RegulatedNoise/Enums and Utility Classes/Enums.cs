@@ -20,7 +20,8 @@ namespace RegulatedNoise
         Webserver,
         Ocr,
         EddnSubscriber,
-        App
+        App, 
+        Exception
     }
 
     public enum StationHasBlackMarket

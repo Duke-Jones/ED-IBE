@@ -1,10 +1,29 @@
 todo:
    * suppress "working..." as unknown commodity
-
+   * option "take jumps into account"
+   * show distance in lists
+   * optimize speed of ocr
+   * dynamic distance for station restriction in price analysis
+   * find automatically ED path
 
 ***********************************************************************************
 
 
+-------------------------------------------------------------------------------------
+1.8.4-0.0.3
+   * loading display- and app-data from ED: improved handling of errors while re-reading files
+   * check both versions ("official" and "international") of RegulatedNoise for updates
+   * New datafiles will not be activated until savings done without errors.
+     old data files (AutoSave.csv/CommandersLogAutoSave.xml, RegulatedNoiseSettings.xml) 
+	 will be saved as "*_bak.<ext>" instead of deleted
+   * fixed : commodity data was not written if "include extended info" was disabled
+   * changed Comboboxes from DropDown to DropDownList with "suggest" AutoCompleteMode
+   * comboboxes that wasn't sorted can be sorted (Settings)
+-------------------------------------------------------------------------------------
+1.8.4-0.0.3b
+   * added new error handling in some functions
+   * automatically generated "Jumped To ..." event is working again
+   * crash while re-reading GameSettings.xml fixed
 -------------------------------------------------------------------------------------
 1.8.4-0.0.2
    * added "Microbial Furnaces", "Advanced Catalysers" and "Resonating Separators" as commodity

@@ -13,7 +13,11 @@ namespace RegulatedNoise
     [Serializable]
     public class RegulatedNoiseSettings
     {
-        public readonly decimal Version = 1.84m;
+        public readonly decimal Version   = 1.84m;
+
+#if DukeJones
+        public readonly decimal VersionDJ = 0.03m;
+#endif
 
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
@@ -38,6 +42,7 @@ namespace RegulatedNoise
         public bool AutoUppercase = true;
         public string TraineddataFile = "big";
         public enLanguage Language = enLanguage.eng;
+        public bool SortingComboboxes = true;
 
 
         public void CheckVersion()
@@ -79,9 +84,10 @@ namespace RegulatedNoise
                         maxVersion = thisVersion;
                         releaseDetails = x;
                     }
+
                 }
 
-                if (Version < maxVersion)
+                if ((Version < maxVersion) )
                 {
                     var dialogResult = MessageBox.Show("Newer version found! Quit RegulatedNoise and browse to GitHub to download it?\r\n\r\nv"+maxVersion+":\r\n"+releaseDetails.body,"Update?",
                         MessageBoxButtons.YesNo);
@@ -100,7 +106,94 @@ namespace RegulatedNoise
             }
 
         }
+
+#if DukeJones
+        public void CheckVersion2()
+        {
+            string sURL;
+            sURL = @"https://api.github.com/repos/Duke-Jones/RegulatedNoise/releases";
+            string response;
+
+            HttpWebRequest webRequest = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
+            webRequest.Method = "GET";
+            webRequest.ServicePoint.Expect100Continue = false;
+            webRequest.UserAgent = "YourAppName";
+                
+            decimal maxVersion = -1;
+            decimal maxVersionDJ = -1;
+
+            try
+            {
+                string[] Versions;
+                decimal MainVersion;
+                decimal DJVersion;
+                string release;
+                bool PR;
+
+                using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
+                    response = responseReader.ReadToEnd();
+
+                dynamic data = JsonConvert.DeserializeObject<dynamic>(response);
+
+                var ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                dynamic releaseDetails = null;
+
+                foreach (var x in data)
+                {
+                    release = x.tag_name;
+                    PR      = (bool)x.prerelease;
+
+                    if (PR == false)
+                    {
+                        release = release.Replace("v", "");
+                        Versions = release.Split('_');
+
+                        MainVersion = decimal.Parse(Versions[0], NumberStyles.Any, ci);
+
+                        if (Versions.GetUpperBound(0) > 0)
+                            DJVersion = decimal.Parse(Versions[1], NumberStyles.Any, ci);
+                        else
+                            DJVersion = decimal.Parse("0.00", NumberStyles.Any, ci);
+
+                        if (maxVersion < MainVersion)
+                        {
+                            maxVersion      = MainVersion;
+                            maxVersionDJ    = DJVersion;
+                            releaseDetails = x;
+                        }
+                        else if ((maxVersion == MainVersion) && (maxVersionDJ < DJVersion))
+                        {
+                            maxVersion      = MainVersion;
+                            maxVersionDJ    = DJVersion;
+                            releaseDetails  = x;
+                        }
+                    }
+                }
+
+                if ((Version < maxVersion) || ((Version == maxVersion) && (VersionDJ < maxVersionDJ)))
+                {
+                    var dialogResult = MessageBox.Show("Newer DJ-version found! Quit RegulatedNoise and browse to GitHub to download it?\r\n\r\nv" + maxVersion.ToString().Replace(",", ".") + "-" + maxVersionDJ.ToString().Replace(",", ".") + ":\r\n" + releaseDetails.body, "Update?",
+                        MessageBoxButtons.YesNo);
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Process.Start(@"https://github.com/stringandstickytape/RegulatedNoise/releases");
+                        Application.Exit();
+                    }
+                }
+            }
+            catch
+            {
+                // Not a disaster if we can't do the version check...
+                return;
+            }
+
+        }
     }
+
+#endif
 
     public partial class Form1
     {

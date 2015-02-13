@@ -224,6 +224,8 @@
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.button15 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.cbSortingComboboxes = new System.Windows.Forms.CheckBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label48 = new System.Windows.Forms.Label();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
@@ -288,6 +290,7 @@
             this.tabEDDN.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -306,6 +309,9 @@
             // 
             // cbStation
             // 
+            this.cbStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbStation.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbStation.FormattingEnabled = true;
             this.cbStation.Location = new System.Drawing.Point(52, 15);
             this.cbStation.Name = "cbStation";
@@ -692,6 +698,9 @@
             // 
             // cbIncludeWithinRegionOfStation
             // 
+            this.cbIncludeWithinRegionOfStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbIncludeWithinRegionOfStation.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbIncludeWithinRegionOfStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbIncludeWithinRegionOfStation.FormattingEnabled = true;
             this.cbIncludeWithinRegionOfStation.Location = new System.Drawing.Point(294, 6);
             this.cbIncludeWithinRegionOfStation.Name = "cbIncludeWithinRegionOfStation";
@@ -721,6 +730,9 @@
             // 
             // cbLightYears
             // 
+            this.cbLightYears.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbLightYears.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbLightYears.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbLightYears.FormattingEnabled = true;
             this.cbLightYears.Items.AddRange(new object[] {
             "10",
@@ -818,7 +830,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(186, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(180, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -845,7 +857,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(181, 213);
+            this.chart1.Size = new System.Drawing.Size(175, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -872,7 +884,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(176, 197);
+            this.chart2.Size = new System.Drawing.Size(170, 191);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1181,6 +1193,9 @@
             // 
             // cbCommodity
             // 
+            this.cbCommodity.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbCommodity.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbCommodity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCommodity.FormattingEnabled = true;
             this.cbCommodity.Location = new System.Drawing.Point(71, 14);
             this.cbCommodity.Name = "cbCommodity";
@@ -1401,19 +1416,27 @@
             // 
             // cbStationToStationTo
             // 
+            this.cbStationToStationTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbStationToStationTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbStationToStationTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbStationToStationTo.FormattingEnabled = true;
             this.cbStationToStationTo.Location = new System.Drawing.Point(329, 6);
             this.cbStationToStationTo.Name = "cbStationToStationTo";
             this.cbStationToStationTo.Size = new System.Drawing.Size(200, 21);
+            this.cbStationToStationTo.Sorted = true;
             this.cbStationToStationTo.TabIndex = 6;
             this.cbStationToStationTo.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationTo_SelectedIndexChanged);
             // 
             // cbStationToStationFrom
             // 
+            this.cbStationToStationFrom.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbStationToStationFrom.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbStationToStationFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbStationToStationFrom.FormattingEnabled = true;
             this.cbStationToStationFrom.Location = new System.Drawing.Point(43, 6);
             this.cbStationToStationFrom.Name = "cbStationToStationFrom";
             this.cbStationToStationFrom.Size = new System.Drawing.Size(200, 21);
+            this.cbStationToStationFrom.Sorted = true;
             this.cbStationToStationFrom.TabIndex = 5;
             this.cbStationToStationFrom.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationFrom_SelectedIndexChanged);
             // 
@@ -2453,6 +2476,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.groupBox9);
             this.tabPage4.Controls.Add(this.groupBox8);
             this.tabPage4.Controls.Add(this.groupBox6);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -2462,6 +2486,29 @@
             this.tabPage4.TabIndex = 12;
             this.tabPage4.Text = "Settings";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox9.Controls.Add(this.cbSortingComboboxes);
+            this.groupBox9.Location = new System.Drawing.Point(6, 248);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(336, 275);
+            this.groupBox9.TabIndex = 10;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "other";
+            // 
+            // cbSortingComboboxes
+            // 
+            this.cbSortingComboboxes.AutoSize = true;
+            this.cbSortingComboboxes.Location = new System.Drawing.Point(11, 19);
+            this.cbSortingComboboxes.Name = "cbSortingComboboxes";
+            this.cbSortingComboboxes.Size = new System.Drawing.Size(177, 17);
+            this.cbSortingComboboxes.TabIndex = 0;
+            this.cbSortingComboboxes.Text = "sorting the items of comboboxes";
+            this.cbSortingComboboxes.UseVisualStyleBackColor = true;
+            this.cbSortingComboboxes.CheckedChanged += new System.EventHandler(this.cbSortingComboboxes_CheckedChanged);
             // 
             // groupBox8
             // 
@@ -2668,6 +2715,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabPage4.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox6.ResumeLayout(false);
@@ -2885,6 +2934,8 @@
         private System.Windows.Forms.Label label12;
         private RegulatedNoise.Enums_and_Utility_Classes.dsCommodities dsCommodities;
         private System.Windows.Forms.BindingSource namesBindingSource;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.CheckBox cbSortingComboboxes;
     }
 }
 

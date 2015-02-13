@@ -6,7 +6,6 @@ namespace RegulatedNoise
     class SingleThreadLogger
     {
         private readonly string _logPathName;
-        //private StreamWriter _streamWriter;
 
         public SingleThreadLogger(ThreadLoggerType threadLoggerType)
         {
@@ -18,7 +17,16 @@ namespace RegulatedNoise
 
         public void Log(string logMessage, bool error = false)
         {
-            File.AppendAllText(_logPathName,DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + (error ? ": ERROR: " : ": ") + logMessage);
+            File.AppendAllText(_logPathName,DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + (error ? ": ERROR: " : ": ") + logMessage + Environment.NewLine);
         }
+
+        public string logPathName
+        {
+            get
+            {
+                return _logPathName;
+            }
+        }
+
     }
 }

@@ -50,8 +50,8 @@ namespace RegulatedNoise
         private delegate void delButtonInvoker(Button myButton, bool enable);
         private TabPage _EDDNTabPage;
         private Int32 _EDDNTabPageIndex;
-
-        
+        private string _LoggedSystem;
+        private bool _setCBSortingIsActive = false;
 
         //Implementation of the new classlibrary
         public EdSystem CurrentSystem;
@@ -60,145 +60,161 @@ namespace RegulatedNoise
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
         {
-            _logger = new SingleThreadLogger(ThreadLoggerType.Form);
-            _logger.Log("Initialising...");
-
-            LoadSettings();
-
-            _logger.Log("  - settings loaded");
-
-            SetProductPath();
-
-            _logger.Log("  - product path set");
-            
-            SetProductAppDataPath();
-
-            _logger.Log("  - product appdata set");
-
-            //if (Control.ModifierKeys == Keys.Shift)
-
-            InitializeComponent();
-
-            _logger.Log("  - initialised component");
-
-            GameSettings = new GameSettings();
-            
-            _logger.Log("  - loaded game settings");
-
-            SetListViewColumnsAndSorters();
-
-            _logger.Log("  - set list views");
-
-            PopulateNetworkInterfaces();
-
-            _logger.Log("  - populated network interfaces");
-
-            ocr = new Ocr(this);
-
-            _logger.Log("  - created OCR object");
-
-            CommandersLog = new CommandersLog(this);
-
-            _logger.Log("  - created Commander's Log object");
-
-            Eddn = new EDDN();
-
-            _logger.Log("  - created EDDN object");
-
-            Application.ApplicationExit += Application_ApplicationExit;
-
-            _logger.Log("  - set application exit handler");
-
-            OcrCalibrator = new OcrCalibrator();
-            OcrCalibrator.LoadCalibration();
-            var OcrCalibratorTabPage = new TabPage("OCR Calibration");
-            var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
-            OcrCalibratorTabPage.Controls.Add(oct);
-            tabControl3.Controls.Add(OcrCalibratorTabPage);
-
-            _logger.Log("  - initialised Ocr Calibrator");
-
-            _logger.Log("  - created EDDN object");
-
-            UpdateSystemNameFromLogFile();
-
-            _logger.Log("  - fetched system name from file");
-
-            CommandersLog.LoadLog(true);
-
-            _logger.Log("  - loaded Commander's Log");
-
-            CommandersLog.UpdateCommandersLogListView();
-
-            _logger.Log("  - updated Commander's Log List View");
-
-            ImportSystemLocations();
-
-            _logger.Log("  - system locations imported");
-
-            if (File.Exists("AutoSave.csv"))
+            try
             {
-                _logger.Log("  - found autosaved CSV");
-                var s = new string[1];
-                s[0] = "AutoSave.csv";
-                ImportListOfCsvs(s);
-                _logger.Log("  - imported CSVs");
-                SetupGui();
-                _logger.Log("  - Updated UI");
+                _logger = new SingleThreadLogger(ThreadLoggerType.Form);
+                _logger.Log("Initialising...");
+
+                LoadSettings();
+
+                _logger.Log("  - settings loaded");
+
+                SetProductPath();
+
+                _logger.Log("  - product path set");
+
+                SetProductAppDataPath();
+
+                _logger.Log("  - product appdata set");
+
+                //if (Control.ModifierKeys == Keys.Shift)
+
+                InitializeComponent();
+
+                _logger.Log("  - initialised component");
+
+                GameSettings = new GameSettings(this);
+
+                _logger.Log("  - loaded game settings");
+
+                SetListViewColumnsAndSorters();
+
+                _logger.Log("  - set list views");
+
+                PopulateNetworkInterfaces();
+
+                _logger.Log("  - populated network interfaces");
+
+                ocr = new Ocr(this);
+
+                _logger.Log("  - created OCR object");
+
+                CommandersLog = new CommandersLog(this);
+
+                _logger.Log("  - created Commander's Log object");
+
+                Eddn = new EDDN();
+
+                _logger.Log("  - created EDDN object");
+
+                Application.ApplicationExit += Application_ApplicationExit;
+
+                _logger.Log("  - set application exit handler");
+
+                OcrCalibrator = new OcrCalibrator();
+                OcrCalibrator.LoadCalibration();
+                var OcrCalibratorTabPage = new TabPage("OCR Calibration");
+                OcrCalibratorTabPage.Name = "OCR_Calibration";
+                var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
+                OcrCalibratorTabPage.Controls.Add(oct);
+                tabControl3.Controls.Add(OcrCalibratorTabPage);
+
+                _logger.Log("  - initialised Ocr Calibrator");
+
+                _logger.Log("  - created EDDN object");
+
+                UpdateSystemNameFromLogFile();
+
+                _logger.Log("  - fetched system name from file");
+
+                CommandersLog.LoadLog(true);
+
+                _logger.Log("  - loaded Commander's Log");
+
+                CommandersLog.UpdateCommandersLogListView();
+
+                _logger.Log("  - updated Commander's Log List View");
+
+                ImportSystemLocations();
+
+                _logger.Log("  - system locations imported");
+
+                if (File.Exists("AutoSave.csv"))
+                {
+                    _logger.Log("  - found autosaved CSV");
+                    var s = new string[1];
+                    s[0] = "AutoSave.csv";
+                    ImportListOfCsvs(s);
+                    _logger.Log("  - imported CSVs");
+                    SetupGui();
+                    _logger.Log("  - Updated UI");
+                }
+
+                ApplySettings();
+
+                _logger.Log("  - applied settings");
+
+                if (!Directory.Exists(".//OCR Correction Images"))
+                    Directory.CreateDirectory(".//OCR Correction Images");
+
+                _logger.Log("Initialisation complete");
+
+
+                if (RegulatedNoiseSettings.TestMode)
+                {
+                    //Testing
+                    var testtab = new TabPage("MRmP Test Tab");
+                    var testtb = new MRmPTestTab.MRmPTestTab { Dock = DockStyle.Fill };
+                    testtab.Controls.Add(testtb);
+                    tabControl1.Controls.Add(testtab);
+                }
+
+                var edl = new EdLogWatcher();
+
+                //subscribe to edlogwatcherevents
+                edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
+
+                //After event subscriptino we can initialize
+                edl.Initialize();
+                edl.StartWatcher();
+
+                // after ed1.Initialize() we can get the current system for autologging
+                _LoggedSystem = tbCurrentSystemFromLogs.Text;
+
+                // it's nice to write automatically uppercase
+                if (cbAutoUppercase.Checked)
+                {
+                    tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
+                }
+                else
+                {
+                    tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
+                }
+
+                // read the commodities and prepare language depending list
+                _commodities.ReadXml(".//Data//Commodities.xml");
+
+                // depending of the language this will be removed
+                _EDDNTabPageIndex = tabControl1.TabPages.IndexOfKey("tabEDDN");
+                _EDDNTabPage = tabControl1.TabPages[_EDDNTabPageIndex];
+
+                // set language
+                setLanguageCombobox();
+
+                // load commodities in the correct language
+                loadCommodities(RegulatedNoiseSettings.Language);
+                loadCommodityLevels(RegulatedNoiseSettings.Language);
+
+                setOCRCalibrationTabVisibility();
+
+                cbSortingComboboxes.Checked = RegulatedNoiseSettings.SortingComboboxes;
+                applyComboboxSetting();    
+
             }
-
-            ApplySettings();
-
-            _logger.Log("  - applied settings");
-
-            if (!Directory.Exists(".//OCR Correction Images"))
-                Directory.CreateDirectory(".//OCR Correction Images");
-
-            _logger.Log("Initialisation complete");
-
-
-            if (RegulatedNoiseSettings.TestMode)
+            catch (Exception ex)
             {
-                //Testing
-                var testtab = new TabPage("MRmP Test Tab");
-                var testtb = new MRmPTestTab.MRmPTestTab { Dock = DockStyle.Fill };
-                testtab.Controls.Add(testtb);
-                tabControl1.Controls.Add(testtab);
+                cErr.processError(ex, "Error in main init function");    
             }
-
-            var edl = new EdLogWatcher();
-            
-            //subscribe to edlogwatcherevents
-            edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
-
-            //After event subscriptino we can initialize
-            edl.Initialize();
-            edl.StartWatcher();
-			
-			// it's nice to write automatically uppercase
-            if (cbAutoUppercase.Checked)
-            {
-                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
-        }
-            else
-            {
-                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
-            }
-
-            // read the commodities and prepare language depending list
-            _commodities.ReadXml(".//Data//Commodities.xml");
-
-            // depending of the language this will be removed
-            _EDDNTabPageIndex = tabControl1.TabPages.IndexOfKey("tabEDDN");
-            _EDDNTabPage = tabControl1.TabPages[_EDDNTabPageIndex];
-
-            // set language
-            setLanguageCombobox();
-
-            // load commodities in the correct language
-            loadCommodities(RegulatedNoiseSettings.Language);
-            loadCommodityLevels(RegulatedNoiseSettings.Language);
-            
         }
 
         private void OnClientArrivedtoNewSystem(object sender, EdLogLineSystemArgs args)
@@ -799,14 +815,31 @@ namespace RegulatedNoise
 
         public void SaveSettings()
         {
-            var fileName = "RegulatedNoiseSettings.xml";
-            if (!File.Exists(fileName))
-                File.Delete(fileName);
+            string newFile, backupFile, currentFile;
 
-            var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            currentFile = "RegulatedNoiseSettings.xml";
+
+            newFile     = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+            backupFile  = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+
+            var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
             var x = new XmlSerializer(RegulatedNoiseSettings.GetType());
             x.Serialize(stream, RegulatedNoiseSettings);
             stream.Close();
+
+            // we delete the current file not until the new file is written without errors
+
+            // delete old backup
+            if (File.Exists(backupFile))
+                File.Delete(backupFile);
+
+            // rename current file to old backup
+            if (File.Exists(currentFile))
+                File.Move(currentFile, backupFile);
+
+            // rename new file to current file
+            File.Move(newFile, currentFile);
+
         }
 
 
@@ -859,6 +892,7 @@ namespace RegulatedNoise
         private void SaveCommodityData(bool force = false)
         {
             SaveFileDialog saveFile = new SaveFileDialog();
+            string newFile, backupFile, currentFile;
 
             if (force)
                 saveFile.FileName = "AutoSave.csv";
@@ -869,12 +903,16 @@ namespace RegulatedNoise
             saveFile.DefaultExt = "csv";
             saveFile.Filter = "CSV (*.csv)|*.csv";
 
+
             if (force || saveFile.ShowDialog() == DialogResult.OK)
             {
-                if (File.Exists(saveFile.FileName))
-                    File.Delete(saveFile.FileName);
 
-                var writer = new StreamWriter(File.OpenWrite(saveFile.FileName));
+                currentFile     = saveFile.FileName;
+                newFile         = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                backupFile      = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+
+                var writer = new StreamWriter(File.OpenWrite(newFile));
+                    
                 writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
 
                 foreach (var station in StationDirectory)
@@ -896,11 +934,37 @@ namespace RegulatedNoise
                             cbExtendedInfoInCSV.Checked ? commodity.SourceFileName : ""
                         });
 
-                        if (cbExtendedInfoInCSV.Checked)
-                            writer.WriteLine(output + ";");
+                        // I'm sure that's not wanted vv
+                        //if (cbExtendedInfoInCSV.Checked)
+                        ///    writer.WriteLine(output + ";");
+                        
+                        writer.WriteLine(output + ";");
                     }
                 }
                 writer.Close();
+
+                // we delete the current file not until the new file is written without errors
+
+                if (force)
+                {
+                    // delete old backup
+                    if (File.Exists(backupFile))
+                        File.Delete(backupFile);
+
+                    // rename current file to old backup
+                    if (File.Exists(currentFile))
+                        File.Move(currentFile, backupFile);
+                }
+                else
+                {
+                    // delete existing file
+                    if (File.Exists(currentFile))
+                        File.Delete(currentFile);
+                }
+                    
+                // rename new file to current file
+                File.Move(newFile, currentFile);
+
             }
         }
 
@@ -1230,8 +1294,11 @@ namespace RegulatedNoise
 
         private void cbStation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //
+            if (_setCBSortingIsActive)
+                return;
+
             var dist = DistanceInLightYears(CombinedNameToSystemName(cbStation.SelectedItem.ToString()));
+
             if (dist < double.MaxValue)
                 lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
             else
@@ -1429,6 +1496,9 @@ namespace RegulatedNoise
 
         private void cbCommodity_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_setCBSortingIsActive)
+                return;
+
             lbCommodities.Items.Clear();
             foreach (var row in CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => !checkboxLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))))
             {
@@ -1969,18 +2039,25 @@ namespace RegulatedNoise
                 return;
             }
 
-            if (pbTrimmed.Image != null) pbTrimmed.Image.Dispose();
-            if (pbStation.Image != null) pbStation.Image.Dispose();
+            try
+            {
+                if (pbTrimmed.Image != null) pbTrimmed.Image.Dispose();
+                if (pbStation.Image != null) pbStation.Image.Dispose();
 
-            if (b != null)
-            {
-                pbTrimmed.Image = (Bitmap)(b.Clone());
-                pbStation.Image = (Bitmap)(bHeader.Clone());
+                if (b != null)
+                {
+                    pbTrimmed.Image = (Bitmap)(b.Clone());
+                    pbStation.Image = (Bitmap)(bHeader.Clone());
+                }
+                else
+                {
+                    pbTrimmed.Image = null;
+                    pbStation.Image = null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                pbTrimmed.Image = null;
-                pbStation.Image = null;
+				cErr.processError(ex);
             }
         }
 
@@ -1993,9 +2070,17 @@ namespace RegulatedNoise
                 return (Bitmap)(Invoke(new ReturnTrimmedImageDelegate(ReturnTrimmedImage)));
             }
 
-            if (pbOcrCurrent.Image == null) return null;
+            try
+            {
+                if (pbOcrCurrent.Image == null) return null;
 
-            return (Bitmap)(pbOcrCurrent.Image.Clone());
+                return (Bitmap)(pbOcrCurrent.Image.Clone());
+            }
+            catch (Exception ex)
+            {
+				cErr.processError(ex);
+                return null;
+            }
         }
 
         public delegate bool ReturnOcrMonitoringStatusDelegate();
@@ -2160,230 +2245,237 @@ namespace RegulatedNoise
 
         private void ContinueDisplayingResults()
         {
-            
-            do
-            {
-                _correctionRow++;
-                if (_correctionRow > _commodityTexts.GetLength(0) - 1) { _correctionRow = 0; _correctionColumn++; }
 
-                if (_commodityTexts.GetLength(0) == 0) return;
+            try
+            {
+                do
+                {
+                    _correctionRow++;
+                    if (_correctionRow > _commodityTexts.GetLength(0) - 1) { _correctionRow = 0; _correctionColumn++; }
+
+                    if (_commodityTexts.GetLength(0) == 0) return;
+
+                    if (_correctionColumn < _commodityTexts.GetLength(1))
+                    {
+                        //Debug.WriteLine(correctionRow + " - " + correctionColumn);
+                        pbOcrCurrent.Image = _originalBitmaps[_correctionRow, _correctionColumn];
+                    }
+
+                    if (_correctionColumn == 0) // hacks for commodity name
+                    {
+                        var currentTextCamelCase =
+                            _textInfo.ToTitleCase(_commodityTexts[_correctionRow, _correctionColumn].ToLower()); // There *was* a reason why I did this...
+
+
+                        // if the ocr have found no char so we dont need to ask Mr. Levenshtein 
+                        if (currentTextCamelCase.Trim().Length > 0)
+                        {
+                            if (KnownCommodityNames.Contains(
+                                currentTextCamelCase))
+                                _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
+                            else
+                            {
+                                var replacedCamelCase = StripPunctuationFromScannedText(currentTextCamelCase); // ignore spaces when using levenshtein to find commodity names
+                                var lowestLevenshteinNumber = 10000;
+                                var nextLowestLevenshteinNumber = 10000;
+                                var lowestMatchingCommodity = "";
+                                var lowestMatchingCommodityRef = "";
+                                double LevenshteinLimit = 0;
+
+                                foreach (var reference in KnownCommodityNames)
+                                {
+                                    var upperRef = StripPunctuationFromScannedText(reference);
+                                    var levenshteinNumber = _levenshtein.LD2(upperRef, replacedCamelCase);
+                                    //if(levenshteinNumber != _levenshtein.LD(upperRef, replacedCamelCase))
+                                    //    Debug.WriteLine("Doh!");
+
+                                    if (upperRef != lowestMatchingCommodityRef)
+                                    {
+                                        if (levenshteinNumber < lowestLevenshteinNumber)
+                                        {
+                                            nextLowestLevenshteinNumber = lowestLevenshteinNumber;
+                                            lowestLevenshteinNumber = levenshteinNumber;
+                                            lowestMatchingCommodityRef = upperRef;
+                                            lowestMatchingCommodity = reference.ToUpper();
+                                        }
+                                        else if (levenshteinNumber < nextLowestLevenshteinNumber)
+                                        {
+                                            nextLowestLevenshteinNumber = levenshteinNumber;
+                                        }
+                                    }
+                                }
+
+                                // it's better if this depends on the length of the word - this factor works pretty good
+                                LevenshteinLimit = Math.Round((currentTextCamelCase.Length * 0.7), 0);
+
+                                if (lowestLevenshteinNumber <= LevenshteinLimit)
+                                {
+                                    _originalBitmapConfidences[_correctionRow, _correctionColumn] = .9f;
+                                    _commodityTexts[_correctionRow, _correctionColumn] = lowestMatchingCommodity;
+                                }
+
+                                if (lowestLevenshteinNumber <= LevenshteinLimit && lowestLevenshteinNumber + 3 < nextLowestLevenshteinNumber) // INDIUM versus INDITE... could factor length in here
+                                    _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
+
+                            }
+
+                            if (_commoditiesSoFar.Contains(_commodityTexts[_correctionRow, _correctionColumn]))
+                            {
+                                _commodityTexts[_correctionRow, _correctionColumn] = "";
+                                _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
+                            }
+
+                            // If we're doing a batch of screenshots, don't keep doing the same commodity when we keep finding it
+                            // but only if it's sure - otherwise it will be registered later
+                            if (_originalBitmapConfidences[_correctionRow, _correctionColumn] == 1)
+                            {
+                                _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]);
+                            }
+                        }
+                        else
+                        {
+                            // that was nothing 
+                            _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
+                            _commodityTexts[_correctionRow, _correctionColumn] = "";
+                        }
+                    }
+                    else if (_correctionColumn == 5 || _correctionColumn == 7) // hacks for LOW/MED/HIGH
+                    {
+                        var commodityLevelUpperCase = StripPunctuationFromScannedText(_commodityTexts[_correctionRow, _correctionColumn]);
+
+                        var levenshteinLow = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.LOW].ToUpper(), commodityLevelUpperCase);
+                        var levenshteinMed = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.MED].ToUpper(), commodityLevelUpperCase);
+                        var levenshteinHigh = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.HIGH].ToUpper(), commodityLevelUpperCase);
+                        var levenshteinBlank = _levenshtein.LD2("", commodityLevelUpperCase);
+
+                        //Pick the lowest levenshtein number
+                        var lowestLevenshtein = Math.Min(Math.Min(levenshteinLow, levenshteinMed), Math.Min(levenshteinHigh, levenshteinBlank));
+
+                        if (lowestLevenshtein == levenshteinLow)
+                        {
+                            _commodityTexts[_correctionRow, _correctionColumn] = "LOW";
+                        }
+                        else if (lowestLevenshtein == levenshteinMed)
+                        {
+                            _commodityTexts[_correctionRow, _correctionColumn] = "MED";
+                        }
+                        else if (lowestLevenshtein == levenshteinHigh)
+                        {
+                            _commodityTexts[_correctionRow, _correctionColumn] = "HIGH";
+                        }
+                        else // lowestLevenshtein == levenshteinBlank
+                        {
+                            _commodityTexts[_correctionRow, _correctionColumn] = "";
+                        }
+
+                        // we will never be challenged on low/med/high again.  this doesn't get internationalized on foreign-language installs... does it? :)
+                        _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
+                    }
+                }
+                // Don't pause for cells which have a high confidence, or have no commodity name
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                while (_correctionColumn < _commodityTexts.GetLength(1) && (_originalBitmapConfidences[_correctionRow, _correctionColumn] > .9f || _originalBitmapConfidences[_correctionRow, _correctionColumn] == 0 || _commodityTexts[_correctionRow, 0] == ""));
 
                 if (_correctionColumn < _commodityTexts.GetLength(1))
                 {
-                    //Debug.WriteLine(correctionRow + " - " + correctionColumn);
-                    pbOcrCurrent.Image = _originalBitmaps[_correctionRow, _correctionColumn];
-                }
-
-                if (_correctionColumn == 0) // hacks for commodity name
-                {
-                    var currentTextCamelCase =
-                        _textInfo.ToTitleCase(_commodityTexts[_correctionRow, _correctionColumn].ToLower()); // There *was* a reason why I did this...
-
-					
-					// if the ocr have found no char so we dont need to ask Mr. Levenshtein 
-                    if (currentTextCamelCase.Trim().Length > 0)
-                    {
-                        if (KnownCommodityNames.Contains(
-                            currentTextCamelCase))
-                            _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
-                        else
-                        {
-                            var replacedCamelCase = StripPunctuationFromScannedText(currentTextCamelCase); // ignore spaces when using levenshtein to find commodity names
-                            var lowestLevenshteinNumber = 10000;
-                            var nextLowestLevenshteinNumber = 10000;
-                            var lowestMatchingCommodity = "";
-                            var lowestMatchingCommodityRef = "";
-                                double LevenshteinLimit = 0;
-
-                            foreach (var reference in KnownCommodityNames)
-                            {
-                                var upperRef = StripPunctuationFromScannedText(reference);
-                                var levenshteinNumber = _levenshtein.LD2(upperRef, replacedCamelCase);
-                                //if(levenshteinNumber != _levenshtein.LD(upperRef, replacedCamelCase))
-                                //    Debug.WriteLine("Doh!");
-
-                                if (upperRef != lowestMatchingCommodityRef)
-                                {
-                                    if (levenshteinNumber < lowestLevenshteinNumber)
-                                    {
-                                        nextLowestLevenshteinNumber = lowestLevenshteinNumber;
-                                        lowestLevenshteinNumber = levenshteinNumber;
-                                        lowestMatchingCommodityRef = upperRef;
-                                        lowestMatchingCommodity = reference.ToUpper();
-                                    }
-                                    else if (levenshteinNumber < nextLowestLevenshteinNumber)
-                                    {
-                                        nextLowestLevenshteinNumber = levenshteinNumber;
-                                    }
-                                }
-                            }
-
-                            // it's better if this depends on the length of the word - this factor works pretty good
-                            LevenshteinLimit = Math.Round((currentTextCamelCase.Length * 0.7), 0);
-
-                            if (lowestLevenshteinNumber <= LevenshteinLimit)
-                            {
-                                _originalBitmapConfidences[_correctionRow, _correctionColumn] = .9f;
-                                _commodityTexts[_correctionRow, _correctionColumn] = lowestMatchingCommodity;
-                            }
-
-                            if (lowestLevenshteinNumber <= LevenshteinLimit && lowestLevenshteinNumber + 3 < nextLowestLevenshteinNumber) // INDIUM versus INDITE... could factor length in here
-                                _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
-
-                        }
-
-                        if (_commoditiesSoFar.Contains(_commodityTexts[_correctionRow, _correctionColumn]))
-                        {
-                            _commodityTexts[_correctionRow, _correctionColumn] = "";
-                            _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
-                        }
-
-                        // If we're doing a batch of screenshots, don't keep doing the same commodity when we keep finding it
-                        // but only if it's sure - otherwise it will be registered later
-                        if (_originalBitmapConfidences[_correctionRow, _correctionColumn] == 1)
-                        {
-                            _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]); 
-                        }
-                    }
-                    else
-                    {
-                        // that was nothing 
-                        _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
-                        _commodityTexts[_correctionRow, _correctionColumn] = "";
-                    }
-                }
-                else if (_correctionColumn == 5 || _correctionColumn == 7) // hacks for LOW/MED/HIGH
-                {
-	                var commodityLevelUpperCase = StripPunctuationFromScannedText(_commodityTexts[_correctionRow, _correctionColumn]);
-
-	                var levenshteinLow = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.LOW].ToUpper(), commodityLevelUpperCase);
-                    var levenshteinMed = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.MED].ToUpper(), commodityLevelUpperCase);
-                    var levenshteinHigh = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.HIGH].ToUpper(), commodityLevelUpperCase);
-                    var levenshteinBlank = _levenshtein.LD2("", commodityLevelUpperCase);
-
-	                //Pick the lowest levenshtein number
-	                var lowestLevenshtein = Math.Min(Math.Min(levenshteinLow, levenshteinMed), Math.Min(levenshteinHigh, levenshteinBlank));
-
-                    if (lowestLevenshtein == levenshteinLow)
-	                {
-		                _commodityTexts[_correctionRow, _correctionColumn] = "LOW";
-	                }
-	                else if (lowestLevenshtein == levenshteinMed)
-	                {
-		                _commodityTexts[_correctionRow, _correctionColumn] = "MED";
-	                }
-	                else if (lowestLevenshtein == levenshteinHigh)
-	                {
-		                _commodityTexts[_correctionRow, _correctionColumn] = "HIGH";
-	                }
-	                else // lowestLevenshtein == levenshteinBlank
-	                {
-		                _commodityTexts[_correctionRow, _correctionColumn] = "";
-	                }
-
-                    // we will never be challenged on low/med/high again.  this doesn't get internationalized on foreign-language installs... does it? :)
-                    _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
-                }
-            }
-            // Don't pause for cells which have a high confidence, or have no commodity name
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            while (_correctionColumn < _commodityTexts.GetLength(1) && (_originalBitmapConfidences[_correctionRow, _correctionColumn] > .9f || _originalBitmapConfidences[_correctionRow, _correctionColumn] == 0 || _commodityTexts[_correctionRow, 0] == ""));
-
-            if (_correctionColumn < _commodityTexts.GetLength(1))
-            {
-                // doing again some stateful enabling
-                tbCommoditiesOcrOutput.Text = _commodityTexts[_correctionRow, _correctionColumn];
-                tbConfidence.Text = _originalBitmapConfidences[_correctionRow, _correctionColumn].ToString(CultureInfo.InvariantCulture);
-                bContinueOcr.Enabled = true;
-                bIgnoreTrash.Enabled = true;
-            }
-            else
-            {
-                bContinueOcr.Enabled = false;
-                bIgnoreTrash.Enabled = false;
-
-                string finalOutput = _csvOutputSoFar;
-
-                for (int row = 0; row < _commodityTexts.GetLength(0); row++)
-                {
-                    if (_commodityTexts[row, 0] != "") // don't create CSV if there's no commodity name
-                    {
-                        finalOutput += tbOcrSystemName.Text + ";" + tbOcrStationName.Text + ";";
-
-                        for (int col = 0; col < _commodityTexts.GetLength(1); col++)
-                        {
-                            _commodityTexts[row, col] = _commodityTexts[row, col].Replace("\r", "").Replace("\n", "");
-
-                            if (col == 3) continue; // don't export cargo levels
-                            finalOutput += _commodityTexts[row, col] + ";";
-                        }
-                        finalOutput += ocr.CurrentScreenshotDateTime.ToString("s").Substring(0, 16) + ";";
-
-                        if (cbExtendedInfoInCSV.Checked)
-                            finalOutput += Path.GetFileName(_screenshotName) + ";";
-
-                        finalOutput += _rowIds[row]+"\r\n";
-                    }
-                }
-
-                _csvOutputSoFar += finalOutput;
-
-                if(pbOriginalImage.Image != null)
-                    pbOriginalImage.Image.Dispose();
-
-                UpdateOriginalImage(null);
-                UpdateTrimmedImage(null, null);
-
-                if (RegulatedNoiseSettings.DeleteScreenshotOnImport)
-                    File.Delete(_screenshotName);
-
-                if (_screenshotResultsBuffer.Count == 0)
-                {
-                    tbFinalOcrOutput.Text += _csvOutputSoFar;
-                    _csvOutputSoFar = null;
-                    
-
-                    pbOcrCurrent.Image = null;
-                    if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
-                    {
-                        
-                        tbFinalOcrOutput.Enabled = true;
-
-                        if (RegulatedNoiseSettings.AutoImport)
-                        {
-                            tbCommoditiesOcrOutput.Text = "Imported!";
-                            ImportFinalOcrOutput();
-                            tbFinalOcrOutput.Text = "";
-                            _csvOutputSoFar = "";
-                            _commoditiesSoFar = new List<string>();
-                            bClearOcrOutput.Enabled = false;
-                            bEditResults.Enabled = false;
-                        }
-                        else
-                        {
-                            tbCommoditiesOcrOutput.Text = "Finished!";
-                            bContinueOcr.Text = "Import";
-                            bContinueOcr.Enabled = true;
-                            bIgnoreTrash.Enabled = false;
-                            bClearOcrOutput.Enabled = true;
-                            bEditResults.Enabled = true;
-                        }
-                    }
-                    else
-                    {
-                        tbCommoditiesOcrOutput.Text = "Working...!";
-                        bClearOcrOutput.Enabled = false;
-                        bEditResults.Enabled = false;
-                    }
-
+                    // doing again some stateful enabling
+                    tbCommoditiesOcrOutput.Text = _commodityTexts[_correctionRow, _correctionColumn];
+                    tbConfidence.Text = _originalBitmapConfidences[_correctionRow, _correctionColumn].ToString(CultureInfo.InvariantCulture);
+                    bContinueOcr.Enabled = true;
+                    bIgnoreTrash.Enabled = true;
                 }
                 else
                 {
-                    var nextScreenshot = _screenshotResultsBuffer[0];
-                    _screenshotResultsBuffer.Remove(nextScreenshot);
-                    ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
-                    BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
+                    bContinueOcr.Enabled = false;
+                    bIgnoreTrash.Enabled = false;
+
+                    string finalOutput = _csvOutputSoFar;
+
+                    for (int row = 0; row < _commodityTexts.GetLength(0); row++)
+                    {
+                        if (_commodityTexts[row, 0] != "") // don't create CSV if there's no commodity name
+                        {
+                            finalOutput += tbOcrSystemName.Text + ";" + tbOcrStationName.Text + ";";
+
+                            for (int col = 0; col < _commodityTexts.GetLength(1); col++)
+                            {
+                                _commodityTexts[row, col] = _commodityTexts[row, col].Replace("\r", "").Replace("\n", "");
+
+                                if (col == 3) continue; // don't export cargo levels
+                                finalOutput += _commodityTexts[row, col] + ";";
+                            }
+                            finalOutput += ocr.CurrentScreenshotDateTime.ToString("s").Substring(0, 16) + ";";
+
+                            if (cbExtendedInfoInCSV.Checked)
+                                finalOutput += Path.GetFileName(_screenshotName) + ";";
+
+                            finalOutput += _rowIds[row] + "\r\n";
+                        }
+                    }
+
+                    _csvOutputSoFar += finalOutput;
+
+                    if (pbOriginalImage.Image != null)
+                        pbOriginalImage.Image.Dispose();
+
+                    UpdateOriginalImage(null);
+                    UpdateTrimmedImage(null, null);
+
+                    if (RegulatedNoiseSettings.DeleteScreenshotOnImport)
+                        File.Delete(_screenshotName);
+
+                    if (_screenshotResultsBuffer.Count == 0)
+                    {
+                        tbFinalOcrOutput.Text += _csvOutputSoFar;
+                        _csvOutputSoFar = null;
+
+
+                        pbOcrCurrent.Image = null;
+                        if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
+                        {
+
+                            tbFinalOcrOutput.Enabled = true;
+
+                            if (RegulatedNoiseSettings.AutoImport)
+                            {
+                                tbCommoditiesOcrOutput.Text = "Imported!";
+                                ImportFinalOcrOutput();
+                                tbFinalOcrOutput.Text = "";
+                                _csvOutputSoFar = "";
+                                _commoditiesSoFar = new List<string>();
+                                bClearOcrOutput.Enabled = false;
+                                bEditResults.Enabled = false;
+                            }
+                            else
+                            {
+                                tbCommoditiesOcrOutput.Text = "Finished!";
+                                bContinueOcr.Text = "Import";
+                                bContinueOcr.Enabled = true;
+                                bIgnoreTrash.Enabled = false;
+                                bClearOcrOutput.Enabled = true;
+                                bEditResults.Enabled = true;
+                            }
+                        }
+                        else
+                        {
+                            tbCommoditiesOcrOutput.Text = "Working...!";
+                            bClearOcrOutput.Enabled = false;
+                            bEditResults.Enabled = false;
+                        }
+
+                    }
+                    else
+                    {
+                        var nextScreenshot = _screenshotResultsBuffer[0];
+                        _screenshotResultsBuffer.Remove(nextScreenshot);
+                        ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
+                        BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+				cErr.processError(ex);
             }
         }
 
@@ -2463,7 +2555,15 @@ namespace RegulatedNoise
                 return;
             }
 
-            pbOcrCurrent.Image = (Bitmap)(b.Clone());
+            try
+            {
+                pbOcrCurrent.Image = (Bitmap)(b.Clone());
+            }
+            catch (Exception ex)
+            {
+				cErr.processError(ex);
+            }
+
         }
         #endregion
 
@@ -2634,7 +2734,14 @@ namespace RegulatedNoise
 
         private void button10_Click(object sender, EventArgs e)
         {
-            CommandersLog.LoadLog();
+            try
+            {
+                CommandersLog.LoadLog();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while loading Commanders Log");    
+            }
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -2809,7 +2916,7 @@ namespace RegulatedNoise
                         }
                     }
                 }
-                catch (Exception e)
+                catch 
                 {
                     tbEDDNOutput.Text = "Couldn't parse JSON!\r\n\r\n" + tbEDDNOutput.Text;
                 }
@@ -2840,11 +2947,17 @@ namespace RegulatedNoise
         #region Station-To-Station
         private void cbStationToStationFrom_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_setCBSortingIsActive)
+                return;
+
             UpdateStationToStation();
         }
 
         private void cbStationToStationTo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_setCBSortingIsActive)
+                return;
+
             UpdateStationToStation();
         }
 
@@ -3164,9 +3277,12 @@ namespace RegulatedNoise
 
                         if (systemName != "")
                         {
-                            if (tbCurrentSystemFromLogs.Text != systemName)
+                            Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
+                            if (_LoggedSystem != systemName)
                             {
+                                // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
                                 CommandersLog.CreateEvent("Jumped to", "", systemName, "", "", 0, "", DateTime.Now);
+                                _LoggedSystem = systemName;
 
                                 //tbCurrentSystemFromLogs.Text = systemName;
                             }
@@ -3364,6 +3480,10 @@ namespace RegulatedNoise
         {
             RegulatedNoiseSettings.CheckVersion();
 
+#if DukeJones
+            RegulatedNoiseSettings.CheckVersion2();            
+#endif
+            
             Text += RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
 
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
@@ -3699,6 +3819,9 @@ namespace RegulatedNoise
 
         private void cbIncludeWithinRegionOfStation_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_setCBSortingIsActive)
+                return;
+
             SetupGui();
         }
 
@@ -3976,6 +4099,52 @@ namespace RegulatedNoise
                 tabControl1.TabPages.RemoveByKey("tabEDDN");
             }
         }
+
+        public void setOCRCalibrationTabVisibility()
+        {
+            TabPage OCRTabPage;
+            OcrCalibratorTab TabControl;
+
+            if (GameSettings != null && tabControl3.TabPages["OCR_Calibration"] != null)
+            {
+                OCRTabPage = tabControl3.TabPages["OCR_Calibration"];
+                OCRTabPage.Enabled = (GameSettings.Display != null);
+                TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
+                TabControl.lblWarning.Visible = (GameSettings.Display == null); 
+            }
+        }
+
+        private void cbSortingComboboxes_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.SortingComboboxes = cbSortingComboboxes.Checked;
+            applyComboboxSetting();
+        }
+
+        /// <summary>
+        /// sets the sorting property of the commodity comboboxes
+        /// </summary>
+        private void applyComboboxSetting()
+        {
+            try
+            {
+                _setCBSortingIsActive = true;
+
+                cbIncludeWithinRegionOfStation.Sorted = RegulatedNoiseSettings.SortingComboboxes;
+                cbStation.Sorted = RegulatedNoiseSettings.SortingComboboxes;
+                cbCommodity.Sorted = RegulatedNoiseSettings.SortingComboboxes;
+                cbStationToStationFrom.Sorted = RegulatedNoiseSettings.SortingComboboxes;
+                cbStationToStationTo.Sorted = RegulatedNoiseSettings.SortingComboboxes;
+
+                _setCBSortingIsActive = false;
+
+            }
+            catch (Exception)
+            {
+                _setCBSortingIsActive = false;
+            }
+        }
+
     }
+
 
 }
