@@ -191,9 +191,10 @@ namespace RegulatedNoise
             }
 
         }
-    }
 
 #endif
+
+    }
 
     public partial class Form1
     {
