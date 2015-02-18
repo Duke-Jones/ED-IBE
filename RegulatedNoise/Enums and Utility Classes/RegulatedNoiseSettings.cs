@@ -16,7 +16,7 @@ namespace RegulatedNoise
         public readonly decimal Version   = 1.84m;
 
 #if DukeJones
-        public readonly decimal VersionDJ = 0.03m;
+        public readonly decimal VersionDJ = 0.04m;
 #endif
 
         public string ProductsPath = "";
@@ -43,6 +43,9 @@ namespace RegulatedNoise
         public string TraineddataFile = "big";
         public enLanguage Language = enLanguage.eng;
         public bool SortingComboboxes = true;
+        public int CmdrsLogSortColumn = 0;
+        public SortOrder CmdrsLogSortOrder = SortOrder.Descending;
+        public bool AutoEvent_JumpedTo = true;
 
 
         public void CheckVersion()

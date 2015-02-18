@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -136,7 +136,7 @@
             this.cbLogEventType = new System.Windows.Forms.ComboBox();
             this.label40 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.button21 = new System.Windows.Forms.Button();
+            this.btCreateAddEntry = new System.Windows.Forms.Button();
             this.cbLogStationName = new System.Windows.Forms.ComboBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -146,7 +146,7 @@
             this.cbLogCargoName = new System.Windows.Forms.ComboBox();
             this.nbTransactionAmount = new System.Windows.Forms.NumericUpDown();
             this.label22 = new System.Windows.Forms.Label();
-            this.button11 = new System.Windows.Forms.Button();
+            this.cbPrepareNewEntry = new System.Windows.Forms.Button();
             this.cbLogQuantity = new System.Windows.Forms.NumericUpDown();
             this.label23 = new System.Windows.Forms.Label();
             this.cbCargoModifier = new System.Windows.Forms.ComboBox();
@@ -224,6 +224,9 @@
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.button15 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.label49 = new System.Windows.Forms.Label();
+            this.cbAutoAdd_JumpedTo = new System.Windows.Forms.CheckBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.cbSortingComboboxes = new System.Windows.Forms.CheckBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -290,6 +293,7 @@
             this.tabEDDN.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -730,9 +734,6 @@
             // 
             // cbLightYears
             // 
-            this.cbLightYears.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbLightYears.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbLightYears.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbLightYears.FormattingEnabled = true;
             this.cbLightYears.Items.AddRange(new object[] {
             "10",
@@ -830,7 +831,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(180, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(164, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -850,14 +851,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(175, 213);
+            series3.ChartArea = "ChartArea1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(159, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -877,14 +878,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(170, 191);
+            series4.ChartArea = "ChartArea1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(154, 175);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1470,7 +1471,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.cbLogEventType);
             this.splitContainer3.Panel2.Controls.Add(this.label40);
             this.splitContainer3.Panel2.Controls.Add(this.label18);
-            this.splitContainer3.Panel2.Controls.Add(this.button21);
+            this.splitContainer3.Panel2.Controls.Add(this.btCreateAddEntry);
             this.splitContainer3.Panel2.Controls.Add(this.cbLogStationName);
             this.splitContainer3.Panel2.Controls.Add(this.label39);
             this.splitContainer3.Panel2.Controls.Add(this.label19);
@@ -1480,7 +1481,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.cbLogCargoName);
             this.splitContainer3.Panel2.Controls.Add(this.nbTransactionAmount);
             this.splitContainer3.Panel2.Controls.Add(this.label22);
-            this.splitContainer3.Panel2.Controls.Add(this.button11);
+            this.splitContainer3.Panel2.Controls.Add(this.cbPrepareNewEntry);
             this.splitContainer3.Panel2.Controls.Add(this.cbLogQuantity);
             this.splitContainer3.Panel2.Controls.Add(this.label23);
             this.splitContainer3.Panel2.Controls.Add(this.cbCargoModifier);
@@ -1500,6 +1501,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvCommandersLog.FullRowSelect = true;
+            this.lvCommandersLog.HideSelection = false;
             this.lvCommandersLog.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvCommandersLog.Location = new System.Drawing.Point(0, 0);
             this.lvCommandersLog.MultiSelect = false;
@@ -1568,15 +1570,15 @@
             this.label18.TabIndex = 7;
             this.label18.Text = "Event";
             // 
-            // button21
+            // btCreateAddEntry
             // 
-            this.button21.Location = new System.Drawing.Point(119, 424);
-            this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(161, 23);
-            this.button21.TabIndex = 34;
-            this.button21.Text = "Create This Entry And Clear";
-            this.button21.UseVisualStyleBackColor = true;
-            this.button21.Click += new System.EventHandler(this.button21_Click);
+            this.btCreateAddEntry.Location = new System.Drawing.Point(119, 424);
+            this.btCreateAddEntry.Name = "btCreateAddEntry";
+            this.btCreateAddEntry.Size = new System.Drawing.Size(164, 23);
+            this.btCreateAddEntry.TabIndex = 34;
+            this.btCreateAddEntry.Text = "Create This Entry";
+            this.btCreateAddEntry.UseVisualStyleBackColor = true;
+            this.btCreateAddEntry.Click += new System.EventHandler(this.saveLogEntry);
             // 
             // cbLogStationName
             // 
@@ -1665,15 +1667,15 @@
             this.label22.TabIndex = 14;
             this.label22.Text = "Cargo";
             // 
-            // button11
+            // cbPrepareNewEntry
             // 
-            this.button11.Location = new System.Drawing.Point(116, 55);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(128, 23);
-            this.button11.TabIndex = 26;
-            this.button11.Text = "Clear";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
+            this.cbPrepareNewEntry.Location = new System.Drawing.Point(116, 55);
+            this.cbPrepareNewEntry.Name = "cbPrepareNewEntry";
+            this.cbPrepareNewEntry.Size = new System.Drawing.Size(164, 23);
+            this.cbPrepareNewEntry.TabIndex = 26;
+            this.cbPrepareNewEntry.Text = "Prepare Fields For A New Entry";
+            this.cbPrepareNewEntry.UseVisualStyleBackColor = true;
+            this.cbPrepareNewEntry.Click += new System.EventHandler(this.button11_Click);
             // 
             // cbLogQuantity
             // 
@@ -2476,6 +2478,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.groupBox10);
             this.tabPage4.Controls.Add(this.groupBox9);
             this.tabPage4.Controls.Add(this.groupBox8);
             this.tabPage4.Controls.Add(this.groupBox6);
@@ -2486,6 +2489,39 @@
             this.tabPage4.TabIndex = 12;
             this.tabPage4.Text = "Settings";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox10.Controls.Add(this.label49);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
+            this.groupBox10.Location = new System.Drawing.Point(357, 9);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(336, 514);
+            this.groupBox10.TabIndex = 11;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Commander\'s Log";
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(29, 22);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(195, 13);
+            this.label49.TabIndex = 1;
+            this.label49.Text = "generate following events automatically:";
+            // 
+            // cbAutoAdd_JumpedTo
+            // 
+            this.cbAutoAdd_JumpedTo.AutoSize = true;
+            this.cbAutoAdd_JumpedTo.Location = new System.Drawing.Point(32, 44);
+            this.cbAutoAdd_JumpedTo.Name = "cbAutoAdd_JumpedTo";
+            this.cbAutoAdd_JumpedTo.Size = new System.Drawing.Size(116, 17);
+            this.cbAutoAdd_JumpedTo.TabIndex = 0;
+            this.cbAutoAdd_JumpedTo.Text = "\"Jumped to\"-Event";
+            this.cbAutoAdd_JumpedTo.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_JumpedTo.CheckedChanged += new System.EventHandler(this.cbAutoAdd_JumpedTo_CheckedChanged);
             // 
             // groupBox9
             // 
@@ -2715,6 +2751,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabPage4.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -2798,7 +2836,7 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Label label23;
         public System.Windows.Forms.TextBox tbLogEventID;
-        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button cbPrepareNewEntry;
         private System.Windows.Forms.TabPage tabEDDN;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button15;
@@ -2824,7 +2862,7 @@
         public System.Windows.Forms.NumericUpDown nbTransactionAmount;
         public System.Windows.Forms.TextBox tbCurrentSystemFromLogs;
         public System.Windows.Forms.ListView lvCommandersLog;
-        public System.Windows.Forms.Button button21;
+        public System.Windows.Forms.Button btCreateAddEntry;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.TabPage tabHelpAndChangeLog;
@@ -2936,6 +2974,9 @@
         private System.Windows.Forms.BindingSource namesBindingSource;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.CheckBox cbSortingComboboxes;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.CheckBox cbAutoAdd_JumpedTo;
     }
 }
 

@@ -22,9 +22,11 @@ namespace RegulatedNoise
             LogEvents = new SortableBindingList<CommandersLogEvent>();
         }
 
-        public void CreateEvent()
+        public string CreateEvent()
         {
-            _callingForm.tbLogEventID.Text = Guid.NewGuid().ToString();
+            String newEventID = Guid.NewGuid().ToString();
+
+            _callingForm.tbLogEventID.Text = newEventID;
 
             LogEvents.Add(new CommandersLogEvent 
             {
@@ -36,12 +38,16 @@ namespace RegulatedNoise
                 CargoVolume =int.Parse(_callingForm.cbLogQuantity.Text),
                 Notes =_callingForm.tbLogNotes.Text,
                 EventDate =DateTime.Parse(_callingForm.dtpLogEventDate.Text),
-                EventID =_callingForm.tbLogEventID.Text
+                EventID = newEventID
             });
+
+            return newEventID;
         }
 
-        public void CreateEvent(string eventType, string station, string system, string cargo, string cargoAction, int cargoVolume, string notes, DateTime eventDate)
+        public String CreateEvent(string eventType, string station, string system, string cargo, string cargoAction, int cargoVolume, string notes, DateTime eventDate)
         {
+            String newEventID = Guid.NewGuid().ToString();
+
             LogEvents.Add(new CommandersLogEvent
             {
                 EventType =               eventType                  ,
@@ -52,24 +58,32 @@ namespace RegulatedNoise
                 CargoVolume =             cargoVolume                ,
                 Notes =                   notes                      ,
                 EventDate        =        eventDate                  ,
-                EventID = Guid.NewGuid().ToString()
+                EventID = newEventID  
             });
 
             UpdateCommandersLogListView();
+
+            return newEventID;
         }
 
         public void CreateNewEvent() // Clears the fields ready for input
         {
-            var now =DateTime.UtcNow;
+            // set it to UTC everywhere or nowhere -> pay attention to the different timezones
+            // if you wan't to concatenate ED-time and local pc time
+            //var now =DateTime.UtcNow;
+            var now = DateTime.Now;
             ClearLogEventFields();
             _callingForm.dtpLogEventDate.Value =now;
             _callingForm.tbLogEventID.Text ="";
-            _callingForm.button21.Text = "Create This Entry And Clear";
+            _callingForm.btCreateAddEntry.Text = "Create This Entry";
         }
 
         public void CreateEvent(CommandersLogEvent partiallyCompleteCommandersLogEventEvent) // when we create from the webserver
         {
-            var now = DateTime.UtcNow;
+            // set it to UTC everywhere or nowhere -> pay attention to the different timezones
+            // if you wan't to concatenate ED-time and local pc time
+            //var now =DateTime.UtcNow;
+            var now = DateTime.Now;
             var newGuid = Guid.NewGuid().ToString();
             ClearLogEventFields();
             _callingForm.dtpLogEventDate.Value = now;

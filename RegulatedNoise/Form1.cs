@@ -642,6 +642,14 @@ namespace RegulatedNoise
                 RegulatedNoiseSettings.TraineddataFile = "big";
             }
             txtTraineddataFile.Text = RegulatedNoiseSettings.TraineddataFile;
+            
+            _commandersLogColumnSorter.SortColumn   = RegulatedNoiseSettings.CmdrsLogSortColumn;
+            _commandersLogColumnSorter.Order        = RegulatedNoiseSettings.CmdrsLogSortOrder;
+
+            cbAutoAdd_JumpedTo.Checked = RegulatedNoiseSettings.AutoEvent_JumpedTo;
+
+            // perform the sort with the last sort options.
+            this.lvCommandersLog.Sort();
 
         }
 
@@ -3281,9 +3289,14 @@ namespace RegulatedNoise
                             if (_LoggedSystem != systemName)
                             {
                                 // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
-                                CommandersLog.CreateEvent("Jumped to", "", systemName, "", "", 0, "", DateTime.Now);
+                                if (cbAutoAdd_JumpedTo.Checked)
+	                            {
+                                    String EventID = CommandersLog.CreateEvent("Jumped To", "", systemName, "", "", 0, "", DateTime.Now);
+                                    setActiveItem(EventID);
+	                            }  
+                                
                                 _LoggedSystem = systemName;
-
+                                
                                 //tbCurrentSystemFromLogs.Text = systemName;
                             }
                             if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
@@ -3310,15 +3323,18 @@ namespace RegulatedNoise
             GenericSingleParameterMessage(null, AppDelegateType.UpdateSystemNameLiveFromLog);
         }
 
-        private void button21_Click(object sender, EventArgs e)
+        private void saveLogEntry(object sender, EventArgs e)
         {
             if (tbLogEventID.Text == "")
             {
-                var newGuid = Guid.NewGuid().ToString();
-                tbLogEventID.Text = newGuid;
-                CommandersLog.CreateEvent();
+                // this is done by CommandersLog.CreateEvent() itself
+                // var newGuid = Guid.NewGuid().ToString();
+                // tbLogEventID.Text = newGuid;
+
+                var newGuid = CommandersLog.CreateEvent();
                 CommandersLog.UpdateCommandersLogListView();
-                CommandersLog.CreateNewEvent();
+                //CommandersLog.CreateNewEvent();
+                setActiveItem(newGuid);
             }
             else
             {
@@ -3356,7 +3372,9 @@ namespace RegulatedNoise
                 _commandersLogSelectedItem = newItem;
                 lvCommandersLog.Items.Insert(columnIndex, newItem);
                 lvCommandersLog.SelectedIndexChanged += lvCommandersLog_SelectedIndexChanged;
-                CommandersLog.CreateNewEvent();
+                //CommandersLog.CreateNewEvent();
+
+                setActiveItem(((ListViewItem)newItem).SubItems[8].Text);
             }
 
             // save new datat immediatly
@@ -3385,7 +3403,7 @@ namespace RegulatedNoise
             cbCargoModifier.Text = logEvent.CargoAction;
             cbLogCargoName.Text = logEvent.Cargo;
             dtpLogEventDate.Value = logEvent.EventDate;
-            button21.Text = "Edit This Entry And Clear";
+            btCreateAddEntry.Text = "Edit This Entry";
 
         }
 
@@ -3429,6 +3447,9 @@ namespace RegulatedNoise
 
             // Perform the sort with these new sort options.
             this.lvCommandersLog.Sort();
+
+            RegulatedNoiseSettings.CmdrsLogSortColumn = _commandersLogColumnSorter.SortColumn;
+            RegulatedNoiseSettings.CmdrsLogSortOrder  = _commandersLogColumnSorter.Order;
         }
 
         private void cbLogSystemName_DropDown(object sender, EventArgs e)
@@ -3480,11 +3501,13 @@ namespace RegulatedNoise
         {
             RegulatedNoiseSettings.CheckVersion();
 
-#if DukeJones
-            RegulatedNoiseSettings.CheckVersion2();            
-#endif
-            
             Text += RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
+
+#if DukeJones
+            RegulatedNoiseSettings.CheckVersion2();
+            Text += "_" + RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture);
+#endif
+
 
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
                  DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
@@ -4142,6 +4165,30 @@ namespace RegulatedNoise
             {
                 _setCBSortingIsActive = false;
             }
+        }
+
+        private void cbAutoAdd_JumpedTo_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.AutoEvent_JumpedTo = cbAutoAdd_JumpedTo.Checked;
+        }
+
+        /// <summary>
+        /// selects the wanted ListViewItem
+        /// </summary>
+        /// <param name="wantedItem"></param>
+        internal void setActiveItem(String wantedItem)
+        {
+            int EventIDIndex = lvCommandersLog.Columns.IndexOfKey("EventID");
+
+            foreach (ListViewItem x in lvCommandersLog.Items)
+            {
+                if (x.SubItems[EventIDIndex].Text == wantedItem)
+                {
+                    x.Selected = true;
+                }
+
+            }
+
         }
 
     }
