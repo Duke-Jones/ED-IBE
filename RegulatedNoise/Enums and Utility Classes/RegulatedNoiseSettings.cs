@@ -16,7 +16,7 @@ namespace RegulatedNoise
         public readonly decimal Version   = 1.84m;
 
 #if DukeJones
-        public readonly decimal VersionDJ = 0.04m;
+        public readonly decimal VersionDJ = 0.05m;
 #endif
 
         public string ProductsPath = "";
@@ -46,7 +46,8 @@ namespace RegulatedNoise
         public int CmdrsLogSortColumn = 0;
         public SortOrder CmdrsLogSortOrder = SortOrder.Descending;
         public bool AutoEvent_JumpedTo = true;
-
+        public float EBPixelThreshold = 0.2f;
+        public int EBPixelAmount = 12;
 
         public void CheckVersion()
         {
@@ -182,7 +183,8 @@ namespace RegulatedNoise
 
                     if (dialogResult == DialogResult.Yes)
                     {
-                        Process.Start(@"https://github.com/stringandstickytape/RegulatedNoise/releases");
+
+                        Process.Start(@"https://github.com/Duke-Jones/RegulatedNoise/releases");
                         Application.Exit();
                     }
                 }

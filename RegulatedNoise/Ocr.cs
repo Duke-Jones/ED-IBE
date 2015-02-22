@@ -29,6 +29,7 @@ namespace RegulatedNoise
         private readonly SingleThreadLogger _logger;
         private Levenshtein _levenshtein = new Levenshtein();
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+        private EBPixeltest PixelTest;
 
         Bitmap _bTrimmedHeader, _bTrimmed, _bOriginal, _bOriginalClone;
 
@@ -186,12 +187,20 @@ namespace RegulatedNoise
 
         public void PerformOcr(List<Tuple<int, int>> textRowLocations)
         {
+            int DarkPixels;
             var conv = new BitmapToPixConverter();
 
             Pix p = conv.Convert(_bTrimmedHeader);
 
             string headerResult;
-			
+
+            // delete the old brainerous images - otherwise Brainerous will process older but not relevant images too
+            if (Directory.Exists(@".\Brainerous\images"))
+                foreach (string file in Directory.GetFiles(@".\\Brainerous\\images", "*.*"))
+                    File.Delete(file);
+            else
+                Directory.CreateDirectory("./Brainerous/images");
+
             using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
             {
                 using (var page = engine.Process(p))
@@ -231,7 +240,7 @@ namespace RegulatedNoise
             var bTrimmedContrast = (Bitmap)_bTrimmed.Clone();
 
             var bitmapCtr = 0;
-            
+
             foreach (var row in textRowLocations)
             {
                 int startRow = row.Item1 - 3;
@@ -285,78 +294,109 @@ namespace RegulatedNoise
                     left = left + fudgeFactor;
                     width = width - fudgeFactor;
 
-                    if (columnCounter != 0 && columnCounter != 5 && columnCounter != 7)
-                    {   //If it's a numeric column write it out for Brainerous to process later
-                        var brainerousOut = Crop(bTrimmedContrast,
-                            new Rectangle(left, startRow, width, heightRow));
+                    DarkPixels = 0;
 
-                        if (!Directory.Exists("./Brainerous/images"))
-                            Directory.CreateDirectory("./Brainerous/images");
+                    if (_callingForm.cbCheckAOne.Checked)
+                    {
+                        if (PixelTest == null)
+                            PixelTest = new EBPixeltest();
 
-                        brainerousOut.Save("./Brainerous/images/" + bitmapCtr + ".png");
-                        bitmapCtr++;
+                        if (columnCounter == 3)
+                        {
+                            var brainerousOut = Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow));
+
+                            // check how much dark pixels are on the bitmap
+                            for (int i = 0; i < brainerousOut.Height; i++)
+                                for (int j = 0; j < brainerousOut.Width; j++)
+                                    if (brainerousOut.GetPixel(j, i).GetBrightness() < Form1.RegulatedNoiseSettings.EBPixelThreshold)
+                                        DarkPixels++;
+
+                            PixelTest.addPicture(brainerousOut, DarkPixels);
+                        }
                     }
                     else
-                    {   // It's a text column, we'll use Tesseract
+                    {
+                        if (columnCounter != 0 && columnCounter != 5 && columnCounter != 7)
+                        {   //If it's a numeric column write it out for Brainerous to process later
+                            var brainerousOut = Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow));
 
-                        // Prepare some different versions of the bitmap, we will take the best result
-                        var c = new Bitmap[7];
-                        c[0] = (Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow)));
-                        c[1] = (Crop(bTrimmedContrast, new Rectangle(left + 1, startRow, width, heightRow)));
-                        c[2] = (Crop(bTrimmedContrast, new Rectangle(left - 1, startRow, width, heightRow)));
-                        c[3] = (Crop(bTrimmedContrast, new Rectangle(left, startRow - 1, width, heightRow)));
-                        c[4] = (Crop(bTrimmedContrast, new Rectangle(left + 1, startRow - 1, width, heightRow)));
-                        c[5] = (Crop(bTrimmedContrast, new Rectangle(left - 1, startRow - 1, width, heightRow)));
-                        c[6] = (Crop(bTrimmedContrast, new Rectangle(left, startRow + 2, width, heightRow - 2)));
-
-                        var t = new string[c.Length];
-                        var cf = new float[c.Length];
-
-                        using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
-                        {
-                            for (int i = 0; i < c.Length; i++)
+                            if (Form1.RegulatedNoiseSettings.EBPixelAmount > 0)
                             {
-                                t[i] = AnalyseFrameUsingTesseract((Bitmap)(c[i].Clone()), engine, out cf[i]);
+                                // check how much dark pixels are on the bitmap -> we process only bitmaps 
+                                // with something on it (minimum one digit supposed, a "1" hat about 25 pixels in default 1920x1200)
+                                for (int i = 0; i < brainerousOut.Height; i++)
+                                    for (int j = 0; j < brainerousOut.Width; j++)
+                                        if (brainerousOut.GetPixel(j, i).GetBrightness() < Form1.RegulatedNoiseSettings.EBPixelThreshold)
+                                            DarkPixels++;
                             }
+
+                            if (DarkPixels >= Form1.RegulatedNoiseSettings.EBPixelAmount)
+                                brainerousOut.Save("./Brainerous/images/" + bitmapCtr + ".png");
+
+                            bitmapCtr++;
                         }
+                        else
+                        {   // It's a text column, we'll use Tesseract
 
-                        int result = 0;
-                        float confidence = cf[0];
+                            // Prepare some different versions of the bitmap, we will take the best result
+                            var c = new Bitmap[7];
+                            c[0] = (Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow)));
+                            c[1] = (Crop(bTrimmedContrast, new Rectangle(left + 1, startRow, width, heightRow)));
+                            c[2] = (Crop(bTrimmedContrast, new Rectangle(left - 1, startRow, width, heightRow)));
+                            c[3] = (Crop(bTrimmedContrast, new Rectangle(left, startRow - 1, width, heightRow)));
+                            c[4] = (Crop(bTrimmedContrast, new Rectangle(left + 1, startRow - 1, width, heightRow)));
+                            c[5] = (Crop(bTrimmedContrast, new Rectangle(left - 1, startRow - 1, width, heightRow)));
+                            c[6] = (Crop(bTrimmedContrast, new Rectangle(left, startRow + 2, width, heightRow - 2)));
 
-                        for (int i = 1; i < c.Length; i++)
-                        {
-                            if (confidence < cf[i])
-                            { result = i; confidence = cf[i]; }
-                        }
+                            var t = new string[c.Length];
+                            var cf = new float[c.Length];
 
-                        originalBitmaps[rowCtr, columnCounter] = (Bitmap)(c[result].Clone());
-
-                        switch (columnCounter)
-                        {
-                            //bodges for number columns
-                            case 1:
-                            case 2:
-                            case 3:
-                                t[result] = t[result].Replace(" ", "").Replace("O", "0").Replace("I", "1").Replace("'", "");
-                                t[result] = System.Text.RegularExpressions.Regex.Replace(t[result], @"[a-zA-Z\s]+", string.Empty); // remove any alphas that remain
-                                break;
-                            case 5:
-                            case 7:
-                                t[result] = t[result].Replace(" ", "").Replace("-", "");
-                                if (t[result] == "HIGH" || t[result] == "MED" || t[result] == "LOW")
+                            using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
+                            {
+                                for (int i = 0; i < c.Length; i++)
                                 {
-                                    cf[result] = 1;
+                                    t[i] = AnalyseFrameUsingTesseract((Bitmap)(c[i].Clone()), engine, out cf[i]);
                                 }
-                                break;
+                            }
+
+                            int result = 0;
+                            float confidence = cf[0];
+
+                            for (int i = 1; i < c.Length; i++)
+                            {
+                                if (confidence < cf[i])
+                                { result = i; confidence = cf[i]; }
+                            }
+
+                            originalBitmaps[rowCtr, columnCounter] = (Bitmap)(c[result].Clone());
+
+                            switch (columnCounter)
+                            {
+                                //bodges for number columns
+                                case 1:
+                                case 2:
+                                case 3:
+                                    t[result] = t[result].Replace(" ", "").Replace("O", "0").Replace("I", "1").Replace("'", "");
+                                    t[result] = System.Text.RegularExpressions.Regex.Replace(t[result], @"[a-zA-Z\s]+", string.Empty); // remove any alphas that remain
+                                    break;
+                                case 5:
+                                case 7:
+                                    t[result] = t[result].Replace(" ", "").Replace("-", "");
+                                    if (t[result] == "HIGH" || t[result] == "MED" || t[result] == "LOW")
+                                    {
+                                        cf[result] = 1;
+                                    }
+                                    break;
+                            }
+                            if ((columnCounter == 5 && t[result].Contains("ENTER")) ||
+                                (columnCounter == 6 && (t[result].Contains("NGAR") || t[result].Contains("SURFACE"))))
+                            {
+                                t[result] = "";
+                                cf[result] = 1;
+                            }
+                            commodityColumnText[rowCtr, columnCounter] += t[result];
+                            originalBitmapConfidences[rowCtr, columnCounter] = cf[result];
                         }
-                        if ((columnCounter == 5 && t[result].Contains("ENTER")) ||
-                            (columnCounter == 6 && (t[result].Contains("NGAR") || t[result].Contains("SURFACE"))))
-                        {
-                            t[result] = "";
-                            cf[result] = 1;
-                        }
-                        commodityColumnText[rowCtr, columnCounter] += t[result];
-                        originalBitmapConfidences[rowCtr, columnCounter] = cf[result];
                     }
 
                     columnCounter++;
@@ -364,65 +404,92 @@ namespace RegulatedNoise
                 rowCtr++;
             }
 
-            if (textRowLocations.Count > 0)
+            if (_callingForm.cbCheckAOne.Checked)
             {
-                // Call out to Brainerous to process the numeric bitmaps we saved earlier
-                var outputFromBrainerous = "";
-                var pr = new Process();
-                pr.StartInfo.UseShellExecute = false;
-                pr.StartInfo.CreateNoWindow = true;
-                pr.StartInfo.RedirectStandardOutput = true;
-                pr.StartInfo.FileName = "./Brainerous/nn_training.exe";
-                pr.StartInfo.WorkingDirectory = "./Brainerous/";
-                pr.Start();
-                outputFromBrainerous = pr.StandardOutput.ReadToEnd();
-                while (outputFromBrainerous.Contains("Failed to pad successfully"))
+                PixelTest.ShowDialog();
+            }
+            else
+            {
+                if (textRowLocations.Count > 0)
                 {
-                    var o2 = outputFromBrainerous.IndexOf("Failed to ");
-                    var o3 = outputFromBrainerous.Substring(0, o2);
-                    var o4 = outputFromBrainerous.Substring(o2).IndexOf("./images");
+                    // Call out to Brainerous to process the numeric bitmaps we saved earlier
+                    var outputFromBrainerous = "";
+                    var pr = new Process();
+                    pr.StartInfo.UseShellExecute = false;
+                    pr.StartInfo.CreateNoWindow = true;
+                    pr.StartInfo.RedirectStandardOutput = true;
+                    pr.StartInfo.FileName = "./Brainerous/nn_training.exe";
+                    pr.StartInfo.WorkingDirectory = "./Brainerous/";
+                    pr.Start();
+                    outputFromBrainerous = pr.StandardOutput.ReadToEnd();
 
-					// I had a string with "Failed to pad successfully" and only some trash behind but no "./images"
-                    // so "o4" was "-1" and this results in strange behaviour
-                    if (o4 > 0)
+                    while (outputFromBrainerous.Contains("Failed to pad successfully"))
                     {
-                    var o5 = outputFromBrainerous.Substring(o2 + o4);
-                    outputFromBrainerous = o3 + "\r\n" + o5;
-                }
-                    else
+                        var o2 = outputFromBrainerous.IndexOf("Failed to ");
+                        var o3 = outputFromBrainerous.Substring(0, o2);
+                        var o4 = outputFromBrainerous.Substring(o2).IndexOf("./images");
+
+                        // I had a string with "Failed to pad successfully" and only some trash behind but no "./images"
+                        // so "o4" was "-1" and this results in strange behaviour
+                        if (o4 > 0)
+                        {
+                            var o5 = outputFromBrainerous.Substring(o2 + o4);
+                            outputFromBrainerous = o3 + "\r\n" + o5;
+                        }
+                        else
+                        {
+                            outputFromBrainerous = o3;
+                        }
+                    }
+
+                    pr.WaitForExit();
+
+                    List<string> splitOutput = ((string[])outputFromBrainerous.Replace("\r", "").Split('\n')).ToList();
+
+                    for (var i = 0; i < (textRowLocations.Count * 10); i += 2)
                     {
-                        outputFromBrainerous = o3; 
+                        string Filename = (i / 2).ToString() + ".png";
+                        if ((splitOutput.Count < i) || (splitOutput[i].Length < 14) || (splitOutput[i].Substring(9) != Filename))
+                        {
+                            splitOutput.Insert(i, "./images/" + Filename);
+                            splitOutput.Insert(i + 1, "");
+                        }
+                    }
+
+
+                    // Load the result from Brainerous into the OCR output
+                    for (var i = 0; i < textRowLocations.Count; i++)
+                    {
+                        commodityColumnText[i, 1] = splitOutput[i * 10 + 1];
+                        originalBitmaps[i, 1] = null;
+                        originalBitmapConfidences[i, 1] = 1;
+                        commodityColumnText[i, 2] = splitOutput[i * 10 + 3];
+                        originalBitmaps[i, 2] = null;
+                        originalBitmapConfidences[i, 2] = 1;
+                        commodityColumnText[i, 3] = splitOutput[i * 10 + 5];
+                        originalBitmaps[i, 3] = null;
+                        originalBitmapConfidences[i, 3] = 1;
+                        commodityColumnText[i, 4] = splitOutput[i * 10 + 7];
+                        originalBitmaps[i, 4] = null;
+                        originalBitmapConfidences[i, 4] = 1;
+                        commodityColumnText[i, 6] = splitOutput[i * 10 + 9];
+                        originalBitmaps[i, 6] = null;
+                        originalBitmapConfidences[i, 6] = 1;
+
                     }
                 }
-
-                pr.WaitForExit();
-
-                var splitOutput = outputFromBrainerous.Replace("\r", "").Split('\n');
-
-                // Load the result from Brainerous into the OCR output
-                for (var i = 0; i < textRowLocations.Count; i++)
-                {
-                    commodityColumnText[i, 1] = splitOutput[i*10 + 1];
-                    originalBitmaps[i, 1] = null;
-                    originalBitmapConfidences[i, 1] = 1;
-                    commodityColumnText[i, 2] = splitOutput[i*10 + 3];
-                    originalBitmaps[i, 2] = null;
-                    originalBitmapConfidences[i, 2] = 1;
-                    commodityColumnText[i, 3] = splitOutput[i*10 + 5];
-                    originalBitmaps[i, 3] = null;
-                    originalBitmapConfidences[i, 3] = 1;
-                    commodityColumnText[i, 4] = splitOutput[i*10 + 7];
-                    originalBitmaps[i, 4] = null;
-                    originalBitmapConfidences[i, 4] = 1;
-                    commodityColumnText[i, 6] = splitOutput[i*10 + 9];
-                    originalBitmaps[i, 6] = null;
-                    originalBitmapConfidences[i, 6] = 1;
-                }
             }
+
             _bOriginal.Dispose();
             _bOriginalClone.Dispose();
-            // Send the results for this screenshot back to the Form
-            _callingForm.DisplayCommodityResults(commodityColumnText, originalBitmaps, originalBitmapConfidences, rowIds, CurrentScreenshot);
+
+            if (_callingForm.cbCheckAOne.Checked)
+                _callingForm.setCheckbox(_callingForm.cbCheckAOne, false);
+            else
+            {
+                // Send the results for this screenshot back to the Form
+                _callingForm.DisplayCommodityResults(commodityColumnText, originalBitmaps, originalBitmapConfidences, rowIds, CurrentScreenshot);
+            }
 
             // ...and if we've got any buffered screenshots waiting to be processed, process the next one
             if (ScreenshotBuffer.Count > 0)

@@ -6,11 +6,17 @@ todo:
    * find automatically ED path
    * showing current ED time (GMT +- x hours)
    * Cmdrs Log must using ED-Time
+   * optimize column widths of tables
+   * make visibility and width of columns selectable and save the settings
+   * possibility to disable station / consider the station distance
+   * sorting for stations : station name, system name, time // optional 4 last on top
    
 ***********************************************************************************
 
-
-
+1.84-0.05
+   * set the correct path for update for DJ version
+   * speed of OCR process improved
+-------------------------------------------------------------------------------------
 1.84-0.04
    * in the distance dropdown can own distances typed in again (issue #9)
    * included current station and system data (17.02.15)

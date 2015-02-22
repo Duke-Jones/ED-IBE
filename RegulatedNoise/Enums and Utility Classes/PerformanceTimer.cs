@@ -6,13 +6,13 @@ using System.Runtime.InteropServices;
 // genaue Timerklasse, um Zeitmessungen durchzuführen (Auflösung ca. 10ms)
 // </summary>
 // <remarks></remarks>
-public class epPerformanceTimer{
+public class PerformanceTimer{
 
     [DllImport("Kernel32.dll")]
-    public extern static Int64 QueryPerformanceCounter(Int64 X);
+    private static extern bool QueryPerformanceCounter(out Int64 lpPerformanceCount);
 
     [DllImport("Kernel32.dll")]
-    public extern static Int64 QueryPerformanceFrequency(Int64 X);
+    private static extern bool QueryPerformanceFrequency(out Int64 lpFrequency);
 
     private Int64   m_Counter1;          // start counter
     private Int64   m_Counter2   =0;     // end counter
@@ -20,10 +20,10 @@ public class epPerformanceTimer{
     private String  m_Name;              // name of timer
     private Boolean m_Started;           // flag : "started"
 
-    public epPerformanceTimer()
+    public PerformanceTimer()
     {
         m_Started = false;
-        QueryPerformanceFrequency(m_Frequency);
+        QueryPerformanceFrequency(out m_Frequency);
     }
 
     // <summary>
@@ -34,7 +34,7 @@ public class epPerformanceTimer{
     {
         m_Started   = true;
         m_Name      = String.Empty;
-        QueryPerformanceCounter(m_Counter1);
+        QueryPerformanceCounter(out m_Counter1);
     }
 
     // <summary>
@@ -46,7 +46,7 @@ public class epPerformanceTimer{
     {
         m_Started   = true;
         m_Name      = Name;
-        QueryPerformanceCounter(m_Counter1);
+        QueryPerformanceCounter(out m_Counter1);
     }
 
     // <summary>
@@ -59,7 +59,7 @@ public class epPerformanceTimer{
         if (m_Started)
         {
             m_Started = false;
-            QueryPerformanceCounter(m_Counter2);
+            QueryPerformanceCounter(out m_Counter2);
             return Convert.ToInt64(Convert.ToInt64(((m_Counter2 - m_Counter1) * 1000)) / m_Frequency );
         }
         else
@@ -77,7 +77,7 @@ public class epPerformanceTimer{
     {
         if (m_Started)
         {
-            QueryPerformanceCounter(m_Counter2);
+            QueryPerformanceCounter(out m_Counter2);
             return Convert.ToInt64(Convert.ToInt64(((m_Counter2 - m_Counter1) * 1000)) / m_Frequency );
         }
         else
@@ -92,7 +92,7 @@ public class epPerformanceTimer{
     // <remarks></remarks>
     public void setcurrentMeasuring(Int64 newMilliseconds)
     {
-        QueryPerformanceCounter(m_Counter1);
+        QueryPerformanceCounter(out m_Counter1);
         m_Counter1 = m_Counter1 - Convert.ToInt64(Math.Round((double)(newMilliseconds * m_Frequency) / 1000, 0));
     }
    

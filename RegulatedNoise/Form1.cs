@@ -48,6 +48,7 @@ namespace RegulatedNoise
         private Levenshtein _levenshtein = new Levenshtein();
         private dsCommodities _commodities = new dsCommodities();
         private delegate void delButtonInvoker(Button myButton, bool enable);
+        private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
         private TabPage _EDDNTabPage;
         private Int32 _EDDNTabPageIndex;
         private string _LoggedSystem;
@@ -208,13 +209,27 @@ namespace RegulatedNoise
                 setOCRCalibrationTabVisibility();
 
                 cbSortingComboboxes.Checked = RegulatedNoiseSettings.SortingComboboxes;
-                applyComboboxSetting();    
+                applyComboboxSetting();
+
+                loadToolTips();
 
             }
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in main init function");    
             }
+        }
+
+        private void loadToolTips()
+        {
+            toolTip1.SetToolTip(txtPixelAmount, "if the bitmap has less dark pixels it will not processed by EliteBrainerous, is set to 0 all bitmaps will be processed");
+            toolTip1.SetToolTip(lblPixelAmount, "if the bitmap has less dark pixels it will not processed by EliteBrainerous, is set to 0 all bitmaps will be processed");
+
+            toolTip1.SetToolTip(txtPixelThreshold, "defines what a dark pixel is 0.0 is black, 1.0 is white");
+            toolTip1.SetToolTip(lblPixelThreshold, "defines what a dark pixel is 0.0 is black, 1.0 is white");
+
+            toolTip1.SetToolTip(cbCheckAOne, "Activate the pixel check with a click on this button. Then buy -one- ton of a commodity and take a screenshot of the market with the \"1\" on it.\nSee how much dark pixels the 1 has and take approximately the half of this value as \"dark pixel amount\"");
+            
         }
 
         private void OnClientArrivedtoNewSystem(object sender, EdLogLineSystemArgs args)
@@ -646,7 +661,10 @@ namespace RegulatedNoise
             _commandersLogColumnSorter.SortColumn   = RegulatedNoiseSettings.CmdrsLogSortColumn;
             _commandersLogColumnSorter.Order        = RegulatedNoiseSettings.CmdrsLogSortOrder;
 
-            cbAutoAdd_JumpedTo.Checked = RegulatedNoiseSettings.AutoEvent_JumpedTo;
+            cbAutoAdd_JumpedTo.Checked              = RegulatedNoiseSettings.AutoEvent_JumpedTo;
+
+            txtPixelThreshold.Text                  = RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
+            txtPixelAmount.Text                     = RegulatedNoiseSettings.EBPixelAmount.ToString();
 
             // perform the sort with the last sort options.
             this.lvCommandersLog.Sort();
@@ -889,12 +907,20 @@ namespace RegulatedNoise
             SaveCommodityData();
         }
 
-        private void setButton(Button myButton, bool enable)
+        internal void setButton(Button myButton, bool enable)
         {
             if (myButton.InvokeRequired)
                 myButton.Invoke(new delButtonInvoker(setButton), myButton, enable);
             else
                 myButton.Enabled = enable;
+        }
+
+        internal void setCheckbox(CheckBox myCheckbox, bool setChecked)
+        {
+            if (myCheckbox.InvokeRequired)
+                myCheckbox.Invoke(new delCheckboxInvoker(setCheckbox), myCheckbox, setChecked);
+            else
+                myCheckbox.Checked = setChecked;
         }
 
         private void SaveCommodityData(bool force = false)
@@ -4191,7 +4217,32 @@ namespace RegulatedNoise
 
         }
 
-    }
+        private void txtPixelThreshold_LostFocus(object sender, EventArgs e)
+        {
+            float newValue;
 
+            if (float.TryParse(txtPixelThreshold.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
+                if (newValue >= 0.0f && newValue <= 1.0)
+                    RegulatedNoiseSettings.EBPixelThreshold = newValue;
+                else
+                    txtPixelThreshold.Text = RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
+            else
+                txtPixelThreshold.Text = RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
+        }
+
+        private void txtPixelAmount_LostFocus(object sender, EventArgs e)
+        {
+            int newValue;
+
+            if (int.TryParse(txtPixelAmount.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
+                if (newValue >= 0 && newValue <= 99)
+                    RegulatedNoiseSettings.EBPixelAmount = newValue;
+                else
+                    txtPixelAmount.Text = RegulatedNoiseSettings.EBPixelAmount.ToString();
+            else
+                txtPixelAmount.Text = RegulatedNoiseSettings.EBPixelAmount.ToString();
+        }
+
+    }
 
 }

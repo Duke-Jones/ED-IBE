@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -233,6 +233,12 @@
             this.label48 = new System.Windows.Forms.Label();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.cbCheckAOne = new System.Windows.Forms.CheckBox();
+            this.lblPixelAmount = new System.Windows.Forms.Label();
+            this.txtPixelAmount = new System.Windows.Forms.TextBox();
+            this.lblPixelThreshold = new System.Windows.Forms.Label();
+            this.txtPixelThreshold = new System.Windows.Forms.TextBox();
             this.txtTraineddataFile = new System.Windows.Forms.TextBox();
             this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -243,6 +249,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -297,6 +304,7 @@
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -831,7 +839,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(164, 465);
+            this.splitContainer1.Size = new System.Drawing.Size(144, 465);
             this.splitContainer1.SplitterDistance = 215;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -851,14 +859,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(159, 213);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(139, 213);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -878,14 +886,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
-            this.chart2.Size = new System.Drawing.Size(154, 175);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(134, 155);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2528,9 +2536,9 @@
             this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox9.Controls.Add(this.cbSortingComboboxes);
-            this.groupBox9.Location = new System.Drawing.Point(6, 248);
+            this.groupBox9.Location = new System.Drawing.Point(6, 395);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(336, 275);
+            this.groupBox9.Size = new System.Drawing.Size(336, 128);
             this.groupBox9.TabIndex = 10;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "other";
@@ -2550,7 +2558,7 @@
             // 
             this.groupBox8.Controls.Add(this.label48);
             this.groupBox8.Controls.Add(this.cmbLanguage);
-            this.groupBox8.Location = new System.Drawing.Point(6, 127);
+            this.groupBox8.Location = new System.Drawing.Point(6, 274);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(336, 115);
             this.groupBox8.TabIndex = 10;
@@ -2578,27 +2586,89 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.groupBox11);
             this.groupBox6.Controls.Add(this.txtTraineddataFile);
             this.groupBox6.Controls.Add(this.cmdSelectTraineddataFile);
             this.groupBox6.Controls.Add(this.label12);
             this.groupBox6.Location = new System.Drawing.Point(6, 6);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(336, 115);
+            this.groupBox6.Size = new System.Drawing.Size(336, 191);
             this.groupBox6.TabIndex = 9;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "OCR-Settings";
             // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.cbCheckAOne);
+            this.groupBox11.Controls.Add(this.lblPixelAmount);
+            this.groupBox11.Controls.Add(this.txtPixelAmount);
+            this.groupBox11.Controls.Add(this.lblPixelThreshold);
+            this.groupBox11.Controls.Add(this.txtPixelThreshold);
+            this.groupBox11.Location = new System.Drawing.Point(11, 63);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(314, 117);
+            this.groupBox11.TabIndex = 14;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "performance improvement";
+            // 
+            // cbCheckAOne
+            // 
+            this.cbCheckAOne.Appearance = System.Windows.Forms.Appearance.Button;
+            this.cbCheckAOne.FlatAppearance.CheckedBackColor = System.Drawing.Color.Lime;
+            this.cbCheckAOne.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbCheckAOne.Location = new System.Drawing.Point(24, 83);
+            this.cbCheckAOne.Name = "cbCheckAOne";
+            this.cbCheckAOne.Size = new System.Drawing.Size(268, 24);
+            this.cbCheckAOne.TabIndex = 18;
+            this.cbCheckAOne.Text = "check next screenshot for a \"1\"";
+            this.cbCheckAOne.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.cbCheckAOne.UseVisualStyleBackColor = true;
+            // 
+            // lblPixelAmount
+            // 
+            this.lblPixelAmount.AutoSize = true;
+            this.lblPixelAmount.Location = new System.Drawing.Point(18, 57);
+            this.lblPixelAmount.Name = "lblPixelAmount";
+            this.lblPixelAmount.Size = new System.Drawing.Size(179, 13);
+            this.lblPixelAmount.TabIndex = 16;
+            this.lblPixelAmount.Text = "dark pixel amount (default=12, 0=off)";
+            // 
+            // txtPixelAmount
+            // 
+            this.txtPixelAmount.Location = new System.Drawing.Point(212, 54);
+            this.txtPixelAmount.Name = "txtPixelAmount";
+            this.txtPixelAmount.Size = new System.Drawing.Size(37, 20);
+            this.txtPixelAmount.TabIndex = 15;
+            this.txtPixelAmount.LostFocus += new System.EventHandler(this.txtPixelAmount_LostFocus);
+            // 
+            // lblPixelThreshold
+            // 
+            this.lblPixelThreshold.AutoSize = true;
+            this.lblPixelThreshold.Location = new System.Drawing.Point(18, 30);
+            this.lblPixelThreshold.Name = "lblPixelThreshold";
+            this.lblPixelThreshold.Size = new System.Drawing.Size(160, 13);
+            this.lblPixelThreshold.TabIndex = 14;
+            this.lblPixelThreshold.Text = "dark pixel threshold (default=0.2)";
+            // 
+            // txtPixelThreshold
+            // 
+            this.txtPixelThreshold.Location = new System.Drawing.Point(212, 27);
+            this.txtPixelThreshold.Name = "txtPixelThreshold";
+            this.txtPixelThreshold.Size = new System.Drawing.Size(37, 20);
+            this.txtPixelThreshold.TabIndex = 13;
+            this.txtPixelThreshold.LostFocus += new System.EventHandler(this.txtPixelThreshold_LostFocus);
+            // 
             // txtTraineddataFile
             // 
-            this.txtTraineddataFile.Location = new System.Drawing.Point(6, 36);
+            this.txtTraineddataFile.Location = new System.Drawing.Point(117, 36);
             this.txtTraineddataFile.Name = "txtTraineddataFile";
             this.txtTraineddataFile.ReadOnly = true;
             this.txtTraineddataFile.Size = new System.Drawing.Size(197, 20);
-            this.txtTraineddataFile.TabIndex = 6;
+            this.txtTraineddataFile.TabIndex = 13;
             // 
             // cmdSelectTraineddataFile
             // 
-            this.cmdSelectTraineddataFile.Location = new System.Drawing.Point(209, 34);
+            this.cmdSelectTraineddataFile.Location = new System.Drawing.Point(16, 34);
             this.cmdSelectTraineddataFile.Name = "cmdSelectTraineddataFile";
             this.cmdSelectTraineddataFile.Size = new System.Drawing.Size(75, 23);
             this.cmdSelectTraineddataFile.TabIndex = 8;
@@ -2609,11 +2679,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 20);
+            this.label12.Location = new System.Drawing.Point(137, 20);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(115, 13);
+            this.label12.Size = new System.Drawing.Size(177, 13);
             this.label12.TabIndex = 7;
-            this.label12.Text = "used \"traineddata\"-File";
+            this.label12.Text = "\"traineddata\"-File for TesseractOCR";
             // 
             // button5
             // 
@@ -2759,6 +2829,8 @@
             this.groupBox8.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.ResumeLayout(false);
@@ -2967,7 +3039,6 @@
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.ComboBox cmbLanguage;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.TextBox txtTraineddataFile;
         private System.Windows.Forms.Button cmdSelectTraineddataFile;
         private System.Windows.Forms.Label label12;
         private RegulatedNoise.Enums_and_Utility_Classes.dsCommodities dsCommodities;
@@ -2977,6 +3048,14 @@
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.CheckBox cbAutoAdd_JumpedTo;
+        private System.Windows.Forms.TextBox txtTraineddataFile;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.Label lblPixelAmount;
+        private System.Windows.Forms.TextBox txtPixelAmount;
+        private System.Windows.Forms.Label lblPixelThreshold;
+        private System.Windows.Forms.TextBox txtPixelThreshold;
+        internal System.Windows.Forms.CheckBox cbCheckAOne;
     }
 }
 
