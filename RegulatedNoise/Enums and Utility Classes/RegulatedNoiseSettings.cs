@@ -16,7 +16,7 @@ namespace RegulatedNoise
         public readonly decimal Version   = 1.84m;
 
 #if DukeJones
-        public readonly decimal VersionDJ = 0.05m;
+        public readonly decimal VersionDJ = 0.06m;
 #endif
 
         public string ProductsPath = "";

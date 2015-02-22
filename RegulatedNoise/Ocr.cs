@@ -449,7 +449,7 @@ namespace RegulatedNoise
                     for (var i = 0; i < (textRowLocations.Count * 10); i += 2)
                     {
                         string Filename = (i / 2).ToString() + ".png";
-                        if ((splitOutput.Count < i) || (splitOutput[i].Length < 14) || (splitOutput[i].Substring(9) != Filename))
+                        if ((splitOutput.Count <= i) || (splitOutput[i].Length < 14) || (splitOutput[i].Substring(9) != Filename))
                         {
                             splitOutput.Insert(i, "./images/" + Filename);
                             splitOutput.Insert(i + 1, "");

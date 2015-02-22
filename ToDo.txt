@@ -13,6 +13,10 @@ todo:
    
 ***********************************************************************************
 
+1.84-0.06
+   * fixed a crash reason while running improved OCR process 
+   * included current station and system data (22.02.15)
+-------------------------------------------------------------------------------------
 1.84-0.05
    * set the correct path for update for DJ version
    * speed of OCR process improved
