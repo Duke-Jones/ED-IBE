@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Reflection;
 using EdClasses.ClassDefinitions;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using Microsoft.Win32;
 
 namespace RegulatedNoise
 {
@@ -456,6 +457,30 @@ namespace RegulatedNoise
             if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
                 return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
 
+            // nothing found ? then lets have a try with the MUICache
+            string ProgramName = "Elite:Dangerous Executable";
+            string ProgramPath = string.Empty;
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache");
+
+            if (key != null)
+            {
+                string[] Names = key.GetValueNames();
+                
+
+                for (int i = 0; i < Names.Count(); i++)
+                {
+                    if (key.GetValue(Names[i]).ToString() == ProgramName)
+                    {
+                        ProgramPath = Names[i].ToString();
+                        ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf("\\Products\\") + 9);
+                        return ProgramPath;
+                    }
+
+                }
+               
+            }
+
             return null;
         }
         private string getProductPathManually()
@@ -680,7 +705,7 @@ namespace RegulatedNoise
             KnownCommodityNames.Clear();
 
             foreach (dsCommodities.NamesRow currentCommodity in _commodities.Names)
-	        {
+            {
                 if (Language == enLanguage.eng)
                     KnownCommodityNames.Add(currentCommodity.eng);
 
@@ -690,8 +715,8 @@ namespace RegulatedNoise
                 else
                     KnownCommodityNames.Add(currentCommodity.fra);
 
-	        }
-            
+            }
+
         }
 
         /// <summary>
@@ -710,7 +735,7 @@ namespace RegulatedNoise
                     Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.LOW);
 
                 else if (i == 1)
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.MED);    
+                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.MED);
 
                 else
                     Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.HIGH);
@@ -725,9 +750,9 @@ namespace RegulatedNoise
                     CommodityLevel.Add(Level[0].ID, Level[0].fra);
 
             }
-            
+
         }
-        
+
         private Thread _ocrThread;
         private List<string> _preOcrBuffer = new List<string>();
         private System.Threading.Timer _preOcrBufferTimer;
@@ -745,7 +770,7 @@ namespace RegulatedNoise
             //                " exists!  Let's pause for a moment before opening it...");
 
             ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
-			// if the textfield support auto-uppercase we must consider
+            // if the textfield support auto-uppercase we must consider
             string s = CommoditiesText("").ToString().ToUpper();
 
             if (s == "Imported!".ToUpper() || s == "Finished!".ToUpper() || s == "" || s == "No rows found...".ToUpper())
@@ -755,7 +780,7 @@ namespace RegulatedNoise
 
             if (_ocrThread == null || !_ocrThread.IsAlive)
             {
-				// some stateful enabling for the buttons
+                // some stateful enabling for the buttons
                 setButton(bClearOcrOutput, false);
                 setButton(bEditResults, false);
 
@@ -780,7 +805,7 @@ namespace RegulatedNoise
             {
                 if (_preOcrBuffer.Count > 0)
                 {
-    				// some stateful enabling for the buttons
+                    // some stateful enabling for the buttons
                     setButton(bClearOcrOutput, false);
                     setButton(bEditResults, false);
 
@@ -845,8 +870,8 @@ namespace RegulatedNoise
 
             currentFile = "RegulatedNoiseSettings.xml";
 
-            newFile     = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-            backupFile  = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+            newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+            backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
 
             var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
             var x = new XmlSerializer(RegulatedNoiseSettings.GetType());
@@ -941,12 +966,12 @@ namespace RegulatedNoise
             if (force || saveFile.ShowDialog() == DialogResult.OK)
             {
 
-                currentFile     = saveFile.FileName;
-                newFile         = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-                backupFile      = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                currentFile = saveFile.FileName;
+                newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
 
                 var writer = new StreamWriter(File.OpenWrite(newFile));
-                    
+
                 writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
 
                 foreach (var station in StationDirectory)
@@ -971,7 +996,7 @@ namespace RegulatedNoise
                         // I'm sure that's not wanted vv
                         //if (cbExtendedInfoInCSV.Checked)
                         ///    writer.WriteLine(output + ";");
-                        
+
                         writer.WriteLine(output + ";");
                     }
                 }
@@ -995,7 +1020,7 @@ namespace RegulatedNoise
                     if (File.Exists(currentFile))
                         File.Delete(currentFile);
                 }
-                    
+
                 // rename new file to current file
                 File.Move(newFile, currentFile);
 
@@ -1148,7 +1173,7 @@ namespace RegulatedNoise
                 _cachedRemoteSystemDistances = new Dictionary<string, double>();
                 _cachedSystemName = localSystem.ToString();
 
-                if(SystemLocations.ContainsKey(localSystem.ToUpper()))
+                if (SystemLocations.ContainsKey(localSystem.ToUpper()))
                     _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
                 else
                     _cachedSystemLocation = null;
@@ -1225,7 +1250,7 @@ namespace RegulatedNoise
 
         private string CombinedNameToStationName(string combinedName)
         {
-            var ret = combinedName.Substring(0, combinedName.IndexOf("[")-1);
+            var ret = combinedName.Substring(0, combinedName.IndexOf("[") - 1);
             return ret;
         }
 
@@ -1344,7 +1369,7 @@ namespace RegulatedNoise
             var start = stationName.IndexOf("[", StringComparison.Ordinal);
             var end = stationName.IndexOf("]", StringComparison.Ordinal);
 
-            tbStationRename.Text = stationName.Substring(0, start-1);
+            tbStationRename.Text = stationName.Substring(0, start - 1);
             tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
 
             foreach (var row in StationDirectory[stationName])
@@ -2091,7 +2116,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-				cErr.processError(ex);
+                cErr.processError(ex);
             }
         }
 
@@ -2112,7 +2137,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-				cErr.processError(ex);
+                cErr.processError(ex);
                 return null;
             }
         }
@@ -2509,7 +2534,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-				cErr.processError(ex);
+                cErr.processError(ex);
             }
         }
 
@@ -2595,7 +2620,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-				cErr.processError(ex);
+                cErr.processError(ex);
             }
 
         }
@@ -2658,12 +2683,12 @@ namespace RegulatedNoise
                 else
                 {
                     _commodityTexts[_correctionRow, _correctionColumn] = commodity;
-                    _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]); 
+                    _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]);
 
                     ContinueDisplayingResults();
                 }
             }
-            
+
         }
 
         private void ImportFinalOcrOutput()
@@ -2685,7 +2710,7 @@ namespace RegulatedNoise
         {
             if (tbOcrStationName.Text != _oldOcrName && _oldOcrName != null)
             {
-                var rows = tbFinalOcrOutput.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+                var rows = tbFinalOcrOutput.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 string newRows = "";
 
@@ -2695,7 +2720,7 @@ namespace RegulatedNoise
                     var newRow2 = tbOcrStationName.Text;
                     var newRow3 = row.Substring(row.IndexOf(";", 1));
                     newRow3 = newRow3.Substring(newRow3.IndexOf(";", 1));
-                    newRows = newRows + newRow1 +";"+ newRow2 + newRow3 + "\r\n";
+                    newRows = newRows + newRow1 + ";" + newRow2 + newRow3 + "\r\n";
 
                 }
                 tbFinalOcrOutput.Text = newRows;
@@ -2710,13 +2735,13 @@ namespace RegulatedNoise
         {
             if (tbOcrSystemName.Text != _oldOcrSystemName && _oldOcrSystemName != null)
             {
-                var rows = tbFinalOcrOutput.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+                var rows = tbFinalOcrOutput.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
                 string newRows = "";
 
                 foreach (var row in rows)
                 {
                     var newRow1 = row.Substring(row.IndexOf(";"));
-                    newRows += tbOcrSystemName.Text + newRow1+"\r\n";
+                    newRows += tbOcrSystemName.Text + newRow1 + "\r\n";
 
                 }
                 tbFinalOcrOutput.Text = newRows;
@@ -2774,7 +2799,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while loading Commanders Log");    
+                cErr.processError(ex, "Error while loading Commanders Log");
             }
         }
 
@@ -2877,7 +2902,7 @@ namespace RegulatedNoise
             string txt = text.ToString();
             // .. we're here because we've received some data from EDDN
 
-            if(txt!="")
+            if (txt != "")
                 try
                 {
                     // ReSharper disable StringIndexOfIsCultureSpecific.1
@@ -2950,7 +2975,7 @@ namespace RegulatedNoise
                         }
                     }
                 }
-                catch 
+                catch
                 {
                     tbEDDNOutput.Text = "Couldn't parse JSON!\r\n\r\n" + tbEDDNOutput.Text;
                 }
@@ -3032,16 +3057,16 @@ namespace RegulatedNoise
                                                      CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
                                                      SystemLocations[CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()]
                                                          .Item1);
-                if(dist < double.MaxValue)
+                if (dist < double.MaxValue)
                     lblStationToStationLightYears.Text = "(" +
-                                                     String.Format("{0:0.00}",dist
+                                                     String.Format("{0:0.00}", dist
                                                      ) + " light years each way)";
                 else lblStationToStationLightYears.Text = "(system(s) not recognised)";
             }
             else lblStationToStationLightYears.Text = "(system(s) not recognised)";
         }
 
-        private Tuple<List<ListViewItem>,List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
+        private Tuple<List<ListViewItem>, List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
         {
             if (stationFrom == null || stationTo == null) { bestRoundTrip = 0; return null; }
             var resultsOutbound = new List<ListViewItem>();
@@ -3316,13 +3341,13 @@ namespace RegulatedNoise
                             {
                                 // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
                                 if (cbAutoAdd_JumpedTo.Checked)
-	                            {
+                                {
                                     String EventID = CommandersLog.CreateEvent("Jumped To", "", systemName, "", "", 0, "", DateTime.Now);
                                     setActiveItem(EventID);
-	                            }  
-                                
+                                }
+
                                 _LoggedSystem = systemName;
-                                
+
                                 //tbCurrentSystemFromLogs.Text = systemName;
                             }
                             if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
@@ -3475,7 +3500,7 @@ namespace RegulatedNoise
             this.lvCommandersLog.Sort();
 
             RegulatedNoiseSettings.CmdrsLogSortColumn = _commandersLogColumnSorter.SortColumn;
-            RegulatedNoiseSettings.CmdrsLogSortOrder  = _commandersLogColumnSorter.Order;
+            RegulatedNoiseSettings.CmdrsLogSortOrder = _commandersLogColumnSorter.Order;
         }
 
         private void cbLogSystemName_DropDown(object sender, EventArgs e)
@@ -3553,8 +3578,20 @@ namespace RegulatedNoise
             tabControl2.SelectedTab = tabPage3;
             tabControl1.SelectedTab = tabHelpAndChangeLog;
 
+            loadWindowPosition();
+
             Retheme();
 
+        }
+
+        private void Form_Resize(object sender, System.EventArgs e)
+        {
+            saveWindowPosition();
+        }
+
+        private void Form_ResizeEnd(object sender, System.EventArgs e)
+        {
+            saveWindowPosition();
         }
 
         private void Retheme()
@@ -4243,6 +4280,63 @@ namespace RegulatedNoise
                 txtPixelAmount.Text = RegulatedNoiseSettings.EBPixelAmount.ToString();
         }
 
+        private void loadWindowPosition()
+        {
+            if (RegulatedNoiseSettings.WindowPosition.Height > -1) 
+            {
+                this.Top         = RegulatedNoiseSettings.WindowPosition.Top;
+                this.Left        = RegulatedNoiseSettings.WindowPosition.Left;
+                this.Height      = RegulatedNoiseSettings.WindowPosition.Height;
+                this.Width       = RegulatedNoiseSettings.WindowPosition.Width;
+
+                this.WindowState = RegulatedNoiseSettings.WindowState;
+            }
+            else
+            {
+                RegulatedNoiseSettings.WindowPosition.Y         = this.Top;
+                RegulatedNoiseSettings.WindowPosition.X         = this.Left;
+                RegulatedNoiseSettings.WindowPosition.Height    = this.Height;
+                RegulatedNoiseSettings.WindowPosition.Width     = this.Width;
+
+                RegulatedNoiseSettings.WindowState              = this.WindowState;
+
+                SaveSettings();
+            }
+        }
+
+        private void saveWindowPosition()
+        {
+            bool changed = false;
+
+            if (this.WindowState != FormWindowState.Minimized)
+                if (RegulatedNoiseSettings.WindowState != this.WindowState)
+                {
+                    RegulatedNoiseSettings.WindowState = this.WindowState;
+                    changed = true;
+                }
+
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                if ((RegulatedNoiseSettings.WindowPosition.Y != this.Top) ||
+                    (RegulatedNoiseSettings.WindowPosition.X != this.Left) ||
+                    (RegulatedNoiseSettings.WindowPosition.Height != this.Height) ||
+                    (RegulatedNoiseSettings.WindowPosition.Width != this.Width))
+                {
+                    RegulatedNoiseSettings.WindowPosition.Y = this.Top;
+                    RegulatedNoiseSettings.WindowPosition.X = this.Left;
+                    RegulatedNoiseSettings.WindowPosition.Height = this.Height;
+                    RegulatedNoiseSettings.WindowPosition.Width = this.Width;
+
+                    changed = true;
+                }
+            }
+
+            if (changed) 
+                SaveSettings();
+        }
+
     }
+
+
 
 }

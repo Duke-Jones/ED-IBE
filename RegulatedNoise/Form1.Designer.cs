@@ -2755,6 +2755,8 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "RegulatedNoise v";
             this.Load += new System.EventHandler(this.Form_Load);
+            this.ResizeEnd += new System.EventHandler(this.Form_ResizeEnd);
+            this.Resize += new System.EventHandler(this.Form_Resize);
             this.tabControl1.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
             this.tabHelpAndChangeLog.PerformLayout();

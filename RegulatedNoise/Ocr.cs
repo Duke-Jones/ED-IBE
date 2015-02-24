@@ -406,7 +406,8 @@ namespace RegulatedNoise
 
             if (_callingForm.cbCheckAOne.Checked)
             {
-                PixelTest.ShowDialog();
+                PixelTest.StartModal(_callingForm);
+
             }
             else
             {

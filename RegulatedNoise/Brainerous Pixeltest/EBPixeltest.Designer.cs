@@ -78,6 +78,7 @@
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "EBPixeltest";
             this.Text = "EBPixeltest";
+            this.Shown += new System.EventHandler(this.EBPixeltest_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
