@@ -21,7 +21,6 @@ using RegulatedNoise.Enums_and_Utility_Classes;
 using Microsoft.Win32;
 #if EDDB_Data
 using RegulatedNoise.EDDB_Data;
-
 #endif
 
 namespace RegulatedNoise
@@ -61,6 +60,7 @@ namespace RegulatedNoise
         private Int32 _EDDNTabPageIndex;
         private string _LoggedSystem;
         private bool _setCBSortingIsActive = false;
+        //public PerformanceTimer PerfTimer = new PerformanceTimer();
 
         //Implementation of the new classlibrary
         public EdSystem CurrentSystem;
@@ -1245,7 +1245,6 @@ namespace RegulatedNoise
             else
             {
 #if EDDB_Data
-
                 if (!myMilkyway.existSystem(localSystem) || _cachedSystemLocation == null)
                 {
                     dist = double.MaxValue;
@@ -1270,8 +1269,7 @@ namespace RegulatedNoise
                 }
 #endif
             }
-            if (remoteSystemName.Contains("LTT"))
-                Debug.WriteLine(remoteSystemName + " - " + dist);
+
             return dist;
         }
 
@@ -1305,15 +1303,23 @@ namespace RegulatedNoise
 
             return dist;
         }
+//        private Dictionary<string, Point3D>_chachedSystemLocations = new Dictionary<string, Point3D>();
 
         private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
         {
 #if EDDB_Data
-            Point3D HomeCoordinates = myMilkyway.getSystemCoordinates(homeSystemName);
-            if (HomeCoordinates == null)
-                return double.MaxValue;
+            double retValue;
 
-            return DistanceInLightYears(remoteSystemName, HomeCoordinates);
+            Point3D HomeCoordinates = myMilkyway.getSystemCoordinates(homeSystemName);
+
+            if (HomeCoordinates == null)
+            { 
+              return double.MaxValue;
+            }
+
+            retValue = DistanceInLightYears(remoteSystemName, HomeCoordinates);
+
+            return retValue;
 #else
             if (!SystemLocations.ContainsKey(homeSystemName))
                 return double.MaxValue;
@@ -3938,7 +3944,6 @@ namespace RegulatedNoise
                     if (bestThisTrip > 0)
                     {
                         string key1, key2;
-
                         if (string.Compare(a.Key, b.Key) < 0)
                         {
                             key1 = a.Key;
@@ -3953,6 +3958,7 @@ namespace RegulatedNoise
                         string credits;
                         double creditsDouble;
                         double distance = 1d;
+
                         if (checkboxPerLightYearRoundTrip.Checked)
                         {
                             distance = 2 * DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
@@ -4468,11 +4474,11 @@ namespace RegulatedNoise
             }
         }
 
+#endif
         private void rbSortByStation_CheckedChanged(object sender, EventArgs e)
         {
 
         }
-#endif
 
     }
 

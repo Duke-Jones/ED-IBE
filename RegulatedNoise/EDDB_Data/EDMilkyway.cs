@@ -23,6 +23,9 @@ namespace RegulatedNoise.EDDB_Data
 
         private bool m_changedSystems = false;
         private bool m_changedStations = false;
+            
+        // a quick cache for systemlocations
+        private Dictionary<string, Point3D> m_cachedLocations = new Dictionary<string, Point3D>();
 
         /// <summary>
         /// creates a new Milkyway :-)
@@ -370,7 +373,7 @@ namespace RegulatedNoise.EDDB_Data
         /// <returns></returns>
         public bool existSystem(string Systemname)
         {
-            return m_Stations[(int)enDataType.Data_Merged].Exists(x => x.Name.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase));
+            return m_Systems[(int)enDataType.Data_Merged].Exists(x => x.Name.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
@@ -403,10 +406,21 @@ namespace RegulatedNoise.EDDB_Data
         {   
             Point3D retValue = null;
 
-            EDSystem mySystem = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase));
+            if (!String.IsNullOrEmpty(Systemname))
+            { 
+                if (!m_cachedLocations.TryGetValue(Systemname, out retValue))
+                {
+                    EDSystem mySystem = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase));
 
-            if (mySystem != null)
-                retValue = new Point3D((float)mySystem.X, (float)mySystem.Y, (float)mySystem.Z);
+                    if (mySystem != null)
+                    { 
+                        retValue = new Point3D((float)mySystem.X, (float)mySystem.Y, (float)mySystem.Z);
+                        m_cachedLocations.Add(Systemname, retValue);
+                    }
+
+                
+                }
+            }
 
             return retValue;
         }

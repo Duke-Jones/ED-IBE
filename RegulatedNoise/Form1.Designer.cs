@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -68,6 +68,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPriceAnalysis = new System.Windows.Forms.TabPage();
             this.gbSorting = new System.Windows.Forms.GroupBox();
+            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
             this.label50 = new System.Windows.Forms.Label();
             this.txtShowLastStationsOnTop = new System.Windows.Forms.TextBox();
             this.rbSortByStation = new System.Windows.Forms.RadioButton();
@@ -252,11 +253,9 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.button8 = new System.Windows.Forms.Button();
-            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -721,6 +720,18 @@
             this.gbSorting.TabStop = false;
             this.gbSorting.Text = "order of stations";
             // 
+            // rbSortByDistance
+            // 
+            this.rbSortByDistance.AutoSize = true;
+            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
+            this.rbSortByDistance.Name = "rbSortByDistance";
+            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
+            this.rbSortByDistance.TabIndex = 23;
+            this.rbSortByDistance.TabStop = true;
+            this.rbSortByDistance.Text = "distance";
+            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
+            this.rbSortByDistance.UseVisualStyleBackColor = true;
+            // 
             // label50
             // 
             this.label50.AutoSize = true;
@@ -907,7 +918,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(134, 451);
+            this.splitContainer1.Size = new System.Drawing.Size(132, 451);
             this.splitContainer1.SplitterDistance = 208;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -927,14 +938,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(129, 206);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(127, 206);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -954,14 +965,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
-            this.chart2.Size = new System.Drawing.Size(124, 138);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(122, 136);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2805,32 +2816,12 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(0, 0);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 23);
-            this.button8.TabIndex = 0;
-            // 
-            // rbSortByDistance
-            // 
-            this.rbSortByDistance.AutoSize = true;
-            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
-            this.rbSortByDistance.Name = "rbSortByDistance";
-            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
-            this.rbSortByDistance.TabIndex = 23;
-            this.rbSortByDistance.TabStop = true;
-            this.rbSortByDistance.Text = "distance";
-            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
-            this.rbSortByDistance.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1095, 626);
-            this.Controls.Add(this.button8);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.button19);
@@ -3144,7 +3135,6 @@
         private System.Windows.Forms.Label lblPixelThreshold;
         private System.Windows.Forms.TextBox txtPixelThreshold;
         internal System.Windows.Forms.CheckBox cbCheckAOne;
-        private System.Windows.Forms.Button button8;
         private System.Windows.Forms.GroupBox gbSorting;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.TextBox txtShowLastStationsOnTop;

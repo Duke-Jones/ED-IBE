@@ -185,4 +185,10 @@ public class PerformanceTimer{
        }
     }
 
+    public void PrintAndReset(string Info)
+    {
+        Debug.Print(string.Format("{0} {1} ms runtime", Info, currentMeasuring().ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("sv-SE"))));
+        startMeasuring();
+    }
+
 }

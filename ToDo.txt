@@ -13,7 +13,15 @@ todo:
    
 ***********************************************************************************
 
-1.84_0.07
+1.84_0.07_3
+   * fixed a error in the new Milkyway-class
+   * locations of the systems are saved in a quick cache
+-------------------------------------------------------------------------------------
+1.84_0.07_2
+   * added support for EDDB data (systems/stations/commodities)
+   * implemented a new internal structure for managing the system and station data
+-------------------------------------------------------------------------------------
+1.84_0.07_1
    * find the path to the ED game directoy (first start) even if it's no standard path
    * Pixeltest is now sure visible in foreground of RN
    * saving and restoring position and state of main window 
