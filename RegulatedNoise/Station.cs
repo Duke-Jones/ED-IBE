@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !EDDB_Data
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,3 +16,4 @@ namespace RegulatedNoise
         public StationPadSize StationPadSize { get; set; }
     }
 }
+#endif

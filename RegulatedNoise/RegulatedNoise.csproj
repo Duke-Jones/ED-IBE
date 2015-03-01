@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ\</OutputPath>
-    <DefineConstants>TRACE;DEBUG; DukeJones</DefineConstants>
+    <DefineConstants>TRACE;DEBUG; DukeJones EDDB_Data</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -73,6 +73,11 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="EDDB_Data\EDCommodities.cs" />
+    <Compile Include="EDDB_Data\CommoditiesJsonTypes\EDCategory.cs" />
+    <Compile Include="EDDB_Data\EDStations.cs" />
+    <Compile Include="EDDB_Data\EDSystems.cs" />
+    <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
@@ -526,6 +531,15 @@
     <Content Include="Data\elite.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data\commodities.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\stations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\systems.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Enums and Utility Classes\dsCommodities.xsc">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
     </None>
@@ -648,6 +662,9 @@
     </None>
     <EmbeddedResource Include="Resources\m.png" />
     <Compile Include="Enums and Utility Classes\enumBindTo.cs" />
+    <Content Include="Json\Bin\Net45\Newtonsoft.Json.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -671,6 +688,9 @@
       <Project>{236a934b-5543-4751-baa2-018dfa825271}</Project>
       <Name>EdClasses</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

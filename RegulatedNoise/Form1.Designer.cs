@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -67,6 +67,11 @@
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPriceAnalysis = new System.Windows.Forms.TabPage();
+            this.gbSorting = new System.Windows.Forms.GroupBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.txtShowLastStationsOnTop = new System.Windows.Forms.TextBox();
+            this.rbSortByStation = new System.Windows.Forms.RadioButton();
+            this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
@@ -82,9 +87,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.bStationDeleteRow = new System.Windows.Forms.Button();
             this.bStationEditRow = new System.Windows.Forms.Button();
+            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.tbStationRename = new System.Windows.Forms.TextBox();
             this.tbSystemRename = new System.Windows.Forms.TextBox();
@@ -118,7 +123,7 @@
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.checkboxPerLightYearRoundTrip = new System.Windows.Forms.CheckBox();
             this.lbAllRoundTrips = new System.Windows.Forms.ListBox();
-            this.button12 = new System.Windows.Forms.Button();
+            this.btnBestRoundTrip = new System.Windows.Forms.Button();
             this.lblStationToStationLightYears = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
@@ -250,12 +255,15 @@
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.button8 = new System.Windows.Forms.Button();
+            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPriceAnalysis.SuspendLayout();
+            this.gbSorting.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -347,9 +355,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbPrices.FullRowSelect = true;
             this.lbPrices.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.lbPrices.Location = new System.Drawing.Point(0, 47);
+            this.lbPrices.Location = new System.Drawing.Point(0, 71);
             this.lbPrices.Name = "lbPrices";
-            this.lbPrices.Size = new System.Drawing.Size(1046, 396);
+            this.lbPrices.Size = new System.Drawing.Size(1046, 381);
             this.lbPrices.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lbPrices.TabIndex = 3;
             this.lbPrices.UseCompatibleStateImageBehavior = false;
@@ -685,6 +693,7 @@
             // 
             // tabPriceAnalysis
             // 
+            this.tabPriceAnalysis.Controls.Add(this.gbSorting);
             this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Controls.Add(this.cbIncludeWithinRegionOfStation);
             this.tabPriceAnalysis.Controls.Add(this.label43);
@@ -697,6 +706,65 @@
             this.tabPriceAnalysis.TabIndex = 10;
             this.tabPriceAnalysis.Text = "Price Analysis";
             this.tabPriceAnalysis.UseVisualStyleBackColor = true;
+            // 
+            // gbSorting
+            // 
+            this.gbSorting.Controls.Add(this.rbSortByDistance);
+            this.gbSorting.Controls.Add(this.label50);
+            this.gbSorting.Controls.Add(this.txtShowLastStationsOnTop);
+            this.gbSorting.Controls.Add(this.rbSortByStation);
+            this.gbSorting.Controls.Add(this.rbSortBySystem);
+            this.gbSorting.Location = new System.Drawing.Point(543, 3);
+            this.gbSorting.Name = "gbSorting";
+            this.gbSorting.Size = new System.Drawing.Size(280, 58);
+            this.gbSorting.TabIndex = 15;
+            this.gbSorting.TabStop = false;
+            this.gbSorting.Text = "order of stations";
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(141, 40);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(130, 13);
+            this.label50.TabIndex = 22;
+            this.label50.Text = "show last <n> stations first";
+            this.toolTip1.SetToolTip(this.label50, "shows the last <n> scanned stations  on top of the list (0=off)");
+            // 
+            // txtShowLastStationsOnTop
+            // 
+            this.txtShowLastStationsOnTop.Location = new System.Drawing.Point(115, 37);
+            this.txtShowLastStationsOnTop.Name = "txtShowLastStationsOnTop";
+            this.txtShowLastStationsOnTop.Size = new System.Drawing.Size(20, 20);
+            this.txtShowLastStationsOnTop.TabIndex = 21;
+            this.txtShowLastStationsOnTop.Text = "99";
+            this.txtShowLastStationsOnTop.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.toolTip1.SetToolTip(this.txtShowLastStationsOnTop, "shows the last <n> scanned stations  on top of the list (0=off)");
+            // 
+            // rbSortByStation
+            // 
+            this.rbSortByStation.AutoSize = true;
+            this.rbSortByStation.Location = new System.Drawing.Point(5, 37);
+            this.rbSortByStation.Name = "rbSortByStation";
+            this.rbSortByStation.Size = new System.Drawing.Size(56, 17);
+            this.rbSortByStation.TabIndex = 19;
+            this.rbSortByStation.TabStop = true;
+            this.rbSortByStation.Text = "station";
+            this.toolTip1.SetToolTip(this.rbSortByStation, "sorting by station ");
+            this.rbSortByStation.UseVisualStyleBackColor = true;
+            // 
+            // rbSortBySystem
+            // 
+            this.rbSortBySystem.AutoSize = true;
+            this.rbSortBySystem.Location = new System.Drawing.Point(5, 14);
+            this.rbSortBySystem.Name = "rbSortBySystem";
+            this.rbSortBySystem.Size = new System.Drawing.Size(97, 17);
+            this.rbSortBySystem.TabIndex = 18;
+            this.rbSortBySystem.TabStop = true;
+            this.rbSortBySystem.Text = "system->station";
+            this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting first by system, second by station");
+            this.rbSortBySystem.UseVisualStyleBackColor = true;
+            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortByStation_CheckedChanged);
             // 
             // bShowStationRestrictionAtStarchartDotClub
             // 
@@ -765,10 +833,10 @@
             this.tabControl2.Controls.Add(this.tabPage1);
             this.tabControl2.Controls.Add(this.tabPage2);
             this.tabControl2.Controls.Add(this.tabStationToStation);
-            this.tabControl2.Location = new System.Drawing.Point(0, 28);
+            this.tabControl2.Location = new System.Drawing.Point(0, 42);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1054, 498);
+            this.tabControl2.Size = new System.Drawing.Size(1054, 484);
             this.tabControl2.TabIndex = 10;
             // 
             // tabPage3
@@ -776,7 +844,7 @@
             this.tabPage3.Controls.Add(this.splitContainer2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1046, 472);
+            this.tabPage3.Size = new System.Drawing.Size(1046, 458);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "All Commodities";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -799,7 +867,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(1046, 469);
+            this.splitContainer2.Size = new System.Drawing.Size(1046, 455);
             this.splitContainer2.SplitterDistance = 822;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 8;
@@ -812,7 +880,7 @@
             this.lvAllComms.FullRowSelect = true;
             this.lvAllComms.Location = new System.Drawing.Point(0, 0);
             this.lvAllComms.Name = "lvAllComms";
-            this.lvAllComms.Size = new System.Drawing.Size(821, 471);
+            this.lvAllComms.Size = new System.Drawing.Size(821, 457);
             this.lvAllComms.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvAllComms.TabIndex = 4;
             this.lvAllComms.UseCompatibleStateImageBehavior = false;
@@ -839,8 +907,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(144, 465);
-            this.splitContainer1.SplitterDistance = 215;
+            this.splitContainer1.Size = new System.Drawing.Size(134, 451);
+            this.splitContainer1.SplitterDistance = 208;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
             // 
@@ -859,14 +927,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(139, 213);
+            series3.ChartArea = "ChartArea1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(129, 206);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -886,23 +954,23 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(134, 155);
+            series4.ChartArea = "ChartArea1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(124, 138);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.bStationDeleteRow);
             this.tabPage1.Controls.Add(this.bStationEditRow);
+            this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.lbPrices);
             this.tabPage1.Controls.Add(this.cbStation);
@@ -911,10 +979,32 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1046, 472);
+            this.tabPage1.Size = new System.Drawing.Size(1046, 458);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "By Station";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // bStationDeleteRow
+            // 
+            this.bStationDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.bStationDeleteRow.Enabled = false;
+            this.bStationDeleteRow.Location = new System.Drawing.Point(836, 42);
+            this.bStationDeleteRow.Name = "bStationDeleteRow";
+            this.bStationDeleteRow.Size = new System.Drawing.Size(97, 23);
+            this.bStationDeleteRow.TabIndex = 17;
+            this.bStationDeleteRow.Text = "Delete Row(s)";
+            this.bStationDeleteRow.UseVisualStyleBackColor = true;
+            // 
+            // bStationEditRow
+            // 
+            this.bStationEditRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.bStationEditRow.Enabled = false;
+            this.bStationEditRow.Location = new System.Drawing.Point(939, 42);
+            this.bStationEditRow.Name = "bStationEditRow";
+            this.bStationEditRow.Size = new System.Drawing.Size(97, 23);
+            this.bStationEditRow.TabIndex = 16;
+            this.bStationEditRow.Text = "Edit Row";
+            this.bStationEditRow.UseVisualStyleBackColor = true;
             // 
             // bShowStationAtStarchartDotInfo
             // 
@@ -925,30 +1015,6 @@
             this.bShowStationAtStarchartDotInfo.TabIndex = 14;
             this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
             this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
-            // 
-            // bStationDeleteRow
-            // 
-            this.bStationDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bStationDeleteRow.Enabled = false;
-            this.bStationDeleteRow.Location = new System.Drawing.Point(872, 446);
-            this.bStationDeleteRow.Name = "bStationDeleteRow";
-            this.bStationDeleteRow.Size = new System.Drawing.Size(93, 23);
-            this.bStationDeleteRow.TabIndex = 8;
-            this.bStationDeleteRow.Text = "Delete Row(s)";
-            this.bStationDeleteRow.UseVisualStyleBackColor = true;
-            this.bStationDeleteRow.Click += new System.EventHandler(this.bStationDeleteRow_Click);
-            // 
-            // bStationEditRow
-            // 
-            this.bStationEditRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bStationEditRow.Enabled = false;
-            this.bStationEditRow.Location = new System.Drawing.Point(971, 446);
-            this.bStationEditRow.Name = "bStationEditRow";
-            this.bStationEditRow.Size = new System.Drawing.Size(75, 23);
-            this.bStationEditRow.TabIndex = 7;
-            this.bStationEditRow.Text = "Edit Row";
-            this.bStationEditRow.UseVisualStyleBackColor = true;
-            this.bStationEditRow.Click += new System.EventHandler(this.bStationEditRow_Click);
             // 
             // groupBox5
             // 
@@ -1020,7 +1086,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1046, 472);
+            this.tabPage2.Size = new System.Drawing.Size(1046, 458);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "By Commodity";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1029,7 +1095,7 @@
             // 
             this.bCommodityDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCommodityDeleteRow.Enabled = false;
-            this.bCommodityDeleteRow.Location = new System.Drawing.Point(866, 444);
+            this.bCommodityDeleteRow.Location = new System.Drawing.Point(866, 430);
             this.bCommodityDeleteRow.Name = "bCommodityDeleteRow";
             this.bCommodityDeleteRow.Size = new System.Drawing.Size(93, 23);
             this.bCommodityDeleteRow.TabIndex = 25;
@@ -1041,7 +1107,7 @@
             // 
             this.bEditCommodity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bEditCommodity.Enabled = false;
-            this.bEditCommodity.Location = new System.Drawing.Point(965, 444);
+            this.bEditCommodity.Location = new System.Drawing.Point(965, 430);
             this.bEditCommodity.Name = "bEditCommodity";
             this.bEditCommodity.Size = new System.Drawing.Size(75, 23);
             this.bEditCommodity.TabIndex = 24;
@@ -1229,7 +1295,7 @@
             this.lbCommodities.FullRowSelect = true;
             this.lbCommodities.Location = new System.Drawing.Point(0, 47);
             this.lbCommodities.Name = "lbCommodities";
-            this.lbCommodities.Size = new System.Drawing.Size(1046, 393);
+            this.lbCommodities.Size = new System.Drawing.Size(1046, 379);
             this.lbCommodities.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lbCommodities.TabIndex = 4;
             this.lbCommodities.UseCompatibleStateImageBehavior = false;
@@ -1252,7 +1318,7 @@
             this.tabStationToStation.Controls.Add(this.cbStationToStationFrom);
             this.tabStationToStation.Location = new System.Drawing.Point(4, 22);
             this.tabStationToStation.Name = "tabStationToStation";
-            this.tabStationToStation.Size = new System.Drawing.Size(1046, 472);
+            this.tabStationToStation.Size = new System.Drawing.Size(1046, 458);
             this.tabStationToStation.TabIndex = 8;
             this.tabStationToStation.Text = "Station-To-Station";
             this.tabStationToStation.UseVisualStyleBackColor = true;
@@ -1272,8 +1338,8 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.lvStationToStationReturn);
-            this.splitContainer4.Size = new System.Drawing.Size(609, 426);
-            this.splitContainer4.SplitterDistance = 213;
+            this.splitContainer4.Size = new System.Drawing.Size(609, 412);
+            this.splitContainer4.SplitterDistance = 206;
             this.splitContainer4.TabIndex = 19;
             // 
             // lvStationToStation
@@ -1284,7 +1350,7 @@
             this.lvStationToStation.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvStationToStation.Location = new System.Drawing.Point(0, 3);
             this.lvStationToStation.Name = "lvStationToStation";
-            this.lvStationToStation.Size = new System.Drawing.Size(606, 207);
+            this.lvStationToStation.Size = new System.Drawing.Size(606, 200);
             this.lvStationToStation.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvStationToStation.TabIndex = 4;
             this.lvStationToStation.UseCompatibleStateImageBehavior = false;
@@ -1299,7 +1365,7 @@
             this.lvStationToStationReturn.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvStationToStationReturn.Location = new System.Drawing.Point(0, 3);
             this.lvStationToStationReturn.Name = "lvStationToStationReturn";
-            this.lvStationToStationReturn.Size = new System.Drawing.Size(606, 203);
+            this.lvStationToStationReturn.Size = new System.Drawing.Size(606, 196);
             this.lvStationToStationReturn.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvStationToStationReturn.TabIndex = 18;
             this.lvStationToStationReturn.UseCompatibleStateImageBehavior = false;
@@ -1313,10 +1379,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox7.Controls.Add(this.checkboxPerLightYearRoundTrip);
             this.groupBox7.Controls.Add(this.lbAllRoundTrips);
-            this.groupBox7.Controls.Add(this.button12);
+            this.groupBox7.Controls.Add(this.btnBestRoundTrip);
             this.groupBox7.Location = new System.Drawing.Point(624, 34);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(415, 426);
+            this.groupBox7.Size = new System.Drawing.Size(415, 412);
             this.groupBox7.TabIndex = 17;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Find Round-Trips";
@@ -1344,19 +1410,19 @@
             this.lbAllRoundTrips.FormattingEnabled = true;
             this.lbAllRoundTrips.Location = new System.Drawing.Point(6, 52);
             this.lbAllRoundTrips.Name = "lbAllRoundTrips";
-            this.lbAllRoundTrips.Size = new System.Drawing.Size(403, 368);
+            this.lbAllRoundTrips.Size = new System.Drawing.Size(403, 342);
             this.lbAllRoundTrips.TabIndex = 13;
             this.lbAllRoundTrips.SelectedIndexChanged += new System.EventHandler(this.lbAllRoundTrips_SelectedIndexChanged);
             // 
-            // button12
+            // btnBestRoundTrip
             // 
-            this.button12.Location = new System.Drawing.Point(6, 19);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(117, 23);
-            this.button12.TabIndex = 12;
-            this.button12.Text = "Best Round-Trip";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click_2);
+            this.btnBestRoundTrip.Location = new System.Drawing.Point(6, 19);
+            this.btnBestRoundTrip.Name = "btnBestRoundTrip";
+            this.btnBestRoundTrip.Size = new System.Drawing.Size(117, 23);
+            this.btnBestRoundTrip.TabIndex = 12;
+            this.btnBestRoundTrip.Text = "Best Round-Trip";
+            this.btnBestRoundTrip.UseVisualStyleBackColor = true;
+            this.btnBestRoundTrip.Click += new System.EventHandler(this.btnBestRoundTrip_Click);
             // 
             // lblStationToStationLightYears
             // 
@@ -2739,12 +2805,32 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(0, 0);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 0;
+            // 
+            // rbSortByDistance
+            // 
+            this.rbSortByDistance.AutoSize = true;
+            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
+            this.rbSortByDistance.Name = "rbSortByDistance";
+            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
+            this.rbSortByDistance.TabIndex = 23;
+            this.rbSortByDistance.TabStop = true;
+            this.rbSortByDistance.Text = "distance";
+            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
+            this.rbSortByDistance.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1095, 626);
+            this.Controls.Add(this.button8);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.button19);
@@ -2765,6 +2851,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPriceAnalysis.ResumeLayout(false);
             this.tabPriceAnalysis.PerformLayout();
+            this.gbSorting.ResumeLayout(false);
+            this.gbSorting.PerformLayout();
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -2962,13 +3050,11 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox tbStationRename;
         private System.Windows.Forms.Button bSwapStationToStations;
-        private System.Windows.Forms.Button bStationEditRow;
         private System.Windows.Forms.Button bEditCommodity;
-        private System.Windows.Forms.Button bStationDeleteRow;
         private System.Windows.Forms.Button bCommodityDeleteRow;
         private System.Windows.Forms.Label lblStationToStationMax;
         private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button btnBestRoundTrip;
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label43;
@@ -3058,6 +3144,15 @@
         private System.Windows.Forms.Label lblPixelThreshold;
         private System.Windows.Forms.TextBox txtPixelThreshold;
         internal System.Windows.Forms.CheckBox cbCheckAOne;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.GroupBox gbSorting;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.TextBox txtShowLastStationsOnTop;
+        private System.Windows.Forms.RadioButton rbSortByStation;
+        private System.Windows.Forms.RadioButton rbSortBySystem;
+        private System.Windows.Forms.Button bStationDeleteRow;
+        private System.Windows.Forms.Button bStationEditRow;
+        private System.Windows.Forms.RadioButton rbSortByDistance;
     }
 }
 

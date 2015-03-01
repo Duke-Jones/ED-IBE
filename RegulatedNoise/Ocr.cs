@@ -11,6 +11,7 @@ using System.Drawing.Imaging;
 using Tesseract;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using RegulatedNoise.EDDB_Data;
 
 namespace RegulatedNoise
 {
@@ -210,10 +211,27 @@ namespace RegulatedNoise
                 }
             }
 
+#if EDDB_Data         
+
+            var matchesInStationReferenceList = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot).OrderBy(x => _levenshtein.LD2(headerResult, x)).ToList();
+
+
+            if(matchesInStationReferenceList.Count > 0)
+            {
+                var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].ToUpper());
+                
+                // this depends on the length of the word - this factor works really good
+                double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Length * 0.7), 0);
+
+                if (ld < LevenshteinLimit)
+                    headerResult = matchesInStationReferenceList[0].ToUpper();
+            }
+#else
+
             var matchesInStationReferenceList =
                 _callingForm.StationReferenceList.Where(x => x.System == SystemAtTimeOfScreenshot.ToUpper()).OrderBy(x => _levenshtein.LD2(headerResult, x.Name)).ToList();
 
-            var q = _callingForm.StationReferenceList.Where(x => x.Name.Contains("'"));
+            //var q = _callingForm.StationReferenceList.Where(x => x.Name.Contains("'"));
 
             if(matchesInStationReferenceList.Count > 0)
             {
@@ -226,6 +244,7 @@ namespace RegulatedNoise
                     headerResult = matchesInStationReferenceList[0].Name.ToUpper();
             }
 
+#endif
             _callingForm.DisplayResults(headerResult);
             
             var commodityColumnText = new string[textRowLocations.Count(), 8]; ;

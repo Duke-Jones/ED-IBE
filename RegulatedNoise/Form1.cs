@@ -19,6 +19,10 @@ using System.Reflection;
 using EdClasses.ClassDefinitions;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using Microsoft.Win32;
+#if EDDB_Data
+using RegulatedNoise.EDDB_Data;
+
+#endif
 
 namespace RegulatedNoise
 {
@@ -32,9 +36,12 @@ namespace RegulatedNoise
         public CommandersLog CommandersLog;
         public ObjectDirectory StationDirectory = new StationDirectory();
         public ObjectDirectory CommodityDirectory = new CommodityDirectory();
+#if EDDB_Data
+        private EDMilkyway _Milkyway;
+#else
         public Dictionary<string, Tuple<Point3D, List<string>>> SystemLocations = new Dictionary<string, Tuple<Point3D, List<string>>>();
         public List<Station> StationReferenceList = new List<Station>();
-        //public Station CurrentStation = null; //Not in use, replaced by EdStation
+#endif
         public static GameSettings GameSettings;
         public static OcrCalibrator OcrCalibrator;
         public List<string> KnownCommodityNames = new List<string>();
@@ -252,6 +259,48 @@ namespace RegulatedNoise
         }
        
 
+#if EDDB_Data
+
+        /// <summary>
+        /// using the direct EDDB format 
+        /// (see http://eddb.io/api)
+        /// </summary>
+        private void ImportSystemLocations()
+        {
+            // read file into a string and deserialize JSON to a type
+            try
+            {
+                _Milkyway = new EDMilkyway();
+                
+                // 1. load the EDDN data
+                { 
+                    // look which stations-file we can get
+                    if (File.Exists(@"./Data/stations.json"))
+                        myMilkyway.loadStationData(@"./Data/stations.json", EDMilkyway.enDataType.Data_EDDB, false);
+                    else
+                        myMilkyway.loadStationData(@"./Data/stations_lite.json", EDMilkyway.enDataType.Data_EDDB, false);
+
+                    // load the systems
+                    myMilkyway.loadSystemData(@"./Data/systems.json", EDMilkyway.enDataType.Data_EDDB, false);
+                }
+                    
+                // 2. load own local data
+                myMilkyway.loadStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
+                myMilkyway.loadSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
+
+                if (myMilkyway.mergeData())
+                { 
+                    myMilkyway.saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
+                    myMilkyway.saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
+                }    
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while reading system and station data", ex);   
+            }
+        }
+
+#else
         private void ImportSystemLocations()
         {
             var reader = new StreamReader(File.OpenRead(".//Data//elite.json"));
@@ -354,6 +403,9 @@ namespace RegulatedNoise
                 
             }
         }
+
+
+#endif
 
         private void SetListViewColumnsAndSorters()
         {
@@ -1173,15 +1225,18 @@ namespace RegulatedNoise
                 _cachedRemoteSystemDistances = new Dictionary<string, double>();
                 _cachedSystemName = localSystem.ToString();
 
+#if EDDB_Data
+                _cachedSystemLocation = myMilkyway.getSystemCoordinates(localSystem);
+#else
                 if (SystemLocations.ContainsKey(localSystem.ToUpper()))
                     _cachedSystemLocation = SystemLocations[localSystem.ToUpper()].Item1;
                 else
                     _cachedSystemLocation = null;
+#endif
             }
 
 
             remoteSystemName = remoteSystemName.ToUpper();
-
 
             if (_cachedRemoteSystemDistances.ContainsKey(remoteSystemName))
             {
@@ -1189,6 +1244,20 @@ namespace RegulatedNoise
             }
             else
             {
+#if EDDB_Data
+
+                if (!myMilkyway.existSystem(localSystem) || _cachedSystemLocation == null)
+                {
+                    dist = double.MaxValue;
+                }
+                else
+                {
+                    var currentSystemLocation = _cachedSystemLocation;
+                    dist = DistanceInLightYears(remoteSystemName, currentSystemLocation);
+                    _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
+                }
+#else
+
                 if (!SystemLocations.ContainsKey(remoteSystemName) || _cachedSystemLocation == null)
                 {
                     dist = double.MaxValue;
@@ -1199,6 +1268,7 @@ namespace RegulatedNoise
                     dist = DistanceInLightYears(remoteSystemName, currentSystemLocation);
                     _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
                 }
+#endif
             }
             if (remoteSystemName.Contains("LTT"))
                 Debug.WriteLine(remoteSystemName + " - " + dist);
@@ -1208,6 +1278,18 @@ namespace RegulatedNoise
         private double DistanceInLightYears(string remoteSystemName, Point3D currentSystemLocation)
         {
             double dist;
+
+#if EDDB_Data
+            Point3D remoteSystemLocation = myMilkyway.getSystemCoordinates(remoteSystemName);
+
+            if (remoteSystemLocation == null)
+                return double.MaxValue;
+
+            double xDelta = currentSystemLocation.X - remoteSystemLocation.X;
+            double yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
+            double zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
+
+#else
             if (!SystemLocations.ContainsKey(remoteSystemName))
                 return double.MaxValue;
 
@@ -1217,16 +1299,27 @@ namespace RegulatedNoise
             var yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
             var zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
 
+#endif
+
             dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
+
             return dist;
         }
 
         private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
         {
+#if EDDB_Data
+            Point3D HomeCoordinates = myMilkyway.getSystemCoordinates(homeSystemName);
+            if (HomeCoordinates == null)
+                return double.MaxValue;
+
+            return DistanceInLightYears(remoteSystemName, HomeCoordinates);
+#else
             if (!SystemLocations.ContainsKey(homeSystemName))
                 return double.MaxValue;
 
             return DistanceInLightYears(remoteSystemName, SystemLocations[homeSystemName].Item1);
+#endif
         }
 
         private string SystemToMeasureDistancesFrom()
@@ -1256,6 +1349,8 @@ namespace RegulatedNoise
 
         private void SetupGui()
         {
+            Cursor = Cursors.WaitCursor;
+
             cbStation.Items.Clear();
             cbCommodity.Items.Clear();
             cbStationToStationFrom.Items.Clear();
@@ -1280,8 +1375,10 @@ namespace RegulatedNoise
             var systems = StationDirectory.Keys.Select(x => (object)(CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
             cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
             cbIncludeWithinRegionOfStation.Items.AddRange(systems);
+
             //cbIncludeWithinRegionOfStation.SelectedIndex = 0;
             cbIncludeWithinRegionOfStation.DropDownStyle = ComboBoxStyle.DropDownList;
+
             if (previouslySelectedValue != null)
                 cbIncludeWithinRegionOfStation.SelectedItem = previouslySelectedValue;
             else
@@ -1329,8 +1426,12 @@ namespace RegulatedNoise
                 }));
             }
 
+            Cursor = Cursors.Default;
+
             UpdateStationToStation();
         }
+
+
 
         private void PopulateNetworkInterfaces()
         {
@@ -3022,8 +3123,12 @@ namespace RegulatedNoise
 
         private void UpdateStationToStation()
         {
+            Cursor = Cursors.WaitCursor;
             if (cbStationToStationTo.SelectedItem == null || cbStationToStationFrom.SelectedItem == null)
+            { 
+                Cursor = Cursors.Default;
                 return;
+            }
 
             lvStationToStation.Items.Clear();
             lvStationToStationReturn.Items.Clear();
@@ -3051,12 +3156,21 @@ namespace RegulatedNoise
             if (_stationToStationReturnColumnSorter.SortColumn != 7)
                 lvStationToStationReturn_ColumnClick(null, new ColumnClickEventArgs(7));
 
+#if EDDB_Data
+            if (myMilkyway.existSystem(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString())))
+            {
+                var dist = DistanceInLightYears(
+                                                     CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
+                                                     myMilkyway.getSystemCoordinates(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString())));
+
+#else
             if (SystemLocations.ContainsKey(CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()))
             {
                 var dist = DistanceInLightYears(
                                                      CombinedNameToSystemName(cbStationToStationTo.SelectedItem.ToString()).ToUpper(),
                                                      SystemLocations[CombinedNameToSystemName(cbStationToStationFrom.SelectedItem.ToString()).ToUpper()]
                                                          .Item1);
+#endif
                 if (dist < double.MaxValue)
                     lblStationToStationLightYears.Text = "(" +
                                                      String.Format("{0:0.00}", dist
@@ -3064,6 +3178,8 @@ namespace RegulatedNoise
                 else lblStationToStationLightYears.Text = "(system(s) not recognised)";
             }
             else lblStationToStationLightYears.Text = "(system(s) not recognised)";
+
+            Cursor = Cursors.Default;
         }
 
         private Tuple<List<ListViewItem>, List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
@@ -3640,6 +3756,7 @@ namespace RegulatedNoise
 
         int animPhase;
         int phaseCtr;
+        
         private void OnTick(object sender, EventArgs args)
         {
             switch (animPhase)
@@ -3804,8 +3921,10 @@ namespace RegulatedNoise
             SetupGui();
         }
 
-        private void button12_Click_2(object sender, EventArgs e)
+        private void btnBestRoundTrip_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
+
             lbAllRoundTrips.Items.Clear();
             int bestRoundTrip = -1;
             string stationA = "", stationB = "";
@@ -3889,6 +4008,7 @@ namespace RegulatedNoise
             //        }
             //    }
             //}
+            this.Cursor = Cursors.Default;
         }
 
         private void cbLightYears_TextChanged(object sender, EventArgs e)
@@ -4335,8 +4455,25 @@ namespace RegulatedNoise
                 SaveSettings();
         }
 
+
+#if EDDB_Data
+        /// <summary>
+        /// get the Milkyway
+        /// </summary>
+        internal EDMilkyway myMilkyway
+        {
+            get
+            {
+                return _Milkyway;
+            }
+        }
+
+        private void rbSortByStation_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+#endif
+
     }
-
-
 
 }
