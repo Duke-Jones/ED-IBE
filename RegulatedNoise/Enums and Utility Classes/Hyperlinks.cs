@@ -52,12 +52,12 @@ namespace RegulatedNoise
 
         private void bShowStationAtStarchartDotInfo_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/system/" + CombinedNameToSystemName(cbStation.Text));
+            Process.Start(@"http://starchart.club/map/system/" + CombinedNameToSystemName(cmbStation.Text));
         }
 
         private void bShowStationToStationRouteAtStarchartDotClub_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cbStationToStationFrom.Text) + @"/" + CombinedNameToSystemName(cbStationToStationTo.Text) + @"/@" + CombinedNameToSystemName(cbStationToStationFrom.Text));
+            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cmbStationToStationFrom.Text) + @"/" + CombinedNameToSystemName(cmbStationToStationTo.Text) + @"/@" + CombinedNameToSystemName(cmbStationToStationFrom.Text));
         }
 
         private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)

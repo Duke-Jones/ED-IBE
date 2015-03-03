@@ -13,6 +13,16 @@ todo:
    
 ***********************************************************************************
 
+1.84_0.07_4 (prerelease)
+   * comboboxes (station/system) can be sorted by 
+      - station only 
+	  - system and station
+	  - distance
+	  - additional can "n" last visited stations shown on top of the list
+   * internal structure is completed for considering the "size of landingpads",
+     "distances of station to stars" and other data based on EDDB
+   * more settings are saved when closing the application
+-------------------------------------------------------------------------------------
 1.84_0.07_3
    * fixed a error in the new Milkyway-class
    * locations of the systems are saved in a quick cache

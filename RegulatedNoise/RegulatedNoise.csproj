@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ\</OutputPath>
-    <DefineConstants>TRACE;DEBUG; DukeJones EDDB_Data</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DukeJones</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -92,6 +92,7 @@
     <Compile Include="Elite Dangerous Specifics\EdLogWatcher.cs" />
     <Compile Include="Enums and Utility Classes\EddnPublisherVersionStats.cs" />
     <Compile Include="Enums and Utility Classes\PerformanceTimer.cs" />
+    <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -528,9 +529,6 @@
     <Content Include="Data\Commodities.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\elite.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Data\commodities.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -561,9 +559,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Data\Station.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="tessdata\big.traineddata">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

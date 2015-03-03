@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace RegulatedNoise
 {
@@ -17,7 +18,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.06m;
+        public readonly decimal VersionDJ = 0.07m;
 #endif
 
         public string ProductsPath = "";
@@ -40,19 +41,21 @@ namespace RegulatedNoise
         public string BackgroundColour = null;
         public bool AutoImport = false;
         public bool TestMode = false;
-        public bool AutoUppercase = true;
-        public string TraineddataFile = "big";
-        public enLanguage Language = enLanguage.eng;
-        public bool SortingComboboxes = true;
-        public int CmdrsLogSortColumn = 0;
-        public SortOrder CmdrsLogSortOrder = SortOrder.Descending;
-        public bool AutoEvent_JumpedTo = true;
-        public float EBPixelThreshold = 0.2f;
-        public int EBPixelAmount    = 12;
-        public Rectangle WindowPosition = new Rectangle(-1,-1,-1,-1);
-        public FormWindowState WindowState = FormWindowState.Normal;
-
-
+        public bool AutoUppercase                                       = true;
+        public string TraineddataFile                                   = "big";
+        public enLanguage Language                                      = enLanguage.eng;
+        public int CmdrsLogSortColumn                                   = 0;
+        public SortOrder CmdrsLogSortOrder                              = SortOrder.Descending;
+        public bool AutoEvent_JumpedTo                                  = true;
+        public float EBPixelThreshold                                   = 0.2f;
+        public int EBPixelAmount                                        = 12;
+        public Rectangle WindowPosition                                 = new Rectangle(-1,-1,-1,-1);
+        public FormWindowState WindowState                              = FormWindowState.Normal;
+        public int lastStationCount                                     = 4;
+        public bool lastStationCountActive                              = false;
+        public bool limitLightYears                                     = false;
+        public int lastLightYears                                       = 25;
+        public int CBSortingSelection                                   = 1;
 
         public void CheckVersion()
         {

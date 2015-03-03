@@ -21,7 +21,7 @@ namespace RegulatedNoise
             RowToEdit = csvRow;
 
             tbEditSystem.Text        = RowToEdit.SystemName;
-            tbEditStation.Text       = RowToEdit.StationName.Substring(0,RowToEdit.StationName.IndexOf("[")-1);
+            tbEditStation.Text       = RowToEdit.StationID;
             cbEditCommodityName.Text = RowToEdit.CommodityName;
             nEditSell.Value          = RowToEdit.SellPrice;
             nEditBuy.Value           = RowToEdit.BuyPrice;
@@ -43,7 +43,7 @@ namespace RegulatedNoise
             var returnValue = new Form1.CsvRow
             {
                 SystemName = tbEditSystem.Text,
-                StationName = tbEditStation.Text + " ["+tbEditSystem.Text+"]",
+                StationID = tbEditStation.Text + " ["+tbEditSystem.Text+"]",
                 CommodityName = cbEditCommodityName.Text,
                 SellPrice = nEditSell.Value,
                 BuyPrice = nEditBuy.Value,

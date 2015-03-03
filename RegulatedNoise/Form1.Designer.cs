@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
-            this.cbStation = new System.Windows.Forms.ComboBox();
+            this.cmbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lbPrices = new System.Windows.Forms.ListView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -68,15 +68,15 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPriceAnalysis = new System.Windows.Forms.TabPage();
             this.gbSorting = new System.Windows.Forms.GroupBox();
+            this.txtlastStationCount = new System.Windows.Forms.TextBox();
+            this.cblastVisitedFirst = new System.Windows.Forms.CheckBox();
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
-            this.label50 = new System.Windows.Forms.Label();
-            this.txtShowLastStationsOnTop = new System.Windows.Forms.TextBox();
             this.rbSortByStation = new System.Windows.Forms.RadioButton();
             this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
-            this.checkboxLightYears = new System.Windows.Forms.CheckBox();
+            this.cbLimitLightYears = new System.Windows.Forms.CheckBox();
             this.cbLightYears = new System.Windows.Forms.ComboBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -94,7 +94,7 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.tbStationRename = new System.Windows.Forms.TextBox();
             this.tbSystemRename = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
+            this.cmdApplySystemRename = new System.Windows.Forms.Button();
             this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.bCommodityDeleteRow = new System.Windows.Forms.Button();
@@ -132,8 +132,8 @@
             this.bSwapStationToStations = new System.Windows.Forms.Button();
             this.label30 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
-            this.cbStationToStationTo = new System.Windows.Forms.ComboBox();
-            this.cbStationToStationFrom = new System.Windows.Forms.ComboBox();
+            this.cmbStationToStationTo = new System.Windows.Forms.ComboBox();
+            this.cmbStationToStationFrom = new System.Windows.Forms.ComboBox();
             this.tabCommandersLog = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lvCommandersLog = new System.Windows.Forms.ListView();
@@ -233,8 +233,6 @@
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label49 = new System.Windows.Forms.Label();
             this.cbAutoAdd_JumpedTo = new System.Windows.Forms.CheckBox();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.cbSortingComboboxes = new System.Windows.Forms.CheckBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label48 = new System.Windows.Forms.Label();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
@@ -308,7 +306,6 @@
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -326,17 +323,17 @@
             this.bOpen.UseVisualStyleBackColor = false;
             this.bOpen.Click += new System.EventHandler(this.bOpen_Click);
             // 
-            // cbStation
+            // cmbStation
             // 
-            this.cbStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbStation.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbStation.FormattingEnabled = true;
-            this.cbStation.Location = new System.Drawing.Point(52, 15);
-            this.cbStation.Name = "cbStation";
-            this.cbStation.Size = new System.Drawing.Size(201, 21);
-            this.cbStation.TabIndex = 1;
-            this.cbStation.SelectedIndexChanged += new System.EventHandler(this.cbStation_SelectedIndexChanged);
+            this.cmbStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cmbStation.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStation.FormattingEnabled = true;
+            this.cmbStation.Location = new System.Drawing.Point(52, 15);
+            this.cmbStation.Name = "cmbStation";
+            this.cmbStation.Size = new System.Drawing.Size(201, 21);
+            this.cmbStation.TabIndex = 1;
+            this.cmbStation.SelectedIndexChanged += new System.EventHandler(this.cbStation_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -356,7 +353,7 @@
             this.lbPrices.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lbPrices.Location = new System.Drawing.Point(0, 71);
             this.lbPrices.Name = "lbPrices";
-            this.lbPrices.Size = new System.Drawing.Size(1046, 381);
+            this.lbPrices.Size = new System.Drawing.Size(1046, 387);
             this.lbPrices.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lbPrices.TabIndex = 3;
             this.lbPrices.UseCompatibleStateImageBehavior = false;
@@ -696,7 +693,7 @@
             this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Controls.Add(this.cbIncludeWithinRegionOfStation);
             this.tabPriceAnalysis.Controls.Add(this.label43);
-            this.tabPriceAnalysis.Controls.Add(this.checkboxLightYears);
+            this.tabPriceAnalysis.Controls.Add(this.cbLimitLightYears);
             this.tabPriceAnalysis.Controls.Add(this.cbLightYears);
             this.tabPriceAnalysis.Controls.Add(this.tabControl2);
             this.tabPriceAnalysis.Location = new System.Drawing.Point(4, 22);
@@ -708,17 +705,40 @@
             // 
             // gbSorting
             // 
+            this.gbSorting.Controls.Add(this.txtlastStationCount);
+            this.gbSorting.Controls.Add(this.cblastVisitedFirst);
             this.gbSorting.Controls.Add(this.rbSortByDistance);
-            this.gbSorting.Controls.Add(this.label50);
-            this.gbSorting.Controls.Add(this.txtShowLastStationsOnTop);
             this.gbSorting.Controls.Add(this.rbSortByStation);
             this.gbSorting.Controls.Add(this.rbSortBySystem);
             this.gbSorting.Location = new System.Drawing.Point(543, 3);
             this.gbSorting.Name = "gbSorting";
-            this.gbSorting.Size = new System.Drawing.Size(280, 58);
+            this.gbSorting.Size = new System.Drawing.Size(253, 51);
             this.gbSorting.TabIndex = 15;
             this.gbSorting.TabStop = false;
             this.gbSorting.Text = "order of stations";
+            // 
+            // txtlastStationCount
+            // 
+            this.txtlastStationCount.Location = new System.Drawing.Point(157, 30);
+            this.txtlastStationCount.MaxLength = 2;
+            this.txtlastStationCount.Name = "txtlastStationCount";
+            this.txtlastStationCount.Size = new System.Drawing.Size(19, 20);
+            this.txtlastStationCount.TabIndex = 26;
+            this.txtlastStationCount.Text = "4";
+            this.txtlastStationCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtlastStationCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtlastStationCount_KeyPress);
+            this.txtlastStationCount.LostFocus += new System.EventHandler(this.txtlastStationCount_LostFocus);
+            // 
+            // cblastVisitedFirst
+            // 
+            this.cblastVisitedFirst.AutoSize = true;
+            this.cblastVisitedFirst.Location = new System.Drawing.Point(115, 32);
+            this.cblastVisitedFirst.Name = "cblastVisitedFirst";
+            this.cblastVisitedFirst.Size = new System.Drawing.Size(130, 17);
+            this.cblastVisitedFirst.TabIndex = 25;
+            this.cblastVisitedFirst.Text = "last           stations first";
+            this.cblastVisitedFirst.UseVisualStyleBackColor = true;
+            this.cblastVisitedFirst.CheckedChanged += new System.EventHandler(this.cblastVisitedFirst_CheckedChanged);
             // 
             // rbSortByDistance
             // 
@@ -727,46 +747,27 @@
             this.rbSortByDistance.Name = "rbSortByDistance";
             this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
             this.rbSortByDistance.TabIndex = 23;
-            this.rbSortByDistance.TabStop = true;
             this.rbSortByDistance.Text = "distance";
             this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
             this.rbSortByDistance.UseVisualStyleBackColor = true;
-            // 
-            // label50
-            // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(141, 40);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(130, 13);
-            this.label50.TabIndex = 22;
-            this.label50.Text = "show last <n> stations first";
-            this.toolTip1.SetToolTip(this.label50, "shows the last <n> scanned stations  on top of the list (0=off)");
-            // 
-            // txtShowLastStationsOnTop
-            // 
-            this.txtShowLastStationsOnTop.Location = new System.Drawing.Point(115, 37);
-            this.txtShowLastStationsOnTop.Name = "txtShowLastStationsOnTop";
-            this.txtShowLastStationsOnTop.Size = new System.Drawing.Size(20, 20);
-            this.txtShowLastStationsOnTop.TabIndex = 21;
-            this.txtShowLastStationsOnTop.Text = "99";
-            this.txtShowLastStationsOnTop.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.toolTip1.SetToolTip(this.txtShowLastStationsOnTop, "shows the last <n> scanned stations  on top of the list (0=off)");
+            this.rbSortByDistance.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
             // 
             // rbSortByStation
             // 
             this.rbSortByStation.AutoSize = true;
-            this.rbSortByStation.Location = new System.Drawing.Point(5, 37);
+            this.rbSortByStation.Location = new System.Drawing.Point(5, 31);
             this.rbSortByStation.Name = "rbSortByStation";
             this.rbSortByStation.Size = new System.Drawing.Size(56, 17);
             this.rbSortByStation.TabIndex = 19;
-            this.rbSortByStation.TabStop = true;
             this.rbSortByStation.Text = "station";
             this.toolTip1.SetToolTip(this.rbSortByStation, "sorting by station ");
             this.rbSortByStation.UseVisualStyleBackColor = true;
+            this.rbSortByStation.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
             // 
             // rbSortBySystem
             // 
             this.rbSortBySystem.AutoSize = true;
+            this.rbSortBySystem.Checked = true;
             this.rbSortBySystem.Location = new System.Drawing.Point(5, 14);
             this.rbSortBySystem.Name = "rbSortBySystem";
             this.rbSortBySystem.Size = new System.Drawing.Size(97, 17);
@@ -775,7 +776,7 @@
             this.rbSortBySystem.Text = "system->station";
             this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting first by system, second by station");
             this.rbSortBySystem.UseVisualStyleBackColor = true;
-            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortByStation_CheckedChanged);
+            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
             // 
             // bShowStationRestrictionAtStarchartDotClub
             // 
@@ -808,16 +809,16 @@
             this.label43.TabIndex = 13;
             this.label43.Text = "light years of";
             // 
-            // checkboxLightYears
+            // cbLimitLightYears
             // 
-            this.checkboxLightYears.AutoSize = true;
-            this.checkboxLightYears.Location = new System.Drawing.Point(6, 8);
-            this.checkboxLightYears.Name = "checkboxLightYears";
-            this.checkboxLightYears.Size = new System.Drawing.Size(156, 17);
-            this.checkboxLightYears.TabIndex = 12;
-            this.checkboxLightYears.Text = "Only include stations within ";
-            this.checkboxLightYears.UseVisualStyleBackColor = true;
-            this.checkboxLightYears.CheckedChanged += new System.EventHandler(this.checkboxLightYears_CheckedChanged);
+            this.cbLimitLightYears.AutoSize = true;
+            this.cbLimitLightYears.Location = new System.Drawing.Point(6, 8);
+            this.cbLimitLightYears.Name = "cbLimitLightYears";
+            this.cbLimitLightYears.Size = new System.Drawing.Size(156, 17);
+            this.cbLimitLightYears.TabIndex = 12;
+            this.cbLimitLightYears.Text = "Only include stations within ";
+            this.cbLimitLightYears.UseVisualStyleBackColor = true;
+            this.cbLimitLightYears.CheckedChanged += new System.EventHandler(this.checkboxLightYears_CheckedChanged);
             // 
             // cbLightYears
             // 
@@ -833,7 +834,9 @@
             this.cbLightYears.Name = "cbLightYears";
             this.cbLightYears.Size = new System.Drawing.Size(48, 21);
             this.cbLightYears.TabIndex = 11;
-            this.cbLightYears.TextChanged += new System.EventHandler(this.cbLightYears_TextChanged);
+            this.cbLightYears.SelectedIndexChanged += new System.EventHandler(this.cbLightYears_SelectedIndexChanged);
+            this.cbLightYears.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbLightYearsInput_KeyPress);
+            this.cbLightYears.LostFocus += new System.EventHandler(this.cbLightYearsInput_LostFocus);
             // 
             // tabControl2
             // 
@@ -844,10 +847,10 @@
             this.tabControl2.Controls.Add(this.tabPage1);
             this.tabControl2.Controls.Add(this.tabPage2);
             this.tabControl2.Controls.Add(this.tabStationToStation);
-            this.tabControl2.Location = new System.Drawing.Point(0, 42);
+            this.tabControl2.Location = new System.Drawing.Point(0, 36);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1054, 484);
+            this.tabControl2.Size = new System.Drawing.Size(1054, 490);
             this.tabControl2.TabIndex = 10;
             // 
             // tabPage3
@@ -855,7 +858,7 @@
             this.tabPage3.Controls.Add(this.splitContainer2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1046, 458);
+            this.tabPage3.Size = new System.Drawing.Size(1046, 464);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "All Commodities";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -878,7 +881,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(1046, 455);
+            this.splitContainer2.Size = new System.Drawing.Size(1046, 461);
             this.splitContainer2.SplitterDistance = 822;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 8;
@@ -891,7 +894,7 @@
             this.lvAllComms.FullRowSelect = true;
             this.lvAllComms.Location = new System.Drawing.Point(0, 0);
             this.lvAllComms.Name = "lvAllComms";
-            this.lvAllComms.Size = new System.Drawing.Size(821, 457);
+            this.lvAllComms.Size = new System.Drawing.Size(821, 463);
             this.lvAllComms.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvAllComms.TabIndex = 4;
             this.lvAllComms.UseCompatibleStateImageBehavior = false;
@@ -918,8 +921,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(132, 451);
-            this.splitContainer1.SplitterDistance = 208;
+            this.splitContainer1.Size = new System.Drawing.Size(100, 457);
+            this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
             // 
@@ -938,14 +941,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(127, 206);
+            series3.ChartArea = "ChartArea1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(95, 208);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -965,14 +968,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(122, 136);
+            series4.ChartArea = "ChartArea1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(90, 108);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -984,13 +987,13 @@
             this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.lbPrices);
-            this.tabPage1.Controls.Add(this.cbStation);
+            this.tabPage1.Controls.Add(this.cmbStation);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.lblLightYearsFromCurrentSystem);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1046, 458);
+            this.tabPage1.Size = new System.Drawing.Size(1046, 464);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "By Station";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -999,18 +1002,19 @@
             // 
             this.bStationDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bStationDeleteRow.Enabled = false;
-            this.bStationDeleteRow.Location = new System.Drawing.Point(836, 42);
+            this.bStationDeleteRow.Location = new System.Drawing.Point(836, 45);
             this.bStationDeleteRow.Name = "bStationDeleteRow";
             this.bStationDeleteRow.Size = new System.Drawing.Size(97, 23);
             this.bStationDeleteRow.TabIndex = 17;
             this.bStationDeleteRow.Text = "Delete Row(s)";
             this.bStationDeleteRow.UseVisualStyleBackColor = true;
+            this.bStationDeleteRow.Click += new System.EventHandler(this.bStationDeleteRow_Click);
             // 
             // bStationEditRow
             // 
             this.bStationEditRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bStationEditRow.Enabled = false;
-            this.bStationEditRow.Location = new System.Drawing.Point(939, 42);
+            this.bStationEditRow.Location = new System.Drawing.Point(939, 45);
             this.bStationEditRow.Name = "bStationEditRow";
             this.bStationEditRow.Size = new System.Drawing.Size(97, 23);
             this.bStationEditRow.TabIndex = 16;
@@ -1031,7 +1035,7 @@
             // 
             this.groupBox5.Controls.Add(this.tbStationRename);
             this.groupBox5.Controls.Add(this.tbSystemRename);
-            this.groupBox5.Controls.Add(this.button6);
+            this.groupBox5.Controls.Add(this.cmdApplySystemRename);
             this.groupBox5.Location = new System.Drawing.Point(567, 1);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(475, 41);
@@ -1053,15 +1057,15 @@
             this.tbSystemRename.Size = new System.Drawing.Size(177, 20);
             this.tbSystemRename.TabIndex = 5;
             // 
-            // button6
+            // cmdApplySystemRename
             // 
-            this.button6.Location = new System.Drawing.Point(372, 12);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(97, 23);
-            this.button6.TabIndex = 4;
-            this.button6.Text = "Apply Changes";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.RenameStation);
+            this.cmdApplySystemRename.Location = new System.Drawing.Point(372, 12);
+            this.cmdApplySystemRename.Name = "cmdApplySystemRename";
+            this.cmdApplySystemRename.Size = new System.Drawing.Size(97, 23);
+            this.cmdApplySystemRename.TabIndex = 4;
+            this.cmdApplySystemRename.Text = "Apply Changes";
+            this.cmdApplySystemRename.UseVisualStyleBackColor = true;
+            this.cmdApplySystemRename.Click += new System.EventHandler(this.RenameStation);
             // 
             // lblLightYearsFromCurrentSystem
             // 
@@ -1097,7 +1101,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1046, 458);
+            this.tabPage2.Size = new System.Drawing.Size(1046, 464);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "By Commodity";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1106,7 +1110,7 @@
             // 
             this.bCommodityDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCommodityDeleteRow.Enabled = false;
-            this.bCommodityDeleteRow.Location = new System.Drawing.Point(866, 430);
+            this.bCommodityDeleteRow.Location = new System.Drawing.Point(866, 436);
             this.bCommodityDeleteRow.Name = "bCommodityDeleteRow";
             this.bCommodityDeleteRow.Size = new System.Drawing.Size(93, 23);
             this.bCommodityDeleteRow.TabIndex = 25;
@@ -1118,7 +1122,7 @@
             // 
             this.bEditCommodity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bEditCommodity.Enabled = false;
-            this.bEditCommodity.Location = new System.Drawing.Point(965, 430);
+            this.bEditCommodity.Location = new System.Drawing.Point(965, 436);
             this.bEditCommodity.Name = "bEditCommodity";
             this.bEditCommodity.Size = new System.Drawing.Size(75, 23);
             this.bEditCommodity.TabIndex = 24;
@@ -1306,7 +1310,7 @@
             this.lbCommodities.FullRowSelect = true;
             this.lbCommodities.Location = new System.Drawing.Point(0, 47);
             this.lbCommodities.Name = "lbCommodities";
-            this.lbCommodities.Size = new System.Drawing.Size(1046, 379);
+            this.lbCommodities.Size = new System.Drawing.Size(1046, 385);
             this.lbCommodities.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lbCommodities.TabIndex = 4;
             this.lbCommodities.UseCompatibleStateImageBehavior = false;
@@ -1325,11 +1329,11 @@
             this.tabStationToStation.Controls.Add(this.bSwapStationToStations);
             this.tabStationToStation.Controls.Add(this.label30);
             this.tabStationToStation.Controls.Add(this.label29);
-            this.tabStationToStation.Controls.Add(this.cbStationToStationTo);
-            this.tabStationToStation.Controls.Add(this.cbStationToStationFrom);
+            this.tabStationToStation.Controls.Add(this.cmbStationToStationTo);
+            this.tabStationToStation.Controls.Add(this.cmbStationToStationFrom);
             this.tabStationToStation.Location = new System.Drawing.Point(4, 22);
             this.tabStationToStation.Name = "tabStationToStation";
-            this.tabStationToStation.Size = new System.Drawing.Size(1046, 458);
+            this.tabStationToStation.Size = new System.Drawing.Size(1046, 464);
             this.tabStationToStation.TabIndex = 8;
             this.tabStationToStation.Text = "Station-To-Station";
             this.tabStationToStation.UseVisualStyleBackColor = true;
@@ -1349,8 +1353,8 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.lvStationToStationReturn);
-            this.splitContainer4.Size = new System.Drawing.Size(609, 412);
-            this.splitContainer4.SplitterDistance = 206;
+            this.splitContainer4.Size = new System.Drawing.Size(609, 418);
+            this.splitContainer4.SplitterDistance = 209;
             this.splitContainer4.TabIndex = 19;
             // 
             // lvStationToStation
@@ -1361,7 +1365,7 @@
             this.lvStationToStation.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvStationToStation.Location = new System.Drawing.Point(0, 3);
             this.lvStationToStation.Name = "lvStationToStation";
-            this.lvStationToStation.Size = new System.Drawing.Size(606, 200);
+            this.lvStationToStation.Size = new System.Drawing.Size(606, 203);
             this.lvStationToStation.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvStationToStation.TabIndex = 4;
             this.lvStationToStation.UseCompatibleStateImageBehavior = false;
@@ -1376,7 +1380,7 @@
             this.lvStationToStationReturn.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvStationToStationReturn.Location = new System.Drawing.Point(0, 3);
             this.lvStationToStationReturn.Name = "lvStationToStationReturn";
-            this.lvStationToStationReturn.Size = new System.Drawing.Size(606, 196);
+            this.lvStationToStationReturn.Size = new System.Drawing.Size(606, 199);
             this.lvStationToStationReturn.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvStationToStationReturn.TabIndex = 18;
             this.lvStationToStationReturn.UseCompatibleStateImageBehavior = false;
@@ -1393,7 +1397,7 @@
             this.groupBox7.Controls.Add(this.btnBestRoundTrip);
             this.groupBox7.Location = new System.Drawing.Point(624, 34);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(415, 412);
+            this.groupBox7.Size = new System.Drawing.Size(415, 418);
             this.groupBox7.TabIndex = 17;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Find Round-Trips";
@@ -1500,31 +1504,29 @@
             this.label29.TabIndex = 7;
             this.label29.Text = "From";
             // 
-            // cbStationToStationTo
+            // cmbStationToStationTo
             // 
-            this.cbStationToStationTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbStationToStationTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbStationToStationTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbStationToStationTo.FormattingEnabled = true;
-            this.cbStationToStationTo.Location = new System.Drawing.Point(329, 6);
-            this.cbStationToStationTo.Name = "cbStationToStationTo";
-            this.cbStationToStationTo.Size = new System.Drawing.Size(200, 21);
-            this.cbStationToStationTo.Sorted = true;
-            this.cbStationToStationTo.TabIndex = 6;
-            this.cbStationToStationTo.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationTo_SelectedIndexChanged);
+            this.cmbStationToStationTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cmbStationToStationTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStationToStationTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationToStationTo.FormattingEnabled = true;
+            this.cmbStationToStationTo.Location = new System.Drawing.Point(329, 6);
+            this.cmbStationToStationTo.Name = "cmbStationToStationTo";
+            this.cmbStationToStationTo.Size = new System.Drawing.Size(200, 21);
+            this.cmbStationToStationTo.TabIndex = 6;
+            this.cmbStationToStationTo.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationTo_SelectedIndexChanged);
             // 
-            // cbStationToStationFrom
+            // cmbStationToStationFrom
             // 
-            this.cbStationToStationFrom.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbStationToStationFrom.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbStationToStationFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbStationToStationFrom.FormattingEnabled = true;
-            this.cbStationToStationFrom.Location = new System.Drawing.Point(43, 6);
-            this.cbStationToStationFrom.Name = "cbStationToStationFrom";
-            this.cbStationToStationFrom.Size = new System.Drawing.Size(200, 21);
-            this.cbStationToStationFrom.Sorted = true;
-            this.cbStationToStationFrom.TabIndex = 5;
-            this.cbStationToStationFrom.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationFrom_SelectedIndexChanged);
+            this.cmbStationToStationFrom.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cmbStationToStationFrom.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStationToStationFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationToStationFrom.FormattingEnabled = true;
+            this.cmbStationToStationFrom.Location = new System.Drawing.Point(43, 6);
+            this.cmbStationToStationFrom.Name = "cmbStationToStationFrom";
+            this.cmbStationToStationFrom.Size = new System.Drawing.Size(200, 21);
+            this.cmbStationToStationFrom.TabIndex = 5;
+            this.cmbStationToStationFrom.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationFrom_SelectedIndexChanged);
             // 
             // tabCommandersLog
             // 
@@ -2564,7 +2566,6 @@
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.groupBox10);
-            this.tabPage4.Controls.Add(this.groupBox9);
             this.tabPage4.Controls.Add(this.groupBox8);
             this.tabPage4.Controls.Add(this.groupBox6);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -2608,36 +2609,13 @@
             this.cbAutoAdd_JumpedTo.UseVisualStyleBackColor = true;
             this.cbAutoAdd_JumpedTo.CheckedChanged += new System.EventHandler(this.cbAutoAdd_JumpedTo_CheckedChanged);
             // 
-            // groupBox9
-            // 
-            this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox9.Controls.Add(this.cbSortingComboboxes);
-            this.groupBox9.Location = new System.Drawing.Point(6, 395);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(336, 128);
-            this.groupBox9.TabIndex = 10;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "other";
-            // 
-            // cbSortingComboboxes
-            // 
-            this.cbSortingComboboxes.AutoSize = true;
-            this.cbSortingComboboxes.Location = new System.Drawing.Point(11, 19);
-            this.cbSortingComboboxes.Name = "cbSortingComboboxes";
-            this.cbSortingComboboxes.Size = new System.Drawing.Size(177, 17);
-            this.cbSortingComboboxes.TabIndex = 0;
-            this.cbSortingComboboxes.Text = "sorting the items of comboboxes";
-            this.cbSortingComboboxes.UseVisualStyleBackColor = true;
-            this.cbSortingComboboxes.CheckedChanged += new System.EventHandler(this.cbSortingComboboxes_CheckedChanged);
-            // 
             // groupBox8
             // 
             this.groupBox8.Controls.Add(this.label48);
             this.groupBox8.Controls.Add(this.cmbLanguage);
             this.groupBox8.Location = new System.Drawing.Point(6, 274);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(336, 115);
+            this.groupBox8.Size = new System.Drawing.Size(336, 249);
             this.groupBox8.TabIndex = 10;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Language";
@@ -2828,6 +2806,7 @@
             this.Controls.Add(this.button5);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.bOpen);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "RegulatedNoise v";
@@ -2904,8 +2883,6 @@
             this.tabPage4.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox6.ResumeLayout(false);
@@ -2922,7 +2899,7 @@
         #endregion
 
         private System.Windows.Forms.Button bOpen;
-        private System.Windows.Forms.ComboBox cbStation;
+        private System.Windows.Forms.ComboBox cmbStation;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListView lbPrices;
         private System.Windows.Forms.TabControl tabControl1;
@@ -2956,7 +2933,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbSystemRename;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button cmdApplySystemRename;
         private System.Windows.Forms.TabPage tabWebserver;
         private System.Windows.Forms.Button bStart;
         private System.Windows.Forms.Button bStop;
@@ -3001,8 +2978,8 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TabPage tabStationToStation;
-        private System.Windows.Forms.ComboBox cbStationToStationTo;
-        private System.Windows.Forms.ComboBox cbStationToStationFrom;
+        private System.Windows.Forms.ComboBox cmbStationToStationTo;
+        private System.Windows.Forms.ComboBox cmbStationToStationFrom;
         private System.Windows.Forms.ListView lvStationToStation;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label29;
@@ -3049,7 +3026,7 @@
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label43;
-        private System.Windows.Forms.CheckBox checkboxLightYears;
+        private System.Windows.Forms.CheckBox cbLimitLightYears;
         private System.Windows.Forms.ComboBox cbLightYears;
         private System.Windows.Forms.LinkLabel linkLabel7;
         private System.Windows.Forms.PictureBox pbBackgroundColour;
@@ -3122,8 +3099,6 @@
         private System.Windows.Forms.Label label12;
         private RegulatedNoise.Enums_and_Utility_Classes.dsCommodities dsCommodities;
         private System.Windows.Forms.BindingSource namesBindingSource;
-        private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.CheckBox cbSortingComboboxes;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.CheckBox cbAutoAdd_JumpedTo;
@@ -3136,13 +3111,13 @@
         private System.Windows.Forms.TextBox txtPixelThreshold;
         internal System.Windows.Forms.CheckBox cbCheckAOne;
         private System.Windows.Forms.GroupBox gbSorting;
-        private System.Windows.Forms.Label label50;
-        private System.Windows.Forms.TextBox txtShowLastStationsOnTop;
         private System.Windows.Forms.RadioButton rbSortByStation;
         private System.Windows.Forms.RadioButton rbSortBySystem;
         private System.Windows.Forms.Button bStationDeleteRow;
         private System.Windows.Forms.Button bStationEditRow;
         private System.Windows.Forms.RadioButton rbSortByDistance;
+        private System.Windows.Forms.TextBox txtlastStationCount;
+        private System.Windows.Forms.CheckBox cblastVisitedFirst;
     }
 }
 
