@@ -10,9 +10,24 @@ todo:
    * make visibility and width of columns selectable and save the settings
    * possibility to disable station / consider the station distance
    * sorting for stations : station name, system name, time // optional 4 last on top
+   * single station/time export
    
 ***********************************************************************************
 
+1.84_0.08
+   * Comboboxes hold their selected item if reordering or anything other
+     change the list of the DropDown items
+   * "Edit Row" for commodities is working again
+   * CSV-Import: if there already recordset that is younger than 
+     the recordset to import so the older recordset gets ignored
+   * if there are more than one recordset for a commodity on a station
+     so only the younger one gets considered for route calculations
+   * order of colums for station and system names in dropdown 
+     depends on the order of the dropdown itself 
+   * setting of checkbox "perLightYearRoundTrip" is also saved
+   * repeatedly language switching result not anymore in a crash
+   * a different language than englisch is saved again
+-------------------------------------------------------------------------------------
 1.84_0.07_4 (prerelease)
    * comboboxes (station/system) can be sorted by 
       - station only 
@@ -96,7 +111,7 @@ todo:
 1.82_1.03
    * optimized filter-processing for screenshots before ocr (tested on commandline tesseractOCR)
    * bug while procesing the results from EliteBrainerous removed
-   * "really" empty strings will be ignored
+   * "really" empty strings gets ignored
    * level for Levenshtein algorithm depends on the length of the word
    * base dictionary adapted ffor german
 -------------------------------------------------------------------------------------

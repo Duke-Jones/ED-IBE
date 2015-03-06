@@ -28,7 +28,11 @@ namespace RegulatedNoise
 {
     public partial class Form1 : Form
     {
+        private SplashScreenForm _Splash;
+
         const string ID_DELIMITER = "empty";
+        const int MAX_NAME_LENGTH = 120;
+
         private delegate void delButtonInvoker(Button myButton, bool enable);
         private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
 
@@ -68,11 +72,15 @@ namespace RegulatedNoise
         private Dictionary<string, int> _StationIndices                 = new Dictionary<string,int>();
         private bool _InitDone                                          = false;
         private StationHistory _StationHistory                          = new StationHistory();
+        //bool _cbIncludeWithinRegionOfStation_IndexChanged               = false;
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
         {
             _InitDone = false ;
+
+            _Splash = new SplashScreenForm();
+//            _Splash.Show();
 
             Cursor = Cursors.WaitCursor;
 
@@ -631,12 +639,8 @@ namespace RegulatedNoise
                 ocr.IsMonitoring = true;
             }
 
-            cbAutoUppercase.Checked = RegulatedNoiseSettings.AutoUppercase;
-            if (RegulatedNoiseSettings.TraineddataFile == String.Empty)
-            {
-                RegulatedNoiseSettings.TraineddataFile = "big";
-            }
-            txtTraineddataFile.Text = RegulatedNoiseSettings.TraineddataFile;
+            cbAutoUppercase.Checked                 = RegulatedNoiseSettings.AutoUppercase;
+            txtTraineddataFile.Text                 = RegulatedNoiseSettings.TraineddataFile;
             
             _commandersLogColumnSorter.SortColumn   = RegulatedNoiseSettings.CmdrsLogSortColumn;
             _commandersLogColumnSorter.Order        = RegulatedNoiseSettings.CmdrsLogSortOrder;
@@ -653,6 +657,7 @@ namespace RegulatedNoise
             cbLightYears.Text                       = RegulatedNoiseSettings.lastLightYears.ToString();
             cblastVisitedFirst.Checked              = RegulatedNoiseSettings.lastStationCountActive;
             cbLimitLightYears.Checked               = RegulatedNoiseSettings.limitLightYears;
+            cbPerLightYearRoundTrip.Checked         = RegulatedNoiseSettings.PerLightYearRoundTrip;
 
             switch (RegulatedNoiseSettings.CBSortingSelection)
             {
@@ -1050,6 +1055,7 @@ namespace RegulatedNoise
         private void ImportCsvString(string line, bool suspendDuplicateChecking = false, bool postToEddn = false, bool updateStationVisitations = false)
         {
             var values = line.Split(';');
+            bool ignoreThisRecord = false;
 
             CsvRow currentRow = new CsvRow();
 
@@ -1077,36 +1083,56 @@ namespace RegulatedNoise
                 if (updateStationVisitations)
                     _StationHistory.addVisit(currentRow.StationID);
 
-                if (!StationDirectory.ContainsKey(currentRow.StationID))
-                    StationDirectory.Add(currentRow.StationID, new List<CsvRow>());
-
                 if (!suspendDuplicateChecking)
                 {
-                    var obsoleteData =
-                        StationDirectory[currentRow.StationID].Where(
-                            x =>
-                                x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName &&
-                                x.SampleDate <= currentRow.SampleDate).ToList();
-
-                    foreach (var x in obsoleteData)
+                    
+                    if (StationDirectory.ContainsKey(currentRow.StationID))
                     {
-                        StationDirectory[currentRow.StationID].Remove(x);
-                        CommodityDirectory[currentRow.CommodityName].Remove(x);
+                        var obsoleteData =
+                            StationDirectory[currentRow.StationID].Where(
+                                x =>
+                                    x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName &&
+                                    x.SampleDate <= currentRow.SampleDate).ToList();
+
+                        // is there older data for delete ?
+                        foreach (var x in obsoleteData)
+                        {
+                            StationDirectory[currentRow.StationID].Remove(x);
+                            CommodityDirectory[currentRow.CommodityName].Remove(x);
+                        }
+
+                        // is there already data that is younger than this new record
+                        var selfIsObsolete =
+                            StationDirectory[currentRow.StationID].Where(
+                                x =>
+                                    x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName &&
+                                    x.SampleDate > currentRow.SampleDate).ToList();
+                        if (selfIsObsolete.Count > 0)
+                        { 
+                            ignoreThisRecord = true;  
+                        }
                     }
                 }
 
-                if (suspendDuplicateChecking || StationDirectory[currentRow.StationID].Count(x => x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName && x.SampleDate == currentRow.SampleDate) == 0)
+                if (!ignoreThisRecord) 
                 {
-                    StationDirectory[currentRow.StationID].Add(currentRow);
+                    if (!StationDirectory.ContainsKey(currentRow.StationID))
+                        StationDirectory.Add(currentRow.StationID, new List<CsvRow>());
 
-                    if (!CommodityDirectory.ContainsKey(currentRow.CommodityName))
-                        CommodityDirectory.Add(currentRow.CommodityName, new List<CsvRow>());
 
-                    CommodityDirectory[currentRow.CommodityName].Add(currentRow);
+                    if (suspendDuplicateChecking || StationDirectory[currentRow.StationID].Count(x => x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName && x.SampleDate == currentRow.SampleDate) == 0)
+                    {
+                        StationDirectory[currentRow.StationID].Add(currentRow);
+
+                        if (!CommodityDirectory.ContainsKey(currentRow.CommodityName))
+                            CommodityDirectory.Add(currentRow.CommodityName, new List<CsvRow>());
+
+                        CommodityDirectory[currentRow.CommodityName].Add(currentRow);
+                    }
+
+                    if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
+                        PostJsonToEddn(currentRow);
                 }
-
-                if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-                    PostJsonToEddn(currentRow);
             }
         }
 
@@ -1244,8 +1270,21 @@ namespace RegulatedNoise
 
         private void SetupGui(bool force= false)
         {
+            //_cbIncludeWithinRegionOfStation_IndexChanged = false;
+
             if (!_InitDone && !force)
                 return;
+
+            cmbStation.BeginUpdate();
+            cmbStationToStationFrom.BeginUpdate();
+            cmbStationToStationTo.BeginUpdate();
+            cbCommodity.BeginUpdate();
+
+
+            // notice the current selected items
+            string Key_cmbStation               = getCmbItemKey(cmbStation.SelectedItem);
+            string Key_cmbStationToStationFrom  = getCmbItemKey(cmbStationToStationFrom.SelectedItem);
+            string Key_cmbStationToStationTo    = getCmbItemKey(cmbStationToStationTo.SelectedItem);
 
             BindingList<System.Collections.Generic.KeyValuePair<string,string>> BaseList;
             IFormatter formatter        = new BinaryFormatter();
@@ -1280,7 +1319,7 @@ namespace RegulatedNoise
                 cmbStationToStationTo.ValueMember = "Key";
             }
 
-            cbIncludeWithinRegionOfStation.SelectedIndexChanged -= cbIncludeWithinRegionOfStation_SelectedIndexChanged;
+            cbIncludeWithinRegionOfStation.SelectedIndexChanged -= cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
 
             var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
             cbIncludeWithinRegionOfStation.Items.Clear();
@@ -1295,13 +1334,23 @@ namespace RegulatedNoise
                 cbIncludeWithinRegionOfStation.SelectedItem = previouslySelectedValue;
             else
                 cbIncludeWithinRegionOfStation.SelectedItem = "<Current System>";
-            cbIncludeWithinRegionOfStation.SelectedIndexChanged += cbIncludeWithinRegionOfStation_SelectedIndexChanged;
 
-            //cbStation.SelectedItem = null;
+            cbIncludeWithinRegionOfStation.SelectedIndexChanged += cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
 
-            if (cmbStation.Items.Count > 0)
-                cmbStation.SelectedItem = cmbStation.Items[0];
+            int ListIndex;
 
+            
+
+            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStation, out ListIndex))
+                cmbStation.SelectedIndex = ListIndex;
+
+            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationFrom, out ListIndex))
+                cmbStationToStationFrom.SelectedIndex = ListIndex;
+
+            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationTo, out ListIndex))
+                cmbStationToStationTo.SelectedIndex = ListIndex;
+
+            
             cbCommodity.Items.Clear();
 
             foreach (var commodity in CommodityDirectory.OrderBy(x => x.Key))
@@ -1341,6 +1390,11 @@ namespace RegulatedNoise
             }
 
             Cursor = Cursors.Default;
+
+            cmbStation.EndUpdate();
+            cmbStationToStationFrom.EndUpdate();
+            cmbStationToStationTo.EndUpdate();
+            cbCommodity.EndUpdate();
 
             UpdateStationToStation();
         }
@@ -1393,7 +1447,7 @@ namespace RegulatedNoise
 
             if (rbSortBySystem.Checked)
             {
-                // get the list ordered as wanted -> order by system and then station
+                // get the list ordered as wanted -> order by system
                 SelectionPreordered = SelectionRaw.OrderBy(x => CombinedNameToSystemName(x.Key)).ThenBy(x => CombinedNameToStationName(x.Key)).ToList();
 
                 if (cblastVisitedFirst.Checked)
@@ -1406,7 +1460,12 @@ namespace RegulatedNoise
                 { 
                     int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
                     if (maxLength < tempLength)
+                    { 
+                        if(MAX_NAME_LENGTH < tempLength)
+                            tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
+                    }
+                        
                     LengthInfo2.Add(tempLength);
                 }
 
@@ -1452,9 +1511,13 @@ namespace RegulatedNoise
                 // be aware of the length of each string in the remaining list
                 for (int i = 0; i < SelectionPreordered.Count(); i++)
                 { 
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
+                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].StationName);
                     if (maxLength < tempLength)
+                    { 
+                        if(MAX_NAME_LENGTH < tempLength)
+                            tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
+                    }
                     LengthInfo2.Add(tempLength);
                 }
 
@@ -1466,7 +1529,7 @@ namespace RegulatedNoise
                     for (int i = 0; i < SelectionOrdered.Count(); i++)
                     {
                         Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key,String.Format("{0}{2}     {1}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
+                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key,String.Format("{1}{2}     {0}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
                         StationIndices.Add(SelectionOrdered[i].Key, i);
 
                         last_i = i+1;
@@ -1483,7 +1546,7 @@ namespace RegulatedNoise
                 for (int i = 0; i < SelectionPreordered.Count(); i++)
                 {
                     Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key,String.Format("{0}{2}     {1}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
+                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key,String.Format("{1}{2}     {0}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
                     StationIndices.Add(SelectionPreordered[i].Key, i+last_i);
                 }
             }
@@ -1502,7 +1565,11 @@ namespace RegulatedNoise
                 { 
                     int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
                     if (maxLength < tempLength)
+                    { 
+                        if(MAX_NAME_LENGTH < tempLength)
+                            tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
+                    }
                     LengthInfo2.Add(tempLength);
                 }
 
@@ -1557,13 +1624,25 @@ namespace RegulatedNoise
 
                 if (foundIndex >= 0)
                 {
+                    int tempLength=0;
+
                     // put the found item in the lastvisited list
                     SelectionOrdered.Add(SelectionPreordered[foundIndex]);
 
                     // be aware of the length of each string
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
+                    if (rbSortBySystem.Checked)
+                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
+                    else if(rbSortByStation.Checked)
+                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].StationName);
+                    else if(rbSortByDistance.Checked)
+                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
+                    
                     if (maxLength < tempLength)
+                    { 
+                        if(MAX_NAME_LENGTH < tempLength)
+                            tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
+                    }
                     LengthInfo1.Add(tempLength);
 
                     // remove item from preordered list
@@ -2135,7 +2214,10 @@ namespace RegulatedNoise
 
         private System.String getCmbItemKey(object Item)
         {
-            return ((KeyValuePair<string, string>)Item).Key;
+            if (Item != null)
+                return ((KeyValuePair<string, string>)Item).Key;
+            else
+                return null;
         }
 
         public string GetLvAllCommsItems()
@@ -3337,14 +3419,14 @@ namespace RegulatedNoise
             foreach (var commodity in CommodityDirectory)
             {
                 var from = StationDirectory[stationFrom].Where(x => x.CommodityName == commodity.Key).ToList();
-                var from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).ToList();
+                var from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).OrderByDescending(x => x.SampleDate).ToList();
                 var to = StationDirectory[stationTo].Where(x => x.CommodityName == commodity.Key).ToList();
-                var to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).ToList();
+                var to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).OrderByDescending(x => x.SampleDate).ToList();
 
-                if (from2.Count() == 1 && to2.Count() == 1)
+                if (from2.Count() >= 1 && to2.Count() >= 1)
                 {
-                    var fromRow = from2.Single();
-                    var toRow = to2.Single();
+                    var fromRow = from2[0];
+                    var toRow = to2[0];
 
                     decimal sellPrice = toRow.SellPrice;
                     decimal supply = fromRow.Supply;
@@ -3377,14 +3459,14 @@ namespace RegulatedNoise
 
 
                 @from = StationDirectory[stationTo].Where(x => x.CommodityName == commodity.Key).ToList();
-                from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).ToList();
+                from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).OrderByDescending(x => x.SampleDate).ToList();
                 to = StationDirectory[stationFrom].Where(x => x.CommodityName == commodity.Key).ToList();
-                to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).ToList();
+                to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).OrderByDescending(x => x.SampleDate).ToList();
 
-                if (from2.Count() == 1 && to2.Count() == 1)
+                if (from2.Count() >= 1 && to2.Count() >= 1)
                 {
-                    var fromRow = from2.Single();
-                    var toRow = to2.Single();
+                    var fromRow = from2[0];
+                    var toRow = to2[0];
 
                     decimal sellPrice = toRow.SellPrice;
                     decimal supply = fromRow.Supply;
@@ -3497,7 +3579,7 @@ namespace RegulatedNoise
             SetupGui();
         }
 
-        private void button18_Click_1(object sender, EventArgs e)
+        private void cmdHint_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
                 "If you leave the Commodity Name blank in the UI or webpage, that entire row will be ignored on import (though it will still appear in the CSV). This is really useful when half a row has been OCR'ed and it's all gone horribly wrong :)",
@@ -3817,6 +3899,11 @@ namespace RegulatedNoise
         #region Christmas!
         System.Windows.Forms.Timer _timer;
 
+        private void Form_Shown(object sender, System.EventArgs e)
+        {
+            _Splash.Close();
+        }
+
         private void Form_Load(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.CheckVersion();
@@ -3983,20 +4070,17 @@ namespace RegulatedNoise
 
         private void bStationEditRow_Click(object sender, EventArgs e)
         {
-            var csvrow =
-                StationDirectory[cmbStation.SelectedItem.ToString()].First(
-                    x => x.CommodityName == lbPrices.SelectedItems[0].Text);
+            string ComboboxKey = getCmbItemKey(cmbStation.SelectedItem);
 
-            var csvrow2 =
-                CommodityDirectory[lbPrices.SelectedItems[0].Text].First(
-                    x => x.StationID == cmbStation.SelectedItem.ToString());
+            var csvrow  = StationDirectory[ComboboxKey].First(x => x.CommodityName == lbPrices.SelectedItems[0].Text);
+            var csvrow2 = CommodityDirectory[lbPrices.SelectedItems[0].Text].First(x => x.StationID == ComboboxKey);
             
             var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
             var q = f.ShowDialog();
 
             if (q == DialogResult.OK)
             {
-                StationDirectory[cmbStation.SelectedItem.ToString()].Remove(csvrow);
+                StationDirectory[ComboboxKey].Remove(csvrow);
                 CommodityDirectory[lbPrices.SelectedItems[0].Text].Remove(csvrow2);
                 ImportCsvString(f.RowToEdit.ToString());
                 SetupGui();
@@ -4106,7 +4190,7 @@ namespace RegulatedNoise
                         double creditsDouble;
                         double distance = 1d;
 
-                        if (checkboxPerLightYearRoundTrip.Checked)
+                        if (cbPerLightYearRoundTrip.Checked)
                         {
                             distance = 2 * DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
                             creditsDouble = bestThisTrip / distance;
@@ -4170,8 +4254,7 @@ namespace RegulatedNoise
             SetupGui();
         }
 
-
-        private void cbIncludeWithinRegionOfStation_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbIncludeWithinRegionOfStation_SelectionChangeCommitted(object sender, System.EventArgs e)
         {
             SetupGui();
         }
@@ -4358,7 +4441,6 @@ namespace RegulatedNoise
                     bContinueOcr_Click(sender, new EventArgs());
                 }
             }
-
         }
 
         /// <summary>
@@ -4397,16 +4479,19 @@ namespace RegulatedNoise
 
         private void cmbLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_InitDone)
+            {
+                RegulatedNoiseSettings.Language = (enLanguage)cmbLanguage.SelectedValue;
 
-            RegulatedNoiseSettings.Language = (enLanguage)cmbLanguage.SelectedValue;
+                // prepare language depending list
+                loadCommodities(RegulatedNoiseSettings.Language);
+                loadCommodityLevels(RegulatedNoiseSettings.Language);
 
-            // prepare language depending list
-            loadCommodities(RegulatedNoiseSettings.Language);
-            loadCommodityLevels(RegulatedNoiseSettings.Language);
+                SaveSettings();
 
-            SaveSettings();
-
-            updateEDDNSetting(RegulatedNoiseSettings.Language);
+                updateEDDNSetting(RegulatedNoiseSettings.Language);
+                
+            }
         }
 
         /// <summary>
@@ -4448,7 +4533,8 @@ namespace RegulatedNoise
                 checkboxImportEDDN.Visible = true;
                 checkboxSpoolEddnToFile.Visible = true;
 
-                tabControl1.TabPages.Insert(_EDDNTabPageIndex, _EDDNTabPage);
+                if (!tabControl1.TabPages.ContainsKey("tabEDDN"))
+                    tabControl1.TabPages.Insert(_EDDNTabPageIndex, _EDDNTabPage);
             }
             else
             {
@@ -4463,7 +4549,8 @@ namespace RegulatedNoise
                 checkboxSpoolEddnToFile.Checked = false;
                 checkboxSpoolEddnToFile.Visible = false;
 
-                tabControl1.TabPages.RemoveByKey("tabEDDN");
+                if (tabControl1.TabPages.ContainsKey("tabEDDN"))
+                    tabControl1.TabPages.RemoveByKey("tabEDDN");
             }
         }
 
@@ -4688,6 +4775,11 @@ namespace RegulatedNoise
 
             if (valueOK && cbLimitLightYears.Checked)
                 SetupGui();
+        }
+
+        private void cbPerLightYearRoundTrip_CheckedChanged(object sender, EventArgs e)
+        {
+            cbPerLightYearRoundTrip.Checked         = RegulatedNoiseSettings.PerLightYearRoundTrip;
         }
 
     }

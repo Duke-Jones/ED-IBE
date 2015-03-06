@@ -18,7 +18,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.07m;
+        public readonly decimal VersionDJ = 0.08m;
 #endif
 
         public string ProductsPath = "";
@@ -56,6 +56,7 @@ namespace RegulatedNoise
         public bool limitLightYears                                     = false;
         public int lastLightYears                                       = 25;
         public int CBSortingSelection                                   = 1;
+        public bool PerLightYearRoundTrip                               = false;
 
         public void CheckVersion()
         {
