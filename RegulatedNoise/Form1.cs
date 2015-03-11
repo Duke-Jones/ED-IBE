@@ -92,6 +92,8 @@ namespace RegulatedNoise
 
                 LoadSettings();
 
+                doSpecial();
+
                 _logger.Log("  - settings loaded");
 
                 SetProductPath();
@@ -3950,6 +3952,19 @@ namespace RegulatedNoise
             saveWindowPosition();
         }
 
+        private void doSpecial()
+        {
+            if (RegulatedNoiseSettings.isFirstVersionRun())
+            {
+                // do all the things that must be done for the new versions
+                if ((RegulatedNoiseSettings.Version == 1.84m) && (RegulatedNoiseSettings.VersionDJ == 0.09m))
+                { 
+                    // this value works much better
+                    RegulatedNoiseSettings.EBPixelThreshold = 0.6f;
+                }
+            }
+        }
+
         private void Retheme()
         {
             if (RegulatedNoiseSettings.ForegroundColour == null || RegulatedNoiseSettings.BackgroundColour == null) return;
@@ -4779,7 +4794,7 @@ namespace RegulatedNoise
 
         private void cbPerLightYearRoundTrip_CheckedChanged(object sender, EventArgs e)
         {
-            cbPerLightYearRoundTrip.Checked         = RegulatedNoiseSettings.PerLightYearRoundTrip;
+            RegulatedNoiseSettings.PerLightYearRoundTrip = cbPerLightYearRoundTrip.Checked;
         }
 
     }

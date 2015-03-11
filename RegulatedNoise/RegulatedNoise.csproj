@@ -92,6 +92,7 @@
     <Compile Include="Elite Dangerous Specifics\EdLogWatcher.cs" />
     <Compile Include="Enums and Utility Classes\EddnPublisherVersionStats.cs" />
     <Compile Include="Enums and Utility Classes\PerformanceTimer.cs" />
+    <Compile Include="Enums and Utility Classes\RNGraphics.cs" />
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
@@ -246,6 +247,7 @@
     </Content>
     <Content Include="Brainerous\nn_training.exe.manifest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Brainerous\numpy.core.multiarray.pyd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -538,6 +540,8 @@
     <EmbeddedResource Include="SplashScreenForm.resx">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Brainerous\scipy.linalg._cblas.pyd" />
+    <None Include="Brainerous\scipy.linalg._clapack.pyd" />
     <None Include="Data\commodities.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -682,11 +686,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Brainerous\images\" />
-    <Folder Include="Brainerous\nn_training_images\already_processed\" />
-    <Folder Include="Brainerous\nn_training_images\split_training_images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\EdClasses\EdClasses.csproj">
       <Project>{236a934b-5543-4751-baa2-018dfa825271}</Project>

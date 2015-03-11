@@ -12,6 +12,7 @@ using Tesseract;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
 {
@@ -32,7 +33,7 @@ namespace RegulatedNoise
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         private EBPixeltest PixelTest;
 
-        Bitmap _bTrimmedHeader, _bTrimmed, _bOriginal, _bOriginalClone;
+        Bitmap _bTrimmedHeader, _bTrimmed_4_Tesseract, _bOriginal, _bOriginalClone, _bTrimmed_4_Brainerous;
 
         public Ocr(Form1 callingForm)
         {
@@ -63,6 +64,7 @@ namespace RegulatedNoise
 
             if (_bOriginal != null) _bOriginal.Dispose();
             if (_bOriginalClone != null) _bOriginalClone.Dispose();
+            if (_bTrimmed_4_Brainerous != null) _bTrimmed_4_Brainerous.Dispose();
 
             // Well, we can get the bitmap without locking its file, like this... maybe it will help 
             using (Stream s = File.OpenRead(CurrentScreenshot))
@@ -84,27 +86,26 @@ namespace RegulatedNoise
             }
             _calibrationPoints = _callingForm.UpdateOriginalImage(_bAnotherClone);
 
+            // get the area of the commodity data
             var trim = new Rectangle(_calibrationPoints[2].X, _calibrationPoints[2].Y,
                 _calibrationPoints[10].X - _calibrationPoints[2].X, _calibrationPoints[11].Y - _calibrationPoints[2].Y);
 
-            if (_bTrimmed != null) _bTrimmed.Dispose();
-            _bTrimmed = Crop(_bOriginalClone, trim);
+            // crop image to the commodity area
+            if (_bTrimmed_4_Tesseract != null) _bTrimmed_4_Tesseract.Dispose();
+            _bTrimmed_4_Tesseract = Crop(_bOriginalClone, trim);
 
+
+            // find automatically the textlines in the commodity area 
             var textRowLocations = new List<Tuple<int, int>>();
-
             var nextLine = 0;
-
-            while (nextLine < _bTrimmed.Height - 1)
+            while (nextLine < _bTrimmed_4_Tesseract.Height - 1)
             {
                 int startLine = -1, endLine = -1;
-                for (int i = nextLine; i < _bTrimmed.Height - 1; i++)
+                for (int i = nextLine; i < _bTrimmed_4_Tesseract.Height - 1; i++)
                 {
                     nextLine = i + 1;
-
-
                     bool hasOrangePixel;
-
-                    using (Bitmap singlePixelRow = Crop(_bTrimmed, new Rectangle(0, i, _bTrimmed.Width, 1)))
+                    using (Bitmap singlePixelRow = Crop(_bTrimmed_4_Tesseract, new Rectangle(0, i, _bTrimmed_4_Tesseract.Width, 1)))
                     {
                         hasOrangePixel = HasOrangePixel(singlePixelRow);
                     }
@@ -112,32 +113,33 @@ namespace RegulatedNoise
                     if (endLine == -1 && !hasOrangePixel)
                         startLine = i;
                     else
-                    {
                         if (hasOrangePixel)
                             endLine = i + 1;
                         else
                             break;
-                    }
-
 
                 }
                 if (startLine != -1 && endLine != -1)
                     textRowLocations.Add(new Tuple<int, int>(startLine, endLine));
             }
 
-
-
-
+            // get the area of the header
             trim = new Rectangle(_calibrationPoints[0].X, _calibrationPoints[0].Y,
                 _calibrationPoints[10].X - _calibrationPoints[0].X, _calibrationPoints[1].Y - _calibrationPoints[0].Y);
 
+            // crop image to the header area and preprocess for OCR
             if(_bTrimmedHeader != null) _bTrimmedHeader.Dispose();
+            _bTrimmedHeader = PreprocessScreenshot(Crop(_bOriginalClone, trim),0);
 
-            _bTrimmedHeader = PreprocessScreenshot(Crop(_bOriginalClone, trim));
+            // now process screenshot for OCR and Elitebrainerous 
+            _bTrimmed_4_Brainerous = PreprocessScreenshot(_bTrimmed_4_Tesseract,1);
+            _bTrimmed_4_Tesseract  = PreprocessScreenshot(_bTrimmed_4_Tesseract,0);
 
-            _bTrimmed = PreprocessScreenshot(_bTrimmed);
+            _bTrimmed_4_Brainerous.Save(@"C:\temp\jawada\_bTrimmed_4_Brainerous.png");
+            _bTrimmed_4_Tesseract.Save(@"C:\temp\jawada\_bTrimmed_4_Tesseract.png");
 
-            _callingForm.UpdateTrimmedImage(_bTrimmed, _bTrimmedHeader);
+            // show preprocessed parts on the GUI
+            _callingForm.UpdateTrimmedImage(_bTrimmed_4_Tesseract, _bTrimmedHeader);
 
             int min=100, max=0;
 
@@ -148,40 +150,68 @@ namespace RegulatedNoise
                 MessageBox.Show(
                     "Couldn't find any text row locations to process.  Have you changed the UI somehow?  You might like to investigate the \"I've changed the UI colour\" button on the OCR Calibration tab...");
             }
-
             else
             {
-
+                // check if the last line is complete or cropped -> if it's cropped we delete it
                 var finalRowLocation = textRowLocations[textRowLocations.Count - 1];
 
                 foreach (var x in textRowLocations)
-                {
                     if (x.Item1 != finalRowLocation.Item1)
                     {
-                        if (min > x.Item2 - x.Item1) min = x.Item2 - x.Item1;
-                        if (max < x.Item2 - x.Item1) max = x.Item2 - x.Item1;
+                        if (min > x.Item2 - x.Item1) 
+                            min = x.Item2 - x.Item1;
+
+                        if (max < x.Item2 - x.Item1) 
+                            max = x.Item2 - x.Item1;
                     }
-                }
 
                 if (finalRowLocation.Item2 - finalRowLocation.Item1 < (min - 2))
-                {
                     textRowLocations.RemoveAt(textRowLocations.Count - 1);
-                }
+ 
                 //if(textRowLocations.ElementAt(textRowLocations.Count))
                 //textRowLocations[textRow].
             }
             PerformOcr(textRowLocations);
         }
 
-        public Bitmap PreprocessScreenshot(Bitmap b)
+        public Bitmap PreprocessScreenshot(Bitmap b, int Preset)
         {
 			// tested with default ED gui setting
             // it's much!! better than v1.82 and I think better than v1.84, too
+            switch (Preset)
+            {
+            	case 0:
+                    b = Invert(b);
+                    b = MakeGrayscale(b);
+                    b = MakeBrighter(b, .20f);
+                    b = Contrast(b, 100);
+            		
+            		break;
+	            case 1:
 
-            b = Invert(b);
-            b = MakeGrayscale(b);
-            b = MakeBrighter(b, .20f);
-            b = Contrast(b, 100);
+                    b = RNGraphics.adjustBitmap(b, 0.6f, 1.3f, 1.0f);
+                    b.Save(@"C:\temp\jawada\testimgage.png");
+                
+                    b = RNGraphics.adjustBitmap(b, 1.0f, 1.0f, 1.2f);
+                    b.Save(@"C:\temp\jawada\testimgage.png");
+
+                    b = RNGraphics.makeGrayscaleBitmap(b);
+                    b.Save(@"C:\temp\jawada\testimgage.png");
+
+                    b = RNGraphics.invertBitmap(b);
+                    b.Save(@"C:\temp\jawada\testimgage.png");
+
+                    b= RNGraphics.changeColour(b, Color.White, Color.White, 25);
+                    b.Save(@"C:\temp\jawada\testimgage.png");
+
+                    b= RNGraphics.adjustBitmap(b, 1.0f, 1.0f, 5.0f);
+                    b.Save(@"C:\temp\jawada\testimgage.png");
+
+                    //b= RNGraphics.changeColour(b, Color.Black, Color.Black, 30);
+                    //b.Save(@"C:\temp\jawada\testimgage.png");
+
+                    break;
+            } 
 
             return b;
         }
@@ -225,18 +255,21 @@ namespace RegulatedNoise
                     headerResult = matchesInStationReferenceList[0].ToUpper();
             }
 
+            // show station on GUI
             _callingForm.DisplayResults(headerResult);
             
-            var commodityColumnText = new string[textRowLocations.Count(), 8]; ;
-            var originalBitmaps = new Bitmap[textRowLocations.Count(),8];
-            var originalBitmapConfidences = new float[textRowLocations.Count(), 8];
-            var rowIds = new string[textRowLocations.Count()];
-
-            var rowCtr = 0;
+            var commodityColumnText         = new string[textRowLocations.Count(), 8]; 
+            var originalBitmaps             = new Bitmap[textRowLocations.Count(),8];
+            var originalBitmapConfidences   = new float[textRowLocations.Count(), 8];
+            var rowIds                      = new string[textRowLocations.Count()];
+            var rowCtr                      = 0;
 			
+
+            _bTrimmed_4_Tesseract.Save(@"C:\temp\jawada\Processimage1.png");
 			// don't do more "optimization" - it's the best I think. don't cchange it here again
             //var bTrimmedContrast = Contrast(MakeGrayscale(MakeBrighter((Bitmap)(_bTrimmed.Clone()),.25f)),60);
-            var bTrimmedContrast = (Bitmap)_bTrimmed.Clone();
+            //bTrimmedContrast.Save(@"C:\temp\jawada\Processimage2.png");
+            //var bTrimmedContrast = (Bitmap)_bTrimmed_4_Tesseract.Clone();
 
             var bitmapCtr = 0;
 
@@ -245,12 +278,15 @@ namespace RegulatedNoise
                 int startRow = row.Item1 - 3;
                 int heightRow = row.Item2 - row.Item1 + 6;
 
-                if (startRow < 0) startRow = 0;
-                if (heightRow + startRow > bTrimmedContrast.Height) heightRow = bTrimmedContrast.Height - startRow;
+                if (startRow < 0) 
+                    startRow = 0;
+
+                if (heightRow + startRow > _bTrimmed_4_Tesseract.Height) 
+                    heightRow = _bTrimmed_4_Tesseract.Height - startRow;
 
                 // We'll use this later to identify the right correction image
                 rowIds[rowCtr] = Guid.NewGuid().ToString();
-                using (Bitmap b = Crop(bTrimmedContrast, new Rectangle(0, startRow, bTrimmedContrast.Width, heightRow)))
+                using (Bitmap b = Crop(_bTrimmed_4_Tesseract, new Rectangle(0, startRow, _bTrimmed_4_Tesseract.Width, heightRow)))
                 {
                     b.Save(".//OCR Correction Images//" + rowIds[rowCtr] + ".png");
                 }
@@ -302,7 +338,7 @@ namespace RegulatedNoise
 
                         if (columnCounter == 3)
                         {
-                            var brainerousOut = Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow));
+                            var brainerousOut = Crop(_bTrimmed_4_Brainerous, new Rectangle(left, startRow, width, heightRow));
 
                             // check how much dark pixels are on the bitmap
                             for (int i = 0; i < brainerousOut.Height; i++)
@@ -317,7 +353,7 @@ namespace RegulatedNoise
                     {
                         if (columnCounter != 0 && columnCounter != 5 && columnCounter != 7)
                         {   //If it's a numeric column write it out for Brainerous to process later
-                            var brainerousOut = Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow));
+                            var brainerousOut = Crop(_bTrimmed_4_Brainerous, new Rectangle(left, startRow, width, heightRow));
 
                             if (Form1.RegulatedNoiseSettings.EBPixelAmount > 0)
                             {
@@ -339,13 +375,13 @@ namespace RegulatedNoise
 
                             // Prepare some different versions of the bitmap, we will take the best result
                             var c = new Bitmap[7];
-                            c[0] = (Crop(bTrimmedContrast, new Rectangle(left, startRow, width, heightRow)));
-                            c[1] = (Crop(bTrimmedContrast, new Rectangle(left + 1, startRow, width, heightRow)));
-                            c[2] = (Crop(bTrimmedContrast, new Rectangle(left - 1, startRow, width, heightRow)));
-                            c[3] = (Crop(bTrimmedContrast, new Rectangle(left, startRow - 1, width, heightRow)));
-                            c[4] = (Crop(bTrimmedContrast, new Rectangle(left + 1, startRow - 1, width, heightRow)));
-                            c[5] = (Crop(bTrimmedContrast, new Rectangle(left - 1, startRow - 1, width, heightRow)));
-                            c[6] = (Crop(bTrimmedContrast, new Rectangle(left, startRow + 2, width, heightRow - 2)));
+                            c[0] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left, startRow, width, heightRow)));
+                            c[1] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left + 1, startRow, width, heightRow)));
+                            c[2] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left - 1, startRow, width, heightRow)));
+                            c[3] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left, startRow - 1, width, heightRow)));
+                            c[4] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left + 1, startRow - 1, width, heightRow)));
+                            c[5] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left - 1, startRow - 1, width, heightRow)));
+                            c[6] = (Crop(_bTrimmed_4_Tesseract, new Rectangle(left, startRow + 2, width, heightRow - 2)));
 
                             var t = new string[c.Length];
                             var cf = new float[c.Length];
@@ -493,7 +529,7 @@ namespace RegulatedNoise
 
             // ...and if we've got any buffered screenshots waiting to be processed, process the next one
             if (ScreenshotBuffer.Count > 0)
-            {
+            {               
                 var screenshot = ScreenshotBuffer[0];
                 ScreenshotBuffer.Remove(screenshot);
                 ProcessNewScreenshot(screenshot);
@@ -505,7 +541,7 @@ namespace RegulatedNoise
         }
 
         private string StripPunctuationFromScannedText(string input)
-        {
+        {       
             return _textInfo.ToUpper(input.Replace("\n\n", "").Replace("-", "").Replace(".", "").Replace(",", ""));
         }
 

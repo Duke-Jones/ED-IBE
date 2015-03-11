@@ -2,8 +2,6 @@ todo:
    * suppress "working..." as unknown commodity
    * option "take jumps into account"
    * show distance in lists
-   * optimize speed of ocr
-   * find automatically ED path
    * showing current ED time (GMT +- x hours)
    * Cmdrs Log must using ED-Time
    * optimize column widths of tables
@@ -11,9 +9,19 @@ todo:
    * possibility to disable station / consider the station distance
    * sorting for stations : station name, system name, time // optional 4 last on top
    * single station/time export
-   
+   * possibility to cancel route calculation
+   * plausibility check for commodity prices
+   * english data base with possibility of import (file/ocr) from other languages
 ***********************************************************************************
 
+1.84_0.09_1
+   * fixed: "perLightYearRoundTrip" was not switchable anymore
+   * improved segmenting capability of EliteBrainerous
+   * splittet OCR base picture into 2 differenzt optimized pictures 
+     in cause of different working methods of EliteBrainerous and Tesseract
+   * added the possibility to start one-time-operations for necessary
+     setting changes for new versions
+-------------------------------------------------------------------------------------
 1.84_0.08
    * Comboboxes hold their selected item if reordering or anything other
      change the list of the DropDown items

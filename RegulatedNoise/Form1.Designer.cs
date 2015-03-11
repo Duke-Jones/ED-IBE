@@ -921,7 +921,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(84, 457);
+            this.splitContainer1.Size = new System.Drawing.Size(82, 457);
             this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -948,7 +948,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(79, 208);
+            this.chart1.Size = new System.Drawing.Size(77, 208);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -975,7 +975,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(74, 92);
+            this.chart2.Size = new System.Drawing.Size(72, 90);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2707,7 +2707,7 @@
             this.lblPixelThreshold.Name = "lblPixelThreshold";
             this.lblPixelThreshold.Size = new System.Drawing.Size(160, 13);
             this.lblPixelThreshold.TabIndex = 14;
-            this.lblPixelThreshold.Text = "dark pixel threshold (default=0.2)";
+            this.lblPixelThreshold.Text = "dark pixel threshold (default=0.6)";
             // 
             // txtPixelThreshold
             // 

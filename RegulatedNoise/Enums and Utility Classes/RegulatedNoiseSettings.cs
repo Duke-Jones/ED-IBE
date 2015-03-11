@@ -18,8 +18,9 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.08m;
+        public readonly decimal VersionDJ = 0.09m;
 #endif
+        private int _isFirstRun = -1;
 
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
@@ -47,7 +48,7 @@ namespace RegulatedNoise
         public int CmdrsLogSortColumn                                   = 0;
         public SortOrder CmdrsLogSortOrder                              = SortOrder.Descending;
         public bool AutoEvent_JumpedTo                                  = true;
-        public float EBPixelThreshold                                   = 0.2f;
+        public float EBPixelThreshold                                   = 0.6f;
         public int EBPixelAmount                                        = 12;
         public Rectangle WindowPosition                                 = new Rectangle(-1,-1,-1,-1);
         public FormWindowState WindowState                              = FormWindowState.Normal;
@@ -57,6 +58,8 @@ namespace RegulatedNoise
         public int lastLightYears                                       = 25;
         public int CBSortingSelection                                   = 1;
         public bool PerLightYearRoundTrip                               = false;
+        public decimal lastVersion                                      = 0.00m;
+        public decimal lastVersionDJ                                    = 0.00m;
 
         public void CheckVersion()
         {
@@ -204,6 +207,36 @@ namespace RegulatedNoise
                 return;
             }
 
+        }
+
+        /// <summary>
+        /// checks if this is the first time of this version running
+        /// </summary>
+        /// <returns></returns>
+        public bool isFirstVersionRun()
+        {
+            bool retValue = false;
+
+            if (_isFirstRun == -1)
+            { 
+                if ((lastVersion < Version) || ((lastVersion == Version) && (lastVersionDJ < VersionDJ)))
+                { 
+                    retValue = true;
+                }
+
+                lastVersion     = Version;
+                lastVersionDJ   = VersionDJ;
+
+            }
+            else
+            { 
+                if (_isFirstRun == 0)
+                    retValue = false;
+                else
+                    retValue = true;
+            }
+
+            return retValue;
         }
 
 #endif
