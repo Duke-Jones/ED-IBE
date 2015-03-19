@@ -651,6 +651,7 @@ namespace RegulatedNoise
 
             txtPixelThreshold.Text                  = RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
             txtPixelAmount.Text                     = RegulatedNoiseSettings.EBPixelAmount.ToString();
+            txtGUIColorCutoffLevel.Text             = RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
 
             // perform the sort with the last sort options.
             this.lvCommandersLog.Sort();
@@ -769,6 +770,7 @@ namespace RegulatedNoise
                 setButton(bEditResults, false);
 
                 _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, tbCurrentSystemFromLogs.Text));
+                _ocrThread.IsBackground = false;
                 _ocrThread.Start();
             }
             else
@@ -796,6 +798,7 @@ namespace RegulatedNoise
                     var s = _preOcrBuffer[0];
                     _preOcrBuffer.RemoveAt(0);
                     _ocrThread = new Thread(() => ocr.ScreenshotCreated(s, tbCurrentSystemFromLogs.Text));
+                    _ocrThread.IsBackground = false;
                     _ocrThread.Start();
                     ScreenshotsQueued("(" +
                                       (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) +
@@ -3163,6 +3166,7 @@ namespace RegulatedNoise
         private void button15_Click(object sender, EventArgs e)
         {
             _eddnSubscriberThread = new Thread(() => Eddn.Subscribe(this));
+            _eddnSubscriberThread.IsBackground = true;
             _eddnSubscriberThread.Start();
         }
 
@@ -4633,6 +4637,19 @@ namespace RegulatedNoise
                 txtPixelAmount.Text = RegulatedNoiseSettings.EBPixelAmount.ToString();
         }
 
+        private void txtGUIColorCutoffLevel_LostFocus(object sender, EventArgs e)
+        {
+            int newValue;
+
+            if (int.TryParse(txtGUIColorCutoffLevel.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
+                if (newValue >= 0 && newValue <= 255)
+                    RegulatedNoiseSettings.GUIColorCutoffLevel = newValue;
+                else
+                    txtGUIColorCutoffLevel.Text = RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
+            else
+                txtGUIColorCutoffLevel.Text = RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
+        }
+
         private void loadWindowPosition()
         {
             if (RegulatedNoiseSettings.WindowPosition.Height > -1) 
@@ -4795,6 +4812,66 @@ namespace RegulatedNoise
         private void cbPerLightYearRoundTrip_CheckedChanged(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.PerLightYearRoundTrip = cbPerLightYearRoundTrip.Checked;
+        }
+
+        /// <summary>
+        /// starts the filter test
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdFilter_Click(object sender, EventArgs e)
+        {
+
+            Bitmap _refbmp = getReferenceScreenshot();
+
+            if (_refbmp == null)
+            {
+                return;
+            }
+
+            FilterTest FTest = new FilterTest();
+
+            FTest.CutoffLevel = RegulatedNoiseSettings.GUIColorCutoffLevel;
+            FTest.TestBitmap = _refbmp;
+
+            FTest.ShowDialog(this);
+
+            if (FTest.DialogResult == System.Windows.Forms.DialogResult.OK)
+            { 
+                txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
+                RegulatedNoiseSettings.GUIColorCutoffLevel = FTest.CutoffLevel;
+                SaveSettings();            
+            }
+        }
+
+        private Bitmap getReferenceScreenshot()
+        {
+            var openFile = new OpenFileDialog
+            {
+                DefaultExt = "bmp",
+                Multiselect = true,
+                Filter = "BMP (*.bmp)|*.bmp",
+                InitialDirectory =
+                    Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) +
+                    @"\Frontier Developments\Elite Dangerous",
+                Title = "Open a screenshot for calibration"
+            };
+
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                var bmp = new Bitmap(openFile.FileName);
+
+                if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
+                    bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
+                var wrongres = MessageBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
+                if (wrongres == DialogResult.Yes)
+                {
+                    return getReferenceScreenshot();
+                }
+                
+                return bmp;
+            }
+            return null;
         }
 
     }

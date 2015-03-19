@@ -14,6 +14,12 @@ todo:
    * english data base with possibility of import (file/ocr) from other languages
 ***********************************************************************************
 
+1.84_0.09_2
+   * improved segmenting capability of EliteBrainerous again
+   * splitting for OCR reasons from 1.84_0.09_1 removed again
+   * added a test for checking the color-cutoff value with samples
+   * clean up some code
+-------------------------------------------------------------------------------------
 1.84_0.09_1
    * fixed: "perLightYearRoundTrip" was not switchable anymore
    * improved segmenting capability of EliteBrainerous

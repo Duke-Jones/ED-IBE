@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cmbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -237,6 +237,11 @@
             this.label48 = new System.Windows.Forms.Label();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.cmdFilter = new System.Windows.Forms.Button();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.txtGUIColorCutoffLevel = new System.Windows.Forms.TextBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.cbCheckAOne = new System.Windows.Forms.CheckBox();
             this.lblPixelAmount = new System.Windows.Forms.Label();
@@ -308,6 +313,7 @@
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
@@ -921,7 +927,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(82, 457);
+            this.splitContainer1.Size = new System.Drawing.Size(74, 457);
             this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -941,14 +947,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(77, 208);
+            series5.ChartArea = "ChartArea1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(69, 208);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -968,14 +974,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(72, 90);
+            series6.ChartArea = "ChartArea1";
+            series6.Name = "Series1";
+            this.chart2.Series.Add(series6);
+            this.chart2.Size = new System.Drawing.Size(64, 82);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2585,7 +2591,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox10.Controls.Add(this.label49);
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
-            this.groupBox10.Location = new System.Drawing.Point(357, 9);
+            this.groupBox10.Location = new System.Drawing.Point(715, 9);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(336, 514);
             this.groupBox10.TabIndex = 11;
@@ -2616,9 +2622,9 @@
             // 
             this.groupBox8.Controls.Add(this.label48);
             this.groupBox8.Controls.Add(this.cmbLanguage);
-            this.groupBox8.Location = new System.Drawing.Point(6, 274);
+            this.groupBox8.Location = new System.Drawing.Point(6, 398);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(336, 249);
+            this.groupBox8.Size = new System.Drawing.Size(336, 125);
             this.groupBox8.TabIndex = 10;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Language";
@@ -2645,16 +2651,65 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.groupBox9);
             this.groupBox6.Controls.Add(this.groupBox11);
             this.groupBox6.Controls.Add(this.txtTraineddataFile);
             this.groupBox6.Controls.Add(this.cmdSelectTraineddataFile);
             this.groupBox6.Controls.Add(this.label12);
             this.groupBox6.Location = new System.Drawing.Point(6, 6);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(336, 191);
+            this.groupBox6.Size = new System.Drawing.Size(486, 386);
             this.groupBox6.TabIndex = 9;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "OCR-Settings";
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.cmdFilter);
+            this.groupBox9.Controls.Add(this.label50);
+            this.groupBox9.Controls.Add(this.label51);
+            this.groupBox9.Controls.Add(this.txtGUIColorCutoffLevel);
+            this.groupBox9.Location = new System.Drawing.Point(11, 186);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(456, 170);
+            this.groupBox9.TabIndex = 15;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Brightness Level";
+            // 
+            // cmdFilter
+            // 
+            this.cmdFilter.Location = new System.Drawing.Point(308, 27);
+            this.cmdFilter.Name = "cmdFilter";
+            this.cmdFilter.Size = new System.Drawing.Size(127, 23);
+            this.cmdFilter.TabIndex = 18;
+            this.cmdFilter.Text = "Filter-Test";
+            this.cmdFilter.UseVisualStyleBackColor = true;
+            this.cmdFilter.Click += new System.EventHandler(this.cmdFilter_Click);
+            // 
+            // label50
+            // 
+            this.label50.Location = new System.Drawing.Point(46, 65);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(358, 91);
+            this.label50.TabIndex = 15;
+            this.label50.Text = resources.GetString("label50.Text");
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(18, 30);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(215, 13);
+            this.label51.TabIndex = 14;
+            this.label51.Text = "UI Color Cutoff Level (0 to 255, default=150)";
+            // 
+            // txtGUIColorCutoffLevel
+            // 
+            this.txtGUIColorCutoffLevel.Location = new System.Drawing.Point(239, 27);
+            this.txtGUIColorCutoffLevel.Name = "txtGUIColorCutoffLevel";
+            this.txtGUIColorCutoffLevel.Size = new System.Drawing.Size(37, 20);
+            this.txtGUIColorCutoffLevel.TabIndex = 13;
+            this.txtGUIColorCutoffLevel.LostFocus += new System.EventHandler(this.txtGUIColorCutoffLevel_LostFocus);
             // 
             // groupBox11
             // 
@@ -2665,7 +2720,7 @@
             this.groupBox11.Controls.Add(this.txtPixelThreshold);
             this.groupBox11.Location = new System.Drawing.Point(11, 63);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(314, 117);
+            this.groupBox11.Size = new System.Drawing.Size(456, 117);
             this.groupBox11.TabIndex = 14;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "performance improvement";
@@ -2892,6 +2947,8 @@
             this.groupBox8.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
@@ -3123,6 +3180,11 @@
         private System.Windows.Forms.RadioButton rbSortByDistance;
         private System.Windows.Forms.TextBox txtlastStationCount;
         private System.Windows.Forms.CheckBox cblastVisitedFirst;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.TextBox txtGUIColorCutoffLevel;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Button cmdFilter;
     }
 }
 

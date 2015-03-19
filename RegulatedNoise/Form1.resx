@@ -1703,8 +1703,16 @@ v0.8:
 
 </value>
   </data>
+  <data name="label50.Text" xml:space="preserve">
+    <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
+
+*) see the graphics in "Filter-Test"</value>
+  </data>
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>460, 17</value>
   </metadata>
   <metadata name="dsCommodities.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>157, 17</value>

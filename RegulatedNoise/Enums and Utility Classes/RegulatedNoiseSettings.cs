@@ -60,6 +60,7 @@ namespace RegulatedNoise
         public bool PerLightYearRoundTrip                               = false;
         public decimal lastVersion                                      = 0.00m;
         public decimal lastVersionDJ                                    = 0.00m;
+        public int GUIColorCutoffLevel                                  = 150;
 
         public void CheckVersion()
         {
@@ -241,6 +242,16 @@ namespace RegulatedNoise
 
 #endif
 
+        /// <summary>
+        /// returns the UI color as color object
+        /// </summary>
+        /// <returns></returns>
+        internal Color getUiColor()
+        {
+            return Color.FromArgb(int.Parse(UiColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber), 
+                                  int.Parse(UiColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
+                                  int.Parse(UiColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+        }
     }
 
     public partial class Form1

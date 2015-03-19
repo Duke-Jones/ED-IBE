@@ -400,6 +400,11 @@
     <ger>Resonanzbegrenzer</ger>
     <fra>Séparateurs à Résonance</fra>
   </Names>
+  <Names>
+    <eng>Painite</eng>
+    <ger>Painit</ger>
+    <fra>Painite</fra>
+  </Names>
   <Levels>
     <ID>0</ID>
     <eng>low</eng>

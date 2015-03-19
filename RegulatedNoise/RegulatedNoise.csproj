@@ -28,9 +28,10 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DukeJones</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -154,6 +155,12 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\ListViewItemComparer.cs" />
     <Compile Include="Ocr.cs" />
+    <Compile Include="Ocr\Calibration\FilterTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ocr\Calibration\FilterTest.Designer.cs">
+      <DependentUpon>FilterTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ocr\Calibration\OcrCalibrator.cs" />
     <Compile Include="Ocr\Calibration\OcrCalibratorTab.cs">
       <SubType>UserControl</SubType>
@@ -199,6 +206,9 @@
     <EmbeddedResource Include="Brainerous Pixeltest\Picturedata.resx">
       <DependentUpon>Picturedata.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Ocr\Calibration\FilterTest.resx">
+      <DependentUpon>FilterTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Ocr\Calibration\OcrCalibratorTab.resx">
       <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
     </EmbeddedResource>
@@ -210,6 +220,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Enums and Utility Classes\Enums.cs" />
     <Content Include="Brainerous\bz2.pyd">
@@ -673,6 +684,11 @@
     <Content Include="Json\Bin\Net45\Newtonsoft.Json.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\SampleTooHigh.png" />
+    <None Include="Resources\SampleTooLow.bmp" />
+    <None Include="Resources\SampleTooLow.png" />
+    <None Include="Resources\SampleTooHigh1.png" />
+    <None Include="Resources\SampleTooLow1.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
