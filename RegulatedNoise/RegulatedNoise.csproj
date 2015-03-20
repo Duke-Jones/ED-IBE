@@ -75,10 +75,11 @@
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
     <Compile Include="EDDB_Data\EDCommodities.cs" />
-    <Compile Include="EDDB_Data\CommoditiesJsonTypes\EDCategory.cs" />
+    <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDStations.cs" />
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
+    <Compile Include="EDDB_Data\Listing.cs" />
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>

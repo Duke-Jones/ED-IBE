@@ -3965,6 +3965,7 @@ namespace RegulatedNoise
                 { 
                     // this value works much better
                     RegulatedNoiseSettings.EBPixelThreshold = 0.6f;
+                    RegulatedNoiseSettings.EBPixelAmount    = 22;
                 }
             }
         }

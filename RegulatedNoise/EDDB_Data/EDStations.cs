@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
 
 namespace RegulatedNoise.EDDB_Data
 {
@@ -21,8 +22,9 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("system_id")]
         public int SystemId { get; set; }
 
+        string m_MaxLandingPadSize;
         [JsonProperty("max_landing_pad_size")]
-        public int? MaxLandingPadSize { get; set; }
+        public string MaxLandingPadSize { get{return m_MaxLandingPadSize;} set{m_MaxLandingPadSize = value; if(m_MaxLandingPadSize == null) m_MaxLandingPadSize = string.Empty;} }
 
         [JsonProperty("distance_to_star")]
         public int? DistanceToStar { get; set; }
@@ -90,6 +92,13 @@ namespace RegulatedNoise.EDDB_Data
         private string[] m_Economies;
         [JsonProperty("economies")]
         public string[] Economies { get{return m_Economies;} set{m_Economies = value; if(m_Economies == null) m_Economies = new string[0];} }
+
+        [JsonProperty("updated_at")]
+        public int UpdatedAt { get; set; }
+
+        private Listing[] m_Listings;
+        [JsonProperty("listings")]
+        public Listing[] Listings { get{return m_Listings;} set{m_Listings = value; if(m_Listings == null) m_Listings = new Listing[0];} }
 
          /// <summary>
          /// creates a new station 

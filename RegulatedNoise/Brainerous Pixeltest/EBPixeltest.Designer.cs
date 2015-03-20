@@ -42,13 +42,13 @@
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 69);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(702, 399);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(727, 415);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(639, 474);
+            this.btnOK.Location = new System.Drawing.Point(664, 490);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 1;
@@ -67,12 +67,13 @@
             this.label1.Size = new System.Drawing.Size(593, 48);
             this.label1.TabIndex = 2;
             this.label1.Text = resources.GetString("label1.Text");
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // EBPixeltest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(726, 509);
+            this.ClientSize = new System.Drawing.Size(751, 525);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.flowLayoutPanel1);

@@ -55,6 +55,13 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("primary_economy")]
         public string PrimaryEconomy { get{return m_PrimaryEconomy;} set{m_PrimaryEconomy = value; if(m_PrimaryEconomy == null) m_PrimaryEconomy = string.Empty;} }
 
+        private int? m_NeedsPermit;
+        [JsonProperty("needs_permit")]
+        public int? NeedsPermit { get{return m_NeedsPermit;} set{m_NeedsPermit = value; if(m_NeedsPermit == null) m_NeedsPermit = -1;} }
+
+        [JsonProperty("updated_at")]
+        public int UpdatedAt { get; set; }
+
         /// <summary>
          /// creates a new system
         /// </summary>

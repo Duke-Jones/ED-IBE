@@ -49,7 +49,7 @@ namespace RegulatedNoise
         public SortOrder CmdrsLogSortOrder                              = SortOrder.Descending;
         public bool AutoEvent_JumpedTo                                  = true;
         public float EBPixelThreshold                                   = 0.6f;
-        public int EBPixelAmount                                        = 12;
+        public int EBPixelAmount                                        = 22;
         public Rectangle WindowPosition                                 = new Rectangle(-1,-1,-1,-1);
         public FormWindowState WindowState                              = FormWindowState.Normal;
         public int lastStationCount                                     = 4;
