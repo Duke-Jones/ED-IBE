@@ -141,10 +141,6 @@ namespace RegulatedNoise
             // now process screenshot for OCR and Elitebrainerous 
             _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Form1.RegulatedNoiseSettings.GUIColorCutoffLevel);
 
-            _bTrimmedHeader.Save(@"C:\temp\jawada\_bTrimmedHeader.png");
-            _bTrimmed_4_View.Save(@"C:\temp\jawada\_bTrimmed_4_View.png");
-            _bTrimmed_4_OCR.Save(@"C:\temp\jawada\_bTrimmed_4_OCR.png");
-
             // show preprocessed parts on the GUI
             _callingForm.UpdateTrimmedImage(_bTrimmed_4_OCR, _bTrimmedHeader);
 
@@ -178,6 +174,8 @@ namespace RegulatedNoise
                 //if(textRowLocations.ElementAt(textRowLocations.Count))
                 //textRowLocations[textRow].
             }
+
+            Debug.Print("process screenshot " + screenshot);
             PerformOcr(textRowLocations);
         }
 
@@ -231,13 +229,6 @@ namespace RegulatedNoise
             var rowIds                      = new string[textRowLocations.Count()];
             var rowCtr                      = 0;
 			
-
-            _bTrimmed_4_OCR.Save(@"C:\temp\jawada\Processimage1.png");
-			// don't do more "optimization" - it's the best I think. don't cchange it here again
-            //var bTrimmedContrast = Contrast(MakeGrayscale(MakeBrighter((Bitmap)(_bTrimmed.Clone()),.25f)),60);
-            //bTrimmedContrast.Save(@"C:\temp\jawada\Processimage2.png");
-            //var bTrimmedContrast = (Bitmap)_bTrimmed_4_Tesseract.Clone();
-
             var bitmapCtr = 0;
 
             foreach (var row in textRowLocations)

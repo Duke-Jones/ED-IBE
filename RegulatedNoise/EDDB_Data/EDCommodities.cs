@@ -10,7 +10,7 @@ using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
 namespace RegulatedNoise.EDDB_Data
 {
 
-    internal class EDCommodities
+    public class EDCommodities
     {
 
         [JsonProperty("id")]
@@ -27,6 +27,128 @@ namespace RegulatedNoise.EDDB_Data
 
         [JsonProperty("category")]
         public EDCategory Category { get; set; }
+
     }
+
+    public class EDCommoditiesWarningLevels
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("pricewarninglevel_demand_low")]
+        public int PriceWarningLevel_Demand_Low { get; set; }
+
+        [JsonProperty("pricewarninglevel_demand_high")]
+        public int PriceWarningLevel_Demand_High { get; set; }
+
+        [JsonProperty("pricewarninglevel_supply_low")]
+        public int PriceWarningLevel_Supply_Low { get; set; }
+        
+        [JsonProperty("pricewarninglevel_supply_high")]
+        public int PriceWarningLevel_Supply_High { get; set; }
+    }
+
+    public class EDCommoditiesExt
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int CategoryId { get; set; }
+        public int? AveragePrice { get; set; }
+        public EDCategory Category { get; set; }
+        public int PriceWarningLevel_Demand_Low { get; set; }
+        public int PriceWarningLevel_Demand_High { get; set; }
+        public int PriceWarningLevel_Supply_Low { get; set; }
+        public int PriceWarningLevel_Supply_High { get; set; }
+
+        public EDCommoditiesExt(EDCommodities Commodity, EDCommoditiesWarningLevels WarnLevel)
+        {
+
+            Id                              = Commodity.Id;
+            Name                            = Commodity.Name;
+            CategoryId                      = Commodity.CategoryId;
+            AveragePrice                    = Commodity.AveragePrice;
+            Category                        = Commodity.Category;
+
+            if (WarnLevel != null)
+            { 
+                PriceWarningLevel_Demand_Low    = WarnLevel.PriceWarningLevel_Demand_Low;
+                PriceWarningLevel_Demand_High   = WarnLevel.PriceWarningLevel_Demand_High;
+                PriceWarningLevel_Supply_Low    = WarnLevel.PriceWarningLevel_Supply_Low;
+                PriceWarningLevel_Supply_High   = WarnLevel.PriceWarningLevel_Supply_High;
+            }
+            else
+            {
+                PriceWarningLevel_Demand_Low    = -1;
+                PriceWarningLevel_Demand_High   = -1;
+                PriceWarningLevel_Supply_Low    = -1;
+                PriceWarningLevel_Supply_High   = -1;
+            }
+
+        }
+
+        public void clear()
+        { 
+            Id                              = -1;
+            Name                            = String.Empty;
+            CategoryId                      = -1;
+            AveragePrice                    = -1;
+            Category                        = null;
+            PriceWarningLevel_Demand_Low    = -1;
+            PriceWarningLevel_Demand_High   = -1;
+            PriceWarningLevel_Supply_Low    = -1;
+            PriceWarningLevel_Supply_High   = -1;
+        }
+
+        public static List<EDCommoditiesExt> mergeCommodityData(List<EDCommodities> Commodities, List<EDCommoditiesWarningLevels> WarningLevels)
+        {
+            List<EDCommoditiesExt> mergedData;
+            EDCommoditiesWarningLevels WarnLevel;
+
+            mergedData = new List<EDCommoditiesExt>();
+
+            foreach (EDCommodities Commodity in Commodities)
+            {
+                WarnLevel = WarningLevels.Find(x => x.Id == Commodity.Id);
+                mergedData.Add(new EDCommoditiesExt(Commodity, WarnLevel));
+            }
+
+            return mergedData;
+        }
+
+        /// <summary>
+        /// seperates the included warning levels as list of own objects
+        /// </summary>
+        /// <param name="mergedData">list seperated to</param>
+        /// <returns></returns>
+        public static List<EDCommoditiesWarningLevels> extractWarningLevels(List<EDCommoditiesExt> mergedData)
+        { 
+            List<EDCommoditiesWarningLevels> WarningLevels = new List<EDCommoditiesWarningLevels>();
+
+            foreach (EDCommoditiesExt CommodityExt in mergedData)
+            {
+                WarningLevels.Add(CommodityExt.getWarningLevels());
+            }
+
+            return WarningLevels;
+        }
+
+        /// <summary>
+        /// seperates the included warning levels as own object
+        /// </summary>
+        /// <returns></returns>
+        private EDCommoditiesWarningLevels getWarningLevels()
+        {
+            return new EDCommoditiesWarningLevels { Id                              = this.Id, 
+                                                    Name                            = this.Name, 
+                                                    PriceWarningLevel_Demand_Low    = this.PriceWarningLevel_Demand_Low, 
+                                                    PriceWarningLevel_Demand_High   = this.PriceWarningLevel_Demand_High, 
+                                                    PriceWarningLevel_Supply_Low    = this.PriceWarningLevel_Supply_Low, 
+                                                    PriceWarningLevel_Supply_High   = this.PriceWarningLevel_Supply_High};
+        }
+    }
+
 
 }

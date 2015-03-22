@@ -267,17 +267,12 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             switch (Preset)
             {
             	case 0:
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     b = Invert(b);
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     b = MakeGrayscale(b);
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     b = MakeBrighter(b, .20f);
-                    b.Save(@"C:\temp\jawada\testimage.png");
 
                     //b= RNGraphics.adjustBitmap(b, 1.0f, 5.0f, 1.0f);
                     b = Contrast(b, 100);
-                    b.Save(@"C:\temp\jawada\testimage.png");
             		
             		break;
 	            case 1:
@@ -287,19 +282,15 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
                     b = (Bitmap)reserve.Clone();
 
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     // set all dark colors to black
                     b = RNGraphics.changeColour(b, Color.Black, Color.Black, GUIColorCutoffLevel , RNGraphics.enPixelCompare.pc_RGB_all);
 
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     // set all GUI colors to white
                     b = RNGraphics.changeColour(b, UIColor, Color.White, 250, RNGraphics.enPixelCompare.pc_Brightness);
 
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     // invert the bitmap
                     b = RNGraphics.invertBitmap(b);
 
-                    b.Save(@"C:\temp\jawada\testimage.png");
                     break;
             } 
 
@@ -536,8 +527,6 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
                                         sourceBitmap.Width, sourceBitmap.Height),
                                         ImageLockMode.ReadOnly, sourceBitmap.PixelFormat);
-
-            sourceBitmap.Save(@"C:\temp\jawada\testimage.png");
 
             byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
 

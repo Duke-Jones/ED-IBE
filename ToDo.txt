@@ -10,10 +10,16 @@ todo:
    * sorting for stations : station name, system name, time // optional 4 last on top
    * single station/time export
    * possibility to cancel route calculation
-   * plausibility check for commodity prices
    * english data base with possibility of import (file/ocr) from other languages
+
+
+   * plausibility check for commodity prices
 ***********************************************************************************
 
+1.84_0.10_1
+   * compiled nn_traing.exe with option "noconsole" 
+   * added classes for calculating plausibility limits for the prices
+-------------------------------------------------------------------------------------
 1.84_0.09
    * added up-to-date data files from EDDB (v3) and expand internal structure 
    * changed default "dark pixel amount" to 22

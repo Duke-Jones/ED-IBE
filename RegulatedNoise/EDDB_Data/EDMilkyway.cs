@@ -9,17 +9,18 @@ using System.Diagnostics;
 namespace RegulatedNoise.EDDB_Data
 {
     
-    internal class EDMilkyway
+    public class EDMilkyway
     {
-        internal enum enDataType
+        public enum enDataType
         {
             Data_EDDB, 
             Data_Own,
             Data_Merged
         }
 
-        private List<EDSystem>[]       m_Systems;              
-        private List<EDStation>[]      m_Stations;
+        private List<EDSystem>[]        m_Systems;              
+        private List<EDStation>[]       m_Stations;
+        private List<EDCommoditiesExt>  m_Commodities;
 
         private bool m_changedSystems = false;
         private bool m_changedStations = false;
@@ -34,8 +35,9 @@ namespace RegulatedNoise.EDDB_Data
         {
             int enumBound = Enum.GetNames(typeof(enDataType)).Length;
 
-            m_Systems   = new List<EDSystem>[enumBound];
-            m_Stations  = new List<EDStation>[enumBound];
+            m_Systems       = new List<EDSystem>[enumBound];
+            m_Stations      = new List<EDStation>[enumBound];
+            m_Commodities   = new List<EDCommoditiesExt>();
         }
 
         /// <summary>
@@ -52,6 +54,14 @@ namespace RegulatedNoise.EDDB_Data
         public List<EDStation> getStations(enDataType Stationtype)
         { 
             return m_Stations[(int)Stationtype];
+        }
+
+        /// <summary>
+        /// returns all commodities
+        /// </summary>
+        public List<EDCommoditiesExt> getCommodities()
+        { 
+            return m_Commodities;
         }
 
         /// <summary>
@@ -318,7 +328,7 @@ namespace RegulatedNoise.EDDB_Data
         }
 
         /// <summary>
-        /// get all stationnames for a system
+        /// get all for stationnames a system
         /// </summary>
         /// <param name="Systemname"></param>
         /// <returns></returns>
@@ -342,7 +352,7 @@ namespace RegulatedNoise.EDDB_Data
         /// </summary>
         /// <param name="Systemname"></param>
         /// <returns></returns>
-        internal List<EDStation> getStations(string Systemname)
+        public List<EDStation> getStations(string Systemname)
         {
             return getStations(Systemname, enDataType.Data_Merged);
         }
@@ -352,7 +362,7 @@ namespace RegulatedNoise.EDDB_Data
         /// </summary>
         /// <param name="Systemname"></param>
         /// <returns></returns>
-        internal List<EDStation> getStations(string Systemname, enDataType wantedType)
+        public List<EDStation> getStations(string Systemname, enDataType wantedType)
         {
             List<EDStation> retValue;
 
@@ -445,6 +455,191 @@ namespace RegulatedNoise.EDDB_Data
             {
                 return m_changedStations;
             }
+        }
+
+        public class MarketData
+        { 
+            public MarketData()
+            {
+                Id = -1;
+                BuyPrices_Demand    = new List<int>();
+                BuyPrices_Supply    = new List<int>();
+                SellPrices_Demand   = new List<int>();
+                SellPrices_Supply   = new List<int>();
+            }
+
+
+            public int Id;
+            public List<int> BuyPrices_Demand;
+            public List<int> BuyPrices_Supply;
+            public List<int> SellPrices_Demand;
+            public List<int> SellPrices_Supply;
+        }
+
+        /// <summary>
+        /// calculates the min, max and average market price for supply and demand of each commodity
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<int, MarketData> calculateAveragePrices()
+        {
+            MarketData CommodityData;
+            Dictionary<int, MarketData> collectedData = new Dictionary<int, MarketData>();
+
+            foreach (EDStation Station in m_Stations[(int)(enDataType.Data_Merged)])
+            {
+                foreach (Listing StationCommodity in Station.Listings)
+                {
+                    if (!collectedData.TryGetValue(StationCommodity.CommodityId, out CommodityData))
+                    {
+                        // add a new Marketdata-Object
+                        CommodityData = new MarketData();
+                        CommodityData.Id        = StationCommodity.CommodityId;
+                        collectedData.Add(CommodityData.Id, CommodityData);
+
+                    }
+
+                    if (StationCommodity.Demand != 0)
+                    { 
+                        if (StationCommodity.BuyPrice != null && StationCommodity.BuyPrice > 0)
+                            CommodityData.BuyPrices_Demand.Add(StationCommodity.BuyPrice);
+
+                        if (StationCommodity.SellPrice != null && StationCommodity.SellPrice > 0)
+                            CommodityData.SellPrices_Demand.Add(StationCommodity.SellPrice);
+                        
+                    }
+
+                    if (StationCommodity.Supply != 0)
+                    { 
+                        if (StationCommodity.BuyPrice != null && StationCommodity.BuyPrice > 0)
+                            CommodityData.BuyPrices_Supply.Add(StationCommodity.BuyPrice);
+
+                        if (StationCommodity.BuyPrice != null && StationCommodity.SellPrice > 0)
+                            CommodityData.SellPrices_Supply.Add(StationCommodity.SellPrice);
+                        
+                    }
+                }        
+            }
+
+            return collectedData;
+        }
+
+        /// <summary>
+        /// calculating the market prices and save them as min and max values for new OCR_ed data,
+        /// if "FileName" is not nothing the new data will is saves in this file
+        /// 
+        /// </summary>
+        /// <param name="FileName">name of the file to save to</param>
+        public void calculateNewPriceLimits(string FileName = "")
+        {
+            Dictionary<int, MarketData> collectedData = calculateAveragePrices();
+
+            foreach (MarketData Commodity in collectedData.Values)
+            {
+                EDCommoditiesExt CommodityBasedata = m_Commodities.Find(x => x.Id == Commodity.Id);
+
+                if (CommodityBasedata != null)
+                {
+                    if (Commodity.BuyPrices_Demand.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Demand_Low = Commodity.BuyPrices_Demand.Min();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Demand_Low = -1;
+
+                    if (Commodity.BuyPrices_Demand.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Demand_High = Commodity.BuyPrices_Demand.Max();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Demand_High = -1;
+
+                    if (Commodity.BuyPrices_Supply.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Supply_Low = Commodity.BuyPrices_Supply.Min();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Supply_Low = -1;
+
+                    if (Commodity.BuyPrices_Supply.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Supply_High = Commodity.BuyPrices_Supply.Max();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Supply_High = -1;
+                }
+                else
+                {
+                    Debug.Print("STOP");
+                }
+
+                //if (CommodityBasedata.Name == "Palladium")
+                //    Debug.Print("STOP, doppelt belegt  " + CommodityBasedata.Name);
+                //    Debug.Print("STOP");
+
+                //Debug.Print("");
+                //Debug.Print("");
+                //Debug.Print(CommodityBasedata.Name + " :");
+                //Debug.Print("Demand Buy Min \t\t" + Commodity.BuyPrices_Demand.Min().ToString("F0"));
+                //Debug.Print("Demand Buy Average\t" + Commodity.BuyPrices_Demand.Average().ToString("F0") + " (" + Commodity.BuyPrices_Demand.Count() + " values)");
+                //Debug.Print("Demand Buy Max\t\t" + Commodity.BuyPrices_Demand.Max().ToString("F0"));
+                //Debug.Print("");
+                //Debug.Print("Demand Sell Min\t\t" + Commodity.SellPrices_Demand.Min().ToString("F0"));
+                //Debug.Print("Demand Sell Average\t" + Commodity.SellPrices_Demand.Average().ToString("F0") + " (" + Commodity.SellPrices_Demand.Count() + " values)");
+                //Debug.Print("Demand Sell Max\t\t" + Commodity.SellPrices_Demand.Max().ToString("F0"));
+                //Debug.Print("");
+                //Debug.Print("Supply Buy Min\t\t" + Commodity.BuyPrices_Supply.Min().ToString("F0"));
+                //Debug.Print("Supply Buy Average\t" + Commodity.BuyPrices_Supply.Average().ToString("F0") + " (" + Commodity.BuyPrices_Supply.Count() + " values)");
+                //Debug.Print("Supply Buy Max\t\t" + Commodity.BuyPrices_Supply.Max().ToString("F0"));
+                //Debug.Print("");
+                //Debug.Print("Supply Sell Min\t\t" + Commodity.SellPrices_Supply.Min().ToString("F0"));
+                //Debug.Print("Supply Sell Average\t" + Commodity.SellPrices_Supply.Average().ToString("F0") + " (" + Commodity.SellPrices_Supply.Count() + " values)");
+                //Debug.Print("Supply Sell Max\t\t" + Commodity.SellPrices_Supply.Max().ToString("F0"));
+            }
+
+            if (!String.IsNullOrEmpty(FileName))
+                saveRNCommodityData(FileName, true);
+        }        
+        /// <summary>
+        /// loads the commodity data from the files
+        /// </summary>
+        /// <param name="EDDBCommodityDatafile"></param>
+        /// <param name="RNCommodityDatafile"></param>
+        /// <param name="createNonExistingFile"></param>
+       internal void loadCommodityData(string EDDBCommodityDatafile, string RNCommodityDatafile, bool createNonExistingFile)
+       {
+           bool notExisting = false;
+           List<EDCommoditiesWarningLevels> RNCommodities;
+           List<EDCommodities> EDDBCommodities = JsonConvert.DeserializeObject<List<EDCommodities>>(File.ReadAllText(EDDBCommodityDatafile));
+           
+
+            if (File.Exists(RNCommodityDatafile))
+                RNCommodities   = JsonConvert.DeserializeObject<List<EDCommoditiesWarningLevels>>(File.ReadAllText(RNCommodityDatafile));
+            else
+            {
+                notExisting = true;
+                RNCommodities   = new List<EDCommoditiesWarningLevels>();
+            }
+
+            m_Commodities = EDCommoditiesExt.mergeCommodityData(EDDBCommodities, RNCommodities);
+
+            if (notExisting)            
+                calculateNewPriceLimits();
+
+            saveRNCommodityData(RNCommodityDatafile, true);
+        }
+
+        /// <summary>
+        /// saves the RN-specific commodity data to a file
+        /// </summary>
+        /// <param name="File">json-file to save</param>
+        /// <param name="Stationtype"></param>
+        private void saveRNCommodityData(string Filename, bool BackupOldFile)
+        {
+            List<EDCommoditiesWarningLevels> WarningLevels = EDCommoditiesExt.extractWarningLevels(m_Commodities);
+
+            string newFile, backupFile;
+
+
+            newFile = String.Format("{0}_new{1}", Path.Combine(Path.GetDirectoryName(Filename), Path.GetFileNameWithoutExtension(Filename)), Path.GetExtension(Filename));
+            backupFile = String.Format("{0}_bak{1}", Path.Combine(Path.GetDirectoryName(Filename), Path.GetFileNameWithoutExtension(Filename)), Path.GetExtension(Filename));
+
+            File.WriteAllText(newFile, JsonConvert.SerializeObject(WarningLevels));
+            
+            // we delete the current file not until the new file is written without errors
+
+            rotateSaveFiles(Filename, newFile, backupFile, BackupOldFile);
         }
     }
 }

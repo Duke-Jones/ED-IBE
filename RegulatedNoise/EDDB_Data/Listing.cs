@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace RegulatedNoise.EDDB_Data
 {
 
-    internal class Listing
+    public class Listing
     {
 
         [JsonProperty("id")]

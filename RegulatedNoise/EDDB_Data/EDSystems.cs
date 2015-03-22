@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace RegulatedNoise.EDDB_Data
 {
 
-    internal class EDSystem
+    public class EDSystem
     {
 
         [JsonProperty("id")]
@@ -112,7 +112,7 @@ namespace RegulatedNoise.EDDB_Data
         /// copy the values from another system exept for the ID
         /// </summary>
         /// <param name="ValueStation"></param>
-        internal void getValues(EDSystem ownSystem)
+        public void getValues(EDSystem ownSystem)
         {
             Name            = ownSystem.Name;
             X               = ownSystem.X;

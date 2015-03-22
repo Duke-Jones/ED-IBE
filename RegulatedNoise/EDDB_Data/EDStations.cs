@@ -10,7 +10,7 @@ using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
 namespace RegulatedNoise.EDDB_Data
 {
 
-    internal class EDStation
+    public class EDStation
     {
 
         [JsonProperty("id")]
@@ -204,7 +204,7 @@ namespace RegulatedNoise.EDDB_Data
         /// copy the values from another station exept for the ID
         /// </summary>
         /// <param name="ValueStation"></param>
-        internal void getValues(EDStation ValueStation)
+        public void getValues(EDStation ValueStation)
         {
             Name                  = ValueStation.Name;
             MaxLandingPadSize     = ValueStation.MaxLandingPadSize;

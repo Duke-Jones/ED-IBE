@@ -313,6 +313,12 @@ namespace RegulatedNoise
                     myMilkyway.saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
                     myMilkyway.saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
                 }    
+
+                myMilkyway.loadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true);
+
+                myMilkyway.calculateAveragePrices();
+
+
             }
             catch (Exception ex)
             {
@@ -920,7 +926,7 @@ namespace RegulatedNoise
             SaveCommodityData();
         }
 
-        internal void setButton(Button myButton, bool enable)
+        public void setButton(Button myButton, bool enable)
         {
             if (myButton.InvokeRequired)
                 myButton.Invoke(new delButtonInvoker(setButton), myButton, enable);
@@ -928,7 +934,7 @@ namespace RegulatedNoise
                 myButton.Enabled = enable;
         }
 
-        internal void setCheckbox(CheckBox myCheckbox, bool setChecked)
+        public void setCheckbox(CheckBox myCheckbox, bool setChecked)
         {
             if (myCheckbox.InvokeRequired)
                 myCheckbox.Invoke(new delCheckboxInvoker(setCheckbox), myCheckbox, setChecked);
@@ -4597,7 +4603,7 @@ namespace RegulatedNoise
         /// selects the wanted ListViewItem
         /// </summary>
         /// <param name="wantedItem"></param>
-        internal void setActiveItem(String wantedItem)
+        public void setActiveItem(String wantedItem)
         {
             int EventIDIndex = lvCommandersLog.Columns.IndexOfKey("EventID");
 
@@ -4709,7 +4715,7 @@ namespace RegulatedNoise
         /// <summary>
         /// get the Milkyway
         /// </summary>
-        internal EDMilkyway myMilkyway
+        public EDMilkyway myMilkyway
         {
             get
             {

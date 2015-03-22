@@ -246,7 +246,7 @@ namespace RegulatedNoise
         /// returns the UI color as color object
         /// </summary>
         /// <returns></returns>
-        internal Color getUiColor()
+        public Color getUiColor()
         {
             return Color.FromArgb(int.Parse(UiColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber), 
                                   int.Parse(UiColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),

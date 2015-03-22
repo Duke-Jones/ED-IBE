@@ -77,6 +77,12 @@
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDStations.cs" />
+    <Compile Include="EDDB_Data\EDStationView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EDDB_Data\EDStationView.designer.cs">
+      <DependentUpon>EDStationView.cs</DependentUpon>
+    </Compile>
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
@@ -189,6 +195,9 @@
     <Compile Include="Webserver.cs" />
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EDDB_Data\EDStationView.resx">
+      <DependentUpon>EDStationView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditOcrResults.resx">
       <DependentUpon>EditOcrResults.cs</DependentUpon>

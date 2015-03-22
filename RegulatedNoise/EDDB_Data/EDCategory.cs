@@ -10,7 +10,7 @@ using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
 namespace RegulatedNoise.EDDB_Data.CommoditiesJsonTypes
 {
 
-    internal class EDCategory
+    public class EDCategory
     {
 
         [JsonProperty("id")]
