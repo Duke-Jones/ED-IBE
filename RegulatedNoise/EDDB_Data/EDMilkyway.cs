@@ -524,6 +524,26 @@ namespace RegulatedNoise.EDDB_Data
         }
 
         /// <summary>
+        /// returns the base data of a commodity
+        /// </summary>
+        /// <param name="CommodityId"></param>
+        /// <returns></returns>
+        public EDCommoditiesExt getCommodity(string commodityName)
+        {
+            return m_Commodities.Find(x => x.Name.Equals(commodityName, StringComparison.InvariantCultureIgnoreCase));    
+        }
+
+        /// <summary>
+        /// returns the base data of a commodity
+        /// </summary>
+        /// <param name="CommodityId"></param>
+        /// <returns></returns>
+        public EDCommoditiesExt getCommodity(int CommodityId)
+        {
+            return m_Commodities.Find(x => x.Id == CommodityId);    
+        }
+
+        /// <summary>
         /// calculating the market prices and save them as min and max values for new OCR_ed data,
         /// if "FileName" is not nothing the new data will is saves in this file
         /// 
@@ -540,24 +560,44 @@ namespace RegulatedNoise.EDDB_Data
                 if (CommodityBasedata != null)
                 {
                     if (Commodity.BuyPrices_Demand.Count() > 0)
-                        CommodityBasedata.PriceWarningLevel_Demand_Low = Commodity.BuyPrices_Demand.Min();
+                        CommodityBasedata.PriceWarningLevel_Demand_Buy_Low = Commodity.BuyPrices_Demand.Min();
                     else
-                        CommodityBasedata.PriceWarningLevel_Demand_Low = -1;
+                        CommodityBasedata.PriceWarningLevel_Demand_Buy_Low = -1;
 
                     if (Commodity.BuyPrices_Demand.Count() > 0)
-                        CommodityBasedata.PriceWarningLevel_Demand_High = Commodity.BuyPrices_Demand.Max();
+                        CommodityBasedata.PriceWarningLevel_Demand_Buy_High = Commodity.BuyPrices_Demand.Max();
                     else
-                        CommodityBasedata.PriceWarningLevel_Demand_High = -1;
+                        CommodityBasedata.PriceWarningLevel_Demand_Buy_High = -1;
 
                     if (Commodity.BuyPrices_Supply.Count() > 0)
-                        CommodityBasedata.PriceWarningLevel_Supply_Low = Commodity.BuyPrices_Supply.Min();
+                        CommodityBasedata.PriceWarningLevel_Supply_Buy_Low = Commodity.BuyPrices_Supply.Min();
                     else
-                        CommodityBasedata.PriceWarningLevel_Supply_Low = -1;
+                        CommodityBasedata.PriceWarningLevel_Supply_Buy_Low = -1;
 
                     if (Commodity.BuyPrices_Supply.Count() > 0)
-                        CommodityBasedata.PriceWarningLevel_Supply_High = Commodity.BuyPrices_Supply.Max();
+                        CommodityBasedata.PriceWarningLevel_Supply_Buy_High = Commodity.BuyPrices_Supply.Max();
                     else
-                        CommodityBasedata.PriceWarningLevel_Supply_High = -1;
+                        CommodityBasedata.PriceWarningLevel_Supply_Buy_High = -1;
+
+                    if (Commodity.BuyPrices_Demand.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Demand_Sell_Low = Commodity.SellPrices_Demand.Min();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Demand_Sell_Low = -1;
+
+                    if (Commodity.SellPrices_Demand.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Demand_Sell_High = Commodity.SellPrices_Demand.Max();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Demand_Sell_High = -1;
+
+                    if (Commodity.SellPrices_Supply.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Supply_Sell_Low = Commodity.SellPrices_Supply.Min();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Supply_Sell_Low = -1;
+
+                    if (Commodity.SellPrices_Supply.Count() > 0)
+                        CommodityBasedata.PriceWarningLevel_Supply_Sell_High = Commodity.SellPrices_Supply.Max();
+                    else
+                        CommodityBasedata.PriceWarningLevel_Supply_Sell_High = -1;
                 }
                 else
                 {

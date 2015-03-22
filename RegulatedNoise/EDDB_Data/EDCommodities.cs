@@ -38,17 +38,29 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("pricewarninglevel_demand_low")]
-        public int PriceWarningLevel_Demand_Low { get; set; }
+        [JsonProperty("pricewarninglevel_demand_buy_low")]
+        public int PriceWarningLevel_Demand_Buy_Low { get; set; }
 
-        [JsonProperty("pricewarninglevel_demand_high")]
-        public int PriceWarningLevel_Demand_High { get; set; }
+        [JsonProperty("pricewarninglevel_demand_buy_high")]
+        public int PriceWarningLevel_Demand_Buy_High { get; set; }
 
-        [JsonProperty("pricewarninglevel_supply_low")]
-        public int PriceWarningLevel_Supply_Low { get; set; }
+        [JsonProperty("pricewarninglevel_supply_buy_low")]
+        public int PriceWarningLevel_Supply_Buy_Low { get; set; }
         
-        [JsonProperty("pricewarninglevel_supply_high")]
-        public int PriceWarningLevel_Supply_High { get; set; }
+        [JsonProperty("pricewarninglevel_supply_buy_high")]
+        public int PriceWarningLevel_Supply_Buy_High { get; set; }
+
+        [JsonProperty("pricewarninglevel_demand_sell_low")]
+        public int PriceWarningLevel_Demand_Sell_Low { get; set; }
+
+        [JsonProperty("pricewarninglevel_demand_sell_high")]
+        public int PriceWarningLevel_Demand_Sell_High { get; set; }
+
+        [JsonProperty("pricewarninglevel_supply_sell_low")]
+        public int PriceWarningLevel_Supply_Sell_Low { get; set; }
+        
+        [JsonProperty("pricewarninglevel_supply_sell_high")]
+        public int PriceWarningLevel_Supply_Sell_High { get; set; }
     }
 
     public class EDCommoditiesExt
@@ -58,10 +70,16 @@ namespace RegulatedNoise.EDDB_Data
         public int CategoryId { get; set; }
         public int? AveragePrice { get; set; }
         public EDCategory Category { get; set; }
-        public int PriceWarningLevel_Demand_Low { get; set; }
-        public int PriceWarningLevel_Demand_High { get; set; }
-        public int PriceWarningLevel_Supply_Low { get; set; }
-        public int PriceWarningLevel_Supply_High { get; set; }
+
+        public int PriceWarningLevel_Demand_Buy_Low { get; set; }
+        public int PriceWarningLevel_Demand_Buy_High { get; set; }
+        public int PriceWarningLevel_Supply_Buy_Low { get; set; }
+        public int PriceWarningLevel_Supply_Buy_High { get; set; }
+
+        public int PriceWarningLevel_Demand_Sell_Low { get; set; }
+        public int PriceWarningLevel_Demand_Sell_High { get; set; }
+        public int PriceWarningLevel_Supply_Sell_Low { get; set; }
+        public int PriceWarningLevel_Supply_Sell_High { get; set; }
 
         public EDCommoditiesExt(EDCommodities Commodity, EDCommoditiesWarningLevels WarnLevel)
         {
@@ -74,17 +92,27 @@ namespace RegulatedNoise.EDDB_Data
 
             if (WarnLevel != null)
             { 
-                PriceWarningLevel_Demand_Low    = WarnLevel.PriceWarningLevel_Demand_Low;
-                PriceWarningLevel_Demand_High   = WarnLevel.PriceWarningLevel_Demand_High;
-                PriceWarningLevel_Supply_Low    = WarnLevel.PriceWarningLevel_Supply_Low;
-                PriceWarningLevel_Supply_High   = WarnLevel.PriceWarningLevel_Supply_High;
+                PriceWarningLevel_Demand_Buy_Low    = WarnLevel.PriceWarningLevel_Demand_Buy_Low;
+                PriceWarningLevel_Demand_Buy_High   = WarnLevel.PriceWarningLevel_Demand_Buy_High;
+                PriceWarningLevel_Supply_Buy_Low    = WarnLevel.PriceWarningLevel_Supply_Buy_Low;
+                PriceWarningLevel_Supply_Buy_High   = WarnLevel.PriceWarningLevel_Supply_Buy_High;
+
+                PriceWarningLevel_Demand_Sell_Low    = WarnLevel.PriceWarningLevel_Demand_Sell_Low;
+                PriceWarningLevel_Demand_Sell_High   = WarnLevel.PriceWarningLevel_Demand_Sell_High;
+                PriceWarningLevel_Supply_Sell_Low    = WarnLevel.PriceWarningLevel_Supply_Sell_Low;
+                PriceWarningLevel_Supply_Sell_High   = WarnLevel.PriceWarningLevel_Supply_Sell_High;
             }
             else
             {
-                PriceWarningLevel_Demand_Low    = -1;
-                PriceWarningLevel_Demand_High   = -1;
-                PriceWarningLevel_Supply_Low    = -1;
-                PriceWarningLevel_Supply_High   = -1;
+                PriceWarningLevel_Demand_Buy_Low    = -1;
+                PriceWarningLevel_Demand_Buy_High   = -1;
+                PriceWarningLevel_Supply_Buy_Low    = -1;
+                PriceWarningLevel_Supply_Buy_High   = -1;
+
+                PriceWarningLevel_Demand_Sell_Low    = -1;
+                PriceWarningLevel_Demand_Sell_High   = -1;
+                PriceWarningLevel_Supply_Sell_Low    = -1;
+                PriceWarningLevel_Supply_Sell_High   = -1;
             }
 
         }
@@ -96,10 +124,16 @@ namespace RegulatedNoise.EDDB_Data
             CategoryId                      = -1;
             AveragePrice                    = -1;
             Category                        = null;
-            PriceWarningLevel_Demand_Low    = -1;
-            PriceWarningLevel_Demand_High   = -1;
-            PriceWarningLevel_Supply_Low    = -1;
-            PriceWarningLevel_Supply_High   = -1;
+
+            PriceWarningLevel_Demand_Buy_Low    = -1;
+            PriceWarningLevel_Demand_Buy_High   = -1;
+            PriceWarningLevel_Supply_Buy_Low    = -1;
+            PriceWarningLevel_Supply_Buy_High   = -1;
+
+            PriceWarningLevel_Demand_Sell_Low    = -1;
+            PriceWarningLevel_Demand_Sell_High   = -1;
+            PriceWarningLevel_Supply_Sell_Low    = -1;
+            PriceWarningLevel_Supply_Sell_High   = -1;
         }
 
         public static List<EDCommoditiesExt> mergeCommodityData(List<EDCommodities> Commodities, List<EDCommoditiesWarningLevels> WarningLevels)
@@ -143,10 +177,14 @@ namespace RegulatedNoise.EDDB_Data
         {
             return new EDCommoditiesWarningLevels { Id                              = this.Id, 
                                                     Name                            = this.Name, 
-                                                    PriceWarningLevel_Demand_Low    = this.PriceWarningLevel_Demand_Low, 
-                                                    PriceWarningLevel_Demand_High   = this.PriceWarningLevel_Demand_High, 
-                                                    PriceWarningLevel_Supply_Low    = this.PriceWarningLevel_Supply_Low, 
-                                                    PriceWarningLevel_Supply_High   = this.PriceWarningLevel_Supply_High};
+                                                    PriceWarningLevel_Demand_Buy_Low    = this.PriceWarningLevel_Demand_Buy_Low, 
+                                                    PriceWarningLevel_Demand_Buy_High   = this.PriceWarningLevel_Demand_Buy_High, 
+                                                    PriceWarningLevel_Supply_Buy_Low    = this.PriceWarningLevel_Supply_Buy_Low, 
+                                                    PriceWarningLevel_Supply_Buy_High   = this.PriceWarningLevel_Supply_Buy_High,
+                                                    PriceWarningLevel_Demand_Sell_Low   = this.PriceWarningLevel_Demand_Sell_Low, 
+                                                    PriceWarningLevel_Demand_Sell_High  = this.PriceWarningLevel_Demand_Sell_High, 
+                                                    PriceWarningLevel_Supply_Sell_Low   = this.PriceWarningLevel_Supply_Sell_Low, 
+                                                    PriceWarningLevel_Supply_Sell_High  = this.PriceWarningLevel_Supply_Sell_High};
         }
     }
 

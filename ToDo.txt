@@ -12,10 +12,13 @@ todo:
    * possibility to cancel route calculation
    * english data base with possibility of import (file/ocr) from other languages
 
-
-   * plausibility check for commodity prices
 ***********************************************************************************
 
+1.84_0.10_2
+   * checking plausibility for the prices          ** "Auto Import" will be possible in future ** 
+   * mark implausible prices in "Result Edit Window"
+   * removed "Auto Uppercase" option - it's now always on
+-------------------------------------------------------------------------------------
 1.84_0.10_1
    * compiled nn_traing.exe with option "noconsole" 
    * added classes for calculating plausibility limits for the prices

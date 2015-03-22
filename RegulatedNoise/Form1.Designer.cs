@@ -166,7 +166,6 @@
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.cbAutoUppercase = new System.Windows.Forms.CheckBox();
             this.bIgnoreTrash = new System.Windows.Forms.Button();
             this.bClearOcrOutput = new System.Windows.Forms.Button();
             this.bEditResults = new System.Windows.Forms.Button();
@@ -928,7 +927,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(68, 457);
+            this.splitContainer1.Size = new System.Drawing.Size(60, 457);
             this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -955,7 +954,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(63, 208);
+            this.chart1.Size = new System.Drawing.Size(55, 208);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -982,7 +981,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(58, 76);
+            this.chart2.Size = new System.Drawing.Size(50, 68);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1890,7 +1889,6 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.cbAutoUppercase);
             this.groupBox4.Controls.Add(this.bIgnoreTrash);
             this.groupBox4.Controls.Add(this.bClearOcrOutput);
             this.groupBox4.Controls.Add(this.bEditResults);
@@ -1921,19 +1919,6 @@
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
-            // 
-            // cbAutoUppercase
-            // 
-            this.cbAutoUppercase.AutoSize = true;
-            this.cbAutoUppercase.Checked = true;
-            this.cbAutoUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAutoUppercase.Location = new System.Drawing.Point(125, 161);
-            this.cbAutoUppercase.Name = "cbAutoUppercase";
-            this.cbAutoUppercase.Size = new System.Drawing.Size(103, 17);
-            this.cbAutoUppercase.TabIndex = 35;
-            this.cbAutoUppercase.Text = "Auto-Uppercase";
-            this.cbAutoUppercase.UseVisualStyleBackColor = true;
-            this.cbAutoUppercase.CheckedChanged += new System.EventHandler(this.cbAutoUppercase_CheckedChanged);
             // 
             // bIgnoreTrash
             // 
@@ -2151,6 +2136,7 @@
             // 
             // tbCommoditiesOcrOutput
             // 
+            this.tbCommoditiesOcrOutput.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbCommoditiesOcrOutput.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbCommoditiesOcrOutput.Location = new System.Drawing.Point(110, 128);
             this.tbCommoditiesOcrOutput.Name = "tbCommoditiesOcrOutput";
@@ -3161,7 +3147,6 @@
         private System.Windows.Forms.Button bClearOcrOutput;
         private System.Windows.Forms.TextBox tbEddnStats;
         private System.Windows.Forms.Button bIgnoreTrash;
-        private System.Windows.Forms.CheckBox cbAutoUppercase;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TabPage tabSettings;
         private System.Windows.Forms.GroupBox groupBox8;

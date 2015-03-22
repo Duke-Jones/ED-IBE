@@ -233,6 +233,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Enums and Utility Classes\Enums.cs" />
+    <None Include="bin\Debug DJ\OCR Correction Images\ff8384ca-c5e4-4642-a19a-0d1adc256018.png" />
+    <None Include="bin\Debug DJ\OCR Correction Images\fefa1584-8397-48a7-9a96-759ea434b412.png" />
     <Content Include="Brainerous\bz2.pyd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

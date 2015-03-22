@@ -36,6 +36,7 @@ namespace RegulatedNoise
         private delegate void delButtonInvoker(Button myButton, bool enable);
         private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
 
+        public static Form1 InstanceObject;
         
         public EDDN Eddn;
         public Random random = new Random();
@@ -78,6 +79,8 @@ namespace RegulatedNoise
         public Form1()
         {
             _InitDone = false ;
+
+            InstanceObject = this;
 
             _Splash = new SplashScreenForm();
 //            _Splash.Show();
@@ -209,16 +212,6 @@ namespace RegulatedNoise
 
                 // after ed1.Initialize() we can get the current system for autologging
                 _LoggedSystem = tbCurrentSystemFromLogs.Text;
-
-                // it's nice to write automatically uppercase
-                if (cbAutoUppercase.Checked)
-                {
-                    tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
-                }
-                else
-                {
-                    tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
-                }
 
                 // read the commodities and prepare language depending list
                 _commodities.ReadXml(".//Data//Commodities.xml");
@@ -647,7 +640,6 @@ namespace RegulatedNoise
                 ocr.IsMonitoring = true;
             }
 
-            cbAutoUppercase.Checked                 = RegulatedNoiseSettings.AutoUppercase;
             txtTraineddataFile.Text                 = RegulatedNoiseSettings.TraineddataFile;
             
             _commandersLogColumnSorter.SortColumn   = RegulatedNoiseSettings.CmdrsLogSortColumn;
@@ -707,6 +699,24 @@ namespace RegulatedNoise
                     KnownCommodityNames.Add(currentCommodity.fra);
 
             }
+
+        }
+
+        /// <summary>
+        /// prepares the commodities in the correct language
+        /// </summary>
+        /// <param name="Language"></param>
+        private string getCommodityBasename(enLanguage Language, string CommodityName)
+        {
+            string BaseName = String.Empty;
+            KnownCommodityNames.Clear();
+
+            dsCommodities.NamesRow[] currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("Ger='" + CommodityName + "'"));
+
+            if (currentCommodity.Count() > 0)
+                BaseName = currentCommodity[0].eng;
+
+            return BaseName;
 
         }
 
@@ -2830,53 +2840,8 @@ namespace RegulatedNoise
                     if (RegulatedNoiseSettings.DeleteScreenshotOnImport)
                         File.Delete(_screenshotName);
 
-                    if (_screenshotResultsBuffer.Count == 0)
-                    {
-                        tbFinalOcrOutput.Text += _csvOutputSoFar;
-                        _csvOutputSoFar = null;
+                    Acquisition();
 
-
-                        pbOcrCurrent.Image = null;
-                        if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
-                        {
-
-                            tbFinalOcrOutput.Enabled = true;
-
-                            if (RegulatedNoiseSettings.AutoImport)
-                            {
-                                tbCommoditiesOcrOutput.Text = "Imported!";
-                                ImportFinalOcrOutput();
-                                tbFinalOcrOutput.Text = "";
-                                _csvOutputSoFar = "";
-                                _commoditiesSoFar = new List<string>();
-                                bClearOcrOutput.Enabled = false;
-                                bEditResults.Enabled = false;
-                            }
-                            else
-                            {
-                                tbCommoditiesOcrOutput.Text = "Finished!";
-                                bContinueOcr.Text = "Import";
-                                bContinueOcr.Enabled = true;
-                                bIgnoreTrash.Enabled = false;
-                                bClearOcrOutput.Enabled = true;
-                                bEditResults.Enabled = true;
-                            }
-                        }
-                        else
-                        {
-                            tbCommoditiesOcrOutput.Text = "Working...!";
-                            bClearOcrOutput.Enabled = false;
-                            bEditResults.Enabled = false;
-                        }
-
-                    }
-                    else
-                    {
-                        var nextScreenshot = _screenshotResultsBuffer[0];
-                        _screenshotResultsBuffer.Remove(nextScreenshot);
-                        ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
-                        BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
-                    }
                 }
             }
             catch (Exception ex)
@@ -2885,6 +2850,74 @@ namespace RegulatedNoise
             }
         }
 
+        private void Acquisition(bool noAutoImport = false)
+        {
+
+            if (_screenshotResultsBuffer.Count == 0)
+            {
+                tbFinalOcrOutput.Text += _csvOutputSoFar;
+                _csvOutputSoFar = null;
+
+
+                pbOcrCurrent.Image = null;
+                if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
+                {
+
+                    if (checkPricePlausibility(tbFinalOcrOutput.Text.Replace("\r", "").Split('\n')))
+                    {
+                        tbFinalOcrOutput.Enabled = true;
+                        tbCommoditiesOcrOutput.Text = "Implausible Results!";
+                        bContinueOcr.Text = "Check Implausible";
+                        bContinueOcr.Enabled = true;
+                        bIgnoreTrash.Enabled = false;
+                        bClearOcrOutput.Enabled = true;
+                        bEditResults.Enabled = true;
+                    }
+                    else
+                    {
+                        tbFinalOcrOutput.Enabled = true;
+
+                        if ((!noAutoImport) && RegulatedNoiseSettings.AutoImport)
+                        {
+                            tbCommoditiesOcrOutput.Text = "Imported!";
+                            ImportFinalOcrOutput();
+                            tbFinalOcrOutput.Text = "";
+                            _csvOutputSoFar = "";
+                            _commoditiesSoFar = new List<string>();
+                            bClearOcrOutput.Enabled = false;
+                            bEditResults.Enabled = false;
+                        }
+                        else
+                        {
+
+                            tbCommoditiesOcrOutput.Text = "Finished!";
+                            bContinueOcr.Text = "Import";
+                            bContinueOcr.Enabled = true;
+                            bIgnoreTrash.Enabled = false;
+                            bClearOcrOutput.Enabled = true;
+                            bEditResults.Enabled = true;
+                        }
+                    }
+                }
+                else
+                {
+                    tbCommoditiesOcrOutput.Text = "Working...!";
+                    bClearOcrOutput.Enabled = false;
+                    bEditResults.Enabled = false;
+                }
+
+            }
+            else
+            {
+                var nextScreenshot = _screenshotResultsBuffer[0];
+                _screenshotResultsBuffer.Remove(nextScreenshot);
+                ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
+                BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
+            }
+
+
+
+        }
         private string StripPunctuationFromScannedText(string input)
         {
             return _textInfo.ToUpper(input.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
@@ -2982,8 +3015,23 @@ namespace RegulatedNoise
 
 
             commodity = _textInfo.ToTitleCase(tbCommoditiesOcrOutput.Text.ToLower().Trim());
+            if (commodity.ToUpper() == "Implausible Results!".ToUpper())
+            {
+                // check results
+                var f = new EditOcrResults(tbFinalOcrOutput.Text);
+                f.onlyImplausible = true;
+                var q = f.ShowDialog();
 
-            if (commodity.ToUpper() == "Imported!".ToUpper() || commodity.ToUpper() == "Finished!".ToUpper() || commodity.ToUpper() == "No rows found...".ToUpper())
+                if (q == DialogResult.OK)
+                {
+                    tbFinalOcrOutput.Text = f.ReturnValue;
+                }
+
+                Acquisition(true);
+
+                isOK = false;
+            }
+            else if (commodity.ToUpper() == "Imported!".ToUpper() || commodity.ToUpper() == "Finished!".ToUpper() || commodity.ToUpper() == "No rows found...".ToUpper())
             {
                 // its the end
                 isOK = true;
@@ -3037,6 +3085,91 @@ namespace RegulatedNoise
             }
 
         }
+
+        public bool checkPricePlausibility(string[] DataRows)
+        {
+            bool unplausible = false;
+
+            foreach (string s in DataRows)
+            {
+                if (s.Contains(";"))
+                {
+                    string[] values = s.Split(';');
+                    CsvRow currentRow = new CsvRow();
+
+                    currentRow.SystemName       = values[0];
+                    currentRow.StationName      = _textInfo.ToTitleCase(values[1].ToLower());
+                    currentRow.StationID        = _textInfo.ToTitleCase(values[1].ToLower()) + " [" + currentRow.SystemName + "]";
+                    currentRow.CommodityName    = _textInfo.ToTitleCase(values[2].ToLower());
+                    Decimal.TryParse(values[3], out currentRow.SellPrice);
+                    Decimal.TryParse(values[4], out currentRow.BuyPrice);
+                    Decimal.TryParse(values[5], out currentRow.Demand);
+                    currentRow.DemandLevel      = _textInfo.ToTitleCase(values[6].ToLower());
+                    Decimal.TryParse(values[7], out currentRow.Supply);
+                    currentRow.SupplyLevel      = _textInfo.ToTitleCase(values[8].ToLower());
+                    DateTime.TryParse(values[9], out currentRow.SampleDate);
+
+                    EDCommoditiesExt CommodityData = myMilkyway.getCommodity(getCommodityBasename(RegulatedNoiseSettings.Language, currentRow.CommodityName));
+
+                    if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) && (!String.IsNullOrEmpty(currentRow.DemandLevel)))
+                    {
+                        // demand AND supply !?
+                        unplausible = true;
+                    }
+                    else if (!String.IsNullOrEmpty(currentRow.SupplyLevel))
+                    { 
+                        // check supply data             
+
+                        if ((currentRow.SellPrice <= 0) || (currentRow.BuyPrice <= 0))
+                            unplausible = true;
+
+                        if ((currentRow.SellPrice < CommodityData.PriceWarningLevel_Supply_Sell_Low) ||
+                            (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Sell_High))
+                        {
+                            unplausible = true;
+                        }
+
+                        if ((currentRow.BuyPrice < CommodityData.PriceWarningLevel_Supply_Buy_Low) ||
+                            (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Buy_High))
+                        {
+                            unplausible = true;
+                        }
+                    }
+                    else if (!String.IsNullOrEmpty(currentRow.DemandLevel))
+                    { 
+                        // check demand data
+
+                        if (currentRow.SellPrice <= 0)
+                            unplausible = true;
+
+                        if ((currentRow.SellPrice < CommodityData.PriceWarningLevel_Demand_Sell_Low) ||
+                            (currentRow.SellPrice > CommodityData.PriceWarningLevel_Demand_Sell_High))
+                        {
+                            unplausible = true;
+                        }
+
+                        if (currentRow.BuyPrice > 0) 
+                            if ((currentRow.BuyPrice < CommodityData.PriceWarningLevel_Demand_Buy_Low) ||
+                                (currentRow.BuyPrice > CommodityData.PriceWarningLevel_Demand_Buy_High))
+                            {
+                                unplausible = true;
+                            }
+                    }
+                    else
+                    { 
+                        // nothing ?!
+                        unplausible = true;
+                    }
+                }
+
+                if (unplausible)
+                    break;
+            }
+
+            return unplausible;
+        }
+
+
 
         private void ImportFinalOcrOutput()
         {
@@ -4408,21 +4541,6 @@ namespace RegulatedNoise
             tbCommoditiesOcrOutput.Text = "";
 
             bContinueOcr_Click(sender, e);
-
-        }
-
-		
-        private void cbAutoUppercase_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbAutoUppercase.Checked)
-	        {
-		        tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Upper;
-        	} else
-        	{
-                tbCommoditiesOcrOutput.CharacterCasing = CharacterCasing.Normal;
-            }
-
-            RegulatedNoiseSettings.AutoUppercase = cbAutoUppercase.Checked;
 
         }
 
