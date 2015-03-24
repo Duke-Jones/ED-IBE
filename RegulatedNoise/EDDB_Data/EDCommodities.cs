@@ -81,6 +81,11 @@ namespace RegulatedNoise.EDDB_Data
         public int PriceWarningLevel_Supply_Sell_Low { get; set; }
         public int PriceWarningLevel_Supply_Sell_High { get; set; }
 
+        public EDCommoditiesExt()
+        {
+            this.clear();
+        }
+
         public EDCommoditiesExt(EDCommodities Commodity, EDCommoditiesWarningLevels WarnLevel)
         {
 

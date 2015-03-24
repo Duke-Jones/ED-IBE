@@ -44,6 +44,8 @@ namespace RegulatedNoise
 
         public void ScreenshotCreated(string filePath, string systemAtTimeOfScreenshot)
         {
+            Form1.InstanceObject.ActivateOCRTab();
+
             SystemAtTimeOfScreenshot = systemAtTimeOfScreenshot;
 
             Debug.WriteLine("Screenshot created: OCR is "+Working);
@@ -491,7 +493,10 @@ namespace RegulatedNoise
             _bOriginalClone.Dispose();
 
             if (_callingForm.cbCheckAOne.Checked)
+            {
                 _callingForm.setCheckbox(_callingForm.cbCheckAOne, false);
+                Form1.InstanceObject.clearOcrOutput();
+            }
             else
             {
                 // Send the results for this screenshot back to the Form

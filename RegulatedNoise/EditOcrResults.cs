@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.SqlServer.Server;
 using System.Diagnostics;
+using RegulatedNoise.EDDB_Data;
 
 namespace RegulatedNoise
 {
@@ -43,15 +44,32 @@ namespace RegulatedNoise
                                      Splitted[5], Splitted[6], Splitted[7], Splitted[8], Splitted[9],
                                      Splitted[10], Splitted[11], implausible.ToString());
 
+                setRowStyle(dgvData.Rows[dgvData.RowCount - 1], implausible);                
+            }
+        }
+
+        private void setRowStyle(DataGridViewRow DGVRow, bool implausible)
+        {
+            try
+            {
                 if (implausible)
-                    dgvData.Rows[dgvData.RowCount-1].DefaultCellStyle.BackColor = Color.LightCoral;
+                {
+                    DGVRow.DefaultCellStyle.BackColor = Color.LightCoral;
+                    DGVRow.DefaultCellStyle.SelectionBackColor = Color.LightCoral;
+                    DGVRow.DefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
+                    DGVRow.Visible = true;
+
+                }
                 else
                 {
-                    dgvData.Rows[dgvData.RowCount-1].DefaultCellStyle.BackColor = SystemColors.Window;
-                    if (cbOnlyImplausible.Checked)
-                        dgvData.Rows[dgvData.RowCount-1].Visible = false;
+                    DGVRow.DefaultCellStyle.BackColor = SystemColors.Window;
+                    DGVRow.DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                    DGVRow.DefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
+                    DGVRow.Visible = (!cbOnlyImplausible.Checked);
                 }
-                
+            }
+            catch (Exception ex)
+            {
             }
         }
 
@@ -59,61 +77,52 @@ namespace RegulatedNoise
 
         private void dgvData_CurrentCellChanged(object sender, EventArgs e)
         {
-            try
-            {
-                StringBuilder SBuilder = new StringBuilder();
-                suspendTextChanged = true;
+            StringBuilder SBuilder = new StringBuilder();
+            suspendTextChanged = true;
 
-                lastRow     = currentRow;
-                if (dgvData.CurrentRow != null)
-                    currentRow = dgvData.CurrentRow.Index;
-                else
-                    currentRow = -1;
+            lastRow     = currentRow;
+            if (dgvData.CurrentRow != null)
+                currentRow = dgvData.CurrentRow.Index;
+            else
+                currentRow = -1;
 
-                if (lastRow >= 0)
-                    for (int i = 0; i < 12; i++)
-                    {
-                        if (i > 0)
-                            SBuilder.Append(";");
+            if (lastRow >= 0)
+            { 
+                for (int i = 0; i < 12; i++)
+                {
+                    if (i > 0)
+                        SBuilder.Append(";");
                     
-                        SBuilder.Append(dgvData.Rows[lastRow].Cells[i].Value.ToString());
-                    }
+                    SBuilder.Append(dgvData.Rows[lastRow].Cells[i].Value.ToString());
+                }
 
                 bool implausible = Form1.InstanceObject.checkPricePlausibility(new string[] {SBuilder.ToString()});
                 dgvData.Rows[lastRow].Cells[12].Value = implausible.ToString();
-                if (implausible)
-                    dgvData.Rows[lastRow].DefaultCellStyle.BackColor = Color.LightCoral;
-                else
-                    dgvData.Rows[lastRow].DefaultCellStyle.BackColor = SystemColors.Window;
 
+                setRowStyle(dgvData.Rows[lastRow], implausible);
+            }
 
-                //var rowId = row.Substring(row.LastIndexOf(";", System.StringComparison.Ordinal)+1);
+            if (dgvData.CurrentRow != null)
+            { 
                 string rowId = dgvData.CurrentRow.Cells[11].Value.ToString();
 
-                if (dgvData.CurrentRow != null)
-                { 
-                    if (pbEditOcrResultsOriginalImage.Image != null)
-                        pbEditOcrResultsOriginalImage.Image.Dispose();
+                if (pbEditOcrResultsOriginalImage.Image != null)
+                    pbEditOcrResultsOriginalImage.Image.Dispose();
 
-                    if (File.Exists(".//OCR Correction Images//" + rowId + ".png"))
-                        pbEditOcrResultsOriginalImage.Image = Bitmap.FromFile(".//OCR Correction Images//" + rowId + ".png");
+                if (File.Exists(".//OCR Correction Images//" + rowId + ".png"))
+                    pbEditOcrResultsOriginalImage.Image = Bitmap.FromFile(".//OCR Correction Images//" + rowId + ".png");
 
-                    tbEditOcrResultsCommodityName.Text = dgvData.CurrentRow.Cells[2].Value.ToString();
-                    tbEditOcrResultsSellPrice.Text = dgvData.CurrentRow.Cells[3].Value.ToString();
-                    tbEditOcrResultsBuyPrice.Text = dgvData.CurrentRow.Cells[4].Value.ToString();
-                    tbEditOcrResultsDemand.Text = dgvData.CurrentRow.Cells[5].Value.ToString();
-                    tbEditOcrResultsDemandLevel.Text = dgvData.CurrentRow.Cells[6].Value.ToString();
-                    tbEditOcrResultsSupply.Text = dgvData.CurrentRow.Cells[7].Value.ToString();
-                    tbEditOcrResultsSupplyLevel.Text = dgvData.CurrentRow.Cells[8].Value.ToString();
-                }
-
-                suspendTextChanged = false;
-
+                tbEditOcrResultsCommodityName.Text = dgvData.CurrentRow.Cells[2].Value.ToString();
+                tbEditOcrResultsSellPrice.Text = dgvData.CurrentRow.Cells[3].Value.ToString();
+                tbEditOcrResultsBuyPrice.Text = dgvData.CurrentRow.Cells[4].Value.ToString();
+                tbEditOcrResultsDemand.Text = dgvData.CurrentRow.Cells[5].Value.ToString();
+                tbEditOcrResultsDemandLevel.Text = dgvData.CurrentRow.Cells[6].Value.ToString();
+                tbEditOcrResultsSupply.Text = dgvData.CurrentRow.Cells[7].Value.ToString();
+                tbEditOcrResultsSupplyLevel.Text = dgvData.CurrentRow.Cells[8].Value.ToString();
             }
-            catch (Exception ex)
-            {
-               Debug.Print("STOP");
-            }
+
+            suspendTextChanged = false;
+
         }
 
         private void tbEditOcrResultTextChanged(object sender, EventArgs e)
@@ -177,21 +186,65 @@ namespace RegulatedNoise
 
             foreach (DataGridViewRow currentRow in dgvData.Rows)
             {
+                bool implausible = (((string)(currentRow.Cells[12].Value)) == (string)(true.ToString()));
+
                 if (cbOnlyImplausible.Checked)
                 { 
-                    currentRow.Visible = (((string)(currentRow.Cells[12].Value)) == (string)(true.ToString()));
+                    currentRow.Visible = implausible;
 
                     if (FirstVisible < 0 && currentRow.Visible)
                         FirstVisible = currentRow.Index;
                 }
                 else
                     currentRow.Visible = true;
+
+                setRowStyle(currentRow, implausible);
             }
 
             dgvData.CurrentCellChanged += dgvData_CurrentCellChanged;
 
             if (dgvData.CurrentRow == null && FirstVisible >= 0)
                 dgvData.CurrentCell = dgvData[0,FirstVisible];
+
+        }
+
+        private void cmdWarnLevels_Click(object sender, EventArgs e)
+        {
+            string Commodity = String.Empty;
+
+            if (dgvData.CurrentRow != null)
+                Commodity = dgvData.CurrentRow.Cells[2].Value.ToString();
+
+            EDCommodityView CView = new EDCommodityView(Commodity);
+
+            CView.ShowDialog(this);
+
+            if (CView.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                checkWarnLevels();
+                cbOnlyImplausible_CheckedChanged(this, null);
+                dgvData.Refresh();
+            }
+
+        }
+
+        private void checkWarnLevels()
+        {
+            StringBuilder SBuilder = new StringBuilder();
+
+            foreach (DataGridViewRow currentRow in dgvData.Rows)
+            {
+                SBuilder.Clear();
+
+                for (int i = 0; i < 12; i++)
+                { 
+                    if (i > 0)
+                        SBuilder.Append(";");
+                    SBuilder.Append(currentRow.Cells[i].Value.ToString());
+                }
+
+                currentRow.Cells[12].Value = Form1.InstanceObject.checkPricePlausibility(new string[] {SBuilder.ToString()}).ToString();
+            }
 
         }
     }

@@ -60,6 +60,7 @@ namespace RegulatedNoise
         public decimal lastVersion                                      = 0.00m;
         public decimal lastVersionDJ                                    = 0.00m;
         public int GUIColorCutoffLevel                                  = 150;
+        public bool AutoActivateOCRTab                                  = true;
 
         public void CheckVersion()
         {

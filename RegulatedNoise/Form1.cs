@@ -659,6 +659,7 @@ namespace RegulatedNoise
             cblastVisitedFirst.Checked              = RegulatedNoiseSettings.lastStationCountActive;
             cbLimitLightYears.Checked               = RegulatedNoiseSettings.limitLightYears;
             cbPerLightYearRoundTrip.Checked         = RegulatedNoiseSettings.PerLightYearRoundTrip;
+            cbAutoActivateOCRTab.Checked            = RegulatedNoiseSettings.AutoActivateOCRTab;
 
             switch (RegulatedNoiseSettings.CBSortingSelection)
             {
@@ -705,11 +706,19 @@ namespace RegulatedNoise
         /// <summary>
         /// prepares the commodities in the correct language
         /// </summary>
+        public string getCommodityBasename(string CommodityName)
+        {
+            enLanguage language = RegulatedNoiseSettings.Language;
+            return getCommodityBasename(language, CommodityName);
+        }
+
+        /// <summary>
+        /// prepares the commodities in the correct language
+        /// </summary>
         /// <param name="Language"></param>
-        private string getCommodityBasename(enLanguage Language, string CommodityName)
+        public string getCommodityBasename(enLanguage Language, string CommodityName)
         {
             string BaseName = String.Empty;
-            KnownCommodityNames.Clear();
 
             dsCommodities.NamesRow[] currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("Ger='" + CommodityName + "'"));
 
@@ -805,6 +814,8 @@ namespace RegulatedNoise
         {
             if (!_ocrThread.IsAlive)
             {
+                Form1.InstanceObject.ActivateOCRTab();
+
                 if (_preOcrBuffer.Count > 0)
                 {
                     // some stateful enabling for the buttons
@@ -821,6 +832,24 @@ namespace RegulatedNoise
                                       " queued)");
                 }
             }
+        }
+
+        public void ActivateOCRTab()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(ActivateOCRTab));
+                return;
+            }
+
+            if (cbAutoActivateOCRTab.Checked && !cbCheckAOne.Checked)
+                try
+                {
+                    tabControl1.SelectedTab = tabControl1.TabPages["tabOCRGroup"];
+                }
+                catch (Exception)
+                {
+                }
         }
 
         public delegate string CommoditiesTextDelegate(string s);
@@ -2735,7 +2764,10 @@ namespace RegulatedNoise
 
                             }
 
-                            if (_commoditiesSoFar.Contains(_commodityTexts[_correctionRow, _correctionColumn]))
+                            if (_commodityTexts[_correctionRow, _correctionColumn].Equals("Getreide", StringComparison.InvariantCultureIgnoreCase))
+                                Debug.Print("STOP");
+
+                            if (_commoditiesSoFar.Contains(_commodityTexts[_correctionRow, _correctionColumn].ToUpper()))
                             {
                                 _commodityTexts[_correctionRow, _correctionColumn] = "";
                                 _originalBitmapConfidences[_correctionRow, _correctionColumn] = 1;
@@ -2745,7 +2777,7 @@ namespace RegulatedNoise
                             // but only if it's sure - otherwise it will be registered later
                             if (_originalBitmapConfidences[_correctionRow, _correctionColumn] == 1)
                             {
-                                _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]);
+                                _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn].ToUpper());
                             }
                         }
                         else
@@ -3077,8 +3109,8 @@ namespace RegulatedNoise
                 }
                 else
                 {
-                    _commodityTexts[_correctionRow, _correctionColumn] = commodity;
-                    _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn]);
+                    _commodityTexts[_correctionRow, _correctionColumn] = commodity.ToUpper();
+                    _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn].ToUpper());
 
                     ContinueDisplayingResults();
                 }
@@ -3088,7 +3120,7 @@ namespace RegulatedNoise
 
         public bool checkPricePlausibility(string[] DataRows)
         {
-            bool unplausible = false;
+            bool implausible = false;
 
             foreach (string s in DataRows)
             {
@@ -3097,76 +3129,117 @@ namespace RegulatedNoise
                     string[] values = s.Split(';');
                     CsvRow currentRow = new CsvRow();
 
+                    currentRow.SellPrice    = -1;
+                    currentRow.BuyPrice     = -1;
+                    currentRow.Demand       = -1;
+                    currentRow.Supply       = -1;
+
                     currentRow.SystemName       = values[0];
                     currentRow.StationName      = _textInfo.ToTitleCase(values[1].ToLower());
                     currentRow.StationID        = _textInfo.ToTitleCase(values[1].ToLower()) + " [" + currentRow.SystemName + "]";
                     currentRow.CommodityName    = _textInfo.ToTitleCase(values[2].ToLower());
-                    Decimal.TryParse(values[3], out currentRow.SellPrice);
-                    Decimal.TryParse(values[4], out currentRow.BuyPrice);
-                    Decimal.TryParse(values[5], out currentRow.Demand);
+
+                    if (!String.IsNullOrEmpty(values[3]))
+                        Decimal.TryParse(values[3], out currentRow.SellPrice);
+                    if (!String.IsNullOrEmpty(values[4]))
+                        Decimal.TryParse(values[4], out currentRow.BuyPrice);
+                    if (!String.IsNullOrEmpty(values[5]))
+                        Decimal.TryParse(values[5], out currentRow.Demand);
+                    if (!String.IsNullOrEmpty(values[7]))
+                        Decimal.TryParse(values[7], out currentRow.Supply);
+
                     currentRow.DemandLevel      = _textInfo.ToTitleCase(values[6].ToLower());
-                    Decimal.TryParse(values[7], out currentRow.Supply);
                     currentRow.SupplyLevel      = _textInfo.ToTitleCase(values[8].ToLower());
+
                     DateTime.TryParse(values[9], out currentRow.SampleDate);
 
                     EDCommoditiesExt CommodityData = myMilkyway.getCommodity(getCommodityBasename(RegulatedNoiseSettings.Language, currentRow.CommodityName));
-
-                    if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) && (!String.IsNullOrEmpty(currentRow.DemandLevel)))
-                    {
-                        // demand AND supply !?
-                        unplausible = true;
-                    }
-                    else if (!String.IsNullOrEmpty(currentRow.SupplyLevel))
+    
+                    if (currentRow.CommodityName == "Panik")
+                        Debug.Print("STOP");
+                            
+                    if (CommodityData != null)
                     { 
-                        // check supply data             
-
-                        if ((currentRow.SellPrice <= 0) || (currentRow.BuyPrice <= 0))
-                            unplausible = true;
-
-                        if ((currentRow.SellPrice < CommodityData.PriceWarningLevel_Supply_Sell_Low) ||
-                            (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Sell_High))
+                        if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) && (!String.IsNullOrEmpty(currentRow.DemandLevel)))
                         {
-                            unplausible = true;
+                            // demand AND supply !?
+                            implausible = true;
                         }
+                        else if (!String.IsNullOrEmpty(currentRow.SupplyLevel))
+                        { 
+                            // check supply data             
 
-                        if ((currentRow.BuyPrice < CommodityData.PriceWarningLevel_Supply_Buy_Low) ||
-                            (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Buy_High))
-                        {
-                            unplausible = true;
-                        }
-                    }
-                    else if (!String.IsNullOrEmpty(currentRow.DemandLevel))
-                    { 
-                        // check demand data
-
-                        if (currentRow.SellPrice <= 0)
-                            unplausible = true;
-
-                        if ((currentRow.SellPrice < CommodityData.PriceWarningLevel_Demand_Sell_Low) ||
-                            (currentRow.SellPrice > CommodityData.PriceWarningLevel_Demand_Sell_High))
-                        {
-                            unplausible = true;
-                        }
-
-                        if (currentRow.BuyPrice > 0) 
-                            if ((currentRow.BuyPrice < CommodityData.PriceWarningLevel_Demand_Buy_Low) ||
-                                (currentRow.BuyPrice > CommodityData.PriceWarningLevel_Demand_Buy_High))
-                            {
-                                unplausible = true;
+                            if ((currentRow.SellPrice <= 0) || (currentRow.BuyPrice <= 0))
+                            { 
+                                // both on 0 is not plausible
+                                implausible = true;
                             }
-                    }
-                    else
-                    { 
-                        // nothing ?!
-                        unplausible = true;
+
+                            if (((CommodityData.PriceWarningLevel_Supply_Sell_Low  >= 0) && (currentRow.SellPrice < CommodityData.PriceWarningLevel_Supply_Sell_Low)) ||
+                                ((CommodityData.PriceWarningLevel_Supply_Sell_High >= 0) && (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Sell_High)))
+                            {
+                                // sell price is out of range
+                                implausible = true;
+                            }
+
+                            if (((CommodityData.PriceWarningLevel_Supply_Buy_Low  >= 0) && (currentRow.BuyPrice  < CommodityData.PriceWarningLevel_Supply_Buy_Low)) ||
+                                ((CommodityData.PriceWarningLevel_Supply_Buy_High >= 0) && (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Buy_High)))
+                            {
+                                // buy price is out of range
+                                implausible = true;
+                            }
+
+                            if (currentRow.Supply.Equals(-1))
+                            {   
+                                // no supply quantity
+                                implausible = true;
+                            }
+
+                        }
+                        else if (!String.IsNullOrEmpty(currentRow.DemandLevel))
+                        { 
+                            // check demand data
+
+                            if (currentRow.SellPrice <= 0)
+                            {
+                                // at least the sell price must be present
+                                implausible = true;
+                            }
+
+                            if (((CommodityData.PriceWarningLevel_Demand_Sell_Low  >= 0) && (currentRow.SellPrice < CommodityData.PriceWarningLevel_Demand_Sell_Low)) ||
+                                ((CommodityData.PriceWarningLevel_Demand_Sell_High >= 0) && (currentRow.SellPrice > CommodityData.PriceWarningLevel_Demand_Sell_High)))
+                            {
+                                // buy price is out of range
+                                implausible = true;
+                            }
+
+                            if (currentRow.BuyPrice >= 0) 
+                                if (((CommodityData.PriceWarningLevel_Demand_Buy_Low  >= 0) && (currentRow.BuyPrice < CommodityData.PriceWarningLevel_Demand_Buy_Low)) ||
+                                    ((CommodityData.PriceWarningLevel_Demand_Buy_High >= 0) && (currentRow.BuyPrice > CommodityData.PriceWarningLevel_Demand_Buy_High)))
+                                {
+                                    // buy price is out of range
+                                    implausible = true;
+                                }
+
+                            if (currentRow.Demand.Equals(-1))
+                            {
+                                // no supply quantity
+                                implausible = true;
+                            }
+                        }
+                        else
+                        { 
+                            // nothing ?!
+                            implausible = true;
+                        }
                     }
                 }
 
-                if (unplausible)
+                if (implausible)
                     break;
             }
 
-            return unplausible;
+            return implausible;
         }
 
 
@@ -4519,7 +4592,18 @@ namespace RegulatedNoise
 
         private void bClearOcrOutput_Click(object sender, EventArgs e)
         {
-			// when we do clear so we must consider all dependences (!->_commoditiesSoFar)
+            clearOcrOutput();
+        }
+
+        public void clearOcrOutput()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(clearOcrOutput));
+                return;
+            }
+
+            // when we do clear so we must consider all dependences (!->_commoditiesSoFar)
             // doing some stateful enabling of button again
             tbFinalOcrOutput.Text = "";
             bContinueOcr.Enabled = false;
@@ -4527,6 +4611,14 @@ namespace RegulatedNoise
             _commoditiesSoFar = new List<string>();
             bClearOcrOutput.Enabled = false;
             bEditResults.Enabled = false;
+            tbCommoditiesOcrOutput.Text = "Finished!";
+
+            tbOcrStationName.Text = "";
+            tbOcrSystemName .Text = "";
+            pbOcrCurrent.Image = null;
+            UpdateOriginalImage(null);
+            UpdateTrimmedImage(null, null);
+
 
         }
 
@@ -4715,6 +4807,7 @@ namespace RegulatedNoise
         private void cbAutoAdd_JumpedTo_CheckedChanged(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.AutoEvent_JumpedTo = cbAutoAdd_JumpedTo.Checked;
+            SaveSettings();
         }
 
         /// <summary>
@@ -4999,6 +5092,21 @@ namespace RegulatedNoise
             return null;
         }
 
-    }
+        private void cmdWarnLevels_Click(object sender, EventArgs e)
+        {
+            string Commodity = String.Empty;
 
+            EDCommodityView CView = new EDCommodityView();
+
+            CView.ShowDialog(this);
+
+        }
+
+        private void cbActivateOCRTab_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.AutoActivateOCRTab = cbAutoActivateOCRTab.Checked;
+            SaveSettings();
+        }
+
+    }
 }

@@ -229,6 +229,9 @@
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.button15 = new System.Windows.Forms.Button();
             this.tabSettings = new System.Windows.Forms.TabPage();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label49 = new System.Windows.Forms.Label();
             this.cbAutoAdd_JumpedTo = new System.Windows.Forms.CheckBox();
@@ -310,6 +313,7 @@
             this.tabEDDN.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabSettings.SuspendLayout();
+            this.groupBox12.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -927,7 +931,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(60, 457);
+            this.splitContainer1.Size = new System.Drawing.Size(52, 457);
             this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -954,7 +958,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(55, 208);
+            this.chart1.Size = new System.Drawing.Size(47, 208);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -981,7 +985,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(50, 68);
+            this.chart2.Size = new System.Drawing.Size(42, 60);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2561,6 +2565,7 @@
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.groupBox12);
             this.tabSettings.Controls.Add(this.groupBox10);
             this.tabSettings.Controls.Add(this.groupBox8);
             this.tabSettings.Controls.Add(this.groupBox6);
@@ -2572,6 +2577,40 @@
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
             // 
+            // groupBox12
+            // 
+            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
+            this.groupBox12.Controls.Add(this.button6);
+            this.groupBox12.Location = new System.Drawing.Point(653, 113);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(398, 410);
+            this.groupBox12.TabIndex = 12;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Other";
+            // 
+            // cbAutoActivateOCRTab
+            // 
+            this.cbAutoActivateOCRTab.AutoSize = true;
+            this.cbAutoActivateOCRTab.Location = new System.Drawing.Point(32, 58);
+            this.cbAutoActivateOCRTab.Name = "cbAutoActivateOCRTab";
+            this.cbAutoActivateOCRTab.Size = new System.Drawing.Size(325, 17);
+            this.cbAutoActivateOCRTab.TabIndex = 3;
+            this.cbAutoActivateOCRTab.Text = "Automatically activate the OCR-Tab when the recognition starts";
+            this.cbAutoActivateOCRTab.UseVisualStyleBackColor = true;
+            this.cbAutoActivateOCRTab.CheckedChanged += new System.EventHandler(this.cbActivateOCRTab_CheckedChanged);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(32, 21);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(226, 23);
+            this.button6.TabIndex = 2;
+            this.button6.Text = "Edit Commodity Price Warn levels";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.cmdWarnLevels_Click);
+            // 
             // groupBox10
             // 
             this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2580,7 +2619,7 @@
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
             this.groupBox10.Location = new System.Drawing.Point(653, 9);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(398, 514);
+            this.groupBox10.Size = new System.Drawing.Size(398, 98);
             this.groupBox10.TabIndex = 11;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
@@ -2938,6 +2977,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabSettings.ResumeLayout(false);
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -3182,6 +3223,9 @@
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Button cmdFilter;
         private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.CheckBox cbAutoActivateOCRTab;
     }
 }
 

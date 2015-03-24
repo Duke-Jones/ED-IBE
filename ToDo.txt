@@ -1,5 +1,4 @@
 todo:
-   * suppress "working..." as unknown commodity
    * option "take jumps into account"
    * show distance in lists
    * showing current ED time (GMT +- x hours)
@@ -7,13 +6,19 @@ todo:
    * optimize column widths of tables
    * make visibility and width of columns selectable and save the settings
    * possibility to disable station / consider the station distance
-   * sorting for stations : station name, system name, time // optional 4 last on top
    * single station/time export
    * possibility to cancel route calculation
    * english data base with possibility of import (file/ocr) from other languages
 
 ***********************************************************************************
 
+1.84_0.10_3
+   * "checking for a one" cleans now up the GUI
+   * fixed a few errors around the plausibility check
+   * single result lines of ocr are now erasable
+   * added function to auto-activate OCR tab if recognition starts
+   * already recognized commodities will not added again anymore during a single ocr cycle
+-------------------------------------------------------------------------------------
 1.84_0.10_2
    * checking plausibility for the prices          ** "Auto Import" will be possible in future ** 
    * mark implausible prices in "Result Edit Window"

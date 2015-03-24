@@ -65,6 +65,15 @@ namespace RegulatedNoise.EDDB_Data
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public void setCommodities(List<EDCommoditiesExt> newList)
+        { 
+            m_Commodities.Distinct();
+            m_Commodities = newList;
+        }
+
+        /// <summary>
         /// loads the stationsdata from a file
         /// </summary>
         /// <param name="File">json-file to load</param>
@@ -97,6 +106,14 @@ namespace RegulatedNoise.EDDB_Data
         public List<EDStation> cloneStations(enDataType Stationtype)
         { 
             return JsonConvert.DeserializeObject<List<EDStation>>(JsonConvert.SerializeObject(m_Stations[(int)Stationtype]));
+        }
+
+        /// <summary>
+        /// returns a cloned list of the commodities
+        /// </summary>
+        public List<EDCommoditiesExt> cloneCommodities()
+        { 
+            return JsonConvert.DeserializeObject<List<EDCommoditiesExt>>(JsonConvert.SerializeObject(m_Commodities));
         }
 
         /// <summary>
@@ -500,20 +517,20 @@ namespace RegulatedNoise.EDDB_Data
 
                     if (StationCommodity.Demand != 0)
                     { 
-                        if (StationCommodity.BuyPrice != null && StationCommodity.BuyPrice > 0)
+                        if (StationCommodity.BuyPrice > 0)
                             CommodityData.BuyPrices_Demand.Add(StationCommodity.BuyPrice);
 
-                        if (StationCommodity.SellPrice != null && StationCommodity.SellPrice > 0)
+                        if (StationCommodity.SellPrice > 0)
                             CommodityData.SellPrices_Demand.Add(StationCommodity.SellPrice);
                         
                     }
 
                     if (StationCommodity.Supply != 0)
                     { 
-                        if (StationCommodity.BuyPrice != null && StationCommodity.BuyPrice > 0)
+                        if (StationCommodity.BuyPrice > 0)
                             CommodityData.BuyPrices_Supply.Add(StationCommodity.BuyPrice);
 
-                        if (StationCommodity.BuyPrice != null && StationCommodity.SellPrice > 0)
+                        if (StationCommodity.SellPrice > 0)
                             CommodityData.SellPrices_Supply.Add(StationCommodity.SellPrice);
                         
                     }

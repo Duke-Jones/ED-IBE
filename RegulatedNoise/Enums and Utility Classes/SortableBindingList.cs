@@ -10,7 +10,7 @@ namespace RegulatedNoise
     public class SortableBindingList<T> : BindingList<T>
     {
         private ArrayList sortedList;
-        private ArrayList unsortedItems;
+        private ArrayList unsortedItems = null;
         private bool isSortedValue;
 
         public SortableBindingList()
