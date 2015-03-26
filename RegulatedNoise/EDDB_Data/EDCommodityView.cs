@@ -8,11 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
-    public partial class EDCommodityView : Form
+    public partial class EDCommodityView : RNBaseForm
     {
+        public override string thisObjectName { get { return "EDCommodityView"; } }
+
         private List<EDCommoditiesExt> Commodities;
         private Boolean m_DataChanged = false;
         private string m_OldValue;
@@ -32,6 +35,9 @@ namespace RegulatedNoise.EDDB_Data
             if (!string.IsNullOrEmpty(presetCommodity))
             {
                 string BaseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
+
+                if(string.IsNullOrEmpty(BaseName))
+                    BaseName = presetCommodity;
 
                 cmdCommodity.SelectedIndex = Commodities.FindIndex(x => x.Name.Equals(BaseName, StringComparison.InvariantCultureIgnoreCase));
             }
@@ -135,6 +141,20 @@ namespace RegulatedNoise.EDDB_Data
             }
             else
                 this.Close();
+        }
+
+        private void cmdFullList_Click(object sender, EventArgs e)
+        {
+            string Commodity = String.Empty;
+
+            EDCommodityListView CView = new EDCommodityListView(cmdCommodity.Text);
+
+            this.Visible = false;
+
+            CView.ShowDialog(this);
+
+            this.Close();
+
         }
 
     }

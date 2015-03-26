@@ -11,11 +11,14 @@ using System.Windows.Forms;
 using Microsoft.SqlServer.Server;
 using System.Diagnostics;
 using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
 {
-    public partial class EditOcrResults : Form
+    public partial class EditOcrResults : RNBaseForm
     {
+        public override string thisObjectName { get { return "EditOcrResults"; } }
+
         public string ReturnValue;
         private int lastRow;
         private int currentRow;
@@ -70,6 +73,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
+                Debug.Print("STOP : " + ex.Message)   ;
             }
         }
 

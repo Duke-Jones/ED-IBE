@@ -76,6 +76,12 @@
     </Compile>
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
+    <Compile Include="EDDB_Data\EDCommodityListView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EDDB_Data\EDCommodityListView.Designer.cs">
+      <DependentUpon>EDCommodityListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="EDDB_Data\EDCommodityView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,12 @@
     <Compile Include="Elite Dangerous Specifics\EdLogWatcher.cs" />
     <Compile Include="Enums and Utility Classes\EddnPublisherVersionStats.cs" />
     <Compile Include="Enums and Utility Classes\PerformanceTimer.cs" />
+    <Compile Include="Enums and Utility Classes\RNBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\RNBaseForm.Designer.cs">
+      <DependentUpon>RNBaseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums and Utility Classes\RNGraphics.cs" />
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
@@ -202,6 +214,9 @@
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EDDB_Data\EDCommodityListView.resx">
+      <DependentUpon>EDCommodityListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EDDB_Data\EDCommodityView.resx">
       <DependentUpon>EDCommodityView.cs</DependentUpon>
     </EmbeddedResource>
@@ -213,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditPriceData.resx">
       <DependentUpon>EditPriceData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Enums and Utility Classes\RNBaseForm.resx">
+      <DependentUpon>RNBaseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

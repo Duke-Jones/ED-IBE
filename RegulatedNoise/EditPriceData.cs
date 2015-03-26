@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
 {
-    public partial class EditPriceData : Form
+    public partial class EditPriceData : RNBaseForm
     {
+        public override string thisObjectName { get { return "EditPriceData"; } }
+
         public Form1.CsvRow RowToEdit;
 
         public EditPriceData(Form1.CsvRow csvRow, List<string> commodities)

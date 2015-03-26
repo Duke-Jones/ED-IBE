@@ -766,6 +766,7 @@ namespace RegulatedNoise
         private Thread _ocrThread;
         private List<string> _preOcrBuffer = new List<string>();
         private System.Threading.Timer _preOcrBufferTimer;
+        private AutoResetEvent _preOcrBufferAutoEvent;
         private void ScreenshotCreated(object sender, FileSystemEventArgs fileSystemEventArgs)
         {
             Thread.Sleep(1000);
@@ -794,6 +795,8 @@ namespace RegulatedNoise
                 setButton(bClearOcrOutput, false);
                 setButton(bEditResults, false);
 
+                Form1.InstanceObject.ActivateOCRTab();
+
                 _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, tbCurrentSystemFromLogs.Text));
                 _ocrThread.IsBackground = false;
                 _ocrThread.Start();
@@ -804,8 +807,8 @@ namespace RegulatedNoise
 
                 if (_preOcrBufferTimer == null)
                 {
-                    var autoEvent = new AutoResetEvent(false);
-                    _preOcrBufferTimer = new System.Threading.Timer(CheckOcrBuffer, autoEvent, 1000, 1000);
+                    _preOcrBufferAutoEvent = new AutoResetEvent(false);
+                    _preOcrBufferTimer = new System.Threading.Timer(CheckOcrBuffer, _preOcrBufferAutoEvent, 1000, 1000);
                 }
             }
         }
@@ -814,8 +817,8 @@ namespace RegulatedNoise
         {
             if (!_ocrThread.IsAlive)
             {
-                Form1.InstanceObject.ActivateOCRTab();
-
+                
+                Debug.Print("CheckOcrBuffer");
                 if (_preOcrBuffer.Count > 0)
                 {
                     // some stateful enabling for the buttons
@@ -830,6 +833,11 @@ namespace RegulatedNoise
                     ScreenshotsQueued("(" +
                                       (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) +
                                       " queued)");
+                }
+                else
+                {
+                    _preOcrBufferAutoEvent.Dispose();
+                    _preOcrBufferTimer.Dispose();
                 }
             }
         }
@@ -5096,7 +5104,7 @@ namespace RegulatedNoise
         {
             string Commodity = String.Empty;
 
-            EDCommodityView CView = new EDCommodityView();
+            EDCommodityListView CView = new EDCommodityListView();
 
             CView.ShowDialog(this);
 

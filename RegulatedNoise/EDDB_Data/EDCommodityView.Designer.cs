@@ -55,7 +55,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.cmdCommodity = new System.Windows.Forms.ComboBox();
-            this.cmdInfo = new System.Windows.Forms.Button();
+            this.cmdFullList = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -329,23 +329,24 @@
             this.cmdCommodity.TabIndex = 34;
             this.cmdCommodity.SelectedIndexChanged += new System.EventHandler(this.cmdCommodity_SelectedIndexChanged);
             // 
-            // cmdInfo
+            // cmdFullList
             // 
-            this.cmdInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdInfo.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.cmdInfo.Location = new System.Drawing.Point(18, 274);
-            this.cmdInfo.Name = "cmdInfo";
-            this.cmdInfo.Size = new System.Drawing.Size(75, 23);
-            this.cmdInfo.TabIndex = 35;
-            this.cmdInfo.Text = "Info";
-            this.cmdInfo.UseVisualStyleBackColor = true;
+            this.cmdFullList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdFullList.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.cmdFullList.Location = new System.Drawing.Point(18, 274);
+            this.cmdFullList.Name = "cmdFullList";
+            this.cmdFullList.Size = new System.Drawing.Size(75, 23);
+            this.cmdFullList.TabIndex = 35;
+            this.cmdFullList.Text = "Full List";
+            this.cmdFullList.UseVisualStyleBackColor = true;
+            this.cmdFullList.Click += new System.EventHandler(this.cmdFullList_Click);
             // 
             // EDCommodityView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(350, 309);
-            this.Controls.Add(this.cmdInfo);
+            this.Controls.Add(this.cmdFullList);
             this.Controls.Add(this.cmdCommodity);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -401,6 +402,6 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox cmdCommodity;
-        private System.Windows.Forms.Button cmdInfo;
+        private System.Windows.Forms.Button cmdFullList;
     }
 }
