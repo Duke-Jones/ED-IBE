@@ -44,7 +44,6 @@ namespace RegulatedNoise
 
         public void ScreenshotCreated(string filePath, string systemAtTimeOfScreenshot)
         {
-            Form1.InstanceObject.ActivateOCRTab();
 
             SystemAtTimeOfScreenshot = systemAtTimeOfScreenshot;
 

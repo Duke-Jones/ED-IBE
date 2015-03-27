@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.bOpen = new System.Windows.Forms.Button();
             this.cmbStation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,8 +50,6 @@
             this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
             this.pbForegroundColour = new System.Windows.Forms.PictureBox();
             this.linkLabel7 = new System.Windows.Forms.LinkLabel();
-            this.label42 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.linkLabel6 = new System.Windows.Forms.LinkLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.linkLabel5 = new System.Windows.Forms.LinkLabel();
@@ -60,12 +58,10 @@
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button23 = new System.Windows.Forms.Button();
-            this.label45 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
             this.button22 = new System.Windows.Forms.Button();
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPriceAnalysis = new System.Windows.Forms.TabPage();
             this.gbSorting = new System.Windows.Forms.GroupBox();
             this.txtlastStationCount = new System.Windows.Forms.TextBox();
@@ -73,7 +69,6 @@
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
             this.rbSortByStation = new System.Windows.Forms.RadioButton();
             this.rbSortBySystem = new System.Windows.Forms.RadioButton();
-            this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.cbLimitLightYears = new System.Windows.Forms.CheckBox();
@@ -90,11 +85,11 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.bStationDeleteRow = new System.Windows.Forms.Button();
             this.bStationEditRow = new System.Windows.Forms.Button();
-            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.tbStationRename = new System.Windows.Forms.TextBox();
             this.tbSystemRename = new System.Windows.Forms.TextBox();
             this.cmdApplySystemRename = new System.Windows.Forms.Button();
+            this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
             this.lblLightYearsFromCurrentSystem = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.bCommodityDeleteRow = new System.Windows.Forms.Button();
@@ -127,13 +122,14 @@
             this.btnBestRoundTrip = new System.Windows.Forms.Button();
             this.lblStationToStationLightYears = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
-            this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
             this.lblStationToStationMax = new System.Windows.Forms.Label();
             this.bSwapStationToStations = new System.Windows.Forms.Button();
             this.label30 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.cmbStationToStationTo = new System.Windows.Forms.ComboBox();
             this.cmbStationToStationFrom = new System.Windows.Forms.ComboBox();
+            this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
+            this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.tabCommandersLog = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lvCommandersLog = new System.Windows.Forms.ListView();
@@ -230,6 +226,8 @@
             this.button15 = new System.Windows.Forms.Button();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.cmdDonate = new System.Windows.Forms.Button();
             this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
             this.button6 = new System.Windows.Forms.Button();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
@@ -403,8 +401,6 @@
             this.tabHelpAndChangeLog.Controls.Add(this.pbBackgroundColour);
             this.tabHelpAndChangeLog.Controls.Add(this.pbForegroundColour);
             this.tabHelpAndChangeLog.Controls.Add(this.linkLabel7);
-            this.tabHelpAndChangeLog.Controls.Add(this.label42);
-            this.tabHelpAndChangeLog.Controls.Add(this.textBox2);
             this.tabHelpAndChangeLog.Controls.Add(this.linkLabel6);
             this.tabHelpAndChangeLog.Controls.Add(this.pictureBox1);
             this.tabHelpAndChangeLog.Controls.Add(this.linkLabel5);
@@ -413,12 +409,10 @@
             this.tabHelpAndChangeLog.Controls.Add(this.linkLabel2);
             this.tabHelpAndChangeLog.Controls.Add(this.linkLabel1);
             this.tabHelpAndChangeLog.Controls.Add(this.button23);
-            this.tabHelpAndChangeLog.Controls.Add(this.label45);
             this.tabHelpAndChangeLog.Controls.Add(this.label44);
             this.tabHelpAndChangeLog.Controls.Add(this.button22);
             this.tabHelpAndChangeLog.Controls.Add(this.lblSubtitle);
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
-            this.tabHelpAndChangeLog.Controls.Add(this.textBox1);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
             this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1057, 529);
@@ -531,26 +525,6 @@
     "t.club/map/";
             this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
             // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(711, 257);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(37, 13);
-            this.label42.TabIndex = 22;
-            this.label42.Text = "To-Do";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(714, 274);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox2.Size = new System.Drawing.Size(340, 190);
-            this.textBox2.TabIndex = 21;
-            this.textBox2.Text = resources.GetString("textBox2.Text");
-            // 
             // linkLabel6
             // 
             this.linkLabel6.AutoSize = true;
@@ -629,22 +603,13 @@
             // 
             // button23
             // 
-            this.button23.Location = new System.Drawing.Point(203, 145);
+            this.button23.Location = new System.Drawing.Point(203, 150);
             this.button23.Name = "button23";
             this.button23.Size = new System.Drawing.Size(167, 23);
             this.button23.TabIndex = 7;
             this.button23.Text = "How can I analyse price data?";
             this.button23.UseVisualStyleBackColor = true;
             this.button23.Click += new System.EventHandler(this.ShowCommodityHelpClick);
-            // 
-            // label45
-            // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(3, 258);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(77, 13);
-            this.label45.TabIndex = 6;
-            this.label45.Text = "Version History";
             // 
             // label44
             // 
@@ -658,7 +623,7 @@
             // 
             // button22
             // 
-            this.button22.Location = new System.Drawing.Point(30, 145);
+            this.button22.Location = new System.Drawing.Point(30, 150);
             this.button22.Name = "button22";
             this.button22.Size = new System.Drawing.Size(167, 23);
             this.button22.TabIndex = 4;
@@ -670,7 +635,7 @@
             // 
             this.lblSubtitle.AutoSize = true;
             this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubtitle.Location = new System.Drawing.Point(49, 106);
+            this.lblSubtitle.Location = new System.Drawing.Point(49, 111);
             this.lblSubtitle.Name = "lblSubtitle";
             this.lblSubtitle.Size = new System.Drawing.Size(551, 21);
             this.lblSubtitle.TabIndex = 3;
@@ -686,26 +651,15 @@
             this.lblRegulatedNoise.TabIndex = 2;
             this.lblRegulatedNoise.Text = "RegulatedNoise";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(6, 274);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(702, 190);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
-            // 
             // tabPriceAnalysis
             // 
             this.tabPriceAnalysis.Controls.Add(this.gbSorting);
-            this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Controls.Add(this.cbIncludeWithinRegionOfStation);
             this.tabPriceAnalysis.Controls.Add(this.label43);
             this.tabPriceAnalysis.Controls.Add(this.cbLimitLightYears);
             this.tabPriceAnalysis.Controls.Add(this.cbLightYears);
             this.tabPriceAnalysis.Controls.Add(this.tabControl2);
+            this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Location = new System.Drawing.Point(4, 22);
             this.tabPriceAnalysis.Name = "tabPriceAnalysis";
             this.tabPriceAnalysis.Size = new System.Drawing.Size(1057, 529);
@@ -787,16 +741,6 @@
             this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
             this.rbSortBySystem.UseVisualStyleBackColor = true;
             this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
-            // bShowStationRestrictionAtStarchartDotClub
-            // 
-            this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
-            this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
-            this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
-            this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
-            this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
-            this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
-            this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
             // 
             // cbIncludeWithinRegionOfStation
             // 
@@ -931,7 +875,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(210, 457);
+            this.splitContainer1.Size = new System.Drawing.Size(204, 457);
             this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -951,14 +895,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(205, 208);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(199, 208);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -978,14 +922,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
-            this.chart2.Size = new System.Drawing.Size(200, 58);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(194, 52);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -994,8 +938,8 @@
             // 
             this.tabPage1.Controls.Add(this.bStationDeleteRow);
             this.tabPage1.Controls.Add(this.bStationEditRow);
-            this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.groupBox5);
+            this.tabPage1.Controls.Add(this.bShowStationAtStarchartDotInfo);
             this.tabPage1.Controls.Add(this.lbPrices);
             this.tabPage1.Controls.Add(this.cmbStation);
             this.tabPage1.Controls.Add(this.label1);
@@ -1031,16 +975,6 @@
             this.bStationEditRow.Text = "Edit Row";
             this.bStationEditRow.UseVisualStyleBackColor = true;
             this.bStationEditRow.Click += new System.EventHandler(this.bStationEditRow_Click);
-            // 
-            // bShowStationAtStarchartDotInfo
-            // 
-            this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
-            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(304, 12);
-            this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
-            this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
-            this.bShowStationAtStarchartDotInfo.TabIndex = 14;
-            this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
-            this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
             // 
             // groupBox5
             // 
@@ -1078,6 +1012,16 @@
             this.cmdApplySystemRename.Text = "Apply Changes";
             this.cmdApplySystemRename.UseVisualStyleBackColor = true;
             this.cmdApplySystemRename.Click += new System.EventHandler(this.RenameStation);
+            // 
+            // bShowStationAtStarchartDotInfo
+            // 
+            this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
+            this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(304, 12);
+            this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
+            this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationAtStarchartDotInfo.TabIndex = 14;
+            this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
+            this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
             // 
             // lblLightYearsFromCurrentSystem
             // 
@@ -1336,13 +1280,13 @@
             this.tabStationToStation.Controls.Add(this.groupBox7);
             this.tabStationToStation.Controls.Add(this.lblStationToStationLightYears);
             this.tabStationToStation.Controls.Add(this.label26);
-            this.tabStationToStation.Controls.Add(this.bShowStationToStationRouteAtStarchartDotClub);
             this.tabStationToStation.Controls.Add(this.lblStationToStationMax);
             this.tabStationToStation.Controls.Add(this.bSwapStationToStations);
             this.tabStationToStation.Controls.Add(this.label30);
             this.tabStationToStation.Controls.Add(this.label29);
             this.tabStationToStation.Controls.Add(this.cmbStationToStationTo);
             this.tabStationToStation.Controls.Add(this.cmbStationToStationFrom);
+            this.tabStationToStation.Controls.Add(this.bShowStationToStationRouteAtStarchartDotClub);
             this.tabStationToStation.Location = new System.Drawing.Point(4, 22);
             this.tabStationToStation.Name = "tabStationToStation";
             this.tabStationToStation.Size = new System.Drawing.Size(1046, 464);
@@ -1470,16 +1414,6 @@
             this.label26.TabIndex = 10;
             this.label26.Text = "Maximum round-trip:";
             // 
-            // bShowStationToStationRouteAtStarchartDotClub
-            // 
-            this.bShowStationToStationRouteAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationToStationRouteAtStarchartDotClub.Image")));
-            this.bShowStationToStationRouteAtStarchartDotClub.Location = new System.Drawing.Point(626, 3);
-            this.bShowStationToStationRouteAtStarchartDotClub.Name = "bShowStationToStationRouteAtStarchartDotClub";
-            this.bShowStationToStationRouteAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
-            this.bShowStationToStationRouteAtStarchartDotClub.TabIndex = 13;
-            this.bShowStationToStationRouteAtStarchartDotClub.UseVisualStyleBackColor = true;
-            this.bShowStationToStationRouteAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationToStationRouteAtStarchartDotClub_Click);
-            // 
             // lblStationToStationMax
             // 
             this.lblStationToStationMax.AutoSize = true;
@@ -1540,6 +1474,26 @@
             this.cmbStationToStationFrom.Size = new System.Drawing.Size(250, 21);
             this.cmbStationToStationFrom.TabIndex = 5;
             this.cmbStationToStationFrom.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationFrom_SelectedIndexChanged);
+            // 
+            // bShowStationToStationRouteAtStarchartDotClub
+            // 
+            this.bShowStationToStationRouteAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationToStationRouteAtStarchartDotClub.Image")));
+            this.bShowStationToStationRouteAtStarchartDotClub.Location = new System.Drawing.Point(626, 3);
+            this.bShowStationToStationRouteAtStarchartDotClub.Name = "bShowStationToStationRouteAtStarchartDotClub";
+            this.bShowStationToStationRouteAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationToStationRouteAtStarchartDotClub.TabIndex = 13;
+            this.bShowStationToStationRouteAtStarchartDotClub.UseVisualStyleBackColor = true;
+            this.bShowStationToStationRouteAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationToStationRouteAtStarchartDotClub_Click);
+            // 
+            // bShowStationRestrictionAtStarchartDotClub
+            // 
+            this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
+            this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
+            this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
+            this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+            this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
+            this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
+            this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
             // 
             // tabCommandersLog
             // 
@@ -2579,8 +2533,11 @@
             // 
             // groupBox12
             // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.label42);
+            this.groupBox12.Controls.Add(this.cmdDonate);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
             this.groupBox12.Location = new System.Drawing.Point(653, 113);
@@ -2590,10 +2547,32 @@
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
             // 
+            // label42
+            // 
+            this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(57, 274);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(335, 91);
+            this.label42.TabIndex = 36;
+            this.label42.Text = resources.GetString("label42.Text");
+            // 
+            // cmdDonate
+            // 
+            this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
+            this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.cmdDonate.Location = new System.Drawing.Point(238, 368);
+            this.cmdDonate.Name = "cmdDonate";
+            this.cmdDonate.Size = new System.Drawing.Size(154, 36);
+            this.cmdDonate.TabIndex = 35;
+            this.cmdDonate.UseVisualStyleBackColor = true;
+            this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
+            // 
             // cbAutoActivateOCRTab
             // 
             this.cbAutoActivateOCRTab.AutoSize = true;
-            this.cbAutoActivateOCRTab.Location = new System.Drawing.Point(32, 58);
+            this.cbAutoActivateOCRTab.Location = new System.Drawing.Point(32, 27);
             this.cbAutoActivateOCRTab.Name = "cbAutoActivateOCRTab";
             this.cbAutoActivateOCRTab.Size = new System.Drawing.Size(325, 17);
             this.cbAutoActivateOCRTab.TabIndex = 3;
@@ -2603,7 +2582,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(32, 21);
+            this.button6.Location = new System.Drawing.Point(32, 64);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -2613,8 +2592,8 @@
             // 
             // groupBox10
             // 
-            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox10.Controls.Add(this.label49);
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
             this.groupBox10.Location = new System.Drawing.Point(653, 9);
@@ -2677,6 +2656,9 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox6.Controls.Add(this.groupBox9);
             this.groupBox6.Controls.Add(this.groupBox11);
             this.groupBox6.Controls.Add(this.txtTraineddataFile);
@@ -2907,8 +2889,6 @@
             this.Text = "RegulatedNoise v";
             this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Form_Shown);
-            this.ResizeEnd += new System.EventHandler(this.Form_ResizeEnd);
-            this.Resize += new System.EventHandler(this.Form_Resize);
             this.tabControl1.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
             this.tabHelpAndChangeLog.PerformLayout();
@@ -3099,9 +3079,7 @@
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.Label lblSubtitle;
         private System.Windows.Forms.Label lblRegulatedNoise;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label44;
-        private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Button button23;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPriceAnalysis;
@@ -3123,8 +3101,6 @@
         private System.Windows.Forms.Label lblStationToStationMax;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Button btnBestRoundTrip;
-        private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.CheckBox cbLimitLightYears;
         private System.Windows.Forms.ComboBox cbLightYears;
@@ -3226,6 +3202,8 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.GroupBox groupBox12;
         private System.Windows.Forms.CheckBox cbAutoActivateOCRTab;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Button cmdDonate;
     }
 }
 

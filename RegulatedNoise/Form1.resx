@@ -117,23 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label50.Text" xml:space="preserve">
-    <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
-
-*) see the graphics in "Filter-Test"</value>
-  </data>
-  <data name="label52.Text" xml:space="preserve">
-    <value>In order to reduce the recognition time you can set a threshold quantity. The areas on which less dark pixels (= text) to see are as specified in the threshold will be completely ignored in the recognition. The threshold value should be greater than the number of pixels of a "-" be but also smaller than number of pixel number of a "1" (because this is the digit with the fewest number of pixels in it).
-So all "-" and less are ignored , all "1" and other digits are detected.</value>
-  </data>
-  <data name="textBox2.Text" xml:space="preserve">
-    <value>* Can it remember last selected station instead of always selecting the first in the list? (when SetupGUI is called)
-* is there a way also to indicate if a station has medium or large landing docks?
-* update system info json button?
-* [steelyeyed] tickbox that means "this station buys even with zero demand"?
-* User-maintainable auto-correct Dictionary? ("advance 0 catalysers")
-* Proper station and system notes would be nice... maybe even in tooltips when you hover over stations/systems?</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1507,178 +1490,9 @@ So all "-" and less are ignored , all "1" and other digits are detected.</value>
         jlWkAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="textBox1.Text" xml:space="preserve">
-    <value>v1.84
-* Fix system name not updating from log files
-* Update elite.json and station.csv
-
-v1.83
-* Don't flatline one CPU core scanning log files (sorry 'bout that...)
-
-v1.82
-* Fix Crash on Startup (if you had a log file line longer than 1000 characters)
-
-v1.81
-* Add EDDN message counting by app and version
-* EditOcrResults window fixes
-* Fix No way to clear ORC corrections if you don't want to import #14
-* Add EDDN Spool to File
-* Fix Can't cancel the "load a calibration screenshot" window #41
-* Fix Manual calibration doesn't let you set the 12th point correctly, according to user feedback. #39
-* Fix Item duplication in the Edit Results window #13
-
-v1.8
-* Add MRmP's editable calibration system
-* Add magnifier for calibration purposes
-* Remove incredibly-dumb bug that has been eating the spaces in station names... d'oh...
-* Check for empty string from EDDN, and at least don't crash on general malformed data
-
-v1.73
-* Update Station.csv and Elite.json.
-* Swap the Levenshtein algorithm for one that works (!) and tweak parameters it compares to
-* Fix button on station-to-station tab
-
-v1.72
-* Include MRmP's (experimental) automatic calibration.  Please feed back to the forum or GitHub if this works well - or not - for your resolution.  Likely will not work at all if you have changed your FOV settings.
-* Crashes now generate a RegulatedNoiseDump.dmp file.  Passing this to the developers is INCREDIBLY helpful in fixing the problems.
-* Fix auto-import checkbox not set on load
-* capture some game settings e.g. resolution
-* fix automatic directory detection on 32-bit
-* fix can't start without DisplaySettings.xml
-
-
-v1.71
-* Fix RegulatedNoise crash on Elite Dangerous startup
-* Fix version history
-
-v1.7
-* station-to-station overhauled: now shows all round trips in a big list, can work in credits-per-light-year, shows outbound and return at the same time
-* Merge MRmP's changes to product directory detection
-* Move elite.json and station.csv to a Data subfolder
-* Check at startup for a new version, and notify the user if one is found
-* Fix GitHub issue #3: update station-to-station when updating rest of GUI
-* Don't crash when calculating distances to systems that we don't know the location of
-* fix rename-loses-source-of-data bug
-
-v1.6
-* Add new OCR Corrections form ("Edit" button on Corrections tab)
-
-v1.5
-* add Maddavo's stations data (static copy) to auto-fix station name OCR errors (thanks to Maddavo) - this also gives us pad-size information, but not using that yet
-* Move a bunch of code to make Form1.cs a less-depressing place to be
-* Add an auto-import checkbox and setting - this defaults to Off at the moment
-* Add Purge All EDDN Data function
-* Remove improbable punctuation from station names (but not apostrophes...)
-* Data imported from EDDN now has "&lt;From EDDN&gt;" as the "Screenshot Name"
-* He Suits is now H.E. Suits... also added Resonating Separators to the hard-coded list of commodity names
-
-v1.41
-* Fix Transaction credits does not accept numbers &gt;100 (GitHub issue #1)
-
-v1.4
-* Add "within x light years of arbitrary system"
-* Add buttons linking to system maps and routes at http://starchart.club - with thanks to Biteketkergetek
-* Goosem@n's fix
-
-v1.33
-* Fix station name needs a space when you rename it error
-* Throw away exceptions when cloning main captured-screenshot bitmap for display purposes LOL
-* Create Brainerous images directory if it doesn't exist
-
-v1.32
-* Another bug fix via iAmLegion, hopefully fixes a lot of crash-during-OCR problems
-
-v1.31
-* Use ImaginaryEd's improved commodity-name-matching algorithm
-
-v1.3
-* Optionally recolour the UI - it's not great but it's as good as it's going to get for the time being :-)
-* [iAmLegion] fix import of system data when locale doesn't use "." as decimal separator
-
-v1.2
-* Add ability to restrict price analysis to systems within x light years, based on 
-* Add ability to handle different UI colours than orange - hit the big obvious button on the Calibration tab to find out more
-* Also, no need to restart app if it finds no rows - it will pop a message to warn you, but will then try again with the next screenshot.  Popup might need removing in due course because it steals focus and that's evil...
-
-v1.12
-* Increase speed at which EDDN import can run
-* Improve handling when Frontier products directory isn't set correctly
-
-v1.11
-* Default to the EDDN test schema for exports (imports currently run on both the live and test schemas)
-* Don't export to EDDN if the system name is undetected (i.e. "SomeSystem")
-
-v1.1
-* Edit and delete data on the Commodity and Station tabs of Price Analysis
-* Sort grids by clicking column headers in webpages
-* Extra navigation links in the trade data webpage
-* Add maximum-round-trip and find-best-round-trip to Station-to-Station tab of Price Analysis
-* Handle "can't find any rows of data in your screenshots" situation gracefully rather than crashing
-* [surtex] tweak exception handler for Crop() which might help us debug it
-* [steelyeyed] fix up OCR help a bit to match recent changes
-* [jippyuk] add delete-screenshot-after-import checkbox
-* [various] make the commodity-matching algorithm a bit more tolerant - please report any occasions when it mis-matches a commodity name
-* [snake man] remove "categoryName" from EDDN export
-
-v1.0
-* Rename to RegulatedNoise.  Your old settings file and calibration file are NOT valid, but commodity CSVs (including auto-saves) and Commander's Logs can be copied from EliteOCRReader installs.
-* Add EliteBrainerous OCR for number recognition - vast improvement in number OCR (still uses Tesseract for letters)
-* Auto-import each screenshot as it completes
-* Add better queueing to OCR
-* Persist username and other OCR settings
-* Add swap-stations button to Station-To-Station tab (thanks to jippyuk for the idea)
-* Add logging code
-* You can now rename stations as well as systems.  You can use this to merge two stations where one has the wrong name, too.
-
-v0.93
-* Fix OCR second-screenshot crash found by "Snake Man"
-* More tiny OCR logic tweaks
-* Fixed rare bug where a "\r" character in the CSV output caused a crash on import
-
-v0.92:
-* Report exceptions to the screen to assist with debugging.  Note that popup windows telling you the app has crashed may appear *behind* the main window, which is particularly unhelpful.
-* Possible fix for RegulatedNoise continuing to run in the background when you've already closed it.
-
-v0.91:
-* Options to start Webserver and OCR on load - now you can just start the app and play.  
-* OCR-on-load uses the last directory you manually selected for OCR
-* Webserver settings now preserved: network interface and colour scheme
-* Reset your settings, if you need to, by deleting RegulatedNoiseSettings.XML in the app directory
-
-v0.9:
-* Correct multiple screenshots in one go - just take more than one shot.  Works with web or GUI.  Don't use this to capture prices from more than one *station* in one go, it will mangle the station names etc.!
-* Restructure tabs to make app less-baffling to newcomers
-* From now on, capturing OCR data gives you a link back to the original screenshot, so you can verify data days later.  Go to the Station tab and double-click in the last column
-* Various specific OCR tweaks, like "ignore ENTER HANGAR"
-* Bits and pieces like a "Clear" button in the webserver OCR correction field, also webserver numeric fields are now labelled as such, so your phone/tablet will give you the right keyboard for edit
-
-v0.8.1:
-
-* Handle failure to find Frontier directories gracefully
-* Add Help and Changelog tab
-* Add startup debugging - hold LEFT-SHIFT before you start the app
-
-v0.8:
-
-* Now reads system names from your netLog files (and will offer to configure appConfig.xml for you too); uses those names to set OCR field and also to create Commander's Log events (automatic system history!);
-* Commander's Log actually usable now (web interface currently b0rked for Commander's Log though);
-* Commodities and Commander's Log autosaved and autoloaded on exit and start;
-* EDDN Export now defaults to Off</value>
-  </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>460, 17</value>
   </metadata>
-  <data name="bShowStationRestrictionAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
-        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
-        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
-        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
-        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
-        E38FHr4WWU6iAAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="bShowStationAtStarchartDotInfo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -1701,6 +1515,17 @@ v0.8:
         E38FHr4WWU6iAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="bShowStationRestrictionAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
+        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
+        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
+        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
+        E38FHr4WWU6iAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="label10.Text" xml:space="preserve">
     <value>Tips:
 
@@ -1712,11 +1537,26 @@ v0.8:
 
 </value>
   </data>
+  <data name="label42.Text" xml:space="preserve">
+    <value>This program was initially written by other developers. 
+Unfortunately, these seem to have stopped the continuation of this 
+program before it was finished. For this reason I have decided to 
+continue to develop this great tool.
+
+If you like it and you want to support my development of this program, 
+I was very happy about a small donation. </value>
+  </data>
+  <data name="label50.Text" xml:space="preserve">
+    <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
+
+*) see the graphics in "Filter-Test"</value>
+  </data>
+  <data name="label52.Text" xml:space="preserve">
+    <value>In order to reduce the recognition time you can set a threshold quantity. The areas on which less dark pixels (= text) to see are as specified in the threshold will be completely ignored in the recognition. The threshold value should be greater than the number of pixels of a "-" be but also smaller than number of pixel number of a "1" (because this is the digit with the fewest number of pixels in it).
+So all "-" and less are ignored , all "1" and other digits are detected.</value>
+  </data>
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>460, 17</value>
   </metadata>
   <metadata name="dsCommodities.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>157, 17</value>

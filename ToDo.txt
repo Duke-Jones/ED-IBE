@@ -9,11 +9,16 @@ todo:
    * single station/time export
    * possibility to cancel route calculation
    * english data base with possibility of import (file/ocr) from other languages
-
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
 ***********************************************************************************
 
+1.84_0.10
+   * completed base class for easy position saving
+   * saving now the positions of all windows
+   * added a donation button 
+   * included a new class for saving dictionaries as XML-file
+-------------------------------------------------------------------------------------   
 1.84_0.10_4
    * added up-to-date data files from EDDB
    * additional table view for viewing and editing the plausibility limits

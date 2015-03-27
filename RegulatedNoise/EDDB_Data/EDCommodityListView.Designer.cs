@@ -37,9 +37,9 @@ namespace RegulatedNoise.EDDB_Data
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EDCommodityListView));
             this.cmdCancel = new System.Windows.Forms.Button();
             this.cmdOk = new System.Windows.Forms.Button();
-            this.cmdInfo = new System.Windows.Forms.Button();
             this.dgvWarnlevels = new System.Windows.Forms.DataGridView();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,6 +53,7 @@ namespace RegulatedNoise.EDDB_Data
             this.SupplySellHigh = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SupplyBuyLow = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SupplyBuyHigh = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvWarnlevels)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,7 +61,7 @@ namespace RegulatedNoise.EDDB_Data
             // 
             this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(1123, 458);
+            this.cmdCancel.Location = new System.Drawing.Point(1123, 513);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(75, 23);
             this.cmdCancel.TabIndex = 0;
@@ -72,24 +73,13 @@ namespace RegulatedNoise.EDDB_Data
             // 
             this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.cmdOk.Location = new System.Drawing.Point(1042, 458);
+            this.cmdOk.Location = new System.Drawing.Point(1042, 513);
             this.cmdOk.Name = "cmdOk";
             this.cmdOk.Size = new System.Drawing.Size(75, 23);
             this.cmdOk.TabIndex = 1;
             this.cmdOk.Text = "OK";
             this.cmdOk.UseVisualStyleBackColor = true;
             this.cmdOk.Click += new System.EventHandler(this.cmdOk_Click);
-            // 
-            // cmdInfo
-            // 
-            this.cmdInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdInfo.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.cmdInfo.Location = new System.Drawing.Point(878, 458);
-            this.cmdInfo.Name = "cmdInfo";
-            this.cmdInfo.Size = new System.Drawing.Size(75, 23);
-            this.cmdInfo.TabIndex = 35;
-            this.cmdInfo.Text = "Info";
-            this.cmdInfo.UseVisualStyleBackColor = true;
             // 
             // dgvWarnlevels
             // 
@@ -115,12 +105,12 @@ namespace RegulatedNoise.EDDB_Data
             this.SupplyBuyHigh});
             this.dgvWarnlevels.Location = new System.Drawing.Point(12, 12);
             this.dgvWarnlevels.Name = "dgvWarnlevels";
-            this.dgvWarnlevels.Size = new System.Drawing.Size(1186, 440);
+            this.dgvWarnlevels.Size = new System.Drawing.Size(1186, 369);
             this.dgvWarnlevels.TabIndex = 36;
             this.dgvWarnlevels.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
-            this.dgvWarnlevels.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
             this.dgvWarnlevels.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
-            //  
+            this.dgvWarnlevels.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
+            // 
             // Id
             // 
             this.Id.HeaderText = "Id";
@@ -148,7 +138,7 @@ namespace RegulatedNoise.EDDB_Data
             this.AveragePrice.HeaderText = "Average Price";
             this.AveragePrice.Name = "AveragePrice";
             this.AveragePrice.ReadOnly = true;
-            this.AveragePrice.Width = 99;
+            this.AveragePrice.Width = 91;
             // 
             // DemandSellLow
             // 
@@ -214,19 +204,31 @@ namespace RegulatedNoise.EDDB_Data
             this.SupplyBuyHigh.Name = "SupplyBuyHigh";
             this.SupplyBuyHigh.Width = 81;
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 391);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(635, 150);
+            this.label1.TabIndex = 37;
+            this.label1.Text = resources.GetString("label1.Text");
+            // 
             // EDCommodityListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1210, 493);
+            this.ClientSize = new System.Drawing.Size(1210, 548);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvWarnlevels);
-            this.Controls.Add(this.cmdInfo);
             this.Controls.Add(this.cmdOk);
             this.Controls.Add(this.cmdCancel);
             this.Name = "EDCommodityListView";
             this.Text = "Commodity Price Warn levels";
             ((System.ComponentModel.ISupportInitialize)(this.dgvWarnlevels)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -234,7 +236,6 @@ namespace RegulatedNoise.EDDB_Data
 
         private System.Windows.Forms.Button cmdCancel;
         private System.Windows.Forms.Button cmdOk;
-        private System.Windows.Forms.Button cmdInfo;
         private System.Windows.Forms.DataGridView dgvWarnlevels;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn CName;
@@ -248,5 +249,6 @@ namespace RegulatedNoise.EDDB_Data
         private DataGridViewTextBoxColumn SupplySellHigh;
         private DataGridViewTextBoxColumn SupplyBuyLow;
         private DataGridViewTextBoxColumn SupplyBuyHigh;
+        private Label label1;
     }
 }

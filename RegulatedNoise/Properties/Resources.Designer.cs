@@ -63,6 +63,16 @@ namespace RegulatedNoise.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PayPalDonate {
+            get {
+                object obj = ResourceManager.GetObject("PayPalDonate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SampleTooHigh {
             get {
                 object obj = ResourceManager.GetObject("SampleTooHigh", resourceCulture);

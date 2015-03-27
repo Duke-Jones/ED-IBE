@@ -8,9 +8,28 @@ using System.Net.Mime;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
 {
+    [Serializable]
+    public class WindowData
+    {
+        public WindowData()
+        {
+            Position.X          = -1;
+            Position.Y          = -1;
+            Position.Width      = -1;
+            Position.Height     = -1;
+
+            State = FormWindowState.Normal;
+        }
+
+        public Rectangle Position;
+        public FormWindowState State;
+    }
+
+
     [Serializable]
     public class RegulatedNoiseSettings
     {
@@ -49,8 +68,6 @@ namespace RegulatedNoise
         public bool AutoEvent_JumpedTo                                  = true;
         public float EBPixelThreshold                                   = 0.6f;
         public int EBPixelAmount                                        = 22;
-        public Rectangle WindowPosition                                 = new Rectangle(-1,-1,-1,-1);
-        public FormWindowState WindowState                              = FormWindowState.Normal;
         public int lastStationCount                                     = 4;
         public bool lastStationCountActive                              = false;
         public bool limitLightYears                                     = false;
@@ -61,6 +78,19 @@ namespace RegulatedNoise
         public decimal lastVersionDJ                                    = 0.00m;
         public int GUIColorCutoffLevel                                  = 150;
         public bool AutoActivateOCRTab                                  = true;
+
+        public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
+                                                                                                                  {"Form1",                 new WindowData()},
+                                                                                                                  {"EditOcrResults",        new WindowData()},
+                                                                                                                  {"EditPriceData",         new WindowData()},
+                                                                                                                  {"EDStationView",         new WindowData()},
+                                                                                                                  {"EDCommodityView",       new WindowData()},
+                                                                                                                  {"EDCommodityListView",   new WindowData()},
+                                                                                                                  {"FilterTest",            new WindowData()},
+                                                                                                                  {"HelpOCR",               new WindowData()},
+                                                                                                                  {"HelpCommodities",       new WindowData()},
+                                                                                                                  {"EBPixeltest",           new WindowData()}
+                                                                                                                };
 
         public void CheckVersion()
         {

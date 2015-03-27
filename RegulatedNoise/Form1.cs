@@ -26,9 +26,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace RegulatedNoise
 {
-    public partial class Form1 : Form
+    public partial class Form1 : RNBaseForm
     {
         private SplashScreenForm _Splash;
+
+        public override string thisObjectName { get { return "Form1"; } }
 
         const string ID_DELIMITER = "empty";
         const int MAX_NAME_LENGTH = 120;
@@ -766,7 +768,6 @@ namespace RegulatedNoise
         private Thread _ocrThread;
         private List<string> _preOcrBuffer = new List<string>();
         private System.Threading.Timer _preOcrBufferTimer;
-        private AutoResetEvent _preOcrBufferAutoEvent;
         private void ScreenshotCreated(object sender, FileSystemEventArgs fileSystemEventArgs)
         {
             Thread.Sleep(1000);
@@ -791,11 +792,11 @@ namespace RegulatedNoise
 
             if (_ocrThread == null || !_ocrThread.IsAlive)
             {
+                Form1.InstanceObject.ActivateOCRTab();
+
                 // some stateful enabling for the buttons
                 setButton(bClearOcrOutput, false);
                 setButton(bEditResults, false);
-
-                Form1.InstanceObject.ActivateOCRTab();
 
                 _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, tbCurrentSystemFromLogs.Text));
                 _ocrThread.IsBackground = false;
@@ -807,18 +808,16 @@ namespace RegulatedNoise
 
                 if (_preOcrBufferTimer == null)
                 {
-                    _preOcrBufferAutoEvent = new AutoResetEvent(false);
-                    _preOcrBufferTimer = new System.Threading.Timer(CheckOcrBuffer, _preOcrBufferAutoEvent, 1000, 1000);
-                }
+                    var autoEvent = new AutoResetEvent(false);
+                    _preOcrBufferTimer = new System.Threading.Timer(CheckOcrBuffer, autoEvent, 1000, 1000);
             }
+        }
         }
 
         private void CheckOcrBuffer(object sender)
         {
             if (!_ocrThread.IsAlive)
             {
-                
-                Debug.Print("CheckOcrBuffer");
                 if (_preOcrBuffer.Count > 0)
                 {
                     // some stateful enabling for the buttons
@@ -834,13 +833,8 @@ namespace RegulatedNoise
                                       (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) +
                                       " queued)");
                 }
-                else
-                {
-                    _preOcrBufferAutoEvent.Dispose();
-                    _preOcrBufferTimer.Dispose();
                 }
             }
-        }
 
         public void ActivateOCRTab()
         {
@@ -4159,22 +4153,11 @@ namespace RegulatedNoise
             tabControl2.SelectedTab = tabStationToStation;
             tabControl2.SelectedTab = tabPage3;
             tabControl1.SelectedTab = tabHelpAndChangeLog;
-
-            loadWindowPosition();
-
+            
             Retheme();
 
         }
 
-        private void Form_Resize(object sender, System.EventArgs e)
-        {
-            saveWindowPosition();
-        }
-
-        private void Form_ResizeEnd(object sender, System.EventArgs e)
-        {
-            saveWindowPosition();
-        }
 
         private void doSpecial()
         {
@@ -4876,60 +4859,61 @@ namespace RegulatedNoise
                 txtGUIColorCutoffLevel.Text = RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
         }
 
-        private void loadWindowPosition()
-        {
-            if (RegulatedNoiseSettings.WindowPosition.Height > -1) 
-            {
-                this.Top         = RegulatedNoiseSettings.WindowPosition.Top;
-                this.Left        = RegulatedNoiseSettings.WindowPosition.Left;
-                this.Height      = RegulatedNoiseSettings.WindowPosition.Height;
-                this.Width       = RegulatedNoiseSettings.WindowPosition.Width;
+        
+        //private void loadWindowPosition()
+        //{
+        //    if (RegulatedNoiseSettings.WindowPosition.Height > -1) 
+        //    {
+        //        this.Top         = RegulatedNoiseSettings.WindowPosition.Top;
+        //        this.Left        = RegulatedNoiseSettings.WindowPosition.Left;
+        //        this.Height      = RegulatedNoiseSettings.WindowPosition.Height;
+        //        this.Width       = RegulatedNoiseSettings.WindowPosition.Width;
 
-                this.WindowState = RegulatedNoiseSettings.WindowState;
-            }
-            else
-            {
-                RegulatedNoiseSettings.WindowPosition.Y         = this.Top;
-                RegulatedNoiseSettings.WindowPosition.X         = this.Left;
-                RegulatedNoiseSettings.WindowPosition.Height    = this.Height;
-                RegulatedNoiseSettings.WindowPosition.Width     = this.Width;
+        //        this.WindowState = RegulatedNoiseSettings.WindowState;
+        //    }
+        //    else
+        //    {
+        //        RegulatedNoiseSettings.WindowPosition.Y         = this.Top;
+        //        RegulatedNoiseSettings.WindowPosition.X         = this.Left;
+        //        RegulatedNoiseSettings.WindowPosition.Height    = this.Height;
+        //        RegulatedNoiseSettings.WindowPosition.Width     = this.Width;
 
-                RegulatedNoiseSettings.WindowState              = this.WindowState;
+        //        RegulatedNoiseSettings.WindowState              = this.WindowState;
 
-                SaveSettings();
-            }
-        }
+        //        SaveSettings();
+        //    }
+        //}
 
-        private void saveWindowPosition()
-        {
-            bool changed = false;
+        //private void saveWindowPosition()
+        //{
+        //    bool changed = false;
 
-            if (this.WindowState != FormWindowState.Minimized)
-                if (RegulatedNoiseSettings.WindowState != this.WindowState)
-                {
-                    RegulatedNoiseSettings.WindowState = this.WindowState;
-                    changed = true;
-                }
+        //    if (this.WindowState != FormWindowState.Minimized)
+        //        if (RegulatedNoiseSettings.WindowState != this.WindowState)
+        //        {
+        //            RegulatedNoiseSettings.WindowState = this.WindowState;
+        //            changed = true;
+        //        }
 
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                if ((RegulatedNoiseSettings.WindowPosition.Y != this.Top) ||
-                    (RegulatedNoiseSettings.WindowPosition.X != this.Left) ||
-                    (RegulatedNoiseSettings.WindowPosition.Height != this.Height) ||
-                    (RegulatedNoiseSettings.WindowPosition.Width != this.Width))
-                {
-                    RegulatedNoiseSettings.WindowPosition.Y = this.Top;
-                    RegulatedNoiseSettings.WindowPosition.X = this.Left;
-                    RegulatedNoiseSettings.WindowPosition.Height = this.Height;
-                    RegulatedNoiseSettings.WindowPosition.Width = this.Width;
+        //    if (this.WindowState == FormWindowState.Normal)
+        //    {
+        //        if ((RegulatedNoiseSettings.WindowPosition.Y != this.Top) ||
+        //            (RegulatedNoiseSettings.WindowPosition.X != this.Left) ||
+        //            (RegulatedNoiseSettings.WindowPosition.Height != this.Height) ||
+        //            (RegulatedNoiseSettings.WindowPosition.Width != this.Width))
+        //        {
+        //            RegulatedNoiseSettings.WindowPosition.Y = this.Top;
+        //            RegulatedNoiseSettings.WindowPosition.X = this.Left;
+        //            RegulatedNoiseSettings.WindowPosition.Height = this.Height;
+        //            RegulatedNoiseSettings.WindowPosition.Width = this.Width;
 
-                    changed = true;
-                }
-            }
+        //            changed = true;
+        //        }
+        //    }
 
-            if (changed) 
-                SaveSettings();
-        }
+        //    if (changed) 
+        //        SaveSettings();
+        //}
 
         /// <summary>
         /// get the Milkyway
@@ -5114,6 +5098,20 @@ namespace RegulatedNoise
         {
             RegulatedNoiseSettings.AutoActivateOCRTab = cbAutoActivateOCRTab.Checked;
             SaveSettings();
+        }
+
+        private void cmdDonate_Click(object sender, EventArgs e)
+        {
+            string url = "";
+ 
+            string ButtonID     = "CMH6HZK37VGHY";  // your paypal email
+ 
+            url += "https://www.paypal.com/cgi-bin/webscr" +
+                "?cmd=" + "_s-xclick" +
+                "&hosted_button_id=" + ButtonID;
+ 
+            System.Diagnostics.Process.Start(url);
+
         }
 
     }

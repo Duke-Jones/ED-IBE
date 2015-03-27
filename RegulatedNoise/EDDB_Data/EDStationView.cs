@@ -11,14 +11,15 @@ using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
-    public partial class EDStationView : Form
+    public partial class EDStationView : RNBaseForm
     {
+        public override string thisObjectName { get { return "EDStationView"; } }
+
         private EDStation m_Station;
 
         internal EDStationView()
         {
             InitializeComponent();
-
         }
 
         internal EDStationView(EDStation Station)
