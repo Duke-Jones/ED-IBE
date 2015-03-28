@@ -55,6 +55,7 @@ namespace RegulatedNoise
         {
             try
             {
+                Debug.Print("setrowstyle");
                 if (implausible)
                 {
                     DGVRow.DefaultCellStyle.BackColor = Color.LightCoral;

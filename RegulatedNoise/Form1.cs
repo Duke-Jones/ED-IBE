@@ -1507,10 +1507,19 @@ namespace RegulatedNoise
                     getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
                 }
 
+
                 // be aware of the length of each string in the remaining list
                 for (int i = 0; i < SelectionPreordered.Count(); i++)
-                { 
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
+                {
+                    int tempLength;
+                    try
+                    {
+                        tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("error while getting text length in pixels", ex);    
+                    }
                     if (maxLength < tempLength)
                     { 
                         if(MAX_NAME_LENGTH < tempLength)
@@ -4306,7 +4315,9 @@ namespace RegulatedNoise
                 StationDirectory[ComboboxKey].Remove(csvrow);
                 CommodityDirectory[lbPrices.SelectedItems[0].Text].Remove(csvrow2);
                 ImportCsvString(f.RowToEdit.ToString());
+
                 SetupGui();
+                cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
             }
         }
 
@@ -4329,6 +4340,7 @@ namespace RegulatedNoise
                 CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
                 ImportCsvString(f.RowToEdit.ToString());
                 SetupGui();
+                cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
             }
         }
 
@@ -4359,8 +4371,21 @@ namespace RegulatedNoise
 
                 StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Remove(csvrow);
                 CommodityDirectory[item.Text].Remove(csvrow2);
+
+                if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
+                {
+                    // if theres no commodity price anymore we can (must) delete the history data
+                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
+                    if (StationInHistory != null)
+                        _StationHistory.History.Remove(StationInHistory);
+
+                    // and also the station itself
+                    StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
+                }
             }
+
             SetupGui();
+            cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
         }
 
         private void bCommodityDeleteRow_Click(object sender, EventArgs e)
@@ -4377,8 +4402,21 @@ namespace RegulatedNoise
 
                 StationDirectory[item.Text].Remove(csvrow);
                 CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
+
+                if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
+                {
+                    // if theres no commodity price anymore we can (must) delete the history data
+                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
+                    if (StationInHistory != null)
+                        _StationHistory.History.Remove(StationInHistory);
+
+                    // and also the station itself
+                    StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
+                }
             }
+
             SetupGui();
+            cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
         }
 
         private void btnBestRoundTrip_Click(object sender, EventArgs e)
@@ -4859,62 +4897,6 @@ namespace RegulatedNoise
                 txtGUIColorCutoffLevel.Text = RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
         }
 
-        
-        //private void loadWindowPosition()
-        //{
-        //    if (RegulatedNoiseSettings.WindowPosition.Height > -1) 
-        //    {
-        //        this.Top         = RegulatedNoiseSettings.WindowPosition.Top;
-        //        this.Left        = RegulatedNoiseSettings.WindowPosition.Left;
-        //        this.Height      = RegulatedNoiseSettings.WindowPosition.Height;
-        //        this.Width       = RegulatedNoiseSettings.WindowPosition.Width;
-
-        //        this.WindowState = RegulatedNoiseSettings.WindowState;
-        //    }
-        //    else
-        //    {
-        //        RegulatedNoiseSettings.WindowPosition.Y         = this.Top;
-        //        RegulatedNoiseSettings.WindowPosition.X         = this.Left;
-        //        RegulatedNoiseSettings.WindowPosition.Height    = this.Height;
-        //        RegulatedNoiseSettings.WindowPosition.Width     = this.Width;
-
-        //        RegulatedNoiseSettings.WindowState              = this.WindowState;
-
-        //        SaveSettings();
-        //    }
-        //}
-
-        //private void saveWindowPosition()
-        //{
-        //    bool changed = false;
-
-        //    if (this.WindowState != FormWindowState.Minimized)
-        //        if (RegulatedNoiseSettings.WindowState != this.WindowState)
-        //        {
-        //            RegulatedNoiseSettings.WindowState = this.WindowState;
-        //            changed = true;
-        //        }
-
-        //    if (this.WindowState == FormWindowState.Normal)
-        //    {
-        //        if ((RegulatedNoiseSettings.WindowPosition.Y != this.Top) ||
-        //            (RegulatedNoiseSettings.WindowPosition.X != this.Left) ||
-        //            (RegulatedNoiseSettings.WindowPosition.Height != this.Height) ||
-        //            (RegulatedNoiseSettings.WindowPosition.Width != this.Width))
-        //        {
-        //            RegulatedNoiseSettings.WindowPosition.Y = this.Top;
-        //            RegulatedNoiseSettings.WindowPosition.X = this.Left;
-        //            RegulatedNoiseSettings.WindowPosition.Height = this.Height;
-        //            RegulatedNoiseSettings.WindowPosition.Width = this.Width;
-
-        //            changed = true;
-        //        }
-        //    }
-
-        //    if (changed) 
-        //        SaveSettings();
-        //}
-
         /// <summary>
         /// get the Milkyway
         /// </summary>
@@ -5113,6 +5095,5 @@ namespace RegulatedNoise
             System.Diagnostics.Process.Start(url);
 
         }
-
     }
 }

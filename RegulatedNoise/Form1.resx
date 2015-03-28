@@ -117,6 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>460, 17</value>
+  </metadata>
+  <metadata name="dsCommodities.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>157, 17</value>
+  </metadata>
+  <metadata name="namesBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>294, 17</value>
+  </metadata>
+  <data name="label42.Text" xml:space="preserve">
+    <value>This program was initially written by other developers. 
+Unfortunately, these seem to have stopped the continuation of this 
+program before it was finished. For this reason I have decided to 
+continue to develop this great tool.
+
+If you like it and you want to support my development of this program, 
+I was very happy about a small donation. 
+
+Thank you, Duke Jones</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1490,9 +1513,6 @@
         jlWkAAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>460, 17</value>
-  </metadata>
   <data name="bShowStationAtStarchartDotInfo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -1537,15 +1557,6 @@
 
 </value>
   </data>
-  <data name="label42.Text" xml:space="preserve">
-    <value>This program was initially written by other developers. 
-Unfortunately, these seem to have stopped the continuation of this 
-program before it was finished. For this reason I have decided to 
-continue to develop this great tool.
-
-If you like it and you want to support my development of this program, 
-I was very happy about a small donation. </value>
-  </data>
   <data name="label50.Text" xml:space="preserve">
     <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
 
@@ -1555,16 +1566,7 @@ I was very happy about a small donation. </value>
     <value>In order to reduce the recognition time you can set a threshold quantity. The areas on which less dark pixels (= text) to see are as specified in the threshold will be completely ignored in the recognition. The threshold value should be greater than the number of pixels of a "-" be but also smaller than number of pixel number of a "1" (because this is the digit with the fewest number of pixels in it).
 So all "-" and less are ignored , all "1" and other digits are detected.</value>
   </data>
-  <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="dsCommodities.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>157, 17</value>
-  </metadata>
-  <metadata name="namesBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>294, 17</value>
-  </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>90</value>
+    <value>60</value>
   </metadata>
 </root>

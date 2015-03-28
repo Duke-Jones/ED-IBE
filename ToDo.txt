@@ -13,6 +13,12 @@ todo:
      so ask the user to set currnet values
 ***********************************************************************************
 
+1.84_0.11_1
+   * fixed: removing price data crashing the program
+   * removing and changing of price data showing changes immediately
+   * a few gui cleanups and small repositionings
+   * removed "commodities_RN.json" (it' auto generated at the first start or it exists already)
+-------------------------------------------------------------------------------------   
 1.84_0.10
    * completed base class for easy position saving
    * saving now the positions of all windows
