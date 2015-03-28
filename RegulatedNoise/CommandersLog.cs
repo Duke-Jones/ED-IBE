@@ -75,7 +75,7 @@ namespace RegulatedNoise
             ClearLogEventFields();
             _callingForm.dtpLogEventDate.Value =now;
             _callingForm.tbLogEventID.Text ="";
-            _callingForm.btCreateAddEntry.Text = "Create This Entry";
+            _callingForm.btCreateAddEntry.Text = "Save As New Entry";
         }
 
         public void CreateEvent(CommandersLogEvent partiallyCompleteCommandersLogEventEvent) // when we create from the webserver

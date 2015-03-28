@@ -13,6 +13,11 @@ todo:
      so ask the user to set currnet values
 ***********************************************************************************
 
+1.84_0.11
+   * if a station is renamed the new name gets now the correct format
+   * fixed another crash reason while changing data
+   * another few gui cleanups and object reconnectings
+-------------------------------------------------------------------------------------   
 1.84_0.11_1
    * fixed: removing price data crashing the program
    * removing and changing of price data showing changes immediately

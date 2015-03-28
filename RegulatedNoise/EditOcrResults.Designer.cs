@@ -161,6 +161,7 @@
             // 
             // EditOcrResultsSplit.Panel2
             // 
+            this.EditOcrResultsSplit.Panel2.Controls.Add(this.pbEditOcrResultsOriginalImage);
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.cmdWarnLevels);
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.cbOnlyImplausible);
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.tbEditOcrResultsCommodityName);
@@ -170,7 +171,6 @@
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.tbEditOcrResultsBuyPrice);
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.tbEditOcrResultsSupply);
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.tbEditOcrResultsDemand);
-            this.EditOcrResultsSplit.Panel2.Controls.Add(this.pbEditOcrResultsOriginalImage);
             this.EditOcrResultsSplit.Panel2.Controls.Add(this.tbEditOcrResultsDemandLevel);
             this.EditOcrResultsSplit.Panel2MinSize = 75;
             this.EditOcrResultsSplit.Size = new System.Drawing.Size(1169, 308);
@@ -335,6 +335,7 @@
             // 
             // pbEditOcrResultsOriginalImage
             // 
+            this.pbEditOcrResultsOriginalImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pbEditOcrResultsOriginalImage.Location = new System.Drawing.Point(3, 3);
             this.pbEditOcrResultsOriginalImage.Name = "pbEditOcrResultsOriginalImage";
             this.pbEditOcrResultsOriginalImage.Size = new System.Drawing.Size(1051, 35);

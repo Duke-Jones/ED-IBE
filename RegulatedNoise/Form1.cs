@@ -2133,6 +2133,8 @@ namespace RegulatedNoise
         {
             var existingStationName = getCmbItemKey(cmbStation.SelectedItem);
 
+            tbStationRename.Text    = _textInfo.ToTitleCase(tbStationRename.Text.ToLower());
+
             var newStationName = tbStationRename.Text + " [" + tbSystemRename.Text + "]";
 
             List<CsvRow> newRows = new List<CsvRow>();
@@ -4034,7 +4036,7 @@ namespace RegulatedNoise
             cbCargoModifier.Text = logEvent.CargoAction;
             cbLogCargoName.Text = logEvent.Cargo;
             dtpLogEventDate.Value = logEvent.EventDate;
-            btCreateAddEntry.Text = "Edit This Entry";
+            btCreateAddEntry.Text = "Save Changed Data";
 
         }
 
@@ -4321,7 +4323,7 @@ namespace RegulatedNoise
             }
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private void bCommodityEditRow_Click(object sender, EventArgs e)
         {
             var csvrow =
                 StationDirectory[lbCommodities.SelectedItems[0].Text].First(
@@ -4403,15 +4405,15 @@ namespace RegulatedNoise
                 StationDirectory[item.Text].Remove(csvrow);
                 CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
 
-                if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
+                if (StationDirectory[item.Text].Count == 0)
                 {
                     // if theres no commodity price anymore we can (must) delete the history data
-                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
+                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == item.Text);
                     if (StationInHistory != null)
                         _StationHistory.History.Remove(StationInHistory);
 
                     // and also the station itself
-                    StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
+                    StationDirectory.Remove(item.Text);
                 }
             }
 
