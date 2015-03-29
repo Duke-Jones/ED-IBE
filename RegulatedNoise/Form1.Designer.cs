@@ -36,11 +36,14 @@
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
-            this.rbSortByStation = new System.Windows.Forms.RadioButton();
-            this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label53 = new System.Windows.Forms.Label();
+            this.txtEDTime = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.txtLocalTime = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.tbCurrentStationinfoFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.button19 = new System.Windows.Forms.Button();
@@ -76,6 +79,9 @@
             this.gbSorting = new System.Windows.Forms.GroupBox();
             this.txtlastStationCount = new System.Windows.Forms.TextBox();
             this.cblastVisitedFirst = new System.Windows.Forms.CheckBox();
+            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
+            this.rbSortByStation = new System.Windows.Forms.RadioButton();
+            this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.cbLimitLightYears = new System.Windows.Forms.CheckBox();
@@ -330,44 +336,6 @@
             this.openFileDialog1.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
             this.openFileDialog1.Title = "select Tesseract Traineddata-File";
             // 
-            // rbSortByDistance
-            // 
-            this.rbSortByDistance.AutoSize = true;
-            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
-            this.rbSortByDistance.Name = "rbSortByDistance";
-            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
-            this.rbSortByDistance.TabIndex = 23;
-            this.rbSortByDistance.Text = "distance";
-            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
-            this.rbSortByDistance.UseVisualStyleBackColor = true;
-            this.rbSortByDistance.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
-            // rbSortByStation
-            // 
-            this.rbSortByStation.AutoSize = true;
-            this.rbSortByStation.Location = new System.Drawing.Point(5, 31);
-            this.rbSortByStation.Name = "rbSortByStation";
-            this.rbSortByStation.Size = new System.Drawing.Size(85, 17);
-            this.rbSortByStation.TabIndex = 19;
-            this.rbSortByStation.Text = "station name";
-            this.toolTip1.SetToolTip(this.rbSortByStation, "sorting by station ");
-            this.rbSortByStation.UseVisualStyleBackColor = true;
-            this.rbSortByStation.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
-            // rbSortBySystem
-            // 
-            this.rbSortBySystem.AutoSize = true;
-            this.rbSortBySystem.Checked = true;
-            this.rbSortBySystem.Location = new System.Drawing.Point(5, 14);
-            this.rbSortBySystem.Name = "rbSortBySystem";
-            this.rbSortBySystem.Size = new System.Drawing.Size(86, 17);
-            this.rbSortBySystem.TabIndex = 18;
-            this.rbSortBySystem.TabStop = true;
-            this.rbSortBySystem.Text = "system name";
-            this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
-            this.rbSortBySystem.UseVisualStyleBackColor = true;
-            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
             // dsCommodities
             // 
             this.dsCommodities.DataSetName = "dsCommodities";
@@ -377,6 +345,63 @@
             // 
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(499, 41);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(49, 13);
+            this.label53.TabIndex = 15;
+            this.label53.Text = "Universe";
+            // 
+            // txtEDTime
+            // 
+            this.txtEDTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEDTime.Location = new System.Drawing.Point(554, 36);
+            this.txtEDTime.Name = "txtEDTime";
+            this.txtEDTime.ReadOnly = true;
+            this.txtEDTime.Size = new System.Drawing.Size(69, 22);
+            this.txtEDTime.TabIndex = 14;
+            this.txtEDTime.Text = "88:88:88";
+            this.txtEDTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(515, 17);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(33, 13);
+            this.label54.TabIndex = 13;
+            this.label54.Text = "Local";
+            // 
+            // txtLocalTime
+            // 
+            this.txtLocalTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLocalTime.Location = new System.Drawing.Point(554, 12);
+            this.txtLocalTime.Name = "txtLocalTime";
+            this.txtLocalTime.ReadOnly = true;
+            this.txtLocalTime.Size = new System.Drawing.Size(69, 22);
+            this.txtLocalTime.TabIndex = 11;
+            this.txtLocalTime.Text = "88:88:88";
+            this.txtLocalTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(667, 38);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(152, 13);
+            this.label45.TabIndex = 10;
+            this.label45.Text = "Current Location (from log files)";
+            // 
+            // tbCurrentStationinfoFromLogs
+            // 
+            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(823, 35);
+            this.tbCurrentStationinfoFromLogs.Name = "tbCurrentStationinfoFromLogs";
+            this.tbCurrentStationinfoFromLogs.ReadOnly = true;
+            this.tbCurrentStationinfoFromLogs.Size = new System.Drawing.Size(255, 20);
+            this.tbCurrentStationinfoFromLogs.TabIndex = 9;
             // 
             // label37
             // 
@@ -427,7 +452,7 @@
             this.tabControl1.Controls.Add(this.tabWebserver);
             this.tabControl1.Controls.Add(this.tabEDDN);
             this.tabControl1.Controls.Add(this.tabSettings);
-            this.tabControl1.Location = new System.Drawing.Point(18, 54);
+            this.tabControl1.Location = new System.Drawing.Point(18, 64);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1067, 619);
@@ -464,7 +489,6 @@
             this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdDonate.Location = new System.Drawing.Point(893, 380);
             this.cmdDonate.Name = "cmdDonate";
             this.cmdDonate.Size = new System.Drawing.Size(154, 36);
@@ -476,11 +500,12 @@
             // 
             this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(712, 286);
+            this.label42.Location = new System.Drawing.Point(734, 350);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(335, 117);
+            this.label42.Size = new System.Drawing.Size(315, 52);
             this.label42.TabIndex = 38;
-            this.label42.Text = resources.GetString("label42.Text");
+            this.label42.Text = "If you like this program and you want to support my development, \r\nI was very hap" +
+    "py about a small donation. \r\n\r\nThank you, Duke Jones";
             // 
             // panel2
             // 
@@ -792,6 +817,44 @@
             this.cblastVisitedFirst.UseVisualStyleBackColor = true;
             this.cblastVisitedFirst.CheckedChanged += new System.EventHandler(this.cblastVisitedFirst_CheckedChanged);
             // 
+            // rbSortByDistance
+            // 
+            this.rbSortByDistance.AutoSize = true;
+            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
+            this.rbSortByDistance.Name = "rbSortByDistance";
+            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
+            this.rbSortByDistance.TabIndex = 23;
+            this.rbSortByDistance.Text = "distance";
+            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
+            this.rbSortByDistance.UseVisualStyleBackColor = true;
+            this.rbSortByDistance.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
+            // rbSortByStation
+            // 
+            this.rbSortByStation.AutoSize = true;
+            this.rbSortByStation.Location = new System.Drawing.Point(5, 31);
+            this.rbSortByStation.Name = "rbSortByStation";
+            this.rbSortByStation.Size = new System.Drawing.Size(85, 17);
+            this.rbSortByStation.TabIndex = 19;
+            this.rbSortByStation.Text = "station name";
+            this.toolTip1.SetToolTip(this.rbSortByStation, "sorting by station ");
+            this.rbSortByStation.UseVisualStyleBackColor = true;
+            this.rbSortByStation.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
+            // rbSortBySystem
+            // 
+            this.rbSortBySystem.AutoSize = true;
+            this.rbSortBySystem.Checked = true;
+            this.rbSortBySystem.Location = new System.Drawing.Point(5, 14);
+            this.rbSortBySystem.Name = "rbSortBySystem";
+            this.rbSortBySystem.Size = new System.Drawing.Size(86, 17);
+            this.rbSortBySystem.TabIndex = 18;
+            this.rbSortBySystem.TabStop = true;
+            this.rbSortBySystem.Text = "system name";
+            this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
+            this.rbSortBySystem.UseVisualStyleBackColor = true;
+            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
             // cbIncludeWithinRegionOfStation
             // 
             this.cbIncludeWithinRegionOfStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -925,7 +988,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(194, 521);
+            this.splitContainer1.Size = new System.Drawing.Size(178, 521);
             this.splitContainer1.SplitterDistance = 237;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -952,7 +1015,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(189, 235);
+            this.chart1.Size = new System.Drawing.Size(173, 235);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -979,7 +1042,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(184, 245);
+            this.chart2.Size = new System.Drawing.Size(168, 229);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2919,6 +2982,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1097, 690);
+            this.Controls.Add(this.label53);
+            this.Controls.Add(this.txtEDTime);
+            this.Controls.Add(this.label54);
+            this.Controls.Add(this.txtLocalTime);
+            this.Controls.Add(this.label45);
+            this.Controls.Add(this.tbCurrentStationinfoFromLogs);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.button19);
@@ -3249,6 +3318,12 @@
         private System.Windows.Forms.LinkLabel linkLabel5;
         private System.Windows.Forms.LinkLabel linkLabel6;
         private System.Windows.Forms.LinkLabel linkLabel7;
+        public System.Windows.Forms.TextBox tbCurrentStationinfoFromLogs;
+        private System.Windows.Forms.Label label45;
+        public System.Windows.Forms.TextBox txtLocalTime;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.Label label53;
+        public System.Windows.Forms.TextBox txtEDTime;
     }
 }
 

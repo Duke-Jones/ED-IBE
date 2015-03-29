@@ -78,6 +78,7 @@ namespace RegulatedNoise
         public decimal lastVersionDJ                                    = 0.00m;
         public int GUIColorCutoffLevel                                  = 150;
         public bool AutoActivateOCRTab                                  = true;
+        public string PilotsName                                        = String.Empty;
 
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},

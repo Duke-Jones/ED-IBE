@@ -129,17 +129,6 @@
   <metadata name="namesBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>294, 17</value>
   </metadata>
-  <data name="label42.Text" xml:space="preserve">
-    <value>This program was initially written by other developers. 
-Unfortunately, these seem to have stopped the continuation of this 
-program before it was finished. For this reason I have decided to 
-continue to develop this great tool.
-
-If you like it and you want to support my development of this program, 
-I was very happy about a small donation. 
-
-Thank you, Duke Jones</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

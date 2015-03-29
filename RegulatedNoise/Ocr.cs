@@ -180,8 +180,6 @@ namespace RegulatedNoise
             PerformOcr(textRowLocations);
         }
 
-
-
         public void PerformOcr(List<Tuple<int, int>> textRowLocations)
         {
             int DarkPixels;

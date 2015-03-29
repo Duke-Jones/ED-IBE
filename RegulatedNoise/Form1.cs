@@ -23,6 +23,7 @@ using System.ComponentModel;
 using RegulatedNoise.EDDB_Data;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 
 namespace RegulatedNoise
 {
@@ -76,6 +77,9 @@ namespace RegulatedNoise
         private bool _InitDone                                          = false;
         private StationHistory _StationHistory                          = new StationHistory();
         //bool _cbIncludeWithinRegionOfStation_IndexChanged               = false;
+
+        private String m_lastestStationInfo                             = String.Empty;
+        private System.Windows.Forms.Timer Clock; 
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -3871,7 +3875,13 @@ namespace RegulatedNoise
 
         public void UpdateSystemNameFromLogFile(bool updateCommandersLogUi = true)
         {
-            var appConfigPath = RegulatedNoiseSettings.ProductsPath;
+            string systemName = "";
+            string stationName = "";
+            string logLump;
+            Regex RegExTest = null;
+            Match m = null;
+
+            var appConfigPath   = RegulatedNoiseSettings.ProductsPath;
 
             if (Directory.Exists(appConfigPath))
             {
@@ -3889,32 +3899,82 @@ namespace RegulatedNoise
                     {
                         var newestNetLog = netLogs[0];
 
-                        // Reading backwards from the end of the file in 8K blocks...
+                        FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        Byte[] ByteBuffer = new Byte[1];
+                        Byte   lastByte = 0;
 
-                        var fs = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        StringBuilder SBuilder = new StringBuilder();
 
-                        fs.Seek(0, SeekOrigin.End);
-
-                        var moveBack = 65536;
-
-                        if (fs.Position - moveBack < 0)
-                            moveBack = (int)(fs.Position);
-
-                        fs.Seek(0 - moveBack, SeekOrigin.Current);
-
-                        var sr = new StreamReader(fs);
-                        string systemName = "";
-                        while (!sr.EndOfStream)
+                        for (long Offset = Datei.Length - ByteBuffer.Length; Offset > -1; Offset -= ByteBuffer.Length)
                         {
-                            string logLump = sr.ReadLine();
+                            Datei.Seek(Offset, SeekOrigin.Begin);
+                            Datei.Read(ByteBuffer,0,ByteBuffer.Length);
 
-                            if (logLump != null && logLump.Contains("System:"))
-                            {
-                                systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
-                                systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+                            if ((ByteBuffer[0] == 0x0D) && (lastByte == 0x0A) && (SBuilder.Length > 1))
+                            { 
+                                // stop - we found the end of the previous line
+                                logLump = SBuilder.ToString();
+
+                                // first looking for the systemname
+                                if (logLump != null && logLump.Contains("System:") && String.IsNullOrEmpty(systemName))
+                                {
+                                    systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
+                                    systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+
+                                    // preparing search for station info
+                                    //RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:(?!{0}).+:{0}", systemName), RegexOptions.IgnoreCase);
+                                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                                        RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", systemName), RegexOptions.IgnoreCase);
+                                    else
+                                        RegExTest = new Regex(String.Format("{1}:.+:.+:{0}", systemName, RegulatedNoiseSettings.PilotsName), RegexOptions.IgnoreCase);
+                                        
+                                    Offset = Datei.Length - ByteBuffer.Length;
+                                }
+
+                                // if we have the systemname we're looking for the stationname
+                                if (!string.IsNullOrEmpty(systemName))
+                                { 
+                                    m = RegExTest.Match(logLump);
+                                    //Debug.Print(logLump);
+                                    //if (logLump.Contains("Duke Jones"))
+                                    //    Debug.Print("Stop");
+                                    if (m.Success)
+                                    {
+                                        string[] parts = m.Groups[0].ToString().Split(':');
+                                        if (parts.GetUpperBound(0) >= 3)
+                                        { 
+
+                                                if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
+                                                {
+                                                    stationName =  _textInfo.ToTitleCase(parts[3].ToLower());
+                                                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                                                        RegulatedNoiseSettings.PilotsName = parts[1];
+                                                }
+                                                else
+                                                {
+                                                    stationName =  parts[2];
+                                                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                                                        RegulatedNoiseSettings.PilotsName = parts[0];
+                                                }
+                                            
+                                        }    
+
+                                        m_lastestStationInfo = stationName;
+                                    }
+                                }
+                                SBuilder.Clear();
                             }
+
+                            lastByte = ByteBuffer[0];
+                            if ((ByteBuffer[0] != 0x0D) && (ByteBuffer[0] != 0x0A))
+                                SBuilder.Insert(0, Encoding.ASCII.GetString(ByteBuffer));
+
+                            if (! String.IsNullOrEmpty(stationName))
+	                        {
+		                        break;
+	                        }
                         }
-                        sr.Close();
+
 
                         if (systemName != "")
                         {
@@ -3930,14 +3990,21 @@ namespace RegulatedNoise
 
                                 _LoggedSystem = systemName;
 
-                                //tbCurrentSystemFromLogs.Text = systemName;
                             }
+
                             if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
                             {
                                 if (updateCommandersLogUi)
                                     cbLogSystemName.Text = systemName;
                             }
                         }
+
+                        setStationInfo();
+                        if (stationName != "")
+                        {
+                                                           
+                        }
+
                     }
 
                     if (stateTimer == null)
@@ -3946,7 +4013,6 @@ namespace RegulatedNoise
                         TimerCallback timerCallback = TimerCallback;
                         stateTimer = new System.Threading.Timer(timerCallback, autoEvent, 10000, 10000);
                     }
-
                 }
             }
         }
@@ -4167,8 +4233,27 @@ namespace RegulatedNoise
             
             Retheme();
 
+            Clock = new System.Windows.Forms.Timer();
+            Clock.Interval = 1000;
+            Clock.Start();
+            Clock.Tick += Clock_Tick;
         }
 
+        private void Clock_Tick(object sender, EventArgs e)
+        {
+            setClock();    
+        }
+
+        private void setClock()
+        {
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(setClock));
+            else
+            { 
+                txtLocalTime.Text = DateTime.Now.ToString("T");
+                txtEDTime.Text = DateTime.UtcNow.ToString("T");
+            }
+        }
 
         private void doSpecial()
         {
@@ -5097,5 +5182,14 @@ namespace RegulatedNoise
             System.Diagnostics.Process.Start(url);
 
         }
+
+        public void setStationInfo()
+        {
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(setStationInfo));
+            else
+                tbCurrentStationinfoFromLogs.Text = m_lastestStationInfo;
+        }
+
     }
 }

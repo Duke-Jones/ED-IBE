@@ -1,7 +1,6 @@
 todo:
    * option "take jumps into account"
    * show distance in lists
-   * showing current ED time (GMT +- x hours)
    * Cmdrs Log must using ED-Time
    * optimize column widths of tables
    * make visibility and width of columns selectable and save the settings
@@ -11,8 +10,14 @@ todo:
    * english data base with possibility of import (file/ocr) from other languages
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
+   * renaming a station must rename the station history too
+   * copy system name from log into clipboard
 ***********************************************************************************
 
+1.84_0.12_1
+   * getting current location in the current system from logfile, too
+   * clock added (local and ingame time)
+-------------------------------------------------------------------------------------   
 1.84_0.11
    * if a station is renamed the new name gets now the correct format
    * fixed another crash reason while changing data
