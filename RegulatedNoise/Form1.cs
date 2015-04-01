@@ -80,6 +80,7 @@ namespace RegulatedNoise
 
         private String m_lastestStationInfo                             = String.Empty;
         private System.Windows.Forms.Timer Clock; 
+        private CommandersLogEvent m_RightMouseSelectedLogEvent                   = null;
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -373,8 +374,12 @@ namespace RegulatedNoise
                     lvCommandersLog.Columns.Add(c);
                 }
             }
-            lvCommandersLog.Columns[0].Width = 150;
-            lvCommandersLog.Columns[1].Width = 200;
+            lvCommandersLog.Columns[0].Width = 130;
+            lvCommandersLog.Columns[1].Width = 130;
+            lvCommandersLog.Columns[2].Width = 150;
+            lvCommandersLog.Columns[3].Width = 150;
+            lvCommandersLog.Columns[4].Width = 80;
+            lvCommandersLog.Columns[5].Width = 80;
 
             // Create an instance of a ListView column sorter and assign it 
             // to the ListView control.
@@ -1319,9 +1324,20 @@ namespace RegulatedNoise
 
         private string CombinedNameToSystemName(string combinedName)
         {
-            var ret = combinedName.Substring(combinedName.IndexOf("[") + 1);
-            ret = ret.TrimEnd(']');
-            return ret;
+            try
+            {
+                var ret = combinedName.Substring(combinedName.IndexOf("[") + 1);
+                ret = ret.TrimEnd(']');
+                return ret;
+
+            }
+            catch (Exception ex)
+            {
+                
+                throw ex;
+            }
+
+            
         }
 
         private void SetupGui(bool force= false)
@@ -1737,73 +1753,86 @@ namespace RegulatedNoise
 
         private void cbStation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var dist = DistanceInLightYears(CombinedNameToSystemName(getCmbItemKey(cmbStation.SelectedItem)));
+            var selectedItem = cmbStation.SelectedItem;
 
-            if (dist < double.MaxValue)
-                lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
-            else
-                lblLightYearsFromCurrentSystem.Text = "(system location unknown)";
-
-            lbPrices.Items.Clear();
-            var stationName =  getCmbItemKey(((ComboBox)sender).SelectedItem); 
-
-            if (stationName != ID_DELIMITER)
+            if (selectedItem != null)
             { 
-                var start = stationName.IndexOf("[", StringComparison.Ordinal);
-                var end = stationName.IndexOf("]", StringComparison.Ordinal);
+                var dist = DistanceInLightYears(CombinedNameToSystemName(getCmbItemKey(selectedItem)));
 
-                tbStationRename.Text = stationName.Substring(0, start - 1);
-                tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
+                if (dist < double.MaxValue)
+                    lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
+                else
+                    lblLightYearsFromCurrentSystem.Text = "(system location unknown)";
 
-                foreach (var row in StationDirectory[stationName])
-                {
-                    decimal bestBuyPrice;
-                    decimal bestSellPrice;
-                    string bestBuy;
-                    string bestSell;
-                    decimal buyers;
-                    decimal sellers;
+                lbPrices.Items.Clear();
+                var stationName =  getCmbItemKey(((ComboBox)sender).SelectedItem); 
 
-                    GetBestBuyAndSell(row.CommodityName, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
+                if (stationName != ID_DELIMITER)
+                { 
+                    var start = stationName.IndexOf("[", StringComparison.Ordinal);
+                    var end = stationName.IndexOf("]", StringComparison.Ordinal);
 
-                    ListViewItem newItem = new ListViewItem(new[] 
-                    {   row.CommodityName, 
-                        row.SellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
-                        row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
-                        row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "", 
-                        row.DemandLevel,
-                        row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
-                        row.SupplyLevel, 
-                        bestBuy, 
-                        bestSell,
-                        bestSell!= "" && bestBuy != "" ? (bestSellPrice-bestBuyPrice).ToString(CultureInfo.InvariantCulture) : "",
-                        row.SampleDate.ToString(CultureInfo.InvariantCulture) ,
-                        row.SourceFileName
-                    });
-                    newItem.UseItemStyleForSubItems = false;
-                    if (bestBuy.Contains(stationName))
+                    tbStationRename.Text = stationName.Substring(0, start - 1);
+                    tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
+
+                    foreach (var row in StationDirectory[stationName])
                     {
-                        newItem.SubItems[7].ForeColor = Color.DarkGreen;
-                        newItem.SubItems[7].BackColor = Color.LightYellow;
+                        decimal bestBuyPrice;
+                        decimal bestSellPrice;
+                        string bestBuy;
+                        string bestSell;
+                        decimal buyers;
+                        decimal sellers;
+
+                        GetBestBuyAndSell(row.CommodityName, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
+
+                        ListViewItem newItem = new ListViewItem(new[] 
+                        {   row.CommodityName, 
+                            row.SellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
+                            row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
+                            row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "", 
+                            row.DemandLevel,
+                            row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
+                            row.SupplyLevel, 
+                            bestBuy, 
+                            bestSell,
+                            bestSell!= "" && bestBuy != "" ? (bestSellPrice-bestBuyPrice).ToString(CultureInfo.InvariantCulture) : "",
+                            row.SampleDate.ToString(CultureInfo.InvariantCulture) ,
+                            row.SourceFileName
+                        });
+                        newItem.UseItemStyleForSubItems = false;
+                        if (bestBuy.Contains(stationName))
+                        {
+                            newItem.SubItems[7].ForeColor = Color.DarkGreen;
+                            newItem.SubItems[7].BackColor = Color.LightYellow;
+                        }
+
+                        if (bestSell.Contains(stationName))
+                        {
+                            newItem.SubItems[8].ForeColor = Color.DarkRed;
+                            newItem.SubItems[8].BackColor = Color.LightYellow;
+                        }
+
+                        lbPrices.Items.Add(newItem);
                     }
 
-                    if (bestSell.Contains(stationName))
-                    {
-                        newItem.SubItems[8].ForeColor = Color.DarkRed;
-                        newItem.SubItems[8].BackColor = Color.LightYellow;
-                    }
+                    cmdApplySystemRename.Enabled = true;
 
-                    lbPrices.Items.Add(newItem);
                 }
-
-                cmdApplySystemRename.Enabled = true;
-
+                else
+                {
+                    tbStationRename.Text = String.Empty;
+                    tbSystemRename.Text  = String.Empty;
+                    cmdApplySystemRename.Enabled = false;
+                    lbPrices.Items.Clear();
+                }
             }
             else
             {
                 tbStationRename.Text = String.Empty;
                 tbSystemRename.Text  = String.Empty;
                 cmdApplySystemRename.Enabled = false;
+                lbPrices.Items.Clear();
             }
         }
 
@@ -1947,41 +1976,52 @@ namespace RegulatedNoise
 
         private void cbCommodity_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var selectedCmbItem = ((ComboBox)sender).SelectedItem;
             lbCommodities.Items.Clear();
-            foreach (var row in CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))))
-            {
-                lbCommodities.Items.Add(new ListViewItem(new[] 
-                {   row.StationID,
-                    row.SellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
-                    row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
-                    row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "",
-                    row.DemandLevel,
-                    row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
-                    row.SupplyLevel,
-                    row.SampleDate.ToString(CultureInfo.InvariantCulture) 
-                }));
-            }
 
-            var l = CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
-            if (l.Count() > 0)
-            {
-                lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
-                lblMax.Text = l.Max(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
-                lblAvg.Text = l.Average(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                lblMin.Text = "N/A";
-                lblMax.Text = "N/A";
-                lblAvg.Text = "N/A";
-            }
+            if (selectedCmbItem != null)
+            { 
+                foreach (var row in CommodityDirectory[(selectedCmbItem.ToString())].Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))))
+                {
+                    lbCommodities.Items.Add(new ListViewItem(new[] 
+                    {   row.StationID,
+                        row.SellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
+                        row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
+                        row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "",
+                        row.DemandLevel,
+                        row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
+                        row.SupplyLevel,
+                        row.SampleDate.ToString(CultureInfo.InvariantCulture) 
+                    }));
+                }
 
-            l = CommodityDirectory[(((ComboBox)sender).SelectedItem.ToString())].Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
-            if (l.Count() > 0)
-            {
-                lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
-                lblMaxSell.Text = l.Max(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
-                lblAvgSell.Text = l.Average(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
+                var l = CommodityDirectory[(selectedCmbItem.ToString())].Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
+                if (l.Count() > 0)
+                {
+                    lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
+                    lblMax.Text = l.Max(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
+                    lblAvg.Text = l.Average(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    lblMin.Text = "N/A";
+                    lblMax.Text = "N/A";
+                    lblAvg.Text = "N/A";
+                }
+
+                l = CommodityDirectory[(selectedCmbItem.ToString())].Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.SystemName))).ToList();
+                if (l.Count() > 0)
+                {
+                    lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
+                    lblMaxSell.Text = l.Max(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
+                    lblAvgSell.Text = l.Average(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    lblMinSell.Text = "N/A";
+                    lblMaxSell.Text = "N/A";
+                    lblAvgSell.Text = "N/A";
+                }
             }
             else
             {
@@ -1989,6 +2029,8 @@ namespace RegulatedNoise
                 lblMaxSell.Text = "N/A";
                 lblAvgSell.Text = "N/A";
             }
+
+
 
         }
 
@@ -2629,8 +2671,29 @@ namespace RegulatedNoise
         {
             if (InvokeRequired)
             {
-                Invoke(new DisplayResultsDelegate(DisplayResults), s);
-                return;
+                Int32 currentTry=0;
+                bool Retry = false;
+
+                do
+                {
+                    Retry = false;
+                    try
+                    {
+                        Invoke(new DisplayResultsDelegate(DisplayResults), s);
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (currentTry >= 3)
+                            throw ex;
+                        else
+                        { 
+                            Thread.Sleep(333);
+                            currentTry++;
+                            Retry = true;
+                        }
+                    }
+                } while (Retry);
             }
 
             tbOcrStationName.Text = s; // CLARK HUB
@@ -3915,9 +3978,11 @@ namespace RegulatedNoise
                                 // stop - we found the end of the previous line
                                 logLump = SBuilder.ToString();
 
+
                                 // first looking for the systemname
                                 if (logLump != null && logLump.Contains("System:") && String.IsNullOrEmpty(systemName))
                                 {
+                                    Debug.Print("Systemstring:" + logLump);
                                     systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
                                     systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
 
@@ -3928,6 +3993,8 @@ namespace RegulatedNoise
                                     else
                                         RegExTest = new Regex(String.Format("{1}:.+:.+:{0}", systemName, RegulatedNoiseSettings.PilotsName), RegexOptions.IgnoreCase);
                                         
+                                    Debug.Print("System: " + systemName);
+                                    // start search at the beginning
                                     Offset = Datei.Length - ByteBuffer.Length;
                                 }
 
@@ -3943,23 +4010,23 @@ namespace RegulatedNoise
                                         string[] parts = m.Groups[0].ToString().Split(':');
                                         if (parts.GetUpperBound(0) >= 3)
                                         { 
+                                            Debug.Print("Stationstring:" + logLump);
+                                            if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
+                                            {
+                                                stationName =  _textInfo.ToTitleCase(parts[3].ToLower());
+                                                if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                                                    RegulatedNoiseSettings.PilotsName = parts[1];
 
-                                                if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
-                                                {
-                                                    stationName =  _textInfo.ToTitleCase(parts[3].ToLower());
-                                                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                                                        RegulatedNoiseSettings.PilotsName = parts[1];
-                                                }
-                                                else
-                                                {
-                                                    stationName =  parts[2];
-                                                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                                                        RegulatedNoiseSettings.PilotsName = parts[0];
-                                                }
-                                            
+                                            }
+                                            else
+                                            {
+                                                stationName =  parts[2];
+                                                if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                                                    RegulatedNoiseSettings.PilotsName = parts[0];
+                                            }
                                         }    
-
-                                        m_lastestStationInfo = stationName;
+                                        
+                                        Debug.Print("Station:" + stationName);
                                     }
                                 }
                                 SBuilder.Clear();
@@ -3979,6 +4046,7 @@ namespace RegulatedNoise
                         if (systemName != "")
                         {
                             Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
+                            
                             if (_LoggedSystem != systemName)
                             {
                                 // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
@@ -3990,7 +4058,13 @@ namespace RegulatedNoise
 
                                 _LoggedSystem = systemName;
 
+                                if (!String.IsNullOrEmpty(stationName))
+                                    m_lastestStationInfo = stationName;
+                                else
+                                    m_lastestStationInfo = "scanning...";
                             }
+                            else if (!String.IsNullOrEmpty(m_lastestStationInfo))
+                                m_lastestStationInfo = stationName;
 
                             if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
                             {
@@ -4000,13 +4074,10 @@ namespace RegulatedNoise
                         }
 
                         setStationInfo();
-                        if (stationName != "")
-                        {
-                                                           
-                        }
 
                     }
-
+                    
+                    Debug.Print("\n\n\n");
                     if (stateTimer == null)
                     {
                         var autoEvent = new AutoResetEvent(false);
@@ -4052,7 +4123,7 @@ namespace RegulatedNoise
 
                 var listViewData = new string[LogEventProperties.Count()];
 
-                listViewData[0] = logEvent.EventDate.ToString(CultureInfo.InvariantCulture);
+                listViewData[0] = logEvent.EventDate.ToString(CultureInfo.CurrentCulture);
 
                 int ctr = 1;
                 foreach (var y in LogEventProperties)
@@ -4065,10 +4136,10 @@ namespace RegulatedNoise
                 }
 
                 lvCommandersLog.SelectedIndexChanged -= lvCommandersLog_SelectedIndexChanged;
-                var columnIndex = lvCommandersLog.Items.IndexOf(_commandersLogSelectedItem);
+                var columnIndex = lvCommandersLog.Items.IndexOf(theClickedOne);
                 lvCommandersLog.Items.RemoveAt(columnIndex);
                 var newItem = new ListViewItem(listViewData);
-                _commandersLogSelectedItem = newItem;
+                theClickedOne = newItem;
                 lvCommandersLog.Items.Insert(columnIndex, newItem);
                 lvCommandersLog.SelectedIndexChanged += lvCommandersLog_SelectedIndexChanged;
                 //CommandersLog.CreateNewEvent();
@@ -4080,14 +4151,14 @@ namespace RegulatedNoise
             CommandersLog.SaveLog(true);
         }
 
-        private ListViewItem _commandersLogSelectedItem;
+        private ListViewItem theClickedOne;
 
         private void lvCommandersLog_SelectedIndexChanged(object sender, EventArgs e)
         {
             var lv = ((ListView)sender);
             if (lv.SelectedItems.Count == 0) return;
-            _commandersLogSelectedItem = lv.SelectedItems[0];
-            var selectedGuid = _commandersLogSelectedItem.SubItems[lv.Columns.IndexOfKey("EventID")].Text;
+            theClickedOne = lv.SelectedItems[0];
+            var selectedGuid = theClickedOne.SubItems[lv.Columns.IndexOfKey("EventID")].Text;
 
             var logEvent = CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
 
@@ -4149,6 +4220,31 @@ namespace RegulatedNoise
 
             RegulatedNoiseSettings.CmdrsLogSortColumn = _commandersLogColumnSorter.SortColumn;
             RegulatedNoiseSettings.CmdrsLogSortOrder = _commandersLogColumnSorter.Order;
+        }
+
+        /// <summary>
+        /// handles mouse clicks on the Commanders Log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void lvCommandersLog_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ListView currentListView = ((ListView)sender);
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                m_RightMouseSelectedLogEvent = null;
+                ListViewItem theClickedOne = currentListView.GetItemAt(e.X, e.Y);
+
+                if(theClickedOne != null)
+                {
+                    var selectedGuid = theClickedOne.SubItems[currentListView.Columns.IndexOfKey("EventID")].Text;
+                    m_RightMouseSelectedLogEvent = CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
+
+                    contextMenuStrip1.Show(currentListView.PointToScreen(e.Location));
+                }
+
+            }
         }
 
         private void cbLogSystemName_DropDown(object sender, EventArgs e)
@@ -4446,33 +4542,40 @@ namespace RegulatedNoise
 
         private void bStationDeleteRow_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in lbPrices.SelectedItems)
+            try
             {
-                var csvrow =
-                    StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].First(
-                        x => x.CommodityName == item.Text);
-
-                var csvrow2 =
-                    CommodityDirectory[item.Text].First(
-                        x => x.StationID == getCmbItemKey(cmbStation.SelectedItem));
-
-                StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Remove(csvrow);
-                CommodityDirectory[item.Text].Remove(csvrow2);
-
-                if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
+                foreach (ListViewItem item in lbPrices.SelectedItems)
                 {
-                    // if theres no commodity price anymore we can (must) delete the history data
-                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
-                    if (StationInHistory != null)
-                        _StationHistory.History.Remove(StationInHistory);
+                    var csvrow =
+                        StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].First(
+                            x => x.CommodityName == item.Text);
 
-                    // and also the station itself
-                    StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
+                    var csvrow2 =
+                        CommodityDirectory[item.Text].First(
+                            x => x.StationID == getCmbItemKey(cmbStation.SelectedItem));
+
+                    StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Remove(csvrow);
+                    CommodityDirectory[item.Text].Remove(csvrow2);
+
+                    if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
+                    {
+                        // if theres no commodity price anymore we can (must) delete the history data
+                        StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
+                        if (StationInHistory != null)
+                            _StationHistory.History.Remove(StationInHistory);
+
+                        // and also the station itself
+                        StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
+                    }
                 }
-            }
 
-            SetupGui();
-            cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
+                SetupGui();
+                cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
+            }
+            catch (Exception ex)
+            {
+                throw ex  ;  
+            }
         }
 
         private void bCommodityDeleteRow_Click(object sender, EventArgs e)
@@ -5189,6 +5292,19 @@ namespace RegulatedNoise
                 Invoke(new MethodInvoker(setStationInfo));
             else
                 tbCurrentStationinfoFromLogs.Text = m_lastestStationInfo;
+        }
+
+        /// <summary>
+        /// copies the systemname of the CmdrLog entry to the clipboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void copySystenmameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(m_RightMouseSelectedLogEvent != null)
+            {
+                 Clipboard.SetText(m_RightMouseSelectedLogEvent.System);
+            }
         }
 
     }

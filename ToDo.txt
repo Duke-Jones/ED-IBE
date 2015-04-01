@@ -11,11 +11,19 @@ todo:
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
    * renaming a station must rename the station history too
-   * copy system name from log into clipboard
-***********************************************************************************
+   * set current location from logfile to stationname if OCRing
+   * systeminformation based on current location info
+   * by commodity : show distance to current system
+   ***********************************************************************************
 
+1.84_0.12_2
+   * delete setting.ini if calibrating new (previous calculated digit width can result in bad OCR)
+   * commodity warnlevels are now saved if changed
+   * fixed crash reason if deleting all commodities from a station
+   * Cmdr's Log now showing dates in local culture settings
+-------------------------------------------------------------------------------------   
 1.84_0.12_1
-   * getting current location in the current system from logfile, too
+   * getting also current location in the current system from logfile
    * clock added (local and ingame time)
 -------------------------------------------------------------------------------------   
 1.84_0.11

@@ -220,6 +220,7 @@ namespace RegulatedNoise
             }
 
             // show station on GUI
+
             _callingForm.DisplayResults(headerResult);
             
             var commodityColumnText         = new string[textRowLocations.Count(), 8]; 

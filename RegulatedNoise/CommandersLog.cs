@@ -198,7 +198,7 @@ namespace RegulatedNoise
             {
                 var listViewData = new string[_callingForm.LogEventProperties.Count()];
 
-                listViewData[0] = x.EventDate.ToString(CultureInfo.InvariantCulture);
+                listViewData[0] = x.EventDate.ToString(CultureInfo.CurrentUICulture);
 
                 int ctr = 1;
                 foreach (var y in _callingForm.LogEventProperties)

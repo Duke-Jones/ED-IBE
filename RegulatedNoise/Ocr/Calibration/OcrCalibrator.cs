@@ -24,6 +24,11 @@ namespace RegulatedNoise
                 }
 
             }
+
+            // otherwise the previous calculated (and now maybe wrong) digit width can result in bad OCR
+            if (File.Exists(@"Brainerous\settings.ini"))
+                File.Delete(@"Brainerous\settings.ini");
+
         }
         public void LoadCalibration()
         {

@@ -36,6 +36,9 @@
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
+            this.rbSortByStation = new System.Windows.Forms.RadioButton();
+            this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label53 = new System.Windows.Forms.Label();
@@ -79,9 +82,6 @@
             this.gbSorting = new System.Windows.Forms.GroupBox();
             this.txtlastStationCount = new System.Windows.Forms.TextBox();
             this.cblastVisitedFirst = new System.Windows.Forms.CheckBox();
-            this.rbSortByDistance = new System.Windows.Forms.RadioButton();
-            this.rbSortByStation = new System.Windows.Forms.RadioButton();
-            this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.cbLimitLightYears = new System.Windows.Forms.CheckBox();
@@ -267,6 +267,8 @@
             this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.bOpen = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -327,6 +329,7 @@
             this.groupBox6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -335,6 +338,44 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
             this.openFileDialog1.Title = "select Tesseract Traineddata-File";
+            // 
+            // rbSortByDistance
+            // 
+            this.rbSortByDistance.AutoSize = true;
+            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
+            this.rbSortByDistance.Name = "rbSortByDistance";
+            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
+            this.rbSortByDistance.TabIndex = 23;
+            this.rbSortByDistance.Text = "distance";
+            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
+            this.rbSortByDistance.UseVisualStyleBackColor = true;
+            this.rbSortByDistance.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
+            // rbSortByStation
+            // 
+            this.rbSortByStation.AutoSize = true;
+            this.rbSortByStation.Location = new System.Drawing.Point(5, 31);
+            this.rbSortByStation.Name = "rbSortByStation";
+            this.rbSortByStation.Size = new System.Drawing.Size(85, 17);
+            this.rbSortByStation.TabIndex = 19;
+            this.rbSortByStation.Text = "station name";
+            this.toolTip1.SetToolTip(this.rbSortByStation, "sorting by station ");
+            this.rbSortByStation.UseVisualStyleBackColor = true;
+            this.rbSortByStation.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
+            // rbSortBySystem
+            // 
+            this.rbSortBySystem.AutoSize = true;
+            this.rbSortBySystem.Checked = true;
+            this.rbSortBySystem.Location = new System.Drawing.Point(5, 14);
+            this.rbSortBySystem.Name = "rbSortBySystem";
+            this.rbSortBySystem.Size = new System.Drawing.Size(86, 17);
+            this.rbSortBySystem.TabIndex = 18;
+            this.rbSortBySystem.TabStop = true;
+            this.rbSortBySystem.Text = "system name";
+            this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
+            this.rbSortBySystem.UseVisualStyleBackColor = true;
+            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
             // 
             // dsCommodities
             // 
@@ -402,6 +443,7 @@
             this.tbCurrentStationinfoFromLogs.ReadOnly = true;
             this.tbCurrentStationinfoFromLogs.Size = new System.Drawing.Size(255, 20);
             this.tbCurrentStationinfoFromLogs.TabIndex = 9;
+            this.tbCurrentStationinfoFromLogs.Text = "scanning...";
             // 
             // label37
             // 
@@ -419,6 +461,7 @@
             this.tbCurrentSystemFromLogs.ReadOnly = true;
             this.tbCurrentSystemFromLogs.Size = new System.Drawing.Size(255, 20);
             this.tbCurrentSystemFromLogs.TabIndex = 7;
+            this.tbCurrentSystemFromLogs.Text = "scanning...";
             // 
             // button19
             // 
@@ -817,44 +860,6 @@
             this.cblastVisitedFirst.UseVisualStyleBackColor = true;
             this.cblastVisitedFirst.CheckedChanged += new System.EventHandler(this.cblastVisitedFirst_CheckedChanged);
             // 
-            // rbSortByDistance
-            // 
-            this.rbSortByDistance.AutoSize = true;
-            this.rbSortByDistance.Location = new System.Drawing.Point(115, 14);
-            this.rbSortByDistance.Name = "rbSortByDistance";
-            this.rbSortByDistance.Size = new System.Drawing.Size(65, 17);
-            this.rbSortByDistance.TabIndex = 23;
-            this.rbSortByDistance.Text = "distance";
-            this.toolTip1.SetToolTip(this.rbSortByDistance, "sorting by distance");
-            this.rbSortByDistance.UseVisualStyleBackColor = true;
-            this.rbSortByDistance.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
-            // rbSortByStation
-            // 
-            this.rbSortByStation.AutoSize = true;
-            this.rbSortByStation.Location = new System.Drawing.Point(5, 31);
-            this.rbSortByStation.Name = "rbSortByStation";
-            this.rbSortByStation.Size = new System.Drawing.Size(85, 17);
-            this.rbSortByStation.TabIndex = 19;
-            this.rbSortByStation.Text = "station name";
-            this.toolTip1.SetToolTip(this.rbSortByStation, "sorting by station ");
-            this.rbSortByStation.UseVisualStyleBackColor = true;
-            this.rbSortByStation.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
-            // rbSortBySystem
-            // 
-            this.rbSortBySystem.AutoSize = true;
-            this.rbSortBySystem.Checked = true;
-            this.rbSortBySystem.Location = new System.Drawing.Point(5, 14);
-            this.rbSortBySystem.Name = "rbSortBySystem";
-            this.rbSortBySystem.Size = new System.Drawing.Size(86, 17);
-            this.rbSortBySystem.TabIndex = 18;
-            this.rbSortBySystem.TabStop = true;
-            this.rbSortBySystem.Text = "system name";
-            this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
-            this.rbSortBySystem.UseVisualStyleBackColor = true;
-            this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
-            // 
             // cbIncludeWithinRegionOfStation
             // 
             this.cbIncludeWithinRegionOfStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -988,7 +993,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(178, 521);
+            this.splitContainer1.Size = new System.Drawing.Size(170, 521);
             this.splitContainer1.SplitterDistance = 237;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -1015,7 +1020,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(173, 235);
+            this.chart1.Size = new System.Drawing.Size(165, 235);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1042,7 +1047,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(168, 229);
+            this.chart2.Size = new System.Drawing.Size(160, 221);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1719,6 +1724,8 @@
             this.lvCommandersLog.View = System.Windows.Forms.View.Details;
             this.lvCommandersLog.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvCommandersLog_ColumnClick);
             this.lvCommandersLog.SelectedIndexChanged += new System.EventHandler(this.lvCommandersLog_SelectedIndexChanged);
+            this.lvCommandersLog.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCommandersLog_MouseClick);
+            
             // 
             // cbLogSystemName
             // 
@@ -2976,6 +2983,20 @@
             this.bOpen.UseVisualStyleBackColor = false;
             this.bOpen.Click += new System.EventHandler(this.bOpen_Click);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copySystenmameToClipboardToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(246, 26);
+            // 
+            // copySystenmameToClipboardToolStripMenuItem
+            // 
+            this.copySystenmameToClipboardToolStripMenuItem.Name = "copySystenmameToClipboardToolStripMenuItem";
+            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.copySystenmameToClipboardToolStripMenuItem.Text = "Copy Systemname To Clipboard";
+            this.copySystenmameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystenmameToClipboardToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3084,10 +3105,12 @@
             this.groupBox9.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
+
 
         #endregion
 
@@ -3324,6 +3347,8 @@
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label53;
         public System.Windows.Forms.TextBox txtEDTime;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem copySystenmameToClipboardToolStripMenuItem;
     }
 }
 

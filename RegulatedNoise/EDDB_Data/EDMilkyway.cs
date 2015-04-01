@@ -71,6 +71,8 @@ namespace RegulatedNoise.EDDB_Data
         { 
             m_Commodities.Distinct();
             m_Commodities = newList;
+
+            saveRNCommodityData(@"./Data/commodities_RN.json", true);
         }
 
         /// <summary>
@@ -682,7 +684,7 @@ namespace RegulatedNoise.EDDB_Data
         /// </summary>
         /// <param name="File">json-file to save</param>
         /// <param name="Stationtype"></param>
-        private void saveRNCommodityData(string Filename, bool BackupOldFile)
+        public void saveRNCommodityData(string Filename, bool BackupOldFile)
         {
             List<EDCommoditiesWarningLevels> WarningLevels = EDCommoditiesExt.extractWarningLevels(m_Commodities);
 
@@ -698,5 +700,6 @@ namespace RegulatedNoise.EDDB_Data
 
             rotateSaveFiles(Filename, newFile, backupFile, BackupOldFile);
         }
+
     }
 }

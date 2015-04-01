@@ -115,6 +115,7 @@ namespace RegulatedNoise.EDDB_Data
                 { 
                     // save and change
                     Form1.InstanceObject.myMilkyway.setCommodities(Commodities.OrderBy(x => x.Id).ToList());
+                    Form1.InstanceObject.myMilkyway.saveRNCommodityData(@"./Data/commodities_RN.json", true);
                     this.Close();
                 }
                 else
