@@ -14,8 +14,13 @@ todo:
    * set current location from logfile to stationname if OCRing
    * systeminformation based on current location info
    * by commodity : show distance to current system
+   * sorting of cmdrslog is wrong if sorted by timestamp
    ***********************************************************************************
 
+1.84_0.13_1
+   * fixed some issues while looking for location in logfiles
+   * changed GUI from CorrectingOCRResults in cause of viewing issues
+-------------------------------------------------------------------------------------   
 1.84_0.12_2
    * delete setting.ini if calibrating new (previous calculated digit width can result in bad OCR)
    * commodity warnlevels are now saved if changed

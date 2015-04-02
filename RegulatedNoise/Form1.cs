@@ -35,6 +35,7 @@ namespace RegulatedNoise
 
         const string ID_DELIMITER = "empty";
         const int MAX_NAME_LENGTH = 120;
+        const long SEARCH_MAXLENGTH = 160;
 
         private delegate void delButtonInvoker(Button myButton, bool enable);
         private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
@@ -3943,6 +3944,10 @@ namespace RegulatedNoise
             string logLump;
             Regex RegExTest = null;
             Match m = null;
+            List<String> PossibleStations = new List<string>();
+
+            if (!String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                RegExTest = new Regex(String.Format("{0}:.+:.+:", Regex.Escape(RegulatedNoiseSettings.PilotsName)), RegexOptions.IgnoreCase);
 
             var appConfigPath   = RegulatedNoiseSettings.ProductsPath;
 
@@ -3962,44 +3967,111 @@ namespace RegulatedNoise
                     {
                         var newestNetLog = netLogs[0];
 
-                        FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        Byte[] ByteBuffer = new Byte[1];
-                        Byte   lastByte = 0;
+                        FileStream Datei    = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        Byte[] ByteBuffer   = new Byte[1];
+                        Byte[] LineBuffer   = new Byte[SEARCH_MAXLENGTH];
 
-                        StringBuilder SBuilder = new StringBuilder();
+                        Datei.Seek(0, SeekOrigin.End);
 
-                        for (long Offset = Datei.Length - ByteBuffer.Length; Offset > -1; Offset -= ByteBuffer.Length)
+                        
+
+                        while(String.IsNullOrEmpty(stationName) && (Datei.Position >= 1))
                         {
-                            Datei.Seek(Offset, SeekOrigin.Begin);
-                            Datei.Read(ByteBuffer,0,ByteBuffer.Length);
+                            long StartPos  = -1;
+                            long EndPos    = -1;
 
-                            if ((ByteBuffer[0] == 0x0D) && (lastByte == 0x0A) && (SBuilder.Length > 1))
-                            { 
-                                // stop - we found the end of the previous line
-                                logLump = SBuilder.ToString();
+                            do
+                            {
+                                Datei.Read(ByteBuffer,0,ByteBuffer.Length);    
 
+                                if((ByteBuffer[0] == 0x0A) || (ByteBuffer[0] == 0x0D))
+                                    if(EndPos == -1)
+                                    {
+                                        if (ByteBuffer[0] == 0x0D) 
+                                            EndPos = Datei.Position+2;
+                                        else
+                                            EndPos = Datei.Position+1;
+
+                                        Datei.Seek(-2, SeekOrigin.Current);
+                                    }
+                                    else
+                                    {
+                                        if (ByteBuffer[0] == 0x0D) 
+                                            StartPos = Datei.Position+2;
+                                        else
+                                            StartPos = Datei.Position+1;
+                                    }
+                                else
+                                    Datei.Seek(-2, SeekOrigin.Current);
+
+                            } while (StartPos == -1 && Datei.Position >= 1);
+                            
+                            if ((StartPos >= 0) && (EndPos <= (StartPos + SEARCH_MAXLENGTH)))
+                            {
+                                // found a line and it's not too long
+                                // read
+                                Datei.Read(LineBuffer,0, (int)(EndPos - StartPos));
+                                // and convert to string
+                                logLump = Encoding.ASCII.GetString(LineBuffer,0, (int)(EndPos - StartPos));
 
                                 // first looking for the systemname
-                                if (logLump != null && logLump.Contains("System:") && String.IsNullOrEmpty(systemName))
+                                if (logLump != null && String.IsNullOrEmpty(systemName))
                                 {
-                                    Debug.Print("Systemstring:" + logLump);
-                                    systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
-                                    systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+                                    if(logLump.Contains("System:"))
+                                    { 
+                                        Debug.Print("Systemstring:" + logLump);
+                                        systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
+                                        systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
 
-                                    // preparing search for station info
-                                    //RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:(?!{0}).+:{0}", systemName), RegexOptions.IgnoreCase);
-                                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                                        RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", systemName), RegexOptions.IgnoreCase);
-                                    else
-                                        RegExTest = new Regex(String.Format("{1}:.+:.+:{0}", systemName, RegulatedNoiseSettings.PilotsName), RegexOptions.IgnoreCase);
+                                        // preparing search for station info
+                                        //RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:(?!{0}).+:{0}", systemName), RegexOptions.IgnoreCase);
+                                        if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                                            RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
+                                        else
+                                            RegExTest = new Regex(String.Format("{1}:.+:.+:{0}", Regex.Escape(systemName), Regex.Escape(RegulatedNoiseSettings.PilotsName)), RegexOptions.IgnoreCase);
                                         
-                                    Debug.Print("System: " + systemName);
-                                    // start search at the beginning
-                                    Offset = Datei.Length - ByteBuffer.Length;
+                                        Debug.Print("System: " + systemName);
+                                        // start search at the beginning
+
+                                        if (RegExTest != null)
+                                        {
+                                            // we may have candidates, check them and if nothing found search from the current position
+                                            foreach (string candidate in PossibleStations)
+	                                        {
+                                                m = RegExTest.Match(candidate);
+                                                //Debug.Print(logLump);
+                                                //if (logLump.Contains("Duke Jones"))
+                                                //    Debug.Print("Stop");
+                                                if (m.Success)
+                                                {
+                                                    getStation(ref stationName, m);
+                                                    break;
+                                                }
+
+	                                        }
+                                        }
+                                        else
+                                        { 
+                                            // we must start from the end
+                                            Datei.Seek(0, SeekOrigin.End);
+                                        }
+                                    }
+                                    else if (RegExTest != null)
+                                    { 
+                                        m = RegExTest.Match(logLump);
+                                        //Debug.Print(logLump);
+                                        //if (logLump.Contains("Duke Jones"))
+                                        //    Debug.Print("Stop");
+                                        if (m.Success)
+                                        {
+                                            PossibleStations.Add(logLump);
+                                        }
+                                    
+                                    }
                                 }
 
                                 // if we have the systemname we're looking for the stationname
-                                if (!string.IsNullOrEmpty(systemName))
+                                if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
                                 { 
                                     m = RegExTest.Match(logLump);
                                     //Debug.Print(logLump);
@@ -4007,39 +4079,16 @@ namespace RegulatedNoise
                                     //    Debug.Print("Stop");
                                     if (m.Success)
                                     {
-                                        string[] parts = m.Groups[0].ToString().Split(':');
-                                        if (parts.GetUpperBound(0) >= 3)
-                                        { 
-                                            Debug.Print("Stationstring:" + logLump);
-                                            if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
-                                            {
-                                                stationName =  _textInfo.ToTitleCase(parts[3].ToLower());
-                                                if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                                                    RegulatedNoiseSettings.PilotsName = parts[1];
-
-                                            }
-                                            else
-                                            {
-                                                stationName =  parts[2];
-                                                if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                                                    RegulatedNoiseSettings.PilotsName = parts[0];
-                                            }
-                                        }    
-                                        
-                                        Debug.Print("Station:" + stationName);
+                                        getStation(ref stationName, m);
                                     }
                                 }
-                                SBuilder.Clear();
+                            }
+                            
+                            if (StartPos >= 3)
+                            { 
+                                Datei.Seek(-(EndPos - StartPos + 2), SeekOrigin.Current);
                             }
 
-                            lastByte = ByteBuffer[0];
-                            if ((ByteBuffer[0] != 0x0D) && (ByteBuffer[0] != 0x0A))
-                                SBuilder.Insert(0, Encoding.ASCII.GetString(ByteBuffer));
-
-                            if (! String.IsNullOrEmpty(stationName))
-	                        {
-		                        break;
-	                        }
                         }
 
 
@@ -4084,6 +4133,27 @@ namespace RegulatedNoise
                         TimerCallback timerCallback = TimerCallback;
                         stateTimer = new System.Threading.Timer(timerCallback, autoEvent, 10000, 10000);
                     }
+                }
+            }
+        }
+
+        private void getStation(ref string stationName, Match m)
+        {
+            string[] parts = m.Groups[0].ToString().Split(':');
+            if (parts.GetUpperBound(0) >= 3)
+            {
+                if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    stationName = _textInfo.ToTitleCase(parts[3].ToLower());
+                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                        RegulatedNoiseSettings.PilotsName = parts[1];
+
+                }
+                else
+                {
+                    stationName = parts[2];
+                    if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                        RegulatedNoiseSettings.PilotsName = parts[0];
                 }
             }
         }
