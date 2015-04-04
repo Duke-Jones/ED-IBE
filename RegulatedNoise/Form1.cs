@@ -82,6 +82,10 @@ namespace RegulatedNoise
         private String m_lastestStationInfo                             = String.Empty;
         private System.Windows.Forms.Timer Clock; 
         private CommandersLogEvent m_RightMouseSelectedLogEvent                   = null;
+        private bool m_Closing = false;
+        private AutoResetEvent m_LogfileScanner_ARE                     = new AutoResetEvent(false);
+        private Thread m_LogfileScanner_Thread;
+
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -896,6 +900,9 @@ namespace RegulatedNoise
 
         void Application_ApplicationExit(object sender, EventArgs e)
         {
+            m_Closing = true;
+            m_LogfileScanner_ARE.Set();
+
             if (stateTimer != null) stateTimer.Dispose();
             if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
 
@@ -3055,9 +3062,6 @@ namespace RegulatedNoise
                 case AppDelegateType.AddEventToLog:
                     CommandersLog.CreateEvent((CommandersLogEvent)o);
                     break;
-                case AppDelegateType.UpdateSystemNameLiveFromLog:
-                    UpdateSystemNameFromLogFile(false);
-                    break;
                 case AppDelegateType.ChangeGridSort:
                     ChangeGridSort((string)o);
                     break;
@@ -3937,204 +3941,235 @@ namespace RegulatedNoise
 
         private System.Threading.Timer stateTimer;
 
-        public void UpdateSystemNameFromLogFile(bool updateCommandersLogUi = true)
+        public void UpdateSystemNameFromLogFile()
         {
-            string systemName = "";
-            string stationName = "";
-            string logLump;
-            Regex RegExTest = null;
-            Match m = null;
-            List<String> PossibleStations = new List<string>();
-
-            if (!String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                RegExTest = new Regex(String.Format("{0}:.+:.+:", Regex.Escape(RegulatedNoiseSettings.PilotsName)), RegexOptions.IgnoreCase);
-
-            var appConfigPath   = RegulatedNoiseSettings.ProductsPath;
-
-            if (Directory.Exists(appConfigPath))
+            if (m_LogfileScanner_Thread == null)
             {
-                var versions = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
+                m_LogfileScanner_Thread = new Thread(() => this.UpdateSystemNameFromLogFile_worker());
+                m_LogfileScanner_Thread.Name = "LogfileScanner_Thread";
+                m_LogfileScanner_Thread.IsBackground = true;
+                m_LogfileScanner_Thread.Start();
+            }
 
-                if (versions[0].Contains("FORC-FDEV"))
+            if (stateTimer == null)
+            {
+                var autoEvent = new AutoResetEvent(false);
+                TimerCallback timerCallback = TimerCallback;
+                stateTimer = new System.Threading.Timer(timerCallback, autoEvent, 10000, 10000);
+            }
+
+
+            m_LogfileScanner_ARE.Set();
+        }
+
+        public void UpdateSystemNameFromLogFile_worker()
+        {
+            SingleThreadLogger logger = new SingleThreadLogger(ThreadLoggerType.FileScanner);
+
+            do
+            {
+                try
                 {
-                    // We'll just go right ahead and use the latest log...
-                    var netLogs =
-                        Directory.GetFiles(versions[0] + "\\Logs", "netLog*.log")
-                            .OrderByDescending(File.GetLastWriteTime)
-                            .ToArray();
+                    string systemName = "";
+                    string stationName = "";
+                    string logLump;
+                    Regex RegExTest = null;
+                    Match m = null;
+                    List<String> PossibleStations = new List<string>();
 
-                    if (netLogs.Length != 0)
+                    if (!String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                        RegExTest = new Regex(String.Format("{0}:.+:.+:", Regex.Escape(RegulatedNoiseSettings.PilotsName)), RegexOptions.IgnoreCase);
+
+                    var appConfigPath = RegulatedNoiseSettings.ProductsPath;
+
+                    if (Directory.Exists(appConfigPath))
                     {
-                        var newestNetLog = netLogs[0];
+                        var versions = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
 
-                        FileStream Datei    = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        Byte[] ByteBuffer   = new Byte[1];
-                        Byte[] LineBuffer   = new Byte[SEARCH_MAXLENGTH];
-
-                        Datei.Seek(0, SeekOrigin.End);
-
-                        
-
-                        while(String.IsNullOrEmpty(stationName) && (Datei.Position >= 1))
+                        if (versions[0].Contains("FORC-FDEV"))
                         {
-                            long StartPos  = -1;
-                            long EndPos    = -1;
+                            // We'll just go right ahead and use the latest log...
+                            var netLogs =
+                                Directory.GetFiles(versions[0] + "\\Logs", "netLog*.log")
+                                    .OrderByDescending(File.GetLastWriteTime)
+                                    .ToArray();
 
-                            do
+                            if (netLogs.Length != 0)
                             {
-                                Datei.Read(ByteBuffer,0,ByteBuffer.Length);    
+                                var newestNetLog = netLogs[0];
 
-                                if((ByteBuffer[0] == 0x0A) || (ByteBuffer[0] == 0x0D))
-                                    if(EndPos == -1)
-                                    {
-                                        if (ByteBuffer[0] == 0x0D) 
-                                            EndPos = Datei.Position+2;
-                                        else
-                                            EndPos = Datei.Position+1;
+                                Debug.Print("Datei geöffnet");
+                                FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                                Byte[] ByteBuffer = new Byte[1];
+                                Byte[] LineBuffer = new Byte[SEARCH_MAXLENGTH];
 
-                                        Datei.Seek(-2, SeekOrigin.Current);
-                                    }
-                                    else
-                                    {
-                                        if (ByteBuffer[0] == 0x0D) 
-                                            StartPos = Datei.Position+2;
-                                        else
-                                            StartPos = Datei.Position+1;
-                                    }
-                                else
-                                    Datei.Seek(-2, SeekOrigin.Current);
+                                Datei.Seek(0, SeekOrigin.End);
 
-                            } while (StartPos == -1 && Datei.Position >= 1);
-                            
-                            if ((StartPos >= 0) && (EndPos <= (StartPos + SEARCH_MAXLENGTH)))
-                            {
-                                // found a line and it's not too long
-                                // read
-                                Datei.Read(LineBuffer,0, (int)(EndPos - StartPos));
-                                // and convert to string
-                                logLump = Encoding.ASCII.GetString(LineBuffer,0, (int)(EndPos - StartPos));
-
-                                // first looking for the systemname
-                                if (logLump != null && String.IsNullOrEmpty(systemName))
+                                while (String.IsNullOrEmpty(stationName) && (Datei.Position >= 1))
                                 {
-                                    if(logLump.Contains("System:"))
-                                    { 
-                                        Debug.Print("Systemstring:" + logLump);
-                                        systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
-                                        systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+                                    long StartPos = -1;
+                                    long EndPos = -1;
 
-                                        // preparing search for station info
-                                        //RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:(?!{0}).+:{0}", systemName), RegexOptions.IgnoreCase);
-                                        if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                                            RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
+                                    do
+                                    {
+                                        Datei.Read(ByteBuffer, 0, ByteBuffer.Length);
+
+                                        if ((ByteBuffer[0] == 0x0A) || (ByteBuffer[0] == 0x0D))
+                                            if (EndPos == -1)
+                                            {
+                                                if (ByteBuffer[0] == 0x0D)
+                                                    EndPos = Datei.Position + 2;
+                                                else
+                                                    EndPos = Datei.Position + 1;
+
+                                                Datei.Seek(-2, SeekOrigin.Current);
+                                            }
+                                            else
+                                            {
+                                                if (ByteBuffer[0] == 0x0D)
+                                                    StartPos = Datei.Position + 2;
+                                                else
+                                                    StartPos = Datei.Position + 1;
+                                            }
                                         else
-                                            RegExTest = new Regex(String.Format("{1}:.+:.+:{0}", Regex.Escape(systemName), Regex.Escape(RegulatedNoiseSettings.PilotsName)), RegexOptions.IgnoreCase);
-                                        
-                                        Debug.Print("System: " + systemName);
-                                        // start search at the beginning
+                                            Datei.Seek(-2, SeekOrigin.Current);
 
-                                        if (RegExTest != null)
+                                    } while (StartPos == -1 && Datei.Position >= 1);
+
+                                    if ((StartPos >= 0) && (EndPos <= (StartPos + SEARCH_MAXLENGTH)))
+                                    {
+                                        // found a line and it's not too long
+                                        // read
+                                        Datei.Read(LineBuffer, 0, (int)(EndPos - StartPos));
+                                        // and convert to string
+                                        logLump = Encoding.ASCII.GetString(LineBuffer, 0, (int)(EndPos - StartPos));
+
+                                        if (logLump.Contains("FindBestIsland"))
+                                            Debug.Print("FBI");
+
+                                        // first looking for the systemname
+                                        if (logLump != null && String.IsNullOrEmpty(systemName))
                                         {
-                                            // we may have candidates, check them and if nothing found search from the current position
-                                            foreach (string candidate in PossibleStations)
-	                                        {
-                                                m = RegExTest.Match(candidate);
+                                            if (logLump.Contains("System:"))
+                                            {
+                                                Debug.Print("Systemstring:" + logLump);
+                                                systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
+                                                systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+
+                                                // preparing search for station info
+                                                RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
+
+                                                Debug.Print("System: " + systemName);
+                                                // start search at the beginning
+
+                                                if (RegExTest != null)
+                                                {
+                                                    // we may have candidates, check them and if nothing found search from the current position
+                                                    foreach (string candidate in PossibleStations)
+                                                    {
+                                                        m = RegExTest.Match(candidate);
+                                                        //Debug.Print(logLump);
+                                                        //if (logLump.Contains("Duke Jones"))
+                                                        //    Debug.Print("Stop");
+                                                        if (m.Success)
+                                                        {
+                                                            getStation(ref stationName, m);
+                                                            break;
+                                                        }
+
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    // we must start from the end
+                                                    Datei.Seek(0, SeekOrigin.End);
+                                                }
+                                            }
+                                            else if (RegExTest != null)
+                                            {
+                                                m = RegExTest.Match(logLump);
                                                 //Debug.Print(logLump);
                                                 //if (logLump.Contains("Duke Jones"))
                                                 //    Debug.Print("Stop");
                                                 if (m.Success)
                                                 {
-                                                    getStation(ref stationName, m);
-                                                    break;
+                                                    PossibleStations.Add(logLump);
                                                 }
 
-	                                        }
+                                            }
                                         }
-                                        else
-                                        { 
-                                            // we must start from the end
-                                            Datei.Seek(0, SeekOrigin.End);
-                                        }
-                                    }
-                                    else if (RegExTest != null)
-                                    { 
-                                        m = RegExTest.Match(logLump);
-                                        //Debug.Print(logLump);
-                                        //if (logLump.Contains("Duke Jones"))
-                                        //    Debug.Print("Stop");
-                                        if (m.Success)
+
+                                        // if we have the systemname we're looking for the stationname
+                                        if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
                                         {
-                                            PossibleStations.Add(logLump);
+                                            m = RegExTest.Match(logLump);
+                                            //Debug.Print(logLump);
+                                            //if (logLump.Contains("Duke Jones"))
+                                            //    Debug.Print("Stop");
+                                            if (m.Success)
+                                            {
+                                                getStation(ref stationName, m);
+                                            }
                                         }
-                                    
                                     }
-                                }
 
-                                // if we have the systemname we're looking for the stationname
-                                if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
-                                { 
-                                    m = RegExTest.Match(logLump);
-                                    //Debug.Print(logLump);
-                                    //if (logLump.Contains("Duke Jones"))
-                                    //    Debug.Print("Stop");
-                                    if (m.Success)
+                                    if (StartPos >= 3)
                                     {
-                                        getStation(ref stationName, m);
+                                        Datei.Seek(-(EndPos - StartPos + 2), SeekOrigin.Current);
+                                    }
+
+                                }
+
+                                Datei.Close();
+                                Datei.Dispose();
+
+                                if (systemName != "")
+                                {
+                                    Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
+
+                                    if (_LoggedSystem != systemName)
+                                    {
+                                        // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
+                                        if (cbAutoAdd_JumpedTo.Checked)
+                                        {
+                                            String EventID = CommandersLog.CreateEvent("Jumped To", "", systemName, "", "", 0, "", DateTime.Now);
+                                            setActiveItem(EventID);
+                                        }
+
+                                        _LoggedSystem = systemName;
+
+                                        if (!String.IsNullOrEmpty(stationName))
+                                            m_lastestStationInfo = stationName;
+                                        else
+                                            m_lastestStationInfo = "scanning...";
+                                    }
+                                    else if (!String.IsNullOrEmpty(stationName))
+                                        m_lastestStationInfo = stationName;
+
+                                    if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
+                                    {
+                                        cbLogSystemName.Text = systemName;
                                     }
                                 }
-                            }
-                            
-                            if (StartPos >= 3)
-                            { 
-                                Datei.Seek(-(EndPos - StartPos + 2), SeekOrigin.Current);
+
+                                setStationInfo();
+
                             }
 
+                            Debug.Print("\n\n\n");
+                            m_LogfileScanner_ARE.WaitOne();
+                            throw new Exception("Bla");
                         }
-
-
-                        if (systemName != "")
-                        {
-                            Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-                            
-                            if (_LoggedSystem != systemName)
-                            {
-                                // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
-                                if (cbAutoAdd_JumpedTo.Checked)
-                                {
-                                    String EventID = CommandersLog.CreateEvent("Jumped To", "", systemName, "", "", 0, "", DateTime.Now);
-                                    setActiveItem(EventID);
-                                }
-
-                                _LoggedSystem = systemName;
-
-                                if (!String.IsNullOrEmpty(stationName))
-                                    m_lastestStationInfo = stationName;
-                                else
-                                    m_lastestStationInfo = "scanning...";
-                            }
-                            else if (!String.IsNullOrEmpty(m_lastestStationInfo))
-                                m_lastestStationInfo = stationName;
-
-                            if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
-                            {
-                                if (updateCommandersLogUi)
-                                    cbLogSystemName.Text = systemName;
-                            }
-                        }
-
-                        setStationInfo();
-
-                    }
-                    
-                    Debug.Print("\n\n\n");
-                    if (stateTimer == null)
-                    {
-                        var autoEvent = new AutoResetEvent(false);
-                        TimerCallback timerCallback = TimerCallback;
-                        stateTimer = new System.Threading.Timer(timerCallback, autoEvent, 10000, 10000);
                     }
                 }
-            }
+                catch (Exception ex)
+                {
+                    Debug.Print("AnalyseError");
+                    logger.Log(ex.Message + "\n" + ex.StackTrace + "\n\n");
+                }
+            }while (!this.Disposing && !m_Closing);
+
+            Debug.Print("out");
         }
 
         private void getStation(ref string stationName, Match m)
@@ -4160,7 +4195,7 @@ namespace RegulatedNoise
 
         private void TimerCallback(object state)
         {
-            GenericSingleParameterMessage(null, AppDelegateType.UpdateSystemNameLiveFromLog);
+            UpdateSystemNameFromLogFile();
         }
 
         private void saveLogEntry(object sender, EventArgs e)

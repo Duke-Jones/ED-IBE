@@ -17,6 +17,9 @@ todo:
    * sorting of cmdrslog is wrong if sorted by timestamp
    ***********************************************************************************
 
+1.84_0.13_2
+   * fixed some issues while looking for location in logfiles
+-------------------------------------------------------------------------------------   
 1.84_0.13_1
    * fixed some issues while looking for location in logfiles
    * changed GUI from CorrectingOCRResults in cause of viewing issues
