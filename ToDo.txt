@@ -10,13 +10,16 @@ todo:
    * english data base with possibility of import (file/ocr) from other languages
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
-   * renaming a station must rename the station history too
-   * set current location from logfile to stationname if OCRing
-   * systeminformation based on current location info
    * by commodity : show distance to current system
-   * sorting of cmdrslog is wrong if sorted by timestamp
    ***********************************************************************************
 
+-------------------------------------------------------------------------------------      
+1.84_0.13_2
+   * first rows for "station distance to star" filter
+   * saving column widths of Cmdr's Log if changed
+   * optimized standard column widths of Cmdr's Log
+   * sorting of date columns now should be correct
+-------------------------------------------------------------------------------------      
 1.84_0.13_2
    * fixed some issues while looking for location in logfiles
 -------------------------------------------------------------------------------------   

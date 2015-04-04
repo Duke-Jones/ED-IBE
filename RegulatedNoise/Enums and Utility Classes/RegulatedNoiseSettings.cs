@@ -29,6 +29,28 @@ namespace RegulatedNoise
         public FormWindowState State;
     }
 
+    [Serializable]
+    public class ColumnData
+    {
+        public ColumnData()
+        { 
+            ColumnName          = "";
+            Width               = -1;
+            Visible             = true;
+        }
+
+        public ColumnData(string Name)
+        {
+            ColumnName          = Name;
+            Width               = -1;
+            Visible             = true;
+        }
+
+        public string ColumnName;
+        public Int32 Width;
+        public Boolean Visible;
+    }
+
 
     [Serializable]
     public class RegulatedNoiseSettings
@@ -72,7 +94,10 @@ namespace RegulatedNoise
         public bool lastStationCountActive                              = false;
         public bool limitLightYears                                     = false;
         public int lastLightYears                                       = 25;
+        public bool StationToStar                                       = false;
+        public int lastStationToStar                                    = 500;
         public int CBSortingSelection                                   = 1;
+        
         public bool PerLightYearRoundTrip                               = false;
         public decimal lastVersion                                      = 0.00m;
         public decimal lastVersionDJ                                    = 0.00m;
@@ -91,6 +116,23 @@ namespace RegulatedNoise
                                                                                                                   {"HelpOCR",               new WindowData()},
                                                                                                                   {"HelpCommodities",       new WindowData()},
                                                                                                                   {"EBPixeltest",           new WindowData()}
+                                                                                                                };
+
+        public SerializableDictionary<string, List<ColumnData>> ListViewColumnData = new SerializableDictionary<string, List<ColumnData>>() { 
+                                                                                                                  {"lvCommandersLog",       new List<ColumnData>() { 
+                                                                                                                                                     new ColumnData("EventDate"), 
+                                                                                                                                                     new ColumnData("EventType"), 
+                                                                                                                                                     new ColumnData("Station"), 
+                                                                                                                                                     new ColumnData("System"), 
+                                                                                                                                                     new ColumnData("Cargo"), 
+                                                                                                                                                     new ColumnData("CargoAction"), 
+                                                                                                                                                     new ColumnData("CargoVolume"), 
+                                                                                                                                                     new ColumnData("Notes"), 
+                                                                                                                                                     new ColumnData("EventID"), 
+                                                                                                                                                     new ColumnData("TransactionAmount"), 
+                                                                                                                                                     new ColumnData("Credits") }},
+                                                                                                                  {"lvAllComms",            new List<ColumnData>() { new ColumnData("") }},
+                                                                                                                  {"lbPrices",              new List<ColumnData>() { new ColumnData("") }}
                                                                                                                 };
 
         public void CheckVersion()

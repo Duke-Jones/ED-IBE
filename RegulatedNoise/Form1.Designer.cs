@@ -41,6 +41,8 @@
             this.rbSortBySystem = new System.Windows.Forms.RadioButton();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
             this.label54 = new System.Windows.Forms.Label();
@@ -85,7 +87,7 @@
             this.cbIncludeWithinRegionOfStation = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.cbLimitLightYears = new System.Windows.Forms.CheckBox();
-            this.cbLightYears = new System.Windows.Forms.ComboBox();
+            this.cmbLightYears = new System.Windows.Forms.ComboBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -133,6 +135,9 @@
             this.lvStationToStation = new System.Windows.Forms.ListView();
             this.lvStationToStationReturn = new System.Windows.Forms.ListView();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.cbStationToStar = new System.Windows.Forms.CheckBox();
+            this.cmbStationToStar = new System.Windows.Forms.ComboBox();
             this.cbPerLightYearRoundTrip = new System.Windows.Forms.CheckBox();
             this.lbAllRoundTrips = new System.Windows.Forms.ListBox();
             this.btnBestRoundTrip = new System.Windows.Forms.Button();
@@ -267,10 +272,9 @@
             this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.bOpen = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -329,7 +333,6 @@
             this.groupBox6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -386,6 +389,20 @@
             // 
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copySystenmameToClipboardToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(246, 26);
+            // 
+            // copySystenmameToClipboardToolStripMenuItem
+            // 
+            this.copySystenmameToClipboardToolStripMenuItem.Name = "copySystenmameToClipboardToolStripMenuItem";
+            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.copySystenmameToClipboardToolStripMenuItem.Text = "Copy Systemname To Clipboard";
+            this.copySystenmameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystenmameToClipboardToolStripMenuItem_Click);
             // 
             // label53
             // 
@@ -813,7 +830,7 @@
             this.tabPriceAnalysis.Controls.Add(this.cbIncludeWithinRegionOfStation);
             this.tabPriceAnalysis.Controls.Add(this.label43);
             this.tabPriceAnalysis.Controls.Add(this.cbLimitLightYears);
-            this.tabPriceAnalysis.Controls.Add(this.cbLightYears);
+            this.tabPriceAnalysis.Controls.Add(this.cmbLightYears);
             this.tabPriceAnalysis.Controls.Add(this.tabControl2);
             this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Location = new System.Drawing.Point(4, 22);
@@ -892,23 +909,23 @@
             this.cbLimitLightYears.UseVisualStyleBackColor = true;
             this.cbLimitLightYears.CheckedChanged += new System.EventHandler(this.checkboxLightYears_CheckedChanged);
             // 
-            // cbLightYears
+            // cmbLightYears
             // 
-            this.cbLightYears.FormattingEnabled = true;
-            this.cbLightYears.Items.AddRange(new object[] {
+            this.cmbLightYears.FormattingEnabled = true;
+            this.cmbLightYears.Items.AddRange(new object[] {
             "10",
             "25",
             "50",
             "100",
             "200",
             "1000"});
-            this.cbLightYears.Location = new System.Drawing.Point(168, 6);
-            this.cbLightYears.Name = "cbLightYears";
-            this.cbLightYears.Size = new System.Drawing.Size(48, 21);
-            this.cbLightYears.TabIndex = 11;
-            this.cbLightYears.SelectedIndexChanged += new System.EventHandler(this.cbLightYears_SelectedIndexChanged);
-            this.cbLightYears.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbLightYearsInput_KeyPress);
-            this.cbLightYears.LostFocus += new System.EventHandler(this.cbLightYearsInput_LostFocus);
+            this.cmbLightYears.Location = new System.Drawing.Point(168, 6);
+            this.cmbLightYears.Name = "cmbLightYears";
+            this.cmbLightYears.Size = new System.Drawing.Size(48, 21);
+            this.cmbLightYears.TabIndex = 11;
+            this.cmbLightYears.SelectedIndexChanged += new System.EventHandler(this.cmbLightYears_SelectedIndexChanged);
+            this.cmbLightYears.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbLightYearsInput_KeyPress);
+            this.cmbLightYears.LostFocus += new System.EventHandler(this.cmbLightYearsInput_LostFocus);
             // 
             // tabControl2
             // 
@@ -993,7 +1010,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(170, 521);
+            this.splitContainer1.Size = new System.Drawing.Size(160, 521);
             this.splitContainer1.SplitterDistance = 237;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -1020,7 +1037,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(165, 235);
+            this.chart1.Size = new System.Drawing.Size(155, 235);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1047,7 +1064,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(160, 221);
+            this.chart2.Size = new System.Drawing.Size(150, 211);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1505,6 +1522,9 @@
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Controls.Add(this.label55);
+            this.groupBox7.Controls.Add(this.cbStationToStar);
+            this.groupBox7.Controls.Add(this.cmbStationToStar);
             this.groupBox7.Controls.Add(this.cbPerLightYearRoundTrip);
             this.groupBox7.Controls.Add(this.lbAllRoundTrips);
             this.groupBox7.Controls.Add(this.btnBestRoundTrip);
@@ -1515,6 +1535,44 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Find Round-Trips";
             // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(342, 30);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(14, 13);
+            this.label55.TabIndex = 18;
+            this.label55.Text = "ls";
+            // 
+            // cbStationToStar
+            // 
+            this.cbStationToStar.AutoSize = true;
+            this.cbStationToStar.Location = new System.Drawing.Point(129, 29);
+            this.cbStationToStar.Name = "cbStationToStar";
+            this.cbStationToStar.Size = new System.Drawing.Size(164, 17);
+            this.cbStationToStar.TabIndex = 17;
+            this.cbStationToStar.Text = "Max. Station-to-Star Distance\r\n";
+            this.cbStationToStar.UseVisualStyleBackColor = true;
+            this.cbStationToStar.CheckedChanged += new System.EventHandler(this.cbStationToStar_CheckedChanged);
+            // 
+            // cmbStationToStar
+            // 
+            this.cmbStationToStar.FormattingEnabled = true;
+            this.cmbStationToStar.Items.AddRange(new object[] {
+            "50",
+            "100",
+            "500",
+            "1000",
+            "2000",
+            "5000"});
+            this.cmbStationToStar.Location = new System.Drawing.Point(291, 27);
+            this.cmbStationToStar.Name = "cmbStationToStar";
+            this.cmbStationToStar.Size = new System.Drawing.Size(48, 21);
+            this.cmbStationToStar.TabIndex = 16;
+            this.cmbStationToStar.SelectedIndexChanged += new System.EventHandler(this.cmbStationToStar_SelectedIndexChanged);
+            this.cmbStationToStar.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbStationToStarInput_KeyPress);
+            this.cmbStationToStar.LostFocus += new System.EventHandler(this.cmbStationToStarInput_LostFocus);
+            // 
             // cbPerLightYearRoundTrip
             // 
             this.cbPerLightYearRoundTrip.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1523,7 +1581,7 @@
             this.cbPerLightYearRoundTrip.AutoSize = true;
             this.cbPerLightYearRoundTrip.Checked = true;
             this.cbPerLightYearRoundTrip.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPerLightYearRoundTrip.Location = new System.Drawing.Point(129, 23);
+            this.cbPerLightYearRoundTrip.Location = new System.Drawing.Point(129, 13);
             this.cbPerLightYearRoundTrip.Name = "cbPerLightYearRoundTrip";
             this.cbPerLightYearRoundTrip.Size = new System.Drawing.Size(156, 17);
             this.cbPerLightYearRoundTrip.TabIndex = 14;
@@ -1725,7 +1783,6 @@
             this.lvCommandersLog.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvCommandersLog_ColumnClick);
             this.lvCommandersLog.SelectedIndexChanged += new System.EventHandler(this.lvCommandersLog_SelectedIndexChanged);
             this.lvCommandersLog.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCommandersLog_MouseClick);
-            
             // 
             // cbLogSystemName
             // 
@@ -2983,20 +3040,6 @@
             this.bOpen.UseVisualStyleBackColor = false;
             this.bOpen.Click += new System.EventHandler(this.bOpen_Click);
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copySystenmameToClipboardToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(246, 26);
-            // 
-            // copySystenmameToClipboardToolStripMenuItem
-            // 
-            this.copySystenmameToClipboardToolStripMenuItem.Name = "copySystenmameToClipboardToolStripMenuItem";
-            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.copySystenmameToClipboardToolStripMenuItem.Text = "Copy Systemname To Clipboard";
-            this.copySystenmameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystenmameToClipboardToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3023,6 +3066,7 @@
             this.Shown += new System.EventHandler(this.Form_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
             this.tabHelpAndChangeLog.PerformLayout();
@@ -3105,12 +3149,10 @@
             this.groupBox9.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
 
         #endregion
 
@@ -3232,7 +3274,7 @@
         private System.Windows.Forms.Button btnBestRoundTrip;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.CheckBox cbLimitLightYears;
-        private System.Windows.Forms.ComboBox cbLightYears;
+        private System.Windows.Forms.ComboBox cmbLightYears;
         private System.Windows.Forms.PictureBox pbBackgroundColour;
         private System.Windows.Forms.PictureBox pbForegroundColour;
         private System.Windows.Forms.Button button20;
@@ -3349,6 +3391,9 @@
         public System.Windows.Forms.TextBox txtEDTime;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem copySystenmameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.Label label55;
+        private System.Windows.Forms.CheckBox cbStationToStar;
+        private System.Windows.Forms.ComboBox cmbStationToStar;
     }
 }
 

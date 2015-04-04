@@ -331,6 +331,50 @@ namespace RegulatedNoise
             }
         }
 
+        private void setColumns(ListView currentListView)
+        {
+            List<ColumnData> currentData = RegulatedNoiseSettings.ListViewColumnData[currentListView.Name];
+
+            switch (currentListView.Name)
+            {
+                case "lvCommandersLog":
+                    currentListView.Columns[0].Width 	=  113;
+                    currentListView.Columns[1].Width 	=  119;
+                    currentListView.Columns[2].Width 	=  122;
+                    currentListView.Columns[3].Width 	=  141;
+                    currentListView.Columns[4].Width 	=   96;
+                    currentListView.Columns[5].Width 	=   72;
+                    currentListView.Columns[6].Width 	=   77;
+                    currentListView.Columns[7].Width 	=  127;
+                    currentListView.Columns[8].Width 	=   60;
+                    currentListView.Columns[9].Width 	=   63;
+                    currentListView.Columns[10].Width 	=   60;
+                    break;
+            }
+
+            foreach (ColumnHeader currentHeader in currentListView.Columns)
+            {
+                ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
+                if (Data.Width > -1)
+                    currentHeader.Width = Data.Width;
+            }
+
+            currentListView.ColumnWidthChanged += lvCommandersLog_ColumnWidthChanged;
+        }
+
+        private void saveColumns(ListView currentListView)
+        {
+            List<ColumnData> currentData = RegulatedNoiseSettings.ListViewColumnData[currentListView.Name];
+
+            foreach (ColumnHeader currentHeader in currentListView.Columns)
+            {
+                ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
+                Data.Width = currentHeader.Width;
+            }
+
+            SaveSettings();
+        }
+
         private void SetListViewColumnsAndSorters()
         {
             lbPrices.Columns.Add("Commodity Name").Width = 150;
@@ -379,12 +423,8 @@ namespace RegulatedNoise
                     lvCommandersLog.Columns.Add(c);
                 }
             }
-            lvCommandersLog.Columns[0].Width = 130;
-            lvCommandersLog.Columns[1].Width = 130;
-            lvCommandersLog.Columns[2].Width = 150;
-            lvCommandersLog.Columns[3].Width = 150;
-            lvCommandersLog.Columns[4].Width = 80;
-            lvCommandersLog.Columns[5].Width = 80;
+
+            setColumns(lvCommandersLog);
 
             // Create an instance of a ListView column sorter and assign it 
             // to the ListView control.
@@ -671,11 +711,14 @@ namespace RegulatedNoise
             this.lvCommandersLog.Sort();
 
             txtlastStationCount.Text                = RegulatedNoiseSettings.lastStationCount.ToString();
-            cbLightYears.Text                       = RegulatedNoiseSettings.lastLightYears.ToString();
+            cmbLightYears.Text                      = RegulatedNoiseSettings.lastLightYears.ToString();
             cblastVisitedFirst.Checked              = RegulatedNoiseSettings.lastStationCountActive;
             cbLimitLightYears.Checked               = RegulatedNoiseSettings.limitLightYears;
             cbPerLightYearRoundTrip.Checked         = RegulatedNoiseSettings.PerLightYearRoundTrip;
             cbAutoActivateOCRTab.Checked            = RegulatedNoiseSettings.AutoActivateOCRTab;
+
+            cmbStationToStar.Text                   = RegulatedNoiseSettings.lastStationToStar.ToString();
+            cbStationToStar.Checked                 = RegulatedNoiseSettings.StationToStar;
 
             switch (RegulatedNoiseSettings.CBSortingSelection)
             {
@@ -973,7 +1016,7 @@ namespace RegulatedNoise
                             DemandLevel + ";" +
                             (Supply != 0 ? Supply.ToString(CultureInfo.InvariantCulture) : "") + ";" +
                             SupplyLevel + ";" +
-                            SampleDate.ToString("s").Substring(0, 16) + ";" +
+                            SampleDate.ToString("s", CultureInfo.CurrentCulture).Substring(0, 16) + ";" +
                             SourceFileName;
             }
         }
@@ -1041,7 +1084,7 @@ namespace RegulatedNoise
                             commodity.DemandLevel,
                             commodity.Supply != 0 ? commodity.Supply.ToString(CultureInfo.InvariantCulture) : "",
                             commodity.SupplyLevel,
-                            commodity.SampleDate.ToString("s").Substring(0, 16),
+                            commodity.SampleDate.ToString("s", CultureInfo.CurrentCulture).Substring(0, 16),
                             cbExtendedInfoInCSV.Checked ? commodity.SourceFileName : ""
                         });
 
@@ -1215,13 +1258,40 @@ namespace RegulatedNoise
             {
                 double dist;
 
-                if (cbLightYears.Text == "")
+                if (cmbLightYears.Text == "")
                     return false;
 
                 dist = DistanceInLightYears(remoteSystemName);
 
-                var limit = float.Parse(cbLightYears.Text);
+                var limit = float.Parse(cmbLightYears.Text);
                 if (dist < limit)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool StationDistance(string SystemName, string StationName)
+        {
+            try
+            {
+                int? dist;
+
+                if (cmbStationToStar.Text == "")
+                    return false;
+
+                dist = _Milkyway.getDistanceToStar(SystemName, StationName).DistanceToStar;
+
+                var limit = int.Parse(cmbStationToStar.Text);
+                if ((dist == null) || (dist < limit))
                 {
                     return true;
                 }
@@ -1805,7 +1875,7 @@ namespace RegulatedNoise
                             bestBuy, 
                             bestSell,
                             bestSell!= "" && bestBuy != "" ? (bestSellPrice-bestBuyPrice).ToString(CultureInfo.InvariantCulture) : "",
-                            row.SampleDate.ToString(CultureInfo.InvariantCulture) ,
+                            row.SampleDate.ToString(CultureInfo.CurrentCulture) ,
                             row.SourceFileName
                         });
                         newItem.UseItemStyleForSubItems = false;
@@ -1999,7 +2069,7 @@ namespace RegulatedNoise
                         row.DemandLevel,
                         row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
                         row.SupplyLevel,
-                        row.SampleDate.ToString(CultureInfo.InvariantCulture) 
+                        row.SampleDate.ToString(CultureInfo.CurrentCulture) 
                     }));
                 }
 
@@ -3834,7 +3904,7 @@ namespace RegulatedNoise
 
             string commodityJson = json.Replace("$0$", tbUsername.Text.Replace("$1$", ""))
                 .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
-                .Replace("$3$", (rowToPost.SampleDate.ToString("s")))
+                .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
                 .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
                 .Replace("$5$", (rowToPost.StationID.Replace(" [" + rowToPost.SystemName + "]", "")))
                 .Replace("$6$", (rowToPost.SystemName))
@@ -4148,7 +4218,7 @@ namespace RegulatedNoise
 
                                     if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
                                     {
-                                        cbLogSystemName.Text = systemName;
+                                        setSystemInfo(systemName);
                                     }
                                 }
 
@@ -4156,9 +4226,6 @@ namespace RegulatedNoise
 
                             }
 
-                            Debug.Print("\n\n\n");
-                            m_LogfileScanner_ARE.WaitOne();
-                            throw new Exception("Bla");
                         }
                     }
                 }
@@ -4167,6 +4234,10 @@ namespace RegulatedNoise
                     Debug.Print("AnalyseError");
                     logger.Log(ex.Message + "\n" + ex.StackTrace + "\n\n");
                 }
+
+                Debug.Print("\n\n\n");
+                m_LogfileScanner_ARE.WaitOne();
+
             }while (!this.Disposing && !m_Closing);
 
             Debug.Print("out");
@@ -4350,6 +4421,11 @@ namespace RegulatedNoise
                 }
 
             }
+        }
+
+        void lvCommandersLog_ColumnWidthChanged(object sender, System.Windows.Forms.ColumnWidthChangedEventArgs e)
+        {
+            saveColumns((ListView)sender);            
         }
 
         private void cbLogSystemName_DropDown(object sender, EventArgs e)
@@ -4723,7 +4799,11 @@ namespace RegulatedNoise
             string stationA = "", stationB = "";
             List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
 
-            foreach (var a in StationDirectory.Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
+            foreach (var a in StationDirectory.Where(
+                                                       x => (!cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))) &&
+                                                            (!cbStationToStar.Checked   || StationDistance(CombinedNameToSystemName(x.Key), CombinedNameToStationName(x.Key)))
+                                                       
+                                                       ))
                 foreach (var b in StationDirectory.Where(x => !cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))))
                 {
                     int bestThisTrip;
@@ -4751,6 +4831,7 @@ namespace RegulatedNoise
                             distance = 2 * DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
                             creditsDouble = bestThisTrip / distance;
                             credits = String.Format("{0:0.000}", creditsDouble / distance) + " Cr/Ly";
+                            distance = distance / 2;
                         }
                         else
                         {
@@ -4807,6 +4888,12 @@ namespace RegulatedNoise
         private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.limitLightYears = cbLimitLightYears.Checked;
+            SetupGui();
+        }
+
+        private void cbStationToStar_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.StationToStar = cbStationToStar.Checked;
             SetupGui();
         }
 
@@ -5252,12 +5339,12 @@ namespace RegulatedNoise
                 SetupGui();
         }
 
-        private void cbLightYearsInput_LostFocus(object sender, EventArgs e)
+        private void cmbLightYearsInput_LostFocus(object sender, EventArgs e)
         {
             checkcbLightYearsInput();
         }
 
-        private void cbLightYearsInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        private void cmbLightYearsInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Return)
             { 
@@ -5265,9 +5352,26 @@ namespace RegulatedNoise
             }
         }
 
-        private void cbLightYears_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbLightYears_SelectedIndexChanged(object sender, EventArgs e)
         {
             checkcbLightYearsInput();   
+        }
+
+        private void cmbStationToStarInput_LostFocus(object sender, System.EventArgs e)
+        {
+            checkcmbStationToStarInput();
+        }
+
+        private void cmbStationToStar_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            checkcmbStationToStarInput();
+        }
+        private void cmbStationToStarInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            { 
+                checkcmbStationToStarInput();   
+            }
         }
 
         private void checkcbLightYearsInput()
@@ -5277,7 +5381,7 @@ namespace RegulatedNoise
 
             Debug.Print("1");
 
-            if (int.TryParse(cbLightYears.Text, out value))
+            if (int.TryParse(cmbLightYears.Text, out value))
             {
                 if (value >= 0)
                 {
@@ -5285,14 +5389,40 @@ namespace RegulatedNoise
                     valueOK = true;
                 }
                 else
-                    cbLightYears.Text = RegulatedNoiseSettings.lastLightYears.ToString();
+                    cmbLightYears.Text = RegulatedNoiseSettings.lastLightYears.ToString();
             }
             else
             {
-                cbLightYears.Text = RegulatedNoiseSettings.lastLightYears.ToString();
+                cmbLightYears.Text = RegulatedNoiseSettings.lastLightYears.ToString();
             }
 
             if (valueOK && cbLimitLightYears.Checked)
+                SetupGui();
+        }
+
+        private void checkcmbStationToStarInput()
+        {
+            int value;
+            bool valueOK = false;
+
+            Debug.Print("1");
+
+            if (int.TryParse(cmbStationToStar.Text, out value))
+            {
+                if (value >= 0)
+                {
+                    RegulatedNoiseSettings.lastStationToStar = value;
+                    valueOK = true;
+                }
+                else
+                    cmbStationToStar.Text = RegulatedNoiseSettings.lastStationToStar.ToString();
+            }
+            else
+            {
+                cmbStationToStar.Text = RegulatedNoiseSettings.lastStationToStar.ToString();
+            }
+
+            if (valueOK && cbStationToStar.Checked)
                 SetupGui();
         }
 
@@ -5397,6 +5527,14 @@ namespace RegulatedNoise
                 Invoke(new MethodInvoker(setStationInfo));
             else
                 tbCurrentStationinfoFromLogs.Text = m_lastestStationInfo;
+        }
+
+        public void setSystemInfo(string SystemInfo)
+        {
+            if (InvokeRequired)
+                Invoke(new ScreenshotsQueuedDelegate(setSystemInfo), SystemInfo);
+            else
+                tbCurrentSystemFromLogs.Text = SystemInfo;
         }
 
         /// <summary>

@@ -56,6 +56,20 @@ namespace RegulatedNoise.EDDB_Data
             return m_Stations[(int)Stationtype];
         }
 
+        public EDStation getDistanceToStar(string systemName, string stationName)
+        {
+            EDStation retValue;
+
+            EDSystem SystemData = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name==systemName);
+
+            if (SystemData != null)
+                retValue = m_Stations[(int)enDataType.Data_Merged].Find(x => x.SystemId==SystemData.Id && x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase));
+            else
+                retValue = null;
+
+            return retValue;
+        }
+
         /// <summary>
         /// returns all commodities
         /// </summary>

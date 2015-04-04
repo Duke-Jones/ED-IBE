@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System;
 
 /// <summary>
 /// This class is an implementation of the 'IComparer' interface.
@@ -65,6 +67,12 @@ public class ListViewColumnSorter : IComparer
                     decimal.TryParse(listviewY.SubItems[ColumnToSort].Text, out b);
                     compareResult = ObjectCompare.Compare(a,b);
                     break;
+                case 10:
+                    DateTime  Date_a = DateTime.MinValue, Date_b = DateTime.MinValue;
+                    DateTime.TryParse(listviewX.SubItems[ColumnToSort].Text, out Date_a);
+                    DateTime.TryParse(listviewY.SubItems[ColumnToSort].Text, out Date_b);
+                    compareResult = ObjectCompare.Compare(Date_a, Date_b);
+                    break;
                 default:
                     compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
                     break;
@@ -80,6 +88,12 @@ public class ListViewColumnSorter : IComparer
                     decimal.TryParse(listviewX.SubItems[ColumnToSort].Text, out a);
                     decimal.TryParse(listviewY.SubItems[ColumnToSort].Text, out b);
                     compareResult = ObjectCompare.Compare(a, b);
+                    break;
+                case 7:
+                    DateTime  Date_a = DateTime.MinValue, Date_b = DateTime.MinValue;
+                    DateTime.TryParse(listviewX.SubItems[ColumnToSort].Text, out Date_a);
+                    DateTime.TryParse(listviewY.SubItems[ColumnToSort].Text, out Date_b);
+                    compareResult = ObjectCompare.Compare(Date_a, Date_b);
                     break;
                 default:
                     compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
@@ -130,10 +144,19 @@ public class ListViewColumnSorter : IComparer
                     break;
             }
 
+        // Commander's Log
         if (ListNumber == 4)
             switch (ColumnToSort)
             {
+                case 0:
+                    DateTime  Date_a = DateTime.MinValue, Date_b = DateTime.MinValue;
+                    DateTime.TryParse(listviewX.SubItems[ColumnToSort].Text, out Date_a);
+                    DateTime.TryParse(listviewY.SubItems[ColumnToSort].Text, out Date_b);
+                    compareResult = ObjectCompare.Compare(Date_a, Date_b);
+                    break;
                 case 1:
+                    
+                    break;
                 case 2:
                 case 4:
                 case 5:
