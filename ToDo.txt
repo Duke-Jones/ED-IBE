@@ -14,11 +14,20 @@ todo:
    ***********************************************************************************
 
 -------------------------------------------------------------------------------------      
-1.84_0.13_2
+
+1.84_0.13_4
+   * added first version of gui for showing and editing system data
+   * "station distance to star" filter full included 
+     ! some stations have still no distance information yet (station-edit needed -> next versions). 
+	   On settings tab you can choose if they should be incuded or excluded
+   * still changings on log scanning issue (maybe finished now)
+-------------------------------------------------------------------------------------      
+1.84_0.13_3
    * first rows for "station distance to star" filter
    * saving column widths of Cmdr's Log if changed
    * optimized standard column widths of Cmdr's Log
-   * sorting of date columns now should be correct
+     vsorting of date columns now should be correct
+   * still changings on log scanning issue
 -------------------------------------------------------------------------------------      
 1.84_0.13_2
    * fixed some issues while looking for location in logfiles

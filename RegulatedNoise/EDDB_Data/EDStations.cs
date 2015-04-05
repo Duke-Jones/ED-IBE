@@ -26,8 +26,9 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("max_landing_pad_size")]
         public string MaxLandingPadSize { get{return m_MaxLandingPadSize;} set{m_MaxLandingPadSize = value; if(m_MaxLandingPadSize == null) m_MaxLandingPadSize = string.Empty;} }
 
+        private int? m_DistanceToStar;
         [JsonProperty("distance_to_star")]
-        public int? DistanceToStar { get; set; }
+        public int? DistanceToStar { get{return m_DistanceToStar;} set{m_DistanceToStar = value; if(m_DistanceToStar == null) m_DistanceToStar = -1;} }
 
         private string m_Faction;
         [JsonProperty("faction")]

@@ -28,6 +28,9 @@ namespace RegulatedNoise.EDDB_Data
         // a quick cache for systemlocations
         private Dictionary<string, Point3D> m_cachedLocations = new Dictionary<string, Point3D>();
 
+        // a quick cache for distances of stations
+        private Dictionary<string, Int32> m_cachedStationDistances = new Dictionary<string, Int32>();
+
         /// <summary>
         /// creates a new Milkyway :-)
         /// </summary>
@@ -56,7 +59,13 @@ namespace RegulatedNoise.EDDB_Data
             return m_Stations[(int)Stationtype];
         }
 
-        public EDStation getDistanceToStar(string systemName, string stationName)
+        /// <summary>
+        /// returns a station in a system by name
+        /// </summary>
+        /// <param name="systemName"></param>
+        /// <param name="stationName"></param>
+        /// <returns></returns>
+        public EDStation getStation(string systemName, string stationName)
         {
             EDStation retValue;
 
@@ -69,6 +78,37 @@ namespace RegulatedNoise.EDDB_Data
 
             return retValue;
         }
+
+        /// <summary>
+        /// returns distance of a station to the star
+        /// </summary>
+        /// <param name="systemName"></param>
+        /// <param name="stationName"></param>
+        /// <returns></returns>
+        public Int32 getStationDistance(string systemName, string stationName)
+        {
+            Int32 Distance = 0;
+
+            if (!m_cachedStationDistances.TryGetValue(systemName + "|" + stationName, out Distance))
+            {
+                EDStation retValue = getStation(systemName, stationName);
+
+                if (retValue != null)
+                {
+                    Distance = (int)(retValue.DistanceToStar);
+                }
+                else
+                {
+                    Distance = -1;
+                }
+
+                m_cachedStationDistances.Add(systemName + "|" + stationName, Distance);
+            }
+
+            return Distance;
+        }
+
+        
 
         /// <summary>
         /// returns all commodities
@@ -715,5 +755,60 @@ namespace RegulatedNoise.EDDB_Data
             rotateSaveFiles(Filename, newFile, backupFile, BackupOldFile);
         }
 
+        /// <summary>
+        /// changes or adds a system to the "own" list and to the merged list
+        /// </summary>
+        /// <param name="m_currentSystemdata">systemdata to be added</param>
+        internal void changeSystem(EDSystem m_currentSystemdata)
+        {
+            EDSystem System;
+            List<EDSystem> ownSystems = getSystems(enDataType.Data_Own);
+            int newSystemIndex;
+
+            // 1st put the new values into our local list
+            System = ownSystems.Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.CurrentCultureIgnoreCase));
+            if(System != null)
+            { 
+                // copy new values into existing system
+                System.getValues(m_currentSystemdata);
+            }
+            else
+            { 
+                // add as a new system to own data
+                newSystemIndex = 0;
+
+                if(ownSystems.Count > 0)
+                    newSystemIndex = ownSystems.Max(X => X.Id) + 1;
+                    
+                ownSystems.Add(new EDSystem(newSystemIndex, m_currentSystemdata));
+                
+            }
+
+            // 2nd put the new values into our merged list
+            List<EDSystem> mergedSystems = getSystems(enDataType.Data_Merged);
+
+            System = mergedSystems.Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.CurrentCultureIgnoreCase));
+            if(System != null)
+            { 
+                // copy new values into existing system
+                System.getValues(m_currentSystemdata);
+            }
+            else
+            { 
+                // add as a new system to own data
+                newSystemIndex = 0;
+
+                if(mergedSystems.Count > 0)
+                    newSystemIndex = mergedSystems.Max(X => X.Id) + 1;
+                ownSystems.Add(new EDSystem(newSystemIndex, m_currentSystemdata));
+            }
+
+            
+            if(m_cachedLocations.ContainsKey(m_currentSystemdata.Name))
+                m_cachedLocations.Remove(m_currentSystemdata.Name);
+
+            saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
+            saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
+        }
     }
 }

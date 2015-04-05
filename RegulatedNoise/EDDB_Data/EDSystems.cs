@@ -102,7 +102,9 @@ namespace RegulatedNoise.EDDB_Data
                 (Allegiance.Equals(eqSystem.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
                 (State.Equals(eqSystem.State, StringComparison.InvariantCultureIgnoreCase)) && 
                 (Security.Equals(eqSystem.Security, StringComparison.InvariantCultureIgnoreCase)) && 
-                (PrimaryEconomy.Equals(eqSystem.PrimaryEconomy, StringComparison.InvariantCultureIgnoreCase)))
+                (PrimaryEconomy.Equals(eqSystem.PrimaryEconomy, StringComparison.InvariantCultureIgnoreCase)) && 
+                (NeedsPermit.Equals(eqSystem.NeedsPermit)) && 
+                (UpdatedAt.Equals(eqSystem.UpdatedAt)))
                     retValue = true;
 
             return retValue;             
@@ -112,8 +114,11 @@ namespace RegulatedNoise.EDDB_Data
         /// copy the values from another system exept for the ID
         /// </summary>
         /// <param name="ValueStation"></param>
-        public void getValues(EDSystem ownSystem)
+        public void getValues(EDSystem ownSystem, bool getAll=false)
         {
+            if(getAll)
+                Id = ownSystem.Id;
+
             Name            = ownSystem.Name;
             X               = ownSystem.X;
             Y               = ownSystem.Y;
@@ -125,6 +130,8 @@ namespace RegulatedNoise.EDDB_Data
             State           = ownSystem.State;
             Security        = ownSystem.Security;
             PrimaryEconomy  = ownSystem.PrimaryEconomy;
+            NeedsPermit     = ownSystem.NeedsPermit;
+            UpdatedAt       = ownSystem.UpdatedAt;
         }
 
         /// <summary>
@@ -144,6 +151,9 @@ namespace RegulatedNoise.EDDB_Data
             State           = string.Empty;
             Security        = string.Empty;
             PrimaryEconomy  = string.Empty;
+            NeedsPermit     = 0;
+            UpdatedAt       = 0;
+
         }
     }
 

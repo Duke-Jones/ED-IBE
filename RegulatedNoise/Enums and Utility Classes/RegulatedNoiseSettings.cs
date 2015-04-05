@@ -104,6 +104,7 @@ namespace RegulatedNoise
         public int GUIColorCutoffLevel                                  = 150;
         public bool AutoActivateOCRTab                                  = true;
         public string PilotsName                                        = String.Empty;
+        public bool IncludeUnknownDTS                                   = false;
 
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},
