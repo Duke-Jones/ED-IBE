@@ -193,6 +193,8 @@ namespace RegulatedNoise
 
         public void UpdateCommandersLogListView()
         {
+            _callingForm.lvCommandersLog.SuspendLayout();
+
             _callingForm.lvCommandersLog.Items.Clear();
             foreach (var x in LogEvents)
             {
@@ -212,6 +214,7 @@ namespace RegulatedNoise
 
                 _callingForm.lvCommandersLog.Items.Add(new ListViewItem(listViewData));
             }
+            _callingForm.lvCommandersLog.ResumeLayout();
         }
     }
 

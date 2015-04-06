@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
@@ -53,7 +53,7 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.button19 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
             this.cmdDonate = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
@@ -213,7 +213,7 @@
             this.button9 = new System.Windows.Forms.Button();
             this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker();
             this.tabOCRGroup = new System.Windows.Forms.TabPage();
-            this.tabControl3 = new System.Windows.Forms.TabControl();
+            this.tabCtrlOCR = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.bIgnoreTrash = new System.Windows.Forms.Button();
@@ -309,7 +309,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
@@ -348,7 +348,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbLogQuantity)).BeginInit();
             this.tabOCRGroup.SuspendLayout();
-            this.tabControl3.SuspendLayout();
+            this.tabCtrlOCR.SuspendLayout();
             this.tabOCR.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).BeginInit();
@@ -537,23 +537,23 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabCtrlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabHelpAndChangeLog);
-            this.tabControl1.Controls.Add(this.tabSystemdata);
-            this.tabControl1.Controls.Add(this.tabPriceAnalysis);
-            this.tabControl1.Controls.Add(this.tabCommandersLog);
-            this.tabControl1.Controls.Add(this.tabOCRGroup);
-            this.tabControl1.Controls.Add(this.tabWebserver);
-            this.tabControl1.Controls.Add(this.tabEDDN);
-            this.tabControl1.Controls.Add(this.tabSettings);
-            this.tabControl1.Location = new System.Drawing.Point(18, 64);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1067, 619);
-            this.tabControl1.TabIndex = 4;
-            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
+            this.tabCtrlMain.Controls.Add(this.tabHelpAndChangeLog);
+            this.tabCtrlMain.Controls.Add(this.tabSystemdata);
+            this.tabCtrlMain.Controls.Add(this.tabPriceAnalysis);
+            this.tabCtrlMain.Controls.Add(this.tabCommandersLog);
+            this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
+            this.tabCtrlMain.Controls.Add(this.tabWebserver);
+            this.tabCtrlMain.Controls.Add(this.tabEDDN);
+            this.tabCtrlMain.Controls.Add(this.tabSettings);
+            this.tabCtrlMain.Location = new System.Drawing.Point(18, 64);
+            this.tabCtrlMain.Name = "tabControl1";
+            this.tabCtrlMain.SelectedIndex = 0;
+            this.tabCtrlMain.Size = new System.Drawing.Size(1067, 619);
+            this.tabCtrlMain.TabIndex = 4;
+            this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // tabHelpAndChangeLog
             // 
@@ -1424,7 +1424,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(188, 501);
+            this.splitContainer1.Size = new System.Drawing.Size(186, 501);
             this.splitContainer1.SplitterDistance = 227;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -1444,14 +1444,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(183, 225);
+            series3.ChartArea = "ChartArea1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(181, 225);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1471,14 +1471,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(178, 171);
+            series4.ChartArea = "ChartArea1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(176, 169);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -2408,7 +2408,7 @@
             // 
             // tabOCRGroup
             // 
-            this.tabOCRGroup.Controls.Add(this.tabControl3);
+            this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
             this.tabOCRGroup.Size = new System.Drawing.Size(1059, 593);
@@ -2416,17 +2416,17 @@
             this.tabOCRGroup.Text = "Optical Character Recognition";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
             // 
-            // tabControl3
+            // tabCtrlOCR
             // 
-            this.tabControl3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabCtrlOCR.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl3.Controls.Add(this.tabOCR);
-            this.tabControl3.Location = new System.Drawing.Point(0, 0);
-            this.tabControl3.Name = "tabControl3";
-            this.tabControl3.SelectedIndex = 0;
-            this.tabControl3.Size = new System.Drawing.Size(1056, 590);
-            this.tabControl3.TabIndex = 0;
+            this.tabCtrlOCR.Controls.Add(this.tabOCR);
+            this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
+            this.tabCtrlOCR.Name = "tabCtrlOCR";
+            this.tabCtrlOCR.SelectedIndex = 0;
+            this.tabCtrlOCR.Size = new System.Drawing.Size(1056, 590);
+            this.tabCtrlOCR.TabIndex = 0;
             // 
             // tabOCR
             // 
@@ -3442,7 +3442,7 @@
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.button19);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabCtrlMain);
             this.Controls.Add(this.bOpen);
             this.KeyPreview = true;
             this.Name = "Form1";
@@ -3453,7 +3453,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
+            this.tabCtrlMain.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
             this.tabHelpAndChangeLog.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -3505,7 +3505,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbLogQuantity)).EndInit();
             this.tabOCRGroup.ResumeLayout(false);
-            this.tabControl3.ResumeLayout(false);
+            this.tabCtrlOCR.ResumeLayout(false);
             this.tabOCR.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
@@ -3548,7 +3548,7 @@
         private System.Windows.Forms.ComboBox cmbStation;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListView lbPrices;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabCtrlMain;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListView lbCommodities;
@@ -3682,7 +3682,7 @@
         private System.Windows.Forms.CheckBox cbPerLightYearRoundTrip;
         private System.Windows.Forms.ListView lvStationToStationReturn;
         private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.TabControl tabControl3;
+        private System.Windows.Forms.TabControl tabCtrlOCR;
         private System.Windows.Forms.TabPage tabOCR;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button bEditResults;

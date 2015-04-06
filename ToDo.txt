@@ -11,10 +11,21 @@ todo:
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
    * by commodity : show distance to current system
+   * new commodity added and looking on the warn levels (small form) results in crash
+   * scanning is not sure visible after every jump
    ***********************************************************************************
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.13
+   * fixed: sometimes OCR calibration tab is opened instead of "capture and correct" tab
+   * fixed: crash if asking for unknown systemdata
+   * fixed: auto adding Cmdr's Log after jump scrolls the whole list
+   * added current EDDN json files
+-------------------------------------------------------------------------------------      
+1.84_0.13_5
+   * only added a special for log for location issue 
+-------------------------------------------------------------------------------------      
 1.84_0.13_4
    * added first version of gui for showing and editing system data
    * "station distance to star" filter full included 
