@@ -731,6 +731,9 @@ namespace RegulatedNoise
             cmbStationToStar.Text                   = RegulatedNoiseSettings.lastStationToStar.ToString();
             cbStationToStar.Checked                 = RegulatedNoiseSettings.StationToStar;
 
+            cmbMaxRouteDistance.Text                = RegulatedNoiseSettings.lastMaxRouteDistance.ToString();
+            cbMaxRouteDistance.Checked              = RegulatedNoiseSettings.MaxRouteDistance;
+
             switch (RegulatedNoiseSettings.CBSortingSelection)
             {
             	case 1:
@@ -4897,11 +4900,28 @@ namespace RegulatedNoise
             lbAllRoundTrips.Items.Clear();
             int bestRoundTrip = -1;
             string stationA = "", stationB = "";
+            ProgressView progress   = new ProgressView();
             List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
+            
+            var selectedStations = StationDirectory.Where(x => getStationSelection(x));
 
-            foreach (var a in StationDirectory.Where(x => getStationSelection(x)))
-                foreach (var b in StationDirectory.Where(x => getStationSelection(x)))
+            Int32 Total             = getCalculations(selectedStations.Count());
+            Int32 Current           = 0;
+
+            progress.progressStart(string.Format(string.Format("calculating best routes: {0} abilities from {1} stations", Total, selectedStations.Count())));
+
+            for (int i = 0; i < selectedStations.Count()-1; i++)
+            {
+                for (int j = i+1; j < selectedStations.Count(); j++)
                 {
+                    var a = selectedStations.ElementAt(i);        
+                    var b = selectedStations.ElementAt(j);
+
+                    Current+=1;
+                    progress.progressUpdate(Current, Total);
+
+                    Debug.Print(Current +"/"+ Total);
+
                     int bestThisTrip;
                     GetBestRoundTripForTwoStations(a.Key, b.Key, out bestThisTrip);
                     if (bestThisTrip > 0)
@@ -4922,12 +4942,12 @@ namespace RegulatedNoise
                         double creditsDouble;
                         double distance = 1d;
 
+                        distance = DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
+
                         if (cbPerLightYearRoundTrip.Checked)
                         {
-                            distance = 2 * DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
-                            creditsDouble = bestThisTrip / distance;
-                            credits = String.Format("{0:0.000}", creditsDouble / distance) + " Cr/Ly";
-                            distance = distance / 2;
+                            creditsDouble = bestThisTrip / (2.0 * distance);
+                            credits = String.Format("{0:0.000}", creditsDouble / (2.0 * distance)) + " Cr/Ly";
                         }
                         else
                         {
@@ -4935,22 +4955,35 @@ namespace RegulatedNoise
                             credits = (bestThisTrip + " Cr");
                         }
 
-                        allRoundTrips.Add(
-                            new Tuple<string, double>(
-                                credits.PadRight(13) + " :" + 
-                                key1
-                                + "..." + 
-                                key2
-                                , creditsDouble));
-
-                        if (bestThisTrip > bestRoundTrip)
+                        if ((!cbMaxRouteDistance.Checked) || (double.Parse(cmbMaxRouteDistance.Text) >= distance))
                         {
-                            bestRoundTrip = bestThisTrip;
-                            stationA = a.Key;
-                            stationB = b.Key;
+                            allRoundTrips.Add(
+                                new Tuple<string, double>(
+                                    credits.PadRight(13) + " :" + 
+                                    key1
+                                    + "..." + 
+                                    key2
+                                    , creditsDouble));
+
+                            if (bestThisTrip > bestRoundTrip)
+                            {
+                                bestRoundTrip = bestThisTrip;
+                                stationA = a.Key;
+                                stationB = b.Key;
+                            }
                         }
+
                     }
+
+                    if (progress.Cancelled)
+                        break;
                 }
+
+                if (progress.Cancelled)
+                    break;
+            }
+
+            progress.progressStop();
 
             var ordered = allRoundTrips.OrderByDescending(x => x.Item2).Select(x => x.Item1).Distinct().ToList().Cast<object>().ToArray();
 
@@ -4958,27 +4991,19 @@ namespace RegulatedNoise
             if(lbAllRoundTrips.Items.Count > 0)
                 lbAllRoundTrips.SelectedIndex = 0;
 
-            //if (bestRoundTrip > 0)
-            //{
-            //    for (int i = 0; i < cbStationToStationFrom.Items.Count; i++)
-            //    {
-            //        if ((string)(cbStationToStationFrom.Items[i]) == stationA)
-            //        {
-            //            cbStationToStationFrom.SelectedIndex = i;
-            //            break;
-            //        }
-            //    }
-            //
-            //    for (int i = 0; i < cbStationToStationTo.Items.Count; i++)
-            //    {
-            //        if ((string)(cbStationToStationTo.Items[i]) == stationB)
-            //        {
-            //            cbStationToStationTo.SelectedIndex = i;
-            //            break;
-            //        }
-            //    }
-            //}
             this.Cursor = Cursors.Default;
+        }
+
+        private int getCalculations(int Total)
+        {
+            Int32 retValue = 0;
+
+            for (int i = 0; i <Total; i++)
+            {
+                retValue += i;
+            }
+            return retValue;
+
         }
 
         private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
@@ -5470,6 +5495,24 @@ namespace RegulatedNoise
             }
         }
 
+        private void cmbMaxRouteDistance_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cmbMaxRouteDistanceInput();   
+        }
+
+        private void cmbMaxRouteDistance_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            { 
+                cmbMaxRouteDistanceInput();   
+            }
+        }
+
+        private void cmbMaxRouteDistance_LostFocus(object sender, System.EventArgs e)
+        {
+            cmbMaxRouteDistanceInput();   
+        }
+
         private void checkcbLightYearsInput()
         {
             int value;
@@ -5520,6 +5563,28 @@ namespace RegulatedNoise
 
             if (valueOK && cbStationToStar.Checked)
                 SetupGui();
+        }
+
+        private void cmbMaxRouteDistanceInput()
+        {
+            int value;
+            bool valueOK = false;
+
+            if (int.TryParse(cmbMaxRouteDistance.Text, out value))
+            {
+                if (value >= 0)
+                {
+                    RegulatedNoiseSettings.lastMaxRouteDistance = value;
+                    valueOK = true;
+                }
+                else
+                    cmbMaxRouteDistance.Text = RegulatedNoiseSettings.lastMaxRouteDistance.ToString();
+            }
+            else
+            {
+                cmbMaxRouteDistance.Text = RegulatedNoiseSettings.lastMaxRouteDistance.ToString();
+            }
+
         }
 
         private void cbPerLightYearRoundTrip_CheckedChanged(object sender, EventArgs e)
@@ -5886,7 +5951,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-                Debug.Print("oh");
+                throw ex;
             }
         }
 
@@ -6050,6 +6115,15 @@ namespace RegulatedNoise
             SaveSettings();
             SetupGui();
         }
+
+        private void cbMaxRouteDistance_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.MaxRouteDistance = cbMaxRouteDistance.Checked;
+            SaveSettings();
+
+            
+        }
+
 
     }
 }

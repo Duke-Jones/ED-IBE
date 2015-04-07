@@ -53,7 +53,11 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
             }
             else
-                MessageBox.Show("Not positioninfo for <" + Classname + "> found !");
+            {
+                Form1.RegulatedNoiseSettings.WindowBaseData.Add(Classname, new WindowData());
+                loadWindowPosition();
+                //MessageBox.Show("Not positioninfo for <" + Classname + "> found !");
+            }
 
             m_LoadingDone = true;
         }

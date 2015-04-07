@@ -59,7 +59,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.13m;
+        public readonly decimal VersionDJ = 0.14m;
 #endif
         private int _isFirstRun = -1;
 
@@ -97,7 +97,8 @@ namespace RegulatedNoise
         public bool StationToStar                                       = false;
         public int lastStationToStar                                    = 500;
         public int CBSortingSelection                                   = 1;
-        
+        public bool MaxRouteDistance                                     = false;
+        public int lastMaxRouteDistance                                  = 20;
         public bool PerLightYearRoundTrip                               = false;
         public decimal lastVersion                                      = 0.00m;
         public decimal lastVersionDJ                                    = 0.00m;
@@ -116,7 +117,8 @@ namespace RegulatedNoise
                                                                                                                   {"FilterTest",            new WindowData()},
                                                                                                                   {"HelpOCR",               new WindowData()},
                                                                                                                   {"HelpCommodities",       new WindowData()},
-                                                                                                                  {"EBPixeltest",           new WindowData()}
+                                                                                                                  {"EBPixeltest",           new WindowData()},
+                                                                                                                  {"ProgressView",          new WindowData()}
                                                                                                                 };
 
         public SerializableDictionary<string, List<ColumnData>> ListViewColumnData = new SerializableDictionary<string, List<ColumnData>>() { 

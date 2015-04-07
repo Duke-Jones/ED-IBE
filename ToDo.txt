@@ -20,6 +20,10 @@ todo:
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.14_2
+   * added a progress view for calculating best routes with cancel option
+   * filter added : max. distance for trade routes
+-------------------------------------------------------------------------------------      
 1.84_0.14_1
    * changes on log scanning issue + additional log info
 -------------------------------------------------------------------------------------      

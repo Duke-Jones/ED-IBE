@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
@@ -171,6 +171,9 @@
             this.lvStationToStation = new System.Windows.Forms.ListView();
             this.lvStationToStationReturn = new System.Windows.Forms.ListView();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label70 = new System.Windows.Forms.Label();
+            this.cmbMaxRouteDistance = new System.Windows.Forms.ComboBox();
+            this.cbMaxRouteDistance = new System.Windows.Forms.CheckBox();
             this.cbPerLightYearRoundTrip = new System.Windows.Forms.CheckBox();
             this.lbAllRoundTrips = new System.Windows.Forms.ListBox();
             this.btnBestRoundTrip = new System.Windows.Forms.Button();
@@ -535,7 +538,7 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // tabControl1
+            // tabCtrlMain
             // 
             this.tabCtrlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -549,7 +552,7 @@
             this.tabCtrlMain.Controls.Add(this.tabEDDN);
             this.tabCtrlMain.Controls.Add(this.tabSettings);
             this.tabCtrlMain.Location = new System.Drawing.Point(18, 64);
-            this.tabCtrlMain.Name = "tabControl1";
+            this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
             this.tabCtrlMain.Size = new System.Drawing.Size(1067, 619);
             this.tabCtrlMain.TabIndex = 4;
@@ -1424,7 +1427,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(186, 501);
+            this.splitContainer1.Size = new System.Drawing.Size(180, 501);
             this.splitContainer1.SplitterDistance = 227;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
@@ -1444,14 +1447,14 @@
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(0, -1);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(181, 225);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(175, 225);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1471,14 +1474,14 @@
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
             this.chart2.Location = new System.Drawing.Point(3, 18);
             this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
-            this.chart2.Size = new System.Drawing.Size(176, 169);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(170, 163);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1936,6 +1939,9 @@
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Controls.Add(this.label70);
+            this.groupBox7.Controls.Add(this.cmbMaxRouteDistance);
+            this.groupBox7.Controls.Add(this.cbMaxRouteDistance);
             this.groupBox7.Controls.Add(this.cbPerLightYearRoundTrip);
             this.groupBox7.Controls.Add(this.lbAllRoundTrips);
             this.groupBox7.Controls.Add(this.btnBestRoundTrip);
@@ -1945,6 +1951,44 @@
             this.groupBox7.TabIndex = 17;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Find Round-Trips";
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(298, 30);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(14, 13);
+            this.label70.TabIndex = 21;
+            this.label70.Text = "ly";
+            // 
+            // cmbMaxRouteDistance
+            // 
+            this.cmbMaxRouteDistance.FormattingEnabled = true;
+            this.cmbMaxRouteDistance.Items.AddRange(new object[] {
+            "10",
+            "15",
+            "20",
+            "30",
+            "50",
+            "100"});
+            this.cmbMaxRouteDistance.Location = new System.Drawing.Point(244, 27);
+            this.cmbMaxRouteDistance.Name = "cmbMaxRouteDistance";
+            this.cmbMaxRouteDistance.Size = new System.Drawing.Size(48, 21);
+            this.cmbMaxRouteDistance.TabIndex = 19;
+            this.cmbMaxRouteDistance.SelectedIndexChanged += new System.EventHandler(this.cmbMaxRouteDistance_SelectedIndexChanged);
+            this.cmbMaxRouteDistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbMaxRouteDistance_KeyPress);
+            this.cmbMaxRouteDistance.LostFocus += new System.EventHandler(this.cmbMaxRouteDistance_LostFocus);
+            // 
+            // cbMaxRouteDistance
+            // 
+            this.cbMaxRouteDistance.AutoSize = true;
+            this.cbMaxRouteDistance.Location = new System.Drawing.Point(129, 29);
+            this.cbMaxRouteDistance.Name = "cbMaxRouteDistance";
+            this.cbMaxRouteDistance.Size = new System.Drawing.Size(115, 17);
+            this.cbMaxRouteDistance.TabIndex = 20;
+            this.cbMaxRouteDistance.Text = "Max. Trip Distance";
+            this.cbMaxRouteDistance.UseVisualStyleBackColor = true;
+            this.cbMaxRouteDistance.CheckedChanged += new System.EventHandler(this.cbMaxRouteDistance_CheckedChanged);
             // 
             // cbPerLightYearRoundTrip
             // 
@@ -3816,6 +3860,9 @@
         private System.Windows.Forms.Button cmdSystemChange;
         private System.Windows.Forms.Label lblRenameHint;
         private System.Windows.Forms.CheckBox cbIncludeUnknownDTS;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.ComboBox cmbMaxRouteDistance;
+        private System.Windows.Forms.CheckBox cbMaxRouteDistance;
     }
 }
 
