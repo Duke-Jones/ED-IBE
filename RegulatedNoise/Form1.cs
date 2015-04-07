@@ -4070,10 +4070,25 @@ namespace RegulatedNoise
 
                     if (Directory.Exists(appConfigPath))
                     {
-                        var versions = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
+                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
 
-                        if (versions[0].Contains("FORC-FDEV"))
+                        if (versions.Count() == 0)
                         {
+                            #if extScanLog
+                                logger.Log("no dirs with <FORC-FDEV> found");
+                                var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
+                                foreach (string SubPath in versions2)
+                                {
+                                    logger.Log("but found <" +  SubPath + ">");   
+                                }
+                            #endif
+                        }
+                        else
+                        {
+                            #if extScanLog
+                                logger.Log("lookin' for files in <" + versions[0] + ">");
+                            #endif
+
                             // We'll just go right ahead and use the latest log...
                             var netLogs =
                                 Directory.GetFiles(versions[0] + "\\Logs", "netLog*.log")

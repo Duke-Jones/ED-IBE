@@ -13,10 +13,16 @@ todo:
    * by commodity : show distance to current system
    * new commodity added and looking on the warn levels (small form) results in crash
    * scanning is not sure visible after every jump
+   * commodity selection is resetted if changing the system distance filter
+   * showing distance to system in the "by station" and "by commodity" view
+   * copy system name with context menu in the "by station" and "by commodity" view
    ***********************************************************************************
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.14_1
+   * changes on log scanning issue + additional log info
+-------------------------------------------------------------------------------------      
 1.84_0.13
    * fixed: sometimes OCR calibration tab is opened instead of "capture and correct" tab
    * fixed: crash if asking for unknown systemdata
