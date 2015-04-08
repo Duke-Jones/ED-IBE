@@ -16,6 +16,9 @@ todo:
    * commodity selection is resetted if changing the system distance filter
    * showing distance to system in the "by station" and "by commodity" view
    * copy system name with context menu in the "by station" and "by commodity" view
+   * if implausibe prices show warnlevel direct under the price data
+   * show hint with age of market prices if location is a station
+   * webserver : allow other ports than 8080
    ***********************************************************************************
 
 -------------------------------------------------------------------------------------      
