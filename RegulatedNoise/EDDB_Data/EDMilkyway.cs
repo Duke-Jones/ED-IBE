@@ -704,18 +704,24 @@ namespace RegulatedNoise.EDDB_Data
             if (!String.IsNullOrEmpty(FileName))
                 saveRNCommodityData(FileName, true);
         }        
+
         /// <summary>
         /// loads the commodity data from the files
         /// </summary>
         /// <param name="EDDBCommodityDatafile"></param>
         /// <param name="RNCommodityDatafile"></param>
         /// <param name="createNonExistingFile"></param>
-       internal void loadCommodityData(string EDDBCommodityDatafile, string RNCommodityDatafile, bool createNonExistingFile)
+       internal bool loadCommodityData(string EDDBCommodityDatafile, string RNCommodityDatafile, bool createNonExistingFile, bool CheckOnly = false)
        {
            bool notExisting = false;
            List<EDCommoditiesWarningLevels> RNCommodities;
            List<EDCommodities> EDDBCommodities = JsonConvert.DeserializeObject<List<EDCommodities>>(File.ReadAllText(EDDBCommodityDatafile));
            
+           if(CheckOnly)
+               if (File.Exists(RNCommodityDatafile))
+                   return true;
+                else
+                   return false;
 
             if (File.Exists(RNCommodityDatafile))
                 RNCommodities   = JsonConvert.DeserializeObject<List<EDCommoditiesWarningLevels>>(File.ReadAllText(RNCommodityDatafile));
@@ -731,6 +737,8 @@ namespace RegulatedNoise.EDDB_Data
                 calculateNewPriceLimits();
 
             saveRNCommodityData(RNCommodityDatafile, true);
+
+            return true;
         }
 
         /// <summary>
@@ -757,9 +765,10 @@ namespace RegulatedNoise.EDDB_Data
 
         /// <summary>
         /// changes or adds a system to the "own" list and to the merged list
+        /// EDDB basedata will not be changed
         /// </summary>
         /// <param name="m_currentSystemdata">systemdata to be added</param>
-        internal void changeSystem(EDSystem m_currentSystemdata)
+        internal void ChangeAddSystem(EDSystem m_currentSystemdata)
         {
             EDSystem System;
             List<EDSystem> ownSystems = getSystems(enDataType.Data_Own);
@@ -803,12 +812,128 @@ namespace RegulatedNoise.EDDB_Data
                 ownSystems.Add(new EDSystem(newSystemIndex, m_currentSystemdata));
             }
 
-            
             if(m_cachedLocations.ContainsKey(m_currentSystemdata.Name))
                 m_cachedLocations.Remove(m_currentSystemdata.Name);
 
             saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
             saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
         }
+
+        /// <summary>
+        /// changes or adds a station to the "own" list and to the merged list
+        /// EDDB basedata will not be changed
+        /// </summary>
+        /// <param name="m_currentSystemdata">systemdata to be added</param>
+        internal void ChangeAddStation(string Systemname, EDStation m_currentStationdata)
+        {
+            EDSystem System;
+            EDStation Station;
+            int newStationIndex;
+
+            List<EDSystem> ownSystems       = getSystems(enDataType.Data_Own);
+            List<EDStation> ownStations     = getStations(enDataType.Data_Own);
+
+            List<EDSystem> mergedSystems    = getSystems(enDataType.Data_Merged);
+            List<EDStation> mergedStations  = getStations(enDataType.Data_Merged);
+
+            // 1st put the new values into our local list
+            System = ownSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
+            if(System == null)
+            {
+                // own system is not existing, look for a EDDN system
+                System = mergedSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
+
+                if(System == null)
+                    throw new Exception("System in merged list required but not existing");
+                
+                // get a new local system id 
+                int newSystemIndex = m_Systems[(int)enDataType.Data_Own].Max(X => X.Id) + 1;
+
+                // and add the EDDN system to the local list
+                System = new EDSystem(newSystemIndex, System);
+                ownSystems.Add(System);
+
+                // get a new station index
+                newStationIndex = 0;
+                if(ownStations.Count > 0)
+                    newStationIndex = ownStations.Max(X => X.Id) + 1;
+                
+                // add the new station in the local station dictionary
+                ownStations.Add(new EDStation(newStationIndex, newSystemIndex, m_currentStationdata));
+            }
+            else
+            { 
+                // the system is existing in the own dictionary 
+                Station = ownStations.Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.CurrentCultureIgnoreCase)) && 
+                                                (x.SystemId == System.Id));
+                if(Station != null)
+                { 
+                    // station is already existing, copy new values into existing Station
+                    Station.getValues(m_currentStationdata);
+                }
+                else
+                { 
+                    // station is not existing, get a new station index
+                    newStationIndex = 0;
+                    if(ownStations.Count > 0)
+                        newStationIndex = ownStations.Max(X => X.Id) + 1;
+                    
+                    // add the new station in the local station dictionary
+                    ownStations.Add(new EDStation(newStationIndex, System.Id, m_currentStationdata));
+                }
+            }
+
+            // 1st put the new values into the merged list
+            System = mergedSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
+            if(System == null)
+            {
+                // system is not exiting in merged list
+                System = ownSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
+
+                if(System == null)
+                    throw new Exception("System in own list required but not existing");
+                
+                // get a new merged system id 
+                int newSystemIndex = m_Systems[(int)enDataType.Data_Merged].Max(X => X.Id) + 1;
+
+                // and add system to the merged list
+                System = new EDSystem(newSystemIndex, System);
+                mergedSystems.Add(System);
+
+                // get a new station index
+                newStationIndex = 0;
+                if(mergedStations.Count > 0)
+                    newStationIndex = mergedStations.Max(X => X.Id) + 1;
+                
+                // add the new station in the local station dictionary
+                mergedStations.Add(new EDStation(newStationIndex, newSystemIndex, m_currentStationdata));
+            }
+            else
+            { 
+                // the system is existing in the merged dictionary 
+                Station = ownStations.Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.CurrentCultureIgnoreCase)) && 
+                                                (x.SystemId == System.Id));
+                if(Station != null)
+                { 
+                    // station is already existing, copy new values into existing Station
+                    Station.getValues(m_currentStationdata);
+                }
+                else
+                { 
+                    // station is not existing, get a new station index
+                    newStationIndex = 0;
+                    if(mergedStations.Count > 0)
+                        newStationIndex = mergedStations.Max(X => X.Id) + 1;
+                    
+                    // add the new station in the merged station dictionary
+                    ownStations.Add(new EDStation(newStationIndex, System.Id, m_currentStationdata));
+                }
+            }
+           
+            if(m_cachedStationDistances.ContainsKey(m_currentStationdata.Name))
+                m_cachedStationDistances.Remove(m_currentStationdata.Name);
+
+            saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
+            saveStationData(@"./Data/Stations_own.json", EDMilkyway.enDataType.Data_Own, true);        }
     }
 }

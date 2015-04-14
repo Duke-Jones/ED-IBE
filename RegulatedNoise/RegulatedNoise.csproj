@@ -44,6 +44,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_Live|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>F:\Games\ED\sonstiges\RegulatedNoise.v1.81\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DukeJones</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
       <HintPath>.\clrzmq.dll</HintPath>
@@ -608,6 +619,9 @@
     <None Include="Data\stations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Data\stations_lite.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\systems.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -736,6 +750,7 @@
     <None Include="Resources\SampleTooHigh.png" />
     <None Include="Resources\SampleTooLow.png" />
     <None Include="Resources\PayPalDonate.jpg" />
+    <None Include="Resources\RNSplash.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

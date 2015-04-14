@@ -120,6 +120,30 @@ namespace RegulatedNoise.EDDB_Data
             getValues(sourceStation);   
         }
 
+        public void clear()
+        {
+            Name                  = "";
+            MaxLandingPadSize     = "";
+            DistanceToStar        = null;
+            Faction               = "";
+            Government            = "";
+            Allegiance            = "";
+            State                 = "";
+            Type                  = "";
+            HasBlackmarket        = null;
+            HasCommodities        = null;
+            HasRefuel             = null;
+            HasRepair             = null;
+            HasRearm              = null;
+            HasOutfitting         = null;
+            HasShipyard           = null;
+
+            ImportCommodities     = new string[0];
+            ExportCommodities     = new string[0];
+            ProhibitedCommodities = new string[0];
+            Economies             = new string[0];
+        }
+
         /// <summary>
         /// true, if all data *except the two IDs* is equal (case insensitive)
         /// </summary>
@@ -129,75 +153,79 @@ namespace RegulatedNoise.EDDB_Data
         {
             bool retValue = false;
 
-            if ((Name.Equals(eqStation.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                (MaxLandingPadSize.Equals(eqStation.MaxLandingPadSize)) && 
-                (DistanceToStar.Equals(eqStation.DistanceToStar)) && 
-                (Faction.Equals(eqStation.Faction, StringComparison.InvariantCultureIgnoreCase)) && 
-                (Government.Equals(eqStation.Government, StringComparison.InvariantCultureIgnoreCase)) && 
-                (Allegiance.Equals(eqStation.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
-                (State.Equals(eqStation.State, StringComparison.InvariantCultureIgnoreCase)) && 
-                (Type.Equals(eqStation.Type, StringComparison.InvariantCultureIgnoreCase)) && 
-                (HasBlackmarket.Equals(eqStation.HasBlackmarket)) && 
-                (HasCommodities.Equals(eqStation.HasCommodities)) && 
-                (HasRefuel.Equals(eqStation.HasRefuel)) &&
-                (HasRepair.Equals(eqStation.HasRepair)) && 
-                (HasRearm.Equals(eqStation.HasRearm)) && 
-                (HasOutfitting.Equals(eqStation.HasOutfitting)) &&
-                (HasShipyard.Equals(eqStation.HasShipyard)))
-                    retValue = true;
+            if(eqStation != null)
+            { 
+                if ((Name.Equals(eqStation.Name, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (MaxLandingPadSize.Equals(eqStation.MaxLandingPadSize)) && 
+                    (DistanceToStar.Equals(eqStation.DistanceToStar)) && 
+                    (Faction.Equals(eqStation.Faction, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (Government.Equals(eqStation.Government, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (Allegiance.Equals(eqStation.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (State.Equals(eqStation.State, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (Type.Equals(eqStation.Type, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (HasBlackmarket.Equals(eqStation.HasBlackmarket)) && 
+                    (HasCommodities.Equals(eqStation.HasCommodities)) && 
+                    (HasRefuel.Equals(eqStation.HasRefuel)) &&
+                    (HasRepair.Equals(eqStation.HasRepair)) && 
+                    (HasRearm.Equals(eqStation.HasRearm)) && 
+                    (HasOutfitting.Equals(eqStation.HasOutfitting)) &&
+                    (HasShipyard.Equals(eqStation.HasShipyard)))
+                        retValue = true;
 
-            if (ImportCommodities.GetUpperBound(0) != eqStation.ImportCommodities.GetUpperBound(0))
-            {
-                retValue = false;
-            } 
+                if (ImportCommodities.GetUpperBound(0) != eqStation.ImportCommodities.GetUpperBound(0))
+                {
+                    retValue = false;
+                } 
 
-            if (ExportCommodities.GetUpperBound(0) != eqStation.ExportCommodities.GetUpperBound(0))
-            {
-                retValue = false;
-            } 
+                if (ExportCommodities.GetUpperBound(0) != eqStation.ExportCommodities.GetUpperBound(0))
+                {
+                    retValue = false;
+                } 
 
-            if (ProhibitedCommodities.GetUpperBound(0) != eqStation.ProhibitedCommodities.GetUpperBound(0))
-            {
-                retValue = false;
-            } 
+                if (ProhibitedCommodities.GetUpperBound(0) != eqStation.ProhibitedCommodities.GetUpperBound(0))
+                {
+                    retValue = false;
+                } 
 
-            if (Economies.GetUpperBound(0) != eqStation.Economies.GetUpperBound(0))
-            {
-                retValue = false;
-            } 
+                if (Economies.GetUpperBound(0) != eqStation.Economies.GetUpperBound(0))
+                {
+                    retValue = false;
+                } 
 
-            if (retValue)
-                for (int i = 0; i < ImportCommodities.GetUpperBound(0); i++)
-                    if (!ImportCommodities[i].Equals(eqStation.ImportCommodities[i], StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        retValue = false;
-                        break; 
-                    } 
+                if (retValue)
+                    for (int i = 0; i < ImportCommodities.GetUpperBound(0); i++)
+                        if (!ImportCommodities[i].Equals(eqStation.ImportCommodities[i], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            retValue = false;
+                            break; 
+                        } 
 
-            if (retValue)
-                for (int i = 0; i < ExportCommodities.GetUpperBound(0); i++)
-                    if (!ExportCommodities[i].Equals(eqStation.ExportCommodities[i], StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        retValue = false;
-                        break; 
-                    } 
+                if (retValue)
+                    for (int i = 0; i < ExportCommodities.GetUpperBound(0); i++)
+                        if (!ExportCommodities[i].Equals(eqStation.ExportCommodities[i], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            retValue = false;
+                            break; 
+                        } 
             
-            if (retValue)
-                for (int i = 0; i < ProhibitedCommodities.GetUpperBound(0); i++)
-                    if (!ProhibitedCommodities[i].Equals(eqStation.ProhibitedCommodities[i], StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        retValue = false;
-                        break; 
-                    } 
+                if (retValue)
+                    for (int i = 0; i < ProhibitedCommodities.GetUpperBound(0); i++)
+                        if (!ProhibitedCommodities[i].Equals(eqStation.ProhibitedCommodities[i], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            retValue = false;
+                            break; 
+                        } 
             
-            if (retValue)
-                for (int i = 0; i < Economies.GetUpperBound(0); i++)
-                    if (!Economies[i].Equals(eqStation.Economies[i], StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        retValue = false;
-                        break; 
-                    } 
+                if (retValue)
+                    for (int i = 0; i < Economies.GetUpperBound(0); i++)
+                        if (!Economies[i].Equals(eqStation.Economies[i], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            retValue = false;
+                            break; 
+                        } 
             
+            }
+
             return retValue;             
         }
 
@@ -229,6 +257,7 @@ namespace RegulatedNoise.EDDB_Data
             Economies             = (string[])ValueStation.Economies.Clone();
 
         }
+
     }
 
 }

@@ -73,6 +73,16 @@ namespace RegulatedNoise.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap RNSplash {
+            get {
+                object obj = ResourceManager.GetObject("RNSplash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SampleTooHigh {
             get {
                 object obj = ResourceManager.GetObject("SampleTooHigh", resourceCulture);

@@ -92,20 +92,23 @@ namespace RegulatedNoise.EDDB_Data
         {
             bool retValue = false;
 
-            if ((Name.Equals(eqSystem.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                (X.Equals(eqSystem.X)) && 
-                (Y.Equals(eqSystem.Y)) && 
-                (Z.Equals(eqSystem.Z)) && 
-                (Faction.Equals(eqSystem.Faction, StringComparison.InvariantCultureIgnoreCase)) && 
-                (Population.Equals(eqSystem.Population)) && 
-                (Government.Equals(eqSystem.Government, StringComparison.InvariantCultureIgnoreCase)) && 
-                (Allegiance.Equals(eqSystem.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
-                (State.Equals(eqSystem.State, StringComparison.InvariantCultureIgnoreCase)) && 
-                (Security.Equals(eqSystem.Security, StringComparison.InvariantCultureIgnoreCase)) && 
-                (PrimaryEconomy.Equals(eqSystem.PrimaryEconomy, StringComparison.InvariantCultureIgnoreCase)) && 
-                (NeedsPermit.Equals(eqSystem.NeedsPermit)) && 
-                (UpdatedAt.Equals(eqSystem.UpdatedAt)))
-                    retValue = true;
+            if(eqSystem != null)
+            { 
+                if ((Name.Equals(eqSystem.Name, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (X.Equals(eqSystem.X)) && 
+                    (Y.Equals(eqSystem.Y)) && 
+                    (Z.Equals(eqSystem.Z)) && 
+                    (Faction.Equals(eqSystem.Faction, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (Population.Equals(eqSystem.Population)) && 
+                    (Government.Equals(eqSystem.Government, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (Allegiance.Equals(eqSystem.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (State.Equals(eqSystem.State, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (Security.Equals(eqSystem.Security, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (PrimaryEconomy.Equals(eqSystem.PrimaryEconomy, StringComparison.InvariantCultureIgnoreCase)) && 
+                    (NeedsPermit.Equals(eqSystem.NeedsPermit)) && 
+                    (UpdatedAt.Equals(eqSystem.UpdatedAt)))
+                       retValue = true;
+            }
 
             return retValue;             
         }

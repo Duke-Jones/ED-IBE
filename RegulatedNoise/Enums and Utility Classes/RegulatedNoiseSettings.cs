@@ -67,6 +67,7 @@ namespace RegulatedNoise
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
         public string ProductAppData = ""; //2nd location for game configuration files
         public string WebserverIpAddress = "";
+        public string WebserverPort = "8080";
         public bool StartWebserverOnLoad = false;
         public string WebserverBackgroundColor = "#FFFFFF";
         public string WebserverForegroundColor = "#000000";
@@ -104,8 +105,10 @@ namespace RegulatedNoise
         public decimal lastVersionDJ                                    = 0.00m;
         public int GUIColorCutoffLevel                                  = 150;
         public bool AutoActivateOCRTab                                  = true;
+        public bool AutoActivateSystemTab                               = true;
         public string PilotsName                                        = String.Empty;
         public bool IncludeUnknownDTS                                   = false;
+        public bool LoadStationsJSON                                  = false;
 
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},
@@ -328,6 +331,7 @@ namespace RegulatedNoise
                                   int.Parse(UiColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
                                   int.Parse(UiColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
         }
+
     }
 
     public partial class Form1

@@ -14,12 +14,15 @@ namespace RegulatedNoise
         public SortableBindingList<CommandersLogEvent> LogEvents { get; set; }
 
         private readonly Form1 _callingForm;
+        public bool isLoaded { get; set; }
 
         public CommandersLog(Form1 callingForm)
         {
             _callingForm = callingForm;
             
             LogEvents = new SortableBindingList<CommandersLogEvent>();
+
+            isLoaded = false;
         }
 
         public string CreateEvent()
@@ -183,7 +186,7 @@ namespace RegulatedNoise
                     fs.Close();
                 }
 
-                UpdateCommandersLogListView();
+                isLoaded = true;
             }
             catch (Exception ex)
             {

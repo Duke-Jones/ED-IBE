@@ -28,41 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblSubtitle = new System.Windows.Forms.Label();
-            this.lblRegulatedNoise = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreenForm));
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // lblSubtitle
+            // listBox1
             // 
-            this.lblSubtitle.AutoSize = true;
-            this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubtitle.Location = new System.Drawing.Point(49, 148);
-            this.lblSubtitle.Name = "lblSubtitle";
-            this.lblSubtitle.Size = new System.Drawing.Size(551, 21);
-            this.lblSubtitle.TabIndex = 5;
-            this.lblSubtitle.Text = "-=- Built-in OCR -=- Price Analysis -=- Commander\'s Log -=- Web Control -=-";
+            this.listBox1.BackColor = System.Drawing.SystemColors.WindowText;
+            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(152)))), ((int)(((byte)(77)))));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Items.AddRange(new object[] {
+            "starting..."});
+            this.listBox1.Location = new System.Drawing.Point(68, 172);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.ScrollAlwaysVisible = true;
+            this.listBox1.Size = new System.Drawing.Size(569, 143);
+            this.listBox1.TabIndex = 6;
             // 
-            // lblRegulatedNoise
+            // label1
             // 
-            this.lblRegulatedNoise.AutoSize = true;
-            this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold);
-            this.lblRegulatedNoise.Location = new System.Drawing.Point(19, 39);
-            this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(641, 106);
-            this.lblRegulatedNoise.TabIndex = 4;
-            this.lblRegulatedNoise.Text = "RegulatedNoise";
+            this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.Location = new System.Drawing.Point(616, 170);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 146);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "label1";
             // 
             // SplashScreenForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(681, 313);
-            this.Controls.Add(this.lblSubtitle);
-            this.Controls.Add(this.lblRegulatedNoise);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(700, 340);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.listBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximumSize = new System.Drawing.Size(681, 313);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(681, 313);
             this.Name = "SplashScreenForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -70,13 +73,12 @@
             this.Text = "Splash";
             this.TopMost = true;
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblSubtitle;
-        private System.Windows.Forms.Label lblRegulatedNoise;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label label1;
     }
 }
