@@ -23,13 +23,16 @@ todo:
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.15_2
+   * sorting of comboboxes is saved now
+   * fixed a unwanted label on splash
+-------------------------------------------------------------------------------------      
 1.84_0.15_1
    * auto show systemdata
    * port of webserver is adjustable
    * show number of stations in system
    * completed splash screen
    * optimized program start behaviour
-   
 -------------------------------------------------------------------------------------      
 1.84_0.14
    * added a progress view for calculating best routes with cancel option

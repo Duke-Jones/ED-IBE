@@ -5557,7 +5557,22 @@ namespace RegulatedNoise
         private void rbSortBy_CheckedChanged(object sender, EventArgs e)
         {
             if (((RadioButton)sender).Checked)
+            {
+                switch (((RadioButton)sender).Name)
+                {
+                    case "rbSortBySystem":
+                        RegulatedNoiseSettings.CBSortingSelection = 1;
+                        break;
+                    case "rbSortByStation":
+                        RegulatedNoiseSettings.CBSortingSelection = 2;
+                        break;
+                    case "rbSortByDistance":
+                        RegulatedNoiseSettings.CBSortingSelection = 3;
+                        break;
+                }
+
                 SetupGui();
+            }
         }
 
         private void cblastVisitedFirst_CheckedChanged(object sender, EventArgs e)

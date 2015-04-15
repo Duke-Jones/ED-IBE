@@ -49,7 +49,7 @@
             // 
             // label1
             // 
-            this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.BackColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(616, 170);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 146);
