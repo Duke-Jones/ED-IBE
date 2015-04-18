@@ -13,7 +13,9 @@ for Elite Dangerous
 
 	
 on forums.frontier.co.uk (english forum):
+
 https://forums.frontier.co.uk/showthread.php?t=137732
 
 on elitedangerous.de (deutsches Forum):
+
 http://www.elitedangerous.de/forum/viewtopic.php?f=66&t=6404&start=0
