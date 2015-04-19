@@ -23,6 +23,12 @@ todo:
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.16
+   * translating of EDDN messages, EDDN now possible with other languages than english
+   * fixed a bug in the internal translating logic
+   * added a plausibility filter to the incoming EDDN logic
+   * added last EDDB data files
+-------------------------------------------------------------------------------------      
 1.84_0.15_2
    * sorting of comboboxes is saved now
    * fixed a unwanted label on splash

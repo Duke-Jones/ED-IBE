@@ -380,7 +380,7 @@ namespace RegulatedNoise
                 // 2. load own local data
                 _Splash.InfoAdd("...loading own stations from <stations_own.json>...");
                 myMilkyway.loadStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
-                _Splash.InfoChange("...loading stations from <stations.json>...<OK> (" + myMilkyway.getStations(EDMilkyway.enDataType.Data_Own).Count + " stations loaded)");
+                _Splash.InfoChange("...loading stations from <stations_own.json>...<OK> (" + myMilkyway.getStations(EDMilkyway.enDataType.Data_Own).Count + " stations loaded)");
 
                 _Splash.InfoAdd("...loading own systems from <systems_own.json>...");
                 myMilkyway.loadSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
@@ -864,12 +864,57 @@ namespace RegulatedNoise
         /// <param name="Language"></param>
         public string getCommodityBasename(enLanguage Language, string CommodityName)
         {
-            string BaseName = String.Empty;
+            string BaseName                             = String.Empty;
+            dsCommodities.NamesRow[] currentCommodity   = null;
 
-            dsCommodities.NamesRow[] currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("Ger='" + CommodityName + "'"));
-
+            switch (Language)
+            {
+                case enLanguage.eng:
+                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("eng='" + CommodityName + "'"));
+                    break;
+                case enLanguage.ger:
+                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("ger='" + CommodityName + "'"));
+                    break;
+                case enLanguage.fra:
+                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("fra='" + CommodityName + "'"));
+                    break;
+            }
+            
             if (currentCommodity.Count() > 0)
                 BaseName = currentCommodity[0].eng;
+
+            return BaseName;
+
+        }
+
+        /// <summary>
+        /// prepares the commodities in the correct language
+        /// </summary>
+        /// <param name="Language"></param>
+        public string getLocalizedCommodity(enLanguage Language, string CommodityName)
+        {
+            string BaseName = String.Empty;
+
+            List<dsCommodities.NamesRow> currentCommodity = _commodities.Names.Where(x => ((x.eng.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)) ||
+                                                                                           (x.ger.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)) ||
+                                                                                           (x.fra.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)))).ToList();
+
+            if (currentCommodity.Count() > 0)
+            {
+                switch (Language)
+                {
+                    case enLanguage.eng:
+                        BaseName = currentCommodity[0].eng;
+                        break;
+                    case enLanguage.ger:
+                        BaseName = currentCommodity[0].ger;
+                        break;
+                    case enLanguage.fra:
+                        BaseName = currentCommodity[0].fra;
+                        break;
+                }
+
+            }
 
             return BaseName;
 
@@ -3419,7 +3464,7 @@ namespace RegulatedNoise
 
         }
 
-        public bool checkPricePlausibility(string[] DataRows)
+        public bool checkPricePlausibility(string[] DataRows, bool simpleEDDNCheck = false)
         {
             bool implausible = false;
 
@@ -3466,7 +3511,7 @@ namespace RegulatedNoise
                             // demand AND supply !?
                             implausible = true;
                         }
-                        else if (!String.IsNullOrEmpty(currentRow.SupplyLevel))
+                        else if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) || (simpleEDDNCheck && (currentRow.Supply > 0)))
                         { 
                             // check supply data             
 
@@ -3497,7 +3542,7 @@ namespace RegulatedNoise
                             }
 
                         }
-                        else if (!String.IsNullOrEmpty(currentRow.DemandLevel))
+                        else if ((!String.IsNullOrEmpty(currentRow.DemandLevel)) || (simpleEDDNCheck && (currentRow.Demand > 0)))
                         { 
                             // check demand data
 
@@ -3717,8 +3762,8 @@ namespace RegulatedNoise
                     _eddnSpooler.WriteLine(text);
                 }
 
-                var headerDictionary = new Dictionary<string, string>();
-                var messageDictionary = new Dictionary<string, string>();
+                var headerDictionary    = new Dictionary<string, string>();
+                var messageDictionary   = new Dictionary<string, string>();
 
                 ParseEddnJson(text, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
 
@@ -3807,28 +3852,66 @@ namespace RegulatedNoise
                     }
                     tbEddnStats.Text = output;
 
-                    //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
-                    if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                    string commodity = getLocalizedCommodity(RegulatedNoiseSettings.Language, messageDictionary["itemName"]);
+
+                    if(!String.IsNullOrEmpty(commodity))
                     {
-                        string csvFormatted = messageDictionary["systemName"] + ";" +
-                                              messageDictionary["stationName"] + ";" +
-                                              messageDictionary["itemName"] + ";" +
-                                              messageDictionary["sellPrice"] + ";" +
-                                              messageDictionary["buyPrice"] + ";" +
-                                              messageDictionary["demand"] + ";" +
-                                              ";" +
-                                              messageDictionary["stationStock"] + ";" +
-                                              ";" +
-                                              messageDictionary["timestamp"] + ";"
-                                              +
-                                              "<From EDDN>" + ";";
-                        ImportCsvString(csvFormatted);
+
+                        //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
+                        if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                        {
+                            string csvFormatted = messageDictionary["systemName"] + ";" +
+                                                  messageDictionary["stationName"] + ";" +
+                                                  commodity + ";" +
+                                                  (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
+                                                  (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
+                                                  messageDictionary["demand"] + ";" +
+                                                  ";" +
+                                                  messageDictionary["stationStock"] + ";" +
+                                                  ";" +
+                                                  messageDictionary["timestamp"] + ";"
+                                                  +
+                                                  "<From EDDN>" + ";";
+
+                            if(!checkPricePlausibility(new string[] {csvFormatted}, true))
+                            {
+                                ImportCsvString(csvFormatted);
+                            }
+                            else
+                            {
+                                lbEddnImplausible.Items.Add(string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted ));
+                                lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
+                                lbEddnImplausible.SelectedIndex = -1;
+
+                                Debug.Print("Implausible EDDN Data: " + csvFormatted);
+                            }
+                        }
+                        
 
                         if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
                         {
                             SetupGui();
                             _lastGuiUpdate = DateTime.Now;
                         }
+                    }
+                    else 
+                    { 
+                        string csvFormatted = messageDictionary["systemName"] + ";" +
+                                                messageDictionary["stationName"] + ";" +
+                                                messageDictionary["itemName"] + ";" +
+                                                (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
+                                                (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
+                                                messageDictionary["demand"] + ";" +
+                                                ";" +
+                                                messageDictionary["stationStock"] + ";" +
+                                                ";" +
+                                                messageDictionary["timestamp"] + ";"
+                                                +
+                                                "<From EDDN>" + ";";
+
+                        lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted ));
+                        lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
+                        lbEddnImplausible.SelectedIndex = -1;
                     }
                 }
                 catch
@@ -4028,67 +4111,64 @@ namespace RegulatedNoise
             if (RegulatedNoiseSettings.UseEddnTestSchema)
             {
                 json =
-                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v" +
-                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) +
+                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
+                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
-#if DukeJones
                 json =
-                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v" +
+                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
                     RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
-#else
-                json =
-                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise"",""softwareVersion"": ""v" +
-                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) +
-                    @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
-#endif           
              }
 
+            string commodity = getCommodityBasename(rowToPost.CommodityName);
 
-            string commodityJson = json.Replace("$0$", tbUsername.Text.Replace("$1$", ""))
-                .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
-                .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
-                .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
-                .Replace("$5$", (rowToPost.StationID.Replace(" [" + rowToPost.SystemName + "]", "")))
-                .Replace("$6$", (rowToPost.SystemName))
-                .Replace("$7$", (rowToPost.Demand.ToString(CultureInfo.InvariantCulture)))
-                .Replace("$8$", (rowToPost.SellPrice.ToString(CultureInfo.InvariantCulture)))
-                .Replace("$9$", (rowToPost.CommodityName)
-                );
-
-            using (var client = new WebClient())
+            if(!String.IsNullOrEmpty(commodity))
             {
-                try
-                {
-                    client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityJson);
-                }
-                catch (WebException ex)
-                {
-                    _logger.Log("Error uploading Json", true);
-                    _logger.Log(ex.ToString(), true);
-                    _logger.Log(ex.Message, true);
-                    _logger.Log(ex.StackTrace, true);
-                    if (ex.InnerException != null)
-                        _logger.Log(ex.InnerException.ToString(), true);
+                string commodityJson = json.Replace("$0$", tbUsername.Text.Replace("$1$", ""))
+                    .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
+                    .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
+                    .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
+                    .Replace("$5$", (rowToPost.StationID.Replace(" [" + rowToPost.SystemName + "]", "")))
+                    .Replace("$6$", (rowToPost.SystemName))
+                    .Replace("$7$", (rowToPost.Demand.ToString(CultureInfo.InvariantCulture)))
+                    .Replace("$8$", (rowToPost.SellPrice.ToString(CultureInfo.InvariantCulture)))
+                    .Replace("$9$", (commodity)
+                    );
 
-                    using (WebResponse response = ex.Response)
+                using (var client = new WebClient())
+                {
+                    try
                     {
-                        using (Stream data = response.GetResponseStream())
+                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityJson);
+                    }
+                    catch (WebException ex)
+                    {
+                        _logger.Log("Error uploading Json", true);
+                        _logger.Log(ex.ToString(), true);
+                        _logger.Log(ex.Message, true);
+                        _logger.Log(ex.StackTrace, true);
+                        if (ex.InnerException != null)
+                            _logger.Log(ex.InnerException.ToString(), true);
+
+                        using (WebResponse response = ex.Response)
                         {
-                            if (data != null)
+                            using (Stream data = response.GetResponseStream())
                             {
-                                StreamReader sr = new StreamReader(data);
-                                MessageBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN");
+                                if (data != null)
+                                {
+                                    StreamReader sr = new StreamReader(data);
+                                    MessageBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN");
+                                }
                             }
                         }
                     }
-                }
-                finally
-                {
-                    client.Dispose();
+                    finally
+                    {
+                        client.Dispose();
+                    }
                 }
             }
         }
@@ -5385,7 +5465,6 @@ namespace RegulatedNoise
             // now we activate the EventHandler
             this.cmbLanguage.SelectedIndexChanged += new System.EventHandler(this.cmbLanguage_SelectedIndexChanged);
 
-            updateEDDNSetting(RegulatedNoiseSettings.Language);
         }
 
         private void cmbLanguage_SelectedIndexChanged(object sender, EventArgs e)
@@ -5400,8 +5479,6 @@ namespace RegulatedNoise
 
                 SaveSettings();
 
-                updateEDDNSetting(RegulatedNoiseSettings.Language);
-                
             }
         }
 
@@ -5434,35 +5511,6 @@ namespace RegulatedNoise
 
             // reload in working array
             loadCommodities(RegulatedNoiseSettings.Language);
-        }
-
-        private void updateEDDNSetting(enLanguage language)
-        {
-            if (language == enLanguage.eng)
-            {
-                cbPostOnImport.Visible = true;
-                checkboxImportEDDN.Visible = true;
-                checkboxSpoolEddnToFile.Visible = true;
-
-                if (!tabCtrlMain.TabPages.ContainsKey("tabEDDN"))
-                    tabCtrlMain.TabPages.Insert(_EDDNTabPageIndex, _EDDNTabPage);
-            }
-            else
-            {
-                cmdStopEDDNListening_Click(this, null);
-                cbPostOnImport.Checked = false;
-                cbPostOnImport.Visible = false;
-                RegulatedNoiseSettings.PostToEddnOnImport = false;
-
-                checkboxImportEDDN.Checked = false;
-                checkboxImportEDDN.Visible = false;
-
-                checkboxSpoolEddnToFile.Checked = false;
-                checkboxSpoolEddnToFile.Visible = false;
-
-                if (tabCtrlMain.TabPages.ContainsKey("tabEDDN"))
-                    tabCtrlMain.TabPages.RemoveByKey("tabEDDN");
-            }
         }
 
         public void setOCRCalibrationTabVisibility()

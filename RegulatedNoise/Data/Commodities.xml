@@ -405,6 +405,11 @@
     <ger>Painit</ger>
     <fra>Painite</fra>
   </Names>
+  <Names>
+    <eng>Osmium</eng>
+    <ger>Osmium</ger>
+    <fra>Osmium</fra>
+  </Names>
   <Levels>
     <ID>0</ID>
     <eng>low</eng>

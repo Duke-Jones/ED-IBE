@@ -59,7 +59,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.15m;
+        public readonly decimal VersionDJ = 0.16m;
 #endif
         private int _isFirstRun = -1;
 

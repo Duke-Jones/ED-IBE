@@ -79,6 +79,7 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabSystemData = new System.Windows.Forms.TabPage();
+            this.label82 = new System.Windows.Forms.Label();
             this.lblStationCount = new System.Windows.Forms.Label();
             this.label72 = new System.Windows.Forms.Label();
             this.cmbStationEconomies = new System.Windows.Forms.ComboBox();
@@ -304,6 +305,8 @@
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
             this.tabEDDN = new System.Windows.Forms.TabPage();
+            this.label83 = new System.Windows.Forms.Label();
+            this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.tbEddnStats = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkboxSpoolEddnToFile = new System.Windows.Forms.CheckBox();
@@ -353,7 +356,6 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label82 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
@@ -590,7 +592,7 @@
             this.tabCtrlMain.Location = new System.Drawing.Point(18, 64);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1067, 619);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1059, 615);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -613,7 +615,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1059, 593);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1051, 589);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -624,7 +626,7 @@
             this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(893, 380);
+            this.cmdDonate.Location = new System.Drawing.Point(870, 380);
             this.cmdDonate.Name = "cmdDonate";
             this.cmdDonate.Size = new System.Drawing.Size(154, 36);
             this.cmdDonate.TabIndex = 37;
@@ -635,7 +637,7 @@
             // 
             this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(734, 350);
+            this.label42.Location = new System.Drawing.Point(711, 350);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(315, 52);
             this.label42.TabIndex = 38;
@@ -655,7 +657,7 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(4, 521);
+            this.panel2.Location = new System.Drawing.Point(-7, 514);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1051, 68);
             this.panel2.TabIndex = 33;
@@ -776,7 +778,7 @@
             this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BackgroundSet.AutoSize = true;
             this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackgroundSet.Location = new System.Drawing.Point(1023, 192);
+            this.BackgroundSet.Location = new System.Drawing.Point(1000, 192);
             this.BackgroundSet.Name = "BackgroundSet";
             this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
             this.BackgroundSet.TabIndex = 30;
@@ -788,7 +790,7 @@
             this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ForegroundSet.AutoSize = true;
             this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForegroundSet.Location = new System.Drawing.Point(1023, 154);
+            this.ForegroundSet.Location = new System.Drawing.Point(1000, 154);
             this.ForegroundSet.Name = "ForegroundSet";
             this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
             this.ForegroundSet.TabIndex = 29;
@@ -798,7 +800,7 @@
             // button20
             // 
             this.button20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button20.Location = new System.Drawing.Point(900, 224);
+            this.button20.Location = new System.Drawing.Point(877, 224);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(148, 44);
             this.button20.TabIndex = 28;
@@ -810,7 +812,7 @@
             // 
             this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(916, 194);
+            this.label47.Location = new System.Drawing.Point(893, 194);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(98, 13);
             this.label47.TabIndex = 27;
@@ -820,7 +822,7 @@
             // 
             this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(916, 155);
+            this.label46.Location = new System.Drawing.Point(893, 155);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(94, 13);
             this.label46.TabIndex = 26;
@@ -830,7 +832,7 @@
             // 
             this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbBackgroundColour.Location = new System.Drawing.Point(1016, 186);
+            this.pbBackgroundColour.Location = new System.Drawing.Point(993, 186);
             this.pbBackgroundColour.Name = "pbBackgroundColour";
             this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbBackgroundColour.TabIndex = 25;
@@ -841,7 +843,7 @@
             // 
             this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbForegroundColour.Location = new System.Drawing.Point(1016, 148);
+            this.pbForegroundColour.Location = new System.Drawing.Point(993, 148);
             this.pbForegroundColour.Name = "pbForegroundColour";
             this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbForegroundColour.TabIndex = 24;
@@ -852,7 +854,7 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(900, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(877, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(148, 130);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -972,10 +974,21 @@
             this.tabSystemData.Controls.Add(this.lblStationRenameHint);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1059, 593);
+            this.tabSystemData.Size = new System.Drawing.Size(1051, 589);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label82.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label82.Location = new System.Drawing.Point(215, 502);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(537, 64);
+            this.label82.TabIndex = 124;
+            this.label82.Text = resources.GetString("label82.Text");
             // 
             // lblStationCount
             // 
@@ -1626,7 +1639,7 @@
             this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Location = new System.Drawing.Point(4, 22);
             this.tabPriceAnalysis.Name = "tabPriceAnalysis";
-            this.tabPriceAnalysis.Size = new System.Drawing.Size(1059, 593);
+            this.tabPriceAnalysis.Size = new System.Drawing.Size(1051, 589);
             this.tabPriceAnalysis.TabIndex = 10;
             this.tabPriceAnalysis.Text = "Price Analysis";
             this.tabPriceAnalysis.UseVisualStyleBackColor = true;
@@ -1770,7 +1783,7 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 56);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1056, 534);
+            this.tabControl2.Size = new System.Drawing.Size(1048, 530);
             this.tabControl2.TabIndex = 10;
             // 
             // tabPage3
@@ -1778,7 +1791,7 @@
             this.tabPage3.Controls.Add(this.splitContainer2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1048, 508);
+            this.tabPage3.Size = new System.Drawing.Size(1040, 504);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "All Commodities";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1801,7 +1814,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(1048, 505);
+            this.splitContainer2.Size = new System.Drawing.Size(1040, 501);
             this.splitContainer2.SplitterDistance = 822;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 8;
@@ -1814,7 +1827,7 @@
             this.lvAllComms.FullRowSelect = true;
             this.lvAllComms.Location = new System.Drawing.Point(0, 0);
             this.lvAllComms.Name = "lvAllComms";
-            this.lvAllComms.Size = new System.Drawing.Size(821, 507);
+            this.lvAllComms.Size = new System.Drawing.Size(821, 503);
             this.lvAllComms.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvAllComms.TabIndex = 4;
             this.lvAllComms.UseCompatibleStateImageBehavior = false;
@@ -1841,8 +1854,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label9);
             this.splitContainer1.Panel2.Controls.Add(this.chart2);
-            this.splitContainer1.Size = new System.Drawing.Size(118, 501);
-            this.splitContainer1.SplitterDistance = 227;
+            this.splitContainer1.Size = new System.Drawing.Size(200, 497);
+            this.splitContainer1.SplitterDistance = 225;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 7;
             // 
@@ -1868,7 +1881,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(113, 225);
+            this.chart1.Size = new System.Drawing.Size(195, 223);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1895,7 +1908,7 @@
             series2.ChartArea = "ChartArea1";
             series2.Name = "Series1";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(108, 101);
+            this.chart2.Size = new System.Drawing.Size(190, 87);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
             this.chart2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
@@ -1913,7 +1926,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1048, 508);
+            this.tabPage1.Size = new System.Drawing.Size(1040, 504);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "By Station";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1922,7 +1935,7 @@
             // 
             this.bStationDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bStationDeleteRow.Enabled = false;
-            this.bStationDeleteRow.Location = new System.Drawing.Point(838, 45);
+            this.bStationDeleteRow.Location = new System.Drawing.Point(830, 45);
             this.bStationDeleteRow.Name = "bStationDeleteRow";
             this.bStationDeleteRow.Size = new System.Drawing.Size(97, 23);
             this.bStationDeleteRow.TabIndex = 17;
@@ -1934,7 +1947,7 @@
             // 
             this.bStationEditRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bStationEditRow.Enabled = false;
-            this.bStationEditRow.Location = new System.Drawing.Point(941, 45);
+            this.bStationEditRow.Location = new System.Drawing.Point(933, 45);
             this.bStationEditRow.Name = "bStationEditRow";
             this.bStationEditRow.Size = new System.Drawing.Size(97, 23);
             this.bStationEditRow.TabIndex = 16;
@@ -1948,7 +1961,7 @@
             this.groupBox5.Controls.Add(this.tbStationRename);
             this.groupBox5.Controls.Add(this.tbSystemRename);
             this.groupBox5.Controls.Add(this.cmdApplySystemRename);
-            this.groupBox5.Location = new System.Drawing.Point(570, 1);
+            this.groupBox5.Location = new System.Drawing.Point(562, 1);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(475, 41);
             this.groupBox5.TabIndex = 6;
@@ -1998,7 +2011,7 @@
             this.lbPrices.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lbPrices.Location = new System.Drawing.Point(0, 71);
             this.lbPrices.Name = "lbPrices";
-            this.lbPrices.Size = new System.Drawing.Size(1048, 431);
+            this.lbPrices.Size = new System.Drawing.Size(1040, 427);
             this.lbPrices.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lbPrices.TabIndex = 3;
             this.lbPrices.UseCompatibleStateImageBehavior = false;
@@ -2062,7 +2075,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1048, 508);
+            this.tabPage2.Size = new System.Drawing.Size(1040, 504);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "By Commodity";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2071,7 +2084,7 @@
             // 
             this.bCommodityDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bCommodityDeleteRow.Enabled = false;
-            this.bCommodityDeleteRow.Location = new System.Drawing.Point(868, 16);
+            this.bCommodityDeleteRow.Location = new System.Drawing.Point(860, 16);
             this.bCommodityDeleteRow.Name = "bCommodityDeleteRow";
             this.bCommodityDeleteRow.Size = new System.Drawing.Size(93, 23);
             this.bCommodityDeleteRow.TabIndex = 25;
@@ -2083,7 +2096,7 @@
             // 
             this.bEditCommodity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bEditCommodity.Enabled = false;
-            this.bEditCommodity.Location = new System.Drawing.Point(967, 16);
+            this.bEditCommodity.Location = new System.Drawing.Point(959, 16);
             this.bEditCommodity.Name = "bEditCommodity";
             this.bEditCommodity.Size = new System.Drawing.Size(75, 23);
             this.bEditCommodity.TabIndex = 24;
@@ -2271,7 +2284,7 @@
             this.lbCommodities.FullRowSelect = true;
             this.lbCommodities.Location = new System.Drawing.Point(0, 47);
             this.lbCommodities.Name = "lbCommodities";
-            this.lbCommodities.Size = new System.Drawing.Size(1048, 455);
+            this.lbCommodities.Size = new System.Drawing.Size(1040, 451);
             this.lbCommodities.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lbCommodities.TabIndex = 4;
             this.lbCommodities.UseCompatibleStateImageBehavior = false;
@@ -2294,7 +2307,7 @@
             this.tabStationToStation.Controls.Add(this.bShowStationToStationRouteAtStarchartDotClub);
             this.tabStationToStation.Location = new System.Drawing.Point(4, 22);
             this.tabStationToStation.Name = "tabStationToStation";
-            this.tabStationToStation.Size = new System.Drawing.Size(1048, 508);
+            this.tabStationToStation.Size = new System.Drawing.Size(1040, 504);
             this.tabStationToStation.TabIndex = 8;
             this.tabStationToStation.Text = "Station-To-Station";
             this.tabStationToStation.UseVisualStyleBackColor = true;
@@ -2314,8 +2327,8 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.lvStationToStationReturn);
-            this.splitContainer4.Size = new System.Drawing.Size(609, 462);
-            this.splitContainer4.SplitterDistance = 230;
+            this.splitContainer4.Size = new System.Drawing.Size(609, 458);
+            this.splitContainer4.SplitterDistance = 228;
             this.splitContainer4.TabIndex = 19;
             // 
             // lvStationToStation
@@ -2326,7 +2339,7 @@
             this.lvStationToStation.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvStationToStation.Location = new System.Drawing.Point(0, 3);
             this.lvStationToStation.Name = "lvStationToStation";
-            this.lvStationToStation.Size = new System.Drawing.Size(606, 224);
+            this.lvStationToStation.Size = new System.Drawing.Size(606, 222);
             this.lvStationToStation.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvStationToStation.TabIndex = 4;
             this.lvStationToStation.UseCompatibleStateImageBehavior = false;
@@ -2341,7 +2354,7 @@
             this.lvStationToStationReturn.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.lvStationToStationReturn.Location = new System.Drawing.Point(0, 3);
             this.lvStationToStationReturn.Name = "lvStationToStationReturn";
-            this.lvStationToStationReturn.Size = new System.Drawing.Size(606, 222);
+            this.lvStationToStationReturn.Size = new System.Drawing.Size(606, 220);
             this.lvStationToStationReturn.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvStationToStationReturn.TabIndex = 18;
             this.lvStationToStationReturn.UseCompatibleStateImageBehavior = false;
@@ -2361,7 +2374,7 @@
             this.groupBox7.Controls.Add(this.btnBestRoundTrip);
             this.groupBox7.Location = new System.Drawing.Point(624, 34);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(417, 462);
+            this.groupBox7.Size = new System.Drawing.Size(409, 458);
             this.groupBox7.TabIndex = 17;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Find Round-Trips";
@@ -2428,7 +2441,7 @@
             this.lbAllRoundTrips.FormattingEnabled = true;
             this.lbAllRoundTrips.Location = new System.Drawing.Point(6, 52);
             this.lbAllRoundTrips.Name = "lbAllRoundTrips";
-            this.lbAllRoundTrips.Size = new System.Drawing.Size(405, 368);
+            this.lbAllRoundTrips.Size = new System.Drawing.Size(397, 355);
             this.lbAllRoundTrips.TabIndex = 13;
             this.lbAllRoundTrips.SelectedIndexChanged += new System.EventHandler(this.lbAllRoundTrips_SelectedIndexChanged);
             // 
@@ -2546,7 +2559,7 @@
             this.tabCommandersLog.Controls.Add(this.splitContainer3);
             this.tabCommandersLog.Location = new System.Drawing.Point(4, 22);
             this.tabCommandersLog.Name = "tabCommandersLog";
-            this.tabCommandersLog.Size = new System.Drawing.Size(1059, 593);
+            this.tabCommandersLog.Size = new System.Drawing.Size(1051, 589);
             this.tabCommandersLog.TabIndex = 6;
             this.tabCommandersLog.Text = "Commander\'s Log";
             this.tabCommandersLog.UseVisualStyleBackColor = true;
@@ -2591,8 +2604,8 @@
             this.splitContainer3.Panel2.Controls.Add(this.label21);
             this.splitContainer3.Panel2.Controls.Add(this.button9);
             this.splitContainer3.Panel2.Controls.Add(this.dtpLogEventDate);
-            this.splitContainer3.Size = new System.Drawing.Size(1082, 590);
-            this.splitContainer3.SplitterDistance = 558;
+            this.splitContainer3.Size = new System.Drawing.Size(1059, 583);
+            this.splitContainer3.SplitterDistance = 535;
             this.splitContainer3.TabIndex = 38;
             // 
             // lvCommandersLog
@@ -2606,7 +2619,7 @@
             this.lvCommandersLog.Location = new System.Drawing.Point(0, 0);
             this.lvCommandersLog.MultiSelect = false;
             this.lvCommandersLog.Name = "lvCommandersLog";
-            this.lvCommandersLog.Size = new System.Drawing.Size(555, 593);
+            this.lvCommandersLog.Size = new System.Drawing.Size(532, 586);
             this.lvCommandersLog.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvCommandersLog.TabIndex = 35;
             this.lvCommandersLog.UseCompatibleStateImageBehavior = false;
@@ -2827,7 +2840,7 @@
             // button10
             // 
             this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button10.Location = new System.Drawing.Point(400, 557);
+            this.button10.Location = new System.Drawing.Point(400, 550);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(85, 23);
             this.button10.TabIndex = 23;
@@ -2847,7 +2860,7 @@
             // button9
             // 
             this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button9.Location = new System.Drawing.Point(311, 557);
+            this.button9.Location = new System.Drawing.Point(311, 550);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(85, 23);
             this.button9.TabIndex = 22;
@@ -2869,7 +2882,7 @@
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1059, 593);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1051, 589);
             this.tabOCRGroup.TabIndex = 11;
             this.tabOCRGroup.Text = "Optical Character Recognition";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
@@ -2883,7 +2896,7 @@
             this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
             this.tabCtrlOCR.Name = "tabCtrlOCR";
             this.tabCtrlOCR.SelectedIndex = 0;
-            this.tabCtrlOCR.Size = new System.Drawing.Size(1056, 590);
+            this.tabCtrlOCR.Size = new System.Drawing.Size(1048, 586);
             this.tabCtrlOCR.TabIndex = 0;
             // 
             // tabOCR
@@ -2892,7 +2905,7 @@
             this.tabOCR.Controls.Add(this.groupBox3);
             this.tabOCR.Location = new System.Drawing.Point(4, 22);
             this.tabOCR.Name = "tabOCR";
-            this.tabOCR.Size = new System.Drawing.Size(1048, 564);
+            this.tabOCR.Size = new System.Drawing.Size(1040, 560);
             this.tabOCR.TabIndex = 4;
             this.tabOCR.Text = "Capture and Correct";
             this.tabOCR.UseVisualStyleBackColor = true;
@@ -2928,7 +2941,7 @@
             this.groupBox4.Controls.Add(this.tbOcrStationName);
             this.groupBox4.Location = new System.Drawing.Point(441, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(595, 549);
+            this.groupBox4.Size = new System.Drawing.Size(587, 545);
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
@@ -3188,7 +3201,7 @@
             this.groupBox3.Controls.Add(this.label11);
             this.groupBox3.Location = new System.Drawing.Point(10, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(424, 549);
+            this.groupBox3.Size = new System.Drawing.Size(424, 545);
             this.groupBox3.TabIndex = 21;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Capture Price Screenshots";
@@ -3277,7 +3290,7 @@
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1059, 593);
+            this.tabWebserver.Size = new System.Drawing.Size(1051, 589);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -3304,7 +3317,7 @@
             this.groupBox1.Controls.Add(this.lblURL);
             this.groupBox1.Location = new System.Drawing.Point(10, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1035, 563);
+            this.groupBox1.Size = new System.Drawing.Size(1027, 559);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Webserver";
@@ -3455,30 +3468,51 @@
             // 
             // tabEDDN
             // 
+            this.tabEDDN.Controls.Add(this.label83);
+            this.tabEDDN.Controls.Add(this.lbEddnImplausible);
             this.tabEDDN.Controls.Add(this.tbEddnStats);
             this.tabEDDN.Controls.Add(this.groupBox2);
             this.tabEDDN.Location = new System.Drawing.Point(4, 22);
             this.tabEDDN.Name = "tabEDDN";
-            this.tabEDDN.Size = new System.Drawing.Size(1059, 593);
+            this.tabEDDN.Size = new System.Drawing.Size(1051, 589);
             this.tabEDDN.TabIndex = 7;
             this.tabEDDN.Text = "EDDN";
             this.tabEDDN.UseVisualStyleBackColor = true;
             // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(6, 348);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(76, 13);
+            this.label83.TabIndex = 6;
+            this.label83.Text = "Rejected Data";
+            // 
+            // lbEddnImplausible
+            // 
+            this.lbEddnImplausible.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbEddnImplausible.FormattingEnabled = true;
+            this.lbEddnImplausible.HorizontalScrollbar = true;
+            this.lbEddnImplausible.Location = new System.Drawing.Point(3, 362);
+            this.lbEddnImplausible.Name = "lbEddnImplausible";
+            this.lbEddnImplausible.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lbEddnImplausible.Size = new System.Drawing.Size(1045, 212);
+            this.lbEddnImplausible.TabIndex = 2;
+            // 
             // tbEddnStats
             // 
-            this.tbEddnStats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbEddnStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbEddnStats.Location = new System.Drawing.Point(459, 3);
             this.tbEddnStats.Multiline = true;
             this.tbEddnStats.Name = "tbEddnStats";
-            this.tbEddnStats.Size = new System.Drawing.Size(597, 587);
+            this.tbEddnStats.Size = new System.Drawing.Size(589, 340);
             this.tbEddnStats.TabIndex = 1;
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox2.Controls.Add(this.checkboxSpoolEddnToFile);
             this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
             this.groupBox2.Controls.Add(this.button17);
@@ -3492,7 +3526,7 @@
             this.groupBox2.Controls.Add(this.button15);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(450, 587);
+            this.groupBox2.Size = new System.Drawing.Size(450, 340);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
@@ -3510,7 +3544,7 @@
             // bPurgeAllEddnData
             // 
             this.bPurgeAllEddnData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 556);
+            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 309);
             this.bPurgeAllEddnData.Name = "bPurgeAllEddnData";
             this.bPurgeAllEddnData.Size = new System.Drawing.Size(129, 23);
             this.bPurgeAllEddnData.TabIndex = 12;
@@ -3594,7 +3628,7 @@
             this.tbEDDNOutput.Location = new System.Drawing.Point(6, 155);
             this.tbEDDNOutput.Multiline = true;
             this.tbEDDNOutput.Name = "tbEDDNOutput";
-            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 395);
+            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 148);
             this.tbEDDNOutput.TabIndex = 3;
             // 
             // button15
@@ -3616,7 +3650,7 @@
             this.tabSettings.Location = new System.Drawing.Point(4, 22);
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSettings.Size = new System.Drawing.Size(1059, 593);
+            this.tabSettings.Size = new System.Drawing.Size(1051, 589);
             this.tabSettings.TabIndex = 12;
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
@@ -3973,23 +4007,12 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
-            // label82
-            // 
-            this.label82.AutoSize = true;
-            this.label82.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label82.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label82.Location = new System.Drawing.Point(215, 502);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(537, 64);
-            this.label82.TabIndex = 124;
-            this.label82.Text = resources.GetString("label82.Text");
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1097, 690);
+            this.ClientSize = new System.Drawing.Size(1089, 686);
             this.Controls.Add(this.label53);
             this.Controls.Add(this.txtEDTime);
             this.Controls.Add(this.label54);
@@ -4424,6 +4447,8 @@
         private System.Windows.Forms.CheckBox cbLoadStationsJSON;
         private System.Windows.Forms.Label label74;
         private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.ListBox lbEddnImplausible;
+        private System.Windows.Forms.Label label83;
     }
 }
 
