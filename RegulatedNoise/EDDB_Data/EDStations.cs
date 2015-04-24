@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
@@ -22,84 +23,65 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("system_id")]
         public int SystemId { get; set; }
 
-        string m_MaxLandingPadSize;
         [JsonProperty("max_landing_pad_size")]
-        public string MaxLandingPadSize { get{return m_MaxLandingPadSize;} set{m_MaxLandingPadSize = value; if(m_MaxLandingPadSize == null) m_MaxLandingPadSize = string.Empty;} }
+        public string MaxLandingPadSize { get; set; }
 
-        private int? m_DistanceToStar;
         [JsonProperty("distance_to_star")]
-        public int? DistanceToStar { get{return m_DistanceToStar;} set{m_DistanceToStar = value; if(m_DistanceToStar == null) m_DistanceToStar = -1;} }
+        public int? DistanceToStar { get; set; }
 
-        private string m_Faction;
         [JsonProperty("faction")]
-        public string Faction { get{return m_Faction;} set{m_Faction = value; if(m_Faction == null) m_Faction = string.Empty;} }
+        public string Faction { get; set; }
 
-        private string m_Government;
         [JsonProperty("government")]
-        public string Government { get{return m_Government;} set{m_Government = value; if(m_Government == null) m_Government = string.Empty;} }
+        public string Government { get; set; }
 
-        private string m_Allegiance;
         [JsonProperty("allegiance")]
-        public string Allegiance { get{return m_Allegiance;} set{m_Allegiance = value; if(m_Allegiance == null) m_Allegiance = string.Empty;} }
+        public string Allegiance { get; set; }
 
-        private string m_State;
         [JsonProperty("state")]
-        public string State { get{return m_State;} set{m_State = value; if(m_State == null) m_State = string.Empty;} }
+        public string State { get; set; }
 
-        private string m_Type;
         [JsonProperty("type")]
-        public string Type { get{return m_Type;} set{m_Type = value; if(m_Type == null) m_Type = string.Empty;} }
+        public string Type { get; set; }
 
-        private int? m_HasBlackmarket;
         [JsonProperty("has_blackmarket")]
-        public int? HasBlackmarket { get{return m_HasBlackmarket;} set{m_HasBlackmarket = value; if(m_HasBlackmarket == null) m_HasBlackmarket = -1;} }
+        public int? HasBlackmarket { get; set; }
 
-        private int? m_HasCommodities;
         [JsonProperty("has_commodities")]
-        public int? HasCommodities { get{return m_HasCommodities;} set{m_HasCommodities = value; if(m_HasCommodities == null) m_HasCommodities = -1;} }
+        public int? HasCommodities { get; set; }
 
-        private int? m_HasRefuel;
         [JsonProperty("has_refuel")]
-        public int? HasRefuel { get{return m_HasRefuel;} set{m_HasRefuel = value; if(m_HasRefuel == null) m_HasRefuel = -1;} }
+        public int? HasRefuel { get; set; }
 
-        private int? m_HasRepair;
         [JsonProperty("has_repair")]
-        public int? HasRepair { get{return m_HasRepair;} set{m_HasRepair = value; if(m_HasRepair == null) m_HasRepair = -1;} }
+        public int? HasRepair { get; set; }
 
-        private int? m_HasRearm;
         [JsonProperty("has_rearm")]
-        public int? HasRearm { get{return m_HasRearm;} set{m_HasRearm = value; if(m_HasRearm == null) m_HasRearm = -1;} }
+        public int? HasRearm { get; set; }
 
-        private int? m_HasOutfitting;
         [JsonProperty("has_outfitting")]
-        public int? HasOutfitting { get{return m_HasOutfitting;} set{m_HasOutfitting = value; if(m_HasOutfitting == null) m_HasOutfitting = -1;} }
+        public int? HasOutfitting { get; set; }
 
-        private int? m_HasShipyard;
         [JsonProperty("has_shipyard")]
-        public int? HasShipyard { get{return m_HasShipyard;} set{m_HasShipyard = value; if(m_HasShipyard == null) m_HasShipyard = -1;} }
+        public int? HasShipyard { get; set; }
 
-        private string[] m_ImportCommodities;
         [JsonProperty("import_commodities")]
-        public string[] ImportCommodities { get{return m_ImportCommodities;} set{m_ImportCommodities = value; if(m_ImportCommodities == null) m_ImportCommodities = new string[0];} }
+        public string[] ImportCommodities { get; set; }
 
-        private string[] m_ExportCommodities;
         [JsonProperty("export_commodities")]
-        public string[] ExportCommodities { get{return m_ExportCommodities;} set{m_ExportCommodities = value; if(m_ExportCommodities == null) m_ExportCommodities = new string[0];} }
+        public string[] ExportCommodities { get; set; }
 
-        private string[] m_ProhibitedCommodities;
         [JsonProperty("prohibited_commodities")]
-        public string[] ProhibitedCommodities { get{return m_ProhibitedCommodities;} set{m_ProhibitedCommodities = value; if(m_ProhibitedCommodities == null) m_ProhibitedCommodities = new string[0];} }
+        public string[] ProhibitedCommodities { get; set; }
 
-        private string[] m_Economies;
         [JsonProperty("economies")]
-        public string[] Economies { get{return m_Economies;} set{m_Economies = value; if(m_Economies == null) m_Economies = new string[0];} }
+        public string[] Economies { get; set; }
 
         [JsonProperty("updated_at")]
         public int UpdatedAt { get; set; }
 
-        private Listing[] m_Listings;
         [JsonProperty("listings")]
-        public Listing[] Listings { get{return m_Listings;} set{m_Listings = value; if(m_Listings == null) m_Listings = new Listing[0];} }
+        public Listing[] Listings { get; set; }
 
          /// <summary>
          /// creates a new station 
@@ -122,14 +104,16 @@ namespace RegulatedNoise.EDDB_Data
 
         public void clear()
         {
-            Name                  = "";
-            MaxLandingPadSize     = "";
+            Id                    = 0;
+            SystemId              = 0;
+            Name                  = string.Empty;
+            MaxLandingPadSize     = null;
             DistanceToStar        = null;
-            Faction               = "";
-            Government            = "";
-            Allegiance            = "";
-            State                 = "";
-            Type                  = "";
+            Faction               = null;
+            Government            = null;
+            Allegiance            = null;
+            State                 = null;
+            Type                  = null;
             HasBlackmarket        = null;
             HasCommodities        = null;
             HasRefuel             = null;
@@ -138,10 +122,10 @@ namespace RegulatedNoise.EDDB_Data
             HasOutfitting         = null;
             HasShipyard           = null;
 
-            ImportCommodities     = new string[0];
-            ExportCommodities     = new string[0];
-            ProhibitedCommodities = new string[0];
-            Economies             = new string[0];
+            ImportCommodities     = null;
+            ExportCommodities     = null;
+            ProhibitedCommodities = null;
+            Economies             = null;
         }
 
         /// <summary>
@@ -154,76 +138,30 @@ namespace RegulatedNoise.EDDB_Data
             bool retValue = false;
 
             if(eqStation != null)
-            { 
-                if ((Name.Equals(eqStation.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (MaxLandingPadSize.Equals(eqStation.MaxLandingPadSize)) && 
-                    (DistanceToStar.Equals(eqStation.DistanceToStar)) && 
-                    (Faction.Equals(eqStation.Faction, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (Government.Equals(eqStation.Government, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (Allegiance.Equals(eqStation.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (State.Equals(eqStation.State, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (Type.Equals(eqStation.Type, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (HasBlackmarket.Equals(eqStation.HasBlackmarket)) && 
-                    (HasCommodities.Equals(eqStation.HasCommodities)) && 
-                    (HasRefuel.Equals(eqStation.HasRefuel)) &&
-                    (HasRepair.Equals(eqStation.HasRepair)) && 
-                    (HasRearm.Equals(eqStation.HasRearm)) && 
-                    (HasOutfitting.Equals(eqStation.HasOutfitting)) &&
-                    (HasShipyard.Equals(eqStation.HasShipyard)))
+            {
+
+
+                if (ObjectCompare.EqualsNullable(this.Name, eqStation.Name) &&
+                    ObjectCompare.EqualsNullable(this.MaxLandingPadSize, eqStation.MaxLandingPadSize) && 
+                    ObjectCompare.EqualsNullable(this.DistanceToStar, eqStation.DistanceToStar) && 
+                    ObjectCompare.EqualsNullable(this.Faction, eqStation.Faction) && 
+                    ObjectCompare.EqualsNullable(this.Government, eqStation.Government) && 
+                    ObjectCompare.EqualsNullable(this.Allegiance, eqStation.Allegiance) && 
+                    ObjectCompare.EqualsNullable(this.State, eqStation.State) && 
+                    ObjectCompare.EqualsNullable(this.Type, eqStation.Type) && 
+                    ObjectCompare.EqualsNullable(this.HasBlackmarket, eqStation.HasBlackmarket) && 
+                    ObjectCompare.EqualsNullable(this.HasCommodities, eqStation.HasCommodities) && 
+                    ObjectCompare.EqualsNullable(this.HasRefuel, eqStation.HasRefuel) &&
+                    ObjectCompare.EqualsNullable(this.HasRepair, eqStation.HasRepair) && 
+                    ObjectCompare.EqualsNullable(this.HasRearm, eqStation.HasRearm) &&
+                    ObjectCompare.EqualsNullable(this.HasOutfitting, eqStation.HasOutfitting) &&
+                    ObjectCompare.EqualsNullable(this.HasShipyard, eqStation.HasShipyard) &&
+                    ObjectCompare.EqualsNullable(this.ImportCommodities, eqStation.ImportCommodities) &&
+                    ObjectCompare.EqualsNullable(this.ExportCommodities, eqStation.ExportCommodities) &&
+                    ObjectCompare.EqualsNullable(this.ProhibitedCommodities, eqStation.ProhibitedCommodities) &&
+                    ObjectCompare.EqualsNullable(this.Economies, eqStation.Economies))
                         retValue = true;
 
-                if (ImportCommodities.GetUpperBound(0) != eqStation.ImportCommodities.GetUpperBound(0))
-                {
-                    retValue = false;
-                } 
-
-                if (ExportCommodities.GetUpperBound(0) != eqStation.ExportCommodities.GetUpperBound(0))
-                {
-                    retValue = false;
-                } 
-
-                if (ProhibitedCommodities.GetUpperBound(0) != eqStation.ProhibitedCommodities.GetUpperBound(0))
-                {
-                    retValue = false;
-                } 
-
-                if (Economies.GetUpperBound(0) != eqStation.Economies.GetUpperBound(0))
-                {
-                    retValue = false;
-                } 
-
-                if (retValue)
-                    for (int i = 0; i < ImportCommodities.GetUpperBound(0); i++)
-                        if (!ImportCommodities[i].Equals(eqStation.ImportCommodities[i], StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            retValue = false;
-                            break; 
-                        } 
-
-                if (retValue)
-                    for (int i = 0; i < ExportCommodities.GetUpperBound(0); i++)
-                        if (!ExportCommodities[i].Equals(eqStation.ExportCommodities[i], StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            retValue = false;
-                            break; 
-                        } 
-            
-                if (retValue)
-                    for (int i = 0; i < ProhibitedCommodities.GetUpperBound(0); i++)
-                        if (!ProhibitedCommodities[i].Equals(eqStation.ProhibitedCommodities[i], StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            retValue = false;
-                            break; 
-                        } 
-            
-                if (retValue)
-                    for (int i = 0; i < Economies.GetUpperBound(0); i++)
-                        if (!Economies[i].Equals(eqStation.Economies[i], StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            retValue = false;
-                            break; 
-                        } 
-            
             }
 
             return retValue;             
@@ -233,8 +171,14 @@ namespace RegulatedNoise.EDDB_Data
         /// copy the values from another station exept for the ID
         /// </summary>
         /// <param name="ValueStation"></param>
-        public void getValues(EDStation ValueStation)
+        public void getValues(EDStation ValueStation, bool getAll = false)
         {
+            if (getAll)
+            {
+                Id          = ValueStation.Id;
+                SystemId    = ValueStation.SystemId;
+            }
+
             Name                  = ValueStation.Name;
             MaxLandingPadSize     = ValueStation.MaxLandingPadSize;
             DistanceToStar        = ValueStation.DistanceToStar;

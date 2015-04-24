@@ -103,6 +103,7 @@ namespace RegulatedNoise
         private DateTime m_StationWarningTime                           = DateTime.Now;
 
         private PerformanceTimer _pt                                    = new PerformanceTimer();
+        private String _AppPath                                         = string.Empty;
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -112,9 +113,10 @@ namespace RegulatedNoise
             InstanceObject = this;
 
             _Splash = new SplashScreenForm();
+
+#if !ep_Debug
             _Splash.Show();
-
-
+#endif
             Cursor = Cursors.WaitCursor;
 
             try
@@ -535,7 +537,7 @@ namespace RegulatedNoise
         private string getProductPathAutomatically()
         {
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
-                                             Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
+                                       Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
 
             string returnValue = null;
             foreach (var directory in autoSearchdir)
@@ -597,10 +599,13 @@ namespace RegulatedNoise
                     }
                 }
 
-                MessageBox.Show(
+                var MBResult = MessageBox.Show(
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
-                + ". Please try again...", "", MessageBoxButtons.OK);
+                + ". Please try again...", "", MessageBoxButtons.RetryCancel);
+
+                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+                    Application.Exit();
             }
         }
         private void SetProductPath()
@@ -614,9 +619,12 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                MessageBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.");
-                path = getProductPathManually();
+                var MBResult = MessageBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
 
+                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+                    Application.Exit();
+
+                path = getProductPathManually();
             }
 
             //Verify that path contains FORC-FDEV
@@ -642,19 +650,25 @@ namespace RegulatedNoise
                     continue;
                 }
                 
-                MessageBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...");
+                var MBResult = MessageBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
+
+                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+                    Application.Exit();
+
                 path = getProductPathManually();
                 dirs = Directory.GetDirectories(path);
             }
 
             RegulatedNoiseSettings.ProductsPath = path;
         }
+
         private string getProductAppDataPathAutomatically()
         {
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("LOCALAPPDATA") };
 
             return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier Developments" select Path.Combine(dir, "Elite Dangerous", "Options") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
         }
+
         private string getProductAppDataPathManually()
         {
             var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory, typically C:\Users\{username}\AppData\{Local or Roaming}\Frontier Developments\Elite Dangerous\Options\Graphics" };
@@ -672,9 +686,13 @@ namespace RegulatedNoise
                     }
                 }
 
-                MessageBox.Show(
+                var MBResult = MessageBox.Show(
                     "Hm, that doesn't seem right, " + dialog.SelectedPath +
-                    " is not the Game Options directory, Please try again", "", MessageBoxButtons.OK);
+                    " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
+
+                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+                    Application.Exit();
+
             }
         }
         private void SetProductAppDataPath()
@@ -688,7 +706,11 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...");
+                var MBResult = MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
+
+                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+                    Application.Exit();
+
                 path = getProductAppDataPathManually();
             }
 
@@ -4802,6 +4824,12 @@ namespace RegulatedNoise
         private void Form_Shown(object sender, System.EventArgs e)
         {
             _Splash.CloseDelayed();
+
+            loadSystemData(tbCurrentSystemFromLogs.Text);
+            loadStationData(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
+
+            showSystemNumbers();
+
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -4840,6 +4868,9 @@ namespace RegulatedNoise
             Clock.Interval = 1000;
             Clock.Start();
             Clock.Tick += Clock_Tick;
+
+            cmdTest.Visible = System.Diagnostics.Debugger.IsAttached;
+
         }
 
         private void Clock_Tick(object sender, EventArgs e)
@@ -6067,24 +6098,55 @@ namespace RegulatedNoise
 
         }
 
+#region System / Station Tab
+
+        /*/////////////////////////////////////////////////////////////////////////////////////////
+        *******************************************************************************************    
+         *
+         *                             System / Station Tab
+         * 
+        ******************************************************************************************* 
+         /*//////////////////////////////////////////////////////////////////////////////////////*/
+
+        private void showSystemNumbers()
+        {
+            if(this.InvokeRequired)
+            { 
+                this.Invoke(new MethodInvoker(showSystemNumbers));
+                return;
+            }
+
+            lblSystemCountTotal.Text    = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Count.ToString();
+            lblStationCountTotal.Text   = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Count.ToString();
+        }
+
+
         private void cmdLoadCurrentSystem_Click(object sender, EventArgs e)
         {
+
             loadSystemData(tbCurrentSystemFromLogs.Text);
             loadStationData(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
+
+            tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
+
         }
 
         private void loadSystemData(string Systemname)
         {
-            
+
+            setSystemEditable(false);
+
             m_SystemLoadingValues = true;
 
-            if(Systemname.Equals(ID_NEWITEM))
+            cmbAllStations.SelectedValue = Systemname;
+
+            if (Systemname.Equals(ID_NEWITEM))
             {
                 m_loadedSystemdata = new EDSystem();
                 m_SystemIsNew = true;
             }
             else
-            { 
+            {
                 m_loadedSystemdata = _Milkyway.getSystem(Systemname);
                 m_SystemIsNew = false;
             }
@@ -6093,28 +6155,28 @@ namespace RegulatedNoise
             cmbStationStations.Items.Add("");
 
 
-            if(m_loadedSystemdata != null)
-            { 
+            if (m_loadedSystemdata != null)
+            {
                 m_currentSystemdata.getValues(m_loadedSystemdata, true);
 
-                txtSystemId.Text                    = m_loadedSystemdata.Id.ToString(CultureInfo.CurrentCulture);
-                txtSystemName.Text                  = m_loadedSystemdata.Name.ToString();
-                txtSystemX.Text                     = m_loadedSystemdata.X.ToString(CultureInfo.CurrentCulture);
-                txtSystemY.Text                     = m_loadedSystemdata.Y.ToString(CultureInfo.CurrentCulture);
-                txtSystemZ.Text                     = m_loadedSystemdata.Z.ToString(CultureInfo.CurrentCulture);
-                txtSystemFaction.Text               = m_loadedSystemdata.Faction.ToString();
-                txtSystemPopulation.Text            = ((long)m_loadedSystemdata.Population).ToString("#,##0.", CultureInfo.CurrentCulture);
-                txtSystemUpdatedAt.Text             = m_loadedSystemdata.UpdatedAt.ToString();
-                cbSystemNeedsPermit.Checked         = m_loadedSystemdata.NeedsPermit == 1 ? true : false;
-                txtSystemPrimaryEconomy.Text        = m_loadedSystemdata.PrimaryEconomy.ToString();
-                txtSystemSecurity.Text              = m_loadedSystemdata.Security.ToString();
-                txtSystemState.Text                 = m_loadedSystemdata.State.ToString();
-                txtSystemAllegiance.Text            = m_loadedSystemdata.Allegiance.ToString();
-                txtSystemGovernment.Text            = m_loadedSystemdata.Government.ToString();
-            
+                txtSystemId.Text = m_loadedSystemdata.Id.ToString(CultureInfo.CurrentCulture);
+                txtSystemName.Text = m_loadedSystemdata.Name;
+                txtSystemX.Text = m_loadedSystemdata.X.ToString("0.00000", CultureInfo.CurrentCulture);
+                txtSystemY.Text = m_loadedSystemdata.Y.ToString("0.00000", CultureInfo.CurrentCulture);
+                txtSystemZ.Text = m_loadedSystemdata.Z.ToString("0.00000", CultureInfo.CurrentCulture);
+                txtSystemFaction.Text = m_loadedSystemdata.Faction.NToString();
+                txtSystemPopulation.Text = m_loadedSystemdata.Population.ToNString("#,##0.", CultureInfo.CurrentCulture);
+                txtSystemUpdatedAt.Text = m_loadedSystemdata.UpdatedAt.ToString();
+                cbSystemNeedsPermit.CheckState = m_loadedSystemdata.NeedsPermit.toCheckState();
+                cmbSystemPrimaryEconomy.Text = m_loadedSystemdata.PrimaryEconomy.NToString();
+                cmbSystemSecurity.Text = m_loadedSystemdata.Security.NToString();
+                cmbSystemState.Text = m_loadedSystemdata.State.NToString();
+                cmbSystemAllegiance.Text = m_loadedSystemdata.Allegiance.NToString();
+                cmbSystemGovernment.Text = m_loadedSystemdata.Government.NToString();
+
                 setSystemSaveButton(true, false);
 
-                if(_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
+                if (_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     txtSystemName.ReadOnly = true;
                     lblSystemRenameHint.Visible = true;
@@ -6127,31 +6189,33 @@ namespace RegulatedNoise
 
                 List<EDStation> StationsInSystem = _Milkyway.getStations(Systemname);
                 foreach (var Station in StationsInSystem)
-	            {
-		            cmbStationStations.Items.Add(Station.Name);    
-	            } 
+                {
+                    cmbStationStations.Items.Add(Station.Name);
+                }
 
                 lblStationCount.Text = StationsInSystem.Count().ToString();
+
+                cmbStationStations.SelectedIndex = 0;
             }
             else
             {
                 m_currentSystemdata.clear();
 
-                txtSystemId.Text                    = "";
-                txtSystemName.Text                  = "system not in database";
-                txtSystemX.Text                     = "0.0";
-                txtSystemY.Text                     = "0.0";
-                txtSystemZ.Text                     = "0.0";
-                txtSystemFaction.Text               = "";
-                txtSystemPopulation.Text            = "0";
-                txtSystemUpdatedAt.Text             = "";
-                cbSystemNeedsPermit.Checked         = false;
-                txtSystemPrimaryEconomy.Text        = "";
-                txtSystemSecurity.Text              = "";
-                txtSystemState.Text                 = "";
-                txtSystemAllegiance.Text            = "";
-                txtSystemGovernment.Text            = "";
-            
+                txtSystemId.Text = Program.NULLSTRING;
+                txtSystemName.Text = Program.NULLSTRING;
+                txtSystemX.Text = Program.NULLSTRING;
+                txtSystemY.Text = Program.NULLSTRING;
+                txtSystemZ.Text = Program.NULLSTRING;
+                txtSystemFaction.Text = Program.NULLSTRING;
+                txtSystemPopulation.Text = Program.NULLSTRING;
+                txtSystemUpdatedAt.Text = Program.NULLSTRING;
+                cbSystemNeedsPermit.CheckState = CheckState.Unchecked;
+                cmbSystemPrimaryEconomy.Text = Program.NULLSTRING;
+                cmbSystemSecurity.Text = Program.NULLSTRING;
+                cmbSystemState.Text = Program.NULLSTRING;
+                cmbSystemAllegiance.Text = Program.NULLSTRING;
+                cmbSystemGovernment.Text = Program.NULLSTRING;
+
                 setSystemSaveButton(true, false);
 
                 txtSystemName.ReadOnly = false;
@@ -6166,51 +6230,53 @@ namespace RegulatedNoise
 
         private void loadStationData(string Systemname, string Stationname)
         {
-            
+
+            setStationEditable(false);
+
             m_StationLoadingValues = true;
 
-            if(Stationname.Equals(ID_NEWITEM))
+            if (Stationname.Equals(ID_NEWITEM))
             {
                 m_loadedStationdata = new EDStation();
                 m_StationIsNew = true;
             }
             else
-            { 
+            {
                 m_loadedStationdata = _Milkyway.getStation(Systemname, Stationname);
                 m_StationIsNew = false;
             }
 
-            if(m_loadedStationdata != null)
-            { 
+            if (m_loadedStationdata != null)
+            {
                 m_currentStationdata.getValues(m_loadedStationdata);
 
-                txtStationId.Text                    = m_loadedStationdata.Id.ToString(CultureInfo.CurrentCulture);
-                txtStationName.Text                  = m_loadedStationdata.Name.ToString();
-                cmbStationMaxLandingPadSize.Text     = m_loadedStationdata.MaxLandingPadSize.ToString();
-                txtStationDistanceToStar.Text        = m_loadedStationdata.DistanceToStar.ToString();
-                txtStationFaction.Text               = m_loadedStationdata.Faction.ToString();
-                cmbStationGovernment.Text            = m_loadedStationdata.Government.ToString();
-                cmbStationAllegiance.Text            = m_loadedStationdata.Allegiance.ToString();
-                cmbStationState.Text                 = m_loadedStationdata.State.ToString();
-                txtStationUpdatedAt.Text             = m_loadedStationdata.UpdatedAt.ToString();
+                txtStationId.Text = m_loadedStationdata.Id.ToString(CultureInfo.CurrentCulture);
+                txtStationName.Text = m_loadedStationdata.Name.ToString();
+                cmbStationMaxLandingPadSize.Text = m_loadedStationdata.MaxLandingPadSize.NToString();
+                txtStationDistanceToStar.Text = m_loadedStationdata.DistanceToStar.ToNString();
+                txtStationFaction.Text = m_loadedStationdata.Faction.NToString();
+                cmbStationGovernment.Text = m_loadedStationdata.Government.NToString();
+                cmbStationAllegiance.Text = m_loadedStationdata.Allegiance.NToString();
+                cmbStationState.Text = m_loadedStationdata.State.NToString();
+                txtStationUpdatedAt.Text = m_loadedStationdata.UpdatedAt.ToString();
 
                 lbStationEconomies.Items.Clear();
                 foreach (string Economy in m_loadedStationdata.Economies)
                     lbStationEconomies.Items.Add(Economy);
 
-                setTriStateCheckBox(cbStationHasCommodities, m_loadedStationdata.HasCommodities);
-                setTriStateCheckBox(cbStationHasBlackmarket, m_loadedStationdata.HasBlackmarket);
-                setTriStateCheckBox(cbStationHasOutfitting,  m_loadedStationdata.HasOutfitting);
-                setTriStateCheckBox(cbStationHasShipyard,    m_loadedStationdata.HasShipyard);
-                setTriStateCheckBox(cbStationHasRearm,       m_loadedStationdata.HasRearm);
-                setTriStateCheckBox(cbStationHasRefuel,      m_loadedStationdata.HasRefuel);
-                setTriStateCheckBox(cbStationHasRepair,      m_loadedStationdata.HasRepair);
-           
+                cbStationHasCommodities.CheckState = m_loadedStationdata.HasCommodities.toCheckState();
+                cbStationHasBlackmarket.CheckState = m_loadedStationdata.HasBlackmarket.toCheckState();
+                cbStationHasOutfitting.CheckState = m_loadedStationdata.HasOutfitting.toCheckState();
+                cbStationHasShipyard.CheckState = m_loadedStationdata.HasShipyard.toCheckState();
+                cbStationHasRearm.CheckState = m_loadedStationdata.HasRearm.toCheckState();
+                cbStationHasRefuel.CheckState = m_loadedStationdata.HasRefuel.toCheckState();
+                cbStationHasRepair.CheckState = m_loadedStationdata.HasRepair.toCheckState();
+
                 setStationSaveButton(true, false);
 
                 cmbStationStations.Text = Stationname;
 
-                if(_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
+                if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
                                                                                       (x.SystemId == m_loadedStationdata.SystemId)))
                 {
                     txtStationName.ReadOnly = true;
@@ -6227,26 +6293,26 @@ namespace RegulatedNoise
             {
                 m_currentStationdata.clear();
 
-                txtStationId.Text                    = "-1";
-                txtStationName.Text                  = "";
-                cmbStationMaxLandingPadSize.Text     = "";
-                txtStationDistanceToStar.Text        = "-1";
-                txtStationFaction.Text               = "";
-                cmbStationGovernment.Text            = "";
-                cmbStationAllegiance.Text            = "";
-                cmbStationState.Text                 = "";
-                txtStationUpdatedAt.Text             = "";
+                txtStationId.Text = Program.NULLSTRING;
+                txtStationName.Text = Program.NULLSTRING;
+                cmbStationMaxLandingPadSize.Text = Program.NULLSTRING;
+                txtStationDistanceToStar.Text = Program.NULLSTRING;
+                txtStationFaction.Text = Program.NULLSTRING;
+                cmbStationGovernment.Text = Program.NULLSTRING;
+                cmbStationAllegiance.Text = Program.NULLSTRING;
+                cmbStationState.Text = Program.NULLSTRING;
+                txtStationUpdatedAt.Text = Program.NULLSTRING;
 
                 lbStationEconomies.Items.Clear();
 
-                setTriStateCheckBox(cbStationHasCommodities, null);
-                setTriStateCheckBox(cbStationHasBlackmarket, null);
-                setTriStateCheckBox(cbStationHasOutfitting,  null);
-                setTriStateCheckBox(cbStationHasShipyard,    null);
-                setTriStateCheckBox(cbStationHasRearm,       null);
-                setTriStateCheckBox(cbStationHasRefuel,      null);
-                setTriStateCheckBox(cbStationHasRepair,      null);
-           
+                cbStationHasCommodities.CheckState = CheckState.Unchecked;
+                cbStationHasBlackmarket.CheckState = CheckState.Unchecked;
+                cbStationHasOutfitting.CheckState = CheckState.Unchecked;
+                cbStationHasShipyard.CheckState = CheckState.Unchecked;
+                cbStationHasRearm.CheckState = CheckState.Unchecked;
+                cbStationHasRefuel.CheckState = CheckState.Unchecked;
+                cbStationHasRepair.CheckState = CheckState.Unchecked;
+
                 setStationSaveButton(true, false);
 
                 txtStationName.ReadOnly = false;
@@ -6254,112 +6320,111 @@ namespace RegulatedNoise
 
                 cmbStationStations.Text = "";
 
-                
             }
 
             m_StationLoadingValues = false;
-            
+
         }
 
         private void prePrepareSystemAndStationFields()
         {
 
-            txtSystemGovernment.Items.Add("");
-            txtSystemGovernment.Items.Add("Anarchy");
-            txtSystemGovernment.Items.Add("Communism");
-            txtSystemGovernment.Items.Add("Confederacy");
-            txtSystemGovernment.Items.Add("Corporate");
-            txtSystemGovernment.Items.Add("Coperative");
-            txtSystemGovernment.Items.Add("Democracy");
-            txtSystemGovernment.Items.Add("Dictatorship");
-            txtSystemGovernment.Items.Add("Feudal");
-            txtSystemGovernment.Items.Add("Imperial");
-            txtSystemGovernment.Items.Add("Patronage");
-            txtSystemGovernment.Items.Add("Colony");
-            txtSystemGovernment.Items.Add("Prison Colony");
-            txtSystemGovernment.Items.Add("Theocracy");
+            cmbSystemGovernment.Items.Add(Program.NULLSTRING);
+            cmbSystemGovernment.Items.Add("Anarchy");
+            cmbSystemGovernment.Items.Add("Communism");
+            cmbSystemGovernment.Items.Add("Confederacy");
+            cmbSystemGovernment.Items.Add("Corporate");
+            cmbSystemGovernment.Items.Add("Coperative");
+            cmbSystemGovernment.Items.Add("Democracy");
+            cmbSystemGovernment.Items.Add("Dictatorship");
+            cmbSystemGovernment.Items.Add("Feudal");
+            cmbSystemGovernment.Items.Add("Imperial");
+            cmbSystemGovernment.Items.Add("Patronage");
+            cmbSystemGovernment.Items.Add("Colony");
+            cmbSystemGovernment.Items.Add("Prison Colony");
+            cmbSystemGovernment.Items.Add("Theocracy");
 
-            txtSystemState.Items.Add("");
-            txtSystemState.Items.Add("Bust");
-            txtSystemState.Items.Add("Civil Unrest");
-            txtSystemState.Items.Add("Civil War");
-            txtSystemState.Items.Add("Expansion");
-            txtSystemState.Items.Add("Lockdown");
-            txtSystemState.Items.Add("Outbreak");
-            txtSystemState.Items.Add("War");
+            cmbSystemState.Items.Add(Program.NULLSTRING);
+            cmbSystemState.Items.Add("Bust");
+            cmbSystemState.Items.Add("Civil Unrest");
+            cmbSystemState.Items.Add("Civil War");
+            cmbSystemState.Items.Add("Expansion");
+            cmbSystemState.Items.Add("Lockdown");
+            cmbSystemState.Items.Add("Outbreak");
+            cmbSystemState.Items.Add("War");
 
-            txtSystemAllegiance.Items.Add("");
-            txtSystemAllegiance.Items.Add("Alliance");
-            txtSystemAllegiance.Items.Add("Empire");
-            txtSystemAllegiance.Items.Add("Federation");
-            txtSystemAllegiance.Items.Add("Independent");
+            cmbSystemAllegiance.Items.Add(Program.NULLSTRING);
+            cmbSystemAllegiance.Items.Add("Alliance");
+            cmbSystemAllegiance.Items.Add("Empire");
+            cmbSystemAllegiance.Items.Add("Federation");
+            cmbSystemAllegiance.Items.Add("Independent");
 
-            txtSystemSecurity.Items.Add("");
-            txtSystemSecurity.Items.Add("Low");
-            txtSystemSecurity.Items.Add("Medium");
-            txtSystemSecurity.Items.Add("High");
+            cmbSystemSecurity.Items.Add(Program.NULLSTRING);
+            cmbSystemSecurity.Items.Add("Low");
+            cmbSystemSecurity.Items.Add("Medium");
+            cmbSystemSecurity.Items.Add("High");
 
-            txtSystemPrimaryEconomy.Items.Add("");
-            txtSystemPrimaryEconomy.Items.Add("Agriculture");
-            txtSystemPrimaryEconomy.Items.Add("Extraction");
-            txtSystemPrimaryEconomy.Items.Add("High Tech");
-            txtSystemPrimaryEconomy.Items.Add("Industrial");
-            txtSystemPrimaryEconomy.Items.Add("Military");
-            txtSystemPrimaryEconomy.Items.Add("Refinery");
-            txtSystemPrimaryEconomy.Items.Add("Service");
-            txtSystemPrimaryEconomy.Items.Add("Terraforming");
-            txtSystemPrimaryEconomy.Items.Add("Tourism");
+            cmbSystemPrimaryEconomy.Items.Add(Program.NULLSTRING);
+            cmbSystemPrimaryEconomy.Items.Add("Agriculture");
+            cmbSystemPrimaryEconomy.Items.Add("Extraction");
+            cmbSystemPrimaryEconomy.Items.Add("High Tech");
+            cmbSystemPrimaryEconomy.Items.Add("Industrial");
+            cmbSystemPrimaryEconomy.Items.Add("Military");
+            cmbSystemPrimaryEconomy.Items.Add("Refinery");
+            cmbSystemPrimaryEconomy.Items.Add("Service");
+            cmbSystemPrimaryEconomy.Items.Add("Terraforming");
+            cmbSystemPrimaryEconomy.Items.Add("Tourism");
 
             txtSystemPopulation.Culture = CultureInfo.CurrentCulture;
 
-            this.txtSystemName.TextChanged              += new System.EventHandler(this.txtSystem_TextChanged);
-            this.txtSystemName.TextChanged              += new System.EventHandler(this.txtSystem_TextChanged);              
-            this.txtSystemX.TextChanged                 += new System.EventHandler(this.txtSystem_TextChanged);                 
-            this.txtSystemY.TextChanged                 += new System.EventHandler(this.txtSystem_TextChanged);                 
-            this.txtSystemZ.TextChanged                 += new System.EventHandler(this.txtSystem_TextChanged);                 
-            this.txtSystemFaction.TextChanged           += new System.EventHandler(this.txtSystem_TextChanged);           
-            this.txtSystemPopulation.TextChanged        += new System.EventHandler(this.txtSystem_TextChanged);        
-            this.txtSystemUpdatedAt.TextChanged         += new System.EventHandler(this.txtSystem_TextChanged);           
-            this.txtSystemPrimaryEconomy.TextChanged    += new System.EventHandler(this.txtSystem_TextChanged);    
-            this.txtSystemSecurity.TextChanged          += new System.EventHandler(this.txtSystem_TextChanged);          
-            this.txtSystemState.TextChanged             += new System.EventHandler(this.txtSystem_TextChanged);             
-            this.txtSystemAllegiance.TextChanged        += new System.EventHandler(this.txtSystem_TextChanged);        
-            this.txtSystemGovernment.TextChanged        += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemName.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemName.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemX.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemY.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemZ.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemFaction.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemPopulation.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.txtSystemUpdatedAt.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.cmbSystemPrimaryEconomy.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.cmbSystemSecurity.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.cmbSystemState.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.cmbSystemAllegiance.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+            this.cmbSystemGovernment.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
 
-            this.txtSystemName.LostFocus                += txtSystem_LostFocus;
-            this.txtSystemName.LostFocus                += txtSystem_LostFocus;              
-            this.txtSystemX.LostFocus                   += txtSystem_LostFocus;                 
-            this.txtSystemY.LostFocus                   += txtSystem_LostFocus;                 
-            this.txtSystemZ.LostFocus                   += txtSystem_LostFocus;                 
-            this.txtSystemFaction.LostFocus             += txtSystem_LostFocus;           
-            this.txtSystemPopulation.LostFocus          += txtSystem_LostFocus;        
-            this.txtSystemUpdatedAt.LostFocus           += txtSystem_LostFocus;           
-            this.txtSystemPrimaryEconomy.LostFocus      += txtSystem_LostFocus;    
-            this.txtSystemSecurity.LostFocus            += txtSystem_LostFocus;          
-            this.txtSystemState.LostFocus               += txtSystem_LostFocus;             
-            this.txtSystemAllegiance.LostFocus          += txtSystem_LostFocus;        
-            this.txtSystemGovernment.LostFocus          += txtSystem_LostFocus;
+            this.txtSystemName.LostFocus += txtSystem_LostFocus;
+            this.txtSystemName.LostFocus += txtSystem_LostFocus;
+            this.txtSystemX.LostFocus += txtSystem_LostFocus;
+            this.txtSystemY.LostFocus += txtSystem_LostFocus;
+            this.txtSystemZ.LostFocus += txtSystem_LostFocus;
+            this.txtSystemFaction.LostFocus += txtSystem_LostFocus;
+            this.txtSystemPopulation.LostFocus += txtSystem_LostFocus;
+            this.txtSystemUpdatedAt.LostFocus += txtSystem_LostFocus;
+            this.cmbSystemPrimaryEconomy.LostFocus += txtSystem_LostFocus;
+            this.cmbSystemSecurity.LostFocus += txtSystem_LostFocus;
+            this.cmbSystemState.LostFocus += txtSystem_LostFocus;
+            this.cmbSystemAllegiance.LostFocus += txtSystem_LostFocus;
+            this.cmbSystemGovernment.LostFocus += txtSystem_LostFocus;
 
-            this.txtSystemName.GotFocus                += txtSystem_GotFocus;
-            this.txtSystemName.GotFocus                += txtSystem_GotFocus;              
-            this.txtSystemX.GotFocus                   += txtSystem_GotFocus;                 
-            this.txtSystemY.GotFocus                   += txtSystem_GotFocus;                 
-            this.txtSystemZ.GotFocus                   += txtSystem_GotFocus;                 
-            this.txtSystemFaction.GotFocus             += txtSystem_GotFocus;           
-            this.txtSystemPopulation.GotFocus          += txtSystem_GotFocus;        
-            this.txtSystemUpdatedAt.GotFocus           += txtSystem_GotFocus;           
-            this.txtSystemPrimaryEconomy.GotFocus      += txtSystem_GotFocus;    
-            this.txtSystemSecurity.GotFocus            += txtSystem_GotFocus;          
-            this.txtSystemState.GotFocus               += txtSystem_GotFocus;             
-            this.txtSystemAllegiance.GotFocus          += txtSystem_GotFocus;        
-            this.txtSystemGovernment.GotFocus          += txtSystem_GotFocus;
+            this.txtSystemName.GotFocus += txtSystem_GotFocus;
+            this.txtSystemName.GotFocus += txtSystem_GotFocus;
+            this.txtSystemX.GotFocus += txtSystem_GotFocus;
+            this.txtSystemY.GotFocus += txtSystem_GotFocus;
+            this.txtSystemZ.GotFocus += txtSystem_GotFocus;
+            this.txtSystemFaction.GotFocus += txtSystem_GotFocus;
+            this.txtSystemPopulation.GotFocus += txtSystem_GotFocus;
+            this.txtSystemUpdatedAt.GotFocus += txtSystem_GotFocus;
+            this.cmbSystemPrimaryEconomy.GotFocus += txtSystem_GotFocus;
+            this.cmbSystemSecurity.GotFocus += txtSystem_GotFocus;
+            this.cmbSystemState.GotFocus += txtSystem_GotFocus;
+            this.cmbSystemAllegiance.GotFocus += txtSystem_GotFocus;
+            this.cmbSystemGovernment.GotFocus += txtSystem_GotFocus;
 
-            this.cbSystemNeedsPermit.CheckedChanged    += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
+            this.cbSystemNeedsPermit.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
 
 
             // ********************** Station *******************
 
-            cmbStationType.Items.Add("");
+            cmbStationType.Items.Add(Program.NULLSTRING);
             cmbStationType.Items.Add("Civilian Outpost");
             cmbStationType.Items.Add("Commercial Outpost");
             cmbStationType.Items.Add("Coriolis Starport");
@@ -6373,11 +6438,11 @@ namespace RegulatedNoise
             cmbStationType.Items.Add("Unknown Outpost");
             cmbStationType.Items.Add("Unknown Starport");
 
-            cmbStationMaxLandingPadSize.Items.Add("");
+            cmbStationMaxLandingPadSize.Items.Add(Program.NULLSTRING);
             cmbStationMaxLandingPadSize.Items.Add("M");
             cmbStationMaxLandingPadSize.Items.Add("L");
 
-            cmbStationEconomies.Items.Add("");
+            cmbStationEconomies.Items.Add(Program.NULLSTRING);
             cmbStationEconomies.Items.Add("Agriculture");
             cmbStationEconomies.Items.Add("Extraction");
             cmbStationEconomies.Items.Add("High Tech");
@@ -6387,8 +6452,8 @@ namespace RegulatedNoise
             cmbStationEconomies.Items.Add("Service");
             cmbStationEconomies.Items.Add("Terraforming");
             cmbStationEconomies.Items.Add("Tourism");
-            
-            cmbStationGovernment.Items.Add("");
+
+            cmbStationGovernment.Items.Add(Program.NULLSTRING);
             cmbStationGovernment.Items.Add("Anarchy");
             cmbStationGovernment.Items.Add("Communism");
             cmbStationGovernment.Items.Add("Confederacy");
@@ -6403,13 +6468,13 @@ namespace RegulatedNoise
             cmbStationGovernment.Items.Add("Prison Colony");
             cmbStationGovernment.Items.Add("Theocracy");
 
-            cmbStationAllegiance.Items.Add("");
+            cmbStationAllegiance.Items.Add(Program.NULLSTRING);
             cmbStationAllegiance.Items.Add("Alliance");
             cmbStationAllegiance.Items.Add("Empire");
             cmbStationAllegiance.Items.Add("Federation");
             cmbStationAllegiance.Items.Add("Independent");
 
-            cmbStationState.Items.Add("");
+            cmbStationState.Items.Add(Program.NULLSTRING);
             cmbStationState.Items.Add("Bust");
             cmbStationState.Items.Add("Civil Unrest");
             cmbStationState.Items.Add("Civil War");
@@ -6417,46 +6482,48 @@ namespace RegulatedNoise
             cmbStationState.Items.Add("Lockdown");
             cmbStationState.Items.Add("Outbreak");
             cmbStationState.Items.Add("War");
-           
-            this.txtStationName.LostFocus                  += txtStation_LostFocus;
-            this.cmbStationMaxLandingPadSize.LostFocus     += txtStation_LostFocus;
-            this.txtStationDistanceToStar.LostFocus        += txtStation_LostFocus;
-            this.txtStationFaction.LostFocus               += txtStation_LostFocus;
-            this.cmbStationGovernment.LostFocus            += txtStation_LostFocus;
-            this.cmbStationAllegiance.LostFocus            += txtStation_LostFocus;
-            this.cmbStationState.LostFocus                 += txtStation_LostFocus;
-            this.cmbStationType.LostFocus                  += txtStation_LostFocus;
-            
-            this.txtStationName.GotFocus                   += txtStation_GotFocus;
-            this.cmbStationMaxLandingPadSize.GotFocus      += txtStation_GotFocus;
-            this.txtStationDistanceToStar.GotFocus         += txtStation_GotFocus;
-            this.txtStationFaction.GotFocus                += txtStation_GotFocus;
-            this.cmbStationGovernment.GotFocus             += txtStation_GotFocus;
-            this.cmbStationAllegiance.GotFocus             += txtStation_GotFocus;
-            this.cmbStationState.GotFocus                  += txtStation_GotFocus;
-            this.cmbStationType.GotFocus                   += txtStation_GotFocus;
 
-            this.txtStationName.TextChanged                += txtStation_TextChanged;
-            this.cmbStationMaxLandingPadSize.TextChanged   += txtStation_TextChanged;   
-            this.txtStationDistanceToStar.TextChanged      += txtStation_TextChanged;      
-            this.txtStationFaction.TextChanged             += txtStation_TextChanged;      
-            this.cmbStationGovernment.TextChanged          += txtStation_TextChanged;      
-            this.cmbStationAllegiance.TextChanged          += txtStation_TextChanged;
-            this.cmbStationState.TextChanged               += txtStation_TextChanged;
-            this.cmbStationType.TextChanged                += txtStation_TextChanged;
+            this.txtStationName.LostFocus += txtStation_LostFocus;
+            this.cmbStationMaxLandingPadSize.LostFocus += txtStation_LostFocus;
+            this.txtStationDistanceToStar.LostFocus += txtStation_LostFocus;
+            this.txtStationFaction.LostFocus += txtStation_LostFocus;
+            this.cmbStationGovernment.LostFocus += txtStation_LostFocus;
+            this.cmbStationAllegiance.LostFocus += txtStation_LostFocus;
+            this.cmbStationState.LostFocus += txtStation_LostFocus;
+            this.cmbStationType.LostFocus += txtStation_LostFocus;
+
+            this.txtStationName.GotFocus += txtStation_GotFocus;
+            this.cmbStationMaxLandingPadSize.GotFocus += txtStation_GotFocus;
+            this.txtStationDistanceToStar.GotFocus += txtStation_GotFocus;
+            this.txtStationFaction.GotFocus += txtStation_GotFocus;
+            this.cmbStationGovernment.GotFocus += txtStation_GotFocus;
+            this.cmbStationAllegiance.GotFocus += txtStation_GotFocus;
+            this.cmbStationState.GotFocus += txtStation_GotFocus;
+            this.cmbStationType.GotFocus += txtStation_GotFocus;
+
+            this.txtStationName.TextChanged += txtStation_TextChanged;
+            this.cmbStationMaxLandingPadSize.TextChanged += txtStation_TextChanged;
+            this.txtStationDistanceToStar.TextChanged += txtStation_TextChanged;
+            this.txtStationFaction.TextChanged += txtStation_TextChanged;
+            this.cmbStationGovernment.TextChanged += txtStation_TextChanged;
+            this.cmbStationAllegiance.TextChanged += txtStation_TextChanged;
+            this.cmbStationState.TextChanged += txtStation_TextChanged;
+            this.cmbStationType.TextChanged += txtStation_TextChanged;
 
 
-            this.cbStationHasCommodities.CheckedChanged     += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cbStationHasBlackmarket.CheckedChanged     += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cbStationHasOutfitting.CheckedChanged      += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cbStationHasShipyard.CheckedChanged        += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cbStationHasRearm.CheckedChanged           += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cbStationHasRefuel.CheckedChanged          += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cbStationHasRepair.CheckedChanged          += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);       
-            this.cmbStationEconomies.SelectedIndexChanged   += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-            this.cmbStationStations.SelectedIndexChanged    += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
-            
+            this.cbStationHasCommodities.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasBlackmarket.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasOutfitting.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasShipyard.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasRearm.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasRefuel.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasRepair.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cmbStationEconomies.SelectedIndexChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cmbStationStations.SelectedIndexChanged += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
 
+            this.cmbAllStations.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
+            this.cmbAllStations.ValueMember     = "Name";
+            this.cmbAllStations.DisplayMember   = "Name";
         }
 
         void txtSystem_GotFocus(object sender, EventArgs e)
@@ -6479,14 +6546,15 @@ namespace RegulatedNoise
                         _propertyInfo = _type.GetProperty(((ComboBox)sender).Name.Substring(9));
                         break;
                 }
-                m_lastSystemValue = (_propertyInfo.GetValue(m_currentSystemdata, null)).ToString();
+
+                m_lastSystemValue = (_propertyInfo.GetValue(m_currentSystemdata, null)).NToString();
 
                 setSystemSaveButton();
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                cErr.processError(ex, "Error in txtSystem_GotFocus-Event");                
             }
         }
 
@@ -6510,186 +6578,147 @@ namespace RegulatedNoise
                         _propertyInfo = _type.GetProperty(((ComboBox)sender).Name.Substring(10));
                         break;
                 }
-                m_lastStationValue = (_propertyInfo.GetValue(m_currentStationdata, null)).ToString();
+                m_lastStationValue = (_propertyInfo.GetValue(m_currentStationdata, null)).NToString();
 
                 setStationSaveButton();
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                cErr.processError(ex, "Error in txtSystem_GotFocus-Event");                
             }
         }
 
         void txtSystem_LostFocus(object sender, EventArgs e)
         {
-            Int32 intValue;
-            long longValue;
-            Double doubleValue;
-
             switch (((Control)sender).Name)
             {
-            	case "txtSystemName":     
-                    if(m_SystemIsNew)
+                case "txtSystemName":
+                    if (m_SystemIsNew)
                     {
                         EDSystem existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(txtSystemName.Text, StringComparison.InvariantCultureIgnoreCase));
-                        if(existing != null)
-                        {
-                            if(DateTime.Now.Subtract(m_SystemWarningTime).TotalSeconds > 5)
-                            { 
+                        if (existing != null)
+                            if (DateTime.Now.Subtract(m_SystemWarningTime).TotalSeconds > 5)
+                            {
                                 m_SystemWarningTime = DateTime.Now;
                                 MessageBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
-                        }
                     }
-                    m_currentSystemdata.Name = txtSystemName.Text;  
+                    m_currentSystemdata.Name = txtSystemName.Text;
+
                     break;
                 case "txtSystemX":
-                    if(double.TryParse(txtSystemX.Text, out doubleValue))
-                        m_currentSystemdata.X = doubleValue;
-                    else
-                    { 
-                        m_currentSystemdata.X = double.Parse(m_lastSystemValue);
-                        txtSystemX.Text = m_lastSystemValue;
-                    }
+                    m_currentSystemdata.X = txtSystemX.Text.ToDouble(m_lastSystemValue);
+                    txtSystemX.Text = m_currentSystemdata.X.ToString();
                     break;
-                case "txtSystemY":         
-                    if(double.TryParse(txtSystemY.Text, out doubleValue))
-                        m_currentSystemdata.Y = doubleValue;
-                    else
-                    { 
-                        m_currentSystemdata.Y = double.Parse(m_lastSystemValue);
-                        txtSystemY.Text = m_lastSystemValue;
-                    }
+
+                case "txtSystemY":
+                    m_currentSystemdata.Y = txtSystemY.Text.ToDouble(m_lastSystemValue);
+                    txtSystemY.Text = m_currentSystemdata.Y.ToString();
                     break;
-                case "txtSystemZ":         
-                    if(double.TryParse(txtSystemZ.Text, out doubleValue))
-                        m_currentSystemdata.Z = doubleValue;
-                    else
-                    {
-                        m_currentSystemdata.Z = double.Parse(m_lastSystemValue);
-                        txtSystemZ.Text = m_lastSystemValue;
-                    }
+
+                case "txtSystemZ":
+                    m_currentSystemdata.Z = txtSystemZ.Text.ToDouble(m_lastSystemValue);
+                    txtSystemZ.Text = m_currentSystemdata.Z.ToString();
                     break;
-                case "txtSystemFaction":   
+
+                case "txtSystemFaction":
                     m_currentSystemdata.Faction = txtSystemFaction.Text;
                     break;
+
                 case "txtSystemPopulation":
-                    if(long.TryParse(txtSystemPopulation.Text.Replace(",","").Replace(".",""), out longValue))
-                        m_currentSystemdata.Population = longValue;
-                    else
-                    { 
-                        m_currentSystemdata.Population = long.Parse(m_lastSystemValue);
-                    }
-                    txtSystemPopulation.Text = ((long)m_currentSystemdata.Population).ToString("#,##0.", CultureInfo.CurrentCulture);
-                    break;
-                case "txtSystemUpdatedAt": 
-                    if(Int32.TryParse(txtSystemUpdatedAt.Text, out intValue))
-                        m_currentSystemdata.UpdatedAt = intValue;
-                    else
-                    { 
-                        m_currentSystemdata.UpdatedAt = Int32.Parse(m_lastSystemValue);
-                        txtSystemUpdatedAt.Text = m_lastSystemValue;
-                    }
+                    m_currentSystemdata.Population = txtSystemPopulation.Text.ToNLong(m_lastSystemValue);
+                    txtSystemPopulation.Text = m_currentSystemdata.Population.ToNString("#,##0.", CultureInfo.CurrentCulture);
+
                     break;
                 case "cbSystemNeedsPermit":
-                    //m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.SelectedValue);
+                    m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.toNInt();
 
-                    //if(Int32.TryParse((int)(cbSystemNeedsPermit.SelectedValue), out intValue))
-                    //    m_currentSystemdata.NeedsPermit = intValue;
-                    //else
-                    //{ 
-                    //    m_currentSystemdata.NeedsPermit = Int32.Parse(m_lastSystemValue);
-                    //    cbSystemNeedsPermit.Text = m_lastSystemValue;
-                    //}
                     break;
-                case "txtSystemPrimaryEconomy":
-                    m_currentSystemdata.PrimaryEconomy = txtSystemPrimaryEconomy.Text;
+                case "cmbSystemPrimaryEconomy":
+                    m_currentSystemdata.PrimaryEconomy = cmbSystemPrimaryEconomy.Text.ToNString();
                     break;
-                case "txtSystemSecurity":  
-                    m_currentSystemdata.Security = txtSystemSecurity.Text;
+
+                case "cmbSystemSecurity":
+                    m_currentSystemdata.Security = cmbSystemSecurity.Text.ToNString();
+
                     break;
-                case "txtSystemState":     
-                    m_currentSystemdata.State = txtSystemState.Text;
+                case "cmbSystemState":
+                    m_currentSystemdata.State = cmbSystemState.Text.ToNString();
+
                     break;
-                case "txtSystemAllegiance":
-                    m_currentSystemdata.Allegiance = txtSystemAllegiance.Text;
+                case "cmbSystemAllegiance":
+                    m_currentSystemdata.Allegiance = cmbSystemAllegiance.Text.ToNString();
+
                     break;
-                case "txtSystemGovernment":
-                    m_currentSystemdata.Government = txtSystemGovernment.Text;
-            		break;
-            } 
-            
+                case "cmbSystemGovernment":
+                    m_currentSystemdata.Government = cmbSystemGovernment.Text.ToNString();
+
+                    break;
+            }
 
             setSystemSaveButton();
         }
 
         void txtStation_LostFocus(object sender, EventArgs e)
         {
-            Int32 intValue;
-
             switch (((Control)sender).Name)
             {
-            	case "txtStationName":     
-                    if(m_StationIsNew)
+                case "txtStationName":
+                    if (m_StationIsNew)
                     {
-                        EDStation existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(txtStationName.Text, StringComparison.InvariantCultureIgnoreCase)) && 
+                        EDStation existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(txtStationName.Text, StringComparison.InvariantCultureIgnoreCase)) &&
                                                                                                                 (x.SystemId == m_currentStationdata.SystemId));
-                        if(existing != null)
+                        if (existing != null)
                         {
-                            if(DateTime.Now.Subtract(m_StationWarningTime).TotalSeconds > 5)
-                            { 
+                            if (DateTime.Now.Subtract(m_StationWarningTime).TotalSeconds > 5)
+                            {
                                 m_StationWarningTime = DateTime.Now;
                                 MessageBox.Show("A Station with this name already exists", "Adding a new Station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                     }
-                    m_currentStationdata.Name = txtStationName.Text;  
+                    m_currentStationdata.Name = txtStationName.Text;
                     break;
-                case "cmbStationMaxLandingPadSize":   
-                    m_currentStationdata.MaxLandingPadSize = cmbStationMaxLandingPadSize.Text;
+
+                case "cmbStationMaxLandingPadSize":
+                    m_currentStationdata.MaxLandingPadSize = cmbStationMaxLandingPadSize.Text.ToNString();
                     break;
+
                 case "txtStationDistanceToStar":
-                    if(Int32.TryParse(txtStationDistanceToStar.Text.Replace(",","").Replace(".",""), out intValue))
-                        m_currentStationdata.DistanceToStar = intValue;
-                    else
-                    { 
-                        m_currentStationdata.DistanceToStar = Int32.Parse(m_lastStationValue);
-                    }
-                    txtStationDistanceToStar.Text = ((Int32)m_currentStationdata.DistanceToStar).ToString("#,##0.", CultureInfo.CurrentCulture);
+                     m_currentStationdata.DistanceToStar = txtStationDistanceToStar.Text.Replace(",", "").Replace(".", "").ToNInt(m_lastStationValue);
+                    txtStationDistanceToStar.Text = m_currentStationdata.DistanceToStar.ToNString("#,##0.", CultureInfo.CurrentCulture);
                     break;
-                case "cmbStationFaction":   
-                    m_currentStationdata.Faction = txtStationFaction.Text;
+
+                case "cmbStationFaction":
+                    m_currentStationdata.Faction = txtStationFaction.Text.ToNString();
                     break;
-                case "txtStationUpdatedAt": 
-                    if(Int32.TryParse(txtStationUpdatedAt.Text, out intValue))
-                        m_currentStationdata.UpdatedAt = intValue;
-                    { 
-                        m_currentStationdata.UpdatedAt = Int32.Parse(m_lastStationValue);
-                        txtStationUpdatedAt.Text = m_lastStationValue;
-                    }
-                    break;
+
                 case "lbStationEconomies":
                     m_currentStationdata.Economies = new String[lbStationEconomies.Items.Count];
-                    for (int i = 0; i <  lbStationEconomies.Items.Count; i++)
+                    for (int i = 0; i < lbStationEconomies.Items.Count; i++)
                     {
-                    	m_currentStationdata.Economies[i] = lbStationEconomies.Items[i].ToString();
+                        m_currentStationdata.Economies[i] = lbStationEconomies.Items[i].ToString();
                     }
                     break;
-                case "cmbStationState":     
-                    m_currentStationdata.State = cmbStationState.Text;
+
+                case "cmbStationState":
+                    m_currentStationdata.State = cmbStationState.Text.ToNString();
                     break;
-                case "cmbStationType":     
-                    m_currentStationdata.Type = cmbStationType.Text;
+
+                case "cmbStationType":
+                    m_currentStationdata.Type = cmbStationType.Text.ToNString();
                     break;
+
                 case "cmbStationAllegiance":
-                    m_currentStationdata.Allegiance = cmbStationAllegiance.Text;
+                    m_currentStationdata.Allegiance = cmbStationAllegiance.Text.ToNString();
                     break;
+
                 case "cmbStationGovernment":
-                    m_currentStationdata.Government = cmbStationGovernment.Text;
-            		break;
-            } 
-            
+                    m_currentStationdata.Government = cmbStationGovernment.Text.ToNString();
+                    break;
+            }
+
 
             setStationSaveButton();
         }
@@ -6698,70 +6727,41 @@ namespace RegulatedNoise
         {
             switch (((Control)sender).Name)
             {
-            	case "cbSystemNeedsPermit": 
-                    m_currentSystemdata.NeedsPermit = getTriStateCheckBox(cbSystemNeedsPermit);
+                case "cbSystemNeedsPermit":
+                    m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.toNInt();
                     break;
-            	case "cbStationHasCommodities": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasCommodities);
+
+                case "cbStationHasCommodities":
+                    m_currentStationdata.HasCommodities = cbStationHasCommodities.toNInt();
                     break;
-            	case "cbStationHasBlackmarket": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasBlackmarket);
+
+                case "cbStationHasBlackmarket":
+                    m_currentStationdata.HasCommodities = cbStationHasBlackmarket.toNInt();
                     break;
-            	case "cbStationHasOutfitting": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasOutfitting);
+
+                case "cbStationHasOutfitting":
+                    m_currentStationdata.HasCommodities = cbStationHasOutfitting.toNInt();
                     break;
-            	case "cbStationHasShipyard": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasShipyard);
+
+                case "cbStationHasShipyard":
+                    m_currentStationdata.HasCommodities = cbStationHasShipyard.toNInt();
                     break;
-            	case "cbStationHasRearm": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasRearm);
+
+                case "cbStationHasRearm":
+                    m_currentStationdata.HasCommodities = cbStationHasRearm.toNInt();
                     break;
-            	case "cbStationHasRefuel": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasRefuel);
+
+                case "cbStationHasRefuel":
+                    m_currentStationdata.HasCommodities = cbStationHasRefuel.toNInt();
                     break;
-            	case "cbStationHasRepair": 
-                    m_currentStationdata.HasCommodities = getTriStateCheckBox(cbStationHasRepair);
+
+                case "cbStationHasRepair":
+                    m_currentStationdata.HasCommodities = cbStationHasRepair.toNInt();
                     break;
             }
 
             setSystemSaveButton();
 
-        }
-
-        private void setTriStateCheckBox(CheckBox currentCheckBox, Int32? value)
-        {
-            switch (value)
-            {
-                case null:
-                    currentCheckBox.CheckState = CheckState.Indeterminate;
-                    break;
-                case 0:
-                    currentCheckBox.CheckState = CheckState.Unchecked;
-                    break;
-                default:
-                    currentCheckBox.CheckState = CheckState.Checked;
-                    break;
-            }
-        }
-
-        private Int32? getTriStateCheckBox(CheckBox currentCheckBox)
-        {
-            Int32? retValue = null;
-
-            switch (currentCheckBox.CheckState)
-            {
-                case CheckState.Indeterminate:
-                    retValue = null;
-                    break;
-                case CheckState.Unchecked:
-                    retValue = 0;
-                    break;
-                default:
-                    retValue = 1;
-                    break;
-            }
-
-            return retValue;
         }
 
         private void txtSystem_TextChanged(object sender, EventArgs e)
@@ -6782,18 +6782,18 @@ namespace RegulatedNoise
 
         private void cmdSystemChange_Click(object sender, EventArgs e)
         {
-            if(m_SystemIsNew)
+            if (m_SystemIsNew)
             {
                 EDSystem existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
-                if(existing != null)
+                if (existing != null)
                 {
                     MessageBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
 
-            if(MessageBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
-            { 
+            if (MessageBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+            {
                 _Milkyway.ChangeAddSystem(m_currentSystemdata);
                 setSystemSaveButton(true, false);
             }
@@ -6801,20 +6801,20 @@ namespace RegulatedNoise
 
         private void cmdStationChange_Click(object sender, EventArgs e)
         {
-            if(m_StationIsNew)
+            if (m_StationIsNew)
             {
                 EDStation existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
                                                                                                         (x.SystemId == m_currentStationdata.SystemId));
-                if(existing != null)
+                if (existing != null)
                 {
                     MessageBox.Show("A station with this name already exists", "Adding a new station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
 
-            if(MessageBox.Show("Save changes on current station ?", "Stationdata changed", 
+            if (MessageBox.Show("Save changes on current station ?", "Stationdata changed",
                                MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
-            { 
+            {
                 //_Milkyway.changeStation(m_currentSystemdata.Name, m_currentStationdata);
                 //setStationSaveButton(true, false);
             }
@@ -6832,8 +6832,8 @@ namespace RegulatedNoise
 
         private void setSystemSaveButton(bool force = false, bool forceValue = true)
         {
-            if(m_SystemIsNew)
-            { 
+            if (m_SystemIsNew)
+            {
                 if (!String.IsNullOrEmpty(m_currentSystemdata.Name))
                     cmdSystemChange.Enabled = true;
                 else
@@ -6841,7 +6841,7 @@ namespace RegulatedNoise
             }
             else
             {
-                if(force)
+                if (force)
                     cmdSystemChange.Enabled = forceValue;
                 else
                     cmdSystemChange.Enabled = !m_currentSystemdata.EqualsED(m_loadedSystemdata);
@@ -6850,8 +6850,8 @@ namespace RegulatedNoise
 
         private void setStationSaveButton(bool force = false, bool forceValue = true)
         {
-            if(m_StationIsNew)
-            { 
+            if (m_StationIsNew)
+            {
                 if (!String.IsNullOrEmpty(m_currentStationdata.Name))
                     cmdStationChange.Enabled = true;
                 else
@@ -6859,38 +6859,11 @@ namespace RegulatedNoise
             }
             else
             {
-                if(force)
+                if (force)
                     cmdStationChange.Enabled = forceValue;
                 else
                     cmdStationChange.Enabled = !m_currentStationdata.EqualsED(m_loadedStationdata);
             }
-        }
-
-        
-        private void cbIncludeUnknownDTS_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
-            SaveSettings();
-            SetupGui();
-        }
-
-        private void cbMaxRouteDistance_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.MaxRouteDistance = cbMaxRouteDistance.Checked;
-            SaveSettings();
-
-            
-        }
-
-        private void comboBox12_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.AutoActivateSystemTab = cbAutoActivateSystemTab.Checked;
-            SaveSettings();
         }
 
         private void lbStationEconomies_SelectedIndexChanged(object sender, EventArgs e)
@@ -6919,9 +6892,116 @@ namespace RegulatedNoise
                 loadStationData(txtSystemName.Text, cmbStationStations.Text);
         }
 
+        public delegate void delBoolean(bool value);
+
+        private void setStationEditable(bool enabled)
+        {
+
+            if(this.InvokeRequired)
+            { 
+                this.Invoke(new delBoolean(setStationEditable), enabled);
+                return;
+            }
+
+            txtStationId.ReadOnly = true;
+            txtStationName.ReadOnly = true;
+            cmbStationMaxLandingPadSize.ReadOnly = !enabled;
+            txtStationDistanceToStar.ReadOnly = !enabled;
+            txtStationFaction.ReadOnly = !enabled;
+            cmbStationGovernment.ReadOnly = !enabled;
+            cmbStationAllegiance.ReadOnly = !enabled;
+            cmbStationState.ReadOnly = !enabled;
+            cmbStationType.ReadOnly = !enabled;
+
+            cbStationHasCommodities.ReadOnly = !enabled;
+            cbStationHasBlackmarket.ReadOnly = !enabled;
+            cbStationHasOutfitting.ReadOnly = !enabled;
+            cbStationHasShipyard.ReadOnly = !enabled;
+            cbStationHasRearm.ReadOnly = !enabled;
+            cbStationHasRefuel.ReadOnly = !enabled;
+            cbStationHasRepair.ReadOnly = !enabled;
+
+            cmbStationEconomies.ReadOnly = !enabled;
+
+            txtStationUpdatedAt.ReadOnly = true;
+        }
+
+        private void setSystemEditable(bool enabled)
+        {
+            if(this.InvokeRequired)
+            { 
+                this.Invoke(new delBoolean(setSystemEditable), enabled);
+                return;
+            }
+
+            txtSystemId.ReadOnly = true;
+            txtSystemName.ReadOnly = true;
+            txtSystemX.ReadOnly = !enabled;
+            txtSystemY.ReadOnly = !enabled;
+            txtSystemZ.ReadOnly = !enabled;
+            txtSystemFaction.ReadOnly = !enabled;
+            txtSystemPopulation.ReadOnly = !enabled;
+            cmbSystemGovernment.ReadOnly = !enabled;
+            cmbSystemAllegiance.ReadOnly = !enabled;
+            cmbSystemState.ReadOnly = !enabled;
+            cmbSystemSecurity.ReadOnly = !enabled;
+            cmbSystemPrimaryEconomy.ReadOnly = !enabled;
+            cbSystemNeedsPermit.ReadOnly = !enabled;
+            txtSystemUpdatedAt.ReadOnly = true;
+        }
+        
+
+#endregion
+
+        
+        private void cbIncludeUnknownDTS_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
+            SaveSettings();
+            SetupGui();
+        }
+
+        private void cbMaxRouteDistance_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.MaxRouteDistance = cbMaxRouteDistance.Checked;
+            SaveSettings();
+
+            
+        }
+
+        private void comboBox12_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.AutoActivateSystemTab = cbAutoActivateSystemTab.Checked;
+            SaveSettings();
+        }
+
         private void cbLoadStationsJSON_CheckedChanged(object sender, EventArgs e)
         {
             RegulatedNoiseSettings.LoadStationsJSON = cbLoadStationsJSON.Checked;
+        }
+
+        public string getAppPath()
+        {
+            return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+
+        }
+
+        private void cmdTest_Click(object sender, EventArgs e)
+        {
+            string Test = null;
+
+            Debug.Print(Test.NToString());
+        }
+
+        private void cmbAllStations_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(!m_SystemLoadingValues)
+                loadSystemData(cmbAllStations.SelectedValue.ToString());
         }
 
     }

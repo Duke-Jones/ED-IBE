@@ -1499,12 +1499,6 @@
         jlWkAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="label82.Text" xml:space="preserve">
-    <value>This page is not finished but it can show the information of the current system.
-Selecting the station in the DropDown works.
-For all other fields:
-Don't change the values in the fields   - it can potentially result in a crash...</value>
-  </data>
   <data name="bShowStationAtStarchartDotInfo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

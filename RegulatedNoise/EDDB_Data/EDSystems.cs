@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
@@ -27,37 +28,29 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("z")]
         public double Z { get; set; }
 
-        private string m_Faction;
         [JsonProperty("faction")]
-        public string Faction { get{return m_Faction;} set{m_Faction = value; if(m_Faction == null) m_Faction = string.Empty;} }
+        public string Faction { get; set; }
 
-        private long? m_Population;
         [JsonProperty("population")]
-        public long? Population { get{return m_Population;} set{m_Population = value; if(m_Population == null) m_Population = -1;} }
+        public long? Population { get; set; }
 
-        private string m_Government;
         [JsonProperty("government")]
-        public string Government { get{return m_Government;} set{m_Government = value; if(m_Government == null) m_Government = string.Empty;} }
+        public string Government { get; set; }
 
-        private string m_Allegiance;
         [JsonProperty("allegiance")]
-        public string Allegiance { get{return m_Allegiance;} set{m_Allegiance = value; if(m_Allegiance == null) m_Allegiance = string.Empty;} }
+        public string Allegiance { get; set; }
 
-        private string m_State;
         [JsonProperty("state")]
-        public string State { get{return m_State;} set{m_State = value; if(m_State == null) m_State = string.Empty;} }
+        public string State { get; set; }
 
-        private string m_Security;
         [JsonProperty("security")]
-        public string Security { get{return m_Security;} set{m_Security = value; if(m_Security == null) m_Security = string.Empty;} }
+        public string Security { get; set; }
 
-        private string m_PrimaryEconomy;
         [JsonProperty("primary_economy")]
-        public string PrimaryEconomy { get{return m_PrimaryEconomy;} set{m_PrimaryEconomy = value; if(m_PrimaryEconomy == null) m_PrimaryEconomy = string.Empty;} }
+        public string PrimaryEconomy { get; set; }
 
-        private int? m_NeedsPermit;
         [JsonProperty("needs_permit")]
-        public int? NeedsPermit { get{return m_NeedsPermit;} set{m_NeedsPermit = value; if(m_NeedsPermit == null) m_NeedsPermit = -1;} }
+        public int? NeedsPermit { get; set; }
 
         [JsonProperty("updated_at")]
         public int UpdatedAt { get; set; }
@@ -92,22 +85,22 @@ namespace RegulatedNoise.EDDB_Data
         {
             bool retValue = false;
 
-            if(eqSystem != null)
-            { 
-                if ((Name.Equals(eqSystem.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (X.Equals(eqSystem.X)) && 
-                    (Y.Equals(eqSystem.Y)) && 
-                    (Z.Equals(eqSystem.Z)) && 
-                    (Faction.Equals(eqSystem.Faction, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (Population.Equals(eqSystem.Population)) && 
-                    (Government.Equals(eqSystem.Government, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (Allegiance.Equals(eqSystem.Allegiance, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (State.Equals(eqSystem.State, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (Security.Equals(eqSystem.Security, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (PrimaryEconomy.Equals(eqSystem.PrimaryEconomy, StringComparison.InvariantCultureIgnoreCase)) && 
-                    (NeedsPermit.Equals(eqSystem.NeedsPermit)) && 
-                    (UpdatedAt.Equals(eqSystem.UpdatedAt)))
-                       retValue = true;
+            if (eqSystem != null)
+            {
+                if (ObjectCompare.EqualsNullable(this.Name, eqSystem.Name) &&
+                    ObjectCompare.EqualsNullable(this.X, eqSystem.X) &&
+                    ObjectCompare.EqualsNullable(this.Y, eqSystem.Y) &&
+                    ObjectCompare.EqualsNullable(this.Z, eqSystem.Z) &&
+                    ObjectCompare.EqualsNullable(this.Faction, eqSystem.Faction) &&
+                    ObjectCompare.EqualsNullable(this.Population, eqSystem.Population) &&
+                    ObjectCompare.EqualsNullable(this.Government, eqSystem.Government) &&
+                    ObjectCompare.EqualsNullable(this.Allegiance, eqSystem.Allegiance) &&
+                    ObjectCompare.EqualsNullable(this.State, eqSystem.State) &&
+                    ObjectCompare.EqualsNullable(this.Security, eqSystem.Security) &&
+                    ObjectCompare.EqualsNullable(this.PrimaryEconomy, eqSystem.PrimaryEconomy) &&
+                    ObjectCompare.EqualsNullable(this.NeedsPermit, eqSystem.NeedsPermit) &&
+                    ObjectCompare.EqualsNullable(this.UpdatedAt, eqSystem.UpdatedAt))
+                    retValue = true;
             }
 
             return retValue;             
@@ -143,21 +136,20 @@ namespace RegulatedNoise.EDDB_Data
         public void clear()
         { 
             Id              = 0;
-            Name            = string.Empty;
+            Name            = String.Empty;
             X               = 0.0;
             Y               = 0.0;
             Z               = 0.0;
-            Faction         = string.Empty;
-            Population      = 0;
-            Government      = string.Empty;
-            Allegiance      = string.Empty;
-            State           = string.Empty;
-            Security        = string.Empty;
-            PrimaryEconomy  = string.Empty;
-            NeedsPermit     = 0;
+            Faction         = null;
+            Population      = null;
+            Government      = null;
+            Allegiance      = null;
+            State           = null;
+            Security        = null;
+            PrimaryEconomy  = null;
+            NeedsPermit     = null;
             UpdatedAt       = 0;
 
         }
     }
-
 }

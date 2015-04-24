@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace RegulatedNoise.EDDB_Data
 {
-    
+
     public class EDMilkyway
     {
         public enum enDataType
@@ -279,10 +279,10 @@ namespace RegulatedNoise.EDDB_Data
                 EDSystem ownSystem = m_Systems[(int)enDataType.Data_Own][StartingCount-i-1];
                 EDSystem existingEDDNSystem = getSystem(ownSystem.Name);
 
-                if (existingEDDNSystem != null)
-                    Debug.Print("Id=" + existingEDDNSystem.Id);
-                else
-                    Debug.Print("Id=null");
+                //if (existingEDDNSystem != null)
+                //    Debug.Print("Id=" + existingEDDNSystem.Id);
+                //else
+                //    Debug.Print("Id=null");
 
                 if (existingEDDNSystem != null)
                 {
@@ -560,37 +560,38 @@ namespace RegulatedNoise.EDDB_Data
 
             foreach (EDStation Station in m_Stations[(int)(enDataType.Data_Merged)])
             {
-                foreach (Listing StationCommodity in Station.Listings)
-                {
-                    if (!collectedData.TryGetValue(StationCommodity.CommodityId, out CommodityData))
+                if (Station.Listings != null)
+                    foreach (Listing StationCommodity in Station.Listings)
                     {
-                        // add a new Marketdata-Object
-                        CommodityData = new MarketData();
-                        CommodityData.Id        = StationCommodity.CommodityId;
-                        collectedData.Add(CommodityData.Id, CommodityData);
+                        if (!collectedData.TryGetValue(StationCommodity.CommodityId, out CommodityData))
+                        {
+                            // add a new Marketdata-Object
+                            CommodityData = new MarketData();
+                            CommodityData.Id        = StationCommodity.CommodityId;
+                            collectedData.Add(CommodityData.Id, CommodityData);
 
-                    }
+                        }
 
-                    if (StationCommodity.Demand != 0)
-                    { 
-                        if (StationCommodity.BuyPrice > 0)
-                            CommodityData.BuyPrices_Demand.Add(StationCommodity.BuyPrice);
+                        if (StationCommodity.Demand != 0)
+                        { 
+                            if (StationCommodity.BuyPrice > 0)
+                                CommodityData.BuyPrices_Demand.Add(StationCommodity.BuyPrice);
 
-                        if (StationCommodity.SellPrice > 0)
-                            CommodityData.SellPrices_Demand.Add(StationCommodity.SellPrice);
+                            if (StationCommodity.SellPrice > 0)
+                                CommodityData.SellPrices_Demand.Add(StationCommodity.SellPrice);
                         
-                    }
+                        }
 
-                    if (StationCommodity.Supply != 0)
-                    { 
-                        if (StationCommodity.BuyPrice > 0)
-                            CommodityData.BuyPrices_Supply.Add(StationCommodity.BuyPrice);
+                        if (StationCommodity.Supply != 0)
+                        { 
+                            if (StationCommodity.BuyPrice > 0)
+                                CommodityData.BuyPrices_Supply.Add(StationCommodity.BuyPrice);
 
-                        if (StationCommodity.SellPrice > 0)
-                            CommodityData.SellPrices_Supply.Add(StationCommodity.SellPrice);
+                            if (StationCommodity.SellPrice > 0)
+                                CommodityData.SellPrices_Supply.Add(StationCommodity.SellPrice);
                         
-                    }
-                }        
+                        }
+                    }        
             }
 
             return collectedData;
@@ -936,4 +937,6 @@ namespace RegulatedNoise.EDDB_Data
             saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
             saveStationData(@"./Data/Stations_own.json", EDMilkyway.enDataType.Data_Own, true);        }
     }
+
+
 }

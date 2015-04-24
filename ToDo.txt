@@ -19,10 +19,18 @@ todo:
    * if implausibe prices show warnlevel direct under the price data
    * show hint with age of market prices if location is a station
    * show hint how many stations and systems are in database
+   * add rejected marketdata from eddn with rightclick contextmenue
    ***********************************************************************************
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.17_1
+   * set "unset"-value for EDDB station and system properties to null
+   * option to cancel while asked for needed directorys on first start
+   * systems in general now viewable, not only the current system
+   * cleaned up system tab
+   * added new helper classes "controls_ext", "Extensions", "ObjectCompare"
+-------------------------------------------------------------------------------------      
 1.84_0.16
    * translating of EDDN messages, EDDN now possible with other languages than english
    * fixed a bug in the internal translating logic
@@ -31,7 +39,7 @@ todo:
 -------------------------------------------------------------------------------------      
 1.84_0.15_2
    * sorting of comboboxes is saved now
-   * fixed a unwanted label on splash
+   * search for 'products' path can be cancelled
 -------------------------------------------------------------------------------------      
 1.84_0.15_1
    * auto show systemdata
