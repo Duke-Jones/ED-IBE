@@ -53,7 +53,6 @@
             this.button5 = new System.Windows.Forms.Button();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
-            this.cmdTest = new System.Windows.Forms.Button();
             this.cmdDonate = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -81,6 +80,7 @@
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabSystemData = new System.Windows.Forms.TabPage();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.cmdStationCancel = new System.Windows.Forms.Button();
             this.lblStationCountTotal = new System.Windows.Forms.Label();
             this.label90 = new System.Windows.Forms.Label();
             this.cmdStationEdit = new System.Windows.Forms.Button();
@@ -101,7 +101,7 @@
             this.cmbStationStations = new System.Windows.Forms.ComboBox_ro();
             this.label87 = new System.Windows.Forms.Label();
             this.cmdStationNew = new System.Windows.Forms.Button();
-            this.cmdStationChange = new System.Windows.Forms.Button();
+            this.cmdStationSave = new System.Windows.Forms.Button();
             this.cmbStationType = new System.Windows.Forms.ComboBox_ro();
             this.label75 = new System.Windows.Forms.Label();
             this.cmbStationState = new System.Windows.Forms.ComboBox_ro();
@@ -121,16 +121,18 @@
             this.txtStationId = new System.Windows.Forms.TextBox();
             this.label86 = new System.Windows.Forms.Label();
             this.lblStationRenameHint = new System.Windows.Forms.Label();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.gbSystemSystemData = new System.Windows.Forms.GroupBox();
+            this.cmdTest = new System.Windows.Forms.Button();
+            this.cmdSystemCancel = new System.Windows.Forms.Button();
             this.lblSystemCountTotal = new System.Windows.Forms.Label();
             this.label82 = new System.Windows.Forms.Label();
             this.label84 = new System.Windows.Forms.Label();
-            this.cmbAllStations = new System.Windows.Forms.ComboBox_ro();
+            this.cmbSystemsAllSystems = new System.Windows.Forms.ComboBox_ro();
             this.label88 = new System.Windows.Forms.Label();
             this.cmdSystemEdit = new System.Windows.Forms.Button();
             this.cbSystemNeedsPermit = new System.Windows.Forms.CheckBox_ro();
             this.cmdSystemNew = new System.Windows.Forms.Button();
-            this.cmdSystemChange = new System.Windows.Forms.Button();
+            this.cmdSystemSave = new System.Windows.Forms.Button();
             this.txtSystemUpdatedAt = new System.Windows.Forms.TextBox();
             this.label63 = new System.Windows.Forms.Label();
             this.cmbSystemPrimaryEconomy = new System.Windows.Forms.ComboBox_ro();
@@ -376,7 +378,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabSystemData.SuspendLayout();
             this.groupBox14.SuspendLayout();
-            this.groupBox13.SuspendLayout();
+            this.gbSystemSystemData.SuspendLayout();
             this.tabPriceAnalysis.SuspendLayout();
             this.gbSorting.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -615,7 +617,6 @@
             // 
             // tabHelpAndChangeLog
             // 
-            this.tabHelpAndChangeLog.Controls.Add(this.cmdTest);
             this.tabHelpAndChangeLog.Controls.Add(this.cmdDonate);
             this.tabHelpAndChangeLog.Controls.Add(this.label42);
             this.tabHelpAndChangeLog.Controls.Add(this.panel2);
@@ -637,17 +638,6 @@
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
-            // 
-            // cmdTest
-            // 
-            this.cmdTest.Location = new System.Drawing.Point(230, 340);
-            this.cmdTest.Name = "cmdTest";
-            this.cmdTest.Size = new System.Drawing.Size(75, 23);
-            this.cmdTest.TabIndex = 39;
-            this.cmdTest.Text = "Test";
-            this.cmdTest.UseVisualStyleBackColor = true;
-            this.cmdTest.Visible = false;
-            this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
             // 
             // cmdDonate
             // 
@@ -933,7 +923,7 @@
             // tabSystemData
             // 
             this.tabSystemData.Controls.Add(this.groupBox14);
-            this.tabSystemData.Controls.Add(this.groupBox13);
+            this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
             this.tabSystemData.Size = new System.Drawing.Size(1051, 589);
@@ -946,6 +936,7 @@
             this.groupBox14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox14.Controls.Add(this.cmdStationCancel);
             this.groupBox14.Controls.Add(this.lblStationCountTotal);
             this.groupBox14.Controls.Add(this.label90);
             this.groupBox14.Controls.Add(this.cmdStationEdit);
@@ -966,7 +957,7 @@
             this.groupBox14.Controls.Add(this.cmbStationStations);
             this.groupBox14.Controls.Add(this.label87);
             this.groupBox14.Controls.Add(this.cmdStationNew);
-            this.groupBox14.Controls.Add(this.cmdStationChange);
+            this.groupBox14.Controls.Add(this.cmdStationSave);
             this.groupBox14.Controls.Add(this.cmbStationType);
             this.groupBox14.Controls.Add(this.label75);
             this.groupBox14.Controls.Add(this.cmbStationState);
@@ -989,9 +980,18 @@
             this.groupBox14.Location = new System.Drawing.Point(506, 49);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(530, 524);
-            this.groupBox14.TabIndex = 128;
+            this.groupBox14.TabIndex = 0;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Station Data";
+            // 
+            // cmdStationCancel
+            // 
+            this.cmdStationCancel.Location = new System.Drawing.Point(169, 473);
+            this.cmdStationCancel.Name = "cmdStationCancel";
+            this.cmdStationCancel.Size = new System.Drawing.Size(110, 23);
+            this.cmdStationCancel.TabIndex = 23;
+            this.cmdStationCancel.Text = "Cancel";
+            this.cmdStationCancel.UseVisualStyleBackColor = true;
             // 
             // lblStationCountTotal
             // 
@@ -1019,7 +1019,7 @@
             this.cmdStationEdit.Location = new System.Drawing.Point(168, 435);
             this.cmdStationEdit.Name = "cmdStationEdit";
             this.cmdStationEdit.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationEdit.TabIndex = 126;
+            this.cmdStationEdit.TabIndex = 21;
             this.cmdStationEdit.Text = "Edit Station";
             this.cmdStationEdit.UseVisualStyleBackColor = true;
             // 
@@ -1052,7 +1052,7 @@
             this.cmbStationEconomies.Name = "cmbStationEconomies";
             this.cmbStationEconomies.ReadOnly = false;
             this.cmbStationEconomies.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationEconomies.TabIndex = 121;
+            this.cmbStationEconomies.TabIndex = 11;
             this.cmbStationEconomies.Visible = false;
             // 
             // lbStationEconomies
@@ -1063,7 +1063,7 @@
             this.lbStationEconomies.Location = new System.Drawing.Point(127, 334);
             this.lbStationEconomies.Name = "lbStationEconomies";
             this.lbStationEconomies.Size = new System.Drawing.Size(151, 79);
-            this.lbStationEconomies.TabIndex = 120;
+            this.lbStationEconomies.TabIndex = 12;
             this.lbStationEconomies.SelectedIndexChanged += new System.EventHandler(this.lbStationEconomies_SelectedIndexChanged);
             // 
             // label64
@@ -1083,7 +1083,7 @@
             this.txtStationUpdatedAt.Name = "txtStationUpdatedAt";
             this.txtStationUpdatedAt.ReadOnly = true;
             this.txtStationUpdatedAt.Size = new System.Drawing.Size(151, 21);
-            this.txtStationUpdatedAt.TabIndex = 117;
+            this.txtStationUpdatedAt.TabIndex = 20;
             this.txtStationUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label73
@@ -1103,7 +1103,7 @@
             this.cbStationHasOutfitting.Name = "cbStationHasOutfitting";
             this.cbStationHasOutfitting.ReadOnly = false;
             this.cbStationHasOutfitting.Size = new System.Drawing.Size(68, 17);
-            this.cbStationHasOutfitting.TabIndex = 115;
+            this.cbStationHasOutfitting.TabIndex = 15;
             this.cbStationHasOutfitting.Text = "Outfitting";
             this.cbStationHasOutfitting.UseVisualStyleBackColor = true;
             // 
@@ -1114,7 +1114,7 @@
             this.cbStationHasShipyard.Name = "cbStationHasShipyard";
             this.cbStationHasShipyard.ReadOnly = false;
             this.cbStationHasShipyard.Size = new System.Drawing.Size(67, 17);
-            this.cbStationHasShipyard.TabIndex = 114;
+            this.cbStationHasShipyard.TabIndex = 16;
             this.cbStationHasShipyard.Text = "Shipyard";
             this.cbStationHasShipyard.UseVisualStyleBackColor = true;
             // 
@@ -1125,7 +1125,7 @@
             this.cbStationHasRepair.Name = "cbStationHasRepair";
             this.cbStationHasRepair.ReadOnly = false;
             this.cbStationHasRepair.Size = new System.Drawing.Size(57, 17);
-            this.cbStationHasRepair.TabIndex = 113;
+            this.cbStationHasRepair.TabIndex = 19;
             this.cbStationHasRepair.Text = "Repair";
             this.cbStationHasRepair.UseVisualStyleBackColor = true;
             // 
@@ -1136,7 +1136,7 @@
             this.cbStationHasRearm.Name = "cbStationHasRearm";
             this.cbStationHasRearm.ReadOnly = false;
             this.cbStationHasRearm.Size = new System.Drawing.Size(61, 17);
-            this.cbStationHasRearm.TabIndex = 112;
+            this.cbStationHasRearm.TabIndex = 17;
             this.cbStationHasRearm.Text = "Re-Arm";
             this.cbStationHasRearm.UseVisualStyleBackColor = true;
             // 
@@ -1147,7 +1147,7 @@
             this.cbStationHasRefuel.Name = "cbStationHasRefuel";
             this.cbStationHasRefuel.ReadOnly = false;
             this.cbStationHasRefuel.Size = new System.Drawing.Size(57, 17);
-            this.cbStationHasRefuel.TabIndex = 111;
+            this.cbStationHasRefuel.TabIndex = 18;
             this.cbStationHasRefuel.Text = "Refuel";
             this.cbStationHasRefuel.UseVisualStyleBackColor = true;
             // 
@@ -1158,9 +1158,9 @@
             this.cbStationHasCommodities.Name = "cbStationHasCommodities";
             this.cbStationHasCommodities.ReadOnly = false;
             this.cbStationHasCommodities.Size = new System.Drawing.Size(85, 17);
-            this.cbStationHasCommodities.TabIndex = 110;
+            this.cbStationHasCommodities.TabIndex = 13;
             this.cbStationHasCommodities.Text = "Commodities";
-            this.cbStationHasCommodities.UseVisualStyleBackColor = true;
+            this.cbStationHasCommodities.UseVisualStyleBackColor = false;
             // 
             // cbStationHasBlackmarket
             // 
@@ -1169,7 +1169,7 @@
             this.cbStationHasBlackmarket.Name = "cbStationHasBlackmarket";
             this.cbStationHasBlackmarket.ReadOnly = false;
             this.cbStationHasBlackmarket.Size = new System.Drawing.Size(85, 17);
-            this.cbStationHasBlackmarket.TabIndex = 109;
+            this.cbStationHasBlackmarket.TabIndex = 14;
             this.cbStationHasBlackmarket.Text = "Blackmarket";
             this.cbStationHasBlackmarket.UseVisualStyleBackColor = true;
             // 
@@ -1180,7 +1180,7 @@
             this.cmbStationStations.Name = "cmbStationStations";
             this.cmbStationStations.ReadOnly = false;
             this.cmbStationStations.Size = new System.Drawing.Size(236, 23);
-            this.cmbStationStations.TabIndex = 96;
+            this.cmbStationStations.TabIndex = 0;
             // 
             // label87
             // 
@@ -1194,22 +1194,22 @@
             // 
             // cmdStationNew
             // 
-            this.cmdStationNew.Location = new System.Drawing.Point(168, 464);
+            this.cmdStationNew.Location = new System.Drawing.Point(285, 435);
             this.cmdStationNew.Name = "cmdStationNew";
             this.cmdStationNew.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationNew.TabIndex = 93;
+            this.cmdStationNew.TabIndex = 22;
             this.cmdStationNew.Text = "Add Station";
             this.cmdStationNew.UseVisualStyleBackColor = true;
             // 
-            // cmdStationChange
+            // cmdStationSave
             // 
-            this.cmdStationChange.Location = new System.Drawing.Point(284, 464);
-            this.cmdStationChange.Name = "cmdStationChange";
-            this.cmdStationChange.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationChange.TabIndex = 92;
-            this.cmdStationChange.Text = "Save Changes";
-            this.cmdStationChange.UseVisualStyleBackColor = true;
-            this.cmdStationChange.Click += new System.EventHandler(this.cmdStationChange_Click);
+            this.cmdStationSave.Location = new System.Drawing.Point(285, 473);
+            this.cmdStationSave.Name = "cmdStationSave";
+            this.cmdStationSave.Size = new System.Drawing.Size(110, 23);
+            this.cmdStationSave.TabIndex = 24;
+            this.cmdStationSave.Text = "Save Changes";
+            this.cmdStationSave.UseVisualStyleBackColor = true;
+            this.cmdStationSave.Click += new System.EventHandler(this.cmdStationChange_Click);
             // 
             // cmbStationType
             // 
@@ -1219,7 +1219,7 @@
             this.cmbStationType.Name = "cmbStationType";
             this.cmbStationType.ReadOnly = false;
             this.cmbStationType.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationType.TabIndex = 87;
+            this.cmbStationType.TabIndex = 10;
             // 
             // label75
             // 
@@ -1239,7 +1239,7 @@
             this.cmbStationState.Name = "cmbStationState";
             this.cmbStationState.ReadOnly = false;
             this.cmbStationState.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationState.TabIndex = 85;
+            this.cmbStationState.TabIndex = 9;
             // 
             // label76
             // 
@@ -1259,7 +1259,7 @@
             this.cmbStationAllegiance.Name = "cmbStationAllegiance";
             this.cmbStationAllegiance.ReadOnly = false;
             this.cmbStationAllegiance.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationAllegiance.TabIndex = 83;
+            this.cmbStationAllegiance.TabIndex = 8;
             // 
             // label77
             // 
@@ -1279,7 +1279,7 @@
             this.cmbStationGovernment.Name = "cmbStationGovernment";
             this.cmbStationGovernment.ReadOnly = false;
             this.cmbStationGovernment.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationGovernment.TabIndex = 81;
+            this.cmbStationGovernment.TabIndex = 7;
             // 
             // label78
             // 
@@ -1297,13 +1297,13 @@
             this.txtStationFaction.Location = new System.Drawing.Point(127, 203);
             this.txtStationFaction.Name = "txtStationFaction";
             this.txtStationFaction.Size = new System.Drawing.Size(151, 21);
-            this.txtStationFaction.TabIndex = 79;
+            this.txtStationFaction.TabIndex = 6;
             // 
             // label79
             // 
             this.label79.AutoSize = true;
             this.label79.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label79.Location = new System.Drawing.Point(22, 206);
+            this.label79.Location = new System.Drawing.Point(22, 208);
             this.label79.Name = "label79";
             this.label79.Size = new System.Drawing.Size(42, 13);
             this.label79.TabIndex = 78;
@@ -1312,17 +1312,17 @@
             // txtStationDistanceToStar
             // 
             this.txtStationDistanceToStar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtStationDistanceToStar.Location = new System.Drawing.Point(127, 177);
+            this.txtStationDistanceToStar.Location = new System.Drawing.Point(127, 147);
             this.txtStationDistanceToStar.Name = "txtStationDistanceToStar";
             this.txtStationDistanceToStar.Size = new System.Drawing.Size(68, 21);
-            this.txtStationDistanceToStar.TabIndex = 77;
+            this.txtStationDistanceToStar.TabIndex = 4;
             this.txtStationDistanceToStar.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label80
             // 
             this.label80.AutoSize = true;
             this.label80.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label80.Location = new System.Drawing.Point(22, 180);
+            this.label80.Location = new System.Drawing.Point(22, 152);
             this.label80.Name = "label80";
             this.label80.Size = new System.Drawing.Size(103, 13);
             this.label80.TabIndex = 76;
@@ -1332,17 +1332,17 @@
             // 
             this.cmbStationMaxLandingPadSize.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbStationMaxLandingPadSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationMaxLandingPadSize.Location = new System.Drawing.Point(127, 151);
+            this.cmbStationMaxLandingPadSize.Location = new System.Drawing.Point(127, 174);
             this.cmbStationMaxLandingPadSize.Name = "cmbStationMaxLandingPadSize";
             this.cmbStationMaxLandingPadSize.ReadOnly = false;
             this.cmbStationMaxLandingPadSize.Size = new System.Drawing.Size(68, 23);
-            this.cmbStationMaxLandingPadSize.TabIndex = 75;
+            this.cmbStationMaxLandingPadSize.TabIndex = 5;
             // 
             // label81
             // 
             this.label81.AutoSize = true;
             this.label81.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label81.Location = new System.Drawing.Point(22, 154);
+            this.label81.Location = new System.Drawing.Point(22, 179);
             this.label81.Name = "label81";
             this.label81.Size = new System.Drawing.Size(88, 13);
             this.label81.TabIndex = 74;
@@ -1355,7 +1355,7 @@
             this.txtStationName.Name = "txtStationName";
             this.txtStationName.ReadOnly = true;
             this.txtStationName.Size = new System.Drawing.Size(236, 21);
-            this.txtStationName.TabIndex = 67;
+            this.txtStationName.TabIndex = 3;
             // 
             // label85
             // 
@@ -1374,7 +1374,7 @@
             this.txtStationId.Name = "txtStationId";
             this.txtStationId.ReadOnly = true;
             this.txtStationId.Size = new System.Drawing.Size(66, 20);
-            this.txtStationId.TabIndex = 65;
+            this.txtStationId.TabIndex = 1;
             this.txtStationId.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label86
@@ -1394,56 +1394,79 @@
             this.lblStationRenameHint.Location = new System.Drawing.Point(23, 111);
             this.lblStationRenameHint.Name = "lblStationRenameHint";
             this.lblStationRenameHint.Size = new System.Drawing.Size(280, 12);
-            this.lblStationRenameHint.TabIndex = 94;
+            this.lblStationRenameHint.TabIndex = 2;
             this.lblStationRenameHint.Text = "Name of station not editable because it comes from the EDDB data.";
             this.lblStationRenameHint.Visible = false;
             // 
-            // groupBox13
+            // gbSystemSystemData
             // 
-            this.groupBox13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.gbSystemSystemData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox13.Controls.Add(this.lblSystemCountTotal);
-            this.groupBox13.Controls.Add(this.label82);
-            this.groupBox13.Controls.Add(this.label84);
-            this.groupBox13.Controls.Add(this.cmbAllStations);
-            this.groupBox13.Controls.Add(this.label88);
-            this.groupBox13.Controls.Add(this.cmdSystemEdit);
-            this.groupBox13.Controls.Add(this.cbSystemNeedsPermit);
-            this.groupBox13.Controls.Add(this.cmdSystemNew);
-            this.groupBox13.Controls.Add(this.cmdSystemChange);
-            this.groupBox13.Controls.Add(this.txtSystemUpdatedAt);
-            this.groupBox13.Controls.Add(this.label63);
-            this.groupBox13.Controls.Add(this.cmbSystemPrimaryEconomy);
-            this.groupBox13.Controls.Add(this.label65);
-            this.groupBox13.Controls.Add(this.cmbSystemSecurity);
-            this.groupBox13.Controls.Add(this.label66);
-            this.groupBox13.Controls.Add(this.cmbSystemState);
-            this.groupBox13.Controls.Add(this.label67);
-            this.groupBox13.Controls.Add(this.cmbSystemAllegiance);
-            this.groupBox13.Controls.Add(this.label68);
-            this.groupBox13.Controls.Add(this.cmbSystemGovernment);
-            this.groupBox13.Controls.Add(this.label69);
-            this.groupBox13.Controls.Add(this.txtSystemPopulation);
-            this.groupBox13.Controls.Add(this.label62);
-            this.groupBox13.Controls.Add(this.txtSystemFaction);
-            this.groupBox13.Controls.Add(this.label61);
-            this.groupBox13.Controls.Add(this.txtSystemZ);
-            this.groupBox13.Controls.Add(this.label60);
-            this.groupBox13.Controls.Add(this.txtSystemY);
-            this.groupBox13.Controls.Add(this.label59);
-            this.groupBox13.Controls.Add(this.txtSystemX);
-            this.groupBox13.Controls.Add(this.label58);
-            this.groupBox13.Controls.Add(this.txtSystemName);
-            this.groupBox13.Controls.Add(this.label57);
-            this.groupBox13.Controls.Add(this.txtSystemId);
-            this.groupBox13.Controls.Add(this.label56);
-            this.groupBox13.Controls.Add(this.lblSystemRenameHint);
-            this.groupBox13.Location = new System.Drawing.Point(14, 49);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(486, 524);
-            this.groupBox13.TabIndex = 127;
-            this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "System Data";
+            this.gbSystemSystemData.Controls.Add(this.cmdTest);
+            this.gbSystemSystemData.Controls.Add(this.cmdSystemCancel);
+            this.gbSystemSystemData.Controls.Add(this.lblSystemCountTotal);
+            this.gbSystemSystemData.Controls.Add(this.label82);
+            this.gbSystemSystemData.Controls.Add(this.label84);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemsAllSystems);
+            this.gbSystemSystemData.Controls.Add(this.label88);
+            this.gbSystemSystemData.Controls.Add(this.cmdSystemEdit);
+            this.gbSystemSystemData.Controls.Add(this.cbSystemNeedsPermit);
+            this.gbSystemSystemData.Controls.Add(this.cmdSystemNew);
+            this.gbSystemSystemData.Controls.Add(this.cmdSystemSave);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemUpdatedAt);
+            this.gbSystemSystemData.Controls.Add(this.label63);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemPrimaryEconomy);
+            this.gbSystemSystemData.Controls.Add(this.label65);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemSecurity);
+            this.gbSystemSystemData.Controls.Add(this.label66);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemState);
+            this.gbSystemSystemData.Controls.Add(this.label67);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemAllegiance);
+            this.gbSystemSystemData.Controls.Add(this.label68);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemGovernment);
+            this.gbSystemSystemData.Controls.Add(this.label69);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemPopulation);
+            this.gbSystemSystemData.Controls.Add(this.label62);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemFaction);
+            this.gbSystemSystemData.Controls.Add(this.label61);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemZ);
+            this.gbSystemSystemData.Controls.Add(this.label60);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemY);
+            this.gbSystemSystemData.Controls.Add(this.label59);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemX);
+            this.gbSystemSystemData.Controls.Add(this.label58);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemName);
+            this.gbSystemSystemData.Controls.Add(this.label57);
+            this.gbSystemSystemData.Controls.Add(this.txtSystemId);
+            this.gbSystemSystemData.Controls.Add(this.label56);
+            this.gbSystemSystemData.Controls.Add(this.lblSystemRenameHint);
+            this.gbSystemSystemData.Location = new System.Drawing.Point(14, 49);
+            this.gbSystemSystemData.Name = "gbSystemSystemData";
+            this.gbSystemSystemData.Size = new System.Drawing.Size(486, 524);
+            this.gbSystemSystemData.TabIndex = 0;
+            this.gbSystemSystemData.TabStop = false;
+            this.gbSystemSystemData.Text = "System Data";
+            // 
+            // cmdTest
+            // 
+            this.cmdTest.Location = new System.Drawing.Point(416, 499);
+            this.cmdTest.Name = "cmdTest";
+            this.cmdTest.Size = new System.Drawing.Size(75, 23);
+            this.cmdTest.TabIndex = 39;
+            this.cmdTest.Text = "Test";
+            this.cmdTest.UseVisualStyleBackColor = true;
+            this.cmdTest.Visible = false;
+            this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
+            // 
+            // cmdSystemCancel
+            // 
+            this.cmdSystemCancel.Location = new System.Drawing.Point(156, 473);
+            this.cmdSystemCancel.Name = "cmdSystemCancel";
+            this.cmdSystemCancel.Size = new System.Drawing.Size(110, 23);
+            this.cmdSystemCancel.TabIndex = 17;
+            this.cmdSystemCancel.Text = "Cancel";
+            this.cmdSystemCancel.UseVisualStyleBackColor = false;
+            this.cmdSystemCancel.Click += new System.EventHandler(this.cmdSystemCancel_Click);
             // 
             // lblSystemCountTotal
             // 
@@ -1477,17 +1500,17 @@
             this.label84.TabIndex = 128;
             this.label84.Text = "Number Of Systems \r\nIn Database : ";
             // 
-            // cmbAllStations
+            // cmbSystemsAllSystems
             // 
-            this.cmbAllStations.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
-            this.cmbAllStations.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cmbAllStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbAllStations.Location = new System.Drawing.Point(117, 33);
-            this.cmbAllStations.Name = "cmbAllStations";
-            this.cmbAllStations.ReadOnly = false;
-            this.cmbAllStations.Size = new System.Drawing.Size(254, 23);
-            this.cmbAllStations.TabIndex = 127;
-            this.cmbAllStations.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+            this.cmbSystemsAllSystems.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cmbSystemsAllSystems.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbSystemsAllSystems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemsAllSystems.Location = new System.Drawing.Point(89, 33);
+            this.cmbSystemsAllSystems.Name = "cmbSystemsAllSystems";
+            this.cmbSystemsAllSystems.ReadOnly = false;
+            this.cmbSystemsAllSystems.Size = new System.Drawing.Size(254, 23);
+            this.cmbSystemsAllSystems.TabIndex = 0;
+            this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
             // 
             // label88
             // 
@@ -1504,56 +1527,57 @@
             this.cmdSystemEdit.Location = new System.Drawing.Point(156, 435);
             this.cmdSystemEdit.Name = "cmdSystemEdit";
             this.cmdSystemEdit.Size = new System.Drawing.Size(110, 23);
-            this.cmdSystemEdit.TabIndex = 125;
+            this.cmdSystemEdit.TabIndex = 15;
             this.cmdSystemEdit.Text = "Edit System";
-            this.cmdSystemEdit.UseVisualStyleBackColor = true;
+            this.cmdSystemEdit.UseVisualStyleBackColor = false;
+            this.cmdSystemEdit.Click += new System.EventHandler(this.cmdSystemEdit_Click);
             // 
             // cbSystemNeedsPermit
             // 
             this.cbSystemNeedsPermit.AutoSize = true;
-            this.cbSystemNeedsPermit.Location = new System.Drawing.Point(305, 260);
+            this.cbSystemNeedsPermit.Location = new System.Drawing.Point(89, 259);
             this.cbSystemNeedsPermit.Name = "cbSystemNeedsPermit";
             this.cbSystemNeedsPermit.ReadOnly = false;
             this.cbSystemNeedsPermit.Size = new System.Drawing.Size(89, 17);
-            this.cbSystemNeedsPermit.TabIndex = 118;
+            this.cbSystemNeedsPermit.TabIndex = 6;
             this.cbSystemNeedsPermit.Text = "Needs Permit";
             this.cbSystemNeedsPermit.UseVisualStyleBackColor = true;
             // 
             // cmdSystemNew
             // 
-            this.cmdSystemNew.Location = new System.Drawing.Point(156, 464);
+            this.cmdSystemNew.Location = new System.Drawing.Point(272, 435);
             this.cmdSystemNew.Name = "cmdSystemNew";
             this.cmdSystemNew.Size = new System.Drawing.Size(110, 23);
-            this.cmdSystemNew.TabIndex = 62;
+            this.cmdSystemNew.TabIndex = 16;
             this.cmdSystemNew.Text = "Add System";
             this.cmdSystemNew.UseVisualStyleBackColor = true;
             this.cmdSystemNew.Click += new System.EventHandler(this.cmdSystemNew_Click);
             // 
-            // cmdSystemChange
+            // cmdSystemSave
             // 
-            this.cmdSystemChange.Location = new System.Drawing.Point(272, 464);
-            this.cmdSystemChange.Name = "cmdSystemChange";
-            this.cmdSystemChange.Size = new System.Drawing.Size(110, 23);
-            this.cmdSystemChange.TabIndex = 61;
-            this.cmdSystemChange.Text = "Save Changes";
-            this.cmdSystemChange.UseVisualStyleBackColor = true;
-            this.cmdSystemChange.Click += new System.EventHandler(this.cmdSystemChange_Click);
+            this.cmdSystemSave.Location = new System.Drawing.Point(272, 473);
+            this.cmdSystemSave.Name = "cmdSystemSave";
+            this.cmdSystemSave.Size = new System.Drawing.Size(110, 23);
+            this.cmdSystemSave.TabIndex = 18;
+            this.cmdSystemSave.Text = "Save Changes";
+            this.cmdSystemSave.UseVisualStyleBackColor = true;
+            this.cmdSystemSave.Click += new System.EventHandler(this.cmdSystemSave_Click);
             // 
             // txtSystemUpdatedAt
             // 
             this.txtSystemUpdatedAt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemUpdatedAt.Location = new System.Drawing.Point(115, 372);
+            this.txtSystemUpdatedAt.Location = new System.Drawing.Point(295, 372);
             this.txtSystemUpdatedAt.Name = "txtSystemUpdatedAt";
             this.txtSystemUpdatedAt.ReadOnly = true;
             this.txtSystemUpdatedAt.Size = new System.Drawing.Size(151, 21);
-            this.txtSystemUpdatedAt.TabIndex = 59;
+            this.txtSystemUpdatedAt.TabIndex = 14;
             this.txtSystemUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label63
             // 
             this.label63.AutoSize = true;
             this.label63.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label63.Location = new System.Drawing.Point(23, 375);
+            this.label63.Location = new System.Drawing.Point(203, 375);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(48, 13);
             this.label63.TabIndex = 58;
@@ -1564,17 +1588,17 @@
             // 
             this.cmbSystemPrimaryEconomy.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbSystemPrimaryEconomy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemPrimaryEconomy.Location = new System.Drawing.Point(117, 312);
+            this.cmbSystemPrimaryEconomy.Location = new System.Drawing.Point(295, 309);
             this.cmbSystemPrimaryEconomy.Name = "cmbSystemPrimaryEconomy";
             this.cmbSystemPrimaryEconomy.ReadOnly = false;
             this.cmbSystemPrimaryEconomy.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemPrimaryEconomy.TabIndex = 55;
+            this.cmbSystemPrimaryEconomy.TabIndex = 13;
             // 
             // label65
             // 
             this.label65.AutoSize = true;
             this.label65.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label65.Location = new System.Drawing.Point(25, 315);
+            this.label65.Location = new System.Drawing.Point(203, 312);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(88, 13);
             this.label65.TabIndex = 54;
@@ -1584,37 +1608,39 @@
             // 
             this.cmbSystemSecurity.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbSystemSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemSecurity.Location = new System.Drawing.Point(117, 286);
+            this.cmbSystemSecurity.Location = new System.Drawing.Point(295, 174);
             this.cmbSystemSecurity.Name = "cmbSystemSecurity";
             this.cmbSystemSecurity.ReadOnly = false;
             this.cmbSystemSecurity.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemSecurity.TabIndex = 53;
+            this.cmbSystemSecurity.TabIndex = 8;
+            this.cmbSystemSecurity.SelectedIndexChanged += new System.EventHandler(this.cmbSystemSecurity_SelectedIndexChanged);
             // 
             // label66
             // 
             this.label66.AutoSize = true;
             this.label66.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label66.Location = new System.Drawing.Point(25, 289);
+            this.label66.Location = new System.Drawing.Point(203, 179);
             this.label66.Name = "label66";
             this.label66.Size = new System.Drawing.Size(45, 13);
             this.label66.TabIndex = 52;
             this.label66.Text = "Security";
+            this.label66.Click += new System.EventHandler(this.label66_Click);
             // 
             // cmbSystemState
             // 
             this.cmbSystemState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbSystemState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemState.Location = new System.Drawing.Point(117, 260);
+            this.cmbSystemState.Location = new System.Drawing.Point(295, 283);
             this.cmbSystemState.Name = "cmbSystemState";
             this.cmbSystemState.ReadOnly = false;
             this.cmbSystemState.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemState.TabIndex = 51;
+            this.cmbSystemState.TabIndex = 12;
             // 
             // label67
             // 
             this.label67.AutoSize = true;
             this.label67.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label67.Location = new System.Drawing.Point(25, 263);
+            this.label67.Location = new System.Drawing.Point(203, 286);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(32, 13);
             this.label67.TabIndex = 50;
@@ -1624,17 +1650,17 @@
             // 
             this.cmbSystemAllegiance.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbSystemAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemAllegiance.Location = new System.Drawing.Point(117, 234);
+            this.cmbSystemAllegiance.Location = new System.Drawing.Point(295, 257);
             this.cmbSystemAllegiance.Name = "cmbSystemAllegiance";
             this.cmbSystemAllegiance.ReadOnly = false;
             this.cmbSystemAllegiance.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemAllegiance.TabIndex = 49;
+            this.cmbSystemAllegiance.TabIndex = 11;
             // 
             // label68
             // 
             this.label68.AutoSize = true;
             this.label68.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label68.Location = new System.Drawing.Point(25, 237);
+            this.label68.Location = new System.Drawing.Point(203, 260);
             this.label68.Name = "label68";
             this.label68.Size = new System.Drawing.Size(56, 13);
             this.label68.TabIndex = 48;
@@ -1644,17 +1670,17 @@
             // 
             this.cmbSystemGovernment.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbSystemGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemGovernment.Location = new System.Drawing.Point(117, 208);
+            this.cmbSystemGovernment.Location = new System.Drawing.Point(295, 228);
             this.cmbSystemGovernment.Name = "cmbSystemGovernment";
             this.cmbSystemGovernment.ReadOnly = false;
             this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemGovernment.TabIndex = 47;
+            this.cmbSystemGovernment.TabIndex = 10;
             // 
             // label69
             // 
             this.label69.AutoSize = true;
             this.label69.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label69.Location = new System.Drawing.Point(25, 211);
+            this.label69.Location = new System.Drawing.Point(203, 231);
             this.label69.Name = "label69";
             this.label69.Size = new System.Drawing.Size(65, 13);
             this.label69.TabIndex = 46;
@@ -1666,18 +1692,19 @@
             this.txtSystemPopulation.Culture = new System.Globalization.CultureInfo("");
             this.txtSystemPopulation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSystemPopulation.HidePromptOnLeave = true;
-            this.txtSystemPopulation.Location = new System.Drawing.Point(117, 182);
+            this.txtSystemPopulation.Location = new System.Drawing.Point(295, 147);
             this.txtSystemPopulation.Name = "txtSystemPopulation";
             this.txtSystemPopulation.Size = new System.Drawing.Size(151, 21);
-            this.txtSystemPopulation.TabIndex = 45;
+            this.txtSystemPopulation.TabIndex = 7;
             this.txtSystemPopulation.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtSystemPopulation.TextMaskFormat = System.Windows.Forms.MaskFormat.ExcludePromptAndLiterals;
+            this.txtSystemPopulation.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.txtSystemPopulation_MaskInputRejected);
             // 
             // label62
             // 
             this.label62.AutoSize = true;
             this.label62.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label62.Location = new System.Drawing.Point(25, 185);
+            this.label62.Location = new System.Drawing.Point(203, 152);
             this.label62.Name = "label62";
             this.label62.Size = new System.Drawing.Size(57, 13);
             this.label62.TabIndex = 44;
@@ -1685,17 +1712,18 @@
             // 
             // txtSystemFaction
             // 
+            this.txtSystemFaction.BackColor = System.Drawing.SystemColors.Window;
             this.txtSystemFaction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemFaction.Location = new System.Drawing.Point(117, 156);
+            this.txtSystemFaction.Location = new System.Drawing.Point(295, 203);
             this.txtSystemFaction.Name = "txtSystemFaction";
             this.txtSystemFaction.Size = new System.Drawing.Size(151, 21);
-            this.txtSystemFaction.TabIndex = 43;
+            this.txtSystemFaction.TabIndex = 9;
             // 
             // label61
             // 
             this.label61.AutoSize = true;
             this.label61.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label61.Location = new System.Drawing.Point(25, 159);
+            this.label61.Location = new System.Drawing.Point(203, 208);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(42, 13);
             this.label61.TabIndex = 42;
@@ -1704,17 +1732,17 @@
             // txtSystemZ
             // 
             this.txtSystemZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemZ.Location = new System.Drawing.Point(305, 208);
+            this.txtSystemZ.Location = new System.Drawing.Point(89, 203);
             this.txtSystemZ.Name = "txtSystemZ";
             this.txtSystemZ.Size = new System.Drawing.Size(92, 21);
-            this.txtSystemZ.TabIndex = 41;
+            this.txtSystemZ.TabIndex = 5;
             this.txtSystemZ.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label60
             // 
             this.label60.AutoSize = true;
             this.label60.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label60.Location = new System.Drawing.Point(287, 211);
+            this.label60.Location = new System.Drawing.Point(71, 208);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(12, 13);
             this.label60.TabIndex = 40;
@@ -1723,17 +1751,17 @@
             // txtSystemY
             // 
             this.txtSystemY.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemY.Location = new System.Drawing.Point(305, 181);
+            this.txtSystemY.Location = new System.Drawing.Point(89, 174);
             this.txtSystemY.Name = "txtSystemY";
             this.txtSystemY.Size = new System.Drawing.Size(92, 21);
-            this.txtSystemY.TabIndex = 39;
+            this.txtSystemY.TabIndex = 4;
             this.txtSystemY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label59
             // 
             this.label59.AutoSize = true;
             this.label59.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label59.Location = new System.Drawing.Point(287, 184);
+            this.label59.Location = new System.Drawing.Point(71, 179);
             this.label59.Name = "label59";
             this.label59.Size = new System.Drawing.Size(12, 13);
             this.label59.TabIndex = 38;
@@ -1742,17 +1770,17 @@
             // txtSystemX
             // 
             this.txtSystemX.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemX.Location = new System.Drawing.Point(305, 154);
+            this.txtSystemX.Location = new System.Drawing.Point(89, 147);
             this.txtSystemX.Name = "txtSystemX";
             this.txtSystemX.Size = new System.Drawing.Size(92, 21);
-            this.txtSystemX.TabIndex = 37;
+            this.txtSystemX.TabIndex = 3;
             this.txtSystemX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label58
             // 
             this.label58.AutoSize = true;
             this.label58.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label58.Location = new System.Drawing.Point(287, 157);
+            this.label58.Location = new System.Drawing.Point(71, 152);
             this.label58.Name = "label58";
             this.label58.Size = new System.Drawing.Size(12, 13);
             this.label58.TabIndex = 36;
@@ -1761,11 +1789,11 @@
             // txtSystemName
             // 
             this.txtSystemName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemName.Location = new System.Drawing.Point(117, 89);
+            this.txtSystemName.Location = new System.Drawing.Point(89, 89);
             this.txtSystemName.Name = "txtSystemName";
             this.txtSystemName.ReadOnly = true;
             this.txtSystemName.Size = new System.Drawing.Size(254, 21);
-            this.txtSystemName.TabIndex = 35;
+            this.txtSystemName.TabIndex = 2;
             this.txtSystemName.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
             // 
             // label57
@@ -1781,11 +1809,11 @@
             // txtSystemId
             // 
             this.txtSystemId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSystemId.Location = new System.Drawing.Point(117, 63);
+            this.txtSystemId.Location = new System.Drawing.Point(89, 63);
             this.txtSystemId.Name = "txtSystemId";
             this.txtSystemId.ReadOnly = true;
             this.txtSystemId.Size = new System.Drawing.Size(66, 20);
-            this.txtSystemId.TabIndex = 33;
+            this.txtSystemId.TabIndex = 1;
             this.txtSystemId.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label56
@@ -4233,8 +4261,8 @@
             this.tabSystemData.ResumeLayout(false);
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
-            this.groupBox13.ResumeLayout(false);
-            this.groupBox13.PerformLayout();
+            this.gbSystemSystemData.ResumeLayout(false);
+            this.gbSystemSystemData.PerformLayout();
             this.tabPriceAnalysis.ResumeLayout(false);
             this.tabPriceAnalysis.PerformLayout();
             this.gbSorting.ResumeLayout(false);
@@ -4588,7 +4616,7 @@
         private System.Windows.Forms.Label label69;
         private System.Windows.Forms.Button cmdLoadCurrentSystem;
         private System.Windows.Forms.Button cmdSystemNew;
-        private System.Windows.Forms.Button cmdSystemChange;
+        private System.Windows.Forms.Button cmdSystemSave;
         private System.Windows.Forms.Label lblSystemRenameHint;
         private System.Windows.Forms.CheckBox cbIncludeUnknownDTS;
         private System.Windows.Forms.Label label70;
@@ -4600,7 +4628,7 @@
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.Label lblStationRenameHint;
         private System.Windows.Forms.Button cmdStationNew;
-        private System.Windows.Forms.Button cmdStationChange;
+        private System.Windows.Forms.Button cmdStationSave;
         private System.Windows.Forms.ComboBox_ro cmbStationType;
         private System.Windows.Forms.Label label75;
         private System.Windows.Forms.ComboBox_ro cmbStationState;
@@ -4646,14 +4674,16 @@
         private System.Windows.Forms.Button cmdStationEdit;
         private System.Windows.Forms.Button cmdSystemEdit;
         private System.Windows.Forms.GroupBox groupBox14;
-        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.GroupBox gbSystemSystemData;
         private System.Windows.Forms.Label lblStationCountTotal;
         private System.Windows.Forms.Label label90;
         private System.Windows.Forms.Label label82;
         private System.Windows.Forms.Label label84;
-        private System.Windows.Forms.ComboBox_ro cmbAllStations;
+        private System.Windows.Forms.ComboBox_ro cmbSystemsAllSystems;
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.Label lblSystemCountTotal;
+        private System.Windows.Forms.Button cmdSystemCancel;
+        private System.Windows.Forms.Button cmdStationCancel;
     }
 }
 

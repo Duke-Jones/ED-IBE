@@ -18,7 +18,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             }
             else if ((Object1 != null) && (Object2 != null))
             {
-                if (Object2.Equals(Object2))
+                if (Object1.Equals(Object2))
                     retValue = true;
                 else
                     retValue = false;

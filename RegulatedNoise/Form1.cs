@@ -6131,22 +6131,23 @@ namespace RegulatedNoise
 
         }
 
-        private void loadSystemData(string Systemname)
+        private void loadSystemData(string Systemname, bool isNew=false)
         {
 
             setSystemEditable(false);
 
             m_SystemLoadingValues = true;
 
-            cmbAllStations.SelectedValue = Systemname;
-
-            if (Systemname.Equals(ID_NEWITEM))
+            if (isNew)
             {
+                cmbSystemsAllSystems.SelectedIndex = -1;
                 m_loadedSystemdata = new EDSystem();
+                m_loadedSystemdata.Name = Systemname;
                 m_SystemIsNew = true;
             }
             else
             {
+                cmbSystemsAllSystems.SelectedValue = Systemname;
                 m_loadedSystemdata = _Milkyway.getSystem(Systemname);
                 m_SystemIsNew = false;
             }
@@ -6174,18 +6175,19 @@ namespace RegulatedNoise
                 cmbSystemAllegiance.Text = m_loadedSystemdata.Allegiance.NToString();
                 cmbSystemGovernment.Text = m_loadedSystemdata.Government.NToString();
 
-                setSystemSaveButton(true, false);
+                setSystemEditable(isNew);
 
-                if (_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    txtSystemName.ReadOnly = true;
-                    lblSystemRenameHint.Visible = true;
-                }
-                else
-                {
-                    txtSystemName.ReadOnly = false;
-                    lblSystemRenameHint.Visible = false;
-                }
+                cmdSystemNew.Enabled    = !isNew;
+                cmdSystemEdit.Enabled   = !isNew;
+                cmdSystemSave.Enabled   = isNew;
+                cmdSystemCancel.Enabled = cmdSystemSave.Enabled;
+
+                cmdStationNew.Enabled       = !isNew;
+                cmdStationEdit.Enabled      = !isNew;
+                cmdStationSave.Enabled      = !isNew;
+                cmdStationCancel.Enabled    = cmdStationSave.Enabled;
+
+                cmbSystemsAllSystems.ReadOnly = isNew;
 
                 List<EDStation> StationsInSystem = _Milkyway.getStations(Systemname);
                 foreach (var Station in StationsInSystem)
@@ -6196,6 +6198,9 @@ namespace RegulatedNoise
                 lblStationCount.Text = StationsInSystem.Count().ToString();
 
                 cmbStationStations.SelectedIndex = 0;
+
+                
+
             }
             else
             {
@@ -6216,7 +6221,19 @@ namespace RegulatedNoise
                 cmbSystemAllegiance.Text = Program.NULLSTRING;
                 cmbSystemGovernment.Text = Program.NULLSTRING;
 
-                setSystemSaveButton(true, false);
+                setSystemEditable(false);
+
+                cmdSystemNew.Enabled    = true;
+                cmdSystemEdit.Enabled   = false;
+                cmdSystemSave.Enabled   = false;
+                cmdSystemCancel.Enabled = cmdSystemSave.Enabled;
+
+                cmdStationNew.Enabled       = false;
+                cmdStationEdit.Enabled      = false;
+                cmdStationSave.Enabled      = false;
+                cmdStationCancel.Enabled    = cmdStationSave.Enabled;
+
+                cmbSystemsAllSystems.ReadOnly = false;
 
                 txtSystemName.ReadOnly = false;
                 lblSystemRenameHint.Visible = false;
@@ -6272,7 +6289,11 @@ namespace RegulatedNoise
                 cbStationHasRefuel.CheckState = m_loadedStationdata.HasRefuel.toCheckState();
                 cbStationHasRepair.CheckState = m_loadedStationdata.HasRepair.toCheckState();
 
-                setStationSaveButton(true, false);
+                setStationEditable(false);
+
+                cmdStationNew.Enabled    = true;
+                cmdStationEdit.Enabled   = true;
+                cmdStationSave.Enabled   = false;
 
                 cmbStationStations.Text = Stationname;
 
@@ -6313,9 +6334,12 @@ namespace RegulatedNoise
                 cbStationHasRefuel.CheckState = CheckState.Unchecked;
                 cbStationHasRepair.CheckState = CheckState.Unchecked;
 
-                setStationSaveButton(true, false);
+                setStationEditable(false);
 
-                txtStationName.ReadOnly = false;
+                cmdStationNew.Enabled    = true;
+                cmdStationEdit.Enabled   = false;
+                cmdStationSave.Enabled   = false;
+
                 lblStationRenameHint.Visible = false;
 
                 cmbStationStations.Text = "";
@@ -6521,9 +6545,9 @@ namespace RegulatedNoise
             this.cmbStationEconomies.SelectedIndexChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
             this.cmbStationStations.SelectedIndexChanged += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
 
-            this.cmbAllStations.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
-            this.cmbAllStations.ValueMember     = "Name";
-            this.cmbAllStations.DisplayMember   = "Name";
+            this.cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
+            this.cmbSystemsAllSystems.ValueMember     = "Name";
+            this.cmbSystemsAllSystems.DisplayMember   = "Name";
         }
 
         void txtSystem_GotFocus(object sender, EventArgs e)
@@ -6543,13 +6567,12 @@ namespace RegulatedNoise
                         _propertyInfo = _type.GetProperty(((MaskedTextBox)sender).Name.Substring(9));
                         break;
                     case "ComboBox":
+                    case "ComboBox_ro":
                         _propertyInfo = _type.GetProperty(((ComboBox)sender).Name.Substring(9));
                         break;
                 }
 
                 m_lastSystemValue = (_propertyInfo.GetValue(m_currentSystemdata, null)).NToString();
-
-                setSystemSaveButton();
 
             }
             catch (Exception ex)
@@ -6575,12 +6598,11 @@ namespace RegulatedNoise
                         _propertyInfo = _type.GetProperty(((MaskedTextBox)sender).Name.Substring(10));
                         break;
                     case "ComboBox":
+                    case "ComboBox_ro":
                         _propertyInfo = _type.GetProperty(((ComboBox)sender).Name.Substring(10));
                         break;
                 }
                 m_lastStationValue = (_propertyInfo.GetValue(m_currentStationdata, null)).NToString();
-
-                setStationSaveButton();
 
             }
             catch (Exception ex)
@@ -6657,7 +6679,6 @@ namespace RegulatedNoise
                     break;
             }
 
-            setSystemSaveButton();
         }
 
         void txtStation_LostFocus(object sender, EventArgs e)
@@ -6719,8 +6740,6 @@ namespace RegulatedNoise
                     break;
             }
 
-
-            setStationSaveButton();
         }
 
         private void CheckBox_StationSystem_CheckedChanged(object sender, EventArgs e)
@@ -6760,15 +6779,23 @@ namespace RegulatedNoise
                     break;
             }
 
-            setSystemSaveButton();
-
         }
 
         private void txtSystem_TextChanged(object sender, EventArgs e)
         {
             if (!m_SystemLoadingValues)
             {
-                setSystemSaveButton(true, true);
+                cmdSystemNew.Enabled    = false;
+                cmdSystemEdit.Enabled   = false;
+                cmdSystemSave.Enabled   = true;
+                cmdSystemCancel.Enabled = cmdSystemSave.Enabled;
+
+                cmdStationNew.Enabled       = false;
+                cmdStationEdit.Enabled      = false;
+                cmdStationSave.Enabled      = false;
+                cmdStationCancel.Enabled    = cmdStationSave.Enabled;
+
+                cmbSystemsAllSystems.ReadOnly = true;
             }
         }
 
@@ -6776,11 +6803,13 @@ namespace RegulatedNoise
         {
             if (!m_StationLoadingValues)
             {
-                setStationSaveButton(true, true);
+                cmdStationNew.Enabled    = false;
+                cmdStationEdit.Enabled   = false;
+                cmdStationSave.Enabled   = true;
             }
         }
 
-        private void cmdSystemChange_Click(object sender, EventArgs e)
+        private void cmdSystemSave_Click(object sender, EventArgs e)
         {
             if (m_SystemIsNew)
             {
@@ -6794,8 +6823,23 @@ namespace RegulatedNoise
 
             if (MessageBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
+                Cursor = Cursors.WaitCursor;
                 _Milkyway.ChangeAddSystem(m_currentSystemdata);
-                setSystemSaveButton(true, false);
+                setSystemEditable(false);
+
+                m_SystemLoadingValues = true;
+
+                cmbSystemsAllSystems.DataSource      = null;
+                cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
+                cmbSystemsAllSystems.ValueMember     = "Name";
+                cmbSystemsAllSystems.DisplayMember   = "Name";
+                cmbSystemsAllSystems.Refresh();
+
+                m_SystemLoadingValues = false;
+
+                loadSystemData(m_currentSystemdata.Name);
+                loadStationData(m_currentSystemdata.Name, txtStationName.Text);
+                Cursor = Cursors.Default;
             }
         }
 
@@ -6822,48 +6866,49 @@ namespace RegulatedNoise
 
         private void cmdSystemNew_Click(object sender, EventArgs e)
         {
-            loadSystemData(ID_NEWITEM);
+            string newSystemname = tbCurrentSystemFromLogs.Text;
+
+            if(InputBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == System.Windows.Forms.DialogResult.OK)
+            { 
+                
+                EDSystem existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newSystemname, StringComparison.InvariantCultureIgnoreCase)));
+                if (existing != null)
+                {
+                    MessageBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                else
+                {
+                    setSystemEditable(true);
+
+                    cmdSystemNew.Enabled        = false;
+                    cmdSystemEdit.Enabled       = false;
+                    cmdSystemSave.Enabled       = true;
+                    cmdSystemCancel.Enabled     = cmdSystemSave.Enabled;
+
+                    cmdStationNew.Enabled       = false;
+                    cmdStationEdit.Enabled      = false;
+                    cmdStationSave.Enabled      = false;
+                    cmdStationCancel.Enabled    = cmdStationSave.Enabled;
+
+                    cmbSystemsAllSystems.ReadOnly = true;
+
+                    this.cmbSystemsAllSystems.SelectedIndexChanged -= new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+                    // it twice needed (?!)
+                    cmbSystemsAllSystems.SelectedIndex = -1;
+                    cmbSystemsAllSystems.SelectedIndex = -1;
+                    this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+
+                    cmbStationStations.ReadOnly = false;
+
+                    loadSystemData(newSystemname, true);
+                }
+            }
         }
 
         private void cmdStationNew_Click(object sender, EventArgs e)
         {
             loadStationData(m_currentSystemdata.Name, ID_NEWITEM);
-        }
-
-        private void setSystemSaveButton(bool force = false, bool forceValue = true)
-        {
-            if (m_SystemIsNew)
-            {
-                if (!String.IsNullOrEmpty(m_currentSystemdata.Name))
-                    cmdSystemChange.Enabled = true;
-                else
-                    cmdSystemChange.Enabled = false;
-            }
-            else
-            {
-                if (force)
-                    cmdSystemChange.Enabled = forceValue;
-                else
-                    cmdSystemChange.Enabled = !m_currentSystemdata.EqualsED(m_loadedSystemdata);
-            }
-        }
-
-        private void setStationSaveButton(bool force = false, bool forceValue = true)
-        {
-            if (m_StationIsNew)
-            {
-                if (!String.IsNullOrEmpty(m_currentStationdata.Name))
-                    cmdStationChange.Enabled = true;
-                else
-                    cmdStationChange.Enabled = false;
-            }
-            else
-            {
-                if (force)
-                    cmdStationChange.Enabled = forceValue;
-                else
-                    cmdStationChange.Enabled = !m_currentStationdata.EqualsED(m_loadedStationdata);
-            }
         }
 
         private void lbStationEconomies_SelectedIndexChanged(object sender, EventArgs e)
@@ -6903,53 +6948,106 @@ namespace RegulatedNoise
                 return;
             }
 
-            txtStationId.ReadOnly = true;
-            txtStationName.ReadOnly = true;
-            cmbStationMaxLandingPadSize.ReadOnly = !enabled;
-            txtStationDistanceToStar.ReadOnly = !enabled;
-            txtStationFaction.ReadOnly = !enabled;
-            cmbStationGovernment.ReadOnly = !enabled;
-            cmbStationAllegiance.ReadOnly = !enabled;
-            cmbStationState.ReadOnly = !enabled;
-            cmbStationType.ReadOnly = !enabled;
+            txtStationId.ReadOnly                   = true;
+            txtStationName.ReadOnly                 = true;
+            cmbStationMaxLandingPadSize.ReadOnly    = !enabled;
+            txtStationDistanceToStar.ReadOnly       = !enabled;
+            txtStationFaction.ReadOnly              = !enabled;
+            cmbStationGovernment.ReadOnly           = !enabled;
+            cmbStationAllegiance.ReadOnly           = !enabled;
+            cmbStationState.ReadOnly                = !enabled;
+            cmbStationType.ReadOnly                 = !enabled;
 
-            cbStationHasCommodities.ReadOnly = !enabled;
-            cbStationHasBlackmarket.ReadOnly = !enabled;
-            cbStationHasOutfitting.ReadOnly = !enabled;
-            cbStationHasShipyard.ReadOnly = !enabled;
-            cbStationHasRearm.ReadOnly = !enabled;
-            cbStationHasRefuel.ReadOnly = !enabled;
-            cbStationHasRepair.ReadOnly = !enabled;
+            cbStationHasCommodities.ReadOnly        = !enabled;
+            cbStationHasBlackmarket.ReadOnly        = !enabled;
+            cbStationHasOutfitting.ReadOnly         = !enabled;
+            cbStationHasShipyard.ReadOnly           = !enabled;
+            cbStationHasRearm.ReadOnly              = !enabled;
+            cbStationHasRefuel.ReadOnly             = !enabled;
+            cbStationHasRepair.ReadOnly             = !enabled;
 
-            cmbStationEconomies.ReadOnly = !enabled;
+            cmbStationEconomies.ReadOnly            = !enabled;
 
-            txtStationUpdatedAt.ReadOnly = true;
+            txtStationUpdatedAt.ReadOnly            = true;
         }
+
 
         private void setSystemEditable(bool enabled)
         {
-            if(this.InvokeRequired)
-            { 
-                this.Invoke(new delBoolean(setSystemEditable), enabled);
-                return;
-            }
+            try
+            {
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new delBoolean(setSystemEditable), enabled);
+                    return;
+                }
 
-            txtSystemId.ReadOnly = true;
-            txtSystemName.ReadOnly = true;
-            txtSystemX.ReadOnly = !enabled;
-            txtSystemY.ReadOnly = !enabled;
-            txtSystemZ.ReadOnly = !enabled;
-            txtSystemFaction.ReadOnly = !enabled;
-            txtSystemPopulation.ReadOnly = !enabled;
-            cmbSystemGovernment.ReadOnly = !enabled;
-            cmbSystemAllegiance.ReadOnly = !enabled;
-            cmbSystemState.ReadOnly = !enabled;
-            cmbSystemSecurity.ReadOnly = !enabled;
-            cmbSystemPrimaryEconomy.ReadOnly = !enabled;
-            cbSystemNeedsPermit.ReadOnly = !enabled;
-            txtSystemUpdatedAt.ReadOnly = true;
+                txtSystemId.ReadOnly                = true;
+                txtSystemX.ReadOnly                 = !enabled;
+                txtSystemY.ReadOnly                 = !enabled;
+                txtSystemZ.ReadOnly                 = !enabled;
+                txtSystemFaction.ReadOnly           = !enabled;
+                txtSystemPopulation.ReadOnly        = !enabled;
+                cmbSystemGovernment.ReadOnly        = !enabled;
+                cmbSystemAllegiance.ReadOnly        = !enabled;
+                cmbSystemState.ReadOnly             = !enabled;
+                cmbSystemSecurity.ReadOnly          = !enabled;
+                cmbSystemPrimaryEconomy.ReadOnly    = !enabled;
+                cbSystemNeedsPermit.ReadOnly        = !enabled;
+                txtSystemUpdatedAt.ReadOnly         = true;
+
+                if(enabled)
+                    if (_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        txtSystemName.ReadOnly      = true;
+                        lblSystemRenameHint.Visible = true;
+                    }
+                    else
+                    {
+                        txtSystemName.ReadOnly      = false;
+                        lblSystemRenameHint.Visible = false;
+                    }
+                else
+                {
+                    txtSystemName.ReadOnly          = false;
+                    lblSystemRenameHint.Visible     = false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while setting ReadOnly-Property", ex);       
+            }
         }
-        
+
+        private void cmdSystemEdit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                setSystemEditable(true);
+
+                cmdSystemNew.Enabled        = false;
+                cmdSystemEdit.Enabled       = false;
+                cmdSystemSave.Enabled       = true;
+                cmdSystemCancel.Enabled     = cmdSystemSave.Enabled;
+
+                cmdStationNew.Enabled       = false;
+                cmdStationEdit.Enabled      = false;
+                cmdStationSave.Enabled      = false;
+                cmdStationCancel.Enabled    = cmdStationSave.Enabled;
+
+                cmbSystemsAllSystems.ReadOnly = true;
+
+                cmbStationStations.ReadOnly = true;
+
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error when starting station edit");
+            }
+        }
+
 
 #endregion
 
@@ -6967,11 +7065,6 @@ namespace RegulatedNoise
             SaveSettings();
 
             
-        }
-
-        private void comboBox12_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
@@ -6993,16 +7086,41 @@ namespace RegulatedNoise
 
         private void cmdTest_Click(object sender, EventArgs e)
         {
-            string Test = null;
-
-            Debug.Print(Test.NToString());
+            this.cmbSystemsAllSystems.SelectedIndexChanged -= new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+            cmbSystemsAllSystems.SelectedIndex = -1;
+            cmbSystemsAllSystems.SelectedIndex = -1;
+            this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
         }
 
         private void cmbAllStations_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(!m_SystemLoadingValues)
-                loadSystemData(cmbAllStations.SelectedValue.ToString());
+                loadSystemData(cmbSystemsAllSystems.SelectedValue.ToString());
         }
+
+        private void txtSystemPopulation_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+        }
+
+        private void cmdSystemCancel_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Dismiss changes ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+            {
+                loadSystemData(txtSystemName.Text);
+                loadStationData(txtSystemName.Text, txtStationName.Text);
+            }
+        }
+
+        private void label66_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbSystemSecurity_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
 
     }
 }

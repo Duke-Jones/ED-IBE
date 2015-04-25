@@ -24,10 +24,13 @@ todo:
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.17_2
+   * data system can be added and changed - station data still open
+-------------------------------------------------------------------------------------      
 1.84_0.17_1
    * set "unset"-value for EDDB station and system properties to null
    * option to cancel while asked for needed directorys on first start
-   * systems in general now viewable, not only the current system
+   * systems in general now editable, not only the current system
    * cleaned up system tab
    * added new helper classes "controls_ext", "Extensions", "ObjectCompare"
 -------------------------------------------------------------------------------------      

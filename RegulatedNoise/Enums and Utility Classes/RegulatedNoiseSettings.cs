@@ -332,7 +332,29 @@ namespace RegulatedNoise
                                   int.Parse(UiColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
         }
 
-    }
+        /// <summary>
+        /// returns the UI color as color object
+        /// </summary>
+        /// <returns></returns>
+        public Color getForegroundColor()
+        {
+            return Color.FromArgb(int.Parse(ForegroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber), 
+                                  int.Parse(ForegroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
+                                  int.Parse(ForegroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+        }
+
+            /// <summary>
+        /// returns the UI color as color object
+        /// </summary>
+        /// <returns></returns>
+        public Color getBackgroundColor()
+        {
+            return Color.FromArgb(int.Parse(BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber), 
+                                  int.Parse(BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
+                                  int.Parse(BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+        }
+
+}
 
     public partial class Form1
     {

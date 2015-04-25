@@ -810,7 +810,7 @@ namespace RegulatedNoise.EDDB_Data
 
                 if(mergedSystems.Count > 0)
                     newSystemIndex = mergedSystems.Max(X => X.Id) + 1;
-                ownSystems.Add(new EDSystem(newSystemIndex, m_currentSystemdata));
+                mergedSystems.Add(new EDSystem(newSystemIndex, m_currentSystemdata));
             }
 
             if(m_cachedLocations.ContainsKey(m_currentSystemdata.Name))

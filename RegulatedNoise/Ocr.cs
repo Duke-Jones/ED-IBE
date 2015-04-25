@@ -147,14 +147,7 @@ namespace RegulatedNoise
 
             int min=100, max=0;
 
-            if (textRowLocations.Count < 1)
-            {
-                _logger.Log("No text row locations found...");
-                _callingForm.GenericSingleParameterMessage(null, AppDelegateType.MaximizeWindow);
-                MessageBox.Show(
-                    "Couldn't find any text row locations to process.  Have you changed the UI somehow?  You might like to investigate the \"I've changed the UI colour\" button on the OCR Calibration tab...");
-            }
-            else
+            if (textRowLocations.Count > 0)
             {
                 // check if the last line is complete or RNGraphics.Cropped -> if it's RNGraphics.Cropped we delete it
                 var finalRowLocation = textRowLocations[textRowLocations.Count - 1];
@@ -172,8 +165,6 @@ namespace RegulatedNoise
                 if (finalRowLocation.Item2 - finalRowLocation.Item1 < (min - 2))
                     textRowLocations.RemoveAt(textRowLocations.Count - 1);
  
-                //if(textRowLocations.ElementAt(textRowLocations.Count))
-                //textRowLocations[textRow].
             }
 
             Debug.Print("process screenshot " + screenshot);

@@ -56,6 +56,32 @@ namespace RegulatedNoise
             }
         }
 
-    }
+        static public void showError(Exception ex, string Infotext)
+        {
+            string Info;
 
+            // first log the complete exception 
+            _logger.Log(Infotext, true);
+            _logger.Log(ex.ToString(), true);
+            _logger.Log(ex.Message, true);
+            _logger.Log(ex.StackTrace, true);
+            if (ex.InnerException != null)
+                _logger.Log(ex.InnerException.ToString(), true);
+
+            if (Infotext.Trim().Length > 0) 
+                Info = Infotext + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine;
+            else
+                Info = ex.Message + Environment.NewLine;
+            
+            if (ex.InnerException != null)
+                Info += Environment.NewLine + ex.GetBaseException().Message;
+
+            Info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
+            Info += string.Format("(dumpfile \"RegulatedNoiseDump.dmp\" created)", Environment.NewLine, _logger.logPathName);
+
+            Program.CreateMiniDump("RegulatedNoiseDump.dmp");
+
+            MessageBox.Show(Info, "Exception occured",MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+    }
 }
