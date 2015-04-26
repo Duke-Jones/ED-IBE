@@ -103,6 +103,23 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         }
     }
     
+    
+    static class Extensions_StringArrayNullable
+    {
+        /// <summary>
+        /// clones a string array and return null if the source array is null
+        /// </summary>
+        /// <param name="thisString">a string or null</param>
+        /// <returns></returns>
+        public static string[] CloneN(this string[] thisStringArray)
+        {
+            if(thisStringArray == null)
+                return null;
+            else
+                return (string[])thisStringArray.Clone();
+        }
+    }
+
     static class Extensions_StringNullable
     {
         /// <summary>

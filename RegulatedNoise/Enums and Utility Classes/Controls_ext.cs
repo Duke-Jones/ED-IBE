@@ -38,12 +38,24 @@ namespace System.Windows.Forms
 
                     if (textBox.Parent == null)
                         this.Parent.Controls.Add(textBox);
+
+                    textBox.Font = this.Font;
                 }
                 else
                 {
                     this.Visible = true;
                     this.textBox.Visible = false;
                 }
+            }
+        }
+
+        public bool Visible_ro
+        {
+            get { return this.Visible; }
+            set
+            {
+                this.Visible           = value;
+                this.textBox.Visible   = value;
             }
         }
     }

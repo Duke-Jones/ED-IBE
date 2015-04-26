@@ -86,7 +86,10 @@ namespace RegulatedNoise.EDDB_Data
          /// <summary>
          /// creates a new station 
          /// </summary>
-        public EDStation(){}
+        public EDStation()
+        {
+            clear();
+        }
 
         /// <summary>
          /// creates a new station as a copy of another station
@@ -97,6 +100,8 @@ namespace RegulatedNoise.EDDB_Data
          /// <param name="sourceStation"></param>
         public EDStation(int newId, int sourceSystemID, EDStation sourceStation)
         {
+            clear();
+
             Id              = newId;
             SystemId        = sourceSystemID;
             getValues(sourceStation);   
@@ -122,10 +127,10 @@ namespace RegulatedNoise.EDDB_Data
             HasOutfitting         = null;
             HasShipyard           = null;
 
-            ImportCommodities     = null;
-            ExportCommodities     = null;
-            ProhibitedCommodities = null;
-            Economies             = null;
+            ImportCommodities     = new String[0];
+            ExportCommodities     = new String[0];
+            ProhibitedCommodities = new String[0];
+            Economies             = new String[0];
         }
 
         /// <summary>
@@ -195,10 +200,10 @@ namespace RegulatedNoise.EDDB_Data
             HasOutfitting         = ValueStation.HasOutfitting;
             HasShipyard           = ValueStation.HasShipyard;
 
-            ImportCommodities     = (string[])ValueStation.ImportCommodities.Clone();
-            ExportCommodities     = (string[])ValueStation.ExportCommodities.Clone();
-            ProhibitedCommodities = (string[])ValueStation.ProhibitedCommodities.Clone();
-            Economies             = (string[])ValueStation.Economies.Clone();
+            ImportCommodities     = ValueStation.ImportCommodities.CloneN();
+            ExportCommodities     = ValueStation.ExportCommodities.CloneN();
+            ProhibitedCommodities = ValueStation.ProhibitedCommodities.CloneN();
+            Economies             = ValueStation.Economies.CloneN();
 
         }
 

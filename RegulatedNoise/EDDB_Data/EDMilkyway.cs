@@ -769,14 +769,25 @@ namespace RegulatedNoise.EDDB_Data
         /// EDDB basedata will not be changed
         /// </summary>
         /// <param name="m_currentSystemdata">systemdata to be added</param>
-        internal void ChangeAddSystem(EDSystem m_currentSystemdata)
+        internal void ChangeAddSystem(EDSystem m_currentSystemdata, string oldSystemName=null)
         {
             EDSystem System;
             List<EDSystem> ownSystems = getSystems(enDataType.Data_Own);
             int newSystemIndex;
 
+            if(oldSystemName == null)
+                oldSystemName = m_currentSystemdata.Name;
+
+            if(!oldSystemName.Equals(m_currentSystemdata.Name))
+            {
+                // changing system name
+                var existing = getSystems(EDMilkyway.enDataType.Data_EDDB).Find(x => x.Name.Equals(oldSystemName, StringComparison.InvariantCultureIgnoreCase));
+                if (existing != null)
+                    throw new Exception("It's not allowed to rename a EDDB system");
+            }
+
             // 1st put the new values into our local list
-            System = ownSystems.Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.CurrentCultureIgnoreCase));
+            System = ownSystems.Find(x => x.Name.Equals(oldSystemName, StringComparison.CurrentCultureIgnoreCase));
             if(System != null)
             { 
                 // copy new values into existing system
@@ -797,7 +808,7 @@ namespace RegulatedNoise.EDDB_Data
             // 2nd put the new values into our merged list
             List<EDSystem> mergedSystems = getSystems(enDataType.Data_Merged);
 
-            System = mergedSystems.Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.CurrentCultureIgnoreCase));
+            System = mergedSystems.Find(x => x.Name.Equals(oldSystemName, StringComparison.CurrentCultureIgnoreCase));
             if(System != null)
             { 
                 // copy new values into existing system
@@ -813,8 +824,8 @@ namespace RegulatedNoise.EDDB_Data
                 mergedSystems.Add(new EDSystem(newSystemIndex, m_currentSystemdata));
             }
 
-            if(m_cachedLocations.ContainsKey(m_currentSystemdata.Name))
-                m_cachedLocations.Remove(m_currentSystemdata.Name);
+            if(m_cachedLocations.ContainsKey(oldSystemName))
+                m_cachedLocations.Remove(oldSystemName);
 
             saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
             saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
@@ -825,11 +836,14 @@ namespace RegulatedNoise.EDDB_Data
         /// EDDB basedata will not be changed
         /// </summary>
         /// <param name="m_currentSystemdata">systemdata to be added</param>
-        internal void ChangeAddStation(string Systemname, EDStation m_currentStationdata)
+        internal void ChangeAddStation(string Systemname, EDStation m_currentStationdata, string oldStationName=null)
         {
             EDSystem System;
             EDStation Station;
             int newStationIndex;
+
+            if(oldStationName == null)
+                oldStationName = m_currentStationdata.Name;
 
             List<EDSystem> ownSystems       = getSystems(enDataType.Data_Own);
             List<EDStation> ownStations     = getStations(enDataType.Data_Own);
