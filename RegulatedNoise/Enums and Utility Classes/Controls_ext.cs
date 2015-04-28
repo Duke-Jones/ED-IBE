@@ -54,8 +54,16 @@ namespace System.Windows.Forms
             get { return this.Visible; }
             set
             {
-                this.Visible           = value;
-                this.textBox.Visible   = value;
+                if (value)
+                {
+                    ReadOnly = ReadOnly;
+                }
+                else
+                {
+                    this.Visible = value;
+                    this.textBox.Visible = value;
+                }
+
             }
         }
     }

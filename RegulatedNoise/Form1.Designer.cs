@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
@@ -79,6 +79,7 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabSystemData = new System.Windows.Forms.TabPage();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.paEconomies = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
             this.cbStationEcoTourism = new System.Windows.Forms.CheckBox_ro();
@@ -90,7 +91,6 @@
             this.cbStationEcoHighTech = new System.Windows.Forms.CheckBox_ro();
             this.cbStationEcoExtraction = new System.Windows.Forms.CheckBox_ro();
             this.cbStationEcoAgriculture = new System.Windows.Forms.CheckBox_ro();
-            this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.cmdStationCancel = new System.Windows.Forms.Button();
             this.lblStationCountTotal = new System.Windows.Forms.Label();
             this.label90 = new System.Windows.Forms.Label();
@@ -108,7 +108,6 @@
             this.cbStationHasRefuel = new System.Windows.Forms.CheckBox_ro();
             this.cbStationHasCommodities = new System.Windows.Forms.CheckBox_ro();
             this.cbStationHasBlackmarket = new System.Windows.Forms.CheckBox_ro();
-            this.cmbStationStations = new System.Windows.Forms.ComboBox_ro();
             this.label87 = new System.Windows.Forms.Label();
             this.cmdStationNew = new System.Windows.Forms.Button();
             this.cmdStationSave = new System.Windows.Forms.Button();
@@ -379,6 +378,7 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cmbStationStations = new System.Windows.Forms.ComboBox_ro();
             this.contextMenuStrip1.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
@@ -387,8 +387,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabSystemData.SuspendLayout();
-            this.paEconomies.SuspendLayout();
             this.groupBox14.SuspendLayout();
+            this.paEconomies.SuspendLayout();
             this.gbSystemSystemData.SuspendLayout();
             this.tabPriceAnalysis.SuspendLayout();
             this.gbSorting.SuspendLayout();
@@ -624,6 +624,8 @@
             this.tabCtrlMain.SelectedIndex = 0;
             this.tabCtrlMain.Size = new System.Drawing.Size(1059, 615);
             this.tabCtrlMain.TabIndex = 4;
+            this.tabCtrlMain.SelectedIndexChanged += new System.EventHandler(this.tabCtrlMain_SelectedIndexChanged);
+            this.tabCtrlMain.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabCtrlMain_Selecting);
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // tabHelpAndChangeLog
@@ -942,140 +944,12 @@
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
             // 
-            // paEconomies
-            // 
-            this.paEconomies.Controls.Add(this.button8);
-            this.paEconomies.Controls.Add(this.cbStationEcoTourism);
-            this.paEconomies.Controls.Add(this.cbStationEcoTerraforming);
-            this.paEconomies.Controls.Add(this.cbStationEcoService);
-            this.paEconomies.Controls.Add(this.cbStationEcoRefinery);
-            this.paEconomies.Controls.Add(this.cbStationEcoMilitary);
-            this.paEconomies.Controls.Add(this.cbStationEcoIndustrial);
-            this.paEconomies.Controls.Add(this.cbStationEcoHighTech);
-            this.paEconomies.Controls.Add(this.cbStationEcoExtraction);
-            this.paEconomies.Controls.Add(this.cbStationEcoAgriculture);
-            this.paEconomies.Location = new System.Drawing.Point(7, 364);
-            this.paEconomies.Name = "paEconomies";
-            this.paEconomies.Size = new System.Drawing.Size(173, 94);
-            this.paEconomies.TabIndex = 129;
-            this.paEconomies.Visible = false;
-            // 
-            // button8
-            // 
-            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(107, 73);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(62, 17);
-            this.button8.TabIndex = 23;
-            this.button8.Text = "OK";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // cbStationEcoTourism
-            // 
-            this.cbStationEcoTourism.AutoSize = true;
-            this.cbStationEcoTourism.Location = new System.Drawing.Point(84, 57);
-            this.cbStationEcoTourism.Name = "cbStationEcoTourism";
-            this.cbStationEcoTourism.ReadOnly = false;
-            this.cbStationEcoTourism.Size = new System.Drawing.Size(63, 17);
-            this.cbStationEcoTourism.TabIndex = 22;
-            this.cbStationEcoTourism.Text = "Tourism";
-            this.cbStationEcoTourism.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoTerraforming
-            // 
-            this.cbStationEcoTerraforming.AutoSize = true;
-            this.cbStationEcoTerraforming.Location = new System.Drawing.Point(84, 39);
-            this.cbStationEcoTerraforming.Name = "cbStationEcoTerraforming";
-            this.cbStationEcoTerraforming.ReadOnly = false;
-            this.cbStationEcoTerraforming.Size = new System.Drawing.Size(85, 17);
-            this.cbStationEcoTerraforming.TabIndex = 21;
-            this.cbStationEcoTerraforming.Text = "Terraforming";
-            this.cbStationEcoTerraforming.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoService
-            // 
-            this.cbStationEcoService.AutoSize = true;
-            this.cbStationEcoService.Location = new System.Drawing.Point(84, 21);
-            this.cbStationEcoService.Name = "cbStationEcoService";
-            this.cbStationEcoService.ReadOnly = false;
-            this.cbStationEcoService.Size = new System.Drawing.Size(62, 17);
-            this.cbStationEcoService.TabIndex = 20;
-            this.cbStationEcoService.Text = "Service";
-            this.cbStationEcoService.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoRefinery
-            // 
-            this.cbStationEcoRefinery.AutoSize = true;
-            this.cbStationEcoRefinery.Location = new System.Drawing.Point(84, 3);
-            this.cbStationEcoRefinery.Name = "cbStationEcoRefinery";
-            this.cbStationEcoRefinery.ReadOnly = false;
-            this.cbStationEcoRefinery.Size = new System.Drawing.Size(65, 17);
-            this.cbStationEcoRefinery.TabIndex = 19;
-            this.cbStationEcoRefinery.Text = "Refinery";
-            this.cbStationEcoRefinery.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoMilitary
-            // 
-            this.cbStationEcoMilitary.AutoSize = true;
-            this.cbStationEcoMilitary.Location = new System.Drawing.Point(3, 75);
-            this.cbStationEcoMilitary.Name = "cbStationEcoMilitary";
-            this.cbStationEcoMilitary.ReadOnly = false;
-            this.cbStationEcoMilitary.Size = new System.Drawing.Size(58, 17);
-            this.cbStationEcoMilitary.TabIndex = 18;
-            this.cbStationEcoMilitary.Text = "Military";
-            this.cbStationEcoMilitary.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoIndustrial
-            // 
-            this.cbStationEcoIndustrial.AutoSize = true;
-            this.cbStationEcoIndustrial.Location = new System.Drawing.Point(3, 57);
-            this.cbStationEcoIndustrial.Name = "cbStationEcoIndustrial";
-            this.cbStationEcoIndustrial.ReadOnly = false;
-            this.cbStationEcoIndustrial.Size = new System.Drawing.Size(68, 17);
-            this.cbStationEcoIndustrial.TabIndex = 17;
-            this.cbStationEcoIndustrial.Text = "Industrial";
-            this.cbStationEcoIndustrial.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoHighTech
-            // 
-            this.cbStationEcoHighTech.AutoSize = true;
-            this.cbStationEcoHighTech.Location = new System.Drawing.Point(3, 39);
-            this.cbStationEcoHighTech.Name = "cbStationEcoHighTech";
-            this.cbStationEcoHighTech.ReadOnly = false;
-            this.cbStationEcoHighTech.Size = new System.Drawing.Size(76, 17);
-            this.cbStationEcoHighTech.TabIndex = 16;
-            this.cbStationEcoHighTech.Text = "High Tech";
-            this.cbStationEcoHighTech.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoExtraction
-            // 
-            this.cbStationEcoExtraction.AutoSize = true;
-            this.cbStationEcoExtraction.Location = new System.Drawing.Point(3, 21);
-            this.cbStationEcoExtraction.Name = "cbStationEcoExtraction";
-            this.cbStationEcoExtraction.ReadOnly = false;
-            this.cbStationEcoExtraction.Size = new System.Drawing.Size(73, 17);
-            this.cbStationEcoExtraction.TabIndex = 15;
-            this.cbStationEcoExtraction.Text = "Extraction";
-            this.cbStationEcoExtraction.UseVisualStyleBackColor = false;
-            // 
-            // cbStationEcoAgriculture
-            // 
-            this.cbStationEcoAgriculture.AutoSize = true;
-            this.cbStationEcoAgriculture.Location = new System.Drawing.Point(3, 3);
-            this.cbStationEcoAgriculture.Name = "cbStationEcoAgriculture";
-            this.cbStationEcoAgriculture.ReadOnly = false;
-            this.cbStationEcoAgriculture.Size = new System.Drawing.Size(76, 17);
-            this.cbStationEcoAgriculture.TabIndex = 14;
-            this.cbStationEcoAgriculture.Text = "Agriculture";
-            this.cbStationEcoAgriculture.UseVisualStyleBackColor = false;
-            // 
             // groupBox14
             // 
             this.groupBox14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox14.Controls.Add(this.cmbStationStations);
             this.groupBox14.Controls.Add(this.paEconomies);
             this.groupBox14.Controls.Add(this.cmdStationCancel);
             this.groupBox14.Controls.Add(this.lblStationCountTotal);
@@ -1094,7 +968,6 @@
             this.groupBox14.Controls.Add(this.cbStationHasRefuel);
             this.groupBox14.Controls.Add(this.cbStationHasCommodities);
             this.groupBox14.Controls.Add(this.cbStationHasBlackmarket);
-            this.groupBox14.Controls.Add(this.cmbStationStations);
             this.groupBox14.Controls.Add(this.label87);
             this.groupBox14.Controls.Add(this.cmdStationNew);
             this.groupBox14.Controls.Add(this.cmdStationSave);
@@ -1124,12 +997,141 @@
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Station Data";
             // 
+            // paEconomies
+            // 
+            this.paEconomies.Controls.Add(this.button8);
+            this.paEconomies.Controls.Add(this.cbStationEcoTourism);
+            this.paEconomies.Controls.Add(this.cbStationEcoTerraforming);
+            this.paEconomies.Controls.Add(this.cbStationEcoService);
+            this.paEconomies.Controls.Add(this.cbStationEcoRefinery);
+            this.paEconomies.Controls.Add(this.cbStationEcoMilitary);
+            this.paEconomies.Controls.Add(this.cbStationEcoIndustrial);
+            this.paEconomies.Controls.Add(this.cbStationEcoHighTech);
+            this.paEconomies.Controls.Add(this.cbStationEcoExtraction);
+            this.paEconomies.Controls.Add(this.cbStationEcoAgriculture);
+            this.paEconomies.Location = new System.Drawing.Point(7, 364);
+            this.paEconomies.Name = "paEconomies";
+            this.paEconomies.Size = new System.Drawing.Size(173, 94);
+            this.paEconomies.TabIndex = 129;
+            this.paEconomies.Visible = false;
+            // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button8.Location = new System.Drawing.Point(107, 73);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(62, 17);
+            this.button8.TabIndex = 9;
+            this.button8.Text = "OK";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.cmdStationEco_OK_Click);
+            // 
+            // cbStationEcoTourism
+            // 
+            this.cbStationEcoTourism.AutoSize = true;
+            this.cbStationEcoTourism.Location = new System.Drawing.Point(84, 57);
+            this.cbStationEcoTourism.Name = "cbStationEcoTourism";
+            this.cbStationEcoTourism.ReadOnly = false;
+            this.cbStationEcoTourism.Size = new System.Drawing.Size(63, 17);
+            this.cbStationEcoTourism.TabIndex = 8;
+            this.cbStationEcoTourism.Text = "Tourism";
+            this.cbStationEcoTourism.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoTerraforming
+            // 
+            this.cbStationEcoTerraforming.AutoSize = true;
+            this.cbStationEcoTerraforming.Location = new System.Drawing.Point(84, 39);
+            this.cbStationEcoTerraforming.Name = "cbStationEcoTerraforming";
+            this.cbStationEcoTerraforming.ReadOnly = false;
+            this.cbStationEcoTerraforming.Size = new System.Drawing.Size(85, 17);
+            this.cbStationEcoTerraforming.TabIndex = 7;
+            this.cbStationEcoTerraforming.Text = "Terraforming";
+            this.cbStationEcoTerraforming.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoService
+            // 
+            this.cbStationEcoService.AutoSize = true;
+            this.cbStationEcoService.Location = new System.Drawing.Point(84, 21);
+            this.cbStationEcoService.Name = "cbStationEcoService";
+            this.cbStationEcoService.ReadOnly = false;
+            this.cbStationEcoService.Size = new System.Drawing.Size(62, 17);
+            this.cbStationEcoService.TabIndex = 6;
+            this.cbStationEcoService.Text = "Service";
+            this.cbStationEcoService.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoRefinery
+            // 
+            this.cbStationEcoRefinery.AutoSize = true;
+            this.cbStationEcoRefinery.Location = new System.Drawing.Point(84, 3);
+            this.cbStationEcoRefinery.Name = "cbStationEcoRefinery";
+            this.cbStationEcoRefinery.ReadOnly = false;
+            this.cbStationEcoRefinery.Size = new System.Drawing.Size(65, 17);
+            this.cbStationEcoRefinery.TabIndex = 5;
+            this.cbStationEcoRefinery.Text = "Refinery";
+            this.cbStationEcoRefinery.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoMilitary
+            // 
+            this.cbStationEcoMilitary.AutoSize = true;
+            this.cbStationEcoMilitary.Location = new System.Drawing.Point(3, 75);
+            this.cbStationEcoMilitary.Name = "cbStationEcoMilitary";
+            this.cbStationEcoMilitary.ReadOnly = false;
+            this.cbStationEcoMilitary.Size = new System.Drawing.Size(58, 17);
+            this.cbStationEcoMilitary.TabIndex = 4;
+            this.cbStationEcoMilitary.Text = "Military";
+            this.cbStationEcoMilitary.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoIndustrial
+            // 
+            this.cbStationEcoIndustrial.AutoSize = true;
+            this.cbStationEcoIndustrial.Location = new System.Drawing.Point(3, 57);
+            this.cbStationEcoIndustrial.Name = "cbStationEcoIndustrial";
+            this.cbStationEcoIndustrial.ReadOnly = false;
+            this.cbStationEcoIndustrial.Size = new System.Drawing.Size(68, 17);
+            this.cbStationEcoIndustrial.TabIndex = 3;
+            this.cbStationEcoIndustrial.Text = "Industrial";
+            this.cbStationEcoIndustrial.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoHighTech
+            // 
+            this.cbStationEcoHighTech.AutoSize = true;
+            this.cbStationEcoHighTech.Location = new System.Drawing.Point(3, 39);
+            this.cbStationEcoHighTech.Name = "cbStationEcoHighTech";
+            this.cbStationEcoHighTech.ReadOnly = false;
+            this.cbStationEcoHighTech.Size = new System.Drawing.Size(76, 17);
+            this.cbStationEcoHighTech.TabIndex = 2;
+            this.cbStationEcoHighTech.Text = "High Tech";
+            this.cbStationEcoHighTech.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoExtraction
+            // 
+            this.cbStationEcoExtraction.AutoSize = true;
+            this.cbStationEcoExtraction.Location = new System.Drawing.Point(3, 21);
+            this.cbStationEcoExtraction.Name = "cbStationEcoExtraction";
+            this.cbStationEcoExtraction.ReadOnly = false;
+            this.cbStationEcoExtraction.Size = new System.Drawing.Size(73, 17);
+            this.cbStationEcoExtraction.TabIndex = 1;
+            this.cbStationEcoExtraction.Text = "Extraction";
+            this.cbStationEcoExtraction.UseVisualStyleBackColor = false;
+            // 
+            // cbStationEcoAgriculture
+            // 
+            this.cbStationEcoAgriculture.AutoSize = true;
+            this.cbStationEcoAgriculture.Location = new System.Drawing.Point(3, 3);
+            this.cbStationEcoAgriculture.Name = "cbStationEcoAgriculture";
+            this.cbStationEcoAgriculture.ReadOnly = false;
+            this.cbStationEcoAgriculture.Size = new System.Drawing.Size(76, 17);
+            this.cbStationEcoAgriculture.TabIndex = 0;
+            this.cbStationEcoAgriculture.Text = "Agriculture";
+            this.cbStationEcoAgriculture.UseVisualStyleBackColor = false;
+            // 
             // cmdStationCancel
             // 
             this.cmdStationCancel.Location = new System.Drawing.Point(169, 473);
             this.cmdStationCancel.Name = "cmdStationCancel";
             this.cmdStationCancel.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationCancel.TabIndex = 23;
+            this.cmdStationCancel.TabIndex = 21;
             this.cmdStationCancel.Text = "Cancel";
             this.cmdStationCancel.UseVisualStyleBackColor = true;
             this.cmdStationCancel.Click += new System.EventHandler(this.cmdStationCancel_Click);
@@ -1160,7 +1162,7 @@
             this.cmdStationEdit.Location = new System.Drawing.Point(168, 435);
             this.cmdStationEdit.Name = "cmdStationEdit";
             this.cmdStationEdit.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationEdit.TabIndex = 21;
+            this.cmdStationEdit.TabIndex = 19;
             this.cmdStationEdit.Text = "Edit Station";
             this.cmdStationEdit.UseVisualStyleBackColor = true;
             this.cmdStationEdit.Click += new System.EventHandler(this.cmdStationEdit_Click);
@@ -1194,9 +1196,9 @@
             this.lbStationEconomies.Location = new System.Drawing.Point(127, 334);
             this.lbStationEconomies.Name = "lbStationEconomies";
             this.lbStationEconomies.Size = new System.Drawing.Size(151, 79);
-            this.lbStationEconomies.TabIndex = 12;
+            this.lbStationEconomies.TabIndex = 10;
             this.lbStationEconomies.Tag = "ReadOnly";
-            this.lbStationEconomies.MouseClick += lbStationEconomies_MouseClick;
+            this.lbStationEconomies.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lbStationEconomies_MouseClick);
             // 
             // label64
             // 
@@ -1215,7 +1217,7 @@
             this.txtStationUpdatedAt.Name = "txtStationUpdatedAt";
             this.txtStationUpdatedAt.ReadOnly = true;
             this.txtStationUpdatedAt.Size = new System.Drawing.Size(151, 21);
-            this.txtStationUpdatedAt.TabIndex = 20;
+            this.txtStationUpdatedAt.TabIndex = 18;
             this.txtStationUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label73
@@ -1235,7 +1237,7 @@
             this.cbStationHasOutfitting.Name = "cbStationHasOutfitting";
             this.cbStationHasOutfitting.ReadOnly = false;
             this.cbStationHasOutfitting.Size = new System.Drawing.Size(68, 17);
-            this.cbStationHasOutfitting.TabIndex = 15;
+            this.cbStationHasOutfitting.TabIndex = 13;
             this.cbStationHasOutfitting.Text = "Outfitting";
             this.cbStationHasOutfitting.UseVisualStyleBackColor = true;
             // 
@@ -1246,7 +1248,7 @@
             this.cbStationHasShipyard.Name = "cbStationHasShipyard";
             this.cbStationHasShipyard.ReadOnly = false;
             this.cbStationHasShipyard.Size = new System.Drawing.Size(67, 17);
-            this.cbStationHasShipyard.TabIndex = 16;
+            this.cbStationHasShipyard.TabIndex = 14;
             this.cbStationHasShipyard.Text = "Shipyard";
             this.cbStationHasShipyard.UseVisualStyleBackColor = true;
             // 
@@ -1257,7 +1259,7 @@
             this.cbStationHasRepair.Name = "cbStationHasRepair";
             this.cbStationHasRepair.ReadOnly = false;
             this.cbStationHasRepair.Size = new System.Drawing.Size(57, 17);
-            this.cbStationHasRepair.TabIndex = 19;
+            this.cbStationHasRepair.TabIndex = 17;
             this.cbStationHasRepair.Text = "Repair";
             this.cbStationHasRepair.UseVisualStyleBackColor = true;
             // 
@@ -1268,7 +1270,7 @@
             this.cbStationHasRearm.Name = "cbStationHasRearm";
             this.cbStationHasRearm.ReadOnly = false;
             this.cbStationHasRearm.Size = new System.Drawing.Size(61, 17);
-            this.cbStationHasRearm.TabIndex = 17;
+            this.cbStationHasRearm.TabIndex = 15;
             this.cbStationHasRearm.Text = "Re-Arm";
             this.cbStationHasRearm.UseVisualStyleBackColor = true;
             // 
@@ -1279,7 +1281,7 @@
             this.cbStationHasRefuel.Name = "cbStationHasRefuel";
             this.cbStationHasRefuel.ReadOnly = false;
             this.cbStationHasRefuel.Size = new System.Drawing.Size(57, 17);
-            this.cbStationHasRefuel.TabIndex = 18;
+            this.cbStationHasRefuel.TabIndex = 16;
             this.cbStationHasRefuel.Text = "Refuel";
             this.cbStationHasRefuel.UseVisualStyleBackColor = true;
             // 
@@ -1290,7 +1292,7 @@
             this.cbStationHasCommodities.Name = "cbStationHasCommodities";
             this.cbStationHasCommodities.ReadOnly = false;
             this.cbStationHasCommodities.Size = new System.Drawing.Size(85, 17);
-            this.cbStationHasCommodities.TabIndex = 13;
+            this.cbStationHasCommodities.TabIndex = 11;
             this.cbStationHasCommodities.Text = "Commodities";
             this.cbStationHasCommodities.UseVisualStyleBackColor = false;
             // 
@@ -1301,20 +1303,9 @@
             this.cbStationHasBlackmarket.Name = "cbStationHasBlackmarket";
             this.cbStationHasBlackmarket.ReadOnly = false;
             this.cbStationHasBlackmarket.Size = new System.Drawing.Size(85, 17);
-            this.cbStationHasBlackmarket.TabIndex = 14;
+            this.cbStationHasBlackmarket.TabIndex = 12;
             this.cbStationHasBlackmarket.Text = "Blackmarket";
             this.cbStationHasBlackmarket.UseVisualStyleBackColor = true;
-            // 
-            // cmbStationStations
-            // 
-            this.cmbStationStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationStations.Location = new System.Drawing.Point(114, 33);
-            this.cmbStationStations.Name = "cmbStationStations";
-            this.cmbStationStations.ReadOnly = false;
-            this.cmbStationStations.Size = new System.Drawing.Size(236, 23);
-            this.cmbStationStations.TabIndex = 0;
-            this.cmbStationStations.Visible_ro = true;
-            this.cmbStationStations.SelectedIndexChanged += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
             // 
             // label87
             // 
@@ -1331,7 +1322,7 @@
             this.cmdStationNew.Location = new System.Drawing.Point(285, 435);
             this.cmdStationNew.Name = "cmdStationNew";
             this.cmdStationNew.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationNew.TabIndex = 22;
+            this.cmdStationNew.TabIndex = 20;
             this.cmdStationNew.Text = "Add Station";
             this.cmdStationNew.UseVisualStyleBackColor = true;
             this.cmdStationNew.Click += new System.EventHandler(this.cmdStationNew_Click);
@@ -1341,7 +1332,7 @@
             this.cmdStationSave.Location = new System.Drawing.Point(285, 473);
             this.cmdStationSave.Name = "cmdStationSave";
             this.cmdStationSave.Size = new System.Drawing.Size(110, 23);
-            this.cmdStationSave.TabIndex = 24;
+            this.cmdStationSave.TabIndex = 22;
             this.cmdStationSave.Text = "Save Changes";
             this.cmdStationSave.UseVisualStyleBackColor = true;
             this.cmdStationSave.Click += new System.EventHandler(this.cmdStationChange_Click);
@@ -1354,7 +1345,7 @@
             this.cmbStationType.Name = "cmbStationType";
             this.cmbStationType.ReadOnly = false;
             this.cmbStationType.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationType.TabIndex = 10;
+            this.cmbStationType.TabIndex = 9;
             this.cmbStationType.Visible_ro = true;
             // 
             // label75
@@ -1375,7 +1366,7 @@
             this.cmbStationState.Name = "cmbStationState";
             this.cmbStationState.ReadOnly = false;
             this.cmbStationState.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationState.TabIndex = 9;
+            this.cmbStationState.TabIndex = 8;
             this.cmbStationState.Visible_ro = true;
             // 
             // label76
@@ -1396,7 +1387,7 @@
             this.cmbStationAllegiance.Name = "cmbStationAllegiance";
             this.cmbStationAllegiance.ReadOnly = false;
             this.cmbStationAllegiance.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationAllegiance.TabIndex = 8;
+            this.cmbStationAllegiance.TabIndex = 7;
             this.cmbStationAllegiance.Visible_ro = true;
             // 
             // label77
@@ -1417,7 +1408,7 @@
             this.cmbStationGovernment.Name = "cmbStationGovernment";
             this.cmbStationGovernment.ReadOnly = false;
             this.cmbStationGovernment.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationGovernment.TabIndex = 7;
+            this.cmbStationGovernment.TabIndex = 6;
             this.cmbStationGovernment.Visible_ro = true;
             // 
             // label78
@@ -1436,7 +1427,7 @@
             this.txtStationFaction.Location = new System.Drawing.Point(127, 203);
             this.txtStationFaction.Name = "txtStationFaction";
             this.txtStationFaction.Size = new System.Drawing.Size(151, 21);
-            this.txtStationFaction.TabIndex = 6;
+            this.txtStationFaction.TabIndex = 5;
             // 
             // label79
             // 
@@ -1454,7 +1445,7 @@
             this.txtStationDistanceToStar.Location = new System.Drawing.Point(127, 147);
             this.txtStationDistanceToStar.Name = "txtStationDistanceToStar";
             this.txtStationDistanceToStar.Size = new System.Drawing.Size(68, 21);
-            this.txtStationDistanceToStar.TabIndex = 4;
+            this.txtStationDistanceToStar.TabIndex = 3;
             this.txtStationDistanceToStar.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label80
@@ -1475,7 +1466,7 @@
             this.cmbStationMaxLandingPadSize.Name = "cmbStationMaxLandingPadSize";
             this.cmbStationMaxLandingPadSize.ReadOnly = false;
             this.cmbStationMaxLandingPadSize.Size = new System.Drawing.Size(68, 23);
-            this.cmbStationMaxLandingPadSize.TabIndex = 5;
+            this.cmbStationMaxLandingPadSize.TabIndex = 4;
             this.cmbStationMaxLandingPadSize.Visible_ro = true;
             // 
             // label81
@@ -1495,7 +1486,7 @@
             this.txtStationName.Name = "txtStationName";
             this.txtStationName.ReadOnly = true;
             this.txtStationName.Size = new System.Drawing.Size(236, 21);
-            this.txtStationName.TabIndex = 3;
+            this.txtStationName.TabIndex = 2;
             // 
             // label85
             // 
@@ -2224,14 +2215,14 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(210, 224);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -2249,14 +2240,14 @@
             // 
             // chart2
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart2.Location = new System.Drawing.Point(0, 0);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
+            series4.ChartArea = "ChartArea1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
             this.chart2.Size = new System.Drawing.Size(210, 267);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
@@ -4367,6 +4358,16 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
+            // cmbStationStations
+            // 
+            this.cmbStationStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationStations.Location = new System.Drawing.Point(114, 31);
+            this.cmbStationStations.Name = "cmbStationStations";
+            this.cmbStationStations.ReadOnly = false;
+            this.cmbStationStations.Size = new System.Drawing.Size(236, 23);
+            this.cmbStationStations.TabIndex = 130;
+            this.cmbStationStations.Visible_ro = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4402,10 +4403,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabSystemData.ResumeLayout(false);
-            this.paEconomies.ResumeLayout(false);
-            this.paEconomies.PerformLayout();
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
+            this.paEconomies.ResumeLayout(false);
+            this.paEconomies.PerformLayout();
             this.gbSystemSystemData.ResumeLayout(false);
             this.gbSystemSystemData.PerformLayout();
             this.tabPriceAnalysis.ResumeLayout(false);
@@ -4767,7 +4768,6 @@
         private System.Windows.Forms.CheckBox cbMaxRouteDistance;
         private System.Windows.Forms.TextBox txtWebserverPort;
         private System.Windows.Forms.Label label71;
-        private System.Windows.Forms.ComboBox_ro cmbStationStations;
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.Label lblStationRenameHint;
         private System.Windows.Forms.Button cmdStationNew;
@@ -4837,6 +4837,7 @@
         private System.Windows.Forms.CheckBox_ro cbStationEcoHighTech;
         private System.Windows.Forms.CheckBox_ro cbStationEcoExtraction;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.ComboBox_ro cmbStationStations;
     }
 }
 

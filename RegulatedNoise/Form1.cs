@@ -6142,7 +6142,7 @@ namespace RegulatedNoise
 
             if (isNew)
             {
-                cmbSystemsAllSystems.SelectedIndex = -1;
+                cmbSystemsAllSystems.SelectedIndex = 0;
                 m_loadedSystemdata = new EDSystem();
                 m_loadedSystemdata.Name = Systemname;
                 m_SystemIsNew = true;
@@ -6279,6 +6279,8 @@ namespace RegulatedNoise
                 cmbStationGovernment.Text = m_loadedStationdata.Government.NToString();
                 cmbStationAllegiance.Text = m_loadedStationdata.Allegiance.NToString();
                 cmbStationState.Text = m_loadedStationdata.State.NToString();
+                cmbStationType.Text = m_loadedStationdata.Type.NToString();
+
                 txtStationUpdatedAt.Text = m_loadedStationdata.UpdatedAt.ToString();
 
                 lbStationEconomies.Items.Clear();
@@ -6333,6 +6335,7 @@ namespace RegulatedNoise
                 cmbStationAllegiance.Text = Program.NULLSTRING;
                 cmbStationState.Text = Program.NULLSTRING;
                 txtStationUpdatedAt.Text = Program.NULLSTRING;
+                cmbStationType.Text = Program.NULLSTRING;
 
                 lbStationEconomies.Items.Clear();
 
@@ -6540,11 +6543,13 @@ namespace RegulatedNoise
             this.cbStationHasRepair.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
             this.cmbStationStations.SelectedIndexChanged += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
 
+            m_SystemLoadingValues = true;
             this.cmbSystemsAllSystems.BeginUpdate();
             this.cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
             this.cmbSystemsAllSystems.ValueMember     = "Name";
             this.cmbSystemsAllSystems.DisplayMember   = "Name";
             this.cmbSystemsAllSystems.EndUpdate();
+            m_SystemLoadingValues = false;
         }
 
         void txtSystem_GotFocus(object sender, EventArgs e)
@@ -6708,7 +6713,7 @@ namespace RegulatedNoise
                     txtStationDistanceToStar.Text = m_currentStationdata.DistanceToStar.ToNString("#,##0.", CultureInfo.CurrentCulture);
                     break;
 
-                case "cmbStationFaction":
+                case "txtStationFaction":
                     m_currentStationdata.Faction = txtStationFaction.Text.ToNString();
                     break;
 
@@ -6752,27 +6757,27 @@ namespace RegulatedNoise
                     break;
 
                 case "cbStationHasBlackmarket":
-                    m_currentStationdata.HasCommodities = cbStationHasBlackmarket.toNInt();
+                    m_currentStationdata.HasBlackmarket = cbStationHasBlackmarket.toNInt();
                     break;
 
                 case "cbStationHasOutfitting":
-                    m_currentStationdata.HasCommodities = cbStationHasOutfitting.toNInt();
+                    m_currentStationdata.HasOutfitting = cbStationHasOutfitting.toNInt();
                     break;
 
                 case "cbStationHasShipyard":
-                    m_currentStationdata.HasCommodities = cbStationHasShipyard.toNInt();
+                    m_currentStationdata.HasShipyard = cbStationHasShipyard.toNInt();
                     break;
 
                 case "cbStationHasRearm":
-                    m_currentStationdata.HasCommodities = cbStationHasRearm.toNInt();
+                    m_currentStationdata.HasRearm = cbStationHasRearm.toNInt();
                     break;
 
                 case "cbStationHasRefuel":
-                    m_currentStationdata.HasCommodities = cbStationHasRefuel.toNInt();
+                    m_currentStationdata.HasRefuel = cbStationHasRefuel.toNInt();
                     break;
 
                 case "cbStationHasRepair":
-                    m_currentStationdata.HasCommodities = cbStationHasRepair.toNInt();
+                    m_currentStationdata.HasRepair = cbStationHasRepair.toNInt();
                     break;
             }
 
@@ -6915,8 +6920,8 @@ namespace RegulatedNoise
 
                 setStationEditable(false);
 
-                loadSystemData(m_currentStationdata.Name);
-                loadStationData(m_currentStationdata.Name, m_currentStationdata.Name);
+                loadSystemData(m_currentSystemdata.Name);
+                loadStationData(m_currentSystemdata.Name, m_currentStationdata.Name);
                 Cursor = Cursors.Default;
             }
         }
@@ -7293,9 +7298,10 @@ namespace RegulatedNoise
             Cursor = Cursors.WaitCursor;
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void cmdStationEco_OK_Click(object sender, EventArgs e)
         {
             lbStationEconomies.Items.Clear();
+            
 
             foreach (var item in paEconomies.Controls)
 	        {
@@ -7304,15 +7310,14 @@ namespace RegulatedNoise
                     var EcoName = ((CheckBox)item).Text;
                     if(((CheckBox)item).Checked)
                         lbStationEconomies.Items.Add(EcoName);
+                       
                 }
 	        }
 
+            m_currentStationdata.Economies = new String[lbStationEconomies.Items.Count];
+            lbStationEconomies.Items.CopyTo(m_currentStationdata.Economies, 0);
+
             paEconomies.Visible = false;
-        }
-
-        private void lbStationEconomies_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
