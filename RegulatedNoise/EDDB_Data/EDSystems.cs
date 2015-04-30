@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RegulatedNoise.EDDB_Data
 {
@@ -151,5 +152,15 @@ namespace RegulatedNoise.EDDB_Data
             UpdatedAt       = 0;
 
         }
+
+        /// <summary>
+        /// return the coordinates of the system
+        /// </summary>
+        /// <returns></returns>
+        internal System.Windows.Forms.DataVisualization.Charting.Point3D SystemCoordinates()
+        {
+            return new Point3D((float)X, (float)Y, (float)Z);
+        }
+
     }
 }

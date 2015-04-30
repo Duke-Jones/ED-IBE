@@ -65,7 +65,22 @@ namespace RegulatedNoise.EDDB_Data
         /// <param name="systemName"></param>
         /// <param name="stationName"></param>
         /// <returns></returns>
+        /// <param name="System"></param>
         public EDStation getStation(string systemName, string stationName)
+        {
+            EDSystem tempSystem;
+
+            return getStation(systemName, stationName, out tempSystem);
+        }
+
+            /// <summary>
+        /// returns a station in a system by name
+        /// </summary>
+        /// <param name="systemName"></param>
+        /// <param name="stationName"></param>
+        /// <returns></returns>
+        /// <param name="System"></param>
+        public EDStation getStation(string systemName, string stationName, out EDSystem System)
         {
             EDStation retValue;
 
@@ -75,6 +90,8 @@ namespace RegulatedNoise.EDDB_Data
                 retValue = m_Stations[(int)enDataType.Data_Merged].Find(x => x.SystemId==SystemData.Id && x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase));
             else
                 retValue = null;
+
+            System = SystemData;
 
             return retValue;
         }
@@ -93,7 +110,7 @@ namespace RegulatedNoise.EDDB_Data
             {
                 EDStation retValue = getStation(systemName, stationName);
 
-                if (retValue != null)
+                if ((retValue != null) && (retValue.DistanceToStar != null))
                 {
                     Distance = (int)(retValue.DistanceToStar);
                 }
@@ -497,7 +514,7 @@ namespace RegulatedNoise.EDDB_Data
 
                     if (mySystem != null)
                     { 
-                        retValue = new Point3D((float)mySystem.X, (float)mySystem.Y, (float)mySystem.Z);
+                        retValue = mySystem.SystemCoordinates();
                         m_cachedLocations.Add(Systemname, retValue);
                     }
 
@@ -775,7 +792,7 @@ namespace RegulatedNoise.EDDB_Data
             List<EDSystem> ownSystems = getSystems(enDataType.Data_Own);
             int newSystemIndex;
 
-            if(oldSystemName == null)
+            if(String.IsNullOrEmpty(oldSystemName.Trim()))
                 oldSystemName = m_currentSystemdata.Name;
 
             if(!oldSystemName.Equals(m_currentSystemdata.Name))
@@ -842,7 +859,7 @@ namespace RegulatedNoise.EDDB_Data
             EDStation Station;
             int newStationIndex;
 
-            if(oldStationName == null)
+            if(String.IsNullOrEmpty(oldStationName.Trim()))
                 oldStationName = m_currentStationdata.Name;
 
             List<EDSystem> ownSystems       = getSystems(enDataType.Data_Own);
@@ -943,7 +960,7 @@ namespace RegulatedNoise.EDDB_Data
                         newStationIndex = mergedStations.Max(X => X.Id) + 1;
                     
                     // add the new station in the merged station dictionary
-                    ownStations.Add(new EDStation(newStationIndex, System.Id, m_currentStationdata));
+                    mergedStations.Add(new EDStation(newStationIndex, System.Id, m_currentStationdata));
                 }
             }
            

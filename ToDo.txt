@@ -20,10 +20,16 @@ todo:
    * show hint with age of market prices if location is a station
    * show hint how many stations and systems are in database
    * add rejected marketdata from eddn with rightclick contextmenue
+   * show the stations as a one look list
    ***********************************************************************************
 
 -------------------------------------------------------------------------------------      
 
+1.84_0.17_5
+   * it's possible to add new stations
+   * default value for EDDN is no longer <test> because it's only for dev testing
+   * set value for EDDN schema from <test> to <normal> and add a hint for users who have EDDN active
+-------------------------------------------------------------------------------------      
 1.84_0.17_4
    * it's possible to change data of existing stations
 -------------------------------------------------------------------------------------      

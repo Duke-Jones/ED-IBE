@@ -106,7 +106,7 @@ namespace RegulatedNoise
         private String _AppPath                                         = string.Empty;
         private String _oldSystemName                                   = null;
         private String _oldStationName                                  = null;
-        
+
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -1583,6 +1583,9 @@ namespace RegulatedNoise
 
         private void SetupGui(bool force= false)
         {
+            System.Windows.Forms.Cursor oldCursor = Cursor;
+            Cursor = Cursors.WaitCursor;
+
             //_cbIncludeWithinRegionOfStation_IndexChanged = false;
 
             if (!_InitDone && !force)
@@ -1609,8 +1612,6 @@ namespace RegulatedNoise
             MemoryStream SerialListCopy = new MemoryStream();
 
             _pt.PrintAndReset("3");
-
-            Cursor = Cursors.WaitCursor;
 
             BaseList = getDropDownStationsItems(ref _StationIndices);
 
@@ -1729,8 +1730,6 @@ namespace RegulatedNoise
 
             _pt.PrintAndReset("10");
 
-            Cursor = Cursors.Default;
-
             cmbStation.EndUpdate();
             cmbStationToStationFrom.EndUpdate();
             cmbStationToStationTo.EndUpdate();
@@ -1739,6 +1738,8 @@ namespace RegulatedNoise
 
             UpdateStationToStation();
             _pt.PrintAndReset("12");
+
+            Cursor = oldCursor;
         }
 
 
@@ -1785,7 +1786,7 @@ namespace RegulatedNoise
 
             // get the relevant stations
             SelectionRaw = StationDirectory.Where(x => getStationSelection(x)).ToList();
-
+            
             if (rbSortBySystem.Checked)
             {
                 // get the list ordered as wanted -> order by system
@@ -4833,6 +4834,8 @@ namespace RegulatedNoise
 
             showSystemNumbers();
 
+            SetupGui();
+
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -4902,6 +4905,22 @@ namespace RegulatedNoise
                     // this value works much better
                     RegulatedNoiseSettings.EBPixelThreshold = 0.6f;
                     RegulatedNoiseSettings.EBPixelAmount    = 22;
+                }
+
+                // do all the things that must be done for the new versions
+                if ((RegulatedNoiseSettings.Version == 1.84m) && (RegulatedNoiseSettings.VersionDJ == 0.17m))
+                { 
+                    if(RegulatedNoiseSettings.UseEddnTestSchema)
+                    { 
+                        RegulatedNoiseSettings.UseEddnTestSchema = false;
+                        SaveSettings();
+                        if(RegulatedNoiseSettings.PostToEddnOnImport)
+                        { 
+                            MessageBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
+                                            "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", 
+                                            "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
                 }
             }
         }
@@ -5266,19 +5285,25 @@ namespace RegulatedNoise
 
         private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             RegulatedNoiseSettings.limitLightYears = cbLimitLightYears.Checked;
             SetupGui();
+            Cursor = Cursors.Default;
         }
 
         private void cbStationToStar_CheckedChanged(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             RegulatedNoiseSettings.StationToStar = cbStationToStar.Checked;
             SetupGui();
+            Cursor = Cursors.Default;
         }
 
         private void cbIncludeWithinRegionOfStation_SelectionChangeCommitted(object sender, System.EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             SetupGui();
+            Cursor = Cursors.Default;
         }
 
         private void button24_Click(object sender, EventArgs e)
@@ -6100,7 +6125,7 @@ namespace RegulatedNoise
         private void label63_Click(object sender, EventArgs e)
         {
 
-        }
+                    }
 
 #region System / Station Tab
 
@@ -6186,7 +6211,7 @@ namespace RegulatedNoise
                     cmdSystemSave.Enabled       = false;
                     cmdSystemCancel.Enabled     = cmdSystemSave.Enabled;
 
-                    cmdStationNew.Enabled       = false;
+                    cmdStationNew.Enabled       = true;
                     cmdStationEdit.Enabled      = false;
                     cmdStationSave.Enabled      = false;
                     cmdStationCancel.Enabled    = cmdStationSave.Enabled;
@@ -6349,7 +6374,7 @@ namespace RegulatedNoise
 
                 setStationEditable(false);
 
-                cmdStationNew.Enabled    = true;
+                cmdStationNew.Enabled    = cmdStationNew.Enabled;
                 cmdStationEdit.Enabled   = false;
                 cmdStationSave.Enabled   = false;
 
@@ -6851,6 +6876,9 @@ namespace RegulatedNoise
             if (MessageBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
                 Cursor = Cursors.WaitCursor;
+                if (m_SystemIsNew)
+                    _oldSystemName = "";
+                
                 _Milkyway.ChangeAddSystem(m_currentSystemdata, _oldSystemName);
                 setSystemEditable(false);
 
@@ -6871,11 +6899,14 @@ namespace RegulatedNoise
 
                 loadSystemData(m_currentSystemdata.Name);
                 loadStationData(m_currentSystemdata.Name, txtStationName.Text);
+
+                showSystemNumbers();
+
                 Cursor = Cursors.Default;
             }
         }
 
-        private void cmdStationChange_Click(object sender, EventArgs e)
+        private void cmdStationSave_Click(object sender, EventArgs e)
         {
             EDStation existing = null;
 
@@ -6912,6 +6943,9 @@ namespace RegulatedNoise
 
             if (MessageBox.Show("Save changes on current station ?", "stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
+                if (m_StationIsNew)
+                    _oldStationName = "";
+
                 Cursor = Cursors.WaitCursor;
                 _Milkyway.ChangeAddStation(m_currentSystemdata.Name, m_currentStationdata, _oldStationName);
 
@@ -6922,6 +6956,9 @@ namespace RegulatedNoise
 
                 loadSystemData(m_currentSystemdata.Name);
                 loadStationData(m_currentSystemdata.Name, m_currentStationdata.Name);
+
+                showSystemNumbers();
+
                 Cursor = Cursors.Default;
             }
         }
@@ -6968,6 +7005,7 @@ namespace RegulatedNoise
                     cmbStationStations.ReadOnly = false;
 
                     loadSystemData(newSystemname, true);
+                    loadStationData(newSystemname, "", false);
                 }
             }
         }
@@ -7259,8 +7297,11 @@ namespace RegulatedNoise
 
         private void cmbAllStations_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(!m_SystemLoadingValues)
+            if (!m_SystemLoadingValues)
+            {
                 loadSystemData(cmbSystemsAllSystems.SelectedValue.ToString());
+                loadStationData(cmbSystemsAllSystems.SelectedValue.ToString(), "");
+            }
         }
 
         private void cmdSystemCancel_Click(object sender, EventArgs e)
@@ -7319,5 +7360,7 @@ namespace RegulatedNoise
 
             paEconomies.Visible = false;
         }
+
+
     }
 }

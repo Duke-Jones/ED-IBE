@@ -59,7 +59,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.16m;
+        public readonly decimal VersionDJ = 0.17m;
 #endif
         private int _isFirstRun = -1;
 
@@ -77,8 +77,7 @@ namespace RegulatedNoise
         public bool IncludeExtendedCSVInfo = true;
         public bool PostToEddnOnImport = false;
         public bool DeleteScreenshotOnImport = false;
-        public bool WarnedAboutEddnSchema = false;
-        public bool UseEddnTestSchema = true;
+        public bool UseEddnTestSchema = false;
         public string UiColour = "#FF8419";
         public string ForegroundColour = null;
         public string BackgroundColour = null;
@@ -107,8 +106,9 @@ namespace RegulatedNoise
         public bool AutoActivateOCRTab                                  = true;
         public bool AutoActivateSystemTab                               = true;
         public string PilotsName                                        = String.Empty;
-        public bool IncludeUnknownDTS                                   = false;
-        public bool LoadStationsJSON                                  = false;
+        public bool IncludeUnknownDTS                                   = true;
+        public bool LoadStationsJSON                                    = false;
+        
 
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},
@@ -405,27 +405,7 @@ namespace RegulatedNoise
 
         private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
         {
-            if (RegulatedNoiseSettings.WarnedAboutEddnSchema == false)
-            {
-                var result = MessageBox.Show(
-                    "Are you sure?  It's very important to get your System Names correct before uploading to the live schema...", "Are you sure?",
-                    MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
-                {
-                    RegulatedNoiseSettings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
-                    RegulatedNoiseSettings.WarnedAboutEddnSchema = true;
-                }
-                else
-                {
-                    RegulatedNoiseSettings.UseEddnTestSchema = true;
-                    cbUseEddnTestSchema.CheckedChanged -= cbUseEddnTestSchema_CheckedChanged;
-                    cbUseEddnTestSchema.Checked = true;
-                    cbUseEddnTestSchema.CheckedChanged += cbUseEddnTestSchema_CheckedChanged;
-                }
-            }
-            else
-                RegulatedNoiseSettings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
+            RegulatedNoiseSettings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
         }
 
         #region Theming

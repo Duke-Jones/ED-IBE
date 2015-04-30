@@ -66,7 +66,7 @@ namespace RegulatedNoise
             else {
                 ProzValue = 0;
             }
-            if (m_PTimer.currentMeasuring() >= 100)
+            if (m_PTimer.currentMeasuring() >= 50)
             { 
                 m_PTimer.startMeasuring();
                 progressUpdate(ProzValue);
