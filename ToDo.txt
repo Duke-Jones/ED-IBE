@@ -25,7 +25,16 @@ todo:
 
 -------------------------------------------------------------------------------------      
 
-1.84_0.17_5
+1.84_0.18_1
+   * positons of Messageboxes and Inputboxes are centered over the parent window
+   * added "Alt-O" shortcut for "Continue" on OCR tab
+   * get stationname for OCR from "location from logfile" if the stationname is 
+     confirmed as "existing in system" by database
+   * added possibility to purge old data on settings tab
+   * added "None" to items in station and system data
+   * correction on <test> EDDN schema check
+-------------------------------------------------------------------------------------      
+1.84_0.17
    * it's possible to add new stations
    * default value for EDDN is no longer <test> because it's only for dev testing
    * set value for EDDN schema from <test> to <normal> and add a hint for users who have EDDN active

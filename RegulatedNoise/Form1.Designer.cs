@@ -82,6 +82,7 @@
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.cmbStationStations = new System.Windows.Forms.ComboBox_ro();
             this.paEconomies = new System.Windows.Forms.Panel();
+            this.cbStationEcoNone = new System.Windows.Forms.CheckBox_ro();
             this.button8 = new System.Windows.Forms.Button();
             this.cbStationEcoTourism = new System.Windows.Forms.CheckBox_ro();
             this.cbStationEcoTerraforming = new System.Windows.Forms.CheckBox_ro();
@@ -344,6 +345,9 @@
             this.button15 = new System.Windows.Forms.Button();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.label89 = new System.Windows.Forms.Label();
+            this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
+            this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.cbLoadStationsJSON = new System.Windows.Forms.CheckBox();
             this.label74 = new System.Windows.Forms.Label();
             this.cbAutoActivateSystemTab = new System.Windows.Forms.CheckBox();
@@ -437,6 +441,7 @@
             this.groupBox2.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.groupBox12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -1012,6 +1017,7 @@
             // 
             // paEconomies
             // 
+            this.paEconomies.Controls.Add(this.cbStationEcoNone);
             this.paEconomies.Controls.Add(this.button8);
             this.paEconomies.Controls.Add(this.cbStationEcoTourism);
             this.paEconomies.Controls.Add(this.cbStationEcoTerraforming);
@@ -1024,15 +1030,27 @@
             this.paEconomies.Controls.Add(this.cbStationEcoAgriculture);
             this.paEconomies.Location = new System.Drawing.Point(7, 364);
             this.paEconomies.Name = "paEconomies";
-            this.paEconomies.Size = new System.Drawing.Size(173, 94);
+            this.paEconomies.Size = new System.Drawing.Size(173, 113);
             this.paEconomies.TabIndex = 129;
             this.paEconomies.Visible = false;
+            // 
+            // cbStationEcoNone
+            // 
+            this.cbStationEcoNone.AutoSize = true;
+            this.cbStationEcoNone.Location = new System.Drawing.Point(84, 75);
+            this.cbStationEcoNone.Name = "cbStationEcoNone";
+            this.cbStationEcoNone.ReadOnly = false;
+            this.cbStationEcoNone.Size = new System.Drawing.Size(52, 17);
+            this.cbStationEcoNone.TabIndex = 10;
+            this.cbStationEcoNone.Text = "None";
+            this.cbStationEcoNone.UseVisualStyleBackColor = false;
+            this.cbStationEcoNone.CheckedChanged += new System.EventHandler(this.checkBox_ro1_CheckedChanged);
             // 
             // button8
             // 
             this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(107, 73);
+            this.button8.Location = new System.Drawing.Point(107, 92);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(62, 17);
             this.button8.TabIndex = 9;
@@ -3496,7 +3514,7 @@
             this.bContinueOcr.Name = "bContinueOcr";
             this.bContinueOcr.Size = new System.Drawing.Size(154, 23);
             this.bContinueOcr.TabIndex = 14;
-            this.bContinueOcr.Text = "Continue";
+            this.bContinueOcr.Text = "C&ontinue";
             this.bContinueOcr.UseVisualStyleBackColor = true;
             this.bContinueOcr.Click += new System.EventHandler(this.bContinueOcr_Click);
             // 
@@ -3898,7 +3916,7 @@
             this.bPurgeAllEddnData.TabIndex = 12;
             this.bPurgeAllEddnData.Text = "Purge all EDDN data";
             this.bPurgeAllEddnData.UseVisualStyleBackColor = true;
-            this.bPurgeAllEddnData.Click += new System.EventHandler(this.button24_Click);
+            this.bPurgeAllEddnData.Click += new System.EventHandler(this.cmdPurgeEDDNData);
             // 
             // button17
             // 
@@ -4008,6 +4026,9 @@
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.label89);
+            this.groupBox12.Controls.Add(this.nudPurgeOldDataDays);
+            this.groupBox12.Controls.Add(this.cmdPurgeOldData);
             this.groupBox12.Controls.Add(this.cbLoadStationsJSON);
             this.groupBox12.Controls.Add(this.label74);
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
@@ -4020,6 +4041,47 @@
             this.groupBox12.TabIndex = 12;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(203, 391);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(29, 13);
+            this.label89.TabIndex = 19;
+            this.label89.Text = "days";
+            this.toolTip1.SetToolTip(this.label89, "0 purges all but todays price data, -1 purges ALL price data");
+            // 
+            // nudPurgeOldDataDays
+            // 
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 388);
+            this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
+            365,
+            0,
+            0,
+            0});
+            this.nudPurgeOldDataDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.nudPurgeOldDataDays.Name = "nudPurgeOldDataDays";
+            this.nudPurgeOldDataDays.Size = new System.Drawing.Size(44, 20);
+            this.nudPurgeOldDataDays.TabIndex = 62;
+            this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip1.SetToolTip(this.nudPurgeOldDataDays, "0 purges all but todays data, -1 purges ALL data");
+            this.nudPurgeOldDataDays.ValueChanged += new System.EventHandler(this.nudPurgeOldDataDays_ValueChanged);
+            // 
+            // cmdPurgeOldData
+            // 
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 386);
+            this.cmdPurgeOldData.Name = "cmdPurgeOldData";
+            this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
+            this.cmdPurgeOldData.TabIndex = 8;
+            this.cmdPurgeOldData.Text = "purge data older than";
+            this.toolTip1.SetToolTip(this.cmdPurgeOldData, "0 purges all but todays price data, -1 purges ALL price data");
+            this.cmdPurgeOldData.UseVisualStyleBackColor = true;
+            this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
             // 
             // cbLoadStationsJSON
             // 
@@ -4082,7 +4144,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(32, 217);
+            this.button6.Location = new System.Drawing.Point(32, 422);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -4472,6 +4534,7 @@
             this.tabSettings.ResumeLayout(false);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -4837,6 +4900,10 @@
         private System.Windows.Forms.CheckBox_ro cbStationEcoExtraction;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.ComboBox_ro cmbStationStations;
+        private System.Windows.Forms.Button cmdPurgeOldData;
+        private System.Windows.Forms.CheckBox_ro cbStationEcoNone;
+        private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.NumericUpDown nudPurgeOldDataDays;
     }
 }
 

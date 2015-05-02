@@ -196,18 +196,28 @@ namespace RegulatedNoise
                 }
             }
 
-            var matchesInStationReferenceList = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot).OrderBy(x => _levenshtein.LD2(headerResult, x)).ToList();
+            string[] StationsInSystem = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
+            string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(_callingForm.tbCurrentStationinfoFromLogs.Text, StringComparison.InvariantCultureIgnoreCase));
 
+            if(headerResult_temp == null)
+            { 
+                // station not found in database
+                var matchesInStationReferenceList = StationsInSystem.OrderBy(x => _levenshtein.LD2(headerResult, x)).ToList();
 
-            if(matchesInStationReferenceList.Count > 0)
-            {
-                var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].ToUpper());
+                if(matchesInStationReferenceList.Count > 0)
+                {
+                    var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].ToUpper());
                 
-                // this depends on the length of the word - this factor works really good
-                double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Length * 0.7), 0);
+                    // this depends on the length of the word - this factor works really good
+                    double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Length * 0.7), 0);
 
-                if (ld < LevenshteinLimit)
-                    headerResult = matchesInStationReferenceList[0].ToUpper();
+                    if (ld <= LevenshteinLimit)
+                        headerResult = matchesInStationReferenceList[0].ToUpper();
+                }
+            }
+            else
+            {
+                headerResult = headerResult_temp;
             }
 
             // show station on GUI

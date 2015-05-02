@@ -24,6 +24,7 @@ using RegulatedNoise.EDDB_Data;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
+using CodeProject.Dialog;
 
 namespace RegulatedNoise
 {
@@ -602,7 +603,7 @@ namespace RegulatedNoise
                     }
                 }
 
-                var MBResult = MessageBox.Show(
+                var MBResult = MsgBox.Show(
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel);
@@ -622,7 +623,7 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                var MBResult = MessageBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
+                var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -653,7 +654,7 @@ namespace RegulatedNoise
                     continue;
                 }
                 
-                var MBResult = MessageBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
+                var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -689,7 +690,7 @@ namespace RegulatedNoise
                     }
                 }
 
-                var MBResult = MessageBox.Show(
+                var MBResult = MsgBox.Show(
                     "Hm, that doesn't seem right, " + dialog.SelectedPath +
                     " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
 
@@ -709,7 +710,7 @@ namespace RegulatedNoise
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                var MBResult = MessageBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
+                var MBResult = MsgBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -741,7 +742,7 @@ namespace RegulatedNoise
                     _logger.Log(ex.StackTrace, true);
                     if (ex.InnerException != null)
                         _logger.Log(ex.InnerException.ToString(), true);
-                    MessageBox.Show("Couldn't load settings; maybe they are from a previous version.  A new settings file will be created on exit.");
+                    MsgBox.Show("Couldn't load settings; maybe they are from a previous version.  A new settings file will be created on exit.");
                     RegulatedNoiseSettings = new RegulatedNoiseSettings();
                 }
                 fs.Close();
@@ -849,6 +850,8 @@ namespace RegulatedNoise
             	    break;
             }
             
+            // Set the MinDate and MaxDate.
+            nudPurgeOldDataDays.Value = RegulatedNoiseSettings.oldDataPurgeDeadlineDays;
         }
 
         /// <summary>
@@ -988,11 +991,11 @@ namespace RegulatedNoise
 
             while (!File.Exists(fileSystemEventArgs.FullPath))
             {
-                //MessageBox.Show("File created... but it doesn't exist?!  Hit OK and I'll retry...");
+                //MsgBox.Show("File created... but it doesn't exist?!  Hit OK and I'll retry...");
                 Thread.Sleep(100);
             }
 
-            //MessageBox.Show("Good news! " + fileSystemEventArgs.FullPath +
+            //MsgBox.Show("Good news! " + fileSystemEventArgs.FullPath +
             //                " exists!  Let's pause for a moment before opening it...");
 
             ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
@@ -1311,7 +1314,7 @@ namespace RegulatedNoise
 
                 if (header != null && !header.StartsWith("System;"))
                 {
-                    MessageBox.Show("Error: " + filename + " is unreadable or in an old format.  Skipping...");
+                    MsgBox.Show("Error: " + filename + " is unreadable or in an old format.  Skipping...");
                     continue;
                 }
 
@@ -2313,7 +2316,7 @@ namespace RegulatedNoise
             {
                 var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Min(y => y.BuyPrice));
-                MessageBox.Show(string.Join(", ", m.Select(x => x.StationID)));
+                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
         }
 
@@ -2323,7 +2326,7 @@ namespace RegulatedNoise
             {
                 var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.SellPrice == l.Min(y => y.SellPrice));
-                MessageBox.Show(string.Join(", ", m.Select(x => x.StationID)));
+                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
         }
 
@@ -2333,7 +2336,7 @@ namespace RegulatedNoise
             {
                 var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Max(y => y.BuyPrice));
-                MessageBox.Show(string.Join(", ", m.Select(x => x.StationID)));
+                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
         }
 
@@ -2343,7 +2346,7 @@ namespace RegulatedNoise
             {
                 var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.SellPrice == l.Max(y => y.SellPrice));
-                MessageBox.Show(string.Join(", ", m.Select(x => x.StationID)));
+                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
         }
 
@@ -2581,7 +2584,7 @@ namespace RegulatedNoise
                 _logger.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
                     _logger.Log(ex.InnerException.ToString(), true);
-                MessageBox.Show(
+                MsgBox.Show(
                     "Couldn't start webserver.  Maybe something is already using port 8080...?");
             }
         }
@@ -2754,7 +2757,7 @@ namespace RegulatedNoise
         {
             if (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 10)
             {
-                MessageBox.Show("You need to calibrate first.  Go to the OCR Calibration tab to do so...");
+                MsgBox.Show("You need to calibrate first.  Go to the OCR Calibration tab to do so...");
                 return;
             }
 
@@ -3056,7 +3059,7 @@ namespace RegulatedNoise
             _rowIds = rowIds;
             _correctionColumn = 0;
             _correctionRow = -1;
-            bContinueOcr.Text = "Continue";
+            bContinueOcr.Text = "C&ontinue";
             bClearOcrOutput.Enabled = false;
             bEditResults.Enabled = false;
             tbFinalOcrOutput.Enabled = false;
@@ -3298,7 +3301,7 @@ namespace RegulatedNoise
                         {
 
                             tbCommoditiesOcrOutput.Text = "Finished!";
-                            bContinueOcr.Text = "Import";
+                            bContinueOcr.Text = "Imp&ort";
                             bContinueOcr.Enabled = true;
                             bIgnoreTrash.Enabled = false;
                             bClearOcrOutput.Enabled = true;
@@ -3449,7 +3452,7 @@ namespace RegulatedNoise
             else
             {
                 // unknown commodity, is it a new one or a typing error ?
-                Answer = MessageBox.Show(String.Format("Do you want to add '{0}' to the known commodities ?", commodity), "Unknown commodity !",
+                Answer = MsgBox.Show(String.Format("Do you want to add '{0}' to the known commodities ?", commodity), "Unknown commodity !",
                                          MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
                 if (Answer == System.Windows.Forms.DialogResult.OK)
@@ -3464,7 +3467,7 @@ namespace RegulatedNoise
             {
                 if (_commodityTexts == null || _correctionColumn >= _commodityTexts.GetLength(1) || finished)
                 {
-                    if (MessageBox.Show("Import this?", "Import?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MsgBox.Show("Import this?", "Import?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         ImportFinalOcrOutput();
                         tbFinalOcrOutput.Text = "";
@@ -4186,7 +4189,7 @@ namespace RegulatedNoise
                                 if (data != null)
                                 {
                                     StreamReader sr = new StreamReader(data);
-                                    MessageBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN");
+                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN");
                                 }
                             }
                         }
@@ -4206,7 +4209,7 @@ namespace RegulatedNoise
 
         private void cmdHint_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
+            MsgBox.Show(
                 "If you leave the Commodity Name blank in the UI or webpage, that entire row will be ignored on import (though it will still appear in the CSV). This is really useful when half a row has been OCR'ed and it's all gone horribly wrong :)",
                 "Really Useful Tip...");
         }
@@ -4897,6 +4900,9 @@ namespace RegulatedNoise
 
         private void doSpecial()
         {
+            decimal lastVersion   = RegulatedNoiseSettings.lastVersion;
+            decimal lastVersionDJ = RegulatedNoiseSettings.lastVersionDJ;
+
             if (RegulatedNoiseSettings.isFirstVersionRun())
             {
                 // do all the things that must be done for the new versions
@@ -4916,10 +4922,38 @@ namespace RegulatedNoise
                         SaveSettings();
                         if(RegulatedNoiseSettings.PostToEddnOnImport)
                         { 
-                            MessageBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
+                            MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
                                             "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", 
                                             "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
+                    }
+                }
+
+
+                if(!RegulatedNoiseSettings.checkedTestEDDNSetting)
+                { 
+                    if((lastVersion.Equals(1.84m) && lastVersionDJ.Equals(0.17m)))
+                    {
+                        // last was 0.17 - so we can be sure, we did the check
+                        RegulatedNoiseSettings.checkedTestEDDNSetting = true;
+                        SaveSettings();
+                    }
+                    else
+                    {
+                        // check did never run yet
+                        if(RegulatedNoiseSettings.UseEddnTestSchema)
+                        { 
+                            RegulatedNoiseSettings.UseEddnTestSchema = false;
+                            SaveSettings();
+                            if(RegulatedNoiseSettings.PostToEddnOnImport)
+                            { 
+                                MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
+                                                "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", 
+                                                "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+                        RegulatedNoiseSettings.checkedTestEDDNSetting = true;
+                        SaveSettings();
                     }
                 }
             }
@@ -5306,7 +5340,7 @@ namespace RegulatedNoise
             Cursor = Cursors.Default;
         }
 
-        private void button24_Click(object sender, EventArgs e)
+        private void cmdPurgeEDDNData(object sender, EventArgs e)
         {
             StationDirectory = PurgeEddnFromDirectory(StationDirectory);
             CommodityDirectory = PurgeEddnFromDirectory(CommodityDirectory);
@@ -5905,7 +5939,7 @@ namespace RegulatedNoise
 
                 if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
                     bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
-                var wrongres = MessageBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
+                var wrongres = MsgBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
                 if (wrongres == DialogResult.Yes)
                 {
                     return getReferenceScreenshot();
@@ -6405,6 +6439,7 @@ namespace RegulatedNoise
             cmbSystemGovernment.Items.Add("Colony");
             cmbSystemGovernment.Items.Add("Prison Colony");
             cmbSystemGovernment.Items.Add("Theocracy");
+            cmbSystemGovernment.Items.Add("None");
 
             cmbSystemState.Items.Add(Program.NULLSTRING);
             cmbSystemState.Items.Add("Bust");
@@ -6414,12 +6449,14 @@ namespace RegulatedNoise
             cmbSystemState.Items.Add("Lockdown");
             cmbSystemState.Items.Add("Outbreak");
             cmbSystemState.Items.Add("War");
+            cmbSystemState.Items.Add("None");
 
             cmbSystemAllegiance.Items.Add(Program.NULLSTRING);
             cmbSystemAllegiance.Items.Add("Alliance");
             cmbSystemAllegiance.Items.Add("Empire");
             cmbSystemAllegiance.Items.Add("Federation");
             cmbSystemAllegiance.Items.Add("Independent");
+            cmbSystemAllegiance.Items.Add("None");
 
             cmbSystemSecurity.Items.Add(Program.NULLSTRING);
             cmbSystemSecurity.Items.Add("Low");
@@ -6436,6 +6473,7 @@ namespace RegulatedNoise
             cmbSystemPrimaryEconomy.Items.Add("Service");
             cmbSystemPrimaryEconomy.Items.Add("Terraforming");
             cmbSystemPrimaryEconomy.Items.Add("Tourism");
+            cmbSystemPrimaryEconomy.Items.Add("None");
 
             txtSystemPopulation.Culture = CultureInfo.CurrentCulture;
 
@@ -6515,14 +6553,17 @@ namespace RegulatedNoise
             cmbStationGovernment.Items.Add("Colony");
             cmbStationGovernment.Items.Add("Prison Colony");
             cmbStationGovernment.Items.Add("Theocracy");
+            cmbStationGovernment.Items.Add("None");
 
             cmbStationAllegiance.Items.Add(Program.NULLSTRING);
             cmbStationAllegiance.Items.Add("Alliance");
             cmbStationAllegiance.Items.Add("Empire");
             cmbStationAllegiance.Items.Add("Federation");
             cmbStationAllegiance.Items.Add("Independent");
+            cmbStationAllegiance.Items.Add("None");
 
             cmbStationState.Items.Add(Program.NULLSTRING);
+            cmbStationState.Items.Add("Boom");
             cmbStationState.Items.Add("Bust");
             cmbStationState.Items.Add("Civil Unrest");
             cmbStationState.Items.Add("Civil War");
@@ -6530,6 +6571,7 @@ namespace RegulatedNoise
             cmbStationState.Items.Add("Lockdown");
             cmbStationState.Items.Add("Outbreak");
             cmbStationState.Items.Add("War");
+            cmbStationState.Items.Add("None");
 
             this.txtStationName.LostFocus += txtStation_LostFocus;
             this.cmbStationMaxLandingPadSize.LostFocus += txtStation_LostFocus;
@@ -6568,6 +6610,17 @@ namespace RegulatedNoise
             this.cbStationHasRepair.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
             this.cmbStationStations.SelectedIndexChanged += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
 
+            this.cbStationEcoAgriculture.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoExtraction.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoHighTech.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoIndustrial.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoMilitary.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoNone.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoRefinery.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoService.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoTerraforming.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+            this.cbStationEcoTourism.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+
             m_SystemLoadingValues = true;
             this.cmbSystemsAllSystems.BeginUpdate();
             this.cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
@@ -6575,6 +6628,29 @@ namespace RegulatedNoise
             this.cmbSystemsAllSystems.DisplayMember   = "Name";
             this.cmbSystemsAllSystems.EndUpdate();
             m_SystemLoadingValues = false;
+        }
+
+        private void cmbStationEconomies_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckBox_ro SenderCheckBox = (CheckBox_ro)sender;
+
+            if(SenderCheckBox.Checked)
+                if(SenderCheckBox.Name.Equals("cbStationEcoNone"))
+                {
+                    this.cbStationEcoAgriculture.Checked = false;
+                    this.cbStationEcoExtraction.Checked = false;
+                    this.cbStationEcoHighTech.Checked = false;
+                    this.cbStationEcoIndustrial.Checked = false;
+                    this.cbStationEcoMilitary.Checked = false;
+                    this.cbStationEcoRefinery.Checked = false;
+                    this.cbStationEcoService.Checked = false;
+                    this.cbStationEcoTerraforming.Checked = false;
+                    this.cbStationEcoTourism.Checked = false;
+                }
+                else
+                {
+                    this.cbStationEcoNone.Checked = false;
+                }
         }
 
         void txtSystem_GotFocus(object sender, EventArgs e)
@@ -6650,7 +6726,7 @@ namespace RegulatedNoise
                             if (DateTime.Now.Subtract(m_SystemWarningTime).TotalSeconds > 5)
                             {
                                 m_SystemWarningTime = DateTime.Now;
-                                MessageBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                     }
                     m_currentSystemdata.Name = txtSystemName.Text;
@@ -6722,7 +6798,7 @@ namespace RegulatedNoise
                             if (DateTime.Now.Subtract(m_StationWarningTime).TotalSeconds > 5)
                             {
                                 m_StationWarningTime = DateTime.Now;
-                                MessageBox.Show("A Station with this name already exists", "Adding a new Station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MsgBox.Show("A Station with this name already exists", "Adding a new Station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
                     }
@@ -6847,7 +6923,9 @@ namespace RegulatedNoise
                 existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (existing != null)
                 {
-                    MessageBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                    //MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
@@ -6859,21 +6937,21 @@ namespace RegulatedNoise
                 existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Find(x => x.Name.Equals(_oldSystemName, StringComparison.InvariantCultureIgnoreCase));
                 if (existing != null)
                 {
-                    MessageBox.Show("It's not allowed to rename a EDDB system", "renaming system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("It's not allowed to rename a EDDB system", "renaming system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
                 existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (existing != null)
                 {
-                    MessageBox.Show("A system with the new name's already existing", "renaming system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("A system with the new name's already existing", "renaming system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
                 newComboBoxRefresh = true;
             }
 
-            if (MessageBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+            if (MsgBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
                 Cursor = Cursors.WaitCursor;
                 if (m_SystemIsNew)
@@ -6917,7 +6995,7 @@ namespace RegulatedNoise
                                                                                               (x.SystemId.Equals(m_currentSystemdata.Id)));
                 if (existing != null)
                 {
-                    MessageBox.Show("A station with this name already exists", "Adding a new station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("A station with this name already exists", "Adding a new station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
@@ -6928,7 +7006,7 @@ namespace RegulatedNoise
                                                                                             (x.SystemId.Equals(m_currentSystemdata.Id)));
                 if (existing != null)
                 {
-                    MessageBox.Show("It's not allowed to rename a EDDB station", "renaming station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("It's not allowed to rename a EDDB station", "renaming station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
@@ -6936,12 +7014,12 @@ namespace RegulatedNoise
                                                                                               (x.SystemId.Equals(m_currentSystemdata.Id)));
                 if (existing != null)
                 {
-                    MessageBox.Show("A station with the new name's already existing", "renaming station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("A station with the new name's already existing", "renaming station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
 
-            if (MessageBox.Show("Save changes on current station ?", "stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+            if (MsgBox.Show("Save changes on current station ?", "stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
                 if (m_StationIsNew)
                     _oldStationName = "";
@@ -6971,13 +7049,13 @@ namespace RegulatedNoise
 
             string newSystemname = tbCurrentSystemFromLogs.Text;
 
-            if(InputBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == System.Windows.Forms.DialogResult.OK)
+            if(InpBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == System.Windows.Forms.DialogResult.OK)
             { 
                 
                 EDSystem existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newSystemname, StringComparison.InvariantCultureIgnoreCase)));
                 if (existing != null)
                 {
-                    MessageBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
                 else
@@ -7022,14 +7100,14 @@ namespace RegulatedNoise
             if (existing != null)
                 newStationname = String.Empty;
 
-            if(InputBox.Show("create a new station", "insert the name of the new station", ref newStationname) == System.Windows.Forms.DialogResult.OK)
+            if(InpBox.Show("create a new station", "insert the name of the new station", ref newStationname) == System.Windows.Forms.DialogResult.OK)
             { 
                 existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
                                                                                               (x.SystemId.Equals(m_currentSystemdata.Id)));
 
                 if (existing != null)
                 {
-                    MessageBox.Show("A station with this name already exists in this system", "Adding a new station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("A station with this name already exists in this system", "Adding a new station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
                 else
@@ -7306,7 +7384,7 @@ namespace RegulatedNoise
 
         private void cmdSystemCancel_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Dismiss changes ?", "Systemdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+            if (MsgBox.Show("Dismiss changes ?", "Systemdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
                 cmbSystemsAllSystems.ReadOnly   = false;
                 cmbStationStations.ReadOnly     = false;
@@ -7318,7 +7396,7 @@ namespace RegulatedNoise
 
         private void cmdStationCancel_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Dismiss changes ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+            if (MsgBox.Show("Dismiss changes ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
             {
                 cmbSystemsAllSystems.ReadOnly   = false;
                 cmbStationStations.ReadOnly     = false;
@@ -7361,6 +7439,57 @@ namespace RegulatedNoise
             paEconomies.Visible = false;
         }
 
+        private void cmdPurgeOldData_Click(object sender, EventArgs e)
+        {
 
+            if(MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
+            {
+                DateTime deadline = DateTime.Now.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
+                StationDirectory = PurgeOldDataFromDirectory(StationDirectory, deadline);
+                CommodityDirectory = PurgeOldDataFromDirectory(CommodityDirectory, deadline);
+                SetupGui();
+            }
+
+        }
+
+        private static ObjectDirectory PurgeOldDataFromDirectory(ObjectDirectory directory, DateTime deadline)
+        {
+            ObjectDirectory newDirectory;
+            
+            if(directory.GetType() == typeof(StationDirectory))
+                newDirectory = new StationDirectory();
+            else
+                newDirectory = new CommodityDirectory();
+
+            foreach (var x in directory)
+            {
+                var newList = new List<CsvRow>();
+                foreach (var y in x.Value)
+                    if (y.SampleDate >= deadline)
+                        newList.Add(y);
+
+                if(newList.Count > 0)
+                    newDirectory.Add(x.Key, newList);
+            }
+            return newDirectory;
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBox_ro1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void nudPurgeOldDataDays_ValueChanged(object sender, EventArgs e)
+        {
+            if(_InitDone)
+            {
+                RegulatedNoiseSettings.oldDataPurgeDeadlineDays = (Int32)(nudPurgeOldDataDays.Value);
+            }
+
+        }
     }
 }
