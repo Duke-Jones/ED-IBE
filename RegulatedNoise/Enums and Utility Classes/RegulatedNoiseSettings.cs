@@ -59,7 +59,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.17m;
+        public readonly decimal VersionDJ = 0.18m;
 #endif
         private int _isFirstRun = -1;
 
@@ -108,7 +108,8 @@ namespace RegulatedNoise
         public string PilotsName                                        = String.Empty;
         public bool IncludeUnknownDTS                                   = true;
         public bool LoadStationsJSON                                    = false;
-        
+        public Int32 oldDataPurgeDeadlineDays                           = 14;   
+        public bool checkedTestEDDNSetting                              = false;   
 
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},
