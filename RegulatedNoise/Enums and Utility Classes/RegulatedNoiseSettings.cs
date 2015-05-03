@@ -59,7 +59,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.18m;
+        public readonly decimal VersionDJ = 0.16m;
 #endif
         private int _isFirstRun = -1;
 
@@ -88,6 +88,9 @@ namespace RegulatedNoise
         public int CmdrsLogSortColumn                                   = 0;
         public SortOrder CmdrsLogSortOrder                              = SortOrder.Descending;
         public bool AutoEvent_JumpedTo                                  = true;
+        public bool AutoEvent_Visited                                   = true;
+        public bool AutoEvent_MarketDataCollected                       = true;
+        public bool AutoEvent_ReplaceVisited                            = true;
         public float EBPixelThreshold                                   = 0.6f;
         public int EBPixelAmount                                        = 22;
         public int lastStationCount                                     = 4;
@@ -142,69 +145,6 @@ namespace RegulatedNoise
                                                                                                                   {"lbPrices",              new List<ColumnData>() { new ColumnData("") }}
                                                                                                                 };
 
-        public void CheckVersion()
-        {
-            string sURL;
-            sURL = @"https://api.github.com/repos/stringandstickytape/RegulatedNoise/releases";
-            string response;
-
-            HttpWebRequest webRequest = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
-            webRequest.Method = "GET";
-            webRequest.ServicePoint.Expect100Continue = false;
-            webRequest.UserAgent = "YourAppName";
-
-            decimal maxVersion = -1;
-
-            try
-            {
-                using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
-                    response = responseReader.ReadToEnd();
-
-                dynamic data = JsonConvert.DeserializeObject<dynamic>(response);
-
-                var ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-                ci.NumberFormat.CurrencyDecimalSeparator = ".";
-
-                dynamic releaseDetails = null;
-
-                foreach (var x in data)
-                {
-                    string release = x.name;
-                    release = release.Replace("v", "");
-
-                    if (release == "")
-                        continue;
-
-                    var thisVersion = decimal.Parse(release, NumberStyles.Any, ci);
-                    if (maxVersion < thisVersion)
-                    {
-                        maxVersion = thisVersion;
-                        releaseDetails = x;
-                    }
-
-                }
-
-                if ((Version < maxVersion) )
-                {
-                    var dialogResult = MessageBox.Show("Newer version found! Quit RegulatedNoise and browse to GitHub to download it?\r\n\r\nv"+maxVersion+":\r\n"+releaseDetails.body,"Update?",
-                        MessageBoxButtons.YesNo);
-
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        Process.Start(@"https://github.com/stringandstickytape/RegulatedNoise/releases");
-                        Application.Exit();
-                    }
-                }
-            }
-            catch
-            {
-                // Not a disaster if we can't do the version check...
-                return;
-            }
-
-        }
-
-#if DukeJones
         public void CheckVersion2()
         {
             string sURL;
@@ -271,15 +211,23 @@ namespace RegulatedNoise
 
                 if ((Version < maxVersion) || ((Version == maxVersion) && (VersionDJ < maxVersionDJ)))
                 {
-                    var dialogResult = MessageBox.Show("Newer DJ-version found! Quit RegulatedNoise and browse to GitHub to download it?\r\n\r\nv" + maxVersion.ToString().Replace(",", ".") + "-" + maxVersionDJ.ToString().Replace(",", ".") + ":\r\n" + releaseDetails.body, "Update?",
-                        MessageBoxButtons.YesNo);
+                
+                    Form1.InstanceObject.lblUpdateInfo.Text = "newer DJ-version found!";
+                    Form1.InstanceObject.lblUpdateInfo.ForeColor = Color.Black;
+                    Form1.InstanceObject.lblUpdateInfo.BackColor = Color.Yellow;
 
-                    if (dialogResult == DialogResult.Yes)
-                    {
+                    Form1.InstanceObject.lblUpdateDetail.Text = maxVersion.ToString().Replace(",", ".") + "-" + maxVersionDJ.ToString().Replace(",", ".") + ":\r\n";
 
-                        Process.Start(@"https://github.com/Duke-Jones/RegulatedNoise/releases");
-                        Application.Exit();
-                    }
+                    Form1.InstanceObject.lblUpdateDetail.Text += releaseDetails.body;
+
+                }
+                else
+                { 
+                    Form1.InstanceObject.lblUpdateInfo.Text = "you have the latest version of RegulatedNoise";
+                    Form1.InstanceObject.lblUpdateInfo.ForeColor = Color.DarkGreen;
+
+                    Form1.InstanceObject.lblUpdateDetail.Text = maxVersion.ToString().Replace(",", ".") + "-" + maxVersionDJ.ToString().Replace(",", ".") + ":\r\n";
+                    Form1.InstanceObject.lblUpdateDetail.Text += releaseDetails.body;
                 }
             }
             catch
@@ -319,8 +267,6 @@ namespace RegulatedNoise
 
             return retValue;
         }
-
-#endif
 
         /// <summary>
         /// returns the UI color as color object

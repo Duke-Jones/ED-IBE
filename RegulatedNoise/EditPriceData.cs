@@ -15,9 +15,9 @@ namespace RegulatedNoise
     {
         public override string thisObjectName { get { return "EditPriceData"; } }
 
-        public Form1.CsvRow RowToEdit;
+        public CsvRow RowToEdit;
 
-        public EditPriceData(Form1.CsvRow csvRow, List<string> commodities)
+        public EditPriceData(CsvRow csvRow, List<string> commodities)
         {
             InitializeComponent();
 
@@ -43,7 +43,7 @@ namespace RegulatedNoise
         {
             DialogResult = DialogResult.OK;
 
-            var returnValue = new Form1.CsvRow
+            var returnValue = new CsvRow
             {
                 SystemName = tbEditSystem.Text,
                 StationID = tbEditStation.Text + " ["+tbEditSystem.Text+"]",

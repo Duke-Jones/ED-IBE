@@ -39,6 +39,9 @@
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
             this.rbSortByStation = new System.Windows.Forms.RadioButton();
             this.rbSortBySystem = new System.Windows.Forms.RadioButton();
+            this.label89 = new System.Windows.Forms.Label();
+            this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
+            this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label53 = new System.Windows.Forms.Label();
@@ -53,6 +56,15 @@
             this.button5 = new System.Windows.Forms.Button();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
+            this.label93 = new System.Windows.Forms.Label();
+            this.label92 = new System.Windows.Forms.Label();
+            this.label91 = new System.Windows.Forms.Label();
+            this.linkLabel11 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel10 = new System.Windows.Forms.LinkLabel();
+            this.llVisitUpdate = new System.Windows.Forms.LinkLabel();
+            this.cmdUpdate = new System.Windows.Forms.Button();
+            this.lblUpdateInfo = new System.Windows.Forms.Label();
+            this.lblUpdateDetail = new System.Windows.Forms.Label();
             this.cmdDonate = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -332,7 +344,8 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.tbEddnStats = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkboxSpoolEddnToFile = new System.Windows.Forms.CheckBox();
+            this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
+            this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
             this.bPurgeAllEddnData = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
@@ -345,9 +358,6 @@
             this.button15 = new System.Windows.Forms.Button();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.label89 = new System.Windows.Forms.Label();
-            this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
-            this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.cbLoadStationsJSON = new System.Windows.Forms.CheckBox();
             this.label74 = new System.Windows.Forms.Label();
             this.cbAutoActivateSystemTab = new System.Windows.Forms.CheckBox();
@@ -355,6 +365,9 @@
             this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
             this.button6 = new System.Windows.Forms.Button();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cbAutoAdd_ReplaceVisited = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_Marketdata = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_Visited = new System.Windows.Forms.CheckBox();
             this.label49 = new System.Windows.Forms.Label();
             this.cbAutoAdd_JumpedTo = new System.Windows.Forms.CheckBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -383,6 +396,7 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
@@ -441,7 +455,6 @@
             this.groupBox2.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.groupBox12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -496,6 +509,50 @@
             this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
             this.rbSortBySystem.UseVisualStyleBackColor = true;
             this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
+            // label89
+            // 
+            this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(203, 338);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(29, 13);
+            this.label89.TabIndex = 19;
+            this.label89.Text = "days";
+            this.toolTip1.SetToolTip(this.label89, "0 purges all but todays price data, -1 purges ALL price data");
+            // 
+            // nudPurgeOldDataDays
+            // 
+            this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 335);
+            this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
+            365,
+            0,
+            0,
+            0});
+            this.nudPurgeOldDataDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.nudPurgeOldDataDays.Name = "nudPurgeOldDataDays";
+            this.nudPurgeOldDataDays.Size = new System.Drawing.Size(44, 20);
+            this.nudPurgeOldDataDays.TabIndex = 62;
+            this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip1.SetToolTip(this.nudPurgeOldDataDays, "0 purges all but todays data, -1 purges ALL data");
+            this.nudPurgeOldDataDays.ValueChanged += new System.EventHandler(this.nudPurgeOldDataDays_ValueChanged);
+            // 
+            // cmdPurgeOldData
+            // 
+            this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 333);
+            this.cmdPurgeOldData.Name = "cmdPurgeOldData";
+            this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
+            this.cmdPurgeOldData.TabIndex = 8;
+            this.cmdPurgeOldData.Text = "purge data older than";
+            this.toolTip1.SetToolTip(this.cmdPurgeOldData, "0 purges all but todays price data, -1 purges ALL price data");
+            this.cmdPurgeOldData.UseVisualStyleBackColor = true;
+            this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
             // 
             // contextMenuStrip1
             // 
@@ -635,6 +692,15 @@
             // 
             // tabHelpAndChangeLog
             // 
+            this.tabHelpAndChangeLog.Controls.Add(this.label93);
+            this.tabHelpAndChangeLog.Controls.Add(this.label92);
+            this.tabHelpAndChangeLog.Controls.Add(this.label91);
+            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel11);
+            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel10);
+            this.tabHelpAndChangeLog.Controls.Add(this.llVisitUpdate);
+            this.tabHelpAndChangeLog.Controls.Add(this.cmdUpdate);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateInfo);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateDetail);
             this.tabHelpAndChangeLog.Controls.Add(this.cmdDonate);
             this.tabHelpAndChangeLog.Controls.Add(this.label42);
             this.tabHelpAndChangeLog.Controls.Add(this.panel2);
@@ -656,6 +722,99 @@
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
+            // 
+            // label93
+            // 
+            this.label93.AutoSize = true;
+            this.label93.Location = new System.Drawing.Point(297, 221);
+            this.label93.Name = "label93";
+            this.label93.Size = new System.Drawing.Size(121, 13);
+            this.label93.TabIndex = 47;
+            this.label93.Text = "RN im deutschen Forum";
+            // 
+            // label92
+            // 
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(297, 186);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(92, 13);
+            this.label92.TabIndex = 46;
+            this.label92.Text = "english RN thread";
+            // 
+            // label91
+            // 
+            this.label91.AutoSize = true;
+            this.label91.Location = new System.Drawing.Point(27, 186);
+            this.label91.Name = "label91";
+            this.label91.Size = new System.Drawing.Size(63, 13);
+            this.label91.TabIndex = 45;
+            this.label91.Text = "Project-Link";
+            // 
+            // linkLabel11
+            // 
+            this.linkLabel11.AutoSize = true;
+            this.linkLabel11.Location = new System.Drawing.Point(297, 234);
+            this.linkLabel11.Name = "linkLabel11";
+            this.linkLabel11.Size = new System.Drawing.Size(343, 13);
+            this.linkLabel11.TabIndex = 44;
+            this.linkLabel11.TabStop = true;
+            this.linkLabel11.Text = "http://www.elitedangerous.de/forum/viewtopic.php?f=66&t=6404&start=0";
+            this.linkLabel11.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
+            // 
+            // linkLabel10
+            // 
+            this.linkLabel10.AutoSize = true;
+            this.linkLabel10.Location = new System.Drawing.Point(297, 200);
+            this.linkLabel10.Name = "linkLabel10";
+            this.linkLabel10.Size = new System.Drawing.Size(271, 13);
+            this.linkLabel10.TabIndex = 43;
+            this.linkLabel10.TabStop = true;
+            this.linkLabel10.Text = "https://forums.frontier.co.uk/showthread.php?t=137732";
+            this.linkLabel10.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
+            // 
+            // llVisitUpdate
+            // 
+            this.llVisitUpdate.AutoSize = true;
+            this.llVisitUpdate.Location = new System.Drawing.Point(27, 200);
+            this.llVisitUpdate.Name = "llVisitUpdate";
+            this.llVisitUpdate.Size = new System.Drawing.Size(238, 13);
+            this.llVisitUpdate.TabIndex = 42;
+            this.llVisitUpdate.TabStop = true;
+            this.llVisitUpdate.Text = "https://github.com/Duke-Jones/RegulatedNoise";
+            this.llVisitUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
+            // 
+            // cmdUpdate
+            // 
+            this.cmdUpdate.Location = new System.Drawing.Point(541, 257);
+            this.cmdUpdate.Name = "cmdUpdate";
+            this.cmdUpdate.Size = new System.Drawing.Size(167, 32);
+            this.cmdUpdate.TabIndex = 41;
+            this.cmdUpdate.Text = "visit update page";
+            this.cmdUpdate.UseVisualStyleBackColor = true;
+            this.cmdUpdate.Click += new System.EventHandler(this.cmdUpdate_Click);
+            // 
+            // lblUpdateInfo
+            // 
+            this.lblUpdateInfo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblUpdateInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUpdateInfo.Location = new System.Drawing.Point(30, 260);
+            this.lblUpdateInfo.Name = "lblUpdateInfo";
+            this.lblUpdateInfo.Size = new System.Drawing.Size(491, 25);
+            this.lblUpdateInfo.TabIndex = 40;
+            this.lblUpdateInfo.Text = "label92";
+            // 
+            // lblUpdateDetail
+            // 
+            this.lblUpdateDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblUpdateDetail.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblUpdateDetail.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUpdateDetail.Location = new System.Drawing.Point(30, 295);
+            this.lblUpdateDetail.Name = "lblUpdateDetail";
+            this.lblUpdateDetail.Size = new System.Drawing.Size(664, 206);
+            this.lblUpdateDetail.TabIndex = 39;
+            this.lblUpdateDetail.Text = "label91";
             // 
             // cmdDonate
             // 
@@ -694,7 +853,7 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(-7, 514);
+            this.panel2.Location = new System.Drawing.Point(1, 514);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1051, 68);
             this.panel2.TabIndex = 33;
@@ -1044,7 +1203,6 @@
             this.cbStationEcoNone.TabIndex = 10;
             this.cbStationEcoNone.Text = "None";
             this.cbStationEcoNone.UseVisualStyleBackColor = false;
-            this.cbStationEcoNone.CheckedChanged += new System.EventHandler(this.checkBox_ro1_CheckedChanged);
             // 
             // button8
             // 
@@ -2999,11 +3157,13 @@
             // cbLogSystemName
             // 
             this.cbLogSystemName.FormattingEnabled = true;
-            this.cbLogSystemName.Location = new System.Drawing.Point(111, 138);
+            this.cbLogSystemName.Location = new System.Drawing.Point(111, 111);
             this.cbLogSystemName.Name = "cbLogSystemName";
-            this.cbLogSystemName.Size = new System.Drawing.Size(327, 21);
+            this.cbLogSystemName.Size = new System.Drawing.Size(334, 21);
             this.cbLogSystemName.TabIndex = 9;
             this.cbLogSystemName.DropDown += new System.EventHandler(this.cbLogSystemName_DropDown);
+            this.cbLogSystemName.SelectedIndexChanged += new System.EventHandler(this.cbLogSystemName_SelectedIndexChanged);
+            this.cbLogSystemName.TextChanged += new System.EventHandler(this.cbLogSystemName_TextChanged);
             // 
             // label41
             // 
@@ -3019,6 +3179,7 @@
             this.cbLogEventType.FormattingEnabled = true;
             this.cbLogEventType.Items.AddRange(new object[] {
             "Jumped To",
+            "Visited",
             "Market Data Collected",
             "Cargo",
             "Fight",
@@ -3065,9 +3226,9 @@
             // cbLogStationName
             // 
             this.cbLogStationName.FormattingEnabled = true;
-            this.cbLogStationName.Location = new System.Drawing.Point(111, 111);
+            this.cbLogStationName.Location = new System.Drawing.Point(111, 138);
             this.cbLogStationName.Name = "cbLogStationName";
-            this.cbLogStationName.Size = new System.Drawing.Size(327, 21);
+            this.cbLogStationName.Size = new System.Drawing.Size(334, 21);
             this.cbLogStationName.TabIndex = 8;
             this.cbLogStationName.DropDown += new System.EventHandler(this.cbLogStationName_DropDown);
             // 
@@ -3083,7 +3244,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(65, 114);
+            this.label19.Location = new System.Drawing.Point(65, 141);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(40, 13);
             this.label19.TabIndex = 10;
@@ -3101,7 +3262,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(64, 141);
+            this.label20.Location = new System.Drawing.Point(62, 114);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(41, 13);
             this.label20.TabIndex = 11;
@@ -3155,7 +3316,7 @@
             this.cbPrepareNewEntry.Name = "cbPrepareNewEntry";
             this.cbPrepareNewEntry.Size = new System.Drawing.Size(164, 23);
             this.cbPrepareNewEntry.TabIndex = 26;
-            this.cbPrepareNewEntry.Text = "Prepare Fields For A New Entry";
+            this.cbPrepareNewEntry.Text = "prepare for new entry";
             this.cbPrepareNewEntry.UseVisualStyleBackColor = true;
             this.cbPrepareNewEntry.Click += new System.EventHandler(this.button11_Click);
             // 
@@ -3879,7 +4040,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkboxSpoolEddnToFile);
+            this.groupBox2.Controls.Add(this.cbSpoolImplausibleToFile);
+            this.groupBox2.Controls.Add(this.cbSpoolEddnToFile);
             this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
             this.groupBox2.Controls.Add(this.button17);
             this.groupBox2.Controls.Add(this.label28);
@@ -3897,15 +4059,25 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
             // 
-            // checkboxSpoolEddnToFile
+            // cbSpoolImplausibleToFile
             // 
-            this.checkboxSpoolEddnToFile.AutoSize = true;
-            this.checkboxSpoolEddnToFile.Location = new System.Drawing.Point(10, 45);
-            this.checkboxSpoolEddnToFile.Name = "checkboxSpoolEddnToFile";
-            this.checkboxSpoolEddnToFile.Size = new System.Drawing.Size(139, 17);
-            this.checkboxSpoolEddnToFile.TabIndex = 13;
-            this.checkboxSpoolEddnToFile.Text = "Spool to EddnOutput.txt";
-            this.checkboxSpoolEddnToFile.UseVisualStyleBackColor = true;
+            this.cbSpoolImplausibleToFile.AutoSize = true;
+            this.cbSpoolImplausibleToFile.Location = new System.Drawing.Point(10, 50);
+            this.cbSpoolImplausibleToFile.Name = "cbSpoolImplausibleToFile";
+            this.cbSpoolImplausibleToFile.Size = new System.Drawing.Size(210, 17);
+            this.cbSpoolImplausibleToFile.TabIndex = 14;
+            this.cbSpoolImplausibleToFile.Text = "Spool implausible to EddnImpOutput.txt";
+            this.cbSpoolImplausibleToFile.UseVisualStyleBackColor = true;
+            // 
+            // cbSpoolEddnToFile
+            // 
+            this.cbSpoolEddnToFile.AutoSize = true;
+            this.cbSpoolEddnToFile.Location = new System.Drawing.Point(10, 34);
+            this.cbSpoolEddnToFile.Name = "cbSpoolEddnToFile";
+            this.cbSpoolEddnToFile.Size = new System.Drawing.Size(139, 17);
+            this.cbSpoolEddnToFile.TabIndex = 13;
+            this.cbSpoolEddnToFile.Text = "Spool to EddnOutput.txt";
+            this.cbSpoolEddnToFile.UseVisualStyleBackColor = true;
             // 
             // bPurgeAllEddnData
             // 
@@ -3920,9 +4092,9 @@
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(244, 122);
+            this.button17.Location = new System.Drawing.Point(283, 127);
             this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(200, 23);
+            this.button17.Size = new System.Drawing.Size(161, 23);
             this.button17.TabIndex = 11;
             this.button17.Text = "Flush all EDDN data to UI";
             this.button17.UseVisualStyleBackColor = true;
@@ -3931,7 +4103,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(11, 100);
+            this.label28.Location = new System.Drawing.Point(7, 112);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(280, 13);
             this.label28.TabIndex = 10;
@@ -3940,7 +4112,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(11, 82);
+            this.label27.Location = new System.Drawing.Point(7, 94);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(241, 13);
             this.label27.TabIndex = 9;
@@ -3949,7 +4121,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(11, 65);
+            this.label25.Location = new System.Drawing.Point(7, 77);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(271, 13);
             this.label25.TabIndex = 7;
@@ -3960,7 +4132,7 @@
             this.checkboxImportEDDN.AutoSize = true;
             this.checkboxImportEDDN.Checked = true;
             this.checkboxImportEDDN.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxImportEDDN.Location = new System.Drawing.Point(10, 29);
+            this.checkboxImportEDDN.Location = new System.Drawing.Point(10, 18);
             this.checkboxImportEDDN.Name = "checkboxImportEDDN";
             this.checkboxImportEDDN.Size = new System.Drawing.Size(222, 17);
             this.checkboxImportEDDN.TabIndex = 6;
@@ -4035,53 +4207,12 @@
             this.groupBox12.Controls.Add(this.cbIncludeUnknownDTS);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(653, 113);
+            this.groupBox12.Location = new System.Drawing.Point(653, 166);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(400, 474);
+            this.groupBox12.Size = new System.Drawing.Size(400, 421);
             this.groupBox12.TabIndex = 12;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
-            // 
-            // label89
-            // 
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(203, 391);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(29, 13);
-            this.label89.TabIndex = 19;
-            this.label89.Text = "days";
-            this.toolTip1.SetToolTip(this.label89, "0 purges all but todays price data, -1 purges ALL price data");
-            // 
-            // nudPurgeOldDataDays
-            // 
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 388);
-            this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
-            365,
-            0,
-            0,
-            0});
-            this.nudPurgeOldDataDays.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.nudPurgeOldDataDays.Name = "nudPurgeOldDataDays";
-            this.nudPurgeOldDataDays.Size = new System.Drawing.Size(44, 20);
-            this.nudPurgeOldDataDays.TabIndex = 62;
-            this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip1.SetToolTip(this.nudPurgeOldDataDays, "0 purges all but todays data, -1 purges ALL data");
-            this.nudPurgeOldDataDays.ValueChanged += new System.EventHandler(this.nudPurgeOldDataDays_ValueChanged);
-            // 
-            // cmdPurgeOldData
-            // 
-            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 386);
-            this.cmdPurgeOldData.Name = "cmdPurgeOldData";
-            this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
-            this.cmdPurgeOldData.TabIndex = 8;
-            this.cmdPurgeOldData.Text = "purge data older than";
-            this.toolTip1.SetToolTip(this.cmdPurgeOldData, "0 purges all but todays price data, -1 purges ALL price data");
-            this.cmdPurgeOldData.UseVisualStyleBackColor = true;
-            this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
             // 
             // cbLoadStationsJSON
             // 
@@ -4144,7 +4275,8 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(32, 422);
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button6.Location = new System.Drawing.Point(32, 369);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -4156,14 +4288,50 @@
             // 
             this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox10.Controls.Add(this.cbAutoAdd_ReplaceVisited);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_Marketdata);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_Visited);
             this.groupBox10.Controls.Add(this.label49);
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
             this.groupBox10.Location = new System.Drawing.Point(653, 6);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(400, 98);
+            this.groupBox10.Size = new System.Drawing.Size(400, 151);
             this.groupBox10.TabIndex = 11;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
+            // 
+            // cbAutoAdd_ReplaceVisited
+            // 
+            this.cbAutoAdd_ReplaceVisited.AutoSize = true;
+            this.cbAutoAdd_ReplaceVisited.Location = new System.Drawing.Point(60, 111);
+            this.cbAutoAdd_ReplaceVisited.Name = "cbAutoAdd_ReplaceVisited";
+            this.cbAutoAdd_ReplaceVisited.Size = new System.Drawing.Size(292, 17);
+            this.cbAutoAdd_ReplaceVisited.TabIndex = 4;
+            this.cbAutoAdd_ReplaceVisited.Text = "replace previous \"Visited\" with  \"Market Data Collected\"";
+            this.cbAutoAdd_ReplaceVisited.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_ReplaceVisited.CheckedChanged += new System.EventHandler(this.cbAutoAdd_ReplaceVisited_CheckedChanged);
+            // 
+            // cbAutoAdd_Marketdata
+            // 
+            this.cbAutoAdd_Marketdata.AutoSize = true;
+            this.cbAutoAdd_Marketdata.Location = new System.Drawing.Point(32, 90);
+            this.cbAutoAdd_Marketdata.Name = "cbAutoAdd_Marketdata";
+            this.cbAutoAdd_Marketdata.Size = new System.Drawing.Size(173, 17);
+            this.cbAutoAdd_Marketdata.TabIndex = 3;
+            this.cbAutoAdd_Marketdata.Text = "\"Market Data Collected\"-Event";
+            this.cbAutoAdd_Marketdata.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Marketdata.CheckedChanged += new System.EventHandler(this.cbAutoAdd_Marketdata_CheckedChanged);
+            // 
+            // cbAutoAdd_Visited
+            // 
+            this.cbAutoAdd_Visited.AutoSize = true;
+            this.cbAutoAdd_Visited.Location = new System.Drawing.Point(32, 67);
+            this.cbAutoAdd_Visited.Name = "cbAutoAdd_Visited";
+            this.cbAutoAdd_Visited.Size = new System.Drawing.Size(98, 17);
+            this.cbAutoAdd_Visited.TabIndex = 2;
+            this.cbAutoAdd_Visited.Text = "\"Visited\"-Event";
+            this.cbAutoAdd_Visited.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Visited.CheckedChanged += new System.EventHandler(this.cbAutoAdd_Visited_CheckedChanged);
             // 
             // label49
             // 
@@ -4454,6 +4622,7 @@
             this.Text = "RegulatedNoise v";
             this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Form_Shown);
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.tabCtrlMain.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
@@ -4534,7 +4703,6 @@
             this.tabSettings.ResumeLayout(false);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -4552,6 +4720,7 @@
             this.PerformLayout();
 
         }
+
 
         #endregion
 
@@ -4708,7 +4877,7 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TextBox tbUsername;
+        internal System.Windows.Forms.TextBox tbUsername;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.CheckBox cbPostOnImport;
         private System.Windows.Forms.TextBox tbOcrSystemName;
@@ -4727,7 +4896,7 @@
         private System.Windows.Forms.Panel panel1;
         public System.Windows.Forms.PictureBox pbOriginalImage;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.CheckBox checkboxSpoolEddnToFile;
+        private System.Windows.Forms.CheckBox cbSpoolEddnToFile;
         private System.Windows.Forms.Button bClearOcrOutput;
         private System.Windows.Forms.TextBox tbEddnStats;
         private System.Windows.Forms.Button bIgnoreTrash;
@@ -4904,6 +5073,21 @@
         private System.Windows.Forms.CheckBox_ro cbStationEcoNone;
         private System.Windows.Forms.Label label89;
         private System.Windows.Forms.NumericUpDown nudPurgeOldDataDays;
+        private System.Windows.Forms.CheckBox cbSpoolImplausibleToFile;
+        private System.Windows.Forms.CheckBox cbAutoAdd_Marketdata;
+        private System.Windows.Forms.CheckBox cbAutoAdd_Visited;
+        private System.Windows.Forms.CheckBox cbAutoAdd_ReplaceVisited;
+        internal System.Windows.Forms.Label lblUpdateInfo;
+        internal System.Windows.Forms.Label lblUpdateDetail;
+        private System.Windows.Forms.Button cmdUpdate;
+        private System.Windows.Forms.LinkLabel llVisitUpdate;
+        private System.Windows.Forms.Label label93;
+        private System.Windows.Forms.Label label92;
+        private System.Windows.Forms.Label label91;
+        private System.Windows.Forms.LinkLabel linkLabel11;
+        private System.Windows.Forms.LinkLabel linkLabel10;
+
+        
     }
 }
 

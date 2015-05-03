@@ -25,7 +25,19 @@ todo:
 
 -------------------------------------------------------------------------------------      
 
-1.84_0.18_1
+1.84_0.18_2
+   * put eddn sending routine into a backgroundthread
+   * if test-schema is not active, so all data coming from test schema will also be ignored
+   * Commander's Log sets station information on new entrys
+   * only known stations in a system are suggested in "Commander's Log" station-dropdown
+   * new AutoEvents: 
+            - "Visited" (Stations)
+			- "Market Data Collected"
+   * optimized refresh behaviour of Commander's Log
+   * added some RN specific infos on the start tab
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------
+      1.84_0.18_1
    * positons of Messageboxes and Inputboxes are centered over the parent window
    * added "Alt-O" shortcut for "Continue" on OCR tab
    * get stationname for OCR from "location from logfile" if the stationname is 

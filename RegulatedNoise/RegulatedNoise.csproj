@@ -131,6 +131,7 @@
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Enums and Utility Classes\CsvRow.cs" />
     <Compile Include="Enums and Utility Classes\Extensions.cs" />
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">

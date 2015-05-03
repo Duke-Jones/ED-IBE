@@ -73,6 +73,8 @@ namespace RegulatedNoise
         private Int32 _EDDNTabPageIndex;
         private string _LoggedSystem        = ID_NOT_SET;
         private string _LoggedLocation      = ID_NOT_SET;
+        private string _LoggedVisited       = ID_NOT_SET;
+        private string _LoggedMarketData    = ID_NOT_SET;
 
         //Implementation of the new classlibrary
         public EdSystem CurrentSystem;
@@ -107,7 +109,8 @@ namespace RegulatedNoise
         private String _AppPath                                         = string.Empty;
         private String _oldSystemName                                   = null;
         private String _oldStationName                                  = null;
-
+        private string _CmdrsLog_LastAutoEventID                        = string.Empty;
+        
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -191,7 +194,7 @@ namespace RegulatedNoise
                 _Splash.InfoChange("create ocr calibrator...<OK>");
 
                 _Splash.InfoAdd("prepare EDDN interface...");
-                Eddn = new EDDN();
+                Eddn = new EDDN(this);
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
                 
@@ -808,6 +811,9 @@ namespace RegulatedNoise
             _commandersLogColumnSorter.Order        = RegulatedNoiseSettings.CmdrsLogSortOrder;
 
             cbAutoAdd_JumpedTo.Checked              = RegulatedNoiseSettings.AutoEvent_JumpedTo;
+            cbAutoAdd_Visited.Checked               = RegulatedNoiseSettings.AutoEvent_Visited;
+            cbAutoAdd_Marketdata.Checked            = RegulatedNoiseSettings.AutoEvent_MarketDataCollected;
+            cbAutoAdd_ReplaceVisited.Checked        = RegulatedNoiseSettings.AutoEvent_ReplaceVisited;
 
             txtPixelThreshold.Text                  = RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
             txtPixelAmount.Text                     = RegulatedNoiseSettings.EBPixelAmount.ToString();
@@ -1150,41 +1156,6 @@ namespace RegulatedNoise
 
         }
 
-
-
-        public class CsvRow
-        {
-            public string SystemName;
-            public string StationID;
-            public string StationName;
-            public string CommodityName;
-            public decimal SellPrice;
-            public decimal BuyPrice;
-            public decimal Cargo;
-            public decimal Demand;
-            public string DemandLevel;
-            public decimal Supply;
-            public string SupplyLevel;
-            public DateTime SampleDate;
-            public string SourceFileName;
-
-            public override string ToString()
-            {
-                return SystemName + ";" +
-                            StationID.Replace(" [" + SystemName + "]", "") + ";" +
-                            CommodityName + ";" +
-                            (SellPrice != 0 ? SellPrice.ToString(CultureInfo.InvariantCulture) : "") + ";" +
-                            (BuyPrice != 0 ? BuyPrice.ToString(CultureInfo.InvariantCulture) : "") + ";" +
-                            (Demand != 0 ? Demand.ToString(CultureInfo.InvariantCulture) : "") + ";" +
-                            DemandLevel + ";" +
-                            (Supply != 0 ? Supply.ToString(CultureInfo.InvariantCulture) : "") + ";" +
-                            SupplyLevel + ";" +
-                            SampleDate.ToString("s", CultureInfo.CurrentCulture).Substring(0, 16) + ";" +
-                            SourceFileName;
-            }
-        }
-
-
         private void button5_Click(object sender, EventArgs e)
         {
             SaveCommodityData();
@@ -1406,7 +1377,7 @@ namespace RegulatedNoise
                     }
 
                     if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-                        PostJsonToEddn(currentRow);
+                        Eddn.sendToEdDDN(currentRow);
                 }
             }
         }
@@ -1698,7 +1669,7 @@ namespace RegulatedNoise
 
             lvAllComms.Items.Clear();
 
-            _pt.PrintAndReset("9");
+            //_pt.PrintAndReset("9");
 
             Debug.Print("Anzahl = " + CommodityDirectory.Count.ToString());
             // Populate all commodities tab
@@ -1711,11 +1682,11 @@ namespace RegulatedNoise
                 decimal buyers;
                 decimal sellers;
 
-                _pt.PrintAndReset("9_1");
+                //_pt.PrintAndReset("9_1");
 
                 GetBestBuyAndSell(commodity.Key, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
 
-                _pt.PrintAndReset("9_2");
+                //_pt.PrintAndReset("9_2");
 
                 lvAllComms.Items.Add(new ListViewItem(new[] 
                 {   commodity.Key,
@@ -1728,19 +1699,19 @@ namespace RegulatedNoise
                     bestBuyPrice != 0 && bestSellPrice != 0 ? (bestSellPrice - bestBuyPrice).ToString(CultureInfo.InvariantCulture) : ""
                 }));
 
-                _pt.PrintAndReset("9_3");
+                //_pt.PrintAndReset("9_3");
             }
 
-            _pt.PrintAndReset("10");
+            //_pt.PrintAndReset("10");
 
             cmbStation.EndUpdate();
             cmbStationToStationFrom.EndUpdate();
             cmbStationToStationTo.EndUpdate();
             cbCommodity.EndUpdate();
-            _pt.PrintAndReset("11");
+            //_pt.PrintAndReset("11");
 
             UpdateStationToStation();
-            _pt.PrintAndReset("12");
+            //_pt.PrintAndReset("12");
 
             Cursor = oldCursor;
         }
@@ -3477,8 +3448,11 @@ namespace RegulatedNoise
                         bClearOcrOutput.Enabled = false;
                         bEditResults.Enabled = false;
 
+                        CommandersLog_MarketDataCollectedEvent(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
+
                         // save the new data immediately
                         SaveCommodityData(true);
+
 
                     }
                 }
@@ -3752,7 +3726,7 @@ namespace RegulatedNoise
 
         private void button15_Click(object sender, EventArgs e)
         {
-            _eddnSubscriberThread = new Thread(() => Eddn.Subscribe(this));
+            _eddnSubscriberThread = new Thread(() => Eddn.Subscribe());
             _eddnSubscriberThread.IsBackground = true;
             _eddnSubscriberThread.Start();
         }
@@ -3778,7 +3752,7 @@ namespace RegulatedNoise
             {
                 tbEDDNOutput.Text = text.ToString();
 
-                if (checkboxSpoolEddnToFile.Checked)
+                if (cbSpoolEddnToFile.Checked)
                 {
                     if (_eddnSpooler == null)
                     {
@@ -3840,107 +3814,137 @@ namespace RegulatedNoise
                     var headerRawLength = txt.Substring(headerRawStart).IndexOf("}");
                     var headerRawData = txt.Substring(headerRawStart, headerRawLength);
 
+                    var schemaRawStart = txt.IndexOf(@"""$schemaRef""") + 14;
+                    var schemaRawLength = txt.Substring(schemaRawStart).IndexOf(@"""message"":");
+                    var schemaRawData = txt.Substring(schemaRawStart, schemaRawLength);
+
                     var messageRawStart = txt.IndexOf(@"""message"":") + 12;
                     var messageRawLength = txt.Substring(messageRawStart).IndexOf("}");
                     var messageRawData = txt.Substring(messageRawStart, messageRawLength);
                     // ReSharper restore StringIndexOfIsCultureSpecific.1
+
+                    schemaRawData = schemaRawData.Replace(@"""", "").Replace(",","");
                     var headerRawPairs = headerRawData.Replace(@"""", "").Split(',');
                     var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
 
 
-                    foreach (var rawHeaderPair in headerRawPairs)
+                    if((RegulatedNoiseSettings.UseEddnTestSchema  && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
+                       (!RegulatedNoiseSettings.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase)  < 0)))
                     {
-                        var splitPair = new string[2];
-                        splitPair[0] = rawHeaderPair.Substring(0, rawHeaderPair.IndexOf(':'));
-                        splitPair[1] = rawHeaderPair.Substring(splitPair[0].Length + 1);
-                        if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
-                        if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
-                        headerDictionary.Add(splitPair[0], splitPair[1]);
-                    }
-
-                    foreach (var rawMessagePair in messageRawPairs)
-                    {
-                        var splitPair = new string[2];
-                        splitPair[0] = rawMessagePair.Substring(0, rawMessagePair.IndexOf(':'));
-                        splitPair[1] = rawMessagePair.Substring(splitPair[0].Length + 1);
-                        if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
-                        if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
-                        messageDictionary.Add(splitPair[0], splitPair[1]);
-                    }
-
-                    var nameAndVersion = (headerDictionary["softwareName"] + " / " + headerDictionary["softwareVersion"]);
-                    if (!_eddnPublisherStats.ContainsKey(nameAndVersion))
-                        _eddnPublisherStats.Add(nameAndVersion, new EddnPublisherVersionStats());
-
-                    _eddnPublisherStats[nameAndVersion].MessagesReceived++;
-
-                    var output = "";
-                    foreach (var appVersion in _eddnPublisherStats)
-                    {
-                        output = output + appVersion.Key + " : " + appVersion.Value.MessagesReceived + " messages\r\n";
-                    }
-                    tbEddnStats.Text = output;
-
-                    string commodity = getLocalizedCommodity(RegulatedNoiseSettings.Language, messageDictionary["itemName"]);
-
-                    if(!String.IsNullOrEmpty(commodity))
-                    {
-
-                        //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
-                        if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                        foreach (var rawHeaderPair in headerRawPairs)
                         {
-                            string csvFormatted = messageDictionary["systemName"] + ";" +
-                                                  messageDictionary["stationName"] + ";" +
-                                                  commodity + ";" +
-                                                  (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
-                                                  (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
-                                                  messageDictionary["demand"] + ";" +
-                                                  ";" +
-                                                  messageDictionary["stationStock"] + ";" +
-                                                  ";" +
-                                                  messageDictionary["timestamp"] + ";"
-                                                  +
-                                                  "<From EDDN>" + ";";
-
-                            if(!checkPricePlausibility(new string[] {csvFormatted}, true))
-                            {
-                                ImportCsvString(csvFormatted);
-                            }
-                            else
-                            {
-                                lbEddnImplausible.Items.Add(string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted ));
-                                lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
-                                lbEddnImplausible.SelectedIndex = -1;
-
-                                Debug.Print("Implausible EDDN Data: " + csvFormatted);
-                            }
+                            var splitPair = new string[2];
+                            splitPair[0] = rawHeaderPair.Substring(0, rawHeaderPair.IndexOf(':'));
+                            splitPair[1] = rawHeaderPair.Substring(splitPair[0].Length + 1);
+                            if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
+                            if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
+                            headerDictionary.Add(splitPair[0], splitPair[1]);
                         }
+
+                        foreach (var rawMessagePair in messageRawPairs)
+                        {
+                            var splitPair = new string[2];
+                            splitPair[0] = rawMessagePair.Substring(0, rawMessagePair.IndexOf(':'));
+                            splitPair[1] = rawMessagePair.Substring(splitPair[0].Length + 1);
+                            if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
+                            if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
+                            messageDictionary.Add(splitPair[0], splitPair[1]);
+                        }
+
+                        var nameAndVersion = (headerDictionary["softwareName"] + " / " + headerDictionary["softwareVersion"]);
+                        if (!_eddnPublisherStats.ContainsKey(nameAndVersion))
+                            _eddnPublisherStats.Add(nameAndVersion, new EddnPublisherVersionStats());
+
+                        _eddnPublisherStats[nameAndVersion].MessagesReceived++;
+
+                        var output = "";
+                        foreach (var appVersion in _eddnPublisherStats)
+                        {
+                            output = output + appVersion.Key + " : " + appVersion.Value.MessagesReceived + " messages\r\n";
+                        }
+                        tbEddnStats.Text = output;
+
+                        string commodity = getLocalizedCommodity(RegulatedNoiseSettings.Language, messageDictionary["itemName"]);
+
+                        if(!String.IsNullOrEmpty(commodity))
+                        {
+
+                            //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
+                            if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                            {
+                                string csvFormatted = messageDictionary["systemName"] + ";" +
+                                                      messageDictionary["stationName"] + ";" +
+                                                      commodity + ";" +
+                                                      (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
+                                                      (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
+                                                      messageDictionary["demand"] + ";" +
+                                                      ";" +
+                                                      messageDictionary["stationStock"] + ";" +
+                                                      ";" +
+                                                      messageDictionary["timestamp"] + ";"
+                                                      +
+                                                      "<From EDDN>" + ";";
+
+                                if(!checkPricePlausibility(new string[] {csvFormatted}, true))
+                                {
+                                    ImportCsvString(csvFormatted);
+                                }
+                                else
+                                {
+                                    string InfoString = string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted );
+
+                                    lbEddnImplausible.Items.Add(InfoString);
+                                    lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
+                                    lbEddnImplausible.SelectedIndex = -1;
+
+                                    if(cbSpoolImplausibleToFile.Checked)
+                                    {
+                                        FileStream LogFileStream = null;
+                                        string FileName = @".\EddnImplausibleOutput.txt";
+
+                                        if(File.Exists(FileName))
+                                        { 
+                                            LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                                        }
+                                        else
+                                        {
+                                            LogFileStream = File.Create(FileName);
+                                        }
+
+                                       LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString), 0, System.Text.Encoding.Default.GetByteCount(InfoString));
+                                       LogFileStream.Close();
+                                    }
+
+                                    Debug.Print("Implausible EDDN Data: " + csvFormatted);
+                                }
+                            }
                         
 
-                        if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
-                        {
-                            SetupGui();
-                            _lastGuiUpdate = DateTime.Now;
+                            if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
+                            {
+                                SetupGui();
+                                _lastGuiUpdate = DateTime.Now;
+                            }
                         }
-                    }
-                    else 
-                    { 
-                        string csvFormatted = messageDictionary["systemName"] + ";" +
-                                                messageDictionary["stationName"] + ";" +
-                                                messageDictionary["itemName"] + ";" +
-                                                (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
-                                                (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
-                                                messageDictionary["demand"] + ";" +
-                                                ";" +
-                                                messageDictionary["stationStock"] + ";" +
-                                                ";" +
-                                                messageDictionary["timestamp"] + ";"
-                                                +
-                                                "<From EDDN>" + ";";
+                        else 
+                        { 
+                            string csvFormatted = messageDictionary["systemName"] + ";" +
+                                                    messageDictionary["stationName"] + ";" +
+                                                    messageDictionary["itemName"] + ";" +
+                                                    (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
+                                                    (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
+                                                    messageDictionary["demand"] + ";" +
+                                                    ";" +
+                                                    messageDictionary["stationStock"] + ";" +
+                                                    ";" +
+                                                    messageDictionary["timestamp"] + ";"
+                                                    +
+                                                    "<From EDDN>" + ";";
 
-                        lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted ));
-                        lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
-                        lbEddnImplausible.SelectedIndex = -1;
+                            lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted ));
+                            lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
+                            lbEddnImplausible.SelectedIndex = -1;
+                        }
                     }
                 }
                 catch
@@ -4131,76 +4135,6 @@ namespace RegulatedNoise
 
         #endregion
 
-
-
-        private void PostJsonToEddn(CsvRow rowToPost)
-        {
-            string json;
-
-            if (RegulatedNoiseSettings.UseEddnTestSchema)
-            {
-                json =
-                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
-                    @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
-            }
-            else
-            {
-                json =
-                    @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                    RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
-                    @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
-             }
-
-            string commodity = getCommodityBasename(rowToPost.CommodityName);
-
-            if(!String.IsNullOrEmpty(commodity))
-            {
-                string commodityJson = json.Replace("$0$", tbUsername.Text.Replace("$1$", ""))
-                    .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
-                    .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
-                    .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
-                    .Replace("$5$", (rowToPost.StationID.Replace(" [" + rowToPost.SystemName + "]", "")))
-                    .Replace("$6$", (rowToPost.SystemName))
-                    .Replace("$7$", (rowToPost.Demand.ToString(CultureInfo.InvariantCulture)))
-                    .Replace("$8$", (rowToPost.SellPrice.ToString(CultureInfo.InvariantCulture)))
-                    .Replace("$9$", (commodity)
-                    );
-
-                using (var client = new WebClient())
-                {
-                    try
-                    {
-                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityJson);
-                    }
-                    catch (WebException ex)
-                    {
-                        _logger.Log("Error uploading Json", true);
-                        _logger.Log(ex.ToString(), true);
-                        _logger.Log(ex.Message, true);
-                        _logger.Log(ex.StackTrace, true);
-                        if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString(), true);
-
-                        using (WebResponse response = ex.Response)
-                        {
-                            using (Stream data = response.GetResponseStream())
-                            {
-                                if (data != null)
-                                {
-                                    StreamReader sr = new StreamReader(data);
-                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN");
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        client.Dispose();
-                    }
-                }
-            }
-        }
 
         private void button17_Click(object sender, EventArgs e)
         {
@@ -4594,8 +4528,82 @@ namespace RegulatedNoise
             }
             else
             {
-                String EventID = CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
-                setActiveItem(EventID);
+                _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
+                setActiveItem(_CmdrsLog_LastAutoEventID);
+            }
+        }
+
+        private void CommandersLog_StationVisitedEvent(string Systemname, string StationName)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new del_setLocationInfo(CommandersLog_StationVisitedEvent), Systemname, StationName);
+            }
+            else
+            {
+                if(!_LoggedVisited.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    bool noLogging = _LoggedVisited.Equals(ID_NOT_SET);
+
+                    _LoggedVisited = Systemname + "|" + StationName;
+
+                    if(cbAutoAdd_Visited.Checked && !noLogging)
+                    { 
+                        _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Visited", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                        setActiveItem(_CmdrsLog_LastAutoEventID);
+                    }
+                }
+            }
+        }
+
+        private void CommandersLog_MarketDataCollectedEvent(string Systemname, string StationName)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new del_setLocationInfo(CommandersLog_MarketDataCollectedEvent), Systemname, StationName);
+            }
+            else
+            {
+                try
+                {
+                    if (!_LoggedMarketData.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _LoggedMarketData = Systemname + "|" + StationName;
+
+                        if (cbAutoAdd_Marketdata.Checked)
+                        {
+                            if (cbAutoAdd_ReplaceVisited.Checked)
+                            {
+                                var logEvent = CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
+
+                                if (logEvent != null &&
+                                   logEvent.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase) &&
+                                   logEvent.Station.Equals(StationName, StringComparison.InvariantCultureIgnoreCase) &&
+                                   logEvent.EventType.Equals("Visited", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    logEvent.EventType = "Market Data Collected";
+                                    CommandersLog.UpdateCommandersLogListView();
+                                }
+                                else
+                                {
+                                    _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                    setActiveItem(_CmdrsLog_LastAutoEventID);
+                                }
+                            }
+                            else
+                            {
+                                _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                setActiveItem(_CmdrsLog_LastAutoEventID);
+                            }
+
+                            setActiveItem(_CmdrsLog_LastAutoEventID);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -4708,12 +4716,46 @@ namespace RegulatedNoise
 
         }
 
+        bool _cbLogStationNameIsDirty = false;
+
         private void cbLogStationName_DropDown(object sender, EventArgs e)
         {
-            cbLogStationName.Items.Clear();
 
-            foreach (var x in StationDirectory)
-                cbLogStationName.Items.Add(x.Key);
+            if(_cbLogStationNameIsDirty)
+            {
+                cbLogStationName.Items.Clear();
+
+                List<EDStation> StationsInSystem = _Milkyway.getStations(cbLogSystemName.Text);
+
+                if(StationsInSystem != null)
+                {
+                    foreach (EDStation Station in StationsInSystem)
+                        cbLogStationName.Items.Add(Station.Name);
+                }
+
+                _cbLogStationNameIsDirty = false;
+            }
+        }
+
+        private void cbLogSystemName_TextChanged(object sender, System.EventArgs e)
+        {
+            _cbLogStationNameIsDirty = true;
+        }
+
+        private void cbLogSystemName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbLogStationName.Items.Clear();
+            
+            List<EDStation> StationsInSystem = _Milkyway.getStations(cbLogSystemName.Text);
+
+            if(StationsInSystem != null)
+            {
+                foreach (EDStation Station in StationsInSystem)
+                    cbLogStationName.Items.Add(Station.Name);
+            }
+
+            _cbLogStationNameIsDirty = false;
+
         }
 
         private void cbLogCargoName_DropDown(object sender, EventArgs e)
@@ -4843,7 +4885,6 @@ namespace RegulatedNoise
 
         private void Form_Load(object sender, EventArgs e)
         {
-            RegulatedNoiseSettings.CheckVersion();
 
             Text += RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
 
@@ -4961,6 +5002,8 @@ namespace RegulatedNoise
 
         private void Retheme()
         {
+            bool noBackColor = false;
+
             if (RegulatedNoiseSettings.ForegroundColour == null || RegulatedNoiseSettings.BackgroundColour == null) return;
 
             var x = GetAll(this);
@@ -4977,30 +5020,48 @@ namespace RegulatedNoise
             {
                 var props = c.GetType().GetProperties().Select(y => y.Name);
 
+                noBackColor = false;
 
-                c.BackColor = b;
-                c.ForeColor = f;
-                if (props.Contains("FlatStyle"))
-                {
-                    var prop = c.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
+                if(!(c.Name == "lblUpdateInfo" && lblUpdateInfo.BackColor == Color.Yellow))
+                { 
+                    c.BackColor = b;
+                    c.ForeColor = f;
+                    if (props.Contains("FlatStyle"))
+                    {
+                        var prop = c.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
 
-                    prop.SetValue(c, FlatStyle.Flat);
+                        prop.SetValue(c, FlatStyle.Flat);
+                    }
+                    if (props.Contains("BorderStyle") && c.GetType() != typeof(Label))
+                    {
+                        var prop = c.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                        prop.SetValue(c, BorderStyle.FixedSingle);
+                    }
+                    if (props.Contains("LinkColor"))
+                    {
+                        var prop = c.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
+
+                        prop.SetValue(c, f);
+                    }
+                    if (props.Contains("BackColor_ro"))
+                    {
+                        var prop = c.GetType().GetProperty("BackColor_ro", BindingFlags.Public | BindingFlags.Instance);
+                        prop.SetValue(c, b);
+                    }
+                    if (props.Contains("ForeColor_ro"))
+                    {
+                        var prop = c.GetType().GetProperty("ForeColor_ro", BindingFlags.Public | BindingFlags.Instance);
+                        prop.SetValue(c, f);
+                    }
+                    
                 }
-                if (props.Contains("BorderStyle") && c.GetType() != typeof(Label))
-                {
-                    var prop = c.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                    prop.SetValue(c, BorderStyle.FixedSingle);
-                }
-                if (props.Contains("LinkColor"))
-                {
-                    var prop = c.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
-
-                    prop.SetValue(c, f);
-                }
+                else 
+                    noBackColor = true;
             }
 
-            BackColor = b;
+            if(!noBackColor)
+                BackColor = b;
         }
 
         int animPhase;
@@ -6089,25 +6150,21 @@ namespace RegulatedNoise
                     // it's a new location
                     tbCurrentStationinfoFromLogs.Text = stationName;
                     newLocation = true;
-                }
 
-                // system info found
-                if(!_LoggedLocation.Equals(stationName, StringComparison.InvariantCultureIgnoreCase))
-                { 
-                    // system is not logged yet
+                    List<EDStation> SystemStations = _Milkyway.getStations(systemName);
 
-                    //// update Cmdr's Log ?
-                    //if(_LoggedLocation != ID_NOT_SET)
-                    //{ 
-                    //    // it's not the first run, create a event if wanted
-                    //    if (cbAutoAdd_JumpedTo.Checked && !Jumped_To)
-                    //    {
-                    //        // create event is enabled
-                    //        CommandersLog_CreateJumpedToEvent(stationName);
-                    //    }
-                    //}
+                    if((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase)) != null))
+                        if (cbAutoAdd_Visited.Checked)
+                        {
+                            // create event is enabled
+                            CommandersLog_StationVisitedEvent(systemName, stationName);
+                        }
 
                     _LoggedLocation = stationName;
+
+                    _LoggedMarketData = "";
+                    _LoggedVisited = "";
+
                 }
             }
 
@@ -6140,7 +6197,7 @@ namespace RegulatedNoise
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        private bool getStationSelection(KeyValuePair<string, List<Form1.CsvRow>> x)
+        private bool getStationSelection(KeyValuePair<string, List<CsvRow>> x)
         {
             return (!cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))) &&
                    (!cbStationToStar.Checked   || StationDistance(CombinedNameToSystemName(x.Key), CombinedNameToStationName(x.Key)));
@@ -7474,15 +7531,6 @@ namespace RegulatedNoise
             return newDirectory;
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox_ro1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void nudPurgeOldDataDays_ValueChanged(object sender, EventArgs e)
         {
             if(_InitDone)
@@ -7491,5 +7539,31 @@ namespace RegulatedNoise
             }
 
         }
+
+        private void cbAutoAdd_Visited_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.AutoEvent_Visited              = cbAutoAdd_Visited.Checked;
+        }
+
+        private void cbAutoAdd_Marketdata_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.AutoEvent_MarketDataCollected  = cbAutoAdd_Marketdata.Checked;      
+        }
+
+        private void cbAutoAdd_ReplaceVisited_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.AutoEvent_ReplaceVisited       = cbAutoAdd_ReplaceVisited.Checked;  
+        }
+
+        private void cmdUpdate_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"https://github.com/Duke-Jones/RegulatedNoise/releases");
+        }
+
+        private void llVisitUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
+        }
+
     }
 }

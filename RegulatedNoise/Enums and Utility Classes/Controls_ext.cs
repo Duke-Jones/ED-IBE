@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace System.Windows.Forms
@@ -12,12 +12,12 @@ namespace System.Windows.Forms
     {
         public ComboBox_ro()
         {
-            textBox = new TextBox();
-            textBox.ReadOnly = true;
-            textBox.Visible = false;
+            TextBox_ro = new TextBox();
+            TextBox_ro.ReadOnly = true;
+            TextBox_ro.Visible = false;
         }
 
-        private TextBox textBox;
+        public TextBox TextBox_ro;
 
         private bool readOnly = false;
 
@@ -31,20 +31,20 @@ namespace System.Windows.Forms
                 if (readOnly)
                 {
                     this.Visible = false;
-                    textBox.Text = this.Text;
-                    textBox.Location = this.Location;
-                    textBox.Size = this.Size;
-                    textBox.Visible = true;
+                    TextBox_ro.Text = this.Text;
+                    TextBox_ro.Location = this.Location;
+                    TextBox_ro.Size = this.Size;
+                    TextBox_ro.Visible = true;
 
-                    if (textBox.Parent == null)
-                        this.Parent.Controls.Add(textBox);
+                    if (TextBox_ro.Parent == null)
+                        this.Parent.Controls.Add(TextBox_ro);
 
-                    textBox.Font = this.Font;
+                    TextBox_ro.Font = this.Font;
                 }
                 else
                 {
                     this.Visible = true;
-                    this.textBox.Visible = false;
+                    this.TextBox_ro.Visible = false;
                 }
             }
         }
@@ -61,10 +61,20 @@ namespace System.Windows.Forms
                 else
                 {
                     this.Visible = value;
-                    this.textBox.Visible = value;
+                    this.TextBox_ro.Visible = value;
                 }
 
             }
+        }
+
+        public Color BackColor_ro { 
+            get { return TextBox_ro.BackColor;}
+            set { TextBox_ro.BackColor = value; }
+        }
+
+        public Color ForeColor_ro { 
+            get { return TextBox_ro.ForeColor;}
+            set { TextBox_ro.ForeColor = value; }
         }
     }
 

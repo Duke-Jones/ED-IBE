@@ -155,6 +155,8 @@ namespace CodeProject.Win32API.Hook
 		public void Install()
 		{
 			hHook = SetWindowsHookEx(hookType, filterFunc, IntPtr.Zero,  (int)AppDomain.GetCurrentThreadId());
+
+            // doesn't work:
             //hHook = SetWindowsHookEx(hookType, filterFunc, IntPtr.Zero, (int)Thread.CurrentThread.ManagedThreadId);
 		}
 
