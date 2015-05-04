@@ -1,11 +1,14 @@
-﻿namespace RegulatedNoise.EDDB_Data
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace RegulatedNoise.EDDB_Data
 {
     partial class EDCommodityView
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -375,33 +378,33 @@
 
         #endregion
 
-        private System.Windows.Forms.Button cmdCancel;
-        private System.Windows.Forms.Button cmdOk;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtId;
-        private System.Windows.Forms.TextBox txtAveragePrice;
-        private System.Windows.Forms.TextBox txtCategory;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox txtSupplyBuyHigh;
-        private System.Windows.Forms.TextBox txtSupplyBuyLow;
-        private System.Windows.Forms.TextBox txtSupplySellHigh;
-        private System.Windows.Forms.TextBox txtSupplySellLow;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox txtDemandBuyHigh;
-        private System.Windows.Forms.TextBox txtDemandBuyLow;
-        private System.Windows.Forms.TextBox txtDemandSellHigh;
-        private System.Windows.Forms.TextBox txtDemandSellLow;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.ComboBox cmdCommodity;
-        private System.Windows.Forms.Button cmdFullList;
+        private Button cmdCancel;
+        private Button cmdOk;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private TextBox txtId;
+        private TextBox txtAveragePrice;
+        private TextBox txtCategory;
+        private GroupBox groupBox1;
+        private TextBox txtSupplyBuyHigh;
+        private TextBox txtSupplyBuyLow;
+        private TextBox txtSupplySellHigh;
+        private TextBox txtSupplySellLow;
+        private Label label9;
+        private Label label7;
+        private Label label6;
+        private Label label4;
+        private GroupBox groupBox2;
+        private TextBox txtDemandBuyHigh;
+        private TextBox txtDemandBuyLow;
+        private TextBox txtDemandSellHigh;
+        private TextBox txtDemandSellLow;
+        private Label label5;
+        private Label label15;
+        private Label label16;
+        private Label label17;
+        private ComboBox cmdCommodity;
+        private Button cmdFullList;
     }
 }
