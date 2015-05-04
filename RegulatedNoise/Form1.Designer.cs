@@ -1165,8 +1165,10 @@
             // 
             this.cmbStationStations.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmbStationStations.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStationStations.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbStationStations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStationStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationStations.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbStationStations.Location = new System.Drawing.Point(114, 31);
             this.cmbStationStations.Name = "cmbStationStations";
             this.cmbStationStations.ReadOnly = false;
@@ -1528,8 +1530,10 @@
             // 
             // cmbStationType
             // 
+            this.cmbStationType.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbStationType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStationType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationType.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbStationType.Location = new System.Drawing.Point(127, 202);
             this.cmbStationType.Name = "cmbStationType";
             this.cmbStationType.ReadOnly = false;
@@ -1549,8 +1553,10 @@
             // 
             // cmbStationState
             // 
+            this.cmbStationState.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbStationState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStationState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationState.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbStationState.Location = new System.Drawing.Point(127, 281);
             this.cmbStationState.Name = "cmbStationState";
             this.cmbStationState.ReadOnly = false;
@@ -1570,8 +1576,10 @@
             // 
             // cmbStationAllegiance
             // 
+            this.cmbStationAllegiance.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbStationAllegiance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStationAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationAllegiance.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbStationAllegiance.Location = new System.Drawing.Point(127, 255);
             this.cmbStationAllegiance.Name = "cmbStationAllegiance";
             this.cmbStationAllegiance.ReadOnly = false;
@@ -1591,8 +1599,10 @@
             // 
             // cmbStationGovernment
             // 
+            this.cmbStationGovernment.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbStationGovernment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStationGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationGovernment.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbStationGovernment.Location = new System.Drawing.Point(127, 229);
             this.cmbStationGovernment.Name = "cmbStationGovernment";
             this.cmbStationGovernment.ReadOnly = false;
@@ -1649,8 +1659,10 @@
             // 
             // cmbStationMaxLandingPadSize
             // 
+            this.cmbStationMaxLandingPadSize.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbStationMaxLandingPadSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStationMaxLandingPadSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationMaxLandingPadSize.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbStationMaxLandingPadSize.Location = new System.Drawing.Point(127, 174);
             this.cmbStationMaxLandingPadSize.Name = "cmbStationMaxLandingPadSize";
             this.cmbStationMaxLandingPadSize.ReadOnly = false;
@@ -1824,8 +1836,10 @@
             // 
             this.cmbSystemsAllSystems.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmbSystemsAllSystems.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbSystemsAllSystems.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbSystemsAllSystems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemsAllSystems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemsAllSystems.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbSystemsAllSystems.Location = new System.Drawing.Point(89, 33);
             this.cmbSystemsAllSystems.Name = "cmbSystemsAllSystems";
             this.cmbSystemsAllSystems.ReadOnly = false;
@@ -1907,8 +1921,10 @@
             // 
             // cmbSystemPrimaryEconomy
             // 
+            this.cmbSystemPrimaryEconomy.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbSystemPrimaryEconomy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemPrimaryEconomy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemPrimaryEconomy.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbSystemPrimaryEconomy.Location = new System.Drawing.Point(295, 201);
             this.cmbSystemPrimaryEconomy.Name = "cmbSystemPrimaryEconomy";
             this.cmbSystemPrimaryEconomy.ReadOnly = false;
@@ -1928,8 +1944,10 @@
             // 
             // cmbSystemSecurity
             // 
+            this.cmbSystemSecurity.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbSystemSecurity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemSecurity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbSystemSecurity.Location = new System.Drawing.Point(295, 174);
             this.cmbSystemSecurity.Name = "cmbSystemSecurity";
             this.cmbSystemSecurity.ReadOnly = false;
@@ -1949,8 +1967,10 @@
             // 
             // cmbSystemState
             // 
+            this.cmbSystemState.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbSystemState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemState.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbSystemState.Location = new System.Drawing.Point(295, 283);
             this.cmbSystemState.Name = "cmbSystemState";
             this.cmbSystemState.ReadOnly = false;
@@ -1970,8 +1990,10 @@
             // 
             // cmbSystemAllegiance
             // 
+            this.cmbSystemAllegiance.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbSystemAllegiance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemAllegiance.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbSystemAllegiance.Location = new System.Drawing.Point(295, 256);
             this.cmbSystemAllegiance.Name = "cmbSystemAllegiance";
             this.cmbSystemAllegiance.ReadOnly = false;
@@ -1991,8 +2013,10 @@
             // 
             // cmbSystemGovernment
             // 
+            this.cmbSystemGovernment.BackColor_ro = System.Drawing.SystemColors.Control;
             this.cmbSystemGovernment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemGovernment.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cmbSystemGovernment.Location = new System.Drawing.Point(295, 228);
             this.cmbSystemGovernment.Name = "cmbSystemGovernment";
             this.cmbSystemGovernment.ReadOnly = false;

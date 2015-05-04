@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Diagnostics;
 using System;
+using System.Globalization;
 
 /// <summary>
 /// This class is an implementation of the 'IComparer' interface.
@@ -150,8 +151,8 @@ public class ListViewColumnSorter : IComparer
             {
                 case 0:
                     DateTime  Date_a = DateTime.MinValue, Date_b = DateTime.MinValue;
-                    DateTime.TryParse(listviewX.SubItems[ColumnToSort].Text, out Date_a);
-                    DateTime.TryParse(listviewY.SubItems[ColumnToSort].Text, out Date_b);
+                    DateTime.TryParse(listviewX.SubItems[ColumnToSort].Text, CultureInfo.CurrentUICulture , DateTimeStyles.None, out Date_a);
+                    DateTime.TryParse(listviewY.SubItems[ColumnToSort].Text, CultureInfo.CurrentUICulture , DateTimeStyles.None, out Date_b);
                     compareResult = ObjectCompare.Compare(Date_a, Date_b);
                     break;
                 case 1:

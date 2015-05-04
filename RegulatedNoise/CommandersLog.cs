@@ -40,7 +40,7 @@ namespace RegulatedNoise
                 CargoAction =_callingForm.cbCargoModifier.Text,
                 CargoVolume =int.Parse(_callingForm.cbLogQuantity.Text),
                 Notes =_callingForm.tbLogNotes.Text,
-                EventDate =DateTime.Parse(_callingForm.dtpLogEventDate.Text),
+                EventDate =DateTime.Parse(_callingForm.dtpLogEventDate.Text, CultureInfo.CurrentUICulture , DateTimeStyles.None),
                 EventID = newEventID
             });
 
