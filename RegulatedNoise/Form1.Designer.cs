@@ -64,7 +64,7 @@
             this.llVisitUpdate = new System.Windows.Forms.LinkLabel();
             this.cmdUpdate = new System.Windows.Forms.Button();
             this.lblUpdateInfo = new System.Windows.Forms.Label();
-            this.lblUpdateDetail = new System.Windows.Forms.Label();
+            this.lblUpdateDetail = new System.Windows.Forms.TextBox();
             this.cmdDonate = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -808,13 +808,13 @@
             this.lblUpdateDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblUpdateDetail.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblUpdateDetail.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUpdateDetail.Location = new System.Drawing.Point(30, 295);
+            this.lblUpdateDetail.Multiline = true;
             this.lblUpdateDetail.Name = "lblUpdateDetail";
-            this.lblUpdateDetail.Size = new System.Drawing.Size(664, 206);
+            this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.lblUpdateDetail.Size = new System.Drawing.Size(664, 214);
             this.lblUpdateDetail.TabIndex = 39;
-            this.lblUpdateDetail.Text = "label91";
             // 
             // cmdDonate
             // 
@@ -1174,7 +1174,7 @@
             this.cmbStationStations.ReadOnly = false;
             this.cmbStationStations.Size = new System.Drawing.Size(236, 23);
             this.cmbStationStations.TabIndex = 130;
-            this.cmbStationStations.Visible_ro = false;
+            this.cmbStationStations.Visible_ro = true;
             // 
             // paEconomies
             // 
@@ -1539,7 +1539,7 @@
             this.cmbStationType.ReadOnly = false;
             this.cmbStationType.Size = new System.Drawing.Size(151, 23);
             this.cmbStationType.TabIndex = 9;
-            this.cmbStationType.Visible_ro = false;
+            this.cmbStationType.Visible_ro = true;
             // 
             // label75
             // 
@@ -1562,7 +1562,7 @@
             this.cmbStationState.ReadOnly = false;
             this.cmbStationState.Size = new System.Drawing.Size(151, 23);
             this.cmbStationState.TabIndex = 8;
-            this.cmbStationState.Visible_ro = false;
+            this.cmbStationState.Visible_ro = true;
             // 
             // label76
             // 
@@ -1585,7 +1585,7 @@
             this.cmbStationAllegiance.ReadOnly = false;
             this.cmbStationAllegiance.Size = new System.Drawing.Size(151, 23);
             this.cmbStationAllegiance.TabIndex = 7;
-            this.cmbStationAllegiance.Visible_ro = false;
+            this.cmbStationAllegiance.Visible_ro = true;
             // 
             // label77
             // 
@@ -1608,7 +1608,7 @@
             this.cmbStationGovernment.ReadOnly = false;
             this.cmbStationGovernment.Size = new System.Drawing.Size(151, 23);
             this.cmbStationGovernment.TabIndex = 6;
-            this.cmbStationGovernment.Visible_ro = false;
+            this.cmbStationGovernment.Visible_ro = true;
             // 
             // label78
             // 
@@ -1668,7 +1668,7 @@
             this.cmbStationMaxLandingPadSize.ReadOnly = false;
             this.cmbStationMaxLandingPadSize.Size = new System.Drawing.Size(68, 23);
             this.cmbStationMaxLandingPadSize.TabIndex = 4;
-            this.cmbStationMaxLandingPadSize.Visible_ro = false;
+            this.cmbStationMaxLandingPadSize.Visible_ro = true;
             // 
             // label81
             // 
@@ -1845,7 +1845,7 @@
             this.cmbSystemsAllSystems.ReadOnly = false;
             this.cmbSystemsAllSystems.Size = new System.Drawing.Size(254, 23);
             this.cmbSystemsAllSystems.TabIndex = 0;
-            this.cmbSystemsAllSystems.Visible_ro = false;
+            this.cmbSystemsAllSystems.Visible_ro = true;
             this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
             // 
             // label88
@@ -1930,7 +1930,7 @@
             this.cmbSystemPrimaryEconomy.ReadOnly = false;
             this.cmbSystemPrimaryEconomy.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemPrimaryEconomy.TabIndex = 13;
-            this.cmbSystemPrimaryEconomy.Visible_ro = false;
+            this.cmbSystemPrimaryEconomy.Visible_ro = true;
             // 
             // label65
             // 
@@ -1953,7 +1953,7 @@
             this.cmbSystemSecurity.ReadOnly = false;
             this.cmbSystemSecurity.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemSecurity.TabIndex = 8;
-            this.cmbSystemSecurity.Visible_ro = false;
+            this.cmbSystemSecurity.Visible_ro = true;
             // 
             // label66
             // 
@@ -1976,7 +1976,7 @@
             this.cmbSystemState.ReadOnly = false;
             this.cmbSystemState.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemState.TabIndex = 12;
-            this.cmbSystemState.Visible_ro = false;
+            this.cmbSystemState.Visible_ro = true;
             // 
             // label67
             // 
@@ -1999,7 +1999,7 @@
             this.cmbSystemAllegiance.ReadOnly = false;
             this.cmbSystemAllegiance.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemAllegiance.TabIndex = 11;
-            this.cmbSystemAllegiance.Visible_ro = false;
+            this.cmbSystemAllegiance.Visible_ro = true;
             // 
             // label68
             // 
@@ -2022,7 +2022,7 @@
             this.cmbSystemGovernment.ReadOnly = false;
             this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemGovernment.TabIndex = 10;
-            this.cmbSystemGovernment.Visible_ro = false;
+            this.cmbSystemGovernment.Visible_ro = true;
             // 
             // label69
             // 
@@ -3423,8 +3423,6 @@
             // 
             // dtpLogEventDate
             // 
-            this.dtpLogEventDate.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.dtpLogEventDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpLogEventDate.Location = new System.Drawing.Point(238, 85);
             this.dtpLogEventDate.Name = "dtpLogEventDate";
             this.dtpLogEventDate.Size = new System.Drawing.Size(200, 20);
@@ -5102,7 +5100,7 @@
         private System.Windows.Forms.CheckBox cbAutoAdd_Visited;
         private System.Windows.Forms.CheckBox cbAutoAdd_ReplaceVisited;
         internal System.Windows.Forms.Label lblUpdateInfo;
-        internal System.Windows.Forms.Label lblUpdateDetail;
+        internal System.Windows.Forms.TextBox lblUpdateDetail;
         private System.Windows.Forms.Button cmdUpdate;
         private System.Windows.Forms.LinkLabel llVisitUpdate;
         private System.Windows.Forms.Label label93;

@@ -141,6 +141,11 @@ namespace RegulatedNoise
                 if(RegulatedNoiseSettings.WindowBaseData.ContainsKey(FormName))
                     _Splash.setPosition(RegulatedNoiseSettings.WindowBaseData[FormName]);
 
+                _Splash.InfoAdd("initialize components...");
+                InitializeComponent();
+                _logger.Log("  - initialised component");
+                _Splash.InfoChange("initialize components...<OK>");
+
                 _Splash.InfoAdd("doing special work if something to do...");
                 doSpecial();
                 _logger.Log("  - special things done");
@@ -153,11 +158,6 @@ namespace RegulatedNoise
 
                 SetProductAppDataPath();
                 _logger.Log("  - product appdata set");
-
-                _Splash.InfoAdd("initialize components...");
-                InitializeComponent();
-                _logger.Log("  - initialised component");
-                _Splash.InfoChange("initialize components...<OK>");
 
                 _Splash.InfoAdd("load game settings...");
                 GameSettings = new GameSettings(this);
@@ -203,6 +203,10 @@ namespace RegulatedNoise
 
                 _Splash.InfoAdd("prepare 'Commander's Log'...");
                 CommandersLog = new CommandersLog(this);
+                dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern + " " + 
+                                                            System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
+                dtpLogEventDate.Format       = System.Windows.Forms.DateTimePickerFormat.Custom;
+
                 _logger.Log("  - created Commander's Log object");
                 CommandersLog.LoadLog(true);
                 _logger.Log("  - loaded Commander's Log");
@@ -6285,7 +6289,7 @@ namespace RegulatedNoise
                 txtSystemZ.Text = m_loadedSystemdata.Z.ToString("0.00000", CultureInfo.CurrentCulture);
                 txtSystemFaction.Text = m_loadedSystemdata.Faction.NToString();
                 txtSystemPopulation.Text = m_loadedSystemdata.Population.ToNString("#,##0.", CultureInfo.CurrentCulture);
-                txtSystemUpdatedAt.Text = m_loadedSystemdata.UpdatedAt.ToString();
+                txtSystemUpdatedAt.Text = UnixTimeStamp.UnixTimeStampToDateTime(m_loadedSystemdata.UpdatedAt).ToString(CultureInfo.CurrentUICulture);
                 cbSystemNeedsPermit.CheckState = m_loadedSystemdata.NeedsPermit.toCheckState();
                 cmbSystemPrimaryEconomy.Text = m_loadedSystemdata.PrimaryEconomy.NToString();
                 cmbSystemSecurity.Text = m_loadedSystemdata.Security.NToString();
@@ -6397,7 +6401,7 @@ namespace RegulatedNoise
                 cmbStationState.Text = m_loadedStationdata.State.NToString();
                 cmbStationType.Text = m_loadedStationdata.Type.NToString();
 
-                txtStationUpdatedAt.Text = m_loadedStationdata.UpdatedAt.ToString();
+                txtStationUpdatedAt.Text = UnixTimeStamp.UnixTimeStampToDateTime(m_loadedStationdata.UpdatedAt).ToString(CultureInfo.CurrentUICulture);
 
                 lbStationEconomies.Items.Clear();
 

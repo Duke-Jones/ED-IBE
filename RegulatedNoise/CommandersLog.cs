@@ -23,6 +23,7 @@ namespace RegulatedNoise
             LogEvents = new SortableBindingList<CommandersLogEvent>();
 
             isLoaded = false;
+
         }
 
         public string CreateEvent()

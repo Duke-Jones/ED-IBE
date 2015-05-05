@@ -21,10 +21,30 @@ todo:
    * show hint how many stations and systems are in database
    * add rejected marketdata from eddn with rightclick contextmenue
    * show the stations as a one look list
-   ***********************************************************************************
+   * eddn layout v2
 
+  -------------------------------------------------------------------------------------      
+1.84_0.19_2
+   * completed changes for sorting datevalues in Commanders Log   
+   * some GUI corrections on start tab
+   * showing changedate of systems and stations in a readable format
 -------------------------------------------------------------------------------------      
-
+1.84_0.19_1
+   * fix invalid cast from EDCommoditiesExt to int (thx to zericco)
+   * test: changes to sorting of datevalues in Commanders Log   
+-------------------------------------------------------------------------------------      
+1.84_0.18_2
+   * put eddn sending routine into a backgroundthread
+   * if test-schema is not active, so all data coming from test schema will also be ignored
+   * Commander's Log sets station information on new entrys
+   * only known stations in a system are suggested in "Commander's Log" station-dropdown
+   * new AutoEvents: 
+            - "Visited" (Stations)
+			- "Market Data Collected"
+   * optimized refresh behaviour of Commander's Log
+   * added some RN specific infos on the start tab
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------      
 1.84_0.18_2
    * put eddn sending routine into a backgroundthread
    * if test-schema is not active, so all data coming from test schema will also be ignored
