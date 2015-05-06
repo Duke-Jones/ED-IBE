@@ -3452,8 +3452,6 @@ namespace RegulatedNoise
                         bClearOcrOutput.Enabled = false;
                         bEditResults.Enabled = false;
 
-                        CommandersLog_MarketDataCollectedEvent(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
-
                         // save the new data immediately
                         SaveCommodityData(true);
 
@@ -3607,6 +3605,8 @@ namespace RegulatedNoise
                     ImportCsvString(s, false, true, true);
                 }
             }
+            
+            CommandersLog_MarketDataCollectedEvent(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
 
             SetupGui();
         }

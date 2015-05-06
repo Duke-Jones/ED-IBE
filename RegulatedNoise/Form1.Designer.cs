@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
@@ -304,7 +304,6 @@
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.tbUsername = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
             this.cbPostOnImport = new System.Windows.Forms.CheckBox();
             this.tbOcrSystemName = new System.Windows.Forms.TextBox();
             this.tbFinalOcrOutput = new System.Windows.Forms.TextBox();
@@ -396,6 +395,7 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label94 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
@@ -1409,7 +1409,7 @@
             this.txtStationUpdatedAt.ReadOnly = true;
             this.txtStationUpdatedAt.Size = new System.Drawing.Size(151, 21);
             this.txtStationUpdatedAt.TabIndex = 18;
-            this.txtStationUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtStationUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label73
             // 
@@ -1907,7 +1907,7 @@
             this.txtSystemUpdatedAt.ReadOnly = true;
             this.txtSystemUpdatedAt.Size = new System.Drawing.Size(151, 21);
             this.txtSystemUpdatedAt.TabIndex = 14;
-            this.txtSystemUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtSystemUpdatedAt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label63
             // 
@@ -2425,14 +2425,14 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series5.ChartArea = "ChartArea1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(210, 224);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -2450,14 +2450,14 @@
             // 
             // chart2
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart2.Location = new System.Drawing.Point(0, 0);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
+            series6.ChartArea = "ChartArea1";
+            series6.Name = "Series1";
+            this.chart2.Series.Add(series6);
             this.chart2.Size = new System.Drawing.Size(210, 269);
             this.chart2.TabIndex = 6;
             this.chart2.Text = "chart2";
@@ -3425,7 +3425,7 @@
             // 
             this.dtpLogEventDate.Location = new System.Drawing.Point(238, 85);
             this.dtpLogEventDate.Name = "dtpLogEventDate";
-            this.dtpLogEventDate.Size = new System.Drawing.Size(200, 20);
+            this.dtpLogEventDate.Size = new System.Drawing.Size(207, 20);
             this.dtpLogEventDate.TabIndex = 21;
             // 
             // tabOCRGroup
@@ -3466,6 +3466,7 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.label94);
             this.groupBox4.Controls.Add(this.bIgnoreTrash);
             this.groupBox4.Controls.Add(this.bClearOcrOutput);
             this.groupBox4.Controls.Add(this.bEditResults);
@@ -3481,7 +3482,6 @@
             this.groupBox4.Controls.Add(this.label33);
             this.groupBox4.Controls.Add(this.label32);
             this.groupBox4.Controls.Add(this.tbUsername);
-            this.groupBox4.Controls.Add(this.label31);
             this.groupBox4.Controls.Add(this.cbPostOnImport);
             this.groupBox4.Controls.Add(this.tbOcrSystemName);
             this.groupBox4.Controls.Add(this.tbFinalOcrOutput);
@@ -3651,15 +3651,6 @@
             this.tbUsername.Size = new System.Drawing.Size(230, 20);
             this.tbUsername.TabIndex = 20;
             this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(286, 472);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(55, 13);
-            this.label31.TabIndex = 19;
-            this.label31.Text = "Username";
             // 
             // cbPostOnImport
             // 
@@ -4619,6 +4610,15 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
+            // label94
+            // 
+            this.label94.AutoSize = true;
+            this.label94.Location = new System.Drawing.Point(286, 472);
+            this.label94.Name = "label94";
+            this.label94.Size = new System.Drawing.Size(55, 13);
+            this.label94.TabIndex = 35;
+            this.label94.Text = "Username";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4900,7 +4900,6 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label32;
         internal System.Windows.Forms.TextBox tbUsername;
-        private System.Windows.Forms.Label label31;
         private System.Windows.Forms.CheckBox cbPostOnImport;
         private System.Windows.Forms.TextBox tbOcrSystemName;
         private System.Windows.Forms.TextBox tbFinalOcrOutput;
@@ -5108,6 +5107,7 @@
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.LinkLabel linkLabel11;
         private System.Windows.Forms.LinkLabel linkLabel10;
+        private System.Windows.Forms.Label label94;
 
         
     }

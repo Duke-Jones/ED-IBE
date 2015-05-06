@@ -2,23 +2,17 @@ todo:
    * option "take jumps into account"
    * show distance in lists
    * Cmdrs Log must using ED-Time
-   * optimize column widths of tables
-   * make visibility and width of columns selectable and save the settings
-   * possibility to disable station / consider the station distance
    * single station/time export
-   * possibility to cancel route calculation
    * english data base with possibility of import (file/ocr) from other languages
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
    * by commodity : show distance to current system
    * new commodity added and looking on the warn levels (small form) results in crash
-   * scanning is not sure visible after every jump
    * commodity selection is resetted if changing the system distance filter
    * showing distance to system in the "by station" and "by commodity" view
    * copy system name with context menu in the "by station" and "by commodity" view
    * if implausibe prices show warnlevel direct under the price data
    * show hint with age of market prices if location is a station
-   * show hint how many stations and systems are in database
    * add rejected marketdata from eddn with rightclick contextmenue
    * show the stations as a one look list
    * eddn layout v2
@@ -28,6 +22,8 @@ todo:
    * completed changes for sorting datevalues in Commanders Log   
    * some GUI corrections on start tab
    * showing changedate of systems and stations in a readable format
+   * correction on trigger for "Market Data Collected" event 
+   * added latest EDDB data files
 -------------------------------------------------------------------------------------      
 1.84_0.19_1
    * fix invalid cast from EDCommoditiesExt to int (thx to zericco)
