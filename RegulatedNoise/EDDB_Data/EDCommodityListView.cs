@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using System.Diagnostics;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
@@ -26,7 +21,7 @@ namespace RegulatedNoise.EDDB_Data
             InitializeComponent();
             int selectedRow;
 
-            Commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
+            Commodities = ApplicationContext.Milkyway.CloneCommodities().OrderBy(x => x.Name).ToList();
 
             foreach (EDCommoditiesExt Commodity in Commodities)
             {
@@ -87,16 +82,16 @@ namespace RegulatedNoise.EDDB_Data
         {
             if (m_DataChanged)
             {
-                if (MessageBox.Show("Save Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
+                if (MessageBox.Show("Save Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == DialogResult.OK)
                 { 
                     // save and change
                     updateCommodityList();
-                    Form1.InstanceObject.myMilkyway.setCommodities(Commodities.OrderBy(x => x.Id).ToList());
+                    ApplicationContext.Milkyway.SetCommodities(Commodities.OrderBy(x => x.Id).ToList());
                     this.Close();
                 }
                 else
                 {
-                    this.DialogResult = System.Windows.Forms.DialogResult.None;
+                    this.DialogResult = DialogResult.None;
                 }
             }
             else
@@ -107,13 +102,13 @@ namespace RegulatedNoise.EDDB_Data
         {
             if (m_DataChanged)
             {
-                if (MessageBox.Show("Dismiss Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
+                if (MessageBox.Show("Dismiss Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == DialogResult.OK)
                 { 
                     this.Close();
                 }
                 else
                 {
-                    this.DialogResult = System.Windows.Forms.DialogResult.None;
+                    this.DialogResult = DialogResult.None;
                 }
             }
             else

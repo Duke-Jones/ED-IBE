@@ -105,7 +105,7 @@ namespace RegulatedNoise
                     if (ex.InnerException != null)
                         _logger.Log(ex.InnerException.ToString(), true);
 
-                    cErr.showError(ex, "Error in EDDN-Sending-Thread");
+                    cErr.ShowError(ex, "Error in EDDN-Sending-Thread");
                 }
 	         
 	        } while ((!_caller.IsDisposed) && (!_caller.Disposing));
@@ -122,18 +122,18 @@ namespace RegulatedNoise
 
             System.Diagnostics.Debug.Print("eddn send : " + rowToPost.ToString());
 
-            if (Form1.RegulatedNoiseSettings.UseEddnTestSchema)
+            if (ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema)
             {
                 json =
                     @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                    Form1.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + Form1.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
+						  ApplicationContext.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + ApplicationContext.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
                 json =
                     @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                    Form1.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + Form1.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
+						  ApplicationContext.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + ApplicationContext.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
              }
 

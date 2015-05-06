@@ -1,35 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RegulatedNoise
 {
     public partial class SplashScreenForm : Form
     {
-        System.Windows.Forms.Timer _CloseTimer;
+        Timer _closeTimer;
         public SplashScreenForm()
         {
             InitializeComponent();
             listBox1.Items.Add("");
         }
 
-        public void InfoAdd(string Info)
+        public void InfoAdd(string info)
         { 
-            listBox1.Items.Insert(listBox1.Items.Count-1, Info);
+            listBox1.Items.Insert(listBox1.Items.Count-1, info);
             listBox1.SelectedIndex = listBox1.Items.Count-1;
             listBox1.SelectedIndex = -1;
             this.Refresh();
         }
 
-        public void InfoChange(string Info)
+        public void InfoChange(string info)
         { 
-            listBox1.Items[listBox1.Items.Count-2] = Info;
+            listBox1.Items[listBox1.Items.Count-2] = info;
             listBox1.SelectedIndex = listBox1.Items.Count-1;
             listBox1.SelectedIndex = -1;
             this.Refresh();
@@ -37,26 +31,25 @@ namespace RegulatedNoise
 
         public void CloseDelayed()
         {
-            _CloseTimer = new System.Windows.Forms.Timer();
-            _CloseTimer.Tick += _CloseTimer_Tick;
-            _CloseTimer.Interval = 1000;
-            _CloseTimer.Start();
+            _closeTimer = new Timer();
+            _closeTimer.Tick += _CloseTimer_Tick;
+            _closeTimer.Interval = 1000;
+            _closeTimer.Start();
             this.Refresh();
         }
 
         void _CloseTimer_Tick(object sender, EventArgs e)
         {
-            _CloseTimer.Dispose();
-            this.Close();
+            _closeTimer.Dispose();
+            Close();
         }
 
-        internal void setPosition(WindowData windowData)
+        internal void SetPosition(WindowData windowData)
         {
             if((windowData != null) && (windowData.Position.Top >= 0))
             {
-                System.Drawing.Rectangle rec_WA = Screen.FromRectangle(windowData.Position).WorkingArea;
-
-                this.Location = new Point((Int32)(rec_WA.X + ((rec_WA.Width - this.Width) / 2)), (Int32)(rec_WA.Y + ((rec_WA.Height - this.Height) / 2)));
+                Rectangle rec_WA = Screen.FromRectangle(windowData.Position).WorkingArea;
+                Location = new Point((Int32)(rec_WA.X + ((rec_WA.Width - this.Width) / 2)), (Int32)(rec_WA.Y + ((rec_WA.Height - this.Height) / 2)));
             }
         }
     }
