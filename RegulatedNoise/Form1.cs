@@ -61,7 +61,6 @@ namespace RegulatedNoise
 		public Dictionary<byte, string> CommodityLevel = new Dictionary<byte, string>();
 		private Ocr ocr;
 		private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _stationToStationReturnColumnSorter, _commandersLogColumnSorter;
-		private Thread _eddnSubscriberThread;
 		private FileSystemWatcher _fileSystemWatcher;
 		private SingleThreadLogger _logger;
 		private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -176,6 +175,7 @@ namespace RegulatedNoise
 
 				_Splash.InfoAdd("prepare EDDN interface...");
 				Eddn = new EDDN(this);
+				components.Add(new Disposer(Eddn));
 				_logger.Log("  - created EDDN object");
 				_Splash.InfoChange("prepare EDDN interface...<OK>");
 
@@ -299,35 +299,39 @@ namespace RegulatedNoise
 
 		private void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
 		{
-			switch (notificationEventArgs.Event)
+			RunInGuiThread(() =>
 			{
-				case NotificationEventArgs.EventType.InitializationStart:
-				case NotificationEventArgs.EventType.InitializationProgress:
-				case NotificationEventArgs.EventType.InitializationCompleted:
-					break;
-				case NotificationEventArgs.EventType.Information:
-					MsgBox.Show(notificationEventArgs.Message,
-						notificationEventArgs.Title ?? "",
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Information);
-					break;
-				case NotificationEventArgs.EventType.Request:
-					MsgBox.Show(notificationEventArgs.Message,
-						notificationEventArgs.Title ?? "",
-						MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-					break;
-				case NotificationEventArgs.EventType.FileRequest:
-					using (FolderBrowserDialog dialog = new FolderBrowserDialog {Description = notificationEventArgs.Message})
-					{
-						if (dialog.ShowDialog() == DialogResult.OK)
+				switch (notificationEventArgs.Event)
+				{
+					case NotificationEventArgs.EventType.InitializationStart:
+					case NotificationEventArgs.EventType.InitializationProgress:
+					case NotificationEventArgs.EventType.InitializationCompleted:
+						break;
+					case NotificationEventArgs.EventType.Information:
+						MsgBox.Show(notificationEventArgs.Message,
+							notificationEventArgs.Title ?? "",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Information);
+						break;
+					case NotificationEventArgs.EventType.Request:
+						MsgBox.Show(notificationEventArgs.Message,
+							notificationEventArgs.Title ?? "",
+							MessageBoxButtons.OKCancel,
+							MessageBoxIcon.Question);
+						break;
+					case NotificationEventArgs.EventType.FileRequest:
+						using (FolderBrowserDialog dialog = new FolderBrowserDialog {Description = notificationEventArgs.Message})
 						{
-							notificationEventArgs.Response = dialog.SelectedPath;
+							if (dialog.ShowDialog() == DialogResult.OK)
+							{
+								notificationEventArgs.Response = dialog.SelectedPath;
+							}
 						}
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			});
 		}
 
 		private void InitializationProgressEventHandler(object sender, NotificationEventArgs notificationEventArgs)
@@ -882,15 +886,10 @@ namespace RegulatedNoise
 		{
 			m_Closing = true;
 			m_LogfileScanner_ARE.Set();
-
 			if (stateTimer != null) stateTimer.Dispose();
-			if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
-
 			SaveCommodityData(true);
 			CommandersLog.SaveLog(true);
-
 			ApplicationContext.RegulatedNoiseSettings.Save();
-
 			if (sws.Running)
 				sws.Stop();
 		}
@@ -1116,7 +1115,7 @@ namespace RegulatedNoise
 					}
 
 					if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-						Eddn.sendToEdDDN(currentRow);
+						Eddn.SendToEdDdn(currentRow);
 				}
 			}
 		}
@@ -3465,9 +3464,7 @@ namespace RegulatedNoise
 
 		private void button15_Click(object sender, EventArgs e)
 		{
-			_eddnSubscriberThread = new Thread(() => Eddn.Subscribe());
-			_eddnSubscriberThread.IsBackground = true;
-			_eddnSubscriberThread.Start();
+			Eddn.Subscribe();
 		}
 
 		#region EDDN Delegates
@@ -3710,8 +3707,7 @@ namespace RegulatedNoise
 
 		private void cmdStopEDDNListening_Click(object sender, EventArgs e)
 		{
-			if (_eddnSubscriberThread != null && _eddnSubscriberThread.IsAlive)
-				_eddnSubscriberThread.Abort();
+			Eddn.UnSubscribe();
 		}
 
 		#region Station-To-Station

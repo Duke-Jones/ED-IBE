@@ -108,6 +108,9 @@
     <Compile Include="DialogBox\Win32API.cs" />
     <Compile Include="DialogBox\WindowsHook.cs" />
     <Compile Include="DialogBox\WndProcRetHook.cs" />
+    <Compile Include="Disposer.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDCommodityListView.cs">
