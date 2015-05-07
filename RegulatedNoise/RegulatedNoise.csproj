@@ -69,6 +69,9 @@
   <PropertyGroup>
     <StartupObject>RegulatedNoise.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
       <HintPath>.\clrzmq.dll</HintPath>
@@ -782,6 +785,7 @@
     <None Include="Resources\SampleTooLow.png" />
     <None Include="Resources\PayPalDonate.jpg" />
     <None Include="Resources\RNSplash.png" />
+    <Content Include="logo.ico" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
