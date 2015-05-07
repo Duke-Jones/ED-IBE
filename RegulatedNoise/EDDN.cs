@@ -20,6 +20,7 @@ namespace RegulatedNoise
 		private readonly SingleThreadLogger _logger;
 		private bool _disposed;
 		private bool _listening;
+		private readonly object _listeningStateChange = new object();
 
 		public EDDN(Form1 caller)
 		{
@@ -34,12 +35,21 @@ namespace RegulatedNoise
 
 		public void UnSubscribe()
 		{
-			_listening = false;
+			lock (_listeningStateChange)
+			{
+				_listening = false;
+			}
 		}
 
 		public void Subscribe()
 		{
-			_listening = true;
+			lock (_listeningStateChange)
+			{
+				if (_listening)
+					return;
+				_listening = true;
+				
+			}
 			Task.Factory.StartNew(() =>
 			{
 				using (var ctx = ZmqContext.Create())

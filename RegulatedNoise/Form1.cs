@@ -282,6 +282,12 @@ namespace RegulatedNoise
 				UpdateSystemNameFromLogFile();
 				_logger.Log("  - fetched system name from file");
 				_Splash.InfoChange("starting logfile watcher...<OK>");
+				if (ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad)
+				{
+					_Splash.InfoAdd("starting EDDN listening...");
+					Eddn.Subscribe();
+					_Splash.InfoChange("listening EDDN...<OK>");
+				}
 
 			}
 			catch (Exception ex)
@@ -1453,7 +1459,6 @@ namespace RegulatedNoise
 
 			Cursor = oldCursor;
 		}
-
 
 		private void setupCombobox(ComboBox CBRefreshed, List<KeyValuePair<string, string>> DDItems)
 		{
@@ -3326,8 +3331,6 @@ namespace RegulatedNoise
 
 			return implausible;
 		}
-
-
 
 		private void ImportFinalOcrOutput()
 		{

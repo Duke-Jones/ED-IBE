@@ -78,6 +78,7 @@ namespace RegulatedNoise
 		public string WebserverForegroundColor = "#000000";
 		public string MostRecentOCRFolder = "";
 		public bool StartOCROnLoad = false;
+		public bool StartListeningEDDNOnLoad = false;
 		public string UserName = "";
 		public bool IncludeExtendedCSVInfo = true;
 		public bool PostToEddnOnImport = false;
@@ -174,9 +175,8 @@ namespace RegulatedNoise
 		{
 			string sURL;
 			sURL = @"https://api.github.com/repos/Duke-Jones/RegulatedNoise/releases";
-			string response;
 
-			HttpWebRequest webRequest = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
+			HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(sURL);
 			webRequest.Method = "GET";
 			webRequest.ServicePoint.Expect100Continue = false;
 			webRequest.UserAgent = "YourAppName";
@@ -192,6 +192,7 @@ namespace RegulatedNoise
 				string release;
 				bool PR;
 
+				string response;
 				using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
 					response = responseReader.ReadToEnd();
 
