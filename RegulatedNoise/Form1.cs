@@ -124,8 +124,8 @@ namespace RegulatedNoise
 			_Splash.Show();
 #endif
 			Cursor = Cursors.WaitCursor;
-			EventBus.OnInitializationProgress += InitializationProgressEventHandler;
-			EventBus.OnInitializationProgress += NotificationEventHandler;
+			EventBus.OnNotificationEvent += InitializationProgressEventHandler;
+			EventBus.OnNotificationEvent += NotificationEventHandler;
 
 			try
 			{
@@ -139,14 +139,6 @@ namespace RegulatedNoise
 				InitializeComponent();
 				_logger.Log("  - component initialized");
 				_Splash.InfoChange("initialize components...<OK>");
-
-				_Splash.InfoAdd("load settings...");
-				SetProductPath();
-				_logger.Log("  - product path set");
-				_Splash.InfoChange("load settings...<OK>");
-
-				SetProductAppDataPath();
-				_logger.Log("  - product appdata set");
 
 				_Splash.InfoAdd("load game settings...");
 				GameSettings = new GameSettings(this);
@@ -176,7 +168,7 @@ namespace RegulatedNoise
 				OcrCalibrator.LoadCalibration();
 				var OcrCalibratorTabPage = new TabPage("OCR Calibration");
 				OcrCalibratorTabPage.Name = "OCR_Calibration";
-				var oct = new OcrCalibratorTab {Dock = DockStyle.Fill};
+				var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
 				OcrCalibratorTabPage.Controls.Add(oct);
 				tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
 				_logger.Log("  - initialised Ocr Calibrator");
@@ -193,8 +185,8 @@ namespace RegulatedNoise
 				_Splash.InfoAdd("prepare 'Commander's Log'...");
 				CommandersLog = new CommandersLog(this);
 				dtpLogEventDate.CustomFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern +
-				                               " " +
-				                               CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
+														 " " +
+														 CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
 				dtpLogEventDate.Format = DateTimePickerFormat.Custom;
 
 				_logger.Log("  - created Commander's Log object");
@@ -237,7 +229,7 @@ namespace RegulatedNoise
 				{
 					//Testing
 					var testtab = new TabPage("MRmP Test Tab");
-					var testtb = new MRmPTestTab.MRmPTestTab {Dock = DockStyle.Fill};
+					var testtb = new MRmPTestTab.MRmPTestTab { Dock = DockStyle.Fill };
 					testtab.Controls.Add(testtb);
 					tabCtrlMain.Controls.Add(testtab);
 				}
@@ -299,7 +291,7 @@ namespace RegulatedNoise
 			finally
 			{
 				Cursor = Cursors.Default;
-				EventBus.OnInitializationProgress -= InitializationProgressEventHandler;
+				EventBus.OnNotificationEvent -= InitializationProgressEventHandler;
 			}
 			_Splash.InfoAdd("\nstart sequence finished !!!");
 			_InitDone = true;
@@ -307,12 +299,34 @@ namespace RegulatedNoise
 
 		private void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
 		{
-			if (notificationEventArgs.Event == NotificationEventArgs.EventType.Information)
+			switch (notificationEventArgs.Event)
 			{
-				MsgBox.Show(notificationEventArgs.Message,
-					notificationEventArgs.Title ?? "Alert",
-					MessageBoxButtons.OK,
-					MessageBoxIcon.Information);
+				case NotificationEventArgs.EventType.InitializationStart:
+				case NotificationEventArgs.EventType.InitializationProgress:
+				case NotificationEventArgs.EventType.InitializationCompleted:
+					break;
+				case NotificationEventArgs.EventType.Information:
+					MsgBox.Show(notificationEventArgs.Message,
+						notificationEventArgs.Title ?? "",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Information);
+					break;
+				case NotificationEventArgs.EventType.Request:
+					MsgBox.Show(notificationEventArgs.Message,
+						notificationEventArgs.Title ?? "",
+						MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+					break;
+				case NotificationEventArgs.EventType.FileRequest:
+					using (FolderBrowserDialog dialog = new FolderBrowserDialog {Description = notificationEventArgs.Message})
+					{
+						if (dialog.ShowDialog() == DialogResult.OK)
+						{
+							notificationEventArgs.Response = dialog.SelectedPath;
+						}
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
@@ -506,189 +520,6 @@ namespace RegulatedNoise
 			listView.Columns.Add("Demand");
 			listView.Columns.Add("Demand Level");
 			listView.Columns.Add("Difference").Width = 70;
-		}
-
-		private string getProductPathAutomatically()
-		{
-			string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
-                                       Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
-
-			string returnValue = null;
-			foreach (var directory in autoSearchdir)
-			{
-				if (directory == null) continue;
-				foreach (var dir in Directory.GetDirectories(directory))
-				{
-					if (Path.GetFileName(dir) != "Frontier") continue;
-					var p = Path.Combine(dir, "EDLaunch", "Products");
-					returnValue = Directory.Exists(p) ? p : null;
-					break;
-				}
-			}
-			if (returnValue != null) return returnValue;
-
-			if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
-				return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
-
-			// nothing found ? then lets have a try with the MUICache
-			string ProgramName = "Elite:Dangerous Executable";
-			string ProgramPath = string.Empty;
-
-			RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache");
-
-			if (key != null)
-			{
-				string[] Names = key.GetValueNames();
-
-
-				for (int i = 0; i < Names.Count(); i++)
-				{
-					if (key.GetValue(Names[i]).ToString() == ProgramName)
-					{
-						ProgramPath = Names[i].ToString();
-						ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf("\\Products\\") + 9);
-						return ProgramPath;
-					}
-
-				}
-
-			}
-
-			return null;
-		}
-		private string getProductPathManually()
-		{
-			var dialog = new FolderBrowserDialog { Description = "Please point me to your Frontier 'Products' directory." };
-
-			while (true)
-			{
-				var dialogResult = dialog.ShowDialog();
-
-				if (dialogResult == DialogResult.OK)
-				{
-					if (Path.GetFileName(dialog.SelectedPath) == "Products")
-					{
-						return dialog.SelectedPath;
-
-					}
-				}
-
-				var MBResult = MsgBox.Show(
-					 "Hm, that doesn't seem right" +
-					 (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory" : "")
-				+ ". Please try again...", "", MessageBoxButtons.RetryCancel);
-
-				if (MBResult == DialogResult.Cancel)
-					Application.Exit();
-			}
-		}
-		private void SetProductPath()
-		{
-			//Already set, no reason to set it again :)
-			if (ApplicationContext.RegulatedNoiseSettings.ProductsPath != "" && ApplicationContext.RegulatedNoiseSettings.GamePath != "") return;
-
-			//Automatic
-			var path = getProductPathAutomatically();
-
-			//Automatic failed, Ask user to find it manually
-			if (path == null)
-			{
-				var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
-
-				if (MBResult == DialogResult.Cancel)
-					Application.Exit();
-
-				path = getProductPathManually();
-			}
-
-			//Verify that path contains FORC-FDEV
-			var dirs = Directory.GetDirectories(path);
-
-			var b = false;
-			while (!b)
-			{
-				var gamedirs = new List<string>();
-				foreach (var dir in dirs)
-				{
-					if (Path.GetFileName(dir).StartsWith("FORC-FDEV"))
-					{
-						gamedirs.Add(dir);
-					}
-				}
-
-				if (gamedirs.Count > 0)
-				{
-					//Get highest Forc-fdev dir.
-					ApplicationContext.RegulatedNoiseSettings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
-					b = true;
-					continue;
-				}
-
-				var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
-
-				if (MBResult == DialogResult.Cancel)
-					Application.Exit();
-
-				path = getProductPathManually();
-				dirs = Directory.GetDirectories(path);
-			}
-
-			ApplicationContext.RegulatedNoiseSettings.ProductsPath = path;
-		}
-
-		private string getProductAppDataPathAutomatically()
-		{
-			string[] autoSearchdir = { Environment.GetEnvironmentVariable("LOCALAPPDATA") };
-
-			return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier Developments" select Path.Combine(dir, "Elite Dangerous", "Options") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
-		}
-
-		private string getProductAppDataPathManually()
-		{
-			var dialog = new FolderBrowserDialog { Description = @"Please point me to the Game Options directory, typically C:\Users\{username}\AppData\{Local or Roaming}\Frontier Developments\Elite Dangerous\Options\Graphics" };
-
-			while (true)
-			{
-				var dialogResult = dialog.ShowDialog();
-
-				if (dialogResult == DialogResult.OK)
-				{
-					if (Path.GetFileName(dialog.SelectedPath) == "Options")
-					{
-						return dialog.SelectedPath;
-
-					}
-				}
-
-				var MBResult = MsgBox.Show(
-					 "Hm, that doesn't seem right, " + dialog.SelectedPath +
-					 " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
-
-				if (MBResult == DialogResult.Cancel)
-					Application.Exit();
-
-			}
-		}
-		private void SetProductAppDataPath()
-		{
-			//Already set, no reason to set it again :)
-			if (ApplicationContext.RegulatedNoiseSettings.ProductAppData != "") return;
-
-			//Automatic
-			var path = getProductAppDataPathAutomatically();
-
-			//Automatic failed, Ask user to find it manually
-			if (path == null)
-			{
-				var MBResult = MsgBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
-
-				if (MBResult == DialogResult.Cancel)
-					Application.Exit();
-
-				path = getProductAppDataPathManually();
-			}
-
-			ApplicationContext.RegulatedNoiseSettings.ProductAppData = path;
 		}
 
 		private void ApplySettings()

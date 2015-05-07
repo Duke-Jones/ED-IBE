@@ -8,10 +8,13 @@ using System.Net.Mime;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using CodeProject.Dialog;
+using Microsoft.Win32;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Exceptions;
 
 namespace RegulatedNoise
 {
@@ -365,6 +368,188 @@ namespace RegulatedNoise
 			}
 		}
 
+		private void SetProductPath()
+		{
+			//Already set, no reason to set it again :)
+			if (ProductsPath != "" && GamePath != "") return;
+			EventBus.InitializationStart("product pathes set");
+			//Automatic
+			var path = GetProductPathAutomatically();
+			//Automatic failed, Ask user to find it manually
+			if (path == null)
+			{
+				var ok = EventBus.Request("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.");
+
+				if (!ok)
+					throw new InitializationException("unable to find product path");
+
+				path = GetProductPathManually();
+			}
+
+			//Verify that path contains FORC-FDEV
+			var dirs = Directory.GetDirectories(path);
+
+			var b = false;
+			while (!b)
+			{
+				var gamedirs = new List<string>();
+				foreach (var dir in dirs)
+				{
+					if (Path.GetFileName(dir).StartsWith("FORC-FDEV"))
+					{
+						gamedirs.Add(dir);
+					}
+				}
+
+				if (gamedirs.Count > 0)
+				{
+					//Get highest Forc-fdev dir.
+					ApplicationContext.RegulatedNoiseSettings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
+					b = true;
+					continue;
+				}
+
+				var ok = EventBus.Request("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...");
+
+				if (!ok)
+					throw new InitializationException("unable to find FORC-DEV subfolder");
+
+				path = GetProductPathManually();
+				dirs = Directory.GetDirectories(path);
+			}
+			ApplicationContext.RegulatedNoiseSettings.ProductsPath = path;
+			EventBus.InitializationCompleted("product pathes set");
+		}
+
+		private static string GetProductAppDataPathAutomatically()
+		{
+			string[] autoSearchdir = { Environment.GetEnvironmentVariable("LOCALAPPDATA") };
+
+			return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier Developments" select Path.Combine(dir, "Elite Dangerous", "Options") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+		}
+
+		private static string GetProductAppDataPathManually()
+		{
+			while (true)
+			{
+				string filePath = EventBus.FileRequest(@"Please point me to the Game Options directory, typically C:\Users\{username}\AppData\{Local or Roaming}\Frontier Developments\Elite Dangerous\Options\Graphics");
+
+				if (filePath != null)
+				{
+					if (Path.GetFileName(filePath) == "Options")
+					{
+						return filePath;
+					}
+				}
+
+				var ok = EventBus.Request(
+					 "Hm, that doesn't seem right, " + filePath +
+					 " is not the Game Options directory, Please try again", "");
+
+				if (!ok)
+					throw new InitializationException("Elite Dangerous Appdata not provided");
+
+			}
+		}
+
+		private void SetProductAppDataPath()
+		{
+			//Already set, no reason to set it again :)
+			if (ProductAppData != "") return;
+			EventBus.InitializationStart("product appdata set");
+			//Automatic
+			var path = GetProductAppDataPathAutomatically();
+
+			//Automatic failed, Ask user to find it manually
+			if (path == null)
+			{
+				var ok = EventBus.Request(@"Automatic discovery of the Game Options directory failed, please point me to it...");
+
+				if (!ok)
+					Application.Exit();
+
+				path = GetProductAppDataPathManually();
+			}
+			ApplicationContext.RegulatedNoiseSettings.ProductAppData = path;
+			EventBus.InitializationCompleted("product appdata set");
+		}
+
+		private static string GetProductPathAutomatically()
+		{
+			string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
+                                       Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
+
+			string returnValue = null;
+			foreach (var directory in autoSearchdir)
+			{
+				if (directory == null) continue;
+				foreach (var dir in Directory.GetDirectories(directory))
+				{
+					if (Path.GetFileName(dir) != "Frontier") continue;
+					var p = Path.Combine(dir, "EDLaunch", "Products");
+					returnValue = Directory.Exists(p) ? p : null;
+					break;
+				}
+			}
+			if (returnValue != null) return returnValue;
+
+			if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
+				return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
+
+			// nothing found ? then lets have a try with the MUICache
+			string ProgramName = "Elite:Dangerous Executable";
+			string ProgramPath = string.Empty;
+
+			RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache");
+
+			if (key != null)
+			{
+				string[] Names = key.GetValueNames();
+
+
+				for (int i = 0; i < Names.Count(); i++)
+				{
+					if (key.GetValue(Names[i]).ToString() == ProgramName)
+					{
+						ProgramPath = Names[i].ToString();
+						ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf("\\Products\\") + 9);
+						return ProgramPath;
+					}
+
+				}
+
+			}
+
+			return null;
+		}
+
+		private static string GetProductPathManually()
+		{
+			var dialog = new FolderBrowserDialog { Description = "Please point me to your Frontier 'Products' directory." };
+
+			while (true)
+			{
+				var dialogResult = dialog.ShowDialog();
+
+				if (dialogResult == DialogResult.OK)
+				{
+					if (Path.GetFileName(dialog.SelectedPath) == "Products")
+					{
+						return dialog.SelectedPath;
+
+					}
+				}
+
+				var MBResult = MsgBox.Show(
+					 "Hm, that doesn't seem right" +
+					 (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory" : "")
+				+ ". Please try again...", "", MessageBoxButtons.RetryCancel);
+
+				if (MBResult == DialogResult.Cancel)
+					Application.Exit();
+			}
+		}
+
 		public static RegulatedNoiseSettings LoadSettings()
 		{
 			EventBus.InitializationStart("load settings");
@@ -393,6 +578,8 @@ namespace RegulatedNoise
 			}
 			EventBus.InitializationCompleted("load settings");
 			settings.ExtraCheck();
+			settings.SetProductPath();
+			settings.SetProductAppDataPath();
 			return settings;
 		}
 
