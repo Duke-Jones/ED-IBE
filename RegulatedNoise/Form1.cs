@@ -1,29 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Globalization;
-using System.Windows.Forms.DataVisualization.Charting;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Diagnostics;
+using System.Net.Sockets;
 using System.Reflection;
-using EdClasses.ClassDefinitions;
-using RegulatedNoise.Enums_and_Utility_Classes;
-using Microsoft.Win32;
-using System.ComponentModel;
-using RegulatedNoise.EDDB_Data;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Permissions;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using CodeProject.Dialog;
+using EdClasses.ClassDefinitions;
+using Microsoft.Win32;
+using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Enums_and_Utility_Classes;
+using Cursor = System.Windows.Forms.Cursor;
+using Timer = System.Windows.Forms.Timer;
 
 namespace RegulatedNoise
 {
@@ -84,7 +85,7 @@ namespace RegulatedNoise
 		private StationHistory _StationHistory = new StationHistory();
 
 		private String m_lastestStationInfo = String.Empty;
-		private System.Windows.Forms.Timer Clock;
+		private Timer Clock;
 		private CommandersLogEvent m_RightMouseSelectedLogEvent = null;
 		private bool m_Closing = false;
 		private AutoResetEvent m_LogfileScanner_ARE = new AutoResetEvent(false);
@@ -123,7 +124,9 @@ namespace RegulatedNoise
 			_Splash.Show();
 #endif
 			Cursor = Cursors.WaitCursor;
-			ApplicationContext.OnInitializationProgress += (sender, args) => RunInGuiThread(() => NotifyInitializationProgress(args));
+			EventBus.OnInitializationProgress += InitializationProgressEventHandler;
+			EventBus.OnInitializationProgress += NotificationEventHandler;
+
 			try
 			{
 				_logger.Log("Initialising...\n");
@@ -134,13 +137,8 @@ namespace RegulatedNoise
 				}
 				_Splash.InfoAdd("initialize components...");
 				InitializeComponent();
-				_logger.Log("  - initialised component");
+				_logger.Log("  - component initialized");
 				_Splash.InfoChange("initialize components...<OK>");
-
-				_Splash.InfoAdd("doing special work if something to do...");
-				doSpecial();
-				_logger.Log("  - special things done");
-				_Splash.InfoChange("doing special work if something to do...<OK>");
 
 				_Splash.InfoAdd("load settings...");
 				SetProductPath();
@@ -194,10 +192,10 @@ namespace RegulatedNoise
 
 				_Splash.InfoAdd("prepare 'Commander's Log'...");
 				CommandersLog = new CommandersLog(this);
-				dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern +
+				dtpLogEventDate.CustomFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern +
 				                               " " +
-				                               System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
-				dtpLogEventDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+				                               CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
+				dtpLogEventDate.Format = DateTimePickerFormat.Custom;
 
 				_logger.Log("  - created Commander's Log object");
 				CommandersLog.LoadLog(true);
@@ -300,24 +298,39 @@ namespace RegulatedNoise
 			}
 			finally
 			{
-				Cursor = Cursors.Default;				
+				Cursor = Cursors.Default;
+				EventBus.OnInitializationProgress -= InitializationProgressEventHandler;
 			}
 			_Splash.InfoAdd("\nstart sequence finished !!!");
 			_InitDone = true;
 		}
 
-		private void NotifyInitializationProgress(InitializationEventArgs args)
+		private void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
 		{
-			switch (args.Event)
+			if (notificationEventArgs.Event == NotificationEventArgs.EventType.Information)
 			{
-				case InitializationEventArgs.EventType.Update:
-					_Splash.InfoChange(args.Message);
-					break;
-				case InitializationEventArgs.EventType.Info:
-				default:
-					_Splash.InfoAdd(args.Message);
-					break;
+				MsgBox.Show(notificationEventArgs.Message,
+					notificationEventArgs.Title ?? "Alert",
+					MessageBoxButtons.OK,
+					MessageBoxIcon.Information);
 			}
+		}
+
+		private void InitializationProgressEventHandler(object sender, NotificationEventArgs notificationEventArgs)
+		{
+			RunInGuiThread(() =>
+			{
+				switch (notificationEventArgs.Event)
+				{
+					case NotificationEventArgs.EventType.InitializationCompleted:
+						_Splash.InfoChange(notificationEventArgs.Message);
+						break;
+					case NotificationEventArgs.EventType.InitializationProgress:
+					default:
+						_Splash.InfoAdd(notificationEventArgs.Message);
+						break;
+				}
+			});
 		}
 
 		private void RunInGuiThread(Action action)
@@ -412,8 +425,7 @@ namespace RegulatedNoise
 				ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
 				Data.Width = currentHeader.Width;
 			}
-
-			SaveSettings();
+			ApplicationContext.RegulatedNoiseSettings.Save();
 		}
 
 		private void SetListViewColumnsAndSorters()
@@ -566,7 +578,7 @@ namespace RegulatedNoise
 					 (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory" : "")
 				+ ". Please try again...", "", MessageBoxButtons.RetryCancel);
 
-				if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+				if (MBResult == DialogResult.Cancel)
 					Application.Exit();
 			}
 		}
@@ -583,7 +595,7 @@ namespace RegulatedNoise
 			{
 				var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
 
-				if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+				if (MBResult == DialogResult.Cancel)
 					Application.Exit();
 
 				path = getProductPathManually();
@@ -614,7 +626,7 @@ namespace RegulatedNoise
 
 				var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
 
-				if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+				if (MBResult == DialogResult.Cancel)
 					Application.Exit();
 
 				path = getProductPathManually();
@@ -652,7 +664,7 @@ namespace RegulatedNoise
 					 "Hm, that doesn't seem right, " + dialog.SelectedPath +
 					 " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
 
-				if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+				if (MBResult == DialogResult.Cancel)
 					Application.Exit();
 
 			}
@@ -670,7 +682,7 @@ namespace RegulatedNoise
 			{
 				var MBResult = MsgBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
 
-				if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+				if (MBResult == DialogResult.Cancel)
 					Application.Exit();
 
 				path = getProductAppDataPathManually();
@@ -782,7 +794,7 @@ namespace RegulatedNoise
 			}
 
 			// Set the MinDate and MaxDate.
-			nudPurgeOldDataDays.Value = ApplicationContext.RegulatedNoiseSettings.oldDataPurgeDeadlineDays;
+			nudPurgeOldDataDays.Value = ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays;
 		}
 
 		/// <summary>
@@ -940,7 +952,7 @@ namespace RegulatedNoise
 
 			if (_ocrThread == null || !_ocrThread.IsAlive)
 			{
-				Form1.InstanceObject.ActivateOCRTab();
+				InstanceObject.ActivateOCRTab();
 
 				// some stateful enabling for the buttons
 				setButton(bClearOcrOutput, false);
@@ -1046,39 +1058,10 @@ namespace RegulatedNoise
 			SaveCommodityData(true);
 			CommandersLog.SaveLog(true);
 
-			SaveSettings();
+			ApplicationContext.RegulatedNoiseSettings.Save();
 
 			if (sws.Running)
 				sws.Stop();
-		}
-
-		public void SaveSettings()
-		{
-			string newFile, backupFile, currentFile;
-
-			currentFile = "RegulatedNoiseSettings.xml";
-
-			newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-			backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-
-			var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
-			var x = new XmlSerializer(ApplicationContext.RegulatedNoiseSettings.GetType());
-			x.Serialize(stream, ApplicationContext.RegulatedNoiseSettings);
-			stream.Close();
-
-			// we delete the current file not until the new file is written without errors
-
-			// delete old backup
-			if (File.Exists(backupFile))
-				File.Delete(backupFile);
-
-			// rename current file to old backup
-			if (File.Exists(currentFile))
-				File.Move(currentFile, backupFile);
-
-			// rename new file to current file
-			File.Move(newFile, currentFile);
-
 		}
 
 		private void button5_Click(object sender, EventArgs e)
@@ -1482,7 +1465,7 @@ namespace RegulatedNoise
 
 		private void SetupGui(bool force = false)
 		{
-			System.Windows.Forms.Cursor oldCursor = Cursor;
+			Cursor oldCursor = Cursor;
 			Cursor = Cursors.WaitCursor;
 
 			//_cbIncludeWithinRegionOfStation_IndexChanged = false;
@@ -1506,7 +1489,7 @@ namespace RegulatedNoise
 
 			_pt.PrintAndReset("2");
 
-			BindingList<System.Collections.Generic.KeyValuePair<string, string>> BaseList;
+			BindingList<KeyValuePair<string, string>> BaseList;
 			IFormatter formatter = new BinaryFormatter();
 			MemoryStream SerialListCopy = new MemoryStream();
 
@@ -1518,9 +1501,9 @@ namespace RegulatedNoise
 
 			_bs_Stations.DataSource = BaseList;
 			SerialListCopy.Seek(0, 0);
-			_bs_StationsFrom.DataSource = (BindingList<System.Collections.Generic.KeyValuePair<string, string>>)formatter.Deserialize(SerialListCopy);
+			_bs_StationsFrom.DataSource = (BindingList<KeyValuePair<string, string>>)formatter.Deserialize(SerialListCopy);
 			SerialListCopy.Seek(0, 0);
-			_bs_StationsTo.DataSource = (BindingList<System.Collections.Generic.KeyValuePair<string, string>>)formatter.Deserialize(SerialListCopy);
+			_bs_StationsTo.DataSource = (BindingList<KeyValuePair<string, string>>)formatter.Deserialize(SerialListCopy);
 
 			_pt.PrintAndReset("4");
 
@@ -1666,7 +1649,7 @@ namespace RegulatedNoise
 			return TextRenderer.MeasureText(myText, cmbStation.Font).Width;
 		}
 
-		private BindingList<System.Collections.Generic.KeyValuePair<string, string>> getDropDownStationsItems(ref Dictionary<string, int> StationIndices)
+		private BindingList<KeyValuePair<string, string>> getDropDownStationsItems(ref Dictionary<string, int> StationIndices)
 		{
 			int SpaceWidth = GetTextLengthInPixels("                    ") / 20;
 			int maxLength = 0;
@@ -1678,7 +1661,7 @@ namespace RegulatedNoise
 			// clear the old index list
 			StationIndices.Clear();
 
-			BindingList<System.Collections.Generic.KeyValuePair<string, string>> DDItems = new BindingList<System.Collections.Generic.KeyValuePair<string, string>>();
+			BindingList<KeyValuePair<string, string>> DDItems = new BindingList<KeyValuePair<string, string>>();
 			List<KeyValuePair<string, List<CsvRow>>> SelectionRaw;
 			List<KeyValuePair<string, List<CsvRow>>> SelectionOrdered = new List<KeyValuePair<string, List<CsvRow>>>();
 			List<KeyValuePair<string, List<CsvRow>>> SelectionPreordered;
@@ -1911,7 +1894,7 @@ namespace RegulatedNoise
 					Console.WriteLine(ni.Name);
 					foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
 					{
-						if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+						if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
 						{
 							cbInterfaces.Items.Add(ip.Address);
 						}
@@ -2493,7 +2476,7 @@ namespace RegulatedNoise
 
 		public delegate string EventArgsDelegate();
 
-		private System.String getCmbItemKey(object Item)
+		private String getCmbItemKey(object Item)
 		{
 			if (Item != null)
 				return ((KeyValuePair<string, string>)Item).Key;
@@ -2638,7 +2621,7 @@ namespace RegulatedNoise
 
 		}
 
-		void txtWebserverPort_LostFocus(object sender, System.EventArgs e)
+		void txtWebserverPort_LostFocus(object sender, EventArgs e)
 		{
 			UpdateUrl();
 		}
@@ -2704,7 +2687,7 @@ namespace RegulatedNoise
 				Point[] returnValue = new Point[12];
 
 				int ctr = 0;
-				foreach (CalibrationPoint o in Form1.OcrCalibrator.CalibrationBoxes)
+				foreach (CalibrationPoint o in OcrCalibrator.CalibrationBoxes)
 				{
 					returnValue[ctr] = ((Point)o.Position);
 					ctr++;
@@ -3351,7 +3334,7 @@ namespace RegulatedNoise
 				Answer = MsgBox.Show(String.Format("Do you want to add '{0}' to the known commodities ?", commodity), "Unknown commodity !",
 												 MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
-				if (Answer == System.Windows.Forms.DialogResult.OK)
+				if (Answer == DialogResult.OK)
 				{
 					// yes, it's really new
 					addCommodity(commodity, ApplicationContext.RegulatedNoiseSettings.Language);
@@ -3836,7 +3819,7 @@ namespace RegulatedNoise
 											LogFileStream = File.Create(FileName);
 										}
 
-										LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString), 0, System.Text.Encoding.Default.GetByteCount(InfoString));
+										LogFileStream.Write(Encoding.Default.GetBytes(InfoString), 0, Encoding.Default.GetByteCount(InfoString));
 										LogFileStream.Close();
 									}
 
@@ -4662,7 +4645,7 @@ namespace RegulatedNoise
 			}
 		}
 
-		private void cbLogSystemName_TextChanged(object sender, System.EventArgs e)
+		private void cbLogSystemName_TextChanged(object sender, EventArgs e)
 		{
 			_cbLogStationNameIsDirty = true;
 		}
@@ -4725,11 +4708,11 @@ namespace RegulatedNoise
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void lvCommandersLog_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		void lvCommandersLog_MouseClick(object sender, MouseEventArgs e)
 		{
 			ListView currentListView = ((ListView)sender);
 
-			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			if (e.Button == MouseButtons.Right)
 			{
 				m_RightMouseSelectedLogEvent = null;
 				ListViewItem theClickedOne = currentListView.GetItemAt(e.X, e.Y);
@@ -4745,7 +4728,7 @@ namespace RegulatedNoise
 			}
 		}
 
-		void lvCommandersLog_ColumnWidthChanged(object sender, System.Windows.Forms.ColumnWidthChangedEventArgs e)
+		void lvCommandersLog_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
 		{
 			saveColumns((ListView)sender);
 		}
@@ -4793,9 +4776,9 @@ namespace RegulatedNoise
 		}
 
 		#region Christmas!
-		System.Windows.Forms.Timer _timer;
+		Timer _timer;
 
-		private void Form_Shown(object sender, System.EventArgs e)
+		private void Form_Shown(object sender, EventArgs e)
 		{
 			_Splash.CloseDelayed();
 
@@ -4823,7 +4806,7 @@ namespace RegulatedNoise
 				  DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
 				 (DateTime.Now.Day == 1 && DateTime.Now.Month == 1))
 			{
-				_timer = new System.Windows.Forms.Timer();
+				_timer = new Timer();
 				_timer.Interval = 75;
 				_timer.Tick += OnTick;
 				_timer.Start();
@@ -4839,12 +4822,12 @@ namespace RegulatedNoise
 
 			Retheme();
 
-			Clock = new System.Windows.Forms.Timer();
+			Clock = new Timer();
 			Clock.Interval = 1000;
 			Clock.Start();
 			Clock.Tick += Clock_Tick;
 
-			cmdTest.Visible = System.Diagnostics.Debugger.IsAttached;
+			cmdTest.Visible = Debugger.IsAttached;
 
 		}
 
@@ -4864,67 +4847,6 @@ namespace RegulatedNoise
 			}
 		}
 
-		private void doSpecial()
-		{
-			decimal lastVersion = ApplicationContext.RegulatedNoiseSettings.lastVersion;
-			decimal lastVersionDJ = ApplicationContext.RegulatedNoiseSettings.lastVersionDJ;
-
-			if (ApplicationContext.RegulatedNoiseSettings.isFirstVersionRun())
-			{
-				// do all the things that must be done for the new versions
-				if ((ApplicationContext.RegulatedNoiseSettings.Version == 1.84m) && (ApplicationContext.RegulatedNoiseSettings.VersionDJ == 0.09m))
-				{
-					// this value works much better
-					ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold = 0.6f;
-					ApplicationContext.RegulatedNoiseSettings.EBPixelAmount = 22;
-				}
-
-				// do all the things that must be done for the new versions
-				if ((ApplicationContext.RegulatedNoiseSettings.Version == 1.84m) && (ApplicationContext.RegulatedNoiseSettings.VersionDJ == 0.17m))
-				{
-					if (ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema)
-					{
-						ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema = false;
-						SaveSettings();
-						if (ApplicationContext.RegulatedNoiseSettings.PostToEddnOnImport)
-						{
-							MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
-												 "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode",
-												 "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
-						}
-					}
-				}
-
-
-				if (!ApplicationContext.RegulatedNoiseSettings.checkedTestEDDNSetting)
-				{
-					if ((lastVersion.Equals(1.84m) && lastVersionDJ.Equals(0.17m)))
-					{
-						// last was 0.17 - so we can be sure, we did the check
-						ApplicationContext.RegulatedNoiseSettings.checkedTestEDDNSetting = true;
-						SaveSettings();
-					}
-					else
-					{
-						// check did never run yet
-						if (ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema)
-						{
-							ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema = false;
-							SaveSettings();
-							if (ApplicationContext.RegulatedNoiseSettings.PostToEddnOnImport)
-							{
-								MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
-													 "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode",
-													 "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
-							}
-						}
-						ApplicationContext.RegulatedNoiseSettings.checkedTestEDDNSetting = true;
-						SaveSettings();
-					}
-				}
-			}
-		}
-
 		private void Retheme()
 		{
 			bool noBackColor = false;
@@ -4933,13 +4855,13 @@ namespace RegulatedNoise
 
 			var x = GetAll(this);
 
-			int redF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-			int greenF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-			int blueF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+			int redF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(1, 2), NumberStyles.HexNumber);
+			int greenF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(3, 2), NumberStyles.HexNumber);
+			int blueF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(5, 2), NumberStyles.HexNumber);
 			var f = Color.FromArgb(redF, greenF, blueF);
-			int redB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-			int greenB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-			int blueB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+			int redB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(1, 2), NumberStyles.HexNumber);
+			int greenB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(3, 2), NumberStyles.HexNumber);
+			int blueB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(5, 2), NumberStyles.HexNumber);
 			var b = Color.FromArgb(redB, greenB, blueB);
 			foreach (Control c in x)
 			{
@@ -5319,7 +5241,7 @@ namespace RegulatedNoise
 			Cursor = Cursors.Default;
 		}
 
-		private void cbIncludeWithinRegionOfStation_SelectionChangeCommitted(object sender, System.EventArgs e)
+		private void cbIncludeWithinRegionOfStation_SelectionChangeCommitted(object sender, EventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
 			SetupGui();
@@ -5482,19 +5404,15 @@ namespace RegulatedNoise
 
 			OCRFile.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
 			OCRFile.FileName = ApplicationContext.RegulatedNoiseSettings.TraineddataFile;
-			OCRFile.InitialDirectory = System.IO.Path.GetFullPath("./tessdata");
+			OCRFile.InitialDirectory = Path.GetFullPath("./tessdata");
 			OCRFile.Title = "select Tesseract Traineddata-File...";
 
 			if (OCRFile.ShowDialog(this) == DialogResult.OK)
 			{
-				ApplicationContext.RegulatedNoiseSettings.TraineddataFile = System.IO.Path.GetFileNameWithoutExtension(OCRFile.FileName);
+				ApplicationContext.RegulatedNoiseSettings.TraineddataFile = Path.GetFileNameWithoutExtension(OCRFile.FileName);
 				txtTraineddataFile.Text = ApplicationContext.RegulatedNoiseSettings.TraineddataFile;
-
-				SaveSettings();
+				ApplicationContext.RegulatedNoiseSettings.Save();
 			}
-
-
-
 		}
 
 
@@ -5543,7 +5461,7 @@ namespace RegulatedNoise
 			cmbLanguage.SelectedValue = (Int32)ApplicationContext.RegulatedNoiseSettings.Language;
 
 			// now we activate the EventHandler
-			this.cmbLanguage.SelectedIndexChanged += new System.EventHandler(this.cmbLanguage_SelectedIndexChanged);
+			this.cmbLanguage.SelectedIndexChanged += new EventHandler(this.cmbLanguage_SelectedIndexChanged);
 
 		}
 
@@ -5552,13 +5470,10 @@ namespace RegulatedNoise
 			if (_InitDone)
 			{
 				ApplicationContext.RegulatedNoiseSettings.Language = (enLanguage)cmbLanguage.SelectedValue;
-
 				// prepare language depending list
 				loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
 				loadCommodityLevels(ApplicationContext.RegulatedNoiseSettings.Language);
-
-				SaveSettings();
-
+				ApplicationContext.RegulatedNoiseSettings.Save();
 			}
 		}
 
@@ -5610,7 +5525,7 @@ namespace RegulatedNoise
 		private void cbAutoAdd_JumpedTo_CheckedChanged(object sender, EventArgs e)
 		{
 			ApplicationContext.RegulatedNoiseSettings.AutoEvent_JumpedTo = cbAutoAdd_JumpedTo.Checked;
-			SaveSettings();
+			ApplicationContext.RegulatedNoiseSettings.Save();
 		}
 
 		/// <summary>
@@ -5703,7 +5618,7 @@ namespace RegulatedNoise
 			checkLastStationCountInput();
 		}
 
-		private void txtlastStationCount_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		private void txtlastStationCount_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (e.KeyChar == (char)Keys.Return)
 			{
@@ -5740,7 +5655,7 @@ namespace RegulatedNoise
 			checkcbLightYearsInput();
 		}
 
-		private void cmbLightYearsInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		private void cmbLightYearsInput_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (e.KeyChar == (char)Keys.Return)
 			{
@@ -5753,16 +5668,16 @@ namespace RegulatedNoise
 			checkcbLightYearsInput();
 		}
 
-		private void cmbStationToStarInput_LostFocus(object sender, System.EventArgs e)
+		private void cmbStationToStarInput_LostFocus(object sender, EventArgs e)
 		{
 			checkcmbStationToStarInput();
 		}
 
-		private void cmbStationToStar_SelectedIndexChanged(object sender, System.EventArgs e)
+		private void cmbStationToStar_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			checkcmbStationToStarInput();
 		}
-		private void cmbStationToStarInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		private void cmbStationToStarInput_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (e.KeyChar == (char)Keys.Return)
 			{
@@ -5775,7 +5690,7 @@ namespace RegulatedNoise
 			cmbMaxRouteDistanceInput();
 		}
 
-		private void cmbMaxRouteDistance_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		private void cmbMaxRouteDistance_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (e.KeyChar == (char)Keys.Return)
 			{
@@ -5783,7 +5698,7 @@ namespace RegulatedNoise
 			}
 		}
 
-		private void cmbMaxRouteDistance_LostFocus(object sender, System.EventArgs e)
+		private void cmbMaxRouteDistance_LostFocus(object sender, EventArgs e)
 		{
 			cmbMaxRouteDistanceInput();
 		}
@@ -5887,11 +5802,11 @@ namespace RegulatedNoise
 
 			FTest.ShowDialog(this);
 
-			if (FTest.DialogResult == System.Windows.Forms.DialogResult.OK)
+			if (FTest.DialogResult == DialogResult.OK)
 			{
 				txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
 				ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel = FTest.CutoffLevel;
-				SaveSettings();
+				ApplicationContext.RegulatedNoiseSettings.Save();
 			}
 		}
 
@@ -5912,8 +5827,8 @@ namespace RegulatedNoise
 			{
 				var bmp = new Bitmap(openFile.FileName);
 
-				if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
-					 bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
+				if (bmp.Height == GameSettings.Display.Resolution.Y &&
+					 bmp.Width == GameSettings.Display.Resolution.X) return bmp;
 				var wrongres = MsgBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
 				if (wrongres == DialogResult.Yes)
 				{
@@ -5938,7 +5853,7 @@ namespace RegulatedNoise
 		private void cbActivateOCRTab_CheckedChanged(object sender, EventArgs e)
 		{
 			ApplicationContext.RegulatedNoiseSettings.AutoActivateOCRTab = cbAutoActivateOCRTab.Checked;
-			SaveSettings();
+			ApplicationContext.RegulatedNoiseSettings.Save();
 		}
 
 		private void cmdDonate_Click(object sender, EventArgs e)
@@ -5951,7 +5866,7 @@ namespace RegulatedNoise
 				 "?cmd=" + "_s-xclick" +
 				 "&hosted_button_id=" + ButtonID;
 
-			System.Diagnostics.Process.Start(url);
+			Process.Start(url);
 
 		}
 
@@ -6449,18 +6364,18 @@ namespace RegulatedNoise
 
 			txtSystemPopulation.Culture = CultureInfo.CurrentCulture;
 
-			this.txtSystemName.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.txtSystemX.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.txtSystemY.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.txtSystemZ.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.txtSystemFaction.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.txtSystemPopulation.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.txtSystemUpdatedAt.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.cmbSystemPrimaryEconomy.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.cmbSystemSecurity.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.cmbSystemState.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.cmbSystemAllegiance.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
-			this.cmbSystemGovernment.TextChanged += new System.EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemName.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemX.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemY.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemZ.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemFaction.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemPopulation.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.txtSystemUpdatedAt.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.cmbSystemPrimaryEconomy.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.cmbSystemSecurity.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.cmbSystemState.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.cmbSystemAllegiance.TextChanged += new EventHandler(this.txtSystem_TextChanged);
+			this.cmbSystemGovernment.TextChanged += new EventHandler(this.txtSystem_TextChanged);
 
 			this.txtSystemName.LostFocus += txtSystem_LostFocus;
 			this.txtSystemX.LostFocus += txtSystem_LostFocus;
@@ -6488,7 +6403,7 @@ namespace RegulatedNoise
 			this.cmbSystemAllegiance.GotFocus += txtSystem_GotFocus;
 			this.cmbSystemGovernment.GotFocus += txtSystem_GotFocus;
 
-			this.cbSystemNeedsPermit.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbSystemNeedsPermit.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
 
 
 			// ********************** Station *******************
@@ -6573,25 +6488,25 @@ namespace RegulatedNoise
 			this.cmbStationType.TextChanged += txtStation_TextChanged;
 
 
-			this.cbStationHasCommodities.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cbStationHasBlackmarket.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cbStationHasOutfitting.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cbStationHasShipyard.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cbStationHasRearm.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cbStationHasRefuel.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cbStationHasRepair.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
-			this.cmbStationStations.SelectedIndexChanged += new System.EventHandler(this.cmbStationStations_SelectedIndexChanged);
+			this.cbStationHasCommodities.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbStationHasBlackmarket.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbStationHasOutfitting.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbStationHasShipyard.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbStationHasRearm.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbStationHasRefuel.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cbStationHasRepair.CheckedChanged += new EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+			this.cmbStationStations.SelectedIndexChanged += new EventHandler(this.cmbStationStations_SelectedIndexChanged);
 
-			this.cbStationEcoAgriculture.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoExtraction.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoHighTech.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoIndustrial.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoMilitary.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoNone.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoRefinery.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoService.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoTerraforming.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
-			this.cbStationEcoTourism.CheckedChanged += new System.EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoAgriculture.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoExtraction.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoHighTech.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoIndustrial.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoMilitary.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoNone.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoRefinery.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoService.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoTerraforming.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
+			this.cbStationEcoTourism.CheckedChanged += new EventHandler(this.cmbStationEconomies_SelectedIndexChanged);
 
 			m_SystemLoadingValues = true;
 			this.cmbSystemsAllSystems.BeginUpdate();
@@ -6923,7 +6838,7 @@ namespace RegulatedNoise
 				newComboBoxRefresh = true;
 			}
 
-			if (MsgBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+			if (MsgBox.Show("Save changes on current system ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
 			{
 				Cursor = Cursors.WaitCursor;
 				if (m_SystemIsNew)
@@ -6991,7 +6906,7 @@ namespace RegulatedNoise
 				}
 			}
 
-			if (MsgBox.Show("Save changes on current station ?", "stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+			if (MsgBox.Show("Save changes on current station ?", "stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
 			{
 				if (m_StationIsNew)
 					_oldStationName = "";
@@ -7021,7 +6936,7 @@ namespace RegulatedNoise
 
 			string newSystemname = tbCurrentSystemFromLogs.Text;
 
-			if (InpBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == System.Windows.Forms.DialogResult.OK)
+			if (InpBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == DialogResult.OK)
 			{
 
 				EDSystem existing = ApplicationContext.Milkyway.GetSystems(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newSystemname, StringComparison.InvariantCultureIgnoreCase)));
@@ -7044,11 +6959,11 @@ namespace RegulatedNoise
 					cmdStationSave.Enabled = false;
 					cmdStationCancel.Enabled = cmdStationSave.Enabled;
 
-					this.cmbSystemsAllSystems.SelectedIndexChanged -= new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+					this.cmbSystemsAllSystems.SelectedIndexChanged -= new EventHandler(this.cmbAllStations_SelectedIndexChanged);
 					// it twice needed (?!)
 					cmbSystemsAllSystems.SelectedIndex = -1;
 					cmbSystemsAllSystems.SelectedIndex = -1;
-					this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+					this.cmbSystemsAllSystems.SelectedIndexChanged += new EventHandler(this.cmbAllStations_SelectedIndexChanged);
 
 					cmbSystemsAllSystems.ReadOnly = true;
 
@@ -7072,7 +6987,7 @@ namespace RegulatedNoise
 			if (existing != null)
 				newStationname = String.Empty;
 
-			if (InpBox.Show("create a new station", "insert the name of the new station", ref newStationname) == System.Windows.Forms.DialogResult.OK)
+			if (InpBox.Show("create a new station", "insert the name of the new station", ref newStationname) == DialogResult.OK)
 			{
 				existing = ApplicationContext.Milkyway.GetStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) &&
 																														(x.SystemId.Equals(m_currentSystemdata.Id)));
@@ -7106,7 +7021,7 @@ namespace RegulatedNoise
 			}
 		}
 
-		void lbStationEconomies_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		void lbStationEconomies_MouseClick(object sender, MouseEventArgs e)
 		{
 			if (!lbStationEconomies.Tag.Equals("ReadOnly"))
 			{
@@ -7308,22 +7223,20 @@ namespace RegulatedNoise
 		private void cbIncludeUnknownDTS_CheckedChanged(object sender, EventArgs e)
 		{
 			ApplicationContext.RegulatedNoiseSettings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
-			SaveSettings();
+			ApplicationContext.RegulatedNoiseSettings.Save();
 			SetupGui();
 		}
 
 		private void cbMaxRouteDistance_CheckedChanged(object sender, EventArgs e)
 		{
 			ApplicationContext.RegulatedNoiseSettings.MaxRouteDistance = cbMaxRouteDistance.Checked;
-			SaveSettings();
-
-
+			ApplicationContext.RegulatedNoiseSettings.Save();
 		}
 
 		private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
 		{
 			ApplicationContext.RegulatedNoiseSettings.AutoActivateSystemTab = cbAutoActivateSystemTab.Checked;
-			SaveSettings();
+			ApplicationContext.RegulatedNoiseSettings.Save();
 		}
 
 		private void cbLoadStationsJSON_CheckedChanged(object sender, EventArgs e)
@@ -7333,16 +7246,16 @@ namespace RegulatedNoise
 
 		public string getAppPath()
 		{
-			return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+			return Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
 
 		}
 
 		private void cmdTest_Click(object sender, EventArgs e)
 		{
-			this.cmbSystemsAllSystems.SelectedIndexChanged -= new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+			this.cmbSystemsAllSystems.SelectedIndexChanged -= new EventHandler(this.cmbAllStations_SelectedIndexChanged);
 			cmbSystemsAllSystems.SelectedIndex = -1;
 			cmbSystemsAllSystems.SelectedIndex = -1;
-			this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
+			this.cmbSystemsAllSystems.SelectedIndexChanged += new EventHandler(this.cmbAllStations_SelectedIndexChanged);
 		}
 
 		private void cmbAllStations_SelectedIndexChanged(object sender, EventArgs e)
@@ -7356,7 +7269,7 @@ namespace RegulatedNoise
 
 		private void cmdSystemCancel_Click(object sender, EventArgs e)
 		{
-			if (MsgBox.Show("Dismiss changes ?", "Systemdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+			if (MsgBox.Show("Dismiss changes ?", "Systemdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
 			{
 				cmbSystemsAllSystems.ReadOnly = false;
 				cmbStationStations.ReadOnly = false;
@@ -7368,7 +7281,7 @@ namespace RegulatedNoise
 
 		private void cmdStationCancel_Click(object sender, EventArgs e)
 		{
-			if (MsgBox.Show("Dismiss changes ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+			if (MsgBox.Show("Dismiss changes ?", "Stationdata changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
 			{
 				cmbSystemsAllSystems.ReadOnly = false;
 				cmbStationStations.ReadOnly = false;
@@ -7379,12 +7292,12 @@ namespace RegulatedNoise
 
 		}
 
-		void tabCtrlMain_SelectedIndexChanged(object sender, System.EventArgs e)
+		void tabCtrlMain_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Cursor = Cursors.Default;
 		}
 
-		void tabCtrlMain_Selecting(object sender, System.Windows.Forms.TabControlCancelEventArgs e)
+		void tabCtrlMain_Selecting(object sender, TabControlCancelEventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
 		}
@@ -7414,7 +7327,7 @@ namespace RegulatedNoise
 		private void cmdPurgeOldData_Click(object sender, EventArgs e)
 		{
 
-			if (MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
+			if (MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
 			{
 				DateTime deadline = DateTime.Now.AddDays(-1 * (Int32)(nudPurgeOldDataDays.Value)).Date;
 				StationDirectory = PurgeOldDataFromDirectory(StationDirectory, deadline);
@@ -7450,7 +7363,7 @@ namespace RegulatedNoise
 		{
 			if (_InitDone)
 			{
-				ApplicationContext.RegulatedNoiseSettings.oldDataPurgeDeadlineDays = (Int32)(nudPurgeOldDataDays.Value);
+				ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays = (Int32)(nudPurgeOldDataDays.Value);
 			}
 
 		}
@@ -7477,7 +7390,7 @@ namespace RegulatedNoise
 
 		private void llVisitUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
+			Process.Start(((LinkLabel)sender).Text);
 		}
 
 	}

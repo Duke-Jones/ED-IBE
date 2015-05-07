@@ -8,6 +8,9 @@ using System.Net.Mime;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
+using CodeProject.Dialog;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
@@ -55,14 +58,13 @@ namespace RegulatedNoise
 	[Serializable]
 	public class RegulatedNoiseSettings
 	{
+		private const string SETTINGS_FILENAME = "RegulatedNoiseSettings.xml";
 		public readonly decimal Version = 1.84m;
 
 #if DukeJones
 
 		public readonly decimal VersionDJ = 0.19m;
 #endif
-		private int _isFirstRun = -1;
-
 		public string ProductsPath = "";
 		public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
 		public string ProductAppData = ""; //2nd location for game configuration files
@@ -103,47 +105,67 @@ namespace RegulatedNoise
 		public bool MaxRouteDistance = false;
 		public int lastMaxRouteDistance = 20;
 		public bool PerLightYearRoundTrip = false;
-		public decimal lastVersion = 0.00m;
-		public decimal lastVersionDJ = 0.00m;
+		private decimal _lastVersion = 0.00m;
+		private decimal _lastVersionDj = 0.00m;
 		public int GUIColorCutoffLevel = 150;
 		public bool AutoActivateOCRTab = true;
 		public bool AutoActivateSystemTab = true;
 		public string PilotsName = String.Empty;
 		public bool IncludeUnknownDTS = true;
 		public bool LoadStationsJSON = false;
-		public Int32 oldDataPurgeDeadlineDays = 14;
-		public bool checkedTestEDDNSetting = false;
+		public Int32 OldDataPurgeDeadlineDays = 14;
+		private bool _checkedTestEddnSetting = false;
 
-		public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
-                                                                                                                  {"Form1",                 new WindowData()},
-                                                                                                                  {"EditOcrResults",        new WindowData()},
-                                                                                                                  {"EditPriceData",         new WindowData()},
-                                                                                                                  {"EDStationView",         new WindowData()},
-                                                                                                                  {"EDCommodityView",       new WindowData()},
-                                                                                                                  {"EDCommodityListView",   new WindowData()},
-                                                                                                                  {"FilterTest",            new WindowData()},
-                                                                                                                  {"HelpOCR",               new WindowData()},
-                                                                                                                  {"HelpCommodities",       new WindowData()},
-                                                                                                                  {"EBPixeltest",           new WindowData()},
-                                                                                                                  {"ProgressView",          new WindowData()}
-                                                                                                                };
+		public readonly SerializableDictionary<string, WindowData> WindowBaseData;
 
-		public SerializableDictionary<string, List<ColumnData>> ListViewColumnData = new SerializableDictionary<string, List<ColumnData>>() { 
-                                                                                                                  {"lvCommandersLog",       new List<ColumnData>() { 
-                                                                                                                                                     new ColumnData("EventDate"), 
-                                                                                                                                                     new ColumnData("EventType"), 
-                                                                                                                                                     new ColumnData("Station"), 
-                                                                                                                                                     new ColumnData("System"), 
-                                                                                                                                                     new ColumnData("Cargo"), 
-                                                                                                                                                     new ColumnData("CargoAction"), 
-                                                                                                                                                     new ColumnData("CargoVolume"), 
-                                                                                                                                                     new ColumnData("Notes"), 
-                                                                                                                                                     new ColumnData("EventID"), 
-                                                                                                                                                     new ColumnData("TransactionAmount"), 
-                                                                                                                                                     new ColumnData("Credits") }},
-                                                                                                                  {"lvAllComms",            new List<ColumnData>() { new ColumnData("") }},
-                                                                                                                  {"lbPrices",              new List<ColumnData>() { new ColumnData("") }}
-                                                                                                                };
+		public readonly SerializableDictionary<string, List<ColumnData>> ListViewColumnData;
+
+		private static XmlSerializer _serializer;
+
+		public RegulatedNoiseSettings()
+		{
+			WindowBaseData = new SerializableDictionary<string, WindowData>() { 
+				{"Form1",                 new WindowData()},
+				{"EditOcrResults",        new WindowData()},
+				{"EditPriceData",         new WindowData()},
+				{"EDStationView",         new WindowData()},
+				{"EDCommodityView",       new WindowData()},
+				{"EDCommodityListView",   new WindowData()},
+				{"FilterTest",            new WindowData()},
+				{"HelpOCR",               new WindowData()},
+				{"HelpCommodities",       new WindowData()},
+				{"EBPixeltest",           new WindowData()},
+				{"ProgressView",          new WindowData()}
+			};
+			ListViewColumnData = new SerializableDictionary<string, List<ColumnData>>() { 
+				{"lvCommandersLog",       new List<ColumnData>() { 
+					new ColumnData("EventDate"), 
+					new ColumnData("EventType"), 
+					new ColumnData("Station"), 
+					new ColumnData("System"), 
+					new ColumnData("Cargo"), 
+					new ColumnData("CargoAction"), 
+					new ColumnData("CargoVolume"), 
+					new ColumnData("Notes"), 
+					new ColumnData("EventID"), 
+					new ColumnData("TransactionAmount"), 
+					new ColumnData("Credits") }},
+				{"lvAllComms",            new List<ColumnData>() { new ColumnData("") }},
+				{"lbPrices",              new List<ColumnData>() { new ColumnData("") }}
+			};
+		}
+
+		private static XmlSerializer Serializer
+		{
+			get
+			{
+				if (_serializer == null)
+				{
+					_serializer = new XmlSerializer(typeof(RegulatedNoiseSettings));
+				}
+				return _serializer;
+			}
+		}
 
 		public void CheckVersion2()
 		{
@@ -242,29 +264,11 @@ namespace RegulatedNoise
 		/// checks if this is the first time of this version running
 		/// </summary>
 		/// <returns></returns>
-		public bool isFirstVersionRun()
+		private bool IsFirstVersionRun()
 		{
-			bool retValue = false;
-
-			if (_isFirstRun == -1)
-			{
-				if ((lastVersion < Version) || ((lastVersion == Version) && (lastVersionDJ < VersionDJ)))
-				{
-					retValue = true;
-				}
-
-				lastVersion = Version;
-				lastVersionDJ = VersionDJ;
-
-			}
-			else
-			{
-				if (_isFirstRun == 0)
-					retValue = false;
-				else
-					retValue = true;
-			}
-
+			bool retValue = (_lastVersion < Version) || ((_lastVersion == Version) && (_lastVersionDj < VersionDJ));
+			_lastVersion = Version;
+			_lastVersionDj = VersionDJ;
 			return retValue;
 		}
 
@@ -272,35 +276,151 @@ namespace RegulatedNoise
 		/// returns the UI color as color object
 		/// </summary>
 		/// <returns></returns>
-		public Color getUiColor()
+		public Color GetUiColor()
 		{
-			return Color.FromArgb(int.Parse(UiColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber),
-										 int.Parse(UiColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
-										 int.Parse(UiColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+			return Color.FromArgb(int.Parse(UiColour.Substring(1, 2), NumberStyles.HexNumber),
+										 int.Parse(UiColour.Substring(3, 2), NumberStyles.HexNumber),
+										 int.Parse(UiColour.Substring(5, 2), NumberStyles.HexNumber));
 		}
 
 		/// <summary>
 		/// returns the UI color as color object
 		/// </summary>
 		/// <returns></returns>
-		public Color getForegroundColor()
+		public Color GetForegroundColor()
 		{
-			return Color.FromArgb(int.Parse(ForegroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber),
-										 int.Parse(ForegroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
-										 int.Parse(ForegroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+			return Color.FromArgb(int.Parse(ForegroundColour.Substring(1, 2), NumberStyles.HexNumber),
+										 int.Parse(ForegroundColour.Substring(3, 2), NumberStyles.HexNumber),
+										 int.Parse(ForegroundColour.Substring(5, 2), NumberStyles.HexNumber));
 		}
 
 		/// <summary>
 		/// returns the UI color as color object
 		/// </summary>
 		/// <returns></returns>
-		public Color getBackgroundColor()
+		public Color GetBackgroundColor()
 		{
-			return Color.FromArgb(int.Parse(BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber),
-										 int.Parse(BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
-										 int.Parse(BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+			return Color.FromArgb(int.Parse(BackgroundColour.Substring(1, 2), NumberStyles.HexNumber),
+										 int.Parse(BackgroundColour.Substring(3, 2), NumberStyles.HexNumber),
+										 int.Parse(BackgroundColour.Substring(5, 2), NumberStyles.HexNumber));
 		}
 
+		private void ExtraCheck()
+		{
+			if (IsFirstVersionRun())
+			{
+				// do all the things that must be done for the new versions
+				if ((Version == 1.84m) && (VersionDJ == 0.09m))
+				{
+					// this value works much better
+					EBPixelThreshold = 0.6f;
+					EBPixelAmount = 22;
+				}
+
+				// do all the things that must be done for the new versions
+				if ((Version == 1.84m) && (VersionDJ == 0.17m))
+				{
+					if (UseEddnTestSchema)
+					{
+						UseEddnTestSchema = false;
+						Save();
+						if (PostToEddnOnImport)
+						{
+							EventBus.Information(@"Set EDDN-mode uniquely to <non-test>-mode.
+												 If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", "Changing a mistakable setting");
+							//MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
+							//					 "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode",
+							//					 "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						}
+					}
+				}
+
+
+				if (!_checkedTestEddnSetting)
+				{
+					if ((_lastVersion.Equals(1.84m) && _lastVersionDj.Equals(0.17m)))
+					{
+						// last was 0.17 - so we can be sure, we did the check
+						_checkedTestEddnSetting = true;
+						Save();
+					}
+					else
+					{
+						// check did never run yet
+						if (UseEddnTestSchema)
+						{
+							UseEddnTestSchema = false;
+							Save();
+							if (PostToEddnOnImport)
+							{
+								EventBus.Information(@"Set EDDN-mode uniquely to <non-test>-mode.
+													 If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode",
+													 "Changing a mistakable setting");
+							}
+						}
+						_checkedTestEddnSetting = true;
+						Save();
+					}
+				}
+			}
+		}
+
+		public static RegulatedNoiseSettings LoadSettings()
+		{
+			EventBus.InitializationStart("load settings");
+			RegulatedNoiseSettings settings;
+
+			if (File.Exists(SETTINGS_FILENAME))
+			{
+				using (var fs = new FileStream(SETTINGS_FILENAME, FileMode.Open))
+				{
+					var reader = XmlReader.Create(fs);
+					try
+					{
+						settings = (RegulatedNoiseSettings)Serializer.Deserialize(reader);
+					}
+					catch (Exception ex)
+					{
+						Trace.TraceError("Error loading settings: " + ex);
+						EventBus.InitializationProgress("Couldn't load settings; maybe they are from a previous version.  A new settings file will be created on exit.");
+						settings = new RegulatedNoiseSettings();
+					}
+				}
+			}
+			else
+			{
+				settings = new RegulatedNoiseSettings();
+			}
+			EventBus.InitializationCompleted("load settings");
+			settings.ExtraCheck();
+			return settings;
+		}
+
+		public void Save()
+		{
+			var newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(SETTINGS_FILENAME), Path.GetExtension(SETTINGS_FILENAME));
+			var backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(SETTINGS_FILENAME), Path.GetExtension(SETTINGS_FILENAME));
+
+			using (var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None))
+			{
+				Serializer.Serialize(stream, this);
+			}
+
+			// we delete the current file not until the new file is written without errors
+			// delete old backup
+			if (File.Exists(backupFile))
+			{
+				File.Delete(backupFile);
+			}
+			// rename current file to old backup
+			if (File.Exists(SETTINGS_FILENAME))
+			{
+				File.Move(SETTINGS_FILENAME, backupFile);
+			}
+			// rename new file to current file
+			File.Move(newFile, SETTINGS_FILENAME);
+
+		}
 	}
 
 	public partial class Form1
@@ -343,7 +463,6 @@ namespace RegulatedNoise
 		{
 			ApplicationContext.RegulatedNoiseSettings.PostToEddnOnImport = cbPostOnImport.Checked;
 		}
-
 
 		private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
 		{

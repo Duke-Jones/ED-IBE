@@ -12,8 +12,6 @@ namespace RegulatedNoise.EDDB_Data
 
 	public class EDMilkyway
 	{
-		public event EventHandler<InitializationEventArgs> OnInitializationProgress;
-
 		public enum enDataType
 		{
 			Data_EDDB,
@@ -967,7 +965,7 @@ namespace RegulatedNoise.EDDB_Data
 			// read file into a string and deserialize JSON to a type
 			try
 			{
-				NotifyStart("create milkyway...");
+				EventBus.InitializationStart("create milkyway...");
 
 				// 1. load the EDDN data
 				{
@@ -975,95 +973,64 @@ namespace RegulatedNoise.EDDB_Data
 
 					if (needPriceCalculation || ApplicationContext.RegulatedNoiseSettings.LoadStationsJSON)
 					{
-						NotifyStart("loading stations from <stations.json> (calculation of plausibility limits required)");
+						EventBus.InitializationStart("loading stations from <stations.json> (calculation of plausibility limits required)");
 						LoadStationData(@"./Data/stations.json", enDataType.Data_EDDB, false);
-						NotifyCompleted("loading stations from <stations.json> (calculation of plausibility limits required)");
-						NotifyInfo("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
+						EventBus.InitializationCompleted("loading stations from <stations.json> (calculation of plausibility limits required)");
+						EventBus.InitializationProgress("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
 					}
 					else
 					{
 						// look which stations-file we can get
 						if (File.Exists(@"./Data/stations_lite.json"))
 						{
-							NotifyStart("loading stations from <stations_lite.json>");
+							EventBus.InitializationStart("loading stations from <stations_lite.json>");
 							LoadStationData(@"./Data/stations_lite.json", enDataType.Data_EDDB, false);
-							NotifyCompleted("loading stations from <stations_lite.json>");
-							NotifyInfo("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
+							EventBus.InitializationCompleted("loading stations from <stations_lite.json>");
+							EventBus.InitializationProgress("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
 						}
 						else
 						{
-							NotifyStart("loading stations from <stations.json>");
+							EventBus.InitializationStart("loading stations from <stations.json>");
 							LoadStationData(@"./Data/stations.json", enDataType.Data_EDDB, false);
-							NotifyCompleted("loading stations from <stations.json>");
-							NotifyInfo("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
+							EventBus.InitializationCompleted("loading stations from <stations.json>");
+							EventBus.InitializationProgress("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
 						}
 					}
 
 					// load the systems
-					NotifyStart("...loading systems from <systems.json>...");
+					EventBus.InitializationStart("...loading systems from <systems.json>...");
 					LoadSystemData(@"./Data/systems.json", enDataType.Data_EDDB, false);
-					NotifyCompleted("loading systems from <systems.json>");
-					NotifyInfo("(" + GetSystems(enDataType.Data_EDDB).Count + " systems loaded)");
+					EventBus.InitializationCompleted("loading systems from <systems.json>");
+					EventBus.InitializationProgress("(" + GetSystems(enDataType.Data_EDDB).Count + " systems loaded)");
 				}
 
 				// 2. load own local data
-				NotifyStart("loading own stations from <stations_own.json>");
+				EventBus.InitializationStart("loading own stations from <stations_own.json>");
 				LoadStationData(@"./Data/stations_own.json", enDataType.Data_Own, true);
-				NotifyCompleted("loading stations from <stations_own.json>");
-				NotifyInfo("(" + GetStations(enDataType.Data_Own).Count + " stations loaded)");
+				EventBus.InitializationCompleted("loading stations from <stations_own.json>");
+				EventBus.InitializationProgress("(" + GetStations(enDataType.Data_Own).Count + " stations loaded)");
 
-				NotifyStart("loading own systems from <systems_own.json>");
+				EventBus.InitializationStart("loading own systems from <systems_own.json>");
 				LoadSystemData(@"./Data/systems_own.json", enDataType.Data_Own, true);
-				NotifyCompleted("loading own systems from <systems_own.json>)");
-				NotifyInfo(GetSystems(enDataType.Data_Own).Count + " systems loaded)");
+				EventBus.InitializationCompleted("loading own systems from <systems_own.json>)");
+				EventBus.InitializationProgress(GetSystems(enDataType.Data_Own).Count + " systems loaded)");
 
-				NotifyStart("merging data");
+				EventBus.InitializationStart("merging data");
 				if (MergeData())
 				{
 					SaveStationData(@"./Data/stations_own.json", enDataType.Data_Own, true);
 					SaveSystemData(@"./Data/systems_own.json", enDataType.Data_Own, true);
 				}
-				NotifyCompleted("merging data");
-				NotifyStart("loading commodity data from <commodities.json>");
+				EventBus.InitializationCompleted("merging data");
+				EventBus.InitializationStart("loading commodity data from <commodities.json>");
 				LoadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true);
-				NotifyCompleted("loading commodity data from <commodities.json>");
+				EventBus.InitializationCompleted("loading commodity data from <commodities.json>");
 				CalculateAveragePrices();
-				NotifyInfo("create milkyway...<OK>");
+				EventBus.InitializationProgress("create milkyway...<OK>");
 			}
 			catch (Exception ex)
 			{
 				throw new InitializationException("Error while reading system and station data", ex);
-			}
-		}
-
-		private void NotifyStart(string message)
-		{
-			RaiseInitializationEvent(message + "...", InitializationEventArgs.EventType.Info);
-		}
-
-		private void NotifyInfo(string message)
-		{
-			RaiseInitializationEvent(message, InitializationEventArgs.EventType.Info);
-		}
-
-		private void NotifyCompleted(string message)
-		{
-			RaiseInitializationEvent("..." + message + "...<OK>", InitializationEventArgs.EventType.Update);
-		}
-
-		private void RaiseInitializationEvent(string message, InitializationEventArgs.EventType eventType)
-		{
-			var handler = OnInitializationProgress;
-			if (handler != null)
-			{
-				try
-				{
-					handler(null, new InitializationEventArgs(message, eventType));
-				}
-				catch (Exception ex)
-				{
-					Trace.TraceError("initialization progress failure: " + ex);
-				}
 			}
 		}
 

@@ -160,8 +160,9 @@
     <Compile Include="Enums and Utility Classes\SerializableDictionary.cs" />
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
+    <Compile Include="EventBus.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
-    <Compile Include="InitializationEventArgs.cs" />
+    <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
