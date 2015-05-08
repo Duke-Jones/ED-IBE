@@ -422,7 +422,7 @@ namespace RegulatedNoise
                 if (gamedirs.Count > 0)
                 {
                     //Get highest Forc-fdev dir.
-                    ApplicationContext.RegulatedNoiseSettings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
+					GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
                     b = true;
                     continue;
                 }
@@ -435,7 +435,7 @@ namespace RegulatedNoise
                 path = GetProductPathManually();
                 dirs = Directory.GetDirectories(path);
             }
-            ApplicationContext.RegulatedNoiseSettings.ProductsPath = path;
+			ProductsPath = path;
             EventBus.InitializationCompleted("product pathes set");
         }
 
@@ -488,7 +488,7 @@ namespace RegulatedNoise
 
                 path = GetProductAppDataPathManually();
             }
-            ApplicationContext.RegulatedNoiseSettings.ProductAppData = path;
+			ProductAppData = path;
             EventBus.InitializationCompleted("product appdata set");
         }
 
