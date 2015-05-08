@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
@@ -7,25 +8,36 @@ using ZeroMQ;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using System.Globalization;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using CodeProject.Dialog;
+using RegulatedNoise.Annotations;
 
 namespace RegulatedNoise
 {
-	public class EDDN : IDisposable
+	public class EDDN : IDisposable, INotifyPropertyChanged
 	{
-		private Form1 _caller;
-		private Thread _Spool2EDDN;
+	    public event EventHandler<EddnMessageEventArgs> OnMessageReceived; 
 		private readonly Queue _sendItems;
 		private readonly SingleThreadLogger _logger;
 		private bool _disposed;
-		private bool _listening;
-		private readonly object _listeningStateChange = new object();
 
-		public EDDN(Form1 caller)
+	    public bool Listening
+	    {
+	        get { return _listening; }
+	        private set
+	        {
+	            if (value == _listening) return;
+	            _listening = value;
+	            RaisePropertyChanged();
+	        }
+	    }
+
+	    private readonly object _listeningStateChange = new object();
+	    private bool _listening;
+	    private string _userName;
+
+	    public EDDN()
 		{
-
-			_caller = caller;
 			_logger = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
 			_sendItems = new Queue(100, 10);
 			_logger.Log("Initialising...\n");
@@ -37,7 +49,7 @@ namespace RegulatedNoise
 		{
 			lock (_listeningStateChange)
 			{
-				_listening = false;
+				Listening = false;
 			}
 		}
 
@@ -45,9 +57,9 @@ namespace RegulatedNoise
 		{
 			lock (_listeningStateChange)
 			{
-				if (_listening)
+				if (Listening)
 					return;
-				_listening = true;
+				Listening = true;
 				
 			}
 			Task.Factory.StartNew(() =>
@@ -58,8 +70,7 @@ namespace RegulatedNoise
 					{
 						socket.SubscribeAll();
 						socket.Connect("tcp://eddn-relay.elite-markets.net:9500");
-						_caller.SetListening();
-						while (!_disposed && _listening)
+						while (!_disposed && Listening)
 						{
 							var byteArray = new byte[10240];
 							int i = socket.Receive(byteArray, TimeSpan.FromTicks(50));
@@ -69,15 +80,15 @@ namespace RegulatedNoise
 								// Don't forget to ignore the first two bytes of the stream (!)
 								stream.ReadByte();
 								stream.ReadByte();
-								string output;
+								string message;
 								using (var decompressionStream = new DeflateStream(stream, CompressionMode.Decompress))
 								{
 									using (var sr = new StreamReader(decompressionStream))
 									{
-										output = sr.ReadToEnd();
+										message = sr.ReadToEnd();
 									}
 								}
-								_caller.OutputEddnRawData(output);
+                                RaiseMessageReceived(message);
 							}
 							Thread.Sleep(10);
 						}
@@ -135,11 +146,11 @@ namespace RegulatedNoise
 					 @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
 			}
 
-			string commodity = _caller.getCommodityBasename(rowToPost.CommodityName);
+			string commodity = ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(rowToPost.CommodityName);
 
 			if (!String.IsNullOrEmpty(commodity))
 			{
-				string commodityJson = json.Replace("$0$", _caller.tbUsername.Text.Replace("$1$", ""))
+				string commodityJson = json.Replace("$0$", rowToPost.Username.Replace("$1$", ""))
 					 .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
 					 .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
 					 .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
@@ -154,7 +165,7 @@ namespace RegulatedNoise
 				{
 					try
 					{
-						client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityJson);
+						client.UploadString(RegulatedNoiseSettings.EDDN_POST_URL, "POST", commodityJson);
 					}
 					catch (WebException ex)
 					{
@@ -166,7 +177,7 @@ namespace RegulatedNoise
 								if (data != null)
 								{
 									StreamReader sr = new StreamReader(data);
-									MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN");
+								    EventBus.Alert(sr.ReadToEnd(), "Error while uploading to EDDN");
 								}
 							}
 						}
@@ -179,5 +190,47 @@ namespace RegulatedNoise
 		{
 			_disposed = true;
 		}
+
+	    public event PropertyChangedEventHandler PropertyChanged;
+
+	    [NotifyPropertyChangedInvocator]
+	    protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+	    {
+            var handler = PropertyChanged;
+            if (handler != null)
+                try
+                {
+                    handler(this, new PropertyChangedEventArgs(propertyName));
+                }
+                catch (Exception ex)
+                {
+                    _logger.Log(propertyName + " notification failed " + ex);
+                }
+        }
+
+	    protected virtual void RaiseMessageReceived(string message)
+	    {
+	        var handler = OnMessageReceived;
+	        if (handler != null)
+	            try
+	            {
+	                handler(this, new EddnMessageEventArgs(message));
+	            }
+	            catch (Exception exception)
+	            {
+	                _logger.Log("EDDN message notification failure: " + exception, true);
+	            }
+	        ;
+	    }
 	}
+
+    public class EddnMessageEventArgs : EventArgs
+    {
+        public readonly string Message;
+
+        public EddnMessageEventArgs(string message)
+        {
+            Message = message;
+        }
+    }
 }

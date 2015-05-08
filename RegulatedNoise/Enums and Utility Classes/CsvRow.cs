@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegulatedNoise.Enums_and_Utility_Classes
 {
     public class CsvRow
     {
+        public string Username;
         public string SystemName;
         public string StationID;
         public string StationName;
@@ -35,7 +32,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                         (Supply != 0 ? Supply.ToString(CultureInfo.InvariantCulture) : "") + ";" +
                         SupplyLevel + ";" +
                         SampleDate.ToString("s", CultureInfo.CurrentCulture).Substring(0, 16) + ";" +
-                        SourceFileName;
+                        SourceFileName+";"+Username;
         }
     }
 }

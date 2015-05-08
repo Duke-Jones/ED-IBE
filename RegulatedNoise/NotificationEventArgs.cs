@@ -11,7 +11,8 @@ namespace RegulatedNoise
 			InitializationCompleted,
 			Information,
 			Request,
-			FileRequest
+			FileRequest,
+		    Alert
 		}
 
 		public readonly EventType Event;

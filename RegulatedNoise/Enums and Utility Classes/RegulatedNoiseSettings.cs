@@ -70,6 +70,9 @@ namespace RegulatedNoise
 
         public readonly decimal VersionDJ = 0.19m;
 #endif
+
+        public const string COMMODITIES_LOCALISATION_FILEPATH = "Data/Commodities.xml";
+        
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
         public string ProductAppData = ""; //2nd location for game configuration files
@@ -230,12 +233,12 @@ namespace RegulatedNoise
                         release = release.Replace("v", "");
                         Versions = release.Split('_');
 
-                        MainVersion = decimal.Parse(Versions[0], NumberStyles.Any, ci);
+                        MainVersion = Decimal.Parse(Versions[0], NumberStyles.Any, ci);
 
                         if (Versions.GetUpperBound(0) > 0)
-                            DJVersion = decimal.Parse(Versions[1], NumberStyles.Any, ci);
+                            DJVersion = Decimal.Parse(Versions[1], NumberStyles.Any, ci);
                         else
-                            DJVersion = decimal.Parse("0.00", NumberStyles.Any, ci);
+                            DJVersion = Decimal.Parse("0.00", NumberStyles.Any, ci);
 
                         if (maxVersion < MainVersion)
                         {
@@ -299,9 +302,9 @@ namespace RegulatedNoise
         /// <returns></returns>
         public Color GetUiColor()
         {
-            return Color.FromArgb(int.Parse(UiColour.Substring(1, 2), NumberStyles.HexNumber),
-                                         int.Parse(UiColour.Substring(3, 2), NumberStyles.HexNumber),
-                                         int.Parse(UiColour.Substring(5, 2), NumberStyles.HexNumber));
+            return Color.FromArgb(Int32.Parse(UiColour.Substring(1, 2), NumberStyles.HexNumber),
+                                         Int32.Parse(UiColour.Substring(3, 2), NumberStyles.HexNumber),
+                                         Int32.Parse(UiColour.Substring(5, 2), NumberStyles.HexNumber));
         }
 
         /// <summary>
@@ -310,9 +313,9 @@ namespace RegulatedNoise
         /// <returns></returns>
         public Color GetForegroundColor()
         {
-            return Color.FromArgb(int.Parse(ForegroundColour.Substring(1, 2), NumberStyles.HexNumber),
-                                         int.Parse(ForegroundColour.Substring(3, 2), NumberStyles.HexNumber),
-                                         int.Parse(ForegroundColour.Substring(5, 2), NumberStyles.HexNumber));
+            return Color.FromArgb(Int32.Parse(ForegroundColour.Substring(1, 2), NumberStyles.HexNumber),
+                                         Int32.Parse(ForegroundColour.Substring(3, 2), NumberStyles.HexNumber),
+                                         Int32.Parse(ForegroundColour.Substring(5, 2), NumberStyles.HexNumber));
         }
 
         /// <summary>
@@ -321,9 +324,9 @@ namespace RegulatedNoise
         /// <returns></returns>
         public Color GetBackgroundColor()
         {
-            return Color.FromArgb(int.Parse(BackgroundColour.Substring(1, 2), NumberStyles.HexNumber),
-                                         int.Parse(BackgroundColour.Substring(3, 2), NumberStyles.HexNumber),
-                                         int.Parse(BackgroundColour.Substring(5, 2), NumberStyles.HexNumber));
+            return Color.FromArgb(Int32.Parse(BackgroundColour.Substring(1, 2), NumberStyles.HexNumber),
+                                         Int32.Parse(BackgroundColour.Substring(3, 2), NumberStyles.HexNumber),
+                                         Int32.Parse(BackgroundColour.Substring(5, 2), NumberStyles.HexNumber));
         }
 
         private void ExtraCheck()
@@ -516,7 +519,7 @@ namespace RegulatedNoise
 
             // nothing found ? then lets have a try with the MUICache
             string ProgramName = "Elite:Dangerous Executable";
-            string ProgramPath = string.Empty;
+            string ProgramPath = String.Empty;
 
             RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache");
 
@@ -635,6 +638,8 @@ namespace RegulatedNoise
 	                Trace.TraceError(propertyName + " notification failed " + ex);
 	            }
 	    }
+
+        public const string EDDN_POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
     }
 
     public partial class Form1

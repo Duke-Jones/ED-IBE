@@ -28,6 +28,11 @@ namespace RegulatedNoise
 			RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.Information) { Title = title });
 		}
 
+        public static void Alert(string message, string title = null)
+        {
+            RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.Alert) { Title = title });
+        }
+
 		public static bool Request(string message, string title = null)
 		{
 			return !RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.Request) { Title = title }).Cancel;

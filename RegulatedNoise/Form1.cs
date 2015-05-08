@@ -42,12 +42,11 @@ namespace RegulatedNoise
 		const string ID_NEWITEM = "<NEW>";
 		const string ID_NOT_SET = "<NOT_SET>";
 
-		private delegate void delButtonInvoker(Button myButton, bool enable);
+	    private delegate void delButtonInvoker(Button myButton, bool enable);
 		private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
 
 		public static Form1 InstanceObject;
 
-		public EDDN Eddn;
 		public Random random = new Random();
 		public Guid SessionGuid;
 		public PropertyInfo[] LogEventProperties;
@@ -65,7 +64,7 @@ namespace RegulatedNoise
 		private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
 		private Levenshtein _levenshtein = new Levenshtein();
 		private dsCommodities _commodities = new dsCommodities();
-		private TabPage _EDDNTabPage;
+
 		private Int32 _EDDNTabPageIndex;
 		private string _LoggedSystem = ID_NOT_SET;
 		private string _LoggedLocation = ID_NOT_SET;
@@ -127,167 +126,153 @@ namespace RegulatedNoise
 
 			try
 			{
-				_logger.Log("Initialising...\n");
-				string formName = GetType().Name;
-				if (ApplicationContext.RegulatedNoiseSettings.WindowBaseData.ContainsKey(formName))
-				{
-					_Splash.SetPosition(ApplicationContext.RegulatedNoiseSettings.WindowBaseData[formName]);
-				}
-				_Splash.InfoAdd("initialize components...");
-				InitializeComponent();
-				_logger.Log("  - component initialized");
-				_Splash.InfoChange("initialize components...<OK>");
+			    _logger.Log("Initialising...\n");
+			    string formName = GetType().Name;
+			    if (ApplicationContext.RegulatedNoiseSettings.WindowBaseData.ContainsKey(formName))
+			    {
+			        _Splash.SetPosition(ApplicationContext.RegulatedNoiseSettings.WindowBaseData[formName]);
+			    }
+			    _Splash.InfoAdd("initialize components...");
+			    InitializeComponent();
+			    _logger.Log("  - component initialized");
+			    _Splash.InfoChange("initialize components...<OK>");
 
-				_Splash.InfoAdd("load game settings...");
-				GameSettings = new GameSettings(this);
-				_logger.Log("  - loaded game settings");
-				_Splash.InfoChange("load game settings...<OK>");
+			    _Splash.InfoAdd("load game settings...");
+			    GameSettings = new GameSettings(this);
+			    _logger.Log("  - loaded game settings");
+			    _Splash.InfoChange("load game settings...<OK>");
 
-				_Splash.InfoAdd("prepare listviews...");
-				SetListViewColumnsAndSorters();
-				_logger.Log("  - set list views");
-				_Splash.InfoChange("prepare listviews...<OK>");
+			    _Splash.InfoAdd("prepare listviews...");
+			    SetListViewColumnsAndSorters();
+			    _logger.Log("  - set list views");
+			    _Splash.InfoChange("prepare listviews...<OK>");
 
-				_Splash.InfoAdd("prepare network interfaces...");
-				PopulateNetworkInterfaces();
-				_logger.Log("  - populated network interfaces");
-				_Splash.InfoChange("prepare network interfaces...<OK>");
+			    _Splash.InfoAdd("prepare network interfaces...");
+			    PopulateNetworkInterfaces();
+			    _logger.Log("  - populated network interfaces");
+			    _Splash.InfoChange("prepare network interfaces...<OK>");
 
-				_Splash.InfoAdd("create OCR object...");
-				ocr = new Ocr(this);
-				_logger.Log("  - created OCR object");
-				_Splash.InfoChange("create OCR object...<OK>");
+			    _Splash.InfoAdd("create OCR object...");
+			    ocr = new Ocr(this);
+			    _logger.Log("  - created OCR object");
+			    _Splash.InfoChange("create OCR object...<OK>");
 
-				Application.ApplicationExit += Application_ApplicationExit;
-				_logger.Log("  - set application exit handler");
+			    Application.ApplicationExit += Application_ApplicationExit;
+			    _logger.Log("  - set application exit handler");
 
-				_Splash.InfoAdd("create ocr calibrator...");
-				OcrCalibrator = new OcrCalibrator();
-				OcrCalibrator.LoadCalibration();
-				var OcrCalibratorTabPage = new TabPage("OCR Calibration");
-				OcrCalibratorTabPage.Name = "OCR_Calibration";
-				var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
-				OcrCalibratorTabPage.Controls.Add(oct);
-				tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
-				_logger.Log("  - initialised Ocr Calibrator");
-				_Splash.InfoChange("create ocr calibrator...<OK>");
+			    _Splash.InfoAdd("create ocr calibrator...");
+			    OcrCalibrator = new OcrCalibrator();
+			    OcrCalibrator.LoadCalibration();
+			    var OcrCalibratorTabPage = new TabPage("OCR Calibration");
+			    OcrCalibratorTabPage.Name = "OCR_Calibration";
+			    var oct = new OcrCalibratorTab {Dock = DockStyle.Fill};
+			    OcrCalibratorTabPage.Controls.Add(oct);
+			    tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
+			    _logger.Log("  - initialised Ocr Calibrator");
+			    _Splash.InfoChange("create ocr calibrator...<OK>");
 
-				_Splash.InfoAdd("prepare EDDN interface...");
-				Eddn = new EDDN(this);
-				components.Add(new Disposer(Eddn));
-				_logger.Log("  - created EDDN object");
-				_Splash.InfoChange("prepare EDDN interface...<OK>");
+			    _Splash.InfoAdd("prepare 'Commander's Log'...");
+			    CommandersLog = new CommandersLog(this);
+			    dtpLogEventDate.CustomFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern +
+			                                   " " +
+			                                   CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
+			    dtpLogEventDate.Format = DateTimePickerFormat.Custom;
 
-				//ImportSystemLocations();
-				_logger.Log("  - system locations imported");
-
-				_Splash.InfoAdd("prepare 'Commander's Log'...");
-				CommandersLog = new CommandersLog(this);
-				dtpLogEventDate.CustomFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern +
-														 " " +
-														 CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
-				dtpLogEventDate.Format = DateTimePickerFormat.Custom;
-
-				_logger.Log("  - created Commander's Log object");
-				CommandersLog.LoadLog(true);
-				_logger.Log("  - loaded Commander's Log");
-				CommandersLog.UpdateCommandersLogListView();
-				_logger.Log("  - updated Commander's Log List View");
-				_Splash.InfoChange("prepare 'Commander's Log'...<OK>");
+			    _logger.Log("  - created Commander's Log object");
+			    CommandersLog.LoadLog(true);
+			    _logger.Log("  - loaded Commander's Log");
+			    CommandersLog.UpdateCommandersLogListView();
+			    _logger.Log("  - updated Commander's Log List View");
+			    _Splash.InfoChange("prepare 'Commander's Log'...<OK>");
 
 
-				_Splash.InfoAdd("load collected market data...");
-				if (File.Exists("AutoSave.csv"))
-				{
-					_logger.Log("  - found autosaved CSV");
-					var s = new string[1];
-					s[0] = "AutoSave.csv";
-					ImportListOfCsvs(s);
-					_logger.Log("  - imported CSVs");
-					SetupGui();
-					_logger.Log("  - Updated UI");
-				}
-				_Splash.InfoChange("load collected market data...<OK>");
+			    _Splash.InfoAdd("load collected market data...");
+			    if (File.Exists("AutoSave.csv"))
+			    {
+			        _logger.Log("  - found autosaved CSV");
+			        var s = new string[1];
+			        s[0] = "AutoSave.csv";
+			        ImportListOfCsvs(s);
+			        _logger.Log("  - imported CSVs");
+			        SetupGui();
+			        _logger.Log("  - Updated UI");
+			    }
+			    _Splash.InfoChange("load collected market data...<OK>");
 
-				_Splash.InfoAdd("load station history...");
-				_StationHistory.loadHistory(@".\Data\StationHistory.json", true);
-				_Splash.InfoChange("load station history...<OK>");
+			    _Splash.InfoAdd("load station history...");
+			    _StationHistory.loadHistory(@".\Data\StationHistory.json", true);
+			    _Splash.InfoChange("load station history...<OK>");
 
-				_Splash.InfoAdd("apply settings...");
-				ApplySettings();
-				_Splash.InfoChange("apply settings...<OK>");
+			    _Splash.InfoAdd("apply settings...");
+			    ApplySettings();
+			    _Splash.InfoChange("apply settings...<OK>");
 
-				_logger.Log("  - applied settings");
+			    _logger.Log("  - applied settings");
 
-				if (!Directory.Exists(".//OCR Correction Images"))
-					Directory.CreateDirectory(".//OCR Correction Images");
+			    if (!Directory.Exists(".//OCR Correction Images"))
+			        Directory.CreateDirectory(".//OCR Correction Images");
 
-				_logger.Log("Initialisation complete");
+			    _logger.Log("Initialisation complete");
 
-				if (ApplicationContext.RegulatedNoiseSettings.TestMode)
-				{
-					//Testing
-					var testtab = new TabPage("MRmP Test Tab");
-					var testtb = new MRmPTestTab.MRmPTestTab { Dock = DockStyle.Fill };
-					testtab.Controls.Add(testtb);
-					tabCtrlMain.Controls.Add(testtab);
-				}
+			    if (ApplicationContext.RegulatedNoiseSettings.TestMode)
+			    {
+			        //Testing
+			        var testtab = new TabPage("MRmP Test Tab");
+			        var testtb = new MRmPTestTab.MRmPTestTab {Dock = DockStyle.Fill};
+			        testtab.Controls.Add(testtb);
+			        tabCtrlMain.Controls.Add(testtab);
+			    }
 
 
-				// two methods with the same functionality 
-				// maybe this was the better way but I've already improved the other 
-				// way (UpdateSystemNameFromLogFile()) 
-				// maybe this will some day be reactivated
-				//var edl = new EdLogWatcher();
+			    // two methods with the same functionality 
+			    // maybe this was the better way but I've already improved the other 
+			    // way (UpdateSystemNameFromLogFile()) 
+			    // maybe this will some day be reactivated
+			    //var edl = new EdLogWatcher();
 
-				//subscribe to edlogwatcherevents
-				//edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
+			    //subscribe to edlogwatcherevents
+			    //edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
 
-				//After event subscriptino we can initialize
-				//edl.Initialize();
-				//edl.StartWatcher();
+			    //After event subscriptino we can initialize
+			    //edl.Initialize();
+			    //edl.StartWatcher();
 
-				_Splash.InfoAdd("load and prepare international commodity names...");
-				// read the commodities and prepare language depending list
-				_commodities.ReadXml(".//Data//Commodities.xml");
+			    _Splash.InfoAdd("load and prepare international commodity names...");
+			    // read the commodities and prepare language depending list
+			    _commodities.ReadXml(RegulatedNoiseSettings.COMMODITIES_LOCALISATION_FILEPATH);
 
-				// depending of the language this will be removed
-				_EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
-				_EDDNTabPage = tabCtrlMain.TabPages[_EDDNTabPageIndex];
+			    // depending of the language this will be removed
+			    _EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
 
-				// set language
-				setLanguageCombobox();
+			    // set language
+			    setLanguageCombobox();
 
-				// load commodities in the correct language
-				loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
-				loadCommodityLevels(ApplicationContext.RegulatedNoiseSettings.Language);
-				_Splash.InfoChange("load and prepare international commodity names...<OK>");
+			    // load commodities in the correct language
+			    loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
+			    loadCommodityLevels(ApplicationContext.RegulatedNoiseSettings.Language);
+			    _Splash.InfoChange("load and prepare international commodity names...<OK>");
 
-				setOCRCalibrationTabVisibility();
+			    setOCRCalibrationTabVisibility();
 
-				_Splash.InfoAdd("load tool tips...");
-				loadToolTips();
-				_Splash.InfoChange("load tool tips...<OK>");
+			    _Splash.InfoAdd("load tool tips...");
+			    loadToolTips();
+			    _Splash.InfoChange("load tool tips...<OK>");
 
-				_Splash.InfoAdd("prepare system/location view...");
-				prePrepareSystemAndStationFields();
-				_Splash.InfoChange("prepare system/location view...<OK>");
+			    _Splash.InfoAdd("prepare system/location view...");
+			    prePrepareSystemAndStationFields();
+			    _Splash.InfoChange("prepare system/location view...<OK>");
 
-				_Splash.InfoAdd("prepare GUI elements...");
-				SetupGui(true);
-				_Splash.InfoChange("prepare GUI elements...<OK>");
+			    _Splash.InfoAdd("prepare GUI elements...");
+			    SetupGui(true);
+			    _Splash.InfoChange("prepare GUI elements...<OK>");
 
-				_Splash.InfoAdd("starting logfile watcher...");
-				UpdateSystemNameFromLogFile();
-				_logger.Log("  - fetched system name from file");
-				_Splash.InfoChange("starting logfile watcher...<OK>");
-				if (ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad)
-				{
-					_Splash.InfoAdd("starting EDDN listening...");
-					Eddn.Subscribe();
-					_Splash.InfoChange("listening EDDN...<OK>");
-				}
-
+			    _Splash.InfoAdd("starting logfile watcher...");
+			    UpdateSystemNameFromLogFile();
+			    _logger.Log("  - fetched system name from file");
+			    _Splash.InfoChange("starting logfile watcher...<OK>");
+			    ApplicationContext.Eddn.PropertyChanged += EddnPropertyChangedEventHandler;
+			    ApplicationContext.Eddn.OnMessageReceived += OutputEddnRawData;
+			    UpdateEddnState();
 			}
 			catch (Exception ex)
 			{
@@ -302,7 +287,15 @@ namespace RegulatedNoise
 			_InitDone = true;
 		}
 
-		private void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
+	    private void EddnPropertyChangedEventHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+	    {
+	        if (propertyChangedEventArgs.PropertyName == "Listening")
+	        {
+	            UpdateEddnState();
+	        }
+	    }
+
+	    private void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
 		{
 			RunInGuiThread(() =>
 			{
@@ -318,7 +311,13 @@ namespace RegulatedNoise
 							MessageBoxButtons.OK,
 							MessageBoxIcon.Information) != DialogResult.OK;
 						break;
-					case NotificationEventArgs.EventType.Request:
+                    case NotificationEventArgs.EventType.Alert:
+                        notificationEventArgs.Cancel = MsgBox.Show(notificationEventArgs.Message,
+                            notificationEventArgs.Title ?? "",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation) != DialogResult.OK;
+                        break;
+                    case NotificationEventArgs.EventType.Request:
 						notificationEventArgs.Cancel = MsgBox.Show(notificationEventArgs.Message,
 							notificationEventArgs.Title ?? "",
 							MessageBoxButtons.OKCancel,
@@ -666,77 +665,6 @@ namespace RegulatedNoise
 		}
 
 		/// <summary>
-		/// prepares the commodities in the correct language
-		/// </summary>
-		public string getCommodityBasename(string CommodityName)
-		{
-			enLanguage language = ApplicationContext.RegulatedNoiseSettings.Language;
-			return getCommodityBasename(language, CommodityName);
-		}
-
-		/// <summary>
-		/// prepares the commodities in the correct language
-		/// </summary>
-		/// <param name="Language"></param>
-		public string getCommodityBasename(enLanguage Language, string CommodityName)
-		{
-			string BaseName = String.Empty;
-			dsCommodities.NamesRow[] currentCommodity = null;
-
-			switch (Language)
-			{
-				case enLanguage.eng:
-					currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("eng='" + CommodityName + "'"));
-					break;
-				case enLanguage.ger:
-					currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("ger='" + CommodityName + "'"));
-					break;
-				case enLanguage.fra:
-					currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("fra='" + CommodityName + "'"));
-					break;
-			}
-
-			if (currentCommodity.Count() > 0)
-				BaseName = currentCommodity[0].eng;
-
-			return BaseName;
-
-		}
-
-		/// <summary>
-		/// prepares the commodities in the correct language
-		/// </summary>
-		/// <param name="Language"></param>
-		public string getLocalizedCommodity(enLanguage Language, string CommodityName)
-		{
-			string BaseName = String.Empty;
-
-			List<dsCommodities.NamesRow> currentCommodity = _commodities.Names.Where(x => ((x.eng.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)) ||
-																													 (x.ger.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)) ||
-																													 (x.fra.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)))).ToList();
-
-			if (currentCommodity.Count() > 0)
-			{
-				switch (Language)
-				{
-					case enLanguage.eng:
-						BaseName = currentCommodity[0].eng;
-						break;
-					case enLanguage.ger:
-						BaseName = currentCommodity[0].ger;
-						break;
-					case enLanguage.fra:
-						BaseName = currentCommodity[0].fra;
-						break;
-				}
-
-			}
-
-			return BaseName;
-
-		}
-
-		/// <summary>
 		/// prepares the commoditylevels in the correct language
 		/// </summary>
 		/// <param name="Language"></param>
@@ -788,7 +716,7 @@ namespace RegulatedNoise
 
 			ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
 			// if the textfield support auto-uppercase we must consider
-			string s = CommoditiesText("").ToString().ToUpper();
+			string s = CommoditiesText("").ToUpper();
 
 			if (s == "Imported!".ToUpper() || s == "Finished!".ToUpper() || s == "" || s == "No rows found...".ToUpper())
 				CommoditiesText("Working...");
@@ -1125,7 +1053,7 @@ namespace RegulatedNoise
 					}
 
 					if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-						Eddn.SendToEdDdn(currentRow);
+						ApplicationContext.Eddn.SendToEdDdn(currentRow);
 				}
 			}
 		}
@@ -1203,7 +1131,7 @@ namespace RegulatedNoise
 			if (_cachedSystemName != localSystem)
 			{
 				_cachedRemoteSystemDistances = new Dictionary<string, double>();
-				_cachedSystemName = localSystem.ToString();
+				_cachedSystemName = localSystem;
 
 				_cachedSystemLocation = ApplicationContext.Milkyway.GetSystemCoordinates(localSystem);
 			}
@@ -1419,7 +1347,7 @@ namespace RegulatedNoise
 
 			//_pt.PrintAndReset("9");
 
-			Debug.Print("Anzahl = " + CommodityDirectory.Count.ToString());
+			Debug.Print("Anzahl = " + CommodityDirectory.Count);
 			// Populate all commodities tab
 			foreach (var commodity in CommodityDirectory)
 			{
@@ -3247,7 +3175,7 @@ namespace RegulatedNoise
 
 					DateTime.TryParse(values[9], out currentRow.SampleDate);
 
-					EDCommoditiesExt CommodityData = ApplicationContext.Milkyway.getCommodity(getCommodityBasename(ApplicationContext.RegulatedNoiseSettings.Language, currentRow.CommodityName));
+					EDCommoditiesExt CommodityData = ApplicationContext.Milkyway.getCommodity(ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(currentRow.CommodityName));
 
 					if (currentRow.CommodityName == "Panik")
 						Debug.Print("STOP");
@@ -3471,7 +3399,7 @@ namespace RegulatedNoise
 
 		private void button15_Click(object sender, EventArgs e)
 		{
-			Eddn.Subscribe();
+			ApplicationContext.Eddn.Subscribe();
 		}
 
 		#region EDDN Delegates
@@ -3484,86 +3412,81 @@ namespace RegulatedNoise
 		private int harvestCommsCount = -1;
 		private StreamWriter _eddnSpooler = null;
 
-		public void OutputEddnRawData(object text)
+		public void OutputEddnRawData(object sender, EddnMessageEventArgs args)
 		{
-			if (InvokeRequired)
-			{
-				SetTextCallback d = OutputEddnRawData;
-				BeginInvoke(d, new { text });
-			}
-			else
-			{
-				tbEDDNOutput.Text = text.ToString();
+		    RunInGuiThread(() =>
+		    {
+		        tbEDDNOutput.Text = args.Message;
 
-				if (cbSpoolEddnToFile.Checked)
-				{
-					if (_eddnSpooler == null)
-					{
-						if (!File.Exists(".//EddnOutput.txt"))
-							_eddnSpooler = File.CreateText(".//EddnOutput.txt");
-						else
-							_eddnSpooler = File.AppendText(".//EddnOutput.txt");
-					}
+		        if (cbSpoolEddnToFile.Checked)
+		        {
+		            if (_eddnSpooler == null)
+		            {
+		                if (!File.Exists(".//EddnOutput.txt"))
+		                    _eddnSpooler = File.CreateText(".//EddnOutput.txt");
+		                else
+		                    _eddnSpooler = File.AppendText(".//EddnOutput.txt");
+		            }
 
-					_eddnSpooler.WriteLine(text);
-				}
+		            _eddnSpooler.WriteLine(args.Message);
+		        }
 
-				var headerDictionary = new Dictionary<string, string>();
-				var messageDictionary = new Dictionary<string, string>();
+		        var headerDictionary = new Dictionary<string, string>();
+		        var messageDictionary = new Dictionary<string, string>();
 
-				ParseEddnJson(text, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
+		        ParseEddnJson(args.Message, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
 
-				if (harvestStations && StationDirectory.Count > harvestStationsCount)
-				{
-					if (File.Exists("stations.txt"))
-						File.Delete("stations.txt");
+		        if (harvestStations && StationDirectory.Count > harvestStationsCount)
+		        {
+		            if (File.Exists("stations.txt"))
+		                File.Delete("stations.txt");
 
-					TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
-					foreach (var x in StationDirectory.OrderBy(x => x.Key))
-					{
-						f.WriteLine(x.Key);
-					}
-					f.Close();
-					harvestStationsCount = StationDirectory.Count;
-				}
+		            TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
+		            foreach (var x in StationDirectory.OrderBy(x => x.Key))
+		            {
+		                f.WriteLine(x.Key);
+		            }
+		            f.Close();
+		            harvestStationsCount = StationDirectory.Count;
+		        }
 
-				if (harvestStations && CommodityDirectory.Count > harvestCommsCount)
-				{
-					if (File.Exists("commodities.txt"))
-						File.Delete("commodities.txt");
+		        if (harvestStations && CommodityDirectory.Count > harvestCommsCount)
+		        {
+		            if (File.Exists("commodities.txt"))
+		                File.Delete("commodities.txt");
 
-					TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
-					foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
-					{
-						f.WriteLine(x.Key);
-					}
-					f.Close();
-					harvestCommsCount = CommodityDirectory.Count;
-				}
-			}
+		            TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
+		            foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
+		            {
+		                f.WriteLine(x.Key);
+		            }
+		            f.Close();
+		            harvestCommsCount = CommodityDirectory.Count;
+		        }
+		    });
 		}
 
 		private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
-		private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
+		
+        private void ParseEddnJson(string text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
 		{
-			string txt = text.ToString();
-			// .. we're here because we've received some data from EDDN
+            // .. we're here because we've received some data from EDDN
 
-			if (txt != "")
+			if (!String.IsNullOrWhiteSpace(text))
 				try
 				{
 					// ReSharper disable StringIndexOfIsCultureSpecific.1
-					var headerRawStart = txt.IndexOf(@"""header""") + 12;
-					var headerRawLength = txt.Substring(headerRawStart).IndexOf("}");
-					var headerRawData = txt.Substring(headerRawStart, headerRawLength);
+					var headerRawStart = text.IndexOf(@"""header""") + 12;
+					var headerRawLength = text.Substring(headerRawStart).IndexOf("}");
+					var headerRawData = text.Substring(headerRawStart, headerRawLength);
 
-					var schemaRawStart = txt.IndexOf(@"""$schemaRef""") + 14;
-					var schemaRawLength = txt.Substring(schemaRawStart).IndexOf(@"""message"":");
-					var schemaRawData = txt.Substring(schemaRawStart, schemaRawLength);
+					var schemaRawStart = text.IndexOf(@"""$schemaRef""") + 14;
+					var schemaRawLength = text.Substring(schemaRawStart).IndexOf(@"""message"":");
+					var schemaRawData = text.Substring(schemaRawStart, schemaRawLength);
 
-					var messageRawStart = txt.IndexOf(@"""message"":") + 12;
-					var messageRawLength = txt.Substring(messageRawStart).IndexOf("}");
-					var messageRawData = txt.Substring(messageRawStart, messageRawLength);
+					var messageRawStart = text.IndexOf(@"""message"":") + 12;
+					var messageRawLength = text.Substring(messageRawStart).IndexOf("}");
+					var messageRawData = text.Substring(messageRawStart, messageRawLength);
 					// ReSharper restore StringIndexOfIsCultureSpecific.1
 
 					schemaRawData = schemaRawData.Replace(@"""", "").Replace(",", "");
@@ -3607,7 +3530,7 @@ namespace RegulatedNoise
 						}
 						tbEddnStats.Text = output;
 
-						string commodity = getLocalizedCommodity(ApplicationContext.RegulatedNoiseSettings.Language, messageDictionary["itemName"]);
+						string commodity = ApplicationContext.CommoditiesLocalisation.GetLocalizedCommodity(messageDictionary["itemName"]);
 
 						if (!String.IsNullOrEmpty(commodity))
 						{
@@ -3626,7 +3549,7 @@ namespace RegulatedNoise
 															 ";" +
 															 messageDictionary["timestamp"] + ";"
 															 +
-															 "<From EDDN>" + ";";
+															 "<From EDDN>" + ";" + tbUsername.Text;
 
 								if (!checkPricePlausibility(new string[] { csvFormatted }, true))
 								{
@@ -3634,28 +3557,28 @@ namespace RegulatedNoise
 								}
 								else
 								{
-									string InfoString = string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted);
+									string infoString = string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted);
 
-									lbEddnImplausible.Items.Add(InfoString);
+									lbEddnImplausible.Items.Add(infoString);
 									lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count - 1;
 									lbEddnImplausible.SelectedIndex = -1;
 
 									if (cbSpoolImplausibleToFile.Checked)
 									{
-										FileStream LogFileStream = null;
+										FileStream logFileStream = null;
 										string FileName = @".\EddnImplausibleOutput.txt";
 
 										if (File.Exists(FileName))
 										{
-											LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+											logFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
 										}
 										else
 										{
-											LogFileStream = File.Create(FileName);
+											logFileStream = File.Create(FileName);
 										}
 
-										LogFileStream.Write(Encoding.Default.GetBytes(InfoString), 0, Encoding.Default.GetByteCount(InfoString));
-										LogFileStream.Close();
+										logFileStream.Write(Encoding.Default.GetBytes(infoString), 0, Encoding.Default.GetByteCount(infoString));
+										logFileStream.Close();
 									}
 
 									Debug.Print("Implausible EDDN Data: " + csvFormatted);
@@ -3682,7 +3605,7 @@ namespace RegulatedNoise
 															";" +
 															messageDictionary["timestamp"] + ";"
 															+
-															"<From EDDN>" + ";";
+                                                            "<From EDDN>" + ";" + tbUsername.Text;
 
 							lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted));
 							lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count - 1;
@@ -3696,25 +3619,33 @@ namespace RegulatedNoise
 				}
 		}
 
-		private delegate void SetListeningDelegate();
-
-		public void SetListening()
+		public void UpdateEddnState()
 		{
-			if (tbEDDNOutput.InvokeRequired)
-			{
-				SetListeningDelegate d = SetListening;
-				BeginInvoke(d);
-			}
-			else
-			{
-				tbEDDNOutput.Text = "Listening...";
-			}
+		    if (ApplicationContext.Eddn.Listening)
+		    {
+		        RunInGuiThread(() =>
+		        {
+		            tbEDDNOutput.Text = "Listening...";
+		            button15.Enabled = false;
+		            cmdStopEDDNListening.Enabled = true;
+		        });
+		    }
+		    else
+		    {
+                RunInGuiThread(() =>
+                {
+                    tbEDDNOutput.Text = "Not Listening";
+                    button15.Enabled = true;
+                    cmdStopEDDNListening.Enabled = false;
+                });		        
+		    }
 		}
-		#endregion
+
+	    #endregion
 
 		private void cmdStopEDDNListening_Click(object sender, EventArgs e)
 		{
-			Eddn.UnSubscribe();
+			ApplicationContext.Eddn.UnSubscribe();
 		}
 
 		#region Station-To-Station
@@ -5336,7 +5267,7 @@ namespace RegulatedNoise
 			_commodities.Names.AddNamesRow(newCommodity);
 
 			// save to file
-			_commodities.WriteXml(".//Data//Commodities.xml");
+			_commodities.WriteXml(RegulatedNoiseSettings.COMMODITIES_LOCALISATION_FILEPATH);
 
 			// reload in working array
 			loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
@@ -6052,7 +5983,7 @@ namespace RegulatedNoise
 				m_currentStationdata.getValues(m_loadedStationdata, true);
 
 				txtStationId.Text = m_loadedStationdata.Id.ToString(CultureInfo.CurrentCulture);
-				txtStationName.Text = m_loadedStationdata.Name.ToString();
+				txtStationName.Text = m_loadedStationdata.Name;
 				cmbStationMaxLandingPadSize.Text = m_loadedStationdata.MaxLandingPadSize.NToString();
 				txtStationDistanceToStar.Text = m_loadedStationdata.DistanceToStar.ToNString();
 				txtStationFaction.Text = m_loadedStationdata.Faction.NToString();
