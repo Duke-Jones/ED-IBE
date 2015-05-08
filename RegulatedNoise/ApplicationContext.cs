@@ -34,6 +34,7 @@ namespace RegulatedNoise
                 if (_settings == null)
                 {
                     _settings = RegulatedNoiseSettings.LoadSettings();
+                    _settings.PropertyChanged += (sender, args) => _settings.Save();
                 }
                 return _settings;
             }
