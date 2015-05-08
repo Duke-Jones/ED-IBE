@@ -4624,7 +4624,7 @@
             // chkAutoListen
             // 
             this.chkAutoListen.AutoSize = true;
-            this.chkAutoListen.Location = new System.Drawing.Point(424, 28);
+            this.chkAutoListen.Location = new System.Drawing.Point(300, 24);
             this.chkAutoListen.Name = "chkAutoListen";
             this.chkAutoListen.Size = new System.Drawing.Size(204, 24);
             this.chkAutoListen.TabIndex = 16;
