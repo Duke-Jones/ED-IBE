@@ -282,7 +282,7 @@ namespace RegulatedNoise
 				UpdateSystemNameFromLogFile();
 				_logger.Log("  - fetched system name from file");
 				_Splash.InfoChange("starting logfile watcher...<OK>");
-				if (ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad)
+				if (ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad)
 				{
 					_Splash.InfoAdd("starting EDDN listening...");
 					Eddn.Subscribe();
@@ -314,24 +314,29 @@ namespace RegulatedNoise
 					case NotificationEventArgs.EventType.InitializationCompleted:
 						break;
 					case NotificationEventArgs.EventType.Information:
-						MsgBox.Show(notificationEventArgs.Message,
+						notificationEventArgs.Cancel = MsgBox.Show(notificationEventArgs.Message,
 							notificationEventArgs.Title ?? "",
 							MessageBoxButtons.OK,
-							MessageBoxIcon.Information);
+							MessageBoxIcon.Information) != DialogResult.OK;
 						break;
 					case NotificationEventArgs.EventType.Request:
-						MsgBox.Show(notificationEventArgs.Message,
+						notificationEventArgs.Cancel = MsgBox.Show(notificationEventArgs.Message,
 							notificationEventArgs.Title ?? "",
 							MessageBoxButtons.OKCancel,
-							MessageBoxIcon.Question);
+							MessageBoxIcon.Question) != DialogResult.OK;
 						break;
 					case NotificationEventArgs.EventType.FileRequest:
 						using (FolderBrowserDialog dialog = new FolderBrowserDialog {Description = notificationEventArgs.Message})
 						{
-							if (dialog.ShowDialog() == DialogResult.OK)
-							{
-								notificationEventArgs.Response = dialog.SelectedPath;
-							}
+						    if (dialog.ShowDialog() == DialogResult.OK)
+						    {
+						        notificationEventArgs.Cancel = false;
+						        notificationEventArgs.Response = dialog.SelectedPath;
+						    }
+						    else
+						    {
+						        notificationEventArgs.Cancel = true;
+						    }
 						}
 						break;
 					default:
@@ -350,7 +355,6 @@ namespace RegulatedNoise
 						_Splash.InfoChange(notificationEventArgs.Message);
 						break;
 					case NotificationEventArgs.EventType.InitializationProgress:
-					default:
 						_Splash.InfoAdd(notificationEventArgs.Message);
 						break;
 				}
@@ -636,7 +640,7 @@ namespace RegulatedNoise
 
 			// Set the MinDate and MaxDate.
 			nudPurgeOldDataDays.Value = ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays;
-            chkAutoListen.Checked = ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad;
+            chkAutoListen.Checked = ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad;
 		}
 
 		/// <summary>
@@ -7226,7 +7230,7 @@ namespace RegulatedNoise
 
         private void chkAutoListen_CheckedChanged(object sender, EventArgs e)
         {
-            ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad = chkAutoListen.Checked;
+            ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad = chkAutoListen.Checked;
             ApplicationContext.RegulatedNoiseSettings.Save();
         }
 	}
