@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ ep|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ ep\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1 ep_Debug</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -203,9 +203,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\ScreenshotResults.cs" />
-    <Compile Include="Enums and Utility Classes\RegulatedNoiseSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Enums and Utility Classes\RegulatedNoiseSettings.cs" />
     <Compile Include="Enums and Utility Classes\SingleThreadLogger.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
