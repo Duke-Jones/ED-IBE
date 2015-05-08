@@ -83,7 +83,7 @@ namespace RegulatedNoise
         public string WebserverForegroundColor = "#000000";
         public string MostRecentOCRFolder = "";
         public bool StartOCROnLoad = false;
-        private bool StartListeningEDDNOnLoad = false;
+        private bool _startListeningEddnOnLoad = false;
         public string UserName = "";
         public bool IncludeExtendedCSVInfo = true;
         public bool PostToEddnOnImport = false;
@@ -180,12 +180,12 @@ namespace RegulatedNoise
 
         public bool StartListeningEddnOnLoad
         {
-            get { return StartListeningEDDNOnLoad; }
+            get { return _startListeningEddnOnLoad; }
             set
             {
-                if (!Equals(StartListeningEDDNOnLoad, value))
+                if (!Equals(_startListeningEddnOnLoad, value))
                 {
-                    StartListeningEDDNOnLoad = value;
+                    _startListeningEddnOnLoad = value;
                     RaisePropertyChanged();
                 }
             }
@@ -640,6 +640,7 @@ namespace RegulatedNoise
 	    }
 
         public const string EDDN_POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
+        public const string EDDN_OUTPUT_FILEPATH = ".//EddnOutput.txt";
     }
 
     public partial class Form1

@@ -536,6 +536,7 @@ namespace RegulatedNoise
 
 		private void ApplySettings()
 		{
+            chkAutoListen.DataBindings.Add("Checked", ApplicationContext.RegulatedNoiseSettings, "StartListeningEddnOnLoad");
 			if (ApplicationContext.RegulatedNoiseSettings.WebserverForegroundColor != "") tbForegroundColour.Text = ApplicationContext.RegulatedNoiseSettings.WebserverForegroundColor;
 			if (ApplicationContext.RegulatedNoiseSettings.WebserverBackgroundColor != "") tbBackgroundColour.Text = ApplicationContext.RegulatedNoiseSettings.WebserverBackgroundColor;
 			txtWebserverPort.Text = ApplicationContext.RegulatedNoiseSettings.WebserverPort;
@@ -3422,10 +3423,10 @@ namespace RegulatedNoise
 		        {
 		            if (_eddnSpooler == null)
 		            {
-		                if (!File.Exists(".//EddnOutput.txt"))
-		                    _eddnSpooler = File.CreateText(".//EddnOutput.txt");
+		                if (!File.Exists(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH))
+		                    _eddnSpooler = File.CreateText(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH);
 		                else
-		                    _eddnSpooler = File.AppendText(".//EddnOutput.txt");
+		                    _eddnSpooler = File.AppendText(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH);
 		            }
 
 		            _eddnSpooler.WriteLine(args.Message);
