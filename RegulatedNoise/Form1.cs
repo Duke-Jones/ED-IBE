@@ -282,7 +282,7 @@ namespace RegulatedNoise
 				UpdateSystemNameFromLogFile();
 				_logger.Log("  - fetched system name from file");
 				_Splash.InfoChange("starting logfile watcher...<OK>");
-				if (ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad)
+				if (ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad)
 				{
 					_Splash.InfoAdd("starting EDDN listening...");
 					Eddn.Subscribe();
@@ -636,7 +636,7 @@ namespace RegulatedNoise
 
 			// Set the MinDate and MaxDate.
 			nudPurgeOldDataDays.Value = ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays;
-            chkAutoListen.Checked = ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad;
+            chkAutoListen.Checked = ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad;
 		}
 
 		/// <summary>
@@ -7226,7 +7226,7 @@ namespace RegulatedNoise
 
         private void chkAutoListen_CheckedChanged(object sender, EventArgs e)
         {
-            ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad = chkAutoListen.Checked;
+            ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad = chkAutoListen.Checked;
             ApplicationContext.RegulatedNoiseSettings.Save();
         }
 	}
