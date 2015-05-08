@@ -20,7 +20,6 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using CodeProject.Dialog;
 using EdClasses.ClassDefinitions;
-using Microsoft.Win32;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using Cursor = System.Windows.Forms.Cursor;

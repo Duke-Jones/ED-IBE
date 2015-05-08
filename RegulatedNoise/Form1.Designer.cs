@@ -394,8 +394,6 @@
 			this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
-			this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.chkAutoListen = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
 			this.contextMenuStrip1.SuspendLayout();
@@ -462,8 +460,6 @@
 			this.groupBox9.SuspendLayout();
 			this.groupBox11.SuspendLayout();
 			this.contextMenuStrip2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// openFileDialog1
@@ -4611,16 +4607,6 @@
 			this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
 			this.removeEconomyToolStripMenuItem.Text = "remove Economy";
 			// 
-			// dsCommodities
-			// 
-			this.dsCommodities.DataSetName = "dsCommodities";
-			this.dsCommodities.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-			// 
-			// namesBindingSource
-			// 
-			this.namesBindingSource.DataMember = "Names";
-			this.namesBindingSource.DataSource = this.dsCommodities;
-			// 
             // chkAutoListen
             // 
             this.chkAutoListen.AutoSize = true;
@@ -4750,8 +4736,6 @@
 			this.groupBox11.ResumeLayout(false);
 			this.groupBox11.PerformLayout();
 			this.contextMenuStrip2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -4943,8 +4927,6 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button cmdSelectTraineddataFile;
         private System.Windows.Forms.Label label12;
-        private RegulatedNoise.Enums_and_Utility_Classes.dsCommodities dsCommodities;
-        private System.Windows.Forms.BindingSource namesBindingSource;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.CheckBox cbAutoAdd_JumpedTo;
