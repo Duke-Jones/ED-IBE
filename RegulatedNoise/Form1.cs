@@ -636,6 +636,7 @@ namespace RegulatedNoise
 
 			// Set the MinDate and MaxDate.
 			nudPurgeOldDataDays.Value = ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays;
+            chkAutoListen.Checked = ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad;
 		}
 
 		/// <summary>
@@ -7223,5 +7224,10 @@ namespace RegulatedNoise
 			Process.Start(((LinkLabel)sender).Text);
 		}
 
+        private void chkAutoListen_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplicationContext.RegulatedNoiseSettings.StartListeningEDDNOnLoad = chkAutoListen.Checked;
+            ApplicationContext.RegulatedNoiseSettings.Save();
+        }
 	}
 }
