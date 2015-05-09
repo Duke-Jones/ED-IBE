@@ -3626,11 +3626,6 @@ namespace RegulatedNoise
 		    {
 		        RunInGuiThread(() =>
 		        {
-                    if (cbSpoolEddnToFile.DataBindings.Count==0)
-                    {
-                        cbSpoolEddnToFile.BindChecked(ApplicationContext.Eddn, eddn => eddn.SaveMessagesToFile);
-                    }
-
 		            tbEDDNOutput.Text = "Listening...";
 		            button15.Enabled = false;
 		            cmdStopEDDNListening.Enabled = true;
