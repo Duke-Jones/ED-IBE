@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RegulatedNoise
@@ -23,7 +21,7 @@ namespace RegulatedNoise
             Application.ThreadException += Application_ThreadException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Form1(ApplicationContext.RegulatedNoiseSettings));
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
@@ -85,7 +83,7 @@ namespace RegulatedNoise
         {
             using (FileStream fs = new FileStream(".//" + Filename, FileMode.Create))
             {
-                using (System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess())
+                using (Process process = Process.GetCurrentProcess())
                 {
                     MiniDumpWriteDump(process.Handle,
                                                      process.Id,

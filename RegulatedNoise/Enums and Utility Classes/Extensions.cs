@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -206,6 +207,41 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
     }
 
+    static class Extensions_Control
+    {
+        public static void Bind<TControl, TResult, TDataSource>(this TControl control,
+            Expression<Func<TControl, TResult>> controlMember, TDataSource dataSource,
+            Expression<Func<TDataSource, TResult>> dataMember) where TControl : Control
+        {
+            control.DataBindings.Add(controlMember.GetPropertyName(), dataSource, dataMember.GetPropertyName(), false, DataSourceUpdateMode.OnPropertyChanged);
+        }
 
+        public static void BindChecked<TDataSource>(this CheckBox checkBox, TDataSource dataSource,
+            Expression<Func<TDataSource, bool>> datamember)
+        {
+            checkBox.Bind(ctrl => ctrl.Checked, dataSource, datamember);
+        }
 
+        public static void BindText<TDataSource>(this TextBox textBox, TDataSource dataSource,
+            Expression<Func<TDataSource, string>> datamember)
+        {
+            textBox.Bind(ctrl => ctrl.Text, dataSource, datamember);
+        }
+    }
+
+    static class ReflexionHelpers
+    {
+        public static string GetPropertyName<TItem,
+               TResult>(this Expression<Func<TItem, TResult>> expression)
+        {
+            if (expression.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                return ((MemberExpression) expression.Body).Member.Name;
+            }
+            else
+            {
+                throw new NotSupportedException("unable to retrieve property name from expression");
+            }
+        }
+    }
 }

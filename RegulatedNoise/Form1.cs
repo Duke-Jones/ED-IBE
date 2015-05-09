@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using CodeProject.Dialog;
 using EdClasses.ClassDefinitions;
+using RegulatedNoise.Annotations;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using Cursor = System.Windows.Forms.Cursor;
@@ -45,7 +46,8 @@ namespace RegulatedNoise
 	    private delegate void delButtonInvoker(Button myButton, bool enable);
 		private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
 
-		public static Form1 InstanceObject;
+        private readonly RegulatedNoiseSettings _settings;
+        public static Form1 InstanceObject;
 
 		public Random random = new Random();
 		public Guid SessionGuid;
@@ -108,9 +110,11 @@ namespace RegulatedNoise
 
 
 		[SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
-		public Form1()
+		public Form1([NotNull] RegulatedNoiseSettings regulatedNoiseSettings)
 		{
-			_InitDone = false;
+		    if (regulatedNoiseSettings == null) throw new ArgumentNullException("regulatedNoiseSettings");
+            _settings = regulatedNoiseSettings;
+            _InitDone = false;
 			_logger = new SingleThreadLogger(ThreadLoggerType.Form);
 
 			InstanceObject = this;
@@ -128,9 +132,9 @@ namespace RegulatedNoise
 			{
 			    _logger.Log("Initialising...\n");
 			    string formName = GetType().Name;
-			    if (ApplicationContext.RegulatedNoiseSettings.WindowBaseData.ContainsKey(formName))
+			    if (_settings.WindowBaseData.ContainsKey(formName))
 			    {
-			        _Splash.SetPosition(ApplicationContext.RegulatedNoiseSettings.WindowBaseData[formName]);
+			        _Splash.SetPosition(_settings.WindowBaseData[formName]);
 			    }
 			    _Splash.InfoAdd("initialize components...");
 			    InitializeComponent();
@@ -214,7 +218,7 @@ namespace RegulatedNoise
 
 			    _logger.Log("Initialisation complete");
 
-			    if (ApplicationContext.RegulatedNoiseSettings.TestMode)
+			    if (_settings.TestMode)
 			    {
 			        //Testing
 			        var testtab = new TabPage("MRmP Test Tab");
@@ -248,8 +252,8 @@ namespace RegulatedNoise
 			    setLanguageCombobox();
 
 			    // load commodities in the correct language
-			    loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
-			    loadCommodityLevels(ApplicationContext.RegulatedNoiseSettings.Language);
+			    loadCommodities(_settings.Language);
+			    loadCommodityLevels(_settings.Language);
 			    _Splash.InfoChange("load and prepare international commodity names...<OK>");
 
 			    setOCRCalibrationTabVisibility();
@@ -270,9 +274,7 @@ namespace RegulatedNoise
 			    UpdateSystemNameFromLogFile();
 			    _logger.Log("  - fetched system name from file");
 			    _Splash.InfoChange("starting logfile watcher...<OK>");
-			    ApplicationContext.Eddn.PropertyChanged += EddnPropertyChangedEventHandler;
-			    ApplicationContext.Eddn.OnMessageReceived += OutputEddnRawData;
-			    UpdateEddnState();
+                UpdateEddnState();
 			}
 			catch (Exception ex)
 			{
@@ -286,6 +288,20 @@ namespace RegulatedNoise
 			_Splash.InfoAdd("\nstart sequence finished !!!");
 			_InitDone = true;
 		}
+
+	    protected override void OnLoad(EventArgs e)
+	    {
+	        base.OnLoad(e);
+            ApplicationContext.Eddn.PropertyChanged += EddnPropertyChangedEventHandler;
+            ApplicationContext.Eddn.OnMessageReceived += OutputEddnRawData;
+        }
+
+	    protected override void OnClosing(CancelEventArgs e)
+	    {
+            ApplicationContext.Eddn.PropertyChanged -= EddnPropertyChangedEventHandler;
+            ApplicationContext.Eddn.OnMessageReceived -= OutputEddnRawData;
+            base.OnClosing(e);
+        }
 
 	    private void EddnPropertyChangedEventHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
 	    {
@@ -413,7 +429,7 @@ namespace RegulatedNoise
 
 		private void setColumns(ListView currentListView)
 		{
-			List<ColumnData> currentData = ApplicationContext.RegulatedNoiseSettings.ListViewColumnData[currentListView.Name];
+			List<ColumnData> currentData = _settings.ListViewColumnData[currentListView.Name];
 
 			switch (currentListView.Name)
 			{
@@ -444,14 +460,14 @@ namespace RegulatedNoise
 
 		private void saveColumns(ListView currentListView)
 		{
-			List<ColumnData> currentData = ApplicationContext.RegulatedNoiseSettings.ListViewColumnData[currentListView.Name];
+			List<ColumnData> currentData = _settings.ListViewColumnData[currentListView.Name];
 
 			foreach (ColumnHeader currentHeader in currentListView.Columns)
 			{
 				ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
 				Data.Width = currentHeader.Width;
 			}
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.Save();
 		}
 
 		private void SetListViewColumnsAndSorters()
@@ -536,31 +552,32 @@ namespace RegulatedNoise
 
 		private void ApplySettings()
 		{
-            chkAutoListen.DataBindings.Add("Checked", ApplicationContext.RegulatedNoiseSettings, "StartListeningEddnOnLoad");
-			if (ApplicationContext.RegulatedNoiseSettings.WebserverForegroundColor != "") tbForegroundColour.Text = ApplicationContext.RegulatedNoiseSettings.WebserverForegroundColor;
-			if (ApplicationContext.RegulatedNoiseSettings.WebserverBackgroundColor != "") tbBackgroundColour.Text = ApplicationContext.RegulatedNoiseSettings.WebserverBackgroundColor;
-			txtWebserverPort.Text = ApplicationContext.RegulatedNoiseSettings.WebserverPort;
-			if (ApplicationContext.RegulatedNoiseSettings.WebserverIpAddress != "") cbInterfaces.Text = ApplicationContext.RegulatedNoiseSettings.WebserverIpAddress;
+            cbAutoListenEddn.BindChecked(_settings, settings => settings.StartListeningEddnOnLoad);
+            cbSpoolEddnToFile.BindChecked(ApplicationContext.Eddn, eddn => eddn.SaveMessagesToFile);
+			if (_settings.WebserverForegroundColor != "") tbForegroundColour.Text = _settings.WebserverForegroundColor;
+			if (_settings.WebserverBackgroundColor != "") tbBackgroundColour.Text = _settings.WebserverBackgroundColor;
+			txtWebserverPort.Text = _settings.WebserverPort;
+			if (_settings.WebserverIpAddress != "") cbInterfaces.Text = _settings.WebserverIpAddress;
 
 
-			cbAutoImport.Checked = ApplicationContext.RegulatedNoiseSettings.AutoImport;
+			cbAutoImport.Checked = _settings.AutoImport;
 
 			ShowSelectedUiColours();
-			cbExtendedInfoInCSV.Checked = ApplicationContext.RegulatedNoiseSettings.IncludeExtendedCSVInfo;
-			cbDeleteScreenshotOnImport.Checked = ApplicationContext.RegulatedNoiseSettings.DeleteScreenshotOnImport;
-			cbUseEddnTestSchema.Checked = ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema;
-			cbPostOnImport.Checked = ApplicationContext.RegulatedNoiseSettings.PostToEddnOnImport;
+			cbExtendedInfoInCSV.Checked = _settings.IncludeExtendedCSVInfo;
+			cbDeleteScreenshotOnImport.Checked = _settings.DeleteScreenshotOnImport;
+			cbUseEddnTestSchema.Checked = _settings.UseEddnTestSchema;
+			cbPostOnImport.Checked = _settings.PostToEddnOnImport;
 
-			if (ApplicationContext.RegulatedNoiseSettings.UserName != "")
-				tbUsername.Text = ApplicationContext.RegulatedNoiseSettings.UserName;
+			if (_settings.UserName != "")
+				tbUsername.Text = _settings.UserName;
 			else
 				tbUsername.Text = Guid.NewGuid().ToString();
-			if (ApplicationContext.RegulatedNoiseSettings.StartWebserverOnLoad)
+			if (_settings.StartWebserverOnLoad)
 			{
 				cbStartWebserverOnLoad.Checked = true;
 				bStart_Click(null, null);
 			}
-			if (ApplicationContext.RegulatedNoiseSettings.StartOCROnLoad && ApplicationContext.RegulatedNoiseSettings.MostRecentOCRFolder != "")
+			if (_settings.StartOCROnLoad && _settings.MostRecentOCRFolder != "")
 			{
 				cbStartOCROnLoad.Checked = true;
 				//ocr.StartMonitoring(RegulatedNoiseSettings.MostRecentOCRFolder);
@@ -568,7 +585,7 @@ namespace RegulatedNoise
 				if (_fileSystemWatcher == null)
 					_fileSystemWatcher = new FileSystemWatcher();
 
-				_fileSystemWatcher.Path = ApplicationContext.RegulatedNoiseSettings.MostRecentOCRFolder;
+				_fileSystemWatcher.Path = _settings.MostRecentOCRFolder;
 
 				_fileSystemWatcher.Filter = "*.bmp";
 
@@ -586,41 +603,41 @@ namespace RegulatedNoise
 				ocr.IsMonitoring = true;
 			}
 
-			txtTraineddataFile.Text = ApplicationContext.RegulatedNoiseSettings.TraineddataFile;
+			txtTraineddataFile.Text = _settings.TraineddataFile;
 
-			_commandersLogColumnSorter.SortColumn = ApplicationContext.RegulatedNoiseSettings.CmdrsLogSortColumn;
-			_commandersLogColumnSorter.Order = ApplicationContext.RegulatedNoiseSettings.CmdrsLogSortOrder;
+			_commandersLogColumnSorter.SortColumn = _settings.CmdrsLogSortColumn;
+			_commandersLogColumnSorter.Order = _settings.CmdrsLogSortOrder;
 
-			cbAutoAdd_JumpedTo.Checked = ApplicationContext.RegulatedNoiseSettings.AutoEvent_JumpedTo;
-			cbAutoAdd_Visited.Checked = ApplicationContext.RegulatedNoiseSettings.AutoEvent_Visited;
-			cbAutoAdd_Marketdata.Checked = ApplicationContext.RegulatedNoiseSettings.AutoEvent_MarketDataCollected;
-			cbAutoAdd_ReplaceVisited.Checked = ApplicationContext.RegulatedNoiseSettings.AutoEvent_ReplaceVisited;
+			cbAutoAdd_JumpedTo.Checked = _settings.AutoEvent_JumpedTo;
+			cbAutoAdd_Visited.Checked = _settings.AutoEvent_Visited;
+			cbAutoAdd_Marketdata.Checked = _settings.AutoEvent_MarketDataCollected;
+			cbAutoAdd_ReplaceVisited.Checked = _settings.AutoEvent_ReplaceVisited;
 
-			txtPixelThreshold.Text = ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
-			txtPixelAmount.Text = ApplicationContext.RegulatedNoiseSettings.EBPixelAmount.ToString();
-			txtGUIColorCutoffLevel.Text = ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
+			txtPixelThreshold.Text = _settings.EBPixelThreshold.ToString("F1");
+			txtPixelAmount.Text = _settings.EBPixelAmount.ToString();
+			txtGUIColorCutoffLevel.Text = _settings.GUIColorCutoffLevel.ToString();
 
 			// perform the sort with the last sort options.
 			this.lvCommandersLog.Sort();
 
-			txtlastStationCount.Text = ApplicationContext.RegulatedNoiseSettings.lastStationCount.ToString();
-			cmbLightYears.Text = ApplicationContext.RegulatedNoiseSettings.lastLightYears.ToString();
-			cblastVisitedFirst.Checked = ApplicationContext.RegulatedNoiseSettings.lastStationCountActive;
-			cbLimitLightYears.Checked = ApplicationContext.RegulatedNoiseSettings.limitLightYears;
-			cbPerLightYearRoundTrip.Checked = ApplicationContext.RegulatedNoiseSettings.PerLightYearRoundTrip;
-			cbAutoActivateOCRTab.Checked = ApplicationContext.RegulatedNoiseSettings.AutoActivateOCRTab;
-			cbAutoActivateSystemTab.Checked = ApplicationContext.RegulatedNoiseSettings.AutoActivateSystemTab;
+			txtlastStationCount.Text = _settings.lastStationCount.ToString();
+			cmbLightYears.Text = _settings.lastLightYears.ToString();
+			cblastVisitedFirst.Checked = _settings.lastStationCountActive;
+			cbLimitLightYears.Checked = _settings.limitLightYears;
+			cbPerLightYearRoundTrip.Checked = _settings.PerLightYearRoundTrip;
+			cbAutoActivateOCRTab.Checked = _settings.AutoActivateOCRTab;
+			cbAutoActivateSystemTab.Checked = _settings.AutoActivateSystemTab;
 
-			cbIncludeUnknownDTS.Checked = ApplicationContext.RegulatedNoiseSettings.IncludeUnknownDTS;
-			cbLoadStationsJSON.Checked = ApplicationContext.RegulatedNoiseSettings.LoadStationsJSON;
+			cbIncludeUnknownDTS.Checked = _settings.IncludeUnknownDTS;
+			cbLoadStationsJSON.Checked = _settings.LoadStationsJSON;
 
-			cmbStationToStar.Text = ApplicationContext.RegulatedNoiseSettings.lastStationToStar.ToString();
-			cbStationToStar.Checked = ApplicationContext.RegulatedNoiseSettings.StationToStar;
+			cmbStationToStar.Text = _settings.lastStationToStar.ToString();
+			cbStationToStar.Checked = _settings.StationToStar;
 
-			cmbMaxRouteDistance.Text = ApplicationContext.RegulatedNoiseSettings.lastMaxRouteDistance.ToString();
-			cbMaxRouteDistance.Checked = ApplicationContext.RegulatedNoiseSettings.MaxRouteDistance;
+			cmbMaxRouteDistance.Text = _settings.lastMaxRouteDistance.ToString();
+			cbMaxRouteDistance.Checked = _settings.MaxRouteDistance;
 
-			switch (ApplicationContext.RegulatedNoiseSettings.CBSortingSelection)
+			switch (_settings.CBSortingSelection)
 			{
 				case 1:
 					rbSortBySystem.Checked = true;
@@ -633,13 +650,12 @@ namespace RegulatedNoise
 					break;
 				default:
 					rbSortBySystem.Checked = true;
-					ApplicationContext.RegulatedNoiseSettings.CBSortingSelection = 1;
+					_settings.CBSortingSelection = 1;
 					break;
 			}
 
 			// Set the MinDate and MaxDate.
-			nudPurgeOldDataDays.Value = ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays;
-            chkAutoListen.Checked = ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad;
+			nudPurgeOldDataDays.Value = _settings.OldDataPurgeDeadlineDays;
 		}
 
 		/// <summary>
@@ -804,8 +820,6 @@ namespace RegulatedNoise
 			return tbCommoditiesOcrOutput.Text;
 		}
 
-
-
 		public delegate void ScreenshotsQueuedDelegate(string s);
 		public delegate void del_setControlText(Control CtrlObject, string newText);
 		public delegate void del_setLocationInfo(string System, string Location);
@@ -828,7 +842,7 @@ namespace RegulatedNoise
 			if (stateTimer != null) stateTimer.Dispose();
 			SaveCommodityData(true);
 			CommandersLog.SaveLog(true);
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.Save();
 			if (sws.Running)
 				sws.Stop();
 		}
@@ -1101,7 +1115,7 @@ namespace RegulatedNoise
 
 				dist = ApplicationContext.Milkyway.GetStationDistance(SystemName, StationName);
 
-				if ((!ApplicationContext.RegulatedNoiseSettings.IncludeUnknownDTS) && (dist == -1))
+				if ((!_settings.IncludeUnknownDTS) && (dist == -1))
 					return false;
 
 				var limit = int.Parse(cmbStationToStar.Text);
@@ -2307,7 +2321,7 @@ namespace RegulatedNoise
 			for (int i = 0; i < listViewToDump.Columns.Count; i++)
 			{
 				var style = "style=\"border:1px solid black; font-weight: bold;\"";
-				header.Append("<TD " + style + "><A style=\"color: #" + ApplicationContext.RegulatedNoiseSettings.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
+				header.Append("<TD " + style + "><A style=\"color: #" + _settings.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
 			}
 
 			header.Append("</TR>");
@@ -2382,10 +2396,10 @@ namespace RegulatedNoise
 
 			if (cbInterfaces.SelectedItem != null)
 			{
-				ApplicationContext.RegulatedNoiseSettings.WebserverIpAddress = cbInterfaces.SelectedItem.ToString();
+				_settings.WebserverIpAddress = cbInterfaces.SelectedItem.ToString();
 			}
 
-			ApplicationContext.RegulatedNoiseSettings.WebserverPort = txtWebserverPort.Text;
+			_settings.WebserverPort = txtWebserverPort.Text;
 
 		}
 
@@ -2412,7 +2426,7 @@ namespace RegulatedNoise
 			dialog.SelectedPath = Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) + @"\Frontier Developments\Elite Dangerous";
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				ApplicationContext.RegulatedNoiseSettings.MostRecentOCRFolder = dialog.SelectedPath;
+				_settings.MostRecentOCRFolder = dialog.SelectedPath;
 
 				if (_fileSystemWatcher == null)
 					_fileSystemWatcher = new FileSystemWatcher();
@@ -2894,7 +2908,7 @@ namespace RegulatedNoise
 					UpdateOriginalImage(null);
 					UpdateTrimmedImage(null, null);
 
-					if (ApplicationContext.RegulatedNoiseSettings.DeleteScreenshotOnImport)
+					if (_settings.DeleteScreenshotOnImport)
 						File.Delete(_screenshotName);
 
 					Acquisition();
@@ -2934,7 +2948,7 @@ namespace RegulatedNoise
 					{
 						tbFinalOcrOutput.Enabled = true;
 
-						if ((!noAutoImport) && ApplicationContext.RegulatedNoiseSettings.AutoImport)
+						if ((!noAutoImport) && _settings.AutoImport)
 						{
 							tbCommoditiesOcrOutput.Text = "Imported!";
 							ImportFinalOcrOutput();
@@ -3105,7 +3119,7 @@ namespace RegulatedNoise
 				if (Answer == DialogResult.OK)
 				{
 					// yes, it's really new
-					addCommodity(commodity, ApplicationContext.RegulatedNoiseSettings.Language);
+					addCommodity(commodity, _settings.Language);
 					isOK = true;
 				}
 			}
@@ -3353,14 +3367,14 @@ namespace RegulatedNoise
 		{
 			sws.ForegroundColour = tbForegroundColour.Text;
 			cbColourScheme.SelectedItem = null;
-			ApplicationContext.RegulatedNoiseSettings.WebserverForegroundColor = tbForegroundColour.Text;
+			_settings.WebserverForegroundColor = tbForegroundColour.Text;
 		}
 
 		private void tbBackgroundColour_TextChanged(object sender, EventArgs e)
 		{
 			sws.BackgroundColour = tbBackgroundColour.Text;
 			cbColourScheme.SelectedItem = null;
-			ApplicationContext.RegulatedNoiseSettings.WebserverBackgroundColor = tbBackgroundColour.Text;
+			_settings.WebserverBackgroundColor = tbBackgroundColour.Text;
 		}
 
 		private void button9_Click(object sender, EventArgs e)
@@ -3411,7 +3425,6 @@ namespace RegulatedNoise
 		private bool harvestStations = false;
 		private int harvestStationsCount = -1;
 		private int harvestCommsCount = -1;
-		private StreamWriter _eddnSpooler = null;
 
 		public void OutputEddnRawData(object sender, EddnMessageEventArgs args)
 		{
@@ -3419,55 +3432,42 @@ namespace RegulatedNoise
 		    {
 		        tbEDDNOutput.Text = args.Message;
 
-		        if (cbSpoolEddnToFile.Checked)
-		        {
-		            if (_eddnSpooler == null)
-		            {
-		                if (!File.Exists(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH))
-		                    _eddnSpooler = File.CreateText(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH);
-		                else
-		                    _eddnSpooler = File.AppendText(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH);
-		            }
-
-		            _eddnSpooler.WriteLine(args.Message);
-		        }
-
 		        var headerDictionary = new Dictionary<string, string>();
 		        var messageDictionary = new Dictionary<string, string>();
 
 		        ParseEddnJson(args.Message, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
-
-		        if (harvestStations && StationDirectory.Count > harvestStationsCount)
-		        {
-		            if (File.Exists("stations.txt"))
-		                File.Delete("stations.txt");
-
-		            TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
-		            foreach (var x in StationDirectory.OrderBy(x => x.Key))
-		            {
-		                f.WriteLine(x.Key);
-		            }
-		            f.Close();
-		            harvestStationsCount = StationDirectory.Count;
-		        }
-
-		        if (harvestStations && CommodityDirectory.Count > harvestCommsCount)
-		        {
-		            if (File.Exists("commodities.txt"))
-		                File.Delete("commodities.txt");
-
-		            TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
-		            foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
-		            {
-		                f.WriteLine(x.Key);
-		            }
-		            f.Close();
-		            harvestCommsCount = CommodityDirectory.Count;
-		        }
 		    });
-		}
 
-		private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
+            if (harvestStations && StationDirectory.Count > harvestStationsCount)
+            {
+                if (File.Exists("stations.txt"))
+                    File.Delete("stations.txt");
+
+                TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
+                foreach (var x in StationDirectory.OrderBy(x => x.Key))
+                {
+                    f.WriteLine(x.Key);
+                }
+                f.Close();
+                harvestStationsCount = StationDirectory.Count;
+            }
+
+            if (harvestStations && CommodityDirectory.Count > harvestCommsCount)
+            {
+                if (File.Exists("commodities.txt"))
+                    File.Delete("commodities.txt");
+
+                TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
+                foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
+                {
+                    f.WriteLine(x.Key);
+                }
+                f.Close();
+                harvestCommsCount = CommodityDirectory.Count;
+            }
+        }
+
+	    private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
 		
         private void ParseEddnJson(string text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
 		{
@@ -3495,8 +3495,8 @@ namespace RegulatedNoise
 					var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
 
 
-					if ((ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
-						(!ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) < 0)))
+					if ((_settings.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
+						(!_settings.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) < 0)))
 					{
 						foreach (var rawHeaderPair in headerRawPairs)
 						{
@@ -3626,6 +3626,11 @@ namespace RegulatedNoise
 		    {
 		        RunInGuiThread(() =>
 		        {
+                    if (cbSpoolEddnToFile.DataBindings.Count==0)
+                    {
+                        cbSpoolEddnToFile.BindChecked(ApplicationContext.Eddn, eddn => eddn.SaveMessagesToFile);
+                    }
+
 		            tbEDDNOutput.Text = "Listening...";
 		            button15.Enabled = false;
 		            cmdStopEDDNListening.Enabled = true;
@@ -3913,9 +3918,9 @@ namespace RegulatedNoise
 #if extScanLog
                     logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(RegulatedNoiseSettings.PilotsName)) + ">");
 #endif
-					RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(ApplicationContext.RegulatedNoiseSettings.PilotsName)), RegexOptions.IgnoreCase);
+					RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(_settings.PilotsName)), RegexOptions.IgnoreCase);
 
-					var appConfigPath = ApplicationContext.RegulatedNoiseSettings.ProductsPath;
+					var appConfigPath = _settings.ProductsPath;
 
 					if (Directory.Exists(appConfigPath))
 					{
@@ -4290,13 +4295,13 @@ namespace RegulatedNoise
 
 				if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
 				{
-					if (String.IsNullOrEmpty(ApplicationContext.RegulatedNoiseSettings.PilotsName))
-						ApplicationContext.RegulatedNoiseSettings.PilotsName = parts[1];
+					if (String.IsNullOrEmpty(_settings.PilotsName))
+						_settings.PilotsName = parts[1];
 				}
 				else
 				{
-					if (String.IsNullOrEmpty(ApplicationContext.RegulatedNoiseSettings.PilotsName))
-						ApplicationContext.RegulatedNoiseSettings.PilotsName = parts[0];
+					if (String.IsNullOrEmpty(_settings.PilotsName))
+						_settings.PilotsName = parts[0];
 				}
 			}
 		}
@@ -4465,8 +4470,8 @@ namespace RegulatedNoise
 			// Perform the sort with these new sort options.
 			this.lvCommandersLog.Sort();
 
-			ApplicationContext.RegulatedNoiseSettings.CmdrsLogSortColumn = _commandersLogColumnSorter.SortColumn;
-			ApplicationContext.RegulatedNoiseSettings.CmdrsLogSortOrder = _commandersLogColumnSorter.Order;
+			_settings.CmdrsLogSortColumn = _commandersLogColumnSorter.SortColumn;
+			_settings.CmdrsLogSortOrder = _commandersLogColumnSorter.Order;
 		}
 
 		/// <summary>
@@ -4560,11 +4565,11 @@ namespace RegulatedNoise
 		private void Form_Load(object sender, EventArgs e)
 		{
 
-			Text += ApplicationContext.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
+			Text += _settings.Version.ToString(CultureInfo.InvariantCulture);
 
 #if DukeJones
-			ApplicationContext.RegulatedNoiseSettings.CheckVersion2();
-			Text += "_" + ApplicationContext.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture);
+			_settings.CheckVersion2();
+			Text += "_" + _settings.VersionDJ.ToString(CultureInfo.InvariantCulture);
 #endif
 
 
@@ -4617,17 +4622,17 @@ namespace RegulatedNoise
 		{
 			bool noBackColor = false;
 
-			if (ApplicationContext.RegulatedNoiseSettings.ForegroundColour == null || ApplicationContext.RegulatedNoiseSettings.BackgroundColour == null) return;
+			if (_settings.ForegroundColour == null || _settings.BackgroundColour == null) return;
 
 			var x = GetAll(this);
 
-			int redF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(1, 2), NumberStyles.HexNumber);
-			int greenF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(3, 2), NumberStyles.HexNumber);
-			int blueF = int.Parse(ApplicationContext.RegulatedNoiseSettings.ForegroundColour.Substring(5, 2), NumberStyles.HexNumber);
+			int redF = int.Parse(_settings.ForegroundColour.Substring(1, 2), NumberStyles.HexNumber);
+			int greenF = int.Parse(_settings.ForegroundColour.Substring(3, 2), NumberStyles.HexNumber);
+			int blueF = int.Parse(_settings.ForegroundColour.Substring(5, 2), NumberStyles.HexNumber);
 			var f = Color.FromArgb(redF, greenF, blueF);
-			int redB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(1, 2), NumberStyles.HexNumber);
-			int greenB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(3, 2), NumberStyles.HexNumber);
-			int blueB = int.Parse(ApplicationContext.RegulatedNoiseSettings.BackgroundColour.Substring(5, 2), NumberStyles.HexNumber);
+			int redB = int.Parse(_settings.BackgroundColour.Substring(1, 2), NumberStyles.HexNumber);
+			int greenB = int.Parse(_settings.BackgroundColour.Substring(3, 2), NumberStyles.HexNumber);
+			int blueB = int.Parse(_settings.BackgroundColour.Substring(5, 2), NumberStyles.HexNumber);
 			var b = Color.FromArgb(redB, greenB, blueB);
 			foreach (Control c in x)
 			{
@@ -4680,8 +4685,7 @@ namespace RegulatedNoise
 		int animPhase;
 		int phaseCtr;
 
-
-		private void OnTick(object sender, EventArgs args)
+	    private void OnTick(object sender, EventArgs args)
 		{
 			switch (animPhase)
 			{
@@ -4994,7 +4998,7 @@ namespace RegulatedNoise
 		private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
-			ApplicationContext.RegulatedNoiseSettings.limitLightYears = cbLimitLightYears.Checked;
+			_settings.limitLightYears = cbLimitLightYears.Checked;
 			SetupGui();
 			Cursor = Cursors.Default;
 		}
@@ -5002,7 +5006,7 @@ namespace RegulatedNoise
 		private void cbStationToStar_CheckedChanged(object sender, EventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
-			ApplicationContext.RegulatedNoiseSettings.StationToStar = cbStationToStar.Checked;
+			_settings.StationToStar = cbStationToStar.Checked;
 			SetupGui();
 			Cursor = Cursors.Default;
 		}
@@ -5169,15 +5173,15 @@ namespace RegulatedNoise
 			OpenFileDialog OCRFile = new OpenFileDialog();
 
 			OCRFile.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
-			OCRFile.FileName = ApplicationContext.RegulatedNoiseSettings.TraineddataFile;
+			OCRFile.FileName = _settings.TraineddataFile;
 			OCRFile.InitialDirectory = Path.GetFullPath("./tessdata");
 			OCRFile.Title = "select Tesseract Traineddata-File...";
 
 			if (OCRFile.ShowDialog(this) == DialogResult.OK)
 			{
-				ApplicationContext.RegulatedNoiseSettings.TraineddataFile = Path.GetFileNameWithoutExtension(OCRFile.FileName);
-				txtTraineddataFile.Text = ApplicationContext.RegulatedNoiseSettings.TraineddataFile;
-				ApplicationContext.RegulatedNoiseSettings.Save();
+				_settings.TraineddataFile = Path.GetFileNameWithoutExtension(OCRFile.FileName);
+				txtTraineddataFile.Text = _settings.TraineddataFile;
+				_settings.Save();
 			}
 		}
 
@@ -5224,7 +5228,7 @@ namespace RegulatedNoise
 			cmbLanguage.DisplayMember = "EnumString";
 			cmbLanguage.DataSource = lstEnum;
 
-			cmbLanguage.SelectedValue = (Int32)ApplicationContext.RegulatedNoiseSettings.Language;
+			cmbLanguage.SelectedValue = (Int32)_settings.Language;
 
 			// now we activate the EventHandler
 			this.cmbLanguage.SelectedIndexChanged += new EventHandler(this.cmbLanguage_SelectedIndexChanged);
@@ -5235,11 +5239,11 @@ namespace RegulatedNoise
 		{
 			if (_InitDone)
 			{
-				ApplicationContext.RegulatedNoiseSettings.Language = (enLanguage)cmbLanguage.SelectedValue;
+				_settings.Language = (enLanguage)cmbLanguage.SelectedValue;
 				// prepare language depending list
-				loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
-				loadCommodityLevels(ApplicationContext.RegulatedNoiseSettings.Language);
-				ApplicationContext.RegulatedNoiseSettings.Save();
+				loadCommodities(_settings.Language);
+				loadCommodityLevels(_settings.Language);
+				_settings.Save();
 			}
 		}
 
@@ -5271,7 +5275,7 @@ namespace RegulatedNoise
 			_commodities.WriteXml(RegulatedNoiseSettings.COMMODITIES_LOCALISATION_FILEPATH);
 
 			// reload in working array
-			loadCommodities(ApplicationContext.RegulatedNoiseSettings.Language);
+			loadCommodities(_settings.Language);
 		}
 
 		public void setOCRCalibrationTabVisibility()
@@ -5290,8 +5294,8 @@ namespace RegulatedNoise
 
 		private void cbAutoAdd_JumpedTo_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.AutoEvent_JumpedTo = cbAutoAdd_JumpedTo.Checked;
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.AutoEvent_JumpedTo = cbAutoAdd_JumpedTo.Checked;
+			_settings.Save();
 		}
 
 		/// <summary>
@@ -5319,11 +5323,11 @@ namespace RegulatedNoise
 
 			if (float.TryParse(txtPixelThreshold.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
 				if (newValue >= 0.0f && newValue <= 1.0)
-					ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold = newValue;
+					_settings.EBPixelThreshold = newValue;
 				else
-					txtPixelThreshold.Text = ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
+					txtPixelThreshold.Text = _settings.EBPixelThreshold.ToString("F1");
 			else
-				txtPixelThreshold.Text = ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold.ToString("F1");
+				txtPixelThreshold.Text = _settings.EBPixelThreshold.ToString("F1");
 		}
 
 		private void txtPixelAmount_LostFocus(object sender, EventArgs e)
@@ -5332,11 +5336,11 @@ namespace RegulatedNoise
 
 			if (int.TryParse(txtPixelAmount.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
 				if (newValue >= 0 && newValue <= 99)
-					ApplicationContext.RegulatedNoiseSettings.EBPixelAmount = newValue;
+					_settings.EBPixelAmount = newValue;
 				else
-					txtPixelAmount.Text = ApplicationContext.RegulatedNoiseSettings.EBPixelAmount.ToString();
+					txtPixelAmount.Text = _settings.EBPixelAmount.ToString();
 			else
-				txtPixelAmount.Text = ApplicationContext.RegulatedNoiseSettings.EBPixelAmount.ToString();
+				txtPixelAmount.Text = _settings.EBPixelAmount.ToString();
 		}
 
 		private void txtGUIColorCutoffLevel_LostFocus(object sender, EventArgs e)
@@ -5345,11 +5349,11 @@ namespace RegulatedNoise
 
 			if (int.TryParse(txtGUIColorCutoffLevel.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
 				if (newValue >= 0 && newValue <= 255)
-					ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel = newValue;
+					_settings.GUIColorCutoffLevel = newValue;
 				else
-					txtGUIColorCutoffLevel.Text = ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
+					txtGUIColorCutoffLevel.Text = _settings.GUIColorCutoffLevel.ToString();
 			else
-				txtGUIColorCutoffLevel.Text = ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel.ToString();
+				txtGUIColorCutoffLevel.Text = _settings.GUIColorCutoffLevel.ToString();
 		}
 
 		private void rbSortBy_CheckedChanged(object sender, EventArgs e)
@@ -5359,13 +5363,13 @@ namespace RegulatedNoise
 				switch (((RadioButton)sender).Name)
 				{
 					case "rbSortBySystem":
-						ApplicationContext.RegulatedNoiseSettings.CBSortingSelection = 1;
+						_settings.CBSortingSelection = 1;
 						break;
 					case "rbSortByStation":
-						ApplicationContext.RegulatedNoiseSettings.CBSortingSelection = 2;
+						_settings.CBSortingSelection = 2;
 						break;
 					case "rbSortByDistance":
-						ApplicationContext.RegulatedNoiseSettings.CBSortingSelection = 3;
+						_settings.CBSortingSelection = 3;
 						break;
 				}
 
@@ -5375,7 +5379,7 @@ namespace RegulatedNoise
 
 		private void cblastVisitedFirst_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.lastStationCountActive = cblastVisitedFirst.Checked;
+			_settings.lastStationCountActive = cblastVisitedFirst.Checked;
 			SetupGui();
 		}
 
@@ -5401,15 +5405,15 @@ namespace RegulatedNoise
 			{
 				if (value >= 1 && value <= 99)
 				{
-					ApplicationContext.RegulatedNoiseSettings.lastStationCount = value;
+					_settings.lastStationCount = value;
 					valueOK = true;
 				}
 				else
-					txtlastStationCount.Text = ApplicationContext.RegulatedNoiseSettings.lastStationCount.ToString();
+					txtlastStationCount.Text = _settings.lastStationCount.ToString();
 			}
 			else
 			{
-				txtlastStationCount.Text = ApplicationContext.RegulatedNoiseSettings.lastStationCount.ToString();
+				txtlastStationCount.Text = _settings.lastStationCount.ToString();
 			}
 
 			if (valueOK && cblastVisitedFirst.Checked)
@@ -5480,15 +5484,15 @@ namespace RegulatedNoise
 			{
 				if (value >= 0)
 				{
-					ApplicationContext.RegulatedNoiseSettings.lastLightYears = value;
+					_settings.lastLightYears = value;
 					valueOK = true;
 				}
 				else
-					cmbLightYears.Text = ApplicationContext.RegulatedNoiseSettings.lastLightYears.ToString();
+					cmbLightYears.Text = _settings.lastLightYears.ToString();
 			}
 			else
 			{
-				cmbLightYears.Text = ApplicationContext.RegulatedNoiseSettings.lastLightYears.ToString();
+				cmbLightYears.Text = _settings.lastLightYears.ToString();
 			}
 
 			if (valueOK && cbLimitLightYears.Checked)
@@ -5506,15 +5510,15 @@ namespace RegulatedNoise
 			{
 				if (value >= 0)
 				{
-					ApplicationContext.RegulatedNoiseSettings.lastStationToStar = value;
+					_settings.lastStationToStar = value;
 					valueOK = true;
 				}
 				else
-					cmbStationToStar.Text = ApplicationContext.RegulatedNoiseSettings.lastStationToStar.ToString();
+					cmbStationToStar.Text = _settings.lastStationToStar.ToString();
 			}
 			else
 			{
-				cmbStationToStar.Text = ApplicationContext.RegulatedNoiseSettings.lastStationToStar.ToString();
+				cmbStationToStar.Text = _settings.lastStationToStar.ToString();
 			}
 
 			if (valueOK && cbStationToStar.Checked)
@@ -5529,21 +5533,21 @@ namespace RegulatedNoise
 			{
 				if (value >= 0)
 				{
-					ApplicationContext.RegulatedNoiseSettings.lastMaxRouteDistance = value;
+					_settings.lastMaxRouteDistance = value;
 				}
 				else
-					cmbMaxRouteDistance.Text = ApplicationContext.RegulatedNoiseSettings.lastMaxRouteDistance.ToString();
+					cmbMaxRouteDistance.Text = _settings.lastMaxRouteDistance.ToString();
 			}
 			else
 			{
-				cmbMaxRouteDistance.Text = ApplicationContext.RegulatedNoiseSettings.lastMaxRouteDistance.ToString();
+				cmbMaxRouteDistance.Text = _settings.lastMaxRouteDistance.ToString();
 			}
 
 		}
 
 		private void cbPerLightYearRoundTrip_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.PerLightYearRoundTrip = cbPerLightYearRoundTrip.Checked;
+			_settings.PerLightYearRoundTrip = cbPerLightYearRoundTrip.Checked;
 		}
 
 		/// <summary>
@@ -5563,7 +5567,7 @@ namespace RegulatedNoise
 
 			FilterTest FTest = new FilterTest();
 
-			FTest.CutoffLevel = ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel;
+			FTest.CutoffLevel = _settings.GUIColorCutoffLevel;
 			FTest.TestBitmap = _refbmp;
 
 			FTest.ShowDialog(this);
@@ -5571,8 +5575,8 @@ namespace RegulatedNoise
 			if (FTest.DialogResult == DialogResult.OK)
 			{
 				txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
-				ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel = FTest.CutoffLevel;
-				ApplicationContext.RegulatedNoiseSettings.Save();
+				_settings.GUIColorCutoffLevel = FTest.CutoffLevel;
+				_settings.Save();
 			}
 		}
 
@@ -5618,8 +5622,8 @@ namespace RegulatedNoise
 
 		private void cbActivateOCRTab_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.AutoActivateOCRTab = cbAutoActivateOCRTab.Checked;
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.AutoActivateOCRTab = cbAutoActivateOCRTab.Checked;
+			_settings.Save();
 		}
 
 		private void cmdDonate_Click(object sender, EventArgs e)
@@ -6988,26 +6992,26 @@ namespace RegulatedNoise
 
 		private void cbIncludeUnknownDTS_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
+			_settings.Save();
 			SetupGui();
 		}
 
 		private void cbMaxRouteDistance_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.MaxRouteDistance = cbMaxRouteDistance.Checked;
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.MaxRouteDistance = cbMaxRouteDistance.Checked;
+			_settings.Save();
 		}
 
 		private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.AutoActivateSystemTab = cbAutoActivateSystemTab.Checked;
-			ApplicationContext.RegulatedNoiseSettings.Save();
+			_settings.AutoActivateSystemTab = cbAutoActivateSystemTab.Checked;
+			_settings.Save();
 		}
 
 		private void cbLoadStationsJSON_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.LoadStationsJSON = cbLoadStationsJSON.Checked;
+			_settings.LoadStationsJSON = cbLoadStationsJSON.Checked;
 		}
 
 		public string getAppPath()
@@ -7129,24 +7133,24 @@ namespace RegulatedNoise
 		{
 			if (_InitDone)
 			{
-				ApplicationContext.RegulatedNoiseSettings.OldDataPurgeDeadlineDays = (Int32)(nudPurgeOldDataDays.Value);
+				_settings.OldDataPurgeDeadlineDays = (Int32)(nudPurgeOldDataDays.Value);
 			}
 
 		}
 
 		private void cbAutoAdd_Visited_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.AutoEvent_Visited = cbAutoAdd_Visited.Checked;
+			_settings.AutoEvent_Visited = cbAutoAdd_Visited.Checked;
 		}
 
 		private void cbAutoAdd_Marketdata_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.AutoEvent_MarketDataCollected = cbAutoAdd_Marketdata.Checked;
+			_settings.AutoEvent_MarketDataCollected = cbAutoAdd_Marketdata.Checked;
 		}
 
 		private void cbAutoAdd_ReplaceVisited_CheckedChanged(object sender, EventArgs e)
 		{
-			ApplicationContext.RegulatedNoiseSettings.AutoEvent_ReplaceVisited = cbAutoAdd_ReplaceVisited.Checked;
+			_settings.AutoEvent_ReplaceVisited = cbAutoAdd_ReplaceVisited.Checked;
 		}
 
 		private void cmdUpdate_Click(object sender, EventArgs e)
@@ -7158,11 +7162,5 @@ namespace RegulatedNoise
 		{
 			Process.Start(((LinkLabel)sender).Text);
 		}
-
-        private void chkAutoListen_CheckedChanged(object sender, EventArgs e)
-        {
-            ApplicationContext.RegulatedNoiseSettings.StartListeningEddnOnLoad = chkAutoListen.Checked;
-            ApplicationContext.RegulatedNoiseSettings.Save();
-        }
 	}
 }

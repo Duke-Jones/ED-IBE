@@ -621,7 +621,6 @@ namespace RegulatedNoise
             }
             // rename new file to current file
             File.Move(newFile, SETTINGS_FILENAME);
-
         }
 
         [NotifyPropertyChangedInvocator]
@@ -638,9 +637,6 @@ namespace RegulatedNoise
 	                Trace.TraceError(propertyName + " notification failed " + ex);
 	            }
 	    }
-
-        public const string EDDN_POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
-        public const string EDDN_OUTPUT_FILEPATH = ".//EddnOutput.txt";
     }
 
     public partial class Form1

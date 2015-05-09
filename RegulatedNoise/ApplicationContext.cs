@@ -77,16 +77,16 @@ namespace RegulatedNoise
             {
                 if(_eddn == null)
                 {
-                    EventBus.InitializationStart("prepare EDDN interface...");
+                    EventBus.InitializationStart("prepare EDDN interface");
                     _eddn = new EDDN();
-                    Trace.TraceInformation("  - created EDDN object");
+                    Trace.TraceInformation("  - EDDN object created");
                     if (RegulatedNoiseSettings.StartListeningEddnOnLoad)
                     {
-                        EventBus.InitializationStart("starting EDDN listening...");
+                        EventBus.InitializationStart("subscribing to EDDN");
                         Eddn.Subscribe();
-                        EventBus.InitializationCompleted("listening EDDN...<OK>");
+                        EventBus.InitializationCompleted("now listening to EDDN");
                     }
-                    EventBus.InitializationCompleted("prepare EDDN interface...<OK>");
+                    EventBus.InitializationCompleted("prepare EDDN interface");
 
                 }
                 return _eddn;

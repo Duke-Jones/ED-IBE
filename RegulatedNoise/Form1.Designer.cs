@@ -394,7 +394,7 @@
 			this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chkAutoListen = new System.Windows.Forms.CheckBox();
+            this.cbAutoListenEddn = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
 			this.contextMenuStrip1.SuspendLayout();
 			this.tabCtrlMain.SuspendLayout();
@@ -4059,7 +4059,7 @@
 			// 
 			// groupBox2
 			// 
-            this.groupBox2.Controls.Add(this.chkAutoListen);
+            this.groupBox2.Controls.Add(this.cbAutoListenEddn);
 			this.groupBox2.Controls.Add(this.cbSpoolImplausibleToFile);
 			this.groupBox2.Controls.Add(this.cbSpoolEddnToFile);
 			this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
@@ -4607,16 +4607,15 @@
 			this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
 			this.removeEconomyToolStripMenuItem.Text = "remove Economy";
 			// 
-            // chkAutoListen
+            // cbAutoListenEddn
             // 
-            this.chkAutoListen.AutoSize = true;
-            this.chkAutoListen.Location = new System.Drawing.Point(300, 24);
-            this.chkAutoListen.Name = "chkAutoListen";
-            this.chkAutoListen.Size = new System.Drawing.Size(204, 24);
-            this.chkAutoListen.TabIndex = 16;
-            this.chkAutoListen.Text = "Listen To EDDN at start";
-            this.chkAutoListen.UseVisualStyleBackColor = true;
-            this.chkAutoListen.CheckedChanged += new System.EventHandler(this.chkAutoListen_CheckedChanged);
+            this.cbAutoListenEddn.AutoSize = true;
+            this.cbAutoListenEddn.Location = new System.Drawing.Point(300, 24);
+            this.cbAutoListenEddn.Name = "cbAutoListenEddn";
+            this.cbAutoListenEddn.Size = new System.Drawing.Size(204, 24);
+            this.cbAutoListenEddn.TabIndex = 16;
+            this.cbAutoListenEddn.Text = "Listen To EDDN at start";
+            this.cbAutoListenEddn.UseVisualStyleBackColor = true;
             // 
 			// Form1
 			// 
@@ -5104,7 +5103,7 @@
         private System.Windows.Forms.LinkLabel linkLabel11;
         private System.Windows.Forms.LinkLabel linkLabel10;
         private System.Windows.Forms.Label label94;
-        private System.Windows.Forms.CheckBox chkAutoListen;
+        private System.Windows.Forms.CheckBox cbAutoListenEddn;
 
         
     }
