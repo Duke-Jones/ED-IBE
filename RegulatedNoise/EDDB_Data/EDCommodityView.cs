@@ -73,7 +73,7 @@ namespace RegulatedNoise.EDDB_Data
 		{
 			get
 			{
-				var edCommoditiesExt = ((EDCommoditiesExt)cmdCommodity.SelectedValue);
+				var edCommoditiesExt = ((EDCommoditiesExt)cmdCommodity.SelectedItem);
 				if (edCommoditiesExt != null)
 				{
 					return m_commodities.Find(x => x.Id == edCommoditiesExt.Id);

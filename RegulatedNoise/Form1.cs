@@ -275,6 +275,11 @@ namespace RegulatedNoise
                 _logger.Log("  - fetched system name from file");
                 _Splash.InfoChange("starting logfile watcher...<OK>");
                 UpdateEddnState();
+#if(DEBUG)
+			    var testTab = new TabPage("Testing");
+                testTab.Controls.Add(new TestTab.TestTab());
+			    tabCtrlMain.Controls.Add(testTab);
+#endif
             }
             catch (Exception ex)
             {
@@ -2887,6 +2892,16 @@ namespace RegulatedNoise
             {
                 cErr.processError(ex);
             }
+        }
+
+        [Conditional("DEBUG")]
+	    internal void FakeAcquisition(string ocrResult)
+        {
+            RunInGuiThread(() =>
+            {
+                tbFinalOcrOutput.Text = ocrResult;
+                Acquisition();
+            });
         }
 
         private void Acquisition(bool noAutoImport = false)
