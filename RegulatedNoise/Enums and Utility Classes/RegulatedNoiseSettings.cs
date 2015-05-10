@@ -459,8 +459,11 @@ namespace RegulatedNoise
         private static string GetProductAppDataPathAutomatically()
         {
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("LOCALAPPDATA") };
-
-            return (from directory in autoSearchdir from dir in Directory.GetDirectories(directory) where Path.GetFileName(dir) == "Frontier Developments" select Path.Combine(dir, "Elite Dangerous", "Options") into p select Directory.Exists(p) ? p : null).FirstOrDefault();
+            return (autoSearchdir.SelectMany(directory => Directory.GetDirectories(directory),
+                (directory, dir) => new {directory, dir})
+                .Where(@t => Path.GetFileName(@t.dir) == "Frontier Developments")
+                .Select(@t => Path.Combine(@t.dir, "Elite Dangerous", "Options"))
+                .Select(p => Directory.Exists(p) ? p : null)).FirstOrDefault();
         }
 
         private static string GetProductAppDataPathManually()
@@ -526,35 +529,40 @@ namespace RegulatedNoise
                     break;
                 }
             }
-            if (returnValue != null) return returnValue;
-
-            if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
-                return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
-
-            // nothing found ? then lets have a try with the MUICache
-            string ProgramName = "Elite:Dangerous Executable";
-            string ProgramPath = String.Empty;
-
-            RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache");
-
-            if (key != null)
+            if (returnValue != null)
             {
-                string[] Names = key.GetValueNames();
-
-
-                for (int i = 0; i < Names.Count(); i++)
-                {
-                    if (key.GetValue(Names[i]).ToString() == ProgramName)
-                    {
-                        ProgramPath = Names[i].ToString();
-                        ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf("\\Products\\") + 9);
-                        return ProgramPath;
-                    }
-
-                }
-
+                return returnValue;                
             }
 
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\";
+            if (Directory.Exists(path))
+            {
+                return path;                
+            }
+
+            // nothing found ? then lets have a try with the MUICache
+            const string programName = "Elite:Dangerous Executable";
+            RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache");
+            if (key != null)
+            {
+                string[] names = key.GetValueNames();
+                for (int i = 0; i < names.Count(); i++)
+                {
+                    if (key.GetValue(names[i]).ToString() == programName)
+                    {
+                        string  programPath = names[i];
+                        var lastIndexOf = programPath.LastIndexOf("\\Products\\");
+                        if (lastIndexOf != -1)
+                        {
+                            programPath = programPath.Substring(0, lastIndexOf + 9);
+                            if (Directory.Exists(programPath))
+                            {
+                                return programPath;                                                            
+                            }
+                        }
+                    }
+                }
+            }
             return null;
         }
 
