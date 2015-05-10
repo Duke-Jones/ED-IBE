@@ -277,7 +277,9 @@ namespace RegulatedNoise
                 UpdateEddnState();
 #if(DEBUG)
 			    var testTab = new TabPage("Testing");
-                testTab.Controls.Add(new TestTab.TestTab());
+                var tester = new TestTab.TestTab();
+                tester.OnFakeEddnMessage += OutputEddnRawData;
+                testTab.Controls.Add(tester);
 			    tabCtrlMain.Controls.Add(testTab);
 #endif
             }

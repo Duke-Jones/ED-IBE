@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
+using RegulatedNoise.EDDB_Data;
 
 namespace RegulatedNoise.TestTab
 {
     public partial class TestTab : UserControl
     {
+        public event EventHandler<EddnMessageEventArgs> OnFakeEddnMessage; 
         public TestTab()
         {
             InitializeComponent();
@@ -15,7 +17,7 @@ namespace RegulatedNoise.TestTab
 
         private void btSendCustomEddnMessage_Click(object sender, EventArgs e)
         {
-            Form1.InstanceObject.OutputEddnRawData(tbCustomEddnMessage.Text);
+            RaiseFakeEddnMessage(new EddnMessageEventArgs(new EddnMessage() { RawText = tbCustomEddnMessage.Text}));
         }
 
         private void btSendFakeOCRResult_Click(object sender, EventArgs e)
@@ -23,6 +25,12 @@ namespace RegulatedNoise.TestTab
             //force Form1 tbFinalOcrOutput
             //then call Form1 acquisition
             Form1.InstanceObject.FakeAcquisition(tbFakeOCRResult.Text);
+        }
+
+        protected virtual void RaiseFakeEddnMessage(EddnMessageEventArgs e)
+        {
+            var handler = OnFakeEddnMessage;
+            if (handler != null) handler(this, e);
         }
     }
 }
