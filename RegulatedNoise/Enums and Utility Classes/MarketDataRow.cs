@@ -48,6 +48,14 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         public string Source { get; set; }
 
+        public string MarketDataId
+        {
+            get
+            {
+                return CommodityName + "@" + StationID;
+            }
+        }
+
         public override string ToString()
         {
             return ToCsv(true);
