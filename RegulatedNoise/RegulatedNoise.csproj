@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ ep|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ ep\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1 ep_Debug</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -259,6 +259,12 @@
     <Compile Include="Station.cs" />
     <Compile Include="ObjectDirectory.cs" />
     <Compile Include="StationDirectory.cs" />
+    <Compile Include="TestTab\TestTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TestTab\TestTab.Designer.cs">
+      <DependentUpon>TestTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="Webserver.cs" />
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
@@ -312,6 +318,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Enums and Utility Classes\Enums.cs" />
+    <EmbeddedResource Include="TestTab\TestTab.resx">
+      <DependentUpon>TestTab.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="bin\Debug DJ\OCR Correction Images\ff8384ca-c5e4-4642-a19a-0d1adc256018.png" />
     <None Include="bin\Debug DJ\OCR Correction Images\fefa1584-8397-48a7-9a96-759ea434b412.png" />
     <Content Include="Brainerous\bz2.pyd">
