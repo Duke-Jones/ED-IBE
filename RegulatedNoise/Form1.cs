@@ -6151,7 +6151,8 @@ namespace RegulatedNoise
 					cmdStationSave.Enabled = false;
 					cmdStationCancel.Enabled = cmdStationSave.Enabled;
 
-					cmbSystemsAllSystems.ReadOnly = isNew;
+					cmbSystemsAllSystems.ReadOnly   = false;
+                    cmbStationStations.ReadOnly     = false;
 				}
 
 				List<EDStation> StationsInSystem = ApplicationContext.Milkyway.GetStations(Systemname);
@@ -6316,6 +6317,7 @@ namespace RegulatedNoise
 				lblStationRenameHint.Visible = false;
 
 				cmbStationStations.Text = "";
+                
 
 			}
 
