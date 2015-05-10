@@ -103,6 +103,7 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommodityDirectory.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
@@ -125,6 +126,8 @@
     <Compile Include="EDDB_Data\EDCommodityView.Designer.cs">
       <DependentUpon>EDCommodityView.cs</DependentUpon>
     </Compile>
+    <Compile Include="EDDB_Data\EddnMessage.cs" />
+    <Compile Include="EDDB_Data\EddnSpooler.cs" />
     <Compile Include="EDDB_Data\EDStations.cs" />
     <Compile Include="EDDB_Data\EDStationView.cs">
       <SubType>Form</SubType>
@@ -135,10 +138,12 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
+    <Compile Include="EDDB_Data\ProposalLevel.cs" />
+    <Compile Include="EDDN.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Enums and Utility Classes\CsvRow.cs" />
+    <Compile Include="Enums and Utility Classes\MarketDataRow.cs" />
     <Compile Include="Enums and Utility Classes\Extensions.cs" />
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
@@ -168,6 +173,7 @@
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
+    <Compile Include="Market.cs" />
     <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
@@ -181,10 +187,10 @@
     <Compile Include="Brainerous Pixeltest\Picturedata.Designer.cs">
       <DependentUpon>Picturedata.cs</DependentUpon>
     </Compile>
+    <Compile Include="ObjectDirectory.cs" />
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
-    <Compile Include="CommodityDirectory.cs" />
+    <Compile Include="Commodities.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
-    <Compile Include="EDDN.cs" />
     <Compile Include="CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
       <SubType>Form</SubType>
@@ -203,7 +209,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\ScreenshotResults.cs" />
-    <Compile Include="Enums and Utility Classes\RegulatedNoiseSettings.cs" />
+    <Compile Include="Enums and Utility Classes\RegulatedNoiseSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Enums and Utility Classes\SingleThreadLogger.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -262,7 +270,6 @@
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Station.cs" />
-    <Compile Include="ObjectDirectory.cs" />
     <Compile Include="StationDirectory.cs" />
     <Compile Include="Webserver.cs" />
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">

@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Threading;
-using ZeroMQ;
-using RegulatedNoise.Enums_and_Utility_Classes;
-using System.Globalization;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RegulatedNoise.Annotations;
+using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Enums_and_Utility_Classes;
+using ZeroMQ;
 
 namespace RegulatedNoise
 {
-    public class EDDN : IDisposable, INotifyPropertyChanged
+    internal class EDDN : IDisposable, INotifyPropertyChanged
     {
-        public const string EDDN_OUTPUT_FILEPATH = "EddnOutput.txt";
         private const string EDDN_POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
         private const string EDDN_LISTEN_URL = "tcp://eddn-relay.elite-markets.net:9500";
         private const int DELAY_BETWEEN_LISTEN = 1000;
@@ -25,6 +28,29 @@ namespace RegulatedNoise
         private readonly Queue _sendItems;
         private readonly SingleThreadLogger _logger;
         private bool _disposed;
+
+        private class EddnPublisherStatisticCollection : KeyedCollection<string, EddnPublisherVersionStats>
+        {
+            protected override string GetKeyForItem(EddnPublisherVersionStats item)
+            {
+                return item.Publisher;
+            }
+
+            public bool TryGetValue(string publisher, out EddnPublisherVersionStats stats)
+            {
+                if (Dictionary != null)
+                {
+                    return Dictionary.TryGetValue(publisher, out stats);
+                }
+                else
+                {
+                    stats = null;
+                    return false;
+                }
+            }
+        }
+
+        private EddnPublisherStatisticCollection _eddnPublisherStats;
 
         public bool Listening
         {
@@ -56,9 +82,28 @@ namespace RegulatedNoise
         {
             _logger = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
             _sendItems = new Queue(100, 10);
+            _eddnPublisherStats = new EddnPublisherStatisticCollection();
             _logger.Log("Initialising...\n");
             Task.Factory.StartNew(EDDNSender, TaskCreationOptions.LongRunning);
             _logger.Log("Initialising...<OK>\n");
+            OnMessageReceived += UpdateStats;
+        }
+
+        private void UpdateStats(object sender, EddnMessageEventArgs e)
+        {
+            var nameAndVersion = (e.Message.header.softwareName + " / " + e.Message.header.softwareVersion);
+            EddnPublisherVersionStats stats;
+            if (!_eddnPublisherStats.TryGetValue(nameAndVersion, out stats))
+            {
+                stats = new EddnPublisherVersionStats(nameAndVersion);
+                _eddnPublisherStats.Add(stats);
+            }
+            ++stats.MessagesReceived;
+        }
+
+        public IEnumerable<EddnPublisherVersionStats>  PublisherStatistics
+        {
+            get { return _eddnPublisherStats; }
         }
 
         public void UnSubscribe()
@@ -104,20 +149,38 @@ namespace RegulatedNoise
                                         message = sr.ReadToEnd();
                                     }
                                 }
-                                RaiseMessageReceived(message);
+                                try
+                                {
+                                    var eddnMessage = JsonConvert.DeserializeObject<EddnMessage>(message);
+                                    eddnMessage.RawText = message;
+                                    eddnMessage.message.Source = "<From EDDN>";
+                                    RaiseMessageReceived(eddnMessage);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.Log("unable to parse message " + Environment.NewLine + message + Environment.NewLine + ex);
+                                    var failedMessage = new EddnMessage
+                                    {
+                                        RawText = message,
+                                        message = {Source = "<From EDDN>"}
+                                    };
+                                    RaiseMessageReceived(failedMessage);
+                                }
                                 if (SaveMessagesToFile)
                                 {
                                     SaveToFile(message);
                                 }
                             }
-                            Thread.Sleep(DELAY_BETWEEN_LISTEN);
+                            else
+                            {
+                                Thread.Sleep(DELAY_BETWEEN_LISTEN);
+                            }
                         }
                     }
                 }
             }, TaskCreationOptions.LongRunning);
             // ReSharper disable once FunctionNeverReturns
         }
-
 
         private void EDDNSender()
         {
@@ -128,7 +191,7 @@ namespace RegulatedNoise
                     Thread.Sleep(10000);
                     while (_sendItems.Count > 0)
                     {
-                        PostJsonToEddn((CsvRow)_sendItems.Dequeue());
+                        PostJsonToEddn((MarketDataRow)_sendItems.Dequeue());
                     }
                 }
                 catch (Exception ex)
@@ -140,12 +203,12 @@ namespace RegulatedNoise
             } while (!_disposed);
         }
 
-        public void SendToEdDdn(CsvRow commodityData)
+        public void SendToEdDdn(MarketDataRow commodityData)
         {
             _sendItems.Enqueue(commodityData);
         }
 
-        private void PostJsonToEddn(CsvRow rowToPost)
+        private void PostJsonToEddn(MarketDataRow rowToPost)
         {
             string json;
 
@@ -170,7 +233,7 @@ namespace RegulatedNoise
 
             if (!String.IsNullOrEmpty(commodity))
             {
-                string commodityJson = json.Replace("$0$", rowToPost.Username.Replace("$1$", ""))
+                string commodityJson = json.Replace("$0$", ApplicationContext.RegulatedNoiseSettings.UserName.Replace("$1$", ""))
                      .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
                      .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
                      .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
@@ -228,7 +291,7 @@ namespace RegulatedNoise
                 }
         }
 
-        protected virtual void RaiseMessageReceived(string message)
+        protected virtual void RaiseMessageReceived(EddnMessage message)
         {
             var handler = OnMessageReceived;
             if (handler != null)
@@ -247,11 +310,11 @@ namespace RegulatedNoise
         {
             try
             {
-                File.AppendAllText(EDDN_OUTPUT_FILEPATH, message + Environment.NewLine);
+                File.AppendAllText(RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH, message + Environment.NewLine);
             }
             catch (Exception ex)
             {
-                _logger.Log("unable to save message to " + EDDN_OUTPUT_FILEPATH + ": " + ex);
+                _logger.Log("unable to save message to " + RegulatedNoiseSettings.EDDN_OUTPUT_FILEPATH + ": " + ex);
                 SaveMessagesToFile = false;
             }
         }
@@ -259,9 +322,9 @@ namespace RegulatedNoise
 
     public class EddnMessageEventArgs : EventArgs
     {
-        public readonly string Message;
+        public readonly EddnMessage Message;
 
-        public EddnMessageEventArgs(string message)
+        public EddnMessageEventArgs(EddnMessage message)
         {
             Message = message;
         }

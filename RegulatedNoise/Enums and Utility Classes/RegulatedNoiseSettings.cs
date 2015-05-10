@@ -64,6 +64,9 @@ namespace RegulatedNoise
     public class RegulatedNoiseSettings : INotifyPropertyChanged
     {
         private const string SETTINGS_FILENAME = "RegulatedNoiseSettings.xml";
+
+        public const string EDDN_OUTPUT_FILEPATH = "EddnOutput.txt";
+
         public readonly decimal Version = 1.84m;
 
 #if DukeJones
@@ -84,7 +87,7 @@ namespace RegulatedNoise
         public string MostRecentOCRFolder = "";
         public bool StartOCROnLoad = false;
         private bool _startListeningEddnOnLoad = false;
-        public string UserName = "";
+        private string _userName = "";
         public bool IncludeExtendedCSVInfo = true;
         public bool PostToEddnOnImport = false;
         public bool DeleteScreenshotOnImport = false;
@@ -188,6 +191,17 @@ namespace RegulatedNoise
                     _startListeningEddnOnLoad = value;
                     RaisePropertyChanged();
                 }
+            }
+        }
+
+        public string UserName
+        {
+            get { return _userName; }
+            set
+            {
+                if (value == _userName) return;
+                _userName = value;
+                RaisePropertyChanged();
             }
         }
 

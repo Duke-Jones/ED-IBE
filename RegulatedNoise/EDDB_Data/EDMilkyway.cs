@@ -5,12 +5,13 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
+using RegulatedNoise.Enums_and_Utility_Classes;
 using RegulatedNoise.Exceptions;
 
 namespace RegulatedNoise.EDDB_Data
 {
 
-	public class EDMilkyway
+	internal class EDMilkyway
 	{
 		public enum enDataType
 		{
@@ -29,7 +30,7 @@ namespace RegulatedNoise.EDDB_Data
 		private readonly Dictionary<string, Point3D> m_cachedLocations;
 
 		// a quick cache for distances of stations
-		private readonly Dictionary<string, Int32> m_cachedStationDistances;
+		private readonly Dictionary<string, int> m_cachedStationDistances;
 
 		/// <summary>
 		/// creates a new Milkyway :-)
@@ -43,7 +44,7 @@ namespace RegulatedNoise.EDDB_Data
 			m_Stations = new List<EDStation>[enumBound];
 			m_Commodities = new List<EDCommoditiesExt>();
 			m_cachedLocations = new Dictionary<string, Point3D>();
-			m_cachedStationDistances = new Dictionary<string, Int32>();
+			m_cachedStationDistances = new Dictionary<string, int>();
 		}
 
 		/// <summary>
@@ -1051,5 +1052,101 @@ namespace RegulatedNoise.EDDB_Data
 			public readonly List<int> SellPricesDemand;
 			public readonly List<int> SellPricesSupply;
 		}
+
+        public bool IsImplausible(MarketDataRow marketData, bool simpleEDDNCheck)
+	    {
+	        EDCommoditiesExt commodityData =
+	            getCommodity(
+	                ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(marketData.CommodityName));
+
+	        if (marketData.CommodityName == "Panik")
+	            Debug.Print("STOP");
+
+	        bool implausible = false;
+
+	        if (commodityData != null)
+	        {
+	            if (marketData.SupplyLevel.HasValue && marketData.DemandLevel.HasValue)
+	            {
+	                // demand AND supply !?
+	                implausible = true;
+	            }
+                else if (marketData.SupplyLevel.HasValue || (simpleEDDNCheck && (marketData.Supply > 0)))
+	            {
+	                // check supply data             
+
+	                if ((marketData.SellPrice <= 0) || (marketData.BuyPrice <= 0))
+	                {
+	                    // both on 0 is not plausible
+	                    implausible = true;
+	                }
+
+	                if (((commodityData.PriceWarningLevel_Supply_Sell_Low >= 0) &&
+	                     (marketData.SellPrice < commodityData.PriceWarningLevel_Supply_Sell_Low)) ||
+	                    ((commodityData.PriceWarningLevel_Supply_Sell_High >= 0) &&
+	                     (marketData.SellPrice > commodityData.PriceWarningLevel_Supply_Sell_High)))
+	                {
+	                    // sell price is out of range
+	                    implausible = true;
+	                }
+
+	                if (((commodityData.PriceWarningLevel_Supply_Buy_Low >= 0) &&
+	                     (marketData.BuyPrice < commodityData.PriceWarningLevel_Supply_Buy_Low)) ||
+	                    ((commodityData.PriceWarningLevel_Supply_Buy_High >= 0) &&
+	                     (marketData.SellPrice > commodityData.PriceWarningLevel_Supply_Buy_High)))
+	                {
+	                    // buy price is out of range
+	                    implausible = true;
+	                }
+
+	                if (marketData.Supply <= 0)
+	                {
+	                    // no supply quantity
+	                    implausible = true;
+	                }
+	            }
+	            else if (marketData.DemandLevel.HasValue || (simpleEDDNCheck && (marketData.Demand > 0)))
+	            {
+	                // check demand data
+
+	                if (marketData.SellPrice <= 0)
+	                {
+	                    // at least the sell price must be present
+	                    implausible = true;
+	                }
+
+	                if (((commodityData.PriceWarningLevel_Demand_Sell_Low >= 0) &&
+	                     (marketData.SellPrice < commodityData.PriceWarningLevel_Demand_Sell_Low)) ||
+	                    ((commodityData.PriceWarningLevel_Demand_Sell_High >= 0) &&
+	                     (marketData.SellPrice > commodityData.PriceWarningLevel_Demand_Sell_High)))
+	                {
+	                    // buy price is out of range
+	                    implausible = true;
+	                }
+
+	                if (marketData.BuyPrice >= 0)
+	                    if (((commodityData.PriceWarningLevel_Demand_Buy_Low >= 0) &&
+	                         (marketData.BuyPrice < commodityData.PriceWarningLevel_Demand_Buy_Low)) ||
+	                        ((commodityData.PriceWarningLevel_Demand_Buy_High >= 0) &&
+	                         (marketData.BuyPrice > commodityData.PriceWarningLevel_Demand_Buy_High)))
+	                    {
+	                        // buy price is out of range
+	                        implausible = true;
+	                    }
+
+	                if (marketData.Demand <= 0)
+	                {
+	                    // no supply quantity
+	                    implausible = true;
+	                }
+	            }
+	            else
+	            {
+	                // nothing ?!
+	                implausible = true;
+	            }
+	        }
+	        return implausible;
+	    }	        
 	}
 }

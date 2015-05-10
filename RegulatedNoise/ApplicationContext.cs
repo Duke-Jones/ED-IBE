@@ -24,6 +24,8 @@ namespace RegulatedNoise
         {
             Trace.UseGlobalLock = false;
             Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(LOGS_PATH, "RegulatedNoise-" + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + "-" + Guid.NewGuid() + ".log")) { Name = "RegulatedNoise" });
+            Trace.AutoFlush = true;
+            Trace.TraceInformation("Application context set up");
         }
 
         private static RegulatedNoiseSettings _settings;
