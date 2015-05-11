@@ -69,10 +69,7 @@ namespace RegulatedNoise
 
         public readonly decimal Version = 1.84m;
 
-#if DukeJones
-
         public readonly decimal VersionDJ = 0.19m;
-#endif
 
         public const string COMMODITIES_LOCALISATION_FILEPATH = "Data/Commodities.xml";
         
