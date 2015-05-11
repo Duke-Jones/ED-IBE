@@ -63,7 +63,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-		public readonly decimal VersionDJ = 0.19m;
+		public readonly decimal VersionDJ = 0.20m;
 #endif
 		public string ProductsPath = "";
 		public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.

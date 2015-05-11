@@ -20,6 +20,7 @@ todo:
 1.84_0.20_2
    * fixed: crash on first start while searching for ED-paths
    * fixed: designtime-crash
+   * added latest EDDB data files
 -------------------------------------------------------------------------------------      
 1.84_0.20_1
    * fix warn level edit view (zericco)
