@@ -145,8 +145,7 @@ namespace RegulatedNoise
                                 }
                                 try
                                 {
-                                    var eddnMessage = JsonConvert.DeserializeObject<EddnMessage>(message);
-                                    eddnMessage.RawText = message;
+                                    var eddnMessage = EddnMessage.ReadJson(message);
                                     eddnMessage.message.Source = "<From EDDN>";
                                     RaiseMessageReceived(eddnMessage);
                                 }

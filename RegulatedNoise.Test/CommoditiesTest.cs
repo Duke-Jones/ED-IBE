@@ -151,6 +151,26 @@ namespace RegulatedNoise.Test
         }
 
         [TestMethod]
+        public void data_is_removed_from_station_index_on_remove()
+        {
+            Commodities commodities = NewCommodities();
+            var marketData = NewMarketData(DateTime.Now);
+            commodities.Update(marketData);
+            commodities.Remove(marketData);
+            Assert.IsFalse(commodities.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
+        }
+
+        [TestMethod]
+        public void data_is_removed_from_commodities_index_on_remove()
+        {
+            Commodities commodities = NewCommodities();
+            var marketData = NewMarketData(DateTime.Now);
+            commodities.Update(marketData);
+            commodities.Remove(marketData);
+            Assert.IsFalse(commodities.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
+        }
+
+        [TestMethod]
         public void obsolete_data_is_silently_discarded()
         {
             Commodities commodities = NewCommodities();

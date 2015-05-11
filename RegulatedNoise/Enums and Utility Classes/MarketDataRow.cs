@@ -9,7 +9,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 {
     public class MarketDataRow
     {
-        private static TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+        private static readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
 
         [JsonProperty(PropertyName = "systemName")]
         public string SystemName { get; set; }
@@ -109,6 +109,11 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             return _textInfo.ToTitleCase(source.Trim().ToLower());
         }
 
+        public static MarketDataRow ReadJson(string json)
+        {
+            return JsonConvert.DeserializeObject<MarketDataRow>(json);
+        }
+
         public string ToCsv(bool useExtended)
         {
             return SystemName + ";" +
@@ -122,6 +127,23 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                         SupplyLevel.Display() + ";" +
                         XmlConvert.ToString(SampleDate, XmlDateTimeSerializationMode.Local) +
                         (useExtended ? ";" + Source : String.Empty);
+        }
+
+        public static bool AreEqual(MarketDataRow lhs, MarketDataRow rhs)
+        {
+            if (ReferenceEquals(lhs, rhs)) return true;
+            if (lhs == null || rhs == null) return false;
+            return String.Compare(lhs.MarketDataId, rhs.MarketDataId, StringComparison.InvariantCultureIgnoreCase) == 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return AreEqual(this, obj as MarketDataRow);
+        }
+
+        public override int GetHashCode()
+        {
+            return MarketDataId.GetHashCode();
         }
     }
 }

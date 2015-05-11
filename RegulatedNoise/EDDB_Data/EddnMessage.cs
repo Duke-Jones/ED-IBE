@@ -10,7 +10,9 @@ namespace RegulatedNoise.EDDB_Data
     {
         public static EddnMessage ReadJson(string json)
         {
-            return JsonConvert.DeserializeObject<EddnMessage>(json);
+            var eddnMessage = JsonConvert.DeserializeObject<EddnMessage>(json);
+            eddnMessage.RawText = json;
+            return eddnMessage;
         }
 
         public Header header { get; set; }
