@@ -1082,16 +1082,12 @@ namespace RegulatedNoise.EDDB_Data
 
 	    private static void DownloadDataFileAsync(Uri address, string filepath, string contentDescription)
 	    {
-	        string content;
             EventBus.InitializationProgress("trying to download " + contentDescription + "...");
             using (var webClient = new WebClient())
 	        {
-	            content = webClient.DownloadString(address);
+	            webClient.DownloadFile(address, filepath);
 	        }
-            Trace.TraceInformation("..." + contentDescription + " download completed");
-
 	        EventBus.InitializationProgress("..." + contentDescription + " download completed");
-            File.WriteAllText(filepath, content);
 	    }
 
 	    private class MarketData
