@@ -21,8 +21,18 @@ namespace RegulatedNoise
             Application.ThreadException += Application_ThreadException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(ApplicationContext.RegulatedNoiseSettings));
+#if(DEBUG)
+            EventBus.OnNotificationEvent += NotificationEventHandler;
+#endif
+            Application.Run(new Form1());
         }
+
+#if(DEBUG)
+        private static void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
+        {
+            Trace.TraceInformation("[" + DateTime.Now + "] " + notificationEventArgs.Message);
+        }
+#endif
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {

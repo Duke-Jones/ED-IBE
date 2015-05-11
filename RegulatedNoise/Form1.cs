@@ -110,10 +110,8 @@ namespace RegulatedNoise
 
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
-        public Form1([NotNull] RegulatedNoiseSettings regulatedNoiseSettings)
+        public Form1()
         {
-            if (regulatedNoiseSettings == null) throw new ArgumentNullException("regulatedNoiseSettings");
-            _settings = regulatedNoiseSettings;
             _InitDone = false;
             _logger = new SingleThreadLogger(ThreadLoggerType.Form);
 
@@ -121,12 +119,14 @@ namespace RegulatedNoise
 
             _Splash = new SplashScreenForm();
 
-#if !ep_Debug
+#if !NO_SPLASH
 			_Splash.Show();
 #endif
             Cursor = Cursors.WaitCursor;
             EventBus.OnNotificationEvent += InitializationProgressEventHandler;
             EventBus.OnNotificationEvent += NotificationEventHandler;
+
+            _settings = ApplicationContext.RegulatedNoiseSettings;
 
             try
             {

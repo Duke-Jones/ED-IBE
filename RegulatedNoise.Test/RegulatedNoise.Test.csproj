@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CommoditiesTest.cs" />
     <Compile Include="EddnMessageTest.cs" />
+    <Compile Include="EDMilyWayTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

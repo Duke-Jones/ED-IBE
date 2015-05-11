@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using RegulatedNoise.Exceptions;
 
@@ -13,7 +15,20 @@ namespace RegulatedNoise.EDDB_Data
 
 	internal class EDMilkyway
 	{
-		public enum enDataType
+	    private const string EDDB_COMMODITIES_DATAFILE = @"./Data/commodities.json";
+	    private const string REGULATEDNOISE_COMMODITIES_DATAFILE = @"./Data/commodities_RN.json";
+	    private const string EDDB_STATIONS_LITE_DATAFILE = @"./Data/stations_lite.json";
+	    private const string EDDB_STATIONS_FULL_DATAFILE = @"./Data/stations.json";
+	    private const string EDDB_SYSTEMS_DATAFILE = @"./Data/systems.json";
+	    private const string OWN_STATIONS_DATAFILE = @"./Data/stations_own.json";
+	    private const string OWN_SYSTEMS_DATAFILE = @"./Data/systems_own.json";
+
+        private const string EDDB_COMMODITIES_URL = @"http://eddb.io/archive/v3/commodities.json";
+        private const string EDDB_SYSTEMS_URL = @"http://eddb.io/archive/v3/systems.json";
+        private const string EDDB_STATIONS_LITE_URL = @"http://eddb.io/archive/v3/stations_lite.json";
+        private const string EDDB_STATIONS_FULL_URL = @"http://eddb.io/archive/v3/stations.json";
+
+	    public enum enDataType
 		{
 			Data_EDDB,
 			Data_Own,
@@ -32,7 +47,7 @@ namespace RegulatedNoise.EDDB_Data
 		// a quick cache for distances of stations
 		private readonly Dictionary<string, int> m_cachedStationDistances;
 
-		/// <summary>
+	    /// <summary>
 		/// creates a new Milkyway :-)
 		/// </summary>
 		public EDMilkyway()
@@ -145,7 +160,7 @@ namespace RegulatedNoise.EDDB_Data
 			m_Commodities.Distinct();
 			m_Commodities = newList;
 
-			SaveRNCommodityData(@"./Data/commodities_RN.json", true);
+			SaveRNCommodityData(REGULATEDNOISE_COMMODITIES_DATAFILE, true);
 		}
 
 		/// <summary>
@@ -706,39 +721,40 @@ namespace RegulatedNoise.EDDB_Data
 				SaveRNCommodityData(FileName, true);
 		}
 
-		/// <summary>
-		/// loads the commodity data from the files
-		/// </summary>
-		/// <param name="EDDBCommodityDatafile"></param>
-		/// <param name="RNCommodityDatafile"></param>
-		/// <param name="createNonExistingFile"></param>
-		private bool LoadCommodityData(string EDDBCommodityDatafile, string RNCommodityDatafile, bool createNonExistingFile, bool CheckOnly = false)
+	    /// <summary>
+	    /// loads the commodity data from the files
+	    /// </summary>
+	    /// <param name="eddbCommodityDatafile"></param>
+	    /// <param name="RNCommodityDatafile"></param>
+	    /// <param name="checkOnly"></param>
+	    private bool LoadCommodityData(string eddbCommodityDatafile, string RNCommodityDatafile, bool checkOnly = false)
 		{
 			bool notExisting = false;
-			List<EDCommoditiesWarningLevels> RNCommodities;
-			List<EDCommodities> EDDBCommodities = JsonConvert.DeserializeObject<List<EDCommodities>>(File.ReadAllText(EDDBCommodityDatafile));
-
-			if (CheckOnly)
+			List<EDCommoditiesWarningLevels> rnCommodities;
+			if (checkOnly)
 				if (File.Exists(RNCommodityDatafile))
 					return true;
 				else
 					return false;
 
 			if (File.Exists(RNCommodityDatafile))
-				RNCommodities = JsonConvert.DeserializeObject<List<EDCommoditiesWarningLevels>>(File.ReadAllText(RNCommodityDatafile));
+			{
+			    rnCommodities = JsonConvert.DeserializeObject<List<EDCommoditiesWarningLevels>>(File.ReadAllText(RNCommodityDatafile));
+			}
 			else
 			{
 				notExisting = true;
-				RNCommodities = new List<EDCommoditiesWarningLevels>();
+				rnCommodities = new List<EDCommoditiesWarningLevels>();
 			}
 
-			m_Commodities = EDCommoditiesExt.mergeCommodityData(EDDBCommodities, RNCommodities);
+            List<EDCommodities> eddbCommodities = JsonConvert.DeserializeObject<List<EDCommodities>>(File.ReadAllText(eddbCommodityDatafile));
+            m_Commodities = EDCommoditiesExt.mergeCommodityData(eddbCommodities, rnCommodities);
 
 			if (notExisting)
-				CalculateNewPriceLimits();
-
+			{
+			    CalculateNewPriceLimits();			    
+			}
 			SaveRNCommodityData(RNCommodityDatafile, true);
-
 			return true;
 		}
 
@@ -749,7 +765,7 @@ namespace RegulatedNoise.EDDB_Data
 		/// <param name="Stationtype"></param>
 		public void SaveRNCommodityData(string filename, bool backupOldFile)
 		{
-			List<EDCommoditiesWarningLevels> WarningLevels = EDCommoditiesExt.extractWarningLevels(m_Commodities);
+			List<EDCommoditiesWarningLevels> warningLevels = EDCommoditiesExt.extractWarningLevels(m_Commodities);
 
 			string newFile, backupFile;
 
@@ -757,10 +773,8 @@ namespace RegulatedNoise.EDDB_Data
 			newFile = String.Format("{0}_new{1}", Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename)), Path.GetExtension(filename));
 			backupFile = String.Format("{0}_bak{1}", Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename)), Path.GetExtension(filename));
 
-			File.WriteAllText(newFile, JsonConvert.SerializeObject(WarningLevels));
-
+			File.WriteAllText(newFile, JsonConvert.SerializeObject(warningLevels));
 			// we delete the current file not until the new file is written without errors
-
 			RotateSaveFiles(filename, newFile, backupFile, backupOldFile);
 		}
 
@@ -828,8 +842,8 @@ namespace RegulatedNoise.EDDB_Data
 			if (m_cachedLocations.ContainsKey(oldSystemName))
 				m_cachedLocations.Remove(oldSystemName);
 
-			SaveStationData(@"./Data/stations_own.json", enDataType.Data_Own, true);
-			SaveSystemData(@"./Data/systems_own.json", enDataType.Data_Own, true);
+			SaveStationData(OWN_STATIONS_DATAFILE, enDataType.Data_Own, true);
+			SaveSystemData(OWN_SYSTEMS_DATAFILE, enDataType.Data_Own, true);
 		}
 
 		/// <summary>
@@ -953,7 +967,7 @@ namespace RegulatedNoise.EDDB_Data
 			if (m_cachedStationDistances.ContainsKey(oldStationName))
 				m_cachedStationDistances.Remove(oldStationName);
 
-			SaveStationData(@"./Data/stations_own.json", enDataType.Data_Own, true);
+			SaveStationData(OWN_STATIONS_DATAFILE, enDataType.Data_Own, true);
 			SaveSystemData(@"./Data/Systems_own.json", enDataType.Data_Own, true);
 		}
 
@@ -967,32 +981,32 @@ namespace RegulatedNoise.EDDB_Data
 			try
 			{
 				EventBus.InitializationStart("create milkyway...");
-
-				// 1. load the EDDN data
+			    DownloadDataFiles();
+			    // 1. load the EDDN data
 				{
-					bool needPriceCalculation = !LoadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true, true);
+					bool needPriceCalculation = !LoadCommodityData(EDDB_COMMODITIES_DATAFILE, REGULATEDNOISE_COMMODITIES_DATAFILE, true);
 
 					if (needPriceCalculation || ApplicationContext.RegulatedNoiseSettings.LoadStationsJSON)
 					{
 						EventBus.InitializationStart("loading stations from <stations.json> (calculation of plausibility limits required)");
-						LoadStationData(@"./Data/stations.json", enDataType.Data_EDDB, false);
+						LoadStationData(EDDB_STATIONS_FULL_DATAFILE, enDataType.Data_EDDB, false);
 						EventBus.InitializationCompleted("loading stations from <stations.json> (calculation of plausibility limits required)");
 						EventBus.InitializationProgress("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
 					}
 					else
 					{
 						// look which stations-file we can get
-						if (File.Exists(@"./Data/stations_lite.json"))
+						if (File.Exists(EDDB_STATIONS_LITE_DATAFILE))
 						{
 							EventBus.InitializationStart("loading stations from <stations_lite.json>");
-							LoadStationData(@"./Data/stations_lite.json", enDataType.Data_EDDB, false);
+							LoadStationData(EDDB_STATIONS_LITE_DATAFILE, enDataType.Data_EDDB, false);
 							EventBus.InitializationCompleted("loading stations from <stations_lite.json>");
 							EventBus.InitializationProgress("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
 						}
 						else
 						{
 							EventBus.InitializationStart("loading stations from <stations.json>");
-							LoadStationData(@"./Data/stations.json", enDataType.Data_EDDB, false);
+							LoadStationData(EDDB_STATIONS_FULL_DATAFILE, enDataType.Data_EDDB, false);
 							EventBus.InitializationCompleted("loading stations from <stations.json>");
 							EventBus.InitializationProgress("(" + GetStations(enDataType.Data_EDDB).Count + " stations loaded)");
 						}
@@ -1000,31 +1014,31 @@ namespace RegulatedNoise.EDDB_Data
 
 					// load the systems
 					EventBus.InitializationStart("...loading systems from <systems.json>...");
-					LoadSystemData(@"./Data/systems.json", enDataType.Data_EDDB, false);
+					LoadSystemData(EDDB_SYSTEMS_DATAFILE, enDataType.Data_EDDB, false);
 					EventBus.InitializationCompleted("loading systems from <systems.json>");
 					EventBus.InitializationProgress("(" + GetSystems(enDataType.Data_EDDB).Count + " systems loaded)");
 				}
 
 				// 2. load own local data
 				EventBus.InitializationStart("loading own stations from <stations_own.json>");
-				LoadStationData(@"./Data/stations_own.json", enDataType.Data_Own, true);
+				LoadStationData(OWN_STATIONS_DATAFILE, enDataType.Data_Own, true);
 				EventBus.InitializationCompleted("loading stations from <stations_own.json>");
 				EventBus.InitializationProgress("(" + GetStations(enDataType.Data_Own).Count + " stations loaded)");
 
 				EventBus.InitializationStart("loading own systems from <systems_own.json>");
-				LoadSystemData(@"./Data/systems_own.json", enDataType.Data_Own, true);
+				LoadSystemData(OWN_SYSTEMS_DATAFILE, enDataType.Data_Own, true);
 				EventBus.InitializationCompleted("loading own systems from <systems_own.json>)");
 				EventBus.InitializationProgress(GetSystems(enDataType.Data_Own).Count + " systems loaded)");
 
 				EventBus.InitializationStart("merging data");
 				if (MergeData())
 				{
-					SaveStationData(@"./Data/stations_own.json", enDataType.Data_Own, true);
-					SaveSystemData(@"./Data/systems_own.json", enDataType.Data_Own, true);
+					SaveStationData(OWN_STATIONS_DATAFILE, enDataType.Data_Own, true);
+					SaveSystemData(OWN_SYSTEMS_DATAFILE, enDataType.Data_Own, true);
 				}
 				EventBus.InitializationCompleted("merging data");
 				EventBus.InitializationStart("loading commodity data from <commodities.json>");
-				LoadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true);
+				LoadCommodityData(EDDB_COMMODITIES_DATAFILE, REGULATEDNOISE_COMMODITIES_DATAFILE);
 				EventBus.InitializationCompleted("loading commodity data from <commodities.json>");
 				CalculateAveragePrices();
 				EventBus.InitializationProgress("create milkyway...<OK>");
@@ -1035,7 +1049,52 @@ namespace RegulatedNoise.EDDB_Data
 			}
 		}
 
-		private class MarketData
+	    private static void DownloadDataFiles()
+	    {
+	        var tasks = new List<Task>();
+	        if (!File.Exists(EDDB_COMMODITIES_DATAFILE))
+	        {
+                tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_COMMODITIES_URL), EDDB_COMMODITIES_DATAFILE,
+                    "eddb commodities data")));
+	        }
+	        if (!File.Exists(EDDB_SYSTEMS_DATAFILE))
+	        {
+	            tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_SYSTEMS_URL), EDDB_SYSTEMS_DATAFILE,
+	                "eddb stations lite data")));
+	        }
+	        if (!File.Exists(EDDB_STATIONS_FULL_DATAFILE))
+	        {
+	            tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_STATIONS_FULL_URL), EDDB_STATIONS_FULL_DATAFILE,
+                    "eddb stations full data")));
+	        }
+	        if (!File.Exists(EDDB_STATIONS_LITE_DATAFILE))
+	        {
+	            tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_STATIONS_LITE_URL), EDDB_STATIONS_LITE_DATAFILE,
+                    "eddb stations lite data")));
+	        }
+            if (tasks.Any())
+            {
+                while (!Task.WaitAll(tasks.ToArray(), TimeSpan.FromSeconds(10)) && EventBus.Request("eddb server not responding, still waiting?"))
+                {
+                }
+            }
+	    }
+
+	    private static void DownloadDataFileAsync(Uri address, string filepath, string contentDescription)
+	    {
+	        string content;
+            EventBus.InitializationProgress("trying to download " + contentDescription + "...");
+            using (var webClient = new WebClient())
+	        {
+	            content = webClient.DownloadString(address);
+	        }
+            Trace.TraceInformation("..." + contentDescription + " download completed");
+
+	        EventBus.InitializationProgress("..." + contentDescription + " download completed");
+            File.WriteAllText(filepath, content);
+	    }
+
+	    private class MarketData
 		{
 			public MarketData()
 			{
