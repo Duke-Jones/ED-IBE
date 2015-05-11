@@ -550,15 +550,14 @@ namespace RegulatedNoise
 					if (key.GetValue(Names[i]).ToString() == ProgramName)
 					{
 						ProgramPath = Names[i].ToString();
-						ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf("\\Products\\") + 9);
-						return ProgramPath;
-					}
-
+						ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf(@"\Products\") + 9);
+						returnValue = Directory.Exists(ProgramPath) ? ProgramPath : null;
+                        break;					
+                    }
 				}
-
 			}
 
-			return null;
+			return returnValue;
 		}
 		private string getProductPathManually()
 		{

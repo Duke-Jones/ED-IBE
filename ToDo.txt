@@ -17,6 +17,10 @@ todo:
    * show the stations as a one look list
    * eddn layout v2
 
+1.84_0.20_2
+   * fixed: crash on first start while searching for ED-paths
+   * fixed: designtime-crash
+-------------------------------------------------------------------------------------      
 1.84_0.20_1
    * fix warn level edit view (zericco)
    * remove initialization logic from Form1 (zericco)
