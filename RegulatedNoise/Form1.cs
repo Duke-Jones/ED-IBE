@@ -65,7 +65,6 @@ namespace RegulatedNoise
         private SingleThreadLogger _logger;
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         private Levenshtein _levenshtein = new Levenshtein();
-        private dsCommodities _commodities = new dsCommodities();
 
         private Int32 _EDDNTabPageIndex;
         private string _LoggedSystem = ID_NOT_SET;
@@ -242,18 +241,16 @@ namespace RegulatedNoise
                 //edl.StartWatcher();
 
                 _Splash.InfoAdd("load and prepare international commodity names...");
-                // read the commodities and prepare language depending list
-                _commodities.ReadXml(RegulatedNoiseSettings.COMMODITIES_LOCALISATION_FILEPATH);
 
                 // depending of the language this will be removed
                 _EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
 
                 // set language
-                setLanguageCombobox();
+                FillLanguageCombobox();
 
                 // load commodities in the correct language
-                loadCommodities(_settings.Language);
-                loadCommodityLevels(_settings.Language);
+                LoadCommodities(_settings.Language);
+                LoadCommodityLevels(_settings.Language);
                 _Splash.InfoChange("load and prepare international commodity names...<OK>");
 
                 setOCRCalibrationTabVisibility();
@@ -669,17 +666,17 @@ namespace RegulatedNoise
         /// <summary>
         /// prepares the commodities in the correct language
         /// </summary>
-        /// <param name="Language"></param>
-        private void loadCommodities(enLanguage Language)
+        /// <param name="language"></param>
+        private void LoadCommodities(enLanguage language)
         {
             KnownCommodityNames.Clear();
 
-            foreach (dsCommodities.NamesRow currentCommodity in _commodities.Names)
+            foreach (dsCommodities.NamesRow currentCommodity in ApplicationContext.CommoditiesLocalisation.Names)
             {
-                if (Language == enLanguage.eng)
+                if (language == enLanguage.eng)
                     KnownCommodityNames.Add(currentCommodity.eng);
 
-                else if (Language == enLanguage.ger)
+                else if (language == enLanguage.ger)
                     KnownCommodityNames.Add(currentCommodity.ger);
 
                 else
@@ -692,35 +689,32 @@ namespace RegulatedNoise
         /// <summary>
         /// prepares the commoditylevels in the correct language
         /// </summary>
-        /// <param name="Language"></param>
-        private void loadCommodityLevels(enLanguage Language)
+        /// <param name="language"></param>
+        private void LoadCommodityLevels(enLanguage language)
         {
-            dsCommodities.LevelsRow[] Level;
-
             CommodityLevel.Clear();
 
             for (int i = 0; i <= 2; i++)
             {
+                dsCommodities.LevelsRow[] level;
                 if (i == 0)
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.LOW);
+                    level = (dsCommodities.LevelsRow[])ApplicationContext.CommoditiesLocalisation.Levels.Select("ID=" + (byte)enCommodityLevel.LOW);
 
                 else if (i == 1)
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.MED);
+                    level = (dsCommodities.LevelsRow[])ApplicationContext.CommoditiesLocalisation.Levels.Select("ID=" + (byte)enCommodityLevel.MED);
 
                 else
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.HIGH);
+                    level = (dsCommodities.LevelsRow[])ApplicationContext.CommoditiesLocalisation.Levels.Select("ID=" + (byte)enCommodityLevel.HIGH);
 
-                if (Language == enLanguage.eng)
-                    CommodityLevel.Add(Level[0].ID, Level[0].eng);
+                if (language == enLanguage.eng)
+                    CommodityLevel.Add(level[0].ID, level[0].eng);
 
-                else if (Language == enLanguage.ger)
-                    CommodityLevel.Add(Level[0].ID, Level[0].ger);
+                else if (language == enLanguage.ger)
+                    CommodityLevel.Add(level[0].ID, level[0].ger);
 
                 else
-                    CommodityLevel.Add(Level[0].ID, Level[0].fra);
-
+                    CommodityLevel.Add(level[0].ID, level[0].fra);
             }
-
         }
 
         private Thread _ocrThread;
@@ -4999,22 +4993,20 @@ namespace RegulatedNoise
         /// <summary>
         /// prepares the "Language" combobox
         /// </summary>
-        private void setLanguageCombobox()
+        private void FillLanguageCombobox()
         {
             List<enumBindTo> lstEnum = new List<enumBindTo>();
-            Array Names;
 
             // Speicherstruktur
-            lstEnum.Clear();
-            Names = Enum.GetValues(Type.GetType("RegulatedNoise.enLanguage", true));
+            Array names = Enum.GetValues(typeof(enLanguage));
 
-            for (int i = 0; i <= Names.GetUpperBound(0); i++)
+            for (int i = 0; i <= names.GetUpperBound(0); i++)
             {
-                enumBindTo cls = new enumBindTo();
-
-                cls.EnumValue = (Int32)Names.GetValue(i);
-                cls.EnumString = Names.GetValue(i).ToString();
-
+                enumBindTo cls = new enumBindTo
+                {
+                    EnumValue = (Int32) names.GetValue(i),
+                    EnumString = names.GetValue(i).ToString()
+                };
                 lstEnum.Add(cls);
             }
 
@@ -5025,7 +5017,7 @@ namespace RegulatedNoise
             cmbLanguage.SelectedValue = (Int32)_settings.Language;
 
             // now we activate the EventHandler
-            this.cmbLanguage.SelectedIndexChanged += new EventHandler(this.cmbLanguage_SelectedIndexChanged);
+            cmbLanguage.SelectedIndexChanged += cmbLanguage_SelectedIndexChanged;
 
         }
 
@@ -5035,8 +5027,8 @@ namespace RegulatedNoise
             {
                 _settings.Language = (enLanguage)cmbLanguage.SelectedValue;
                 // prepare language depending list
-                loadCommodities(_settings.Language);
-                loadCommodityLevels(_settings.Language);
+                LoadCommodities(_settings.Language);
+                LoadCommodityLevels(_settings.Language);
                 _settings.Save();
             }
         }
@@ -5048,7 +5040,7 @@ namespace RegulatedNoise
         /// <param name="language"></param>
         private void addCommodity(string commodity, enLanguage language)
         {
-            dsCommodities.NamesRow newCommodity = (dsCommodities.NamesRow)_commodities.Names.NewRow();
+            dsCommodities.NamesRow newCommodity = (dsCommodities.NamesRow)ApplicationContext.CommoditiesLocalisation.Names.NewRow();
 
             newCommodity.eng = "???";
             newCommodity.ger = "???";
@@ -5063,13 +5055,13 @@ namespace RegulatedNoise
             else
                 newCommodity.fra = commodity;
 
-            _commodities.Names.AddNamesRow(newCommodity);
+            ApplicationContext.CommoditiesLocalisation.Names.AddNamesRow(newCommodity);
 
             // save to file
-            _commodities.WriteXml(RegulatedNoiseSettings.COMMODITIES_LOCALISATION_FILEPATH);
+            ApplicationContext.CommoditiesLocalisation.WriteXml(RegulatedNoiseSettings.COMMODITIES_LOCALISATION_FILEPATH);
 
             // reload in working array
-            loadCommodities(_settings.Language);
+            LoadCommodities(_settings.Language);
         }
 
         public void setOCRCalibrationTabVisibility()
