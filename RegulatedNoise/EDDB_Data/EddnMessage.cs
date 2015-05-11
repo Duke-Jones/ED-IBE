@@ -23,6 +23,11 @@ namespace RegulatedNoise.EDDB_Data
         {
             get { return schemaRef != null && schemaRef.Contains("Test"); }
         }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 
     public class Header

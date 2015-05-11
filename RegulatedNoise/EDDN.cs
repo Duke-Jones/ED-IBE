@@ -29,28 +29,34 @@ namespace RegulatedNoise
         private readonly SingleThreadLogger _logger;
         private bool _disposed;
 
-        private class EddnPublisherStatisticCollection : KeyedCollection<string, EddnPublisherVersionStats>
-        {
-            protected override string GetKeyForItem(EddnPublisherVersionStats item)
-            {
-                return item.Publisher;
-            }
+        private readonly EddnPublisherStatisticCollection _eddnPublisherStats;
 
-            public bool TryGetValue(string publisher, out EddnPublisherVersionStats stats)
-            {
-                if (Dictionary != null)
-                {
-                    return Dictionary.TryGetValue(publisher, out stats);
-                }
-                else
-                {
-                    stats = null;
-                    return false;
-                }
-            }
+        private readonly object _listeningStateChange = new object();
+        private bool _listening;
+        private bool _saveMessagesToFile;
+        private readonly dsCommodities _commoditiesLocalisation;
+        private readonly RegulatedNoiseSettings _settings;
+
+        public IEnumerable<EddnPublisherVersionStats> PublisherStatistics
+        {
+            get { return _eddnPublisherStats; }
         }
 
-        private EddnPublisherStatisticCollection _eddnPublisherStats;
+        /// <summary>
+        /// Gets or sets a value indicating whether [test mode].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [test mode]; otherwise, <c>false</c>.
+        /// </value>
+        public bool TestMode { get; set; }
+
+        public void UnSubscribe()
+        {
+            lock (_listeningStateChange)
+            {
+                Listening = false;
+            }
+        }
 
         public bool Listening
         {
@@ -74,12 +80,11 @@ namespace RegulatedNoise
             }
         }
 
-        private readonly object _listeningStateChange = new object();
-        private bool _listening;
-        private bool _saveMessagesToFile;
-
-        public EDDN()
+        public EDDN([NotNull] dsCommodities commoditiesLocalisation,
+            [NotNull] RegulatedNoiseSettings regulatedNoiseSettings)
         {
+            if (commoditiesLocalisation == null) throw new ArgumentNullException("commoditiesLocalisation");
+            if (regulatedNoiseSettings == null) throw new ArgumentNullException("regulatedNoiseSettings");
             _logger = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
             _sendItems = new Queue(100, 10);
             _eddnPublisherStats = new EddnPublisherStatisticCollection();
@@ -87,6 +92,8 @@ namespace RegulatedNoise
             Task.Factory.StartNew(EDDNSender, TaskCreationOptions.LongRunning);
             _logger.Log("Initialising...<OK>\n");
             OnMessageReceived += UpdateStats;
+            _commoditiesLocalisation = commoditiesLocalisation;
+            _settings = regulatedNoiseSettings;
         }
 
         private void UpdateStats(object sender, EddnMessageEventArgs e)
@@ -99,19 +106,6 @@ namespace RegulatedNoise
                 _eddnPublisherStats.Add(stats);
             }
             ++stats.MessagesReceived;
-        }
-
-        public IEnumerable<EddnPublisherVersionStats>  PublisherStatistics
-        {
-            get { return _eddnPublisherStats; }
-        }
-
-        public void UnSubscribe()
-        {
-            lock (_listeningStateChange)
-            {
-                Listening = false;
-            }
         }
 
         public void Subscribe()
@@ -210,58 +204,60 @@ namespace RegulatedNoise
 
         private void PostJsonToEddn(MarketDataRow rowToPost)
         {
-            string json;
-
             Debug.Print("eddn send : " + rowToPost);
-
-            if (ApplicationContext.RegulatedNoiseSettings.UseEddnTestSchema)
+            var eddnMessage = new EddnMessage()
             {
-                json =
-                     @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                     ApplicationContext.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + ApplicationContext.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
-                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                header = new Header()
+                {
+                    softwareName = "RegulatedNoise__DJ"
+                    ,softwareVersion = "v" + _settings.Version.ToString(CultureInfo.InvariantCulture) + "_" + _settings.VersionDJ.ToString(CultureInfo.InvariantCulture)
+                    ,uploaderID = _settings.UserName
+                }
+                ,message = rowToPost
+            };
+            if (_settings.UseEddnTestSchema)
+            {
+                eddnMessage.schemaRef = "http://schemas.elite-markets.net/eddn/commodity/1/test";
             }
             else
             {
-                json =
-                     @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                     ApplicationContext.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + ApplicationContext.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
-                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
+                eddnMessage.schemaRef = "http://schemas.elite-markets.net/eddn/commodity/1";
             }
 
-            string commodity = ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(rowToPost.CommodityName);
+            string commodity = _commoditiesLocalisation.GetCommodityBasename(rowToPost.CommodityName);
 
             if (!String.IsNullOrEmpty(commodity))
             {
-                string commodityJson = json.Replace("$0$", ApplicationContext.RegulatedNoiseSettings.UserName.Replace("$1$", ""))
-                     .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
-                     .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.CurrentCulture)))
-                     .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
-                     .Replace("$5$", (rowToPost.StationID.Replace(" [" + rowToPost.SystemName + "]", "")))
-                     .Replace("$6$", (rowToPost.SystemName))
-                     .Replace("$7$", (rowToPost.Demand.ToString(CultureInfo.InvariantCulture)))
-                     .Replace("$8$", (rowToPost.SellPrice.ToString(CultureInfo.InvariantCulture)))
-                     .Replace("$9$", (commodity)
-                     );
+                eddnMessage.message.CommodityName = commodity;
+                var json = eddnMessage.ToJson();
+                SendToEddn(json);
+            }
+        }
 
-                using (var client = new WebClient())
+        private void SendToEddn(string json)
+        {
+            if (TestMode)
+            {
+                Debug.WriteLine("sending to eddn: " + json);
+                return;
+            }
+            using (var client = new WebClient())
+            {
+                try
                 {
-                    try
+                    client.UploadString(EDDN_POST_URL, "POST", json);
+                }
+                catch (WebException ex)
+                {
+                    _logger.Log("Error uploading Json: " + ex, true);
+                    using (WebResponse response = ex.Response)
                     {
-                        client.UploadString(EDDN_POST_URL, "POST", commodityJson);
-                    }
-                    catch (WebException ex)
-                    {
-                        _logger.Log("Error uploading Json: " + ex, true);
-                        using (WebResponse response = ex.Response)
+                        using (Stream data = response.GetResponseStream())
                         {
-                            using (Stream data = response.GetResponseStream())
+                            if (data != null)
                             {
-                                if (data != null)
-                                {
-                                    StreamReader sr = new StreamReader(data);
-                                    EventBus.Alert(sr.ReadToEnd(), "Error while uploading to EDDN");
-                                }
+                                StreamReader sr = new StreamReader(data);
+                                EventBus.Alert(sr.ReadToEnd(), "Error while uploading to EDDN");
                             }
                         }
                     }
@@ -318,15 +314,26 @@ namespace RegulatedNoise
                 SaveMessagesToFile = false;
             }
         }
-    }
 
-    public class EddnMessageEventArgs : EventArgs
-    {
-        public readonly EddnMessage Message;
-
-        public EddnMessageEventArgs(EddnMessage message)
+        private class EddnPublisherStatisticCollection : KeyedCollection<string, EddnPublisherVersionStats>
         {
-            Message = message;
+            protected override string GetKeyForItem(EddnPublisherVersionStats item)
+            {
+                return item.Publisher;
+            }
+
+            public bool TryGetValue(string publisher, out EddnPublisherVersionStats stats)
+            {
+                if (Dictionary != null)
+                {
+                    return Dictionary.TryGetValue(publisher, out stats);
+                }
+                else
+                {
+                    stats = null;
+                    return false;
+                }
+            }
         }
     }
 }

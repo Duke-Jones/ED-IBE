@@ -80,7 +80,7 @@ namespace RegulatedNoise
                 if(_eddn == null)
                 {
                     EventBus.InitializationStart("prepare EDDN interface");
-                    _eddn = new EDDN();
+                    _eddn = new EDDN(ApplicationContext.CommoditiesLocalisation, ApplicationContext.RegulatedNoiseSettings);
                     Trace.TraceInformation("  - EDDN object created");
                     if (RegulatedNoiseSettings.StartListeningEddnOnLoad)
                     {
