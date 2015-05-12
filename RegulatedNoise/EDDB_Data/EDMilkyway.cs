@@ -1149,7 +1149,7 @@ namespace RegulatedNoise.EDDB_Data
                     else if (((commodityData.PriceWarningLevel_Supply_Buy_Low >= 0) &&
                          (marketData.BuyPrice < commodityData.PriceWarningLevel_Supply_Buy_Low)) ||
                         ((commodityData.PriceWarningLevel_Supply_Buy_High >= 0) &&
-                         (marketData.SellPrice > commodityData.PriceWarningLevel_Supply_Buy_High)))
+                         (marketData.BuyPrice > commodityData.PriceWarningLevel_Supply_Buy_High)))
                     {
                         // buy price is out of range
                         plausibility = new PlausibilityState(false, "buy price out of supply prices warn level "
@@ -1188,14 +1188,14 @@ namespace RegulatedNoise.EDDB_Data
                                                                     commodityData.PriceWarningLevel_Demand_Sell_High +
                                                                     "]");
                     }
-                    else if (((commodityData.PriceWarningLevel_Demand_Buy_Low >= 0) &&
+                    else if (marketData.BuyPrice>0 && (((commodityData.PriceWarningLevel_Demand_Buy_Low >= 0) &&
                          (marketData.BuyPrice < commodityData.PriceWarningLevel_Demand_Buy_Low)) ||
                         ((commodityData.PriceWarningLevel_Demand_Buy_High >= 0) &&
-                         (marketData.BuyPrice > commodityData.PriceWarningLevel_Demand_Buy_High)))
+                         (marketData.BuyPrice > commodityData.PriceWarningLevel_Demand_Buy_High))))
                     {
                         // buy price is out of range
                         plausibility = new PlausibilityState(false, "buy price out of supply prices warn level "
-                                                                    + marketData.SellPrice
+                                                                    + marketData.BuyPrice
                                                                     + " [" +
                                                                     commodityData.PriceWarningLevel_Demand_Buy_Low +
                                                                     "," +
