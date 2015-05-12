@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="playground\Products\FORC-FDEV\Logs\Logs\netLog.1505062314.01.log">
+    <Content Include="playground\Products\FORC-FDEV\Logs\netLog.1505062314.01.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
