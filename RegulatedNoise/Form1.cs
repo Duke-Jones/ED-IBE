@@ -1125,30 +1125,6 @@ namespace RegulatedNoise
             return localSystem;
         }
 
-        private string CombinedNameToStationName(string combinedName)
-        {
-            var ret = combinedName.Substring(0, combinedName.IndexOf("[") - 1);
-            return ret;
-        }
-
-        private string CombinedNameToSystemName(string combinedName)
-        {
-            try
-            {
-                var ret = combinedName.Substring(combinedName.IndexOf("[") + 1);
-                ret = ret.TrimEnd(']');
-                return ret;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-
-        }
-
         private void SetupGui(bool force = false)
         {
             Cursor oldCursor = Cursor;
@@ -1416,7 +1392,7 @@ namespace RegulatedNoise
             else if (rbSortByStation.Checked)
             {
                 // get the list ordered as wanted -> order by station
-                selectionPreordered = selectionRaw.OrderBy(x => CombinedNameToStationName(x.Key)).ToList(); ;
+                selectionPreordered = selectionRaw.OrderBy(x => MarketDataRow.StationIdToStationName(x.Key)).ToList(); ;
 
                 if (cblastVisitedFirst.Checked)
                 {
@@ -1470,7 +1446,7 @@ namespace RegulatedNoise
             else if (rbSortByDistance.Checked)
             {
                 // get the list ordered as wanted -> order by distance 
-                selectionPreordered = selectionRaw.OrderBy(x => DistanceInLightYears(CombinedNameToSystemName(x.Key))).ToList();
+                selectionPreordered = selectionRaw.OrderBy(x => DistanceInLightYears(MarketDataRow.StationIdToSystemName(x.Key))).ToList();
 
                 if (cblastVisitedFirst.Checked)
                 {
@@ -1595,7 +1571,7 @@ namespace RegulatedNoise
 
             if (selectedItem != null)
             {
-                var dist = DistanceInLightYears(CombinedNameToSystemName(getCmbItemKey(selectedItem)));
+                var dist = DistanceInLightYears(MarketDataRow.StationIdToSystemName(getCmbItemKey(selectedItem)));
 
                 if (dist < double.MaxValue)
                     lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
@@ -3329,11 +3305,10 @@ namespace RegulatedNoise
                 if (_stationToStationReturnColumnSorter.SortColumn != 7)
                     lvStationToStationReturn_ColumnClick(null, new ColumnClickEventArgs(7));
 
-                if (ApplicationContext.Milkyway.SystemExists(CombinedNameToSystemName(stationFrom)))
+                if (ApplicationContext.Milkyway.SystemExists(MarketDataRow.StationIdToSystemName(stationFrom)))
                 {
-                    var dist = DistanceInLightYears(
-                                                                     CombinedNameToSystemName(stationFrom).ToUpper(),
-                                                                     ApplicationContext.Milkyway.GetSystemCoordinates(CombinedNameToSystemName(stationTo)));
+                    var dist = DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom).ToUpper(),
+                                                                     ApplicationContext.Milkyway.GetSystemCoordinates(MarketDataRow.StationIdToSystemName(stationTo)));
 
                     if (dist < double.MaxValue)
                         lblStationToStationLightYears.Text = "(" +
@@ -4496,7 +4471,7 @@ namespace RegulatedNoise
                         double creditsDouble;
                         double distance = 1d;
 
-                        distance = DistanceInLightYears(CombinedNameToSystemName(stationFrom).ToUpper(), CombinedNameToSystemName(stationTo).ToUpper());
+                        distance = DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom).ToUpper(), MarketDataRow.StationIdToSystemName(stationTo).ToUpper());
 
                         if (cbPerLightYearRoundTrip.Checked)
                         {
@@ -5324,8 +5299,8 @@ namespace RegulatedNoise
         /// <returns></returns>
         private bool IsSelected(string stationId)
         {
-            return (!cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(stationId))) &&
-                     (!cbStationToStar.Checked || StationDistance(CombinedNameToSystemName(stationId), CombinedNameToStationName(stationId)));
+            return (!cbLimitLightYears.Checked || Distance(MarketDataRow.StationIdToSystemName(stationId))) &&
+                     (!cbStationToStar.Checked || StationDistance(MarketDataRow.StationIdToSystemName(stationId), MarketDataRow.StationIdToStationName(stationId)));
 
         }
 

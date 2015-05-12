@@ -146,5 +146,15 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         {
             return MarketDataId.GetHashCode();
         }
+
+        public static string StationIdToStationName(string stationId)
+        {
+            return stationId.Substring(0, stationId.IndexOf("[") - 1);
+        }
+
+        public static string StationIdToSystemName(string stationId)
+        {
+            return stationId.Substring(stationId.IndexOf("[") + 1).TrimEnd(']');
+        }
     }
 }
