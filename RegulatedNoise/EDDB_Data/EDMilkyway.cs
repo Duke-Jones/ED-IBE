@@ -508,13 +508,13 @@ namespace RegulatedNoise.EDDB_Data
             return m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private EDStation GetSystemStation(string Systemname, string StationName)
+        private EDStation GetSystemStation(string systemname, string stationName)
         {
             EDStation wantedStation = null;
-            EDSystem wantedSystem = GetSystem(Systemname);
+            EDSystem wantedSystem = GetSystem(systemname);
 
             if (wantedSystem != null)
-                wantedStation = m_Stations[(int)enDataType.Data_Merged].Find(x => (x.SystemId == wantedSystem.Id) && (x.Name.Equals(StationName)));
+                wantedStation = m_Stations[(int)enDataType.Data_Merged].Find(x => (x.SystemId == wantedSystem.Id) && (x.Name.Equals(stationName)));
 
             return wantedStation;
         }
@@ -522,22 +522,22 @@ namespace RegulatedNoise.EDDB_Data
         /// <summary>
         /// get coordinates of a system
         /// </summary>
-        /// <param name="Systemname"></param>
+        /// <param name="systemname"></param>
         /// <returns></returns>
-        public Point3D GetSystemCoordinates(string Systemname)
+        public Point3D GetSystemCoordinates(string systemname)
         {
             Point3D retValue = null;
 
-            if (!String.IsNullOrEmpty(Systemname))
+            if (!String.IsNullOrEmpty(systemname))
             {
-                if (!m_cachedLocations.TryGetValue(Systemname, out retValue))
+                if (!m_cachedLocations.TryGetValue(systemname, out retValue))
                 {
-                    EDSystem mySystem = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase));
+                    EDSystem mySystem = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name.Equals(systemname, StringComparison.InvariantCultureIgnoreCase));
 
                     if (mySystem != null)
                     {
                         retValue = mySystem.SystemCoordinates();
-                        m_cachedLocations.Add(Systemname, retValue);
+                        m_cachedLocations.Add(systemname, retValue);
                     }
 
 
@@ -570,40 +570,38 @@ namespace RegulatedNoise.EDDB_Data
         /// <returns></returns>
         private Dictionary<int, MarketData> CalculateAveragePrices()
         {
-            MarketData CommodityData;
             Dictionary<int, MarketData> collectedData = new Dictionary<int, MarketData>();
 
-            foreach (EDStation Station in m_Stations[(int)(enDataType.Data_Merged)])
+            foreach (EDStation station in m_Stations[(int)(enDataType.Data_Merged)])
             {
-                if (Station.Listings != null)
-                    foreach (Listing StationCommodity in Station.Listings)
+                if (station.Listings != null)
+                    foreach (Listing stationCommodity in station.Listings)
                     {
-                        if (!collectedData.TryGetValue(StationCommodity.CommodityId, out CommodityData))
+                        MarketData commodityData;
+                        if (!collectedData.TryGetValue(stationCommodity.CommodityId, out commodityData))
                         {
                             // add a new Marketdata-Object
-                            CommodityData = new MarketData();
-                            CommodityData.Id = StationCommodity.CommodityId;
-                            collectedData.Add(CommodityData.Id, CommodityData);
+                            commodityData = new MarketData {Id = stationCommodity.CommodityId};
+                            collectedData.Add(commodityData.Id, commodityData);
+                        }
+
+                        if (stationCommodity.Demand != 0)
+                        {
+                            if (stationCommodity.BuyPrice > 0)
+                                commodityData.BuyPricesDemand.Add(stationCommodity.BuyPrice);
+
+                            if (stationCommodity.SellPrice > 0)
+                                commodityData.SellPricesDemand.Add(stationCommodity.SellPrice);
 
                         }
 
-                        if (StationCommodity.Demand != 0)
+                        if (stationCommodity.Supply != 0)
                         {
-                            if (StationCommodity.BuyPrice > 0)
-                                CommodityData.BuyPricesDemand.Add(StationCommodity.BuyPrice);
+                            if (stationCommodity.BuyPrice > 0)
+                                commodityData.BuyPricesSupply.Add(stationCommodity.BuyPrice);
 
-                            if (StationCommodity.SellPrice > 0)
-                                CommodityData.SellPricesDemand.Add(StationCommodity.SellPrice);
-
-                        }
-
-                        if (StationCommodity.Supply != 0)
-                        {
-                            if (StationCommodity.BuyPrice > 0)
-                                CommodityData.BuyPricesSupply.Add(StationCommodity.BuyPrice);
-
-                            if (StationCommodity.SellPrice > 0)
-                                CommodityData.SellPricesSupply.Add(StationCommodity.SellPrice);
+                            if (stationCommodity.SellPrice > 0)
+                                commodityData.SellPricesSupply.Add(stationCommodity.SellPrice);
 
                         }
                     }
@@ -1074,7 +1072,7 @@ namespace RegulatedNoise.EDDB_Data
             }
             if (tasks.Any())
             {
-                while (!Task.WaitAll(tasks.ToArray(), TimeSpan.FromSeconds(10)) && EventBus.Request("eddb server not responding, still waiting?"))
+                while (!Task.WaitAll(tasks.ToArray(), TimeSpan.FromMinutes(5)) && EventBus.Request("eddb server not responding, still waiting?"))
                 {
                 }
             }
