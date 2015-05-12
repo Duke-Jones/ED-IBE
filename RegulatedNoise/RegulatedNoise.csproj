@@ -103,6 +103,7 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Commodities.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
+    <Compile Include="Market.cs" />
     <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
