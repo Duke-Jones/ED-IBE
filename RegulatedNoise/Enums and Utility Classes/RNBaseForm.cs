@@ -23,7 +23,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
 		protected void loadWindowPosition()
 		{
-			if (ApplicationContext.RegulatedNoiseSettings == null)
+
+			if (ApplicationContext.IsDesignMode(this) || ApplicationContext.RegulatedNoiseSettings == null)
 				return;
 
 			string Classname = this.GetType().Name;

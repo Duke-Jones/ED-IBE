@@ -17,7 +17,17 @@ todo:
    * show the stations as a one look list
    * eddn layout v2
 
-  -------------------------------------------------------------------------------------      
+1.84_0.20_2
+   * fixed: crash on first start while searching for ED-paths
+   * fixed: designtime-crash
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------      
+1.84_0.20_1
+   * fix warn level edit view (zericco)
+   * remove initialization logic from Form1 (zericco)
+   * introduce ApplicationContext (zericco)
+   * corrected readonly-behaviour of stations-dropdown (system tab)
+-------------------------------------------------------------------------------------      
 1.84_0.19_2
    * completed changes for sorting datevalues in Commanders Log   
    * some GUI corrections on start tab
