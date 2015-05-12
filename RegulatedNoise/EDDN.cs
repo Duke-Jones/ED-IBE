@@ -21,9 +21,10 @@ namespace RegulatedNoise
 {
     internal class EDDN : IDisposable, INotifyPropertyChanged
     {
-        private const string EDDN_POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
-        private const string EDDN_LISTEN_URL = "tcp://eddn-relay.elite-markets.net:9500";
-        private const int DELAY_BETWEEN_LISTEN = 1000;
+        private const string POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
+        private const string LISTEN_URL = "tcp://eddn-relay.elite-markets.net:9500";
+        private const int DELAY_BETWEEN_POLL = 1000;
+        public const string SOURCENAME = "<From EDDN>";
         public event EventHandler<EddnMessageEventArgs> OnMessageReceived;
         private readonly Queue _sendItems;
         private readonly SingleThreadLogger _logger;
@@ -124,7 +125,7 @@ namespace RegulatedNoise
                     using (var socket = ctx.CreateSocket(SocketType.SUB))
                     {
                         socket.SubscribeAll();
-                        socket.Connect(EDDN_LISTEN_URL);
+                        socket.Connect(LISTEN_URL);
                         while (!_disposed && Listening)
                         {
                             var byteArray = new byte[10240];
@@ -146,7 +147,7 @@ namespace RegulatedNoise
                                 try
                                 {
                                     var eddnMessage = EddnMessage.ReadJson(message);
-                                    eddnMessage.message.Source = "<From EDDN>";
+                                    eddnMessage.message.Source = SOURCENAME;
                                     RaiseMessageReceived(eddnMessage);
                                 }
                                 catch (Exception ex)
@@ -155,7 +156,7 @@ namespace RegulatedNoise
                                     var failedMessage = new EddnMessage
                                     {
                                         RawText = message,
-                                        message = {Source = "<From EDDN>"}
+                                        message = {Source = SOURCENAME}
                                     };
                                     RaiseMessageReceived(failedMessage);
                                 }
@@ -166,7 +167,7 @@ namespace RegulatedNoise
                             }
                             else
                             {
-                                Thread.Sleep(DELAY_BETWEEN_LISTEN);
+                                Thread.Sleep(DELAY_BETWEEN_POLL);
                             }
                         }
                     }
@@ -244,7 +245,7 @@ namespace RegulatedNoise
             {
                 try
                 {
-                    client.UploadString(EDDN_POST_URL, "POST", json);
+                    client.UploadString(POST_URL, "POST", json);
                 }
                 catch (WebException ex)
                 {

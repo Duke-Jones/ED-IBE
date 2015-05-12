@@ -45,6 +45,7 @@ namespace RegulatedNoise
         private static EDMilkyway _milkyway;
         private static dsCommodities _commoditiesLocalisation;
         private static EDDN _eddn;
+        private static Commodities _commodities;
 
         public static EDMilkyway Milkyway
         {
@@ -93,6 +94,17 @@ namespace RegulatedNoise
                 }
                 return _eddn;
             }
+        }
+
+        public static Commodities Commodities
+        {
+            get
+            {
+                if (_commodities == null)
+                    _commodities = new Commodities();
+                return _commodities;
+            }
+            set { _commodities = value; }
         }
     }
 }

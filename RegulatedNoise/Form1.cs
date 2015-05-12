@@ -53,8 +53,6 @@ namespace RegulatedNoise
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
         public CommandersLog CommandersLog;
-        public ObjectDirectory StationDirectory = new StationDirectory();
-        public ObjectDirectory CommodityDirectory = new CommodityDirectory();
         public static GameSettings GameSettings;
         public static OcrCalibrator OcrCalibrator;
         public List<string> KnownCommodityNames = new List<string>();
@@ -107,6 +105,10 @@ namespace RegulatedNoise
         private String _oldStationName = null;
         private string _CmdrsLog_LastAutoEventID = string.Empty;
 
+        private Commodities Commodities
+        {
+            get { return ApplicationContext.Commodities; }
+        }
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -273,11 +275,11 @@ namespace RegulatedNoise
                 _Splash.InfoChange("starting logfile watcher...<OK>");
                 UpdateEddnState();
 #if(DEBUG)
-			    var testTab = new TabPage("Testing");
+                var testTab = new TabPage("Testing");
                 var tester = new TestTab.TestTab();
                 tester.OnFakeEddnMessage += OutputEddnRawData;
                 testTab.Controls.Add(tester);
-			    tabCtrlMain.Controls.Add(testTab);
+                tabCtrlMain.Controls.Add(testTab);
 #endif
             }
             catch (Exception ex)
@@ -317,7 +319,7 @@ namespace RegulatedNoise
 
         private void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
         {
-            RunInGuiThread(() =>
+            this.RunInGuiThread(() =>
             {
                 switch (notificationEventArgs.Event)
                 {
@@ -365,7 +367,7 @@ namespace RegulatedNoise
 
         private void InitializationProgressEventHandler(object sender, NotificationEventArgs notificationEventArgs)
         {
-            RunInGuiThread(() =>
+            this.RunInGuiThread(() =>
             {
                 switch (notificationEventArgs.Event)
                 {
@@ -377,28 +379,6 @@ namespace RegulatedNoise
                         break;
                 }
             });
-        }
-
-        private void RunInGuiThread(Action action)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(action);
-            }
-            else
-                action();
-        }
-
-        private TResult RunInGuiThread<TResult>(Func<TResult> action)
-        {
-            if (InvokeRequired)
-            {
-                return (TResult)Invoke(action);
-            }
-            else
-            {
-                return action();
-            }
         }
 
         private void loadToolTips()
@@ -887,25 +867,22 @@ namespace RegulatedNoise
 
             if (force || saveFile.ShowDialog() == DialogResult.OK)
             {
-
                 currentFile = saveFile.FileName;
-                newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-                backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile),
+                    Path.GetExtension(currentFile));
+                backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile),
+                    Path.GetExtension(currentFile));
 
                 var writer = new StreamWriter(File.OpenWrite(newFile));
 
                 writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
-
-                foreach (var station in StationDirectory)
+                foreach (MarketDataRow commodity in Commodities)
                 {
-                    foreach (MarketDataRow commodity in station.Value)
-                    {
-                        // I'm sure that's not wanted vv
-                        //if (cbExtendedInfoInCSV.Checked)
-                        ///    writer.WriteLine(output + ";");
+                    // I'm sure that's not wanted vv
+                    //if (cbExtendedInfoInCSV.Checked)
+                    ///    writer.WriteLine(output + ";");
 
-                        writer.WriteLine(commodity.ToCsv(cbExtendedInfoInCSV.Checked));
-                    }
+                    writer.WriteLine(commodity.ToCsv(cbExtendedInfoInCSV.Checked));
                 }
                 writer.Close();
 
@@ -930,7 +907,6 @@ namespace RegulatedNoise
 
                 // rename new file to current file
                 File.Move(newFile, currentFile);
-
             }
         }
 
@@ -976,71 +952,26 @@ namespace RegulatedNoise
             }
         }
 
-        private void ImportCsvString(string csvRow, bool suspendDuplicateChecking = false, bool postToEddn = false, bool updateStationVisitations = false)
+        private void ImportCsvString(string csvRow, bool postToEddn = false, bool updateStationVisitations = false)
         {
-            bool ignoreThisRecord = false;
-            ImportMarketData(MarketDataRow.ReadCsv(csvRow), suspendDuplicateChecking, postToEddn, updateStationVisitations, ignoreThisRecord);
+            ImportMarketData(MarketDataRow.ReadCsv(csvRow), postToEddn, updateStationVisitations);
         }
 
-        private void ImportMarketData(MarketDataRow marketData, bool suspendDuplicateChecking, bool postToEddn, bool updateStationVisitations, bool ignoreThisRecord)
+        private void ImportMarketData(MarketDataRow marketData, bool postToEddn, bool updateStationVisitations)
         {
             if (marketData.CommodityName != "")
             {
                 if (updateStationVisitations)
-                    _StationHistory.addVisit(marketData.StationID);
-
-                if (!suspendDuplicateChecking)
                 {
-                    if (StationDirectory.ContainsKey(marketData.StationID))
-                    {
-                        var obsoleteData =
-                            StationDirectory[marketData.StationID].Where(
-                                x =>
-                                    x.StationID == marketData.StationID && x.CommodityName == marketData.CommodityName &&
-                                    x.SampleDate <= marketData.SampleDate).ToList();
-
-                        // is there older data for delete ?
-                        foreach (var x in obsoleteData)
-                        {
-                            StationDirectory[marketData.StationID].Remove(x);
-                            CommodityDirectory[marketData.CommodityName].Remove(x);
-                        }
-
-                        // is there already data that is younger than this new record
-                        var selfIsObsolete =
-                            StationDirectory[marketData.StationID].Where(
-                                x =>
-                                    x.StationID == marketData.StationID && x.CommodityName == marketData.CommodityName &&
-                                    x.SampleDate > marketData.SampleDate).ToList();
-                        if (selfIsObsolete.Count > 0)
-                        {
-                            ignoreThisRecord = true;
-                        }
-                    }
+                    _StationHistory.addVisit(marketData.StationID);
                 }
 
-                if (!ignoreThisRecord)
+                if (Commodities.Update(marketData) != Market.UpdateState.Discarded)
                 {
-                    if (!StationDirectory.ContainsKey(marketData.StationID))
-                        StationDirectory.Add(marketData.StationID, new List<MarketDataRow>());
-
-
-                    if (suspendDuplicateChecking ||
-                        StationDirectory[marketData.StationID].Count(
-                            x =>
-                                x.StationID == marketData.StationID && x.CommodityName == marketData.CommodityName &&
-                                x.SampleDate == marketData.SampleDate) == 0)
-                    {
-                        StationDirectory[marketData.StationID].Add(marketData);
-
-                        if (!CommodityDirectory.ContainsKey(marketData.CommodityName))
-                            CommodityDirectory.Add(marketData.CommodityName, new List<MarketDataRow>());
-
-                        CommodityDirectory[marketData.CommodityName].Add(marketData);
-                    }
-
                     if (postToEddn && cbPostOnImport.Checked && marketData.SystemName != "SomeSystem")
+                    {
                         ApplicationContext.Eddn.SendToEdDdn(marketData);
+                    }
                 }
             }
         }
@@ -1244,25 +1175,24 @@ namespace RegulatedNoise
 
             _pt.PrintAndReset("2");
 
-            BindingList<KeyValuePair<string, string>> BaseList;
             IFormatter formatter = new BinaryFormatter();
-            MemoryStream SerialListCopy = new MemoryStream();
+            MemoryStream serialListCopy = new MemoryStream();
 
             _pt.PrintAndReset("3");
 
-            BaseList = getDropDownStationsItems(ref _StationIndices);
+            var baseList = GetDropDownStationsItems(ref _StationIndices);
 
-            formatter.Serialize(SerialListCopy, BaseList);
+            formatter.Serialize(serialListCopy, baseList);
 
-            _bs_Stations.DataSource = BaseList;
-            SerialListCopy.Seek(0, 0);
-            _bs_StationsFrom.DataSource = (BindingList<KeyValuePair<string, string>>)formatter.Deserialize(SerialListCopy);
-            SerialListCopy.Seek(0, 0);
-            _bs_StationsTo.DataSource = (BindingList<KeyValuePair<string, string>>)formatter.Deserialize(SerialListCopy);
+            _bs_Stations.DataSource = baseList;
+            serialListCopy.Seek(0, 0);
+            _bs_StationsFrom.DataSource = (BindingList<KeyValuePair<string, string>>)formatter.Deserialize(serialListCopy);
+            serialListCopy.Seek(0, 0);
+            _bs_StationsTo.DataSource = (BindingList<KeyValuePair<string, string>>)formatter.Deserialize(serialListCopy);
 
             _pt.PrintAndReset("4");
 
-            SerialListCopy.Dispose();
+            serialListCopy.Dispose();
 
             if (!_InitDone)
             {
@@ -1285,7 +1215,7 @@ namespace RegulatedNoise
 
             var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
             cbIncludeWithinRegionOfStation.Items.Clear();
-            var systems = StationDirectory.Keys.Select(x => (object)(CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
+            var systems = Commodities.StationNames.Distinct().OrderBy(x => x).ToArray();
             cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
             cbIncludeWithinRegionOfStation.Items.AddRange(systems);
 
@@ -1301,28 +1231,28 @@ namespace RegulatedNoise
 
             cbIncludeWithinRegionOfStation.SelectedIndexChanged += cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
 
-            int ListIndex;
+            int listIndex;
 
 
             _pt.PrintAndReset("7");
 
-            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStation, out ListIndex))
-                cmbStation.SelectedIndex = ListIndex;
+            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStation, out listIndex))
+                cmbStation.SelectedIndex = listIndex;
 
-            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationFrom, out ListIndex))
-                cmbStationToStationFrom.SelectedIndex = ListIndex;
+            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationFrom, out listIndex))
+                cmbStationToStationFrom.SelectedIndex = listIndex;
 
-            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationTo, out ListIndex))
-                cmbStationToStationTo.SelectedIndex = ListIndex;
+            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationTo, out listIndex))
+                cmbStationToStationTo.SelectedIndex = listIndex;
 
 
             cbCommodity.Items.Clear();
 
             _pt.PrintAndReset("8");
 
-            foreach (var commodity in CommodityDirectory.OrderBy(x => x.Key))
+            foreach (var commodity in Commodities.CommodityNames.OrderBy(x => x))
             {
-                cbCommodity.Items.Add(commodity.Key);
+                cbCommodity.Items.Add(commodity);
             }
 
             cbCommodity.SelectedItem = null;
@@ -1334,9 +1264,9 @@ namespace RegulatedNoise
 
             //_pt.PrintAndReset("9");
 
-            Debug.Print("Anzahl = " + CommodityDirectory.Count);
+            Debug.Print("Anzahl = " + Commodities.CommodityNames.Count());
             // Populate all commodities tab
-            foreach (var commodity in CommodityDirectory)
+            foreach (var commodity in Commodities.CommodityNames)
             {
                 decimal bestBuyPrice;
                 decimal bestSellPrice;
@@ -1347,12 +1277,12 @@ namespace RegulatedNoise
 
                 //_pt.PrintAndReset("9_1");
 
-                GetBestBuyAndSell(commodity.Key, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
+                GetBestBuyAndSell(commodity, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
 
                 //_pt.PrintAndReset("9_2");
 
                 lvAllComms.Items.Add(new ListViewItem(new[] 
-                {   commodity.Key,
+                {   commodity,
                     bestBuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? bestBuyPrice.ToString(CultureInfo.InvariantCulture) : "",
                     bestBuy,
                     buyers.ToString(CultureInfo.InvariantCulture),
@@ -1379,23 +1309,22 @@ namespace RegulatedNoise
             Cursor = oldCursor;
         }
 
-        private void setupCombobox(ComboBox CBRefreshed, List<KeyValuePair<string, string>> DDItems)
+        private void UpdateCombobox(ComboBox comboBox, List<KeyValuePair<string, string>> dataSource)
         {
-            CBRefreshed.DataSource = null;
-
-            CBRefreshed.Items.Clear();
-
-            CBRefreshed.DataSource = DDItems;
-
-            CBRefreshed.ValueMember = "Key";
-            CBRefreshed.DisplayMember = "Value";
-
-            if (CBRefreshed.Items.Count > 0)
-                CBRefreshed.SelectedItem = CBRefreshed.Items[0];
+            comboBox.DataSource = null;
+            comboBox.Items.Clear();
+            comboBox.DataSource = dataSource;
+            comboBox.ValueMember = "Key";
+            comboBox.DisplayMember = "Value";
+            if (comboBox.Items.Count > 0)
+            {
+                comboBox.SelectedItem = comboBox.Items[0];
+            }
             else
-                CBRefreshed.SelectedItem = null;
-
-            CBRefreshed.Refresh();
+            {
+                comboBox.SelectedItem = null;
+            }
+            comboBox.Refresh();
         }
 
         private int GetTextLengthInPixels(string myText)
@@ -1403,44 +1332,41 @@ namespace RegulatedNoise
             return TextRenderer.MeasureText(myText, cmbStation.Font).Width;
         }
 
-        private BindingList<KeyValuePair<string, string>> getDropDownStationsItems(ref Dictionary<string, int> StationIndices)
+        private BindingList<KeyValuePair<string, string>> GetDropDownStationsItems(ref Dictionary<string, int> stationIndices)
         {
-            int SpaceWidth = GetTextLengthInPixels("                    ") / 20;
+            int spaceWidth = GetTextLengthInPixels("                    ") / 20;
             int maxLength = 0;
-            int Spaces = 0;
+            int spaces = 0;
             int last_i = 0;
-            List<int> LengthInfo1 = new List<int>();
-            List<int> LengthInfo2 = new List<int>();
+            List<int> lengthInfo1 = new List<int>();
+            List<int> lengthInfo2 = new List<int>();
 
             // clear the old index list
-            StationIndices.Clear();
+            stationIndices.Clear();
 
-            BindingList<KeyValuePair<string, string>> DDItems = new BindingList<KeyValuePair<string, string>>();
-            List<KeyValuePair<string, List<MarketDataRow>>> SelectionRaw;
-            List<KeyValuePair<string, List<MarketDataRow>>> SelectionOrdered = new List<KeyValuePair<string, List<MarketDataRow>>>();
-            List<KeyValuePair<string, List<MarketDataRow>>> SelectionPreordered;
+            var dropDownStationsItems = new BindingList<KeyValuePair<string, string>>();
+            var selectionOrdered = new List<KeyValuePair<string, IEnumerable<MarketDataRow>>>();
+            List<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionPreordered;
 
             // get the relevant stations
-            SelectionRaw = StationDirectory.Where(x => getStationSelection(x)).ToList();
+            var selectionRaw = Commodities.StationIds.Where(IsSelected).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, Commodities.StationMarket(stationId))).Where(kvp => kvp.Value.Any()).ToList();
 
             if (rbSortBySystem.Checked)
             {
                 // get the list ordered as wanted -> order by system
-                SelectionPreordered = SelectionRaw.OrderBy(x => CombinedNameToSystemName(x.Key)).ThenBy(x => CombinedNameToStationName(x.Key)).ToList();
-
+                selectionPreordered = selectionRaw.OrderBy(x => x.Key).ToList();
                 if (cblastVisitedFirst.Checked)
                 {
-                    getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
+                    GetVisitedListPart(ref maxLength, lengthInfo1, selectionOrdered, selectionPreordered);
                 }
 
-
                 // be aware of the length of each string in the remaining list
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
+                for (int i = 0; i < selectionPreordered.Count(); i++)
                 {
                     int tempLength;
                     try
                     {
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
+                        tempLength = GetTextLengthInPixels(selectionPreordered[i].Value.First().SystemName);
                     }
                     catch (Exception ex)
                     {
@@ -1453,7 +1379,7 @@ namespace RegulatedNoise
                         maxLength = tempLength;
                     }
 
-                    LengthInfo2.Add(tempLength);
+                    lengthInfo2.Add(tempLength);
                 }
 
                 last_i = 0;
@@ -1461,51 +1387,53 @@ namespace RegulatedNoise
                 if (cblastVisitedFirst.Checked)
                 {
                     // insert get the visited (lengths are in LengthInfo1)
-                    for (int i = 0; i < SelectionOrdered.Count(); i++)
+                    for (int i = 0; i < selectionOrdered.Count(); i++)
                     {
-                        Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key, String.Format("{0}{2}     {1}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                        StationIndices.Add(SelectionOrdered[i].Key, i);
+                        spaces = (int)Math.Ceiling((double)(maxLength - lengthInfo1[i]) / spaceWidth);
+                        var marketDataRow = selectionOrdered[i].Value.First();
+                        dropDownStationsItems.Add(new KeyValuePair<string, string>(selectionOrdered[i].Key, String.Format("{0}{2}     {1}", marketDataRow.SystemName, marketDataRow.StationName, "".PadLeft(spaces))));
+                        stationIndices.Add(selectionOrdered[i].Key, i);
 
                         last_i = i + 1;
                     }
 
                     // insert separator
-                    DDItems.Add(new KeyValuePair<string, string>(ID_DELIMITER, String.Format("-----------------------")));
-                    StationIndices.Add(ID_DELIMITER, last_i);
-                    LengthInfo1.Add(0);
+                    dropDownStationsItems.Add(new KeyValuePair<string, string>(ID_DELIMITER, String.Format("-----------------------")));
+                    stationIndices.Add(ID_DELIMITER, last_i);
+                    lengthInfo1.Add(0);
                     last_i++;
                 }
 
                 // insert get the visited (lengths are in LengthInfo1)
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
+                for (int i = 0; i < selectionPreordered.Count(); i++)
                 {
-                    Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key, String.Format("{0}{2}     {1}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                    StationIndices.Add(SelectionPreordered[i].Key, i + last_i);
+                    spaces = (int)Math.Ceiling((double)(maxLength - lengthInfo2[i]) / spaceWidth);
+                    var marketDataRow = selectionPreordered[i].Value.First();
+                    dropDownStationsItems.Add(new KeyValuePair<string, string>(selectionPreordered[i].Key, String.Format("{0}{2}     {1}", marketDataRow.SystemName, marketDataRow.StationName, "".PadLeft(spaces))));
+                    stationIndices.Add(selectionPreordered[i].Key, i + last_i);
                 }
             }
             else if (rbSortByStation.Checked)
             {
                 // get the list ordered as wanted -> order by station
-                SelectionPreordered = SelectionRaw.OrderBy(x => CombinedNameToStationName(x.Key)).ToList(); ;
+                selectionPreordered = selectionRaw.OrderBy(x => CombinedNameToStationName(x.Key)).ToList(); ;
 
                 if (cblastVisitedFirst.Checked)
                 {
-                    getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
+                    GetVisitedListPart(ref maxLength, lengthInfo1, selectionOrdered, selectionPreordered);
                 }
 
                 // be aware of the length of each string in the remaining list
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
+                for (int i = 0; i < selectionPreordered.Count(); i++)
                 {
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].StationName);
+                    int tempLength = GetTextLengthInPixels(selectionPreordered[i].Value.First().StationName);
                     if (maxLength < tempLength)
                     {
                         if (MAX_NAME_LENGTH < tempLength)
                             tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
                     }
-                    LengthInfo2.Add(tempLength);
+                    lengthInfo2.Add(tempLength);
                 }
 
                 last_i = 0;
@@ -1513,51 +1441,53 @@ namespace RegulatedNoise
                 if (cblastVisitedFirst.Checked)
                 {
                     // insert get the visited (lengths are in LengthInfo1)
-                    for (int i = 0; i < SelectionOrdered.Count(); i++)
+                    for (int i = 0; i < selectionOrdered.Count(); i++)
                     {
-                        Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key, String.Format("{1}{2}     {0}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                        StationIndices.Add(SelectionOrdered[i].Key, i);
+                        spaces = (int)Math.Ceiling((Double)(maxLength - lengthInfo1[i]) / (Double)spaceWidth);
+                        var marketDataRow = selectionOrdered[i].Value.First();
+                        dropDownStationsItems.Add(new KeyValuePair<string, string>(selectionOrdered[i].Key, String.Format("{1}{2}     {0}", marketDataRow.SystemName, marketDataRow.StationName, "".PadLeft(spaces))));
+                        stationIndices.Add(selectionOrdered[i].Key, i);
 
                         last_i = i + 1;
                     }
 
                     // insert separator
-                    DDItems.Add(new KeyValuePair<string, string>(ID_DELIMITER, String.Format("-----------------------")));
-                    StationIndices.Add(ID_DELIMITER, last_i);
-                    LengthInfo1.Add(0);
+                    dropDownStationsItems.Add(new KeyValuePair<string, string>(ID_DELIMITER, String.Format("-----------------------")));
+                    stationIndices.Add(ID_DELIMITER, last_i);
+                    lengthInfo1.Add(0);
                     last_i++;
                 }
 
                 // insert get the visited (lengths are in LengthInfo1)
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
+                for (int i = 0; i < selectionPreordered.Count(); i++)
                 {
-                    Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key, String.Format("{1}{2}     {0}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                    StationIndices.Add(SelectionPreordered[i].Key, i + last_i);
+                    spaces = (int)Math.Ceiling((Double)(maxLength - lengthInfo2[i]) / (Double)spaceWidth);
+                    var marketDataRow = selectionPreordered[i].Value.First();
+                    dropDownStationsItems.Add(new KeyValuePair<string, string>(selectionPreordered[i].Key, String.Format("{1}{2}     {0}", marketDataRow.SystemName, marketDataRow.StationName, "".PadLeft(spaces))));
+                    stationIndices.Add(selectionPreordered[i].Key, i + last_i);
                 }
             }
             else if (rbSortByDistance.Checked)
             {
                 // get the list ordered as wanted -> order by distance 
-                SelectionPreordered = SelectionRaw.OrderBy(x => DistanceInLightYears(CombinedNameToSystemName(x.Key))).ToList();
+                selectionPreordered = selectionRaw.OrderBy(x => DistanceInLightYears(CombinedNameToSystemName(x.Key))).ToList();
 
                 if (cblastVisitedFirst.Checked)
                 {
-                    getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
+                    GetVisitedListPart(ref maxLength, lengthInfo1, selectionOrdered, selectionPreordered);
                 }
 
                 // be aware of the length of each string in the remaining list
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
+                for (int i = 0; i < selectionPreordered.Count(); i++)
                 {
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
+                    int tempLength = GetTextLengthInPixels(selectionPreordered[i].Value.First().SystemName);
                     if (maxLength < tempLength)
                     {
                         if (MAX_NAME_LENGTH < tempLength)
                             tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
                     }
-                    LengthInfo2.Add(tempLength);
+                    lengthInfo2.Add(tempLength);
                 }
 
                 last_i = 0;
@@ -1565,32 +1495,34 @@ namespace RegulatedNoise
                 if (cblastVisitedFirst.Checked)
                 {
                     // insert get the visited (lengths are in LengthInfo1)
-                    for (int i = 0; i < SelectionOrdered.Count(); i++)
+                    for (int i = 0; i < selectionOrdered.Count(); i++)
                     {
-                        Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key, String.Format("{0}{2}     \t{1}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                        StationIndices.Add(SelectionOrdered[i].Key, i);
+                        spaces = (int)Math.Ceiling((Double)(maxLength - lengthInfo1[i]) / (Double)spaceWidth);
+                        var marketDataRow = selectionOrdered[i].Value.First();
+                        dropDownStationsItems.Add(new KeyValuePair<string, string>(selectionOrdered[i].Key, String.Format("{0}{2}     \t{1}", marketDataRow.SystemName, marketDataRow.StationName, "".PadLeft(spaces))));
+                        stationIndices.Add(selectionOrdered[i].Key, i);
 
                         last_i = i + 1;
                     }
 
                     // insert separator
-                    DDItems.Add(new KeyValuePair<string, string>(ID_DELIMITER, String.Format("-----------------------")));
-                    StationIndices.Add(ID_DELIMITER, last_i);
-                    LengthInfo1.Add(0);
+                    dropDownStationsItems.Add(new KeyValuePair<string, string>(ID_DELIMITER, String.Format("-----------------------")));
+                    stationIndices.Add(ID_DELIMITER, last_i);
+                    lengthInfo1.Add(0);
                     last_i++;
                 }
 
                 // insert get the visited (lengths are in LengthInfo1)
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
+                for (int i = 0; i < selectionPreordered.Count(); i++)
                 {
-                    Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key, String.Format("{0}{2}     \t{1}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                    StationIndices.Add(SelectionPreordered[i].Key, i + last_i);
+                    spaces = (int)Math.Ceiling((Double)(maxLength - lengthInfo2[i]) / (Double)spaceWidth);
+                    var marketDataRow = selectionPreordered[i].Value.First();
+                    dropDownStationsItems.Add(new KeyValuePair<string, string>(selectionPreordered[i].Key, String.Format("{0}{2}     \t{1}", marketDataRow.SystemName, marketDataRow.StationName, "".PadLeft(spaces))));
+                    stationIndices.Add(selectionPreordered[i].Key, i + last_i);
                 }
             }
 
-            return DDItems;
+            return dropDownStationsItems;
 
         }
 
@@ -1598,31 +1530,31 @@ namespace RegulatedNoise
         /// get the Stations which are visited the last time and remove them from the base list
         /// </summary>
         /// <param name="maxLength"></param>
-        /// <param name="LengthInfo1"></param>
-        /// <param name="SelectionOrdered"></param>
-        /// <param name="SelectionPreordered"></param>
-        private void getVisitedListPart(ref int maxLength, List<int> LengthInfo1, List<KeyValuePair<string, List<MarketDataRow>>> SelectionOrdered, List<KeyValuePair<string, List<MarketDataRow>>> SelectionPreordered)
+        /// <param name="lengthInfo1"></param>
+        /// <param name="selectionOrdered"></param>
+        /// <param name="selectionPreordered"></param>
+        private void GetVisitedListPart(ref int maxLength, ICollection<int> lengthInfo1, ICollection<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionOrdered, ICollection<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionPreordered)
         {
             int lastVisitCount = int.Parse(txtlastStationCount.Text);
 
-            for (int i = 0; (i < _StationHistory.History.Count) && (SelectionOrdered.Count < lastVisitCount); i++)
+            for (int i = 0; (i < _StationHistory.History.Count) && (selectionOrdered.Count() < lastVisitCount); i++)
             {
-                int foundIndex = SelectionPreordered.FindIndex(x => x.Key.Equals(_StationHistory.History[i].Station, StringComparison.InvariantCultureIgnoreCase));
+                KeyValuePair<string, IEnumerable<MarketDataRow>> stationMarket = selectionPreordered.FirstOrDefault(x => x.Key.Equals(_StationHistory.History[i].Station, StringComparison.InvariantCultureIgnoreCase));
 
-                if (foundIndex >= 0)
+                if (stationMarket.Key != null)
                 {
                     int tempLength = 0;
 
                     // put the found item in the lastvisited list
-                    SelectionOrdered.Add(SelectionPreordered[foundIndex]);
-
+                    selectionOrdered.Add(stationMarket);
+                    MarketDataRow marketDataRow = stationMarket.Value.First();
                     // be aware of the length of each string
                     if (rbSortBySystem.Checked)
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
+                        tempLength = GetTextLengthInPixels(marketDataRow.SystemName);
                     else if (rbSortByStation.Checked)
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].StationName);
+                        tempLength = GetTextLengthInPixels(marketDataRow.StationName);
                     else if (rbSortByDistance.Checked)
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
+                        tempLength = GetTextLengthInPixels(marketDataRow.SystemName);
 
                     if (maxLength < tempLength)
                     {
@@ -1630,14 +1562,14 @@ namespace RegulatedNoise
                             tempLength = MAX_NAME_LENGTH;
                         maxLength = tempLength;
                     }
-                    LengthInfo1.Add(tempLength);
+                    lengthInfo1.Add(tempLength);
 
                     // remove item from preordered list
-                    SelectionPreordered.RemoveAt(foundIndex);
-
+                    selectionPreordered.Remove(stationMarket);
                 }
             }
         }
+
         private void PopulateNetworkInterfaces()
         {
             // from http://stackoverflow.com/questions/9855230/how-to-get-the-network-interface-and-its-right-ipv4-address
@@ -1681,7 +1613,7 @@ namespace RegulatedNoise
                     tbStationRename.Text = stationName.Substring(0, start - 1);
                     tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
 
-                    foreach (var row in StationDirectory[stationName])
+                    foreach (var row in Commodities.StationMarket(stationName))
                     {
                         decimal bestBuyPrice;
                         decimal bestSellPrice;
@@ -1754,7 +1686,7 @@ namespace RegulatedNoise
             bestBuy = "";
             bestSell = "";
 
-            var l = CommodityDirectory[commodityName].Where(x => x.Supply != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
+            var l = Commodities.CommodityMarket(commodityName).Where(x => x.Supply != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
             buyers = l.Count();
 
             if (l.Count() != 0)
@@ -1764,7 +1696,7 @@ namespace RegulatedNoise
                 bestBuy = string.Join(" ", l.Where(x => x.BuyPrice == bestBuyPriceCopy).Select(x => x.StationID + " (" + x.BuyPrice + ")"));
             }
 
-            var m = CommodityDirectory[commodityName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
+            var m = Commodities.CommodityMarket(commodityName).Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
             sellers = m.Count();
             if (m.Count() != 0)
             {
@@ -1885,12 +1817,12 @@ namespace RegulatedNoise
 
         private void cbCommodity_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selectedCmbItem = ((ComboBox)sender).SelectedItem;
+            object selectedCmbItem = ((ComboBox)sender).SelectedItem;
             lbCommodities.Items.Clear();
 
             if (selectedCmbItem != null)
             {
-                foreach (var row in CommodityDirectory[(selectedCmbItem.ToString())].Where(x => getStationSelection(x)))
+                foreach (var row in Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => getStationSelection(x)))
                 {
                     lbCommodities.Items.Add(new ListViewItem(new string[] 
                     {   row.StationID,
@@ -1904,8 +1836,8 @@ namespace RegulatedNoise
                     }));
                 }
 
-                var l = CommodityDirectory[(selectedCmbItem.ToString())].Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => getStationSelection(x)).ToList();
-                if (l.Count() > 0)
+                var l = Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => getStationSelection(x)).ToList();
+                if (l.Any())
                 {
                     lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
                     lblMax.Text = l.Max(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
@@ -1918,8 +1850,8 @@ namespace RegulatedNoise
                     lblAvg.Text = "N/A";
                 }
 
-                l = CommodityDirectory[(selectedCmbItem.ToString())].Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => getStationSelection(x)).ToList();
-                if (l.Count() > 0)
+                l = Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => getStationSelection(x)).ToList();
+                if (l.Any())
                 {
                     lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
                     lblMaxSell.Text = l.Max(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
@@ -1947,7 +1879,7 @@ namespace RegulatedNoise
         {
             if (lblMin.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Min(y => y.BuyPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1957,7 +1889,7 @@ namespace RegulatedNoise
         {
             if (lblMinSell.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.SellPrice == l.Min(y => y.SellPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1967,7 +1899,7 @@ namespace RegulatedNoise
         {
             if (lblMax.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Max(y => y.BuyPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1977,7 +1909,7 @@ namespace RegulatedNoise
         {
             if (lblMaxSell.Text != "N/A")
             {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.SellPrice == l.Max(y => y.SellPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -2008,7 +1940,7 @@ namespace RegulatedNoise
 
             chart1.Series.Add(series1);
 
-            foreach (var price in CommodityDirectory[senderName].Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
+            foreach (var price in Commodities.CommodityMarket(senderName).Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
             {
                 series1.Points.AddXY(price.StationID, price.BuyPrice);
             }
@@ -2030,7 +1962,7 @@ namespace RegulatedNoise
 
             chart2.Series.Add(series2);
 
-            foreach (var price in CommodityDirectory[senderName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
+            foreach (var price in Commodities.CommodityMarket(senderName).Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
             {
                 series2.Points.AddXY(price.StationID, price.SellPrice);
             }
@@ -2087,100 +2019,16 @@ namespace RegulatedNoise
         private void RenameStation(object sender, EventArgs e)
         {
             var existingStationName = getCmbItemKey(cmbStation.SelectedItem);
-
             tbStationRename.Text = _textInfo.ToTitleCase(tbStationRename.Text.ToLower());
-
-            var newStationName = tbStationRename.Text + " [" + tbSystemRename.Text + "]";
-
-            List<MarketDataRow> newRows = new List<MarketDataRow>();
-
-            foreach (var row in StationDirectory[existingStationName])
+            string newStationId = tbStationRename.Text + " [" + tbSystemRename.Text + "]";
+            foreach (MarketDataRow row in Commodities.StationMarket(existingStationName))
             {
-                MarketDataRow newRow = new MarketDataRow
-                {
-                    BuyPrice = row.BuyPrice,
-                    Stock = row.Stock,
-                    CommodityName = row.CommodityName,
-                    Demand = row.Demand,
-                    DemandLevel = row.DemandLevel,
-                    SampleDate = row.SampleDate,
-                    SellPrice = row.SellPrice,
-                    StationName = tbStationRename.Text,
-                    Supply = row.Supply,
-                    SupplyLevel = row.SupplyLevel,
-                    SystemName = tbSystemRename.Text,
-                    Source = row.Source
-                };
-
-                newRows.Add(newRow);
+                Commodities.Remove(row);
+                row.StationName = tbStationRename.Text;
+                row.SystemName = tbSystemRename.Text;
+                Commodities.Update(row);
             }
-
-
-            StationDirectory.Remove(existingStationName);
-
-            if (!StationDirectory.ContainsKey(newStationName))
-                StationDirectory.Add(newStationName, newRows);
-            else StationDirectory[newStationName].AddRange(newRows);
-
-            var newCommodityDirectory = new CommodityDirectory();
-
-            foreach (var collectionOfRows in CommodityDirectory)
-            {
-                newRows = new List<MarketDataRow>();
-
-                foreach (var row in collectionOfRows.Value)
-                {
-
-                    MarketDataRow newRow = new MarketDataRow
-                    {
-                        BuyPrice = row.BuyPrice,
-                        Stock = row.Stock,
-                        CommodityName = row.CommodityName,
-                        Demand = row.Demand,
-                        DemandLevel = row.DemandLevel,
-                        SampleDate = row.SampleDate,
-                        SellPrice = row.SellPrice,
-                        Supply = row.Supply,
-                        SupplyLevel = row.SupplyLevel,
-                        SystemName = row.StationID == existingStationName ? tbSystemRename.Text : row.SystemName
-                    };
-                    newRows.Add(newRow);
-                }
-
-                newCommodityDirectory.Add(collectionOfRows.Key, newRows);
-            }
-
-            CommodityDirectory = newCommodityDirectory;
-
-            //Remove duplicates (incl. historical)
-            var newStationDirectory = new List<MarketDataRow>();
-
-            var distinctCommodityNames = StationDirectory[newStationName].ToList().Select(x => x.CommodityName).Distinct();
-
-            foreach (var c in distinctCommodityNames)
-            {
-                newStationDirectory.Add(StationDirectory[newStationName].ToList().Where(x => x.CommodityName == c).OrderByDescending(x => x.SampleDate).First());
-            }
-
-            StationDirectory[newStationName] = newStationDirectory;
-
-            var newCommodityDirectory2 = new CommodityDirectory();
-
-            for (int i = 0; i < CommodityDirectory.Keys.Count; i++)
-            {
-                var distinctStationNames = CommodityDirectory.ElementAt(i).Value.Select(x => x.StationID).Distinct();
-                foreach (var d in distinctStationNames)
-                {
-                    if (!newCommodityDirectory2.Keys.Contains(CommodityDirectory.ElementAt(i).Key))
-                        newCommodityDirectory2.Add(CommodityDirectory.ElementAt(i).Key, new List<MarketDataRow> { CommodityDirectory.ElementAt(i).Value.ToList().Where(x => x.StationID == d).OrderByDescending(x => x.SampleDate).First() });
-                    else newCommodityDirectory2[CommodityDirectory.ElementAt(i).Key].Add(CommodityDirectory.ElementAt(i).Value.ToList().Where(x => x.StationID == d).OrderByDescending(x => x.SampleDate).First());
-                }
-            }
-
-            CommodityDirectory = newCommodityDirectory2;
-
-            _StationHistory.RenameStation(existingStationName, newStationName);
-
+            _StationHistory.RenameStation(existingStationName, newStationId);
             SetupGui();
         }
 
@@ -2242,7 +2090,7 @@ namespace RegulatedNoise
                 return (string)(Invoke(new EventArgsDelegate(GetLvAllCommsItems)));
             }
 
-            if (StationDirectory.Count == 0)
+            if (Commodities.Count == 0)
                 return "No data loaded :-(";
 
             var s = new StringBuilder();
@@ -2610,10 +2458,10 @@ namespace RegulatedNoise
                         Invoke(new DisplayResultsDelegate(DisplayResults), s);
                         return;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         if (currentTry >= 3)
-                            throw ex;
+                            throw;
                         else
                         {
                             Thread.Sleep(333);
@@ -2626,22 +2474,23 @@ namespace RegulatedNoise
 
             tbOcrStationName.Text = s; // CLARK HUB
 
-            var systemNames = StationDirectory.Keys.Where(x => x.ToUpper().Contains(s)).ToList();
+            var systemNames = Commodities.Systems.Where(x => x.ToUpper().Contains(s)).ToList();
             if (systemNames.Count == 1) // let's hope so!
             {
-                var tempName = systemNames.First();
-                var tempName2 = tempName.Substring(tempName.IndexOf("[", StringComparison.Ordinal)).Replace("[", "").Replace("]", "");
-                tbOcrSystemName.Text = tempName2;
+                tbOcrSystemName.Text = systemNames.First();
             }
             else
             {
                 UpdateSystemNameFromLogFile();
 
                 if (tbCurrentSystemFromLogs.Text != "")
+                {
                     tbOcrSystemName.Text = tbCurrentSystemFromLogs.Text;
+                }
                 else
+                {
                     tbOcrSystemName.Text = "SomeSystem";
-
+                }
             }
         }
 
@@ -2891,9 +2740,9 @@ namespace RegulatedNoise
         }
 
         [Conditional("DEBUG")]
-	    internal void FakeAcquisition(string ocrResult)
+        internal void FakeAcquisition(string ocrResult)
         {
-            RunInGuiThread(() =>
+            this.RunInGuiThread(() =>
             {
                 tbFinalOcrOutput.Text = ocrResult;
                 Acquisition();
@@ -3158,13 +3007,10 @@ namespace RegulatedNoise
             {
                 if (s.Contains(";"))
                 {
-
-                    ImportCsvString(s, false, true, true);
+                    ImportCsvString(s, true, true);
                 }
             }
-
             CommandersLog_MarketDataCollectedEvent(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
-
             SetupGui();
         }
 
@@ -3274,13 +3120,13 @@ namespace RegulatedNoise
 
         private void button12_Click_1(object sender, EventArgs e)
         {
-            foreach (var s in StationDirectory)
+            foreach (var stationId in Commodities.StationIds)
             {
-                var eventDates = s.Value.ToList().Select(x => x.SampleDate.AddSeconds(0 - x.SampleDate.Second)).Distinct();
+                var eventDates = Commodities.StationMarket(stationId).Select(x => x.SampleDate.AddSeconds(0 - x.SampleDate.Second)).Distinct();
 
                 foreach (var d in eventDates)
                 {
-                    CommandersLog.CreateEvent("Market Data Collected", s.Key, s.Key, null, null, 0, null, d);
+                    CommandersLog.CreateEvent("Market Data Collected", stationId, stationId, null, null, 0, null, d);
                 }
             }
         }
@@ -3299,38 +3145,43 @@ namespace RegulatedNoise
 
         public void OutputEddnRawData(object sender, EddnMessageEventArgs args)
         {
-            RunInGuiThread(() =>
+            this.RunInGuiThread(() =>
             {
                 tbEDDNOutput.Text = args.Message.RawText;
                 ParseEddnJson(args.Message, checkboxImportEDDN.Checked);
             });
 
-            if (harvestStations && StationDirectory.Count > harvestStationsCount)
+            var stationCount = Commodities.StationIds.Count();
+            if (harvestStations && stationCount > harvestStationsCount)
             {
                 if (File.Exists("stations.txt"))
+                {
                     File.Delete("stations.txt");
+                }
 
                 TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
-                foreach (var x in StationDirectory.OrderBy(x => x.Key))
+                foreach (var stationId in Commodities.StationIds.OrderBy(x => x))
                 {
-                    f.WriteLine(x.Key);
+                    f.WriteLine(stationId);
                 }
                 f.Close();
-                harvestStationsCount = StationDirectory.Count;
+                harvestStationsCount = stationCount;
             }
 
-            if (harvestStations && CommodityDirectory.Count > harvestCommsCount)
+            var commodityCount = Commodities.CommodityNames.Count();
+            if (harvestStations && commodityCount > harvestCommsCount)
             {
                 if (File.Exists("commodities.txt"))
-                    File.Delete("commodities.txt");
-
-                TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
-                foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
                 {
-                    f.WriteLine(x.Key);
+                    File.Delete("commodities.txt");
+                }
+                TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
+                foreach (var commodity in Commodities.CommodityNames.OrderBy(x => x))
+                {
+                    f.WriteLine(commodity);
                 }
                 f.Close();
-                harvestCommsCount = CommodityDirectory.Count;
+                harvestCommsCount = commodityCount;
             }
         }
 
@@ -3371,22 +3222,9 @@ namespace RegulatedNoise
 
                                 if (cbSpoolImplausibleToFile.Checked)
                                 {
-                                    FileStream logFileStream = null;
                                     string FileName = @".\EddnImplausibleOutput.txt";
-
-                                    if (File.Exists(FileName))
-                                    {
-                                        logFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                                    }
-                                    else
-                                    {
-                                        logFileStream = File.Create(FileName);
-                                    }
-
-                                    logFileStream.Write(Encoding.Default.GetBytes(infoString), 0, Encoding.Default.GetByteCount(infoString));
-                                    logFileStream.Close();
+                                    File.AppendAllText(FileName, infoString + Environment.NewLine + eddn.RawText);
                                 }
-
                                 Debug.Print("Implausible EDDN Data: " + csvFormatted);
                             }
                         }
@@ -3412,12 +3250,12 @@ namespace RegulatedNoise
                 tbEDDNOutput.Text = "Couldn't parse JSON!\r\n\r\n" + tbEDDNOutput.Text;
             }
         }
-        
+
         public void UpdateEddnState()
         {
             if (ApplicationContext.Eddn.Listening)
             {
-                RunInGuiThread(() =>
+                this.RunInGuiThread(() =>
                 {
                     tbEDDNOutput.Text = "Listening...";
                     button15.Enabled = false;
@@ -3426,7 +3264,7 @@ namespace RegulatedNoise
             }
             else
             {
-                RunInGuiThread(() =>
+                this.RunInGuiThread(() =>
                 {
                     tbEDDNOutput.Text = "Not Listening";
                     button15.Enabled = true;
@@ -3518,86 +3356,63 @@ namespace RegulatedNoise
             var resultsOutbound = new List<ListViewItem>();
             var resultsReturn = new List<ListViewItem>();
 
-            foreach (var commodity in CommodityDirectory)
+            int outwardIncome = 0;
+            int returnIncome = 0;
+            foreach (var commodity in Commodities.CommodityNames)
             {
-                var from = StationDirectory[stationFrom].Where(x => x.CommodityName == commodity.Key).ToList();
-                var from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).OrderByDescending(x => x.SampleDate).ToList();
-                var to = StationDirectory[stationTo].Where(x => x.CommodityName == commodity.Key).ToList();
-                var to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).OrderByDescending(x => x.SampleDate).ToList();
+                MarketDataRow fromRow = Commodities.StationMarket(stationFrom)
+                                        .FirstOrDefault(x => x.CommodityName == commodity);
+                MarketDataRow toRow = Commodities.StationMarket(stationTo)
+                                        .FirstOrDefault(x => x.CommodityName == commodity);
 
-                if (from2.Any() && to2.Any())
+                if (fromRow == null || toRow == null) continue;
+
+                int tradeRouteIncome = TradeRouteIncome(fromRow, toRow);
+                if (tradeRouteIncome > 0)
                 {
-                    var fromRow = from2[0];
-                    var toRow = to2[0];
-
-                    decimal sellPrice = toRow.SellPrice;
-                    decimal supply = fromRow.Supply;
-                    string supplyLevel = fromRow.SupplyLevel.Display();
-                    decimal buyPrice = fromRow.BuyPrice;
-                    decimal demand = toRow.Demand;
-                    string demandLevel = toRow.DemandLevel.Display();
-                    decimal difference = toRow.SellPrice - fromRow.BuyPrice;
-
-                    var newItem = new
-                         ListViewItem(new string[]
-                        {
-                            commodity.Key,
-                            buyPrice.ToString(CultureInfo.InvariantCulture),
-                            supply.ToString(CultureInfo.InvariantCulture),
-                            supplyLevel,
-                            sellPrice.ToString(CultureInfo.InvariantCulture),
-                            demand.ToString(CultureInfo.InvariantCulture),
-                            demandLevel,
-                            difference.ToString(CultureInfo.InvariantCulture)
-                        });
-
-                    if (difference > 0)
-                    {
-                        resultsOutbound.Add(newItem);
-                    }
+                    resultsOutbound.Add(BuildTradeRouteViewItem(fromRow, toRow));
+                    outwardIncome = Math.Max(outwardIncome, tradeRouteIncome);
                 }
 
-                // Return trip
-
-
-                @from = StationDirectory[stationTo].Where(x => x.CommodityName == commodity.Key).ToList();
-                from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).OrderByDescending(x => x.SampleDate).ToList();
-                to = StationDirectory[stationFrom].Where(x => x.CommodityName == commodity.Key).ToList();
-                to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).OrderByDescending(x => x.SampleDate).ToList();
-
-                if (from2.Any() && to2.Any())
+                tradeRouteIncome = TradeRouteIncome(toRow, fromRow);
+                if (tradeRouteIncome > 0)
                 {
-                    var fromRow = from2[0];
-                    var toRow = to2[0];
-
-                    decimal sellPrice = toRow.SellPrice;
-                    decimal supply = fromRow.Supply;
-                    string supplyLevel = fromRow.SupplyLevel.Display();
-                    decimal buyPrice = fromRow.BuyPrice;
-                    decimal demand = toRow.Demand;
-                    string demandLevel = toRow.DemandLevel.Display();
-                    decimal difference = toRow.SellPrice - fromRow.BuyPrice;
-
-                    if (difference > 0)
-                        resultsReturn.Add(new ListViewItem(new[]
-                        {
-                            commodity.Key,
-                            buyPrice.ToString(CultureInfo.InvariantCulture),
-                            supply.ToString(CultureInfo.InvariantCulture),
-                            supplyLevel,
-                            sellPrice.ToString(CultureInfo.InvariantCulture),
-                            demand.ToString(CultureInfo.InvariantCulture),
-                            demandLevel,
-                            difference.ToString(CultureInfo.InvariantCulture)
-                        }));
+                    resultsReturn.Add(BuildTradeRouteViewItem(toRow, fromRow));
+                    returnIncome = Math.Max(returnIncome, tradeRouteIncome);
                 }
             }
-
-            var q = resultsOutbound.Count > 0 ? resultsOutbound.Max(x => int.Parse(x.SubItems[7].Text)) : 0;
-            var r = resultsReturn.Count > 0 ? resultsReturn.Max(x => int.Parse(x.SubItems[7].Text)) : 0;
-
-            bestRoundTrip = q + r;
+            bestRoundTrip = outwardIncome + returnIncome;
             return new Tuple<List<ListViewItem>, List<ListViewItem>>(resultsOutbound, resultsReturn);
+        }
+
+        private static ListViewItem BuildTradeRouteViewItem(MarketDataRow fromRow, MarketDataRow toRow)
+        {
+            return new
+                ListViewItem(new string[]
+                {
+                    fromRow.CommodityName,
+                    fromRow.BuyPrice.ToString(CultureInfo.InvariantCulture),
+                    fromRow.Supply.ToString(CultureInfo.InvariantCulture),
+                    fromRow.SupplyLevel.Display(),
+                    toRow.SellPrice.ToString(CultureInfo.InvariantCulture),
+                    toRow.Demand.ToString(CultureInfo.InvariantCulture),
+                    toRow.DemandLevel.Display(),
+                    (toRow.SellPrice - fromRow.BuyPrice).ToString(CultureInfo.InvariantCulture)
+                });
+        }
+
+        private static int TradeRouteIncome(MarketDataRow fromRow, MarketDataRow toRow)
+        {
+            if (fromRow.CommodityName == toRow.CommodityName
+                   && fromRow.BuyPrice > 0 && fromRow.Supply > 0
+                   && toRow.Demand > 0)
+            {
+                return toRow.SellPrice - fromRow.BuyPrice;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         #endregion
@@ -4228,9 +4043,10 @@ namespace RegulatedNoise
         private void cbLogCargoName_DropDown(object sender, EventArgs e)
         {
             cbLogCargoName.Items.Clear();
-
-            foreach (var x in CommodityDirectory)
-                cbLogCargoName.Items.Add(x.Key);
+            foreach (var x in Commodities.CommodityNames)
+            {
+                cbLogCargoName.Items.Add(x);
+            }
         }
 
         private void lvCommandersLog_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -4295,8 +4111,10 @@ namespace RegulatedNoise
         private void cbLogSystemName_DropDown(object sender, EventArgs e)
         {
             cbLogSystemName.Items.Clear();
-            foreach (var q in StationDirectory.Select(x => x.Key.Substring(x.Key.IndexOf("[", StringComparison.Ordinal) + 1, x.Key.IndexOf("]", StringComparison.Ordinal) - (x.Key.IndexOf("[", StringComparison.Ordinal) + 1))))
-                cbLogSystemName.Items.Add(q);
+            foreach (var system in Commodities.Systems)
+            {
+                cbLogSystemName.Items.Add(system);
+            }
         }
 
         #region Help button handlers
@@ -4546,46 +4364,34 @@ namespace RegulatedNoise
 
         private void bStationEditRow_Click(object sender, EventArgs e)
         {
-            string ComboboxKey = getCmbItemKey(cmbStation.SelectedItem);
+            string stationId = getCmbItemKey(cmbStation.SelectedItem);
+            string commodityName = lbPrices.SelectedItems[0].Text;
+            EditMarketData(stationId, commodityName);
+            SetupGui();
+            cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
+        }
 
-            var csvrow = StationDirectory[ComboboxKey].First(x => x.CommodityName == lbPrices.SelectedItems[0].Text);
-            var csvrow2 = CommodityDirectory[lbPrices.SelectedItems[0].Text].First(x => x.StationID == ComboboxKey);
-
-            var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
-            var q = f.ShowDialog();
-
-            if (q == DialogResult.OK)
+        private void EditMarketData(string stationId, string commodityName)
+        {
+            MarketDataRow marketData =
+                Commodities.StationMarket(stationId).First(x => x.CommodityName == commodityName);
+            using (var f = new EditPriceData(marketData, Commodities.CommodityNames))
             {
-                StationDirectory[ComboboxKey].Remove(csvrow);
-                CommodityDirectory[lbPrices.SelectedItems[0].Text].Remove(csvrow2);
-                ImportCsvString(f.RowToEdit.ToString());
-
-                SetupGui();
-                cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    Commodities.Remove(marketData);
+                    ImportMarketData(f.RowToEdit, false, false);
+                }
             }
         }
 
         private void bCommodityEditRow_Click(object sender, EventArgs e)
         {
-            var csvrow =
-                 StationDirectory[lbCommodities.SelectedItems[0].Text].First(
-                            x => x.CommodityName == cbCommodity.SelectedItem.ToString());
-
-            var csvrow2 =
-                 CommodityDirectory[cbCommodity.SelectedItem.ToString()].First(
-                      x => x.StationID == lbCommodities.SelectedItems[0].Text);
-
-            var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
-            var q = f.ShowDialog();
-
-            if (q == DialogResult.OK)
-            {
-                StationDirectory[lbCommodities.SelectedItems[0].Text].Remove(csvrow);
-                CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
-                ImportCsvString(f.RowToEdit.ToString());
-                SetupGui();
-                cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
-            }
+            string stationId = lbCommodities.SelectedItems[0].Text;
+            string commodityName = cbCommodity.SelectedItem.ToString();
+            EditMarketData(stationId, commodityName);
+            SetupGui();
+            cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
         }
 
         private void lbCommodities_SelectedIndexChanged(object sender, EventArgs e)
@@ -4603,123 +4409,93 @@ namespace RegulatedNoise
 
         private void bStationDeleteRow_Click(object sender, EventArgs e)
         {
-            try
+            foreach (ListViewItem item in lbPrices.SelectedItems)
             {
-                foreach (ListViewItem item in lbPrices.SelectedItems)
+                var stationId = getCmbItemKey(cmbStation.SelectedItem);
+                var stationMarket = Commodities.StationMarket(stationId);
+                MarketDataRow marketDataRow = stationMarket.First(x => x.CommodityName == item.Text);
+                Commodities.Remove(marketDataRow);
+                if (!stationMarket.Any())
                 {
-                    var csvrow =
-                         StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].First(
-                              x => x.CommodityName == item.Text);
-
-                    var csvrow2 =
-                         CommodityDirectory[item.Text].First(
-                              x => x.StationID == getCmbItemKey(cmbStation.SelectedItem));
-
-                    StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Remove(csvrow);
-                    CommodityDirectory[item.Text].Remove(csvrow2);
-
-                    if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
-                    {
-                        // if theres no commodity price anymore we can (must) delete the history data
-                        StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
-                        if (StationInHistory != null)
-                            _StationHistory.History.Remove(StationInHistory);
-
-                        // and also the station itself
-                        StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
-                    }
+                    // if theres no commodity price anymore we can (must) delete the history data
+                    StationVisit stationInHistory = _StationHistory.History.Find(x => x.Station == stationId);
+                    if (stationInHistory != null)
+                        _StationHistory.History.Remove(stationInHistory);
                 }
+            }
 
-                SetupGui();
-                cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            SetupGui();
+            cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
         }
 
         private void bCommodityDeleteRow_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in lbCommodities.SelectedItems)
             {
-                var csvrow =
-                     StationDirectory[item.Text].First(
+                IEnumerable<MarketDataRow> stationMarket = Commodities.StationMarket(item.Text);
+                MarketDataRow marketData =
+                     stationMarket.First(
                           x => x.CommodityName == cbCommodity.SelectedItem.ToString());
+                Commodities.Remove(marketData);
 
-                var csvrow2 =
-                     CommodityDirectory[cbCommodity.SelectedItem.ToString()].First(
-                          x => x.StationID == item.Text);
-
-                StationDirectory[item.Text].Remove(csvrow);
-                CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
-
-                if (StationDirectory[item.Text].Count == 0)
+                if (!stationMarket.Any())
                 {
                     // if theres no commodity price anymore we can (must) delete the history data
-                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == item.Text);
-                    if (StationInHistory != null)
-                        _StationHistory.History.Remove(StationInHistory);
-
-                    // and also the station itself
-                    StationDirectory.Remove(item.Text);
+                    StationVisit stationInHistory = _StationHistory.History.Find(x => x.Station == item.Text);
+                    if (stationInHistory != null)
+                        _StationHistory.History.Remove(stationInHistory);
                 }
             }
-
             SetupGui();
             cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
         }
 
         private void btnBestRoundTrip_Click(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
 
             lbAllRoundTrips.Items.Clear();
             int bestRoundTrip = -1;
-            string stationA = "", stationB = "";
             ProgressView progress = new ProgressView();
             List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
 
-            var selectedStations = StationDirectory.Where(x => getStationSelection(x));
+            var selectedStations = Commodities.StationIds.Where(IsSelected).ToList();
 
-            Int32 Total = getCalculations(selectedStations.Count());
-            Int32 Current = 0;
+            int total = (selectedStations.Count*(selectedStations.Count + 1))/2;
+            int current = 0;
 
-            progress.progressStart(string.Format(string.Format("calculating best routes: {0} abilities from {1} stations", Total, selectedStations.Count())));
+            progress.progressStart(string.Format("calculating best routes: {0} abilities from {1} stations", total, selectedStations.Count()));
 
-            for (int i = 0; i < selectedStations.Count() - 1; i++)
+            for (int i = 0; i < selectedStations.Count - 1; i++)
             {
-                for (int j = i + 1; j < selectedStations.Count(); j++)
+                for (int j = i + 1; j < selectedStations.Count; j++)
                 {
-                    var a = selectedStations.ElementAt(i);
-                    var b = selectedStations.ElementAt(j);
+                    string stationFrom = selectedStations[i];
+                    string stationTo = selectedStations[j];
 
-                    Current += 1;
-                    progress.progressUpdate(Current, Total);
-
-                    Debug.Print(Current + "/" + Total);
-
+                    current += 1;
+                    progress.progressUpdate(current, total);
+                    Debug.Print(current + "/" + total);
                     int bestThisTrip;
-                    GetBestRoundTripForTwoStations(a.Key, b.Key, out bestThisTrip);
+                    GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestThisTrip);
                     if (bestThisTrip > 0)
                     {
                         string key1, key2;
-                        if (string.Compare(a.Key, b.Key) < 0)
+                        if (String.Compare(stationFrom, stationTo) < 0)
                         {
-                            key1 = a.Key;
-                            key2 = b.Key;
+                            key1 = stationFrom;
+                            key2 = stationTo;
                         }
                         else
                         {
-                            key1 = b.Key;
-                            key2 = a.Key;
+                            key1 = stationTo;
+                            key2 = stationFrom;
                         }
-
                         string credits;
                         double creditsDouble;
                         double distance = 1d;
 
-                        distance = DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
+                        distance = DistanceInLightYears(CombinedNameToSystemName(stationFrom).ToUpper(), CombinedNameToSystemName(stationTo).ToUpper());
 
                         if (cbPerLightYearRoundTrip.Checked)
                         {
@@ -4745,8 +4521,6 @@ namespace RegulatedNoise
                             if (bestThisTrip > bestRoundTrip)
                             {
                                 bestRoundTrip = bestThisTrip;
-                                stationA = a.Key;
-                                stationB = b.Key;
                             }
                         }
 
@@ -4769,18 +4543,6 @@ namespace RegulatedNoise
                 lbAllRoundTrips.SelectedIndex = 0;
 
             this.Cursor = Cursors.Default;
-        }
-
-        private int getCalculations(int Total)
-        {
-            Int32 retValue = 0;
-
-            for (int i = 0; i < Total; i++)
-            {
-                retValue += i;
-            }
-            return retValue;
-
         }
 
         private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
@@ -4808,31 +4570,8 @@ namespace RegulatedNoise
 
         private void cmdPurgeEDDNData(object sender, EventArgs e)
         {
-            StationDirectory = PurgeEddnFromDirectory(StationDirectory);
-            CommodityDirectory = PurgeEddnFromDirectory(CommodityDirectory);
+            Commodities.RemoveAll(md => md.Source == EDDN.SOURCENAME);
             SetupGui();
-        }
-
-        private static ObjectDirectory PurgeEddnFromDirectory(ObjectDirectory directory)
-        {
-            ObjectDirectory newDirectory;
-
-            if (directory.GetType() == typeof(StationDirectory))
-                newDirectory = new StationDirectory();
-            else
-                newDirectory = new CommodityDirectory();
-
-            foreach (var x in directory)
-            {
-                var newList = new List<MarketDataRow>();
-                foreach (var y in x.Value)
-                    if (y.Source != "<From EDDN>")
-                        newList.Add(y);
-
-                if (newList.Count > 0)
-                    newDirectory.Add(x.Key, newList);
-            }
-            return newDirectory;
         }
 
         private void bEditResults_Click(object sender, EventArgs e)
@@ -5004,7 +4743,7 @@ namespace RegulatedNoise
             {
                 enumBindTo cls = new enumBindTo
                 {
-                    EnumValue = (Int32) names.GetValue(i),
+                    EnumValue = (Int32)names.GetValue(i),
                     EnumString = names.GetValue(i).ToString()
                 };
                 lstEnum.Add(cls);
@@ -5580,12 +5319,12 @@ namespace RegulatedNoise
         /// <summary>
         /// gets the reduced selection of station due to lightyear limit and distance to star limit
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="stationId">The station identifier.</param>
         /// <returns></returns>
-        private bool getStationSelection(KeyValuePair<string, List<MarketDataRow>> x)
+        private bool IsSelected(string stationId)
         {
-            return (!cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))) &&
-                     (!cbStationToStar.Checked || StationDistance(CombinedNameToSystemName(x.Key), CombinedNameToStationName(x.Key)));
+            return (!cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(stationId))) &&
+                     (!cbStationToStar.Checked || StationDistance(CombinedNameToSystemName(stationId), CombinedNameToStationName(stationId)));
 
         }
 
@@ -6886,33 +6625,15 @@ namespace RegulatedNoise
             if (MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
                 DateTime deadline = DateTime.Now.AddDays(-1 * (Int32)(nudPurgeOldDataDays.Value)).Date;
-                StationDirectory = PurgeOldDataFromDirectory(StationDirectory, deadline);
-                CommodityDirectory = PurgeOldDataFromDirectory(CommodityDirectory, deadline);
+                PurgeObsoleteMarketData(deadline);
                 SetupGui();
             }
 
         }
 
-        private static ObjectDirectory PurgeOldDataFromDirectory(ObjectDirectory directory, DateTime deadline)
+        private void PurgeObsoleteMarketData(DateTime deadline)
         {
-            ObjectDirectory newDirectory;
-
-            if (directory.GetType() == typeof(StationDirectory))
-                newDirectory = new StationDirectory();
-            else
-                newDirectory = new CommodityDirectory();
-
-            foreach (var x in directory)
-            {
-                var newList = new List<MarketDataRow>();
-                foreach (var y in x.Value)
-                    if (y.SampleDate >= deadline)
-                        newList.Add(y);
-
-                if (newList.Count > 0)
-                    newDirectory.Add(x.Key, newList);
-            }
-            return newDirectory;
+            Commodities.RemoveAll(md => md.SampleDate < deadline);
         }
 
         private void nudPurgeOldDataDays_ValueChanged(object sender, EventArgs e)

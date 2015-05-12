@@ -32,6 +32,7 @@
             this.btSendCustomEddnMessage = new System.Windows.Forms.Button();
             this.tbFakeOCRResult = new System.Windows.Forms.TextBox();
             this.btSendFakeOCRResult = new System.Windows.Forms.Button();
+            this.lbCommoditiesLog = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // tbCustomEddnMessage
@@ -71,10 +72,20 @@
             this.btSendFakeOCRResult.UseVisualStyleBackColor = true;
             this.btSendFakeOCRResult.Click += new System.EventHandler(this.btSendFakeOCRResult_Click);
             // 
+            // lbCommoditiesLog
+            // 
+            this.lbCommoditiesLog.FormattingEnabled = true;
+            this.lbCommoditiesLog.ItemHeight = 20;
+            this.lbCommoditiesLog.Location = new System.Drawing.Point(23, 461);
+            this.lbCommoditiesLog.Name = "lbCommoditiesLog";
+            this.lbCommoditiesLog.Size = new System.Drawing.Size(737, 184);
+            this.lbCommoditiesLog.TabIndex = 2;
+            // 
             // TestTab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lbCommoditiesLog);
             this.Controls.Add(this.btSendFakeOCRResult);
             this.Controls.Add(this.tbFakeOCRResult);
             this.Controls.Add(this.btSendCustomEddnMessage);
@@ -92,5 +103,6 @@
         private System.Windows.Forms.Button btSendCustomEddnMessage;
         private System.Windows.Forms.TextBox tbFakeOCRResult;
         private System.Windows.Forms.Button btSendFakeOCRResult;
+        private System.Windows.Forms.ListBox lbCommoditiesLog;
     }
 }

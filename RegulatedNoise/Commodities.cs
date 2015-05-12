@@ -3,18 +3,205 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using RegulatedNoise.Annotations;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
 {
-    internal class Commodities: ICollection<MarketDataRow>
+    internal class Commodities : ICollection<MarketDataRow>
     {
         public event EventHandler<MarketDataEventArgs> OnMarketDataUpdate
         {
             add { _allMarketDatas.OnMarketDataUpdate += value; }
             remove { _allMarketDatas.OnMarketDataUpdate -= value; }
         }
+
+        public int Count { get { return _allMarketDatas.Count; } }
+
+        public bool IsReadOnly { get { return false; } }
+
+        public IEnumerable<string> StationIds
+        {
+            get
+            {
+                lock (_updating)
+                {
+                    return _byStation.Select(s => s.StationID);
+                }
+            }
+        }
+
+        public IEnumerable<string> CommodityNames
+        {
+            get
+            {
+                lock (_updating)
+                {
+                    return _byCommodity.Select(s => s.Commodity);
+                }
+            }
+        }
+
+        public IEnumerable<string> StationNames
+        {
+            get
+            {
+                lock (_updating)
+                {
+                    return _byStation.Select(s => s.StationName);
+                }
+            }
+        }
+
+        public IEnumerable<string> Systems
+        {
+            get
+            {
+                lock (_updating)
+                {
+                    return _byStation.Select(s => s.System);
+                }
+            }
+        }
+
+        public MarketDataRow this[string marketDataId]
+        {
+            get { return _allMarketDatas[marketDataId]; }
+        }
+
+        private readonly StationMarketCollection _byStation;
+
+        private readonly CommodityMarketCollection _byCommodity;
+
+        private readonly MarketDataCollection _allMarketDatas;
+
+        private readonly object _updating = new object();
+
+        public Commodities()
+        {
+            _byStation = new StationMarketCollection();
+            _byCommodity = new CommodityMarketCollection();
+            _allMarketDatas = new MarketDataCollection();
+        }
+
+        public IEnumerable<MarketDataRow> StationMarket(string stationId)
+        {
+            return GetMarketDatas(stationId, _byStation);
+        }
+
+        public IEnumerable<MarketDataRow> CommodityMarket(string commodityName)
+        {
+            return GetMarketDatas(commodityName, _byCommodity);
+        }
+
+        protected IEnumerable<MarketDataRow> GetMarketDatas<TMarket>(string marketId, MarketCollection<TMarket> marketCollection)
+            where TMarket : Market
+        {
+            TMarket market;
+            if (!marketCollection.TryGetValue(marketId, out market))
+            {
+                return new MarketDataRow[0];
+            }
+            else
+            {
+                return market;
+            }
+        }
+
+        public void Add(MarketDataRow marketData)
+        {
+            _allMarketDatas.Add(marketData);
+        }
+
+        public bool Contains(MarketDataRow marketData)
+        {
+            return _allMarketDatas.Contains(marketData);
+        }
+
+        public void CopyTo(MarketDataRow[] array, int arrayIndex)
+        {
+            _allMarketDatas.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove([NotNull] MarketDataRow marketDataRow)
+        {
+            lock (_updating)
+            {
+                bool deleted = _allMarketDatas.NotifiedRemove(marketDataRow);
+                if (deleted)
+                {
+                    _byStation.Remove(marketDataRow);
+                    _byCommodity.Remove(marketDataRow);
+                }
+                return deleted;
+            }
+        }
+
+        public void RemoveAll(Predicate<MarketDataRow> filter)
+        {
+            lock (_updating)
+            {
+                _allMarketDatas.RemoveAll(filter);
+                _byStation.RemoveAll(filter);
+                _byCommodity.RemoveAll(filter);
+            }
+        }
+
+        public void Clear()
+        {
+            lock (_updating)
+            {
+                _allMarketDatas.Clear();
+                _byStation.Clear();
+                _byCommodity.Clear();
+            }
+        }
+
+        public Market.UpdateState Update([NotNull] MarketDataRow marketDataRow)
+        {
+            Market.UpdateState update;
+            lock (_updating)
+            {
+                update = _allMarketDatas.Update(marketDataRow);
+                switch (update)
+                {
+                    case Market.UpdateState.Added:
+                        _byStation.Add(marketDataRow);
+                        _byCommodity.Add(marketDataRow);
+                        break;
+                    case Market.UpdateState.Replace:
+                        _byStation.Remove(marketDataRow);
+                        _byCommodity.Remove(marketDataRow);
+                        break;
+                    case Market.UpdateState.Discarded:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(update + " unhandled update operation");
+                }
+            }
+            return update;
+        }
+
+        public void UpdateRange([NotNull] IEnumerable<MarketDataRow> marketDataRows)
+        {
+            if (marketDataRows == null) throw new ArgumentNullException("marketDataRows");
+            foreach (MarketDataRow marketDataRow in marketDataRows)
+            {
+                Update(marketDataRow);
+            }
+        }
+
+        public IEnumerator<MarketDataRow> GetEnumerator()
+        {
+            return _allMarketDatas.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
 
         protected class MarketDataCollection : Market
         {
@@ -25,7 +212,7 @@ namespace RegulatedNoise
         }
 
         protected abstract class MarketCollection<TMarket> : KeyedCollection<string, TMarket>
-            where TMarket: ICollection<MarketDataRow>
+            where TMarket : Market
         {
             public void Add([NotNull] MarketDataRow marketDataRow)
             {
@@ -78,6 +265,14 @@ namespace RegulatedNoise
                     return Dictionary.TryGetValue(marketId, out market);
                 }
             }
+
+            public void RemoveAll(Predicate<MarketDataRow> filter)
+            {
+                foreach (TMarket market in this)
+                {
+                    market.RemoveAll(filter);
+                }
+            }
         }
 
         protected class StationMarketCollection : MarketCollection<StationMarket>
@@ -94,7 +289,7 @@ namespace RegulatedNoise
 
             protected override StationMarket NewMarket(MarketDataRow marketDataRow)
             {
-                return new StationMarket(GetKey(marketDataRow));
+                return new StationMarket(marketDataRow.StationID, marketDataRow.SystemName, marketDataRow.StationName);
             }
         }
 
@@ -112,148 +307,12 @@ namespace RegulatedNoise
 
             protected override CommodityMarket NewMarket(MarketDataRow marketDataRow)
             {
-                return new CommodityMarket(GetKey(marketDataRow));
+                return new CommodityMarket(marketDataRow.CommodityName);
             }
-        }
-
-        public int Count { get { return _allMarketDatas.Count; } }
-        
-        public bool IsReadOnly { get { return false; } }
-
-        public MarketDataRow this[string marketDataId]
-        {
-            get { return _allMarketDatas[marketDataId]; }
-        }
-
-        private readonly StationMarketCollection _byStation;
-
-        private readonly CommodityMarketCollection _byCommodity;
-
-        private readonly MarketDataCollection _allMarketDatas;
-        
-        private readonly object _updating = new object();
-
-        public Commodities()
-        {
-            _byStation = new StationMarketCollection();
-            _byCommodity = new CommodityMarketCollection();
-            _allMarketDatas = new MarketDataCollection();
-        }
-
-        public IEnumerable<MarketDataRow> StationMarket(string stationId)
-        {
-            return GetMarketDatas(stationId, _byStation);
-        }
-
-        public IEnumerable<MarketDataRow> CommodityMarket(string commodityName)
-        {
-            return GetMarketDatas(commodityName, _byCommodity);
-        }
-
-        protected IEnumerable<MarketDataRow> GetMarketDatas<TMarket>(string marketId, MarketCollection<TMarket> marketCollection)
-            where TMarket : ICollection<MarketDataRow>
-        {
-            TMarket market;
-            if (!marketCollection.TryGetValue(marketId, out market))
-            {
-                return new MarketDataRow[0];
-            }
-            else
-            {
-                return market;
-            }
-        }
-
-        public void Add(MarketDataRow marketData)
-        {
-            _allMarketDatas.Add(marketData);
-        }
-
-        public bool Contains(MarketDataRow marketData)
-        {
-            return _allMarketDatas.Contains(marketData);
-        }
-
-        public void CopyTo(MarketDataRow[] array, int arrayIndex)
-        {
-            _allMarketDatas.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove([NotNull] MarketDataRow marketDataRow)
-        {
-            lock (_updating)
-            {
-                bool deleted = _allMarketDatas.Delete(marketDataRow);
-                if (deleted)
-                {
-                    _byStation.Remove(marketDataRow);
-                    _byCommodity.Remove(marketDataRow);
-                }
-                return deleted;
-            }
-        }
-
-        public void Clear()
-        {
-            lock (_updating)
-            {
-                _allMarketDatas.Clear();
-                _byStation.Clear();
-                _byCommodity.Clear();
-            }
-        }
-
-        public void Update([NotNull] MarketDataRow marketDataRow)
-        {
-            lock (_updating)
-            {
-                Market.UpdateState update = _allMarketDatas.Update(marketDataRow);
-                switch (update)
-                {
-                    case Market.UpdateState.Added:
-                        _byStation.Add(marketDataRow);
-                        _byCommodity.Add(marketDataRow);
-                        break;
-                    case Market.UpdateState.Replace:
-                        _byStation.Remove(marketDataRow);
-                        _byCommodity.Remove(marketDataRow);
-                        break;
-                    case Market.UpdateState.Discarded:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(update + " unhandled update operation");
-                }
-            }
-            
-            //if (_allMarketDatas.Update(marketDataRow))
-            //{
-            //    _byStation[marketDataRow.StationID][marketDataRow.MarketDataId] = marketDataRow;
-            //}
-            //_byStation.Update(marketDataRow);
-            //_byCommodity.Update(marketDataRow);
-        }
-
-        public void UpdateRange([NotNull] IEnumerable<MarketDataRow> marketDataRows)
-        {
-            if (marketDataRows == null) throw new ArgumentNullException("marketDataRows");
-            foreach (MarketDataRow marketDataRow in marketDataRows)
-            {
-                Update(marketDataRow);
-            }
-        }
-
-        public IEnumerator<MarketDataRow> GetEnumerator()
-        {
-            return _allMarketDatas.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 
-    internal class MarketDataEventArgs: EventArgs
+    internal class MarketDataEventArgs : EventArgs
     {
         public readonly MarketDataRow Previous;
 
@@ -284,12 +343,13 @@ namespace RegulatedNoise
 
     internal class CommodityMarket : Market
     {
-        public CommodityMarket(string commodity)
-        {
-            Commodity = commodity;
-        }
-
         public string Commodity { get; private set; }
+
+        public CommodityMarket([NotNull] string commodityName)
+        {
+            if (commodityName == null) throw new ArgumentNullException("commodityName");
+            Commodity = commodityName;
+        }
 
         protected override string GetKeyForItem(MarketDataRow item)
         {
@@ -299,12 +359,19 @@ namespace RegulatedNoise
 
     internal class StationMarket : Market
     {
-        public StationMarket(string stationId)
-        {
-            StationID = stationId;
-        }
+        public string StationName { get; private set; }
 
         public string StationID { get; private set; }
+        
+        public string System { get; private set; }
+
+        public StationMarket([NotNull] string stationId, string system, string stationName)
+        {
+            if (stationId == null) throw new ArgumentNullException("stationId");
+            StationID = stationId;
+            StationName = stationName;
+            System = system;
+        }
 
         protected override string GetKeyForItem(MarketDataRow item)
         {

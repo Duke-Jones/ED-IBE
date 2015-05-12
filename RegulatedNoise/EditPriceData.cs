@@ -13,7 +13,7 @@ namespace RegulatedNoise
 
         public MarketDataRow RowToEdit;
 
-        public EditPriceData(MarketDataRow marketDataRow, List<string> commodities)
+        public EditPriceData(MarketDataRow marketDataRow, IEnumerable<string> commodities)
         {
             InitializeComponent();
 

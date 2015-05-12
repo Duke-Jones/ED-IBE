@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using RegulatedNoise.Annotations;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
@@ -61,7 +62,7 @@ namespace RegulatedNoise
             return updateState;
         }
 
-        public bool Delete([NotNull] MarketDataRow marketDataRow)
+        public bool NotifiedRemove([NotNull] MarketDataRow marketDataRow)
         {
             if (marketDataRow == null) throw new ArgumentNullException("marketDataRow");
             bool removed;
@@ -74,6 +75,18 @@ namespace RegulatedNoise
                 RaiseMarketDataUpdate(new MarketDataEventArgs(previous:marketDataRow));                
             }
             return removed;
+        }
+
+        public void RemoveAll(Predicate<MarketDataRow> filter)
+        {
+            lock (_updating)
+            {
+                var toRemove = this.Where(md => filter(md)).ToList();
+                foreach (var marketDataRow in toRemove)
+                {
+                    NotifiedRemove(marketDataRow);
+                }
+            }
         }
 
         protected void RaiseMarketDataReplace(MarketDataRow existing, MarketDataRow update)

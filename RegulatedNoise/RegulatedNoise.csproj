@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NO_SPLASH NO_PATH_INIT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NO_SPLASH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -103,7 +103,6 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommodityDirectory.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
@@ -187,7 +186,6 @@
     <Compile Include="Brainerous Pixeltest\Picturedata.Designer.cs">
       <DependentUpon>Picturedata.cs</DependentUpon>
     </Compile>
-    <Compile Include="ObjectDirectory.cs" />
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
     <Compile Include="Commodities.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
@@ -270,7 +268,6 @@
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Station.cs" />
-    <Compile Include="StationDirectory.cs" />
     <Compile Include="TestTab\TestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>

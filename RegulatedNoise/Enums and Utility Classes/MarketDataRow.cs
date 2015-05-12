@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -72,11 +73,11 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 SystemName = fields[0].Trim()
                 ,StationName = Format(fields[1])
                 ,CommodityName = Format(fields[2])
-                ,SellPrice = String.IsNullOrWhiteSpace(fields[3]) ? 0 : Int32.Parse(fields[3].Trim())
-                ,BuyPrice = String.IsNullOrWhiteSpace(fields[4]) ? 0 : Int32.Parse(fields[4].Trim())
-                ,Demand = String.IsNullOrWhiteSpace(fields[5]) ? 0 : Int32.Parse(fields[5].Trim())
+                ,SellPrice = String.IsNullOrWhiteSpace(fields[3]) ? -1 : Int32.Parse(fields[3].Trim())
+                ,BuyPrice = String.IsNullOrWhiteSpace(fields[4]) ? -1 : Int32.Parse(fields[4].Trim())
+                ,Demand = String.IsNullOrWhiteSpace(fields[5]) ? -1 : Int32.Parse(fields[5].Trim())
                 ,DemandLevel = fields[6].ToProposalLevel()
-                ,Supply = String.IsNullOrWhiteSpace(fields[7]) ? 0 : Int32.Parse(fields[7].Trim())
+                ,Supply = String.IsNullOrWhiteSpace(fields[7]) ? -1 : Int32.Parse(fields[7].Trim())
                 ,SupplyLevel = fields[8].ToProposalLevel()
                 ,SampleDate = String.IsNullOrWhiteSpace(fields[9]) ? DateTime.MinValue : ReadCsvDate(fields[9])
             };
