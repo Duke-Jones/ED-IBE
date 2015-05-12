@@ -22,5 +22,19 @@ namespace RegulatedNoise.Test
             var eddnMessage = JsonConvert.DeserializeObject<EddnMessage>(rawText);
             Assert.AreEqual(ProposalLevel.High, eddnMessage.message.SupplyLevel, "unexpected supply level");
         }
+
+//        [TestMethod]
+//        public void demand_is_defaulted_to_minus_1()
+//        {
+//            const string rawText = @"{""header"": {""softwareVersion"": ""v1.84_0.20"", ""gatewayTimestamp"": ""2015-05-12T00:09:18.244433"", ""softwareName"": ""RegulatedNoise__DJ"", ""uploaderID"": ""UncleDave""}, ""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1""
+//                                        , ""message"": {""buyPrice"": 0
+//                                                        , ""timestamp"": ""2015-05-12T00:40:00""
+//                                                        , ""stationStock"": 0
+//                                                        , ""systemName"": ""Nu"", ""stationName"": ""Syromyatnikov Horizons""
+//                                                        , ""demand"": 20494, ""sellPrice"": 276
+//                                                        , ""itemName"": ""H.E. Suits""}}";
+//            var eddnMessage = JsonConvert.DeserializeObject<EddnMessage>(rawText);
+//            Assert.AreEqual(-1, eddnMessage.message.Supply, "unexpected default demand");
+//        }
     }
 }
