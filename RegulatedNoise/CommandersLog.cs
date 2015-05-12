@@ -109,7 +109,7 @@ namespace RegulatedNoise
             _callingForm.tbLogNotes.Text = "";
             _callingForm.nbTransactionAmount.Text = "0";
 
-            _callingForm.UpdateSystemNameFromLogFile();
+            ApplicationContext.EliteLogFilesScanner.UpdateSystemNameFromLogFile();
 
             if (_callingForm.tbCurrentSystemFromLogs.Text != "")
                 _callingForm.cbLogSystemName.Text = _callingForm.tbCurrentSystemFromLogs.Text;

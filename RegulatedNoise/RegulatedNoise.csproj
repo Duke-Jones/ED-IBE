@@ -140,6 +140,7 @@
     <Compile Include="EDDB_Data\ProposalLevel.cs" />
     <Compile Include="EDDN.cs" />
     <Compile Include="EddnMessageEventArgs.cs" />
+    <Compile Include="EliteInteractions\LogFilesScanner.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>

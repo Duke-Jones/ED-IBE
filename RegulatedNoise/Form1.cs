@@ -22,6 +22,7 @@ using CodeProject.Dialog;
 using EdClasses.ClassDefinitions;
 using RegulatedNoise.Annotations;
 using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using Cursor = System.Windows.Forms.Cursor;
 using Timer = System.Windows.Forms.Timer;
@@ -30,17 +31,13 @@ namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
     {
-        private const string STR_START_MARKER = "<START>";
         private SplashScreenForm _Splash;
 
         public override string thisObjectName { get { return "Form1"; } }
 
         const string ID_DELIMITER = "empty";
         const int MAX_NAME_LENGTH = 120;
-        const long SEARCH_MAXLENGTH = 160;
-        const long SEARCH_MINLENGTH = 5;
 
-        const string ID_NEWITEM = "<NEW>";
         const string ID_NOT_SET = "<NOT_SET>";
 
         private delegate void delButtonInvoker(Button myButton, bool enable);
@@ -64,7 +61,6 @@ namespace RegulatedNoise
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         private Levenshtein _levenshtein = new Levenshtein();
 
-        private Int32 _EDDNTabPageIndex;
         private string _LoggedSystem = ID_NOT_SET;
         private string _LoggedLocation = ID_NOT_SET;
         private string _LoggedVisited = ID_NOT_SET;
@@ -80,12 +76,8 @@ namespace RegulatedNoise
         private bool _InitDone = false;
         private StationHistory _StationHistory = new StationHistory();
 
-        private String m_lastestStationInfo = String.Empty;
         private Timer Clock;
         private CommandersLogEvent m_RightMouseSelectedLogEvent = null;
-        private bool m_Closing = false;
-        private AutoResetEvent m_LogfileScanner_ARE = new AutoResetEvent(false);
-        private Thread m_LogfileScanner_Thread;
         private EDSystem m_loadedSystemdata = new EDSystem();
         private EDSystem m_currentSystemdata = new EDSystem();
         private EDStation m_loadedStationdata = new EDStation();
@@ -100,7 +92,6 @@ namespace RegulatedNoise
         private DateTime m_StationWarningTime = DateTime.Now;
 
         private PerformanceTimer _pt = new PerformanceTimer();
-        private String _AppPath = string.Empty;
         private String _oldSystemName = null;
         private String _oldStationName = null;
         private string _CmdrsLog_LastAutoEventID = string.Empty;
@@ -245,7 +236,7 @@ namespace RegulatedNoise
                 _Splash.InfoAdd("load and prepare international commodity names...");
 
                 // depending of the language this will be removed
-                _EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
+                //_EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
 
                 // set language
                 FillLanguageCombobox();
@@ -270,7 +261,8 @@ namespace RegulatedNoise
                 _Splash.InfoChange("prepare GUI elements...<OK>");
 
                 _Splash.InfoAdd("starting logfile watcher...");
-                UpdateSystemNameFromLogFile();
+                ApplicationContext.EliteLogFilesScanner.OnCurrentLocationUpdate += UpdateLocationInfo;
+                ApplicationContext.EliteLogFilesScanner.UpdateSystemNameFromLogFile();
                 _logger.Log("  - fetched system name from file");
                 _Splash.InfoChange("starting logfile watcher...<OK>");
                 UpdateEddnState();
@@ -819,9 +811,6 @@ namespace RegulatedNoise
 
         void Application_ApplicationExit(object sender, EventArgs e)
         {
-            m_Closing = true;
-            m_LogfileScanner_ARE.Set();
-            if (stateTimer != null) stateTimer.Dispose();
             SaveCommodityData(true);
             CommandersLog.SaveLog(true);
             _settings.Save();
@@ -2457,7 +2446,7 @@ namespace RegulatedNoise
             }
             else
             {
-                UpdateSystemNameFromLogFile();
+                ApplicationContext.EliteLogFilesScanner.UpdateSystemNameFromLogFile();
 
                 if (tbCurrentSystemFromLogs.Text != "")
                 {
@@ -3456,327 +3445,6 @@ namespace RegulatedNoise
             }
         }
 
-        private System.Threading.Timer stateTimer;
-
-        public void UpdateSystemNameFromLogFile()
-        {
-            if (m_LogfileScanner_Thread == null)
-            {
-                m_LogfileScanner_Thread = new Thread(() => this.UpdateSystemNameFromLogFile_worker());
-                m_LogfileScanner_Thread.Name = "LogfileScanner_Thread";
-                m_LogfileScanner_Thread.IsBackground = true;
-                m_LogfileScanner_Thread.Start();
-            }
-
-            if (stateTimer == null)
-            {
-                var autoEvent = new AutoResetEvent(false);
-                TimerCallback timerCallback = TimerCallback;
-                stateTimer = new System.Threading.Timer(timerCallback, autoEvent, 10000, 10000);
-            }
-
-
-            m_LogfileScanner_ARE.Set();
-        }
-
-        public void UpdateSystemNameFromLogFile_worker()
-        {
-            SingleThreadLogger logger = new SingleThreadLogger(ThreadLoggerType.FileScanner);
-
-            do
-            {
-                try
-                {
-                    string systemName = "";
-                    string stationName = "";
-                    string logLump;
-                    Regex RegExTest = null;
-                    Match m = null;
-                    List<String> PossibleStations = new List<string>();
-
-#if extScanLog
-                    logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(RegulatedNoiseSettings.PilotsName)) + ">");
-#endif
-                    RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(_settings.PilotsName)), RegexOptions.IgnoreCase);
-
-                    var appConfigPath = _settings.ProductsPath;
-
-                    if (Directory.Exists(appConfigPath))
-                    {
-                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
-
-                        if (versions.Count() == 0)
-                        {
-#if extScanLog
-                                logger.Log("no dirs with <FORC-FDEV> found");
-                                var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
-                                foreach (string SubPath in versions2)
-                                {
-                                    logger.Log("but found <" +  SubPath + ">");   
-                                }
-#endif
-                        }
-                        else
-                        {
-#if extScanLog
-                                logger.Log("lookin' for files in <" + versions[0] + ">");
-#endif
-
-                            // We'll just go right ahead and use the latest log...
-                            var netLogs =
-                                 Directory.GetFiles(versions[0] + "\\Logs", "netLog*.log")
-                                      .OrderByDescending(File.GetLastWriteTime)
-                                      .ToArray();
-
-                            if (netLogs.Length != 0)
-                            {
-                                var newestNetLog = netLogs[0];
-
-                                Debug.Print("File opened : <" + newestNetLog + ">");
-#if extScanLog
-                                logger.Log("File opened : <" + newestNetLog + ">");
-#endif
-                                FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                                Byte[] ByteBuffer = new Byte[1];
-                                Byte[] LineBuffer = new Byte[SEARCH_MAXLENGTH];
-
-                                Datei.Seek(0, SeekOrigin.End);
-
-                                while (String.IsNullOrEmpty(stationName) && (Datei.Position >= 2))
-                                {
-                                    long StartPos = -1;
-                                    long EndPos = -1;
-
-                                    do
-                                    {
-                                        Datei.Read(ByteBuffer, 0, ByteBuffer.Length);
-
-                                        if ((ByteBuffer[0] == 0x0A) || (ByteBuffer[0] == 0x0D))
-                                            if (EndPos == -1)
-                                            {
-                                                if (ByteBuffer[0] == 0x0D)
-                                                    EndPos = Datei.Position + 1;
-                                                else
-                                                    EndPos = Datei.Position;
-
-                                                Datei.Seek(-3, SeekOrigin.Current);
-                                            }
-                                            else
-                                            {
-                                                if (ByteBuffer[0] == 0x0D)
-                                                    StartPos = Datei.Position + 1;
-                                                else
-                                                    StartPos = Datei.Position;
-                                            }
-                                        else
-                                            Datei.Seek(-3, SeekOrigin.Current);
-
-                                    } while (StartPos == -1 && Datei.Position >= 3);
-
-                                    if ((StartPos == -1) && ((EndPos - StartPos) > SEARCH_MINLENGTH))
-                                        StartPos = 0;
-
-                                    if ((StartPos >= 0) && ((EndPos - StartPos) <= SEARCH_MAXLENGTH))
-                                    {
-                                        // found a line and it's not too long
-                                        // read
-                                        Datei.Read(LineBuffer, 0, (int)(EndPos - StartPos));
-                                        // and convert to string
-                                        logLump = Encoding.ASCII.GetString(LineBuffer, 0, (int)(EndPos - StartPos));
-
-                                        // first looking for the systemname
-                                        if (logLump != null && String.IsNullOrEmpty(systemName))
-                                        {
-                                            if (logLump.Contains("System:"))
-                                            {
-                                                Debug.Print("Systemstring:" + logLump);
-#if extScanLog
-                                                logger.Log("Systemstring:" + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
-                                                systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
-
-                                                Debug.Print("System: " + systemName);
-#if extScanLog
-                                                logger.Log("System: " + systemName);
-#endif
-
-                                                // preparing search for station info
-                                                RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
-#if extScanLog
-                                                logger.Log("new Regex : <" + String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)) + ">");
-#endif
-
-                                                // start search at the beginning
-
-                                                if (RegExTest != null)
-                                                {
-                                                    // we may have candidates, check them and if nothing found search from the current position
-                                                    foreach (string candidate in PossibleStations)
-                                                    {
-                                                        Debug.Print("check candidate : " + candidate);
-#if extScanLog
-                                                        logger.Log("check candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                        m = RegExTest.Match(candidate);
-                                                        //Debug.Print(logLump);
-                                                        //if (logLump.Contains("Duke Jones"))
-                                                        //    Debug.Print("Stop");
-                                                        if (m.Success)
-                                                        {
-#if extScanLog
-                                                            logger.Log("Stationstring from candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                            Debug.Print("Stationstring from candidate : " + candidate);
-                                                            getStation(ref stationName, m);
-                                                            break;
-                                                        }
-
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    // we must start from the end
-                                                    Datei.Seek(0, SeekOrigin.End);
-                                                }
-                                            }
-                                            else if (RegExTest != null)
-                                            {
-                                                m = RegExTest.Match(logLump);
-                                                //Debug.Print(logLump);
-                                                //if (logLump.Contains("Duke Jones"))
-                                                //    Debug.Print("Stop");
-                                                if (m.Success)
-                                                {
-#if extScanLog
-                                                    logger.Log("Candidate added : " + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                    Debug.Print("Candidate : " + logLump);
-                                                    PossibleStations.Add(logLump);
-                                                }
-
-                                            }
-                                        }
-
-                                        // if we have the systemname we're looking for the stationname
-                                        if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
-                                        {
-                                            m = RegExTest.Match(logLump);
-                                            //Debug.Print(logLump);
-                                            //if (logLump.Contains("Duke Jones"))
-                                            //    Debug.Print("Stop");
-                                            if (m.Success)
-                                            {
-#if extScanLog
-                                                logger.Log("Stationstring (direct) : " + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                Debug.Print("Stationstring (direct) : " + logLump);
-                                                getStation(ref stationName, m);
-                                            }
-                                        }
-                                    }
-
-                                    if (StartPos >= 3)
-                                    {
-                                        Datei.Seek(StartPos - 1, SeekOrigin.Begin);
-                                    }
-                                    else
-                                        Datei.Seek(0, SeekOrigin.Begin);
-                                }
-
-                                Datei.Close();
-                                Datei.Dispose();
-                                Debug.Print("Datei geschlossen");
-#if extScanLog
-                                logger.Log("File closed");
-#endif
-
-                                setLocationInfo(systemName, stationName);
-
-                                //                                if (systemName != "")
-                                //                                {
-                                //                                    Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-
-                                //                                    setSystemInfo(systemName);
-
-                                //                                }
-
-                                //                                if (stationName != "")
-                                //                                {
-                                //                                    Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-
-                                //                                    setSystemInfo(systemName);
-
-                                //                                }
-
-                                //                                    if (_LoggedSystem != systemName)
-                                //                                    {
-                                //#if extScanLog
-                                //                                        logger.Log("1 <" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-                                //                                        logger.Log("1 <" + stationName + "> - <" + tbCurrentStationinfoFromLogs.Text + ">");
-                                //#endif
-
-                                //                                        // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
-                                //                                        if (cbAutoAdd_JumpedTo.Checked)
-                                //                                        {
-                                //                                            CommandersLog_CreateJumpedToEvent(systemName);
-                                //                                        }
-
-                                //                                        _LoggedSystem = systemName;
-
-                                //                                        if (!String.IsNullOrEmpty(stationName))
-                                //                                            m_lastestStationInfo = stationName;
-                                //                                        else
-                                //                                            m_lastestStationInfo = "scanning...";
-                                //                                    }
-                                //                                    else if (!String.IsNullOrEmpty(stationName))
-                                //                                    { 
-                                //#if extScanLog
-                                //                                        logger.Log("2 <" + stationName + "> - <" + tbCurrentStationinfoFromLogs.Text + ">");
-                                //#endif
-                                //                                        m_lastestStationInfo = stationName;
-                                //                                    }
-
-                                //                                    //if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
-                                //                                    //{
-                                //                                        setSystemInfo(systemName);
-                                //                                    //}
-
-                                //#if extScanLog
-                                //                                    logger.Log("Found <" + systemName + "> - <" + m_lastestStationInfo + ">");
-                                //                                    logger.Log("GUI   <" + tbCurrentSystemFromLogs.Text + "> - <" + tbCurrentStationinfoFromLogs.Text + ">");
-                                //#endif
-                                //                                }
-
-
-
-                                //                                setStationInfo();
-
-                            }
-
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.Print("AnalyseError");
-                    logger.Log(ex.Message + "\n" + ex.StackTrace + "\n\n");
-                }
-
-#if extScanLog
-                logger.Log("sleeping...");
-                logger.Log("\n\n\n");
-#endif
-                Debug.Print("\n\n\n");
-                m_LogfileScanner_ARE.WaitOne();
-#if extScanLog
-                logger.Log("awake...");
-#endif
-
-            } while (!this.Disposing && !m_Closing);
-
-            Debug.Print("out");
-        }
 
         private void CommandersLog_CreateJumpedToEvent(string Systemname)
         {
@@ -3863,31 +3531,6 @@ namespace RegulatedNoise
                     throw ex;
                 }
             }
-        }
-
-        private void getStation(ref string stationName, Match m)
-        {
-            string[] parts = m.Groups[0].ToString().Split(':');
-            if (parts.GetUpperBound(0) >= 3)
-            {
-                stationName = parts[parts.GetUpperBound(0) - 1];
-
-                if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (String.IsNullOrEmpty(_settings.PilotsName))
-                        _settings.PilotsName = parts[1];
-                }
-                else
-                {
-                    if (String.IsNullOrEmpty(_settings.PilotsName))
-                        _settings.PilotsName = parts[0];
-                }
-            }
-        }
-
-        private void TimerCallback(object state)
-        {
-            UpdateSystemNameFromLogFile();
         }
 
         private void saveLogEntry(object sender, EventArgs e)
@@ -5191,92 +4834,93 @@ namespace RegulatedNoise
             }
         }
 
-        private void setLocationInfo(string systemName, string stationName)
+        private void UpdateLocationInfo(object sender, LocationUpdateEventArgs e)
         {
-
-            if (InvokeRequired)
+            this.RunInGuiThread(() =>
             {
-                Invoke(new del_setLocationInfo(setLocationInfo), systemName, stationName);
-                return;
-            }
+                string systemName = e.System;
+                string stationName = e.Station;
+                //bool Jumped_To      = false;
+                bool newSystem = false;
+                bool newLocation = false;
+                bool InitialRun = false;
 
-            //bool Jumped_To      = false;
-            bool newSystem = false;
-            bool newLocation = false;
-            bool InitialRun = false;
-
-            if (!String.IsNullOrEmpty(systemName))
-            {
-                // system info found
-                if (!tbCurrentSystemFromLogs.Text.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
+                if (!String.IsNullOrEmpty(systemName))
                 {
-                    // it's a new system
-                    Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
-                    tbCurrentSystemFromLogs.Text = systemName;
-                    newSystem = true;
-                }
-
-                // system info found
-                if (!_LoggedSystem.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // system is not logged yet
-
-                    // update Cmdr's Log ?
-                    if (_LoggedSystem != ID_NOT_SET)
+                    // system info found
+                    if (!tbCurrentSystemFromLogs.Text.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        // it's not the first run, create a event if wanted
-                        if (cbAutoAdd_JumpedTo.Checked)
-                        {
-                            // create event is enabled
-                            CommandersLog_CreateJumpedToEvent(systemName);
-                        }
-                    }
-                    else
-                    {
-                        InitialRun = true;
+                        // it's a new system
+                        Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
+                        tbCurrentSystemFromLogs.Text = systemName;
+                        newSystem = true;
                     }
 
-                    //Jumped_To = true;
-                    _LoggedSystem = systemName;
-                }
+                    // system info found
+                    if (!_LoggedSystem.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // system is not logged yet
 
-            }
-
-            if (!String.IsNullOrEmpty(stationName))
-            {
-                // system info found
-                if (!tbCurrentStationinfoFromLogs.Text.Equals(stationName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // it's a new location
-                    tbCurrentStationinfoFromLogs.Text = stationName;
-                    newLocation = true;
-
-                    List<EDStation> SystemStations = ApplicationContext.Milkyway.GetStations(systemName);
-
-                    if ((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase)) != null))
-                        if (cbAutoAdd_Visited.Checked)
+                        // update Cmdr's Log ?
+                        if (_LoggedSystem != ID_NOT_SET)
                         {
-                            // create event is enabled
-                            CommandersLog_StationVisitedEvent(systemName, stationName);
+                            // it's not the first run, create a event if wanted
+                            if (cbAutoAdd_JumpedTo.Checked)
+                            {
+                                // create event is enabled
+                                CommandersLog_CreateJumpedToEvent(systemName);
+                            }
+                        }
+                        else
+                        {
+                            InitialRun = true;
                         }
 
-                    _LoggedLocation = stationName;
-
-                    _LoggedMarketData = "";
-                    _LoggedVisited = "";
+                        //Jumped_To = true;
+                        _LoggedSystem = systemName;
+                    }
 
                 }
-            }
 
-            if ((newSystem || newLocation) && (!InitialRun))
-            {
-                loadSystemData(_LoggedSystem);
-                loadStationData(_LoggedSystem, _LoggedLocation);
+                if (!String.IsNullOrEmpty(stationName))
+                {
+                    // system info found
+                    if (
+                        !tbCurrentStationinfoFromLogs.Text.Equals(stationName,
+                            StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // it's a new location
+                        tbCurrentStationinfoFromLogs.Text = stationName;
+                        newLocation = true;
 
-                if (cbAutoActivateSystemTab.Checked)
-                    tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
-            }
+                        List<EDStation> SystemStations = ApplicationContext.Milkyway.GetStations(systemName);
 
+                        if ((SystemStations != null) &&
+                            (SystemStations.Find(
+                                x => x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase)) != null))
+                            if (cbAutoAdd_Visited.Checked)
+                            {
+                                // create event is enabled
+                                CommandersLog_StationVisitedEvent(systemName, stationName);
+                            }
+
+                        _LoggedLocation = stationName;
+
+                        _LoggedMarketData = "";
+                        _LoggedVisited = "";
+
+                    }
+                }
+
+                if ((newSystem || newLocation) && (!InitialRun))
+                {
+                    loadSystemData(_LoggedSystem);
+                    loadStationData(_LoggedSystem, _LoggedLocation);
+
+                    if (cbAutoActivateSystemTab.Checked)
+                        tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
+                }
+            });
         }
 
         /// <summary>

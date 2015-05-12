@@ -12,6 +12,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
@@ -46,6 +47,7 @@ namespace RegulatedNoise
         private static dsCommodities _commoditiesLocalisation;
         private static EDDN _eddn;
         private static Commodities _commodities;
+        private static LogFilesScanner _eliteLogFilesScanner;
 
         public static EDMilkyway Milkyway
         {
@@ -134,6 +136,19 @@ namespace RegulatedNoise
                 return _commodities;
             }
             set { _commodities = value; }
+        }
+
+        public static LogFilesScanner EliteLogFilesScanner
+        {
+            get
+            {
+                if (_eliteLogFilesScanner == null)
+                {
+                    _eliteLogFilesScanner = new LogFilesScanner(RegulatedNoiseSettings);
+                }
+                return _eliteLogFilesScanner;
+            }
+            set { _eliteLogFilesScanner = value; }
         }
     }
 }

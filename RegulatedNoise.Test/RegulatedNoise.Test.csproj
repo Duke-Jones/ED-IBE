@@ -49,16 +49,23 @@
     <Compile Include="EddnMessageTest.cs" />
     <Compile Include="EddnTest.cs" />
     <Compile Include="EDMilyWayTest.cs" />
+    <Compile Include="EliteInteractions\LogFilesScannerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="playground\Products\FORC-FDEV\Logs\Logs\netLog.1505062314.01.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RegulatedNoise\RegulatedNoise.csproj">
       <Project>{D720EB9A-C879-4E3B-AA19-B820E8192B7A}</Project>
       <Name>RegulatedNoise</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="playground\Options\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
