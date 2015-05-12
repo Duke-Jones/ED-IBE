@@ -3199,24 +3199,24 @@ namespace RegulatedNoise
                     }
                     tbEddnStats.Text = output.ToString();
 
-                    string commodity = ApplicationContext.CommoditiesLocalisation.GetLocalizedCommodity(eddn.message.CommodityName);
+                    string commodity = ApplicationContext.CommoditiesLocalisation.GetLocalizedCommodity(eddn.Message.CommodityName);
                     if (!String.IsNullOrEmpty(commodity))
                     {
 
                         //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
-                        if (import && eddn.header.uploaderID != _settings.UserName) // Don't import our own uploads...
+                        if (import && eddn.Header.UploaderId != _settings.UserName) // Don't import our own uploads...
                         {
-                            eddn.message.CommodityName = commodity;
+                            eddn.Message.CommodityName = commodity;
 
-                            string csvFormatted = eddn.message.ToCsv(true);
-                            var plausibilityState = ApplicationContext.Milkyway.IsImplausible(eddn.message, true);
+                            string csvFormatted = eddn.Message.ToCsv(true);
+                            var plausibilityState = ApplicationContext.Milkyway.IsImplausible(eddn.Message, true);
                             if (plausibilityState.Plausible)
                             {
                                 ImportCsvString(csvFormatted);
                             }
                             else
                             {
-                                string infoString = string.Format("IMPLAUSIBLE DATA {4} from {0}/{1}/ID=[{2}] : \"{3}\"", eddn.header.softwareName, eddn.header.softwareVersion, eddn.header.uploaderID, csvFormatted, plausibilityState.Comments);
+                                string infoString = string.Format("IMPLAUSIBLE DATA {4} from {0}/{1}/ID=[{2}] : \"{3}\"", eddn.Header.SoftwareName, eddn.Header.SoftwareVersion, eddn.Header.UploaderId, csvFormatted, plausibilityState.Comments);
                                 lbEddnImplausible.Items.Add(infoString);
                                 lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count - 1;
                                 lbEddnImplausible.SelectedIndex = -1;
@@ -3239,8 +3239,8 @@ namespace RegulatedNoise
                     }
                     else
                     {
-                        string csvFormatted = eddn.message.ToCsv(true);
-                        lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", eddn.header.softwareName, eddn.header.softwareVersion, eddn.header.uploaderID, csvFormatted));
+                        string csvFormatted = eddn.Message.ToCsv(true);
+                        lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", eddn.Header.SoftwareName, eddn.Header.SoftwareVersion, eddn.Header.UploaderId, csvFormatted));
                         lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count - 1;
                         lbEddnImplausible.SelectedIndex = -1;
                     }

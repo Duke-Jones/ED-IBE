@@ -99,7 +99,7 @@ namespace RegulatedNoise
 
         private void UpdateStats(object sender, EddnMessageEventArgs e)
         {
-            var nameAndVersion = (e.Message.header.softwareName + " / " + e.Message.header.softwareVersion);
+            var nameAndVersion = (e.Message.Header.SoftwareName + " / " + e.Message.Header.SoftwareVersion);
             EddnPublisherVersionStats stats;
             if (!_eddnPublisherStats.TryGetValue(nameAndVersion, out stats))
             {
@@ -147,7 +147,7 @@ namespace RegulatedNoise
                                 try
                                 {
                                     var eddnMessage = EddnMessage.ReadJson(message);
-                                    eddnMessage.message.Source = SOURCENAME;
+                                    eddnMessage.Message.Source = SOURCENAME;
                                     RaiseMessageReceived(eddnMessage);
                                 }
                                 catch (Exception ex)
@@ -156,7 +156,7 @@ namespace RegulatedNoise
                                     var failedMessage = new EddnMessage
                                     {
                                         RawText = message,
-                                        message = {Source = SOURCENAME}
+                                        Message = {Source = SOURCENAME}
                                     };
                                     RaiseMessageReceived(failedMessage);
                                 }
@@ -207,28 +207,28 @@ namespace RegulatedNoise
             Debug.Print("eddn send : " + rowToPost);
             var eddnMessage = new EddnMessage()
             {
-                header = new Header()
+                Header = new Header()
                 {
-                    softwareName = "RegulatedNoise__DJ"
-                    ,softwareVersion = "v" + _settings.Version.ToString(CultureInfo.InvariantCulture) + "_" + _settings.VersionDJ.ToString(CultureInfo.InvariantCulture)
-                    ,uploaderID = _settings.UserName
+                    SoftwareName = "RegulatedNoise__DJ"
+                    ,SoftwareVersion = "v" + _settings.Version.ToString(CultureInfo.InvariantCulture) + "_" + _settings.VersionDJ.ToString(CultureInfo.InvariantCulture)
+                    ,UploaderId = _settings.UserName
                 }
-                ,message = rowToPost
+                ,Message = rowToPost
             };
             if (_settings.UseEddnTestSchema)
             {
-                eddnMessage.schemaRef = "http://schemas.elite-markets.net/eddn/commodity/1/test";
+                eddnMessage.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/1/test";
             }
             else
             {
-                eddnMessage.schemaRef = "http://schemas.elite-markets.net/eddn/commodity/1";
+                eddnMessage.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/1";
             }
 
             string commodity = _commoditiesLocalisation.GetCommodityBasename(rowToPost.CommodityName);
 
             if (!String.IsNullOrEmpty(commodity))
             {
-                eddnMessage.message.CommodityName = commodity;
+                eddnMessage.Message.CommodityName = commodity;
                 var json = eddnMessage.ToJson();
                 SendToEddn(json);
             }

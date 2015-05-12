@@ -1052,22 +1052,22 @@ namespace RegulatedNoise.EDDB_Data
             var tasks = new List<Task>();
             if (!File.Exists(EDDB_COMMODITIES_DATAFILE))
             {
-                tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_COMMODITIES_URL), EDDB_COMMODITIES_DATAFILE,
+                tasks.Add(Task.Run(() => DownloadDataFile(new Uri(EDDB_COMMODITIES_URL), EDDB_COMMODITIES_DATAFILE,
                     "eddb commodities data")));
             }
             if (!File.Exists(EDDB_SYSTEMS_DATAFILE))
             {
-                tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_SYSTEMS_URL), EDDB_SYSTEMS_DATAFILE,
+                tasks.Add(Task.Run(() => DownloadDataFile(new Uri(EDDB_SYSTEMS_URL), EDDB_SYSTEMS_DATAFILE,
                     "eddb stations lite data")));
             }
             if (!File.Exists(EDDB_STATIONS_FULL_DATAFILE))
             {
-                tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_STATIONS_FULL_URL), EDDB_STATIONS_FULL_DATAFILE,
+                tasks.Add(Task.Run(() => DownloadDataFile(new Uri(EDDB_STATIONS_FULL_URL), EDDB_STATIONS_FULL_DATAFILE,
                     "eddb stations full data")));
             }
             if (!File.Exists(EDDB_STATIONS_LITE_DATAFILE))
             {
-                tasks.Add(Task.Run(() => DownloadDataFileAsync(new Uri(EDDB_STATIONS_LITE_URL), EDDB_STATIONS_LITE_DATAFILE,
+                tasks.Add(Task.Run(() => DownloadDataFile(new Uri(EDDB_STATIONS_LITE_URL), EDDB_STATIONS_LITE_DATAFILE,
                     "eddb stations lite data")));
             }
             if (tasks.Any())
@@ -1078,7 +1078,7 @@ namespace RegulatedNoise.EDDB_Data
             }
         }
 
-        private static void DownloadDataFileAsync(Uri address, string filepath, string contentDescription)
+        private static void DownloadDataFile(Uri address, string filepath, string contentDescription)
         {
             EventBus.InitializationProgress("trying to download " + contentDescription + "...");
             using (var webClient = new WebClient())
