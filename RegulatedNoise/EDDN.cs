@@ -11,7 +11,6 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using RegulatedNoise.Annotations;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
@@ -118,62 +117,65 @@ namespace RegulatedNoise
                 Listening = true;
 
             }
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(ListenToEddn, TaskCreationOptions.LongRunning);
+            // ReSharper disable once FunctionNeverReturns
+        }
+
+        private void ListenToEddn()
+        {
+            using (var ctx = ZmqContext.Create())
             {
-                using (var ctx = ZmqContext.Create())
+                using (var socket = ctx.CreateSocket(SocketType.SUB))
                 {
-                    using (var socket = ctx.CreateSocket(SocketType.SUB))
+                    socket.SubscribeAll();
+                    socket.Connect(LISTEN_URL);
+                    while (!_disposed && Listening)
                     {
-                        socket.SubscribeAll();
-                        socket.Connect(LISTEN_URL);
-                        while (!_disposed && Listening)
+                        var byteArray = new byte[10240];
+                        int i = socket.Receive(byteArray, TimeSpan.FromTicks(50));
+                        if (i != -1)
                         {
-                            var byteArray = new byte[10240];
-                            int i = socket.Receive(byteArray, TimeSpan.FromTicks(50));
-                            if (i != -1)
+                            Stream stream = new MemoryStream(byteArray);
+                            // Don't forget to ignore the first two bytes of the stream (!)
+                            stream.ReadByte();
+                            stream.ReadByte();
+                            string message;
+                            using (var decompressionStream = new DeflateStream(stream, CompressionMode.Decompress))
                             {
-                                Stream stream = new MemoryStream(byteArray);
-                                // Don't forget to ignore the first two bytes of the stream (!)
-                                stream.ReadByte();
-                                stream.ReadByte();
-                                string message;
-                                using (var decompressionStream = new DeflateStream(stream, CompressionMode.Decompress))
+                                using (var sr = new StreamReader(decompressionStream))
                                 {
-                                    using (var sr = new StreamReader(decompressionStream))
-                                    {
-                                        message = sr.ReadToEnd();
-                                    }
-                                }
-                                try
-                                {
-                                    var eddnMessage = EddnMessage.ReadJson(message);
-                                    eddnMessage.Message.Source = SOURCENAME;
-                                    RaiseMessageReceived(eddnMessage);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.Log("unable to parse message " + Environment.NewLine + message + Environment.NewLine + ex);
-                                    var failedMessage = new EddnMessage
-                                    {
-                                        RawText = message,
-                                        Message = {Source = SOURCENAME}
-                                    };
-                                    RaiseMessageReceived(failedMessage);
-                                }
-                                if (SaveMessagesToFile)
-                                {
-                                    SaveToFile(message);
+                                    message = sr.ReadToEnd();
                                 }
                             }
-                            else
+                            try
                             {
-                                Thread.Sleep(DELAY_BETWEEN_POLL);
+                                var eddnMessage = EddnMessage.ReadJson(message);
+                                eddnMessage.Message.Source = SOURCENAME;
+                                RaiseMessageReceived(eddnMessage);
                             }
+                            catch (Exception ex)
+                            {
+                                _logger.Log("unable to parse message " + Environment.NewLine + message + Environment.NewLine +
+                                            ex);
+                                var failedMessage = new EddnMessage
+                                {
+                                    RawText = message,
+                                    Message = {Source = SOURCENAME}
+                                };
+                                RaiseMessageReceived(failedMessage);
+                            }
+                            if (SaveMessagesToFile)
+                            {
+                                SaveToFile(message);
+                            }
+                        }
+                        else
+                        {
+                            Thread.Sleep(DELAY_BETWEEN_POLL);
                         }
                     }
                 }
-            }, TaskCreationOptions.LongRunning);
-            // ReSharper disable once FunctionNeverReturns
+            }
         }
 
         private void EDDNSender()
