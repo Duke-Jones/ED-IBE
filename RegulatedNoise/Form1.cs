@@ -959,7 +959,7 @@ namespace RegulatedNoise
                 {
                     if (postToEddn && cbPostOnImport.Checked && marketData.SystemName != "SomeSystem")
                     {
-                        ApplicationContext.Eddn.SendToEdDdn(marketData);
+                        ApplicationContext.Eddn.SendToEddn(marketData);
                     }
                 }
             }
@@ -3177,11 +3177,11 @@ namespace RegulatedNoise
                             var plausibilityState = ApplicationContext.Milkyway.IsImplausible(eddn.Message, true);
                             if (plausibilityState.Plausible)
                             {
-                                ImportCsvString(csvFormatted);
+                                ImportMarketData(eddn.Message, false, false);
                             }
                             else
                             {
-                                string infoString = string.Format("IMPLAUSIBLE DATA {4} from {0}/{1}/ID=[{2}] : \"{3}\"", eddn.Header.SoftwareName, eddn.Header.SoftwareVersion, eddn.Header.UploaderId, csvFormatted, plausibilityState.Comments);
+                                string infoString = String.Format("IMPLAUSIBLE DATA {4} from {0}/{1}/ID=[{2}] : \"{3}\"", eddn.Header.SoftwareName, eddn.Header.SoftwareVersion, eddn.Header.UploaderId, csvFormatted, plausibilityState.Comments);
                                 lbEddnImplausible.Items.Add(infoString);
                                 lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count - 1;
                                 lbEddnImplausible.SelectedIndex = -1;
@@ -3189,7 +3189,7 @@ namespace RegulatedNoise
                                 if (cbSpoolImplausibleToFile.Checked)
                                 {
                                     string FileName = @".\EddnImplausibleOutput.txt";
-                                    File.AppendAllText(FileName, infoString + Environment.NewLine + eddn.RawText);
+                                    File.AppendAllText(FileName, Environment.NewLine + infoString + Environment.NewLine + eddn.RawText);
                                 }
                                 Debug.Print("Implausible EDDN Data: " + csvFormatted);
                             }

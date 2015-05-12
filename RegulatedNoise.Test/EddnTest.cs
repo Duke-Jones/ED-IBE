@@ -24,7 +24,7 @@ namespace RegulatedNoise.Test
         {
             using (var eddn = NewEddn())
             {
-                eddn.SendToEdDdn(new MarketDataRow() { CommodityName = "Tea", BuyPrice = 1234, SampleDate = DateTime.Now, StationName = "myStation", SystemName = "mySystem"});            
+                eddn.SendToEddn(new MarketDataRow() { CommodityName = "Tea", BuyPrice = 1234, SampleDate = DateTime.Now, StationName = "myStation", SystemName = "mySystem"});            
             }
         }
 

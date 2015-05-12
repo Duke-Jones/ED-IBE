@@ -197,7 +197,7 @@ namespace RegulatedNoise
             } while (!_disposed);
         }
 
-        public void SendToEdDdn(MarketDataRow commodityData)
+        public void SendToEddn(MarketDataRow commodityData)
         {
             _sendItems.Enqueue(commodityData);
         }
