@@ -127,7 +127,6 @@
       <DependentUpon>EDCommodityView.cs</DependentUpon>
     </Compile>
     <Compile Include="EDDB_Data\EddnMessage.cs" />
-    <Compile Include="EDDB_Data\EddnSpooler.cs" />
     <Compile Include="EDDB_Data\EDStations.cs" />
     <Compile Include="EDDB_Data\EDStationView.cs">
       <SubType>Form</SubType>
@@ -173,7 +172,6 @@
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
-    <Compile Include="Market.cs" />
     <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
@@ -189,7 +187,6 @@
     </Compile>
     <Compile Include="ObjectDirectory.cs" />
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
-    <Compile Include="Commodities.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
