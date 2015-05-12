@@ -2992,7 +2992,7 @@ namespace RegulatedNoise
                 if (csvRow.Contains(";"))
                 {
                     MarketDataRow currentRow = MarketDataRow.ReadCsv(csvRow);
-                    implausible = ApplicationContext.Milkyway.IsImplausible(currentRow, simpleEDDNCheck);
+                    implausible = !ApplicationContext.Milkyway.IsImplausible(currentRow, simpleEDDNCheck).Plausible;
                 }
                 if (implausible)
                     break;
@@ -3209,13 +3209,14 @@ namespace RegulatedNoise
                             eddn.message.CommodityName = commodity;
 
                             string csvFormatted = eddn.message.ToCsv(true);
-                            if (!ApplicationContext.Milkyway.IsImplausible(eddn.message, true))
+                            var plausibilityState = ApplicationContext.Milkyway.IsImplausible(eddn.message, true);
+                            if (plausibilityState.Plausible)
                             {
                                 ImportCsvString(csvFormatted);
                             }
                             else
                             {
-                                string infoString = string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", eddn.header.softwareName, eddn.header.softwareVersion, eddn.header.uploaderID, csvFormatted);
+                                string infoString = string.Format("IMPLAUSIBLE DATA {4} from {0}/{1}/ID=[{2}] : \"{3}\"", eddn.header.softwareName, eddn.header.softwareVersion, eddn.header.uploaderID, csvFormatted, plausibilityState.Comments);
                                 lbEddnImplausible.Items.Add(infoString);
                                 lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count - 1;
                                 lbEddnImplausible.SelectedIndex = -1;

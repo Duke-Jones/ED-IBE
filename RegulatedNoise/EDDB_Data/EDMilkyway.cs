@@ -1108,7 +1108,7 @@ namespace RegulatedNoise.EDDB_Data
             public readonly List<int> SellPricesSupply;
         }
 
-        public bool IsImplausible(MarketDataRow marketData, bool simpleEDDNCheck)
+        public PlausibilityState IsImplausible(MarketDataRow marketData, bool simpleEDDNCheck)
         {
             EDCommoditiesExt commodityData =
                 getCommodity(
@@ -1117,25 +1117,25 @@ namespace RegulatedNoise.EDDB_Data
             if (marketData.CommodityName == "Panik")
                 Debug.Print("STOP");
 
-            bool implausible = false;
+            PlausibilityState plausibility = new PlausibilityState(true);
 
             if (commodityData != null)
             {
                 if (marketData.SupplyLevel.HasValue && marketData.DemandLevel.HasValue)
                 {
                     // demand AND supply !?
-                    implausible = true;
+                    plausibility = new PlausibilityState(false, "both demand and supply");
                 }
                 else if ((marketData.SellPrice <= 0) && (marketData.BuyPrice <= 0))
                 {
                     // both on 0 is not plausible
-                    implausible = true;
+                    plausibility = new PlausibilityState(false, "nor sell, nor buy price");
                 }
                 else if (marketData.SupplyLevel.HasValue || (simpleEDDNCheck && (marketData.Supply > 0)))
                 {
                     if (marketData.BuyPrice <= 0)
                     {
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "buy price not provided when demand available");
                     }
                     // check supply data             
                     else if (((commodityData.PriceWarningLevel_Supply_Sell_Low >= 0) &&
@@ -1144,7 +1144,9 @@ namespace RegulatedNoise.EDDB_Data
                          (marketData.SellPrice > commodityData.PriceWarningLevel_Supply_Sell_High)))
                     {
                         // sell price is out of range
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "sell price out of supply prices warn level " 
+                            + marketData.SellPrice 
+                            + " [" + commodityData.PriceWarningLevel_Supply_Sell_Low + ","  + commodityData.PriceWarningLevel_Supply_Sell_High + "]");
                     }
                     else if (((commodityData.PriceWarningLevel_Supply_Buy_Low >= 0) &&
                          (marketData.BuyPrice < commodityData.PriceWarningLevel_Supply_Buy_Low)) ||
@@ -1152,12 +1154,18 @@ namespace RegulatedNoise.EDDB_Data
                          (marketData.SellPrice > commodityData.PriceWarningLevel_Supply_Buy_High)))
                     {
                         // buy price is out of range
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "buy price out of supply prices warn level "
+                                                                    + marketData.SellPrice
+                                                                    + " [" +
+                                                                    commodityData.PriceWarningLevel_Supply_Buy_Low +
+                                                                    "," +
+                                                                    commodityData.PriceWarningLevel_Supply_Buy_High +
+                                                                    "]");
                     }
                     if (marketData.Supply <= 0)
                     {
                         // no supply quantity
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "supply not provided");
                     }
                 }
                 else if (marketData.DemandLevel.HasValue || (simpleEDDNCheck && (marketData.Demand > 0)))
@@ -1166,7 +1174,7 @@ namespace RegulatedNoise.EDDB_Data
                     if (marketData.SellPrice <= 0)
                     {
                         // at least the sell price must be present
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "sell price not provided when supply available");
                     }
                     else if (((commodityData.PriceWarningLevel_Demand_Sell_Low >= 0) &&
                          (marketData.SellPrice < commodityData.PriceWarningLevel_Demand_Sell_Low)) ||
@@ -1174,7 +1182,13 @@ namespace RegulatedNoise.EDDB_Data
                          (marketData.SellPrice > commodityData.PriceWarningLevel_Demand_Sell_High)))
                     {
                         // buy price is out of range
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "sell price out of demand prices warn level "
+                                                                    + marketData.SellPrice
+                                                                    + " [" +
+                                                                    commodityData.PriceWarningLevel_Demand_Sell_Low +
+                                                                    "," +
+                                                                    commodityData.PriceWarningLevel_Demand_Sell_High +
+                                                                    "]");
                     }
                     else if (((commodityData.PriceWarningLevel_Demand_Buy_Low >= 0) &&
                          (marketData.BuyPrice < commodityData.PriceWarningLevel_Demand_Buy_Low)) ||
@@ -1182,22 +1196,47 @@ namespace RegulatedNoise.EDDB_Data
                          (marketData.BuyPrice > commodityData.PriceWarningLevel_Demand_Buy_High)))
                     {
                         // buy price is out of range
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "buy price out of supply prices warn level "
+                                                                    + marketData.SellPrice
+                                                                    + " [" +
+                                                                    commodityData.PriceWarningLevel_Demand_Buy_Low +
+                                                                    "," +
+                                                                    commodityData.PriceWarningLevel_Demand_Buy_High +
+                                                                    "]");
                     }
 
                     if (marketData.Demand <= 0)
                     {
                         // no demand quantity
-                        implausible = true;
+                        plausibility = new PlausibilityState(false, "demand not provided");
                     }
                 }
                 else
                 {
                     // nothing ?!
-                    implausible = true;
+                    plausibility = new PlausibilityState(false, "nor demand,nor supply provided");
                 }
             }
-            return implausible;
+            return plausibility;
+        }
+    }
+
+    internal struct PlausibilityState
+    {
+        public readonly bool Plausible;
+
+        public readonly string Comments;
+
+        public PlausibilityState(bool plausible) 
+            : this()
+        {
+            Plausible = plausible;
+        }
+
+        public PlausibilityState(bool plausible, string comments)
+            :this(plausible)
+        {
+            Comments = comments;
         }
     }
 }
