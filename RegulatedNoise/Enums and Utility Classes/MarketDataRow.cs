@@ -15,7 +15,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         [JsonProperty(PropertyName = "systemName")]
         public string SystemName { get; set; }
         
-        public string StationID { get { return SystemName + " [" + StationName + "]"; } }
+        public string StationID { get { return StationName + " [" + SystemName + "]"; } }
 
         [JsonProperty(PropertyName = "stationName")]
         public string StationName { get; set; }

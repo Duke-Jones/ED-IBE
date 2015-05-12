@@ -50,6 +50,7 @@
     <Compile Include="EddnTest.cs" />
     <Compile Include="EDMilyWayTest.cs" />
     <Compile Include="EliteInteractions\LogFilesScannerTest.cs" />
+    <Compile Include="MarketDataRowTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
