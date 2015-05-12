@@ -45,6 +45,7 @@ namespace RegulatedNoise
         private static EDMilkyway _milkyway;
         private static dsCommodities _commoditiesLocalisation;
         private static EDDN _eddn;
+        private static Commodities _commodities;
 
         public static EDMilkyway Milkyway
         {
@@ -109,7 +110,7 @@ namespace RegulatedNoise
                 if(_eddn == null)
                 {
                     EventBus.InitializationStart("prepare EDDN interface");
-                    _eddn = new EDDN();
+                    _eddn = new EDDN(ApplicationContext.CommoditiesLocalisation, ApplicationContext.RegulatedNoiseSettings);
                     Trace.TraceInformation("  - EDDN object created");
                     if (RegulatedNoiseSettings.StartListeningEddnOnLoad)
                     {
@@ -122,6 +123,17 @@ namespace RegulatedNoise
                 }
                 return _eddn;
             }
+        }
+
+        public static Commodities Commodities
+        {
+            get
+            {
+                if (_commodities == null)
+                    _commodities = new Commodities();
+                return _commodities;
+            }
+            set { _commodities = value; }
         }
     }
 }

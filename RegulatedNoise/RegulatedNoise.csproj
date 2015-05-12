@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NO_SPLASH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ ep|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ ep\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1 ep_Debug</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1 NO_SPLASH</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -103,7 +103,6 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommodityDirectory.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
@@ -139,6 +138,7 @@
     <Compile Include="EDDB_Data\Listing.cs" />
     <Compile Include="EDDB_Data\ProposalLevel.cs" />
     <Compile Include="EDDN.cs" />
+    <Compile Include="EddnMessageEventArgs.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -185,7 +185,6 @@
     <Compile Include="Brainerous Pixeltest\Picturedata.Designer.cs">
       <DependentUpon>Picturedata.cs</DependentUpon>
     </Compile>
-    <Compile Include="ObjectDirectory.cs" />
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="CommandersLog.cs" />
@@ -267,7 +266,6 @@
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Station.cs" />
-    <Compile Include="StationDirectory.cs" />
     <Compile Include="TestTab\TestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
@@ -9,7 +10,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 {
     public class MarketDataRow
     {
-        private static TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+        private static readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
 
         [JsonProperty(PropertyName = "systemName")]
         public string SystemName { get; set; }
@@ -48,6 +49,14 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         public string Source { get; set; }
 
+        public string MarketDataId
+        {
+            get
+            {
+                return CommodityName + "@" + StationID;
+            }
+        }
+
         public override string ToString()
         {
             return ToCsv(true);
@@ -64,11 +73,11 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 SystemName = fields[0].Trim()
                 ,StationName = Format(fields[1])
                 ,CommodityName = Format(fields[2])
-                ,SellPrice = String.IsNullOrWhiteSpace(fields[3]) ? 0 : Int32.Parse(fields[3].Trim())
-                ,BuyPrice = String.IsNullOrWhiteSpace(fields[4]) ? 0 : Int32.Parse(fields[4].Trim())
-                ,Demand = String.IsNullOrWhiteSpace(fields[5]) ? 0 : Int32.Parse(fields[5].Trim())
+                ,SellPrice = String.IsNullOrWhiteSpace(fields[3]) ? -1 : Int32.Parse(fields[3].Trim())
+                ,BuyPrice = String.IsNullOrWhiteSpace(fields[4]) ? -1 : Int32.Parse(fields[4].Trim())
+                ,Demand = String.IsNullOrWhiteSpace(fields[5]) ? -1 : Int32.Parse(fields[5].Trim())
                 ,DemandLevel = fields[6].ToProposalLevel()
-                ,Supply = String.IsNullOrWhiteSpace(fields[7]) ? 0 : Int32.Parse(fields[7].Trim())
+                ,Supply = String.IsNullOrWhiteSpace(fields[7]) ? -1 : Int32.Parse(fields[7].Trim())
                 ,SupplyLevel = fields[8].ToProposalLevel()
                 ,SampleDate = String.IsNullOrWhiteSpace(fields[9]) ? DateTime.MinValue : ReadCsvDate(fields[9])
             };
@@ -101,6 +110,11 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             return _textInfo.ToTitleCase(source.Trim().ToLower());
         }
 
+        public static MarketDataRow ReadJson(string json)
+        {
+            return JsonConvert.DeserializeObject<MarketDataRow>(json);
+        }
+
         public string ToCsv(bool useExtended)
         {
             return SystemName + ";" +
@@ -114,6 +128,23 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                         SupplyLevel.Display() + ";" +
                         XmlConvert.ToString(SampleDate, XmlDateTimeSerializationMode.Local) +
                         (useExtended ? ";" + Source : String.Empty);
+        }
+
+        public static bool AreEqual(MarketDataRow lhs, MarketDataRow rhs)
+        {
+            if (ReferenceEquals(lhs, rhs)) return true;
+            if (lhs == null || rhs == null) return false;
+            return String.Compare(lhs.MarketDataId, rhs.MarketDataId, StringComparison.InvariantCultureIgnoreCase) == 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return AreEqual(this, obj as MarketDataRow);
+        }
+
+        public override int GetHashCode()
+        {
+            return MarketDataId.GetHashCode();
         }
     }
 }
