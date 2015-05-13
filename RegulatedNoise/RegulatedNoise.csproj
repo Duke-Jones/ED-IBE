@@ -137,6 +137,7 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
+    <Compile Include="EDDB_Data\PlausibilityState.cs" />
     <Compile Include="EDDB_Data\ProposalLevel.cs" />
     <Compile Include="EDDN.cs" />
     <Compile Include="EddnMessageEventArgs.cs" />
@@ -275,6 +276,8 @@
     <Compile Include="TestTab\TestTab.Designer.cs">
       <DependentUpon>TestTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="Trading\TradeEngine.cs" />
+    <Compile Include="Trading\TradeRoute.cs" />
     <Compile Include="Webserver.cs" />
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>

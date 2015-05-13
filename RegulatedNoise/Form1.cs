@@ -24,6 +24,7 @@ using RegulatedNoise.Annotations;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Trading;
 using Cursor = System.Windows.Forms.Cursor;
 using Timer = System.Windows.Forms.Timer;
 
@@ -523,7 +524,7 @@ namespace RegulatedNoise
             listView.Columns.Add("Buy Price");
             listView.Columns.Add("Demand");
             listView.Columns.Add("Demand Level");
-            listView.Columns.Add("Difference").Width = 70;
+            listView.Columns.Add("Profit").Width = 70;
         }
 
         private void ApplySettings()
@@ -1028,78 +1029,8 @@ namespace RegulatedNoise
 
         private double DistanceInLightYears(string remoteSystemName)
         {
-            double dist;
-
-            string localSystem;
-
-
-            localSystem = SystemToMeasureDistancesFrom();
-
-            if (_cachedSystemName != localSystem)
-            {
-                _cachedRemoteSystemDistances = new Dictionary<string, double>();
-                _cachedSystemName = localSystem;
-
-                _cachedSystemLocation = ApplicationContext.Milkyway.GetSystemCoordinates(localSystem);
-            }
-
-
-            remoteSystemName = remoteSystemName.ToUpper();
-
-            if (_cachedRemoteSystemDistances.ContainsKey(remoteSystemName))
-            {
-                dist = _cachedRemoteSystemDistances[remoteSystemName];
-            }
-            else
-            {
-                if (!ApplicationContext.Milkyway.SystemExists(localSystem) || _cachedSystemLocation == null)
-                {
-                    dist = double.MaxValue;
-                }
-                else
-                {
-                    var currentSystemLocation = _cachedSystemLocation;
-                    dist = DistanceInLightYears(remoteSystemName, currentSystemLocation);
-                    _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
-                }
-            }
-
-            return dist;
-        }
-
-        private double DistanceInLightYears(string remoteSystemName, Point3D currentSystemLocation)
-        {
-            double dist;
-
-            Point3D remoteSystemLocation = ApplicationContext.Milkyway.GetSystemCoordinates(remoteSystemName);
-
-            if (remoteSystemLocation == null)
-                return double.MaxValue;
-
-            double xDelta = currentSystemLocation.X - remoteSystemLocation.X;
-            double yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
-            double zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
-
-            dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
-
-            return dist;
-        }
-        //        private Dictionary<string, Point3D>_chachedSystemLocations = new Dictionary<string, Point3D>();
-
-        private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
-        {
-            double retValue;
-
-            Point3D HomeCoordinates = ApplicationContext.Milkyway.GetSystemCoordinates(homeSystemName);
-
-            if (HomeCoordinates == null)
-            {
-                return double.MaxValue;
-            }
-
-            retValue = DistanceInLightYears(remoteSystemName, HomeCoordinates);
-
-            return retValue;
+            var localSystem = SystemToMeasureDistancesFrom();
+            return ApplicationContext.Milkyway.DistanceInLightYears(remoteSystemName, localSystem);
         }
 
         private string SystemToMeasureDistancesFrom()
@@ -3296,9 +3227,7 @@ namespace RegulatedNoise
 
                 if (ApplicationContext.Milkyway.SystemExists(MarketDataRow.StationIdToSystemName(stationFrom)))
                 {
-                    var dist = DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom).ToUpper(),
-                                                                     ApplicationContext.Milkyway.GetSystemCoordinates(MarketDataRow.StationIdToSystemName(stationTo)));
-
+                    var dist = ApplicationContext.Milkyway.DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom), MarketDataRow.StationIdToSystemName(stationTo));
                     if (dist < double.MaxValue)
                         lblStationToStationLightYears.Text = "(" +
                                                                     String.Format("{0:0.00}", dist
@@ -3315,70 +3244,44 @@ namespace RegulatedNoise
             }
         }
 
-        private Tuple<List<ListViewItem>, List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
+        private static Tuple<IEnumerable<ListViewItem>, IEnumerable<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
         {
             if (stationFrom == null || stationTo == null) { bestRoundTrip = 0; return null; }
-            var resultsOutbound = new List<ListViewItem>();
-            var resultsReturn = new List<ListViewItem>();
-
-            int outwardIncome = 0;
-            int returnIncome = 0;
-            foreach (var commodity in Commodities.CommodityNames)
-            {
-                MarketDataRow fromRow = Commodities.StationMarket(stationFrom)
-                                        .FirstOrDefault(x => x.CommodityName == commodity);
-                MarketDataRow toRow = Commodities.StationMarket(stationTo)
-                                        .FirstOrDefault(x => x.CommodityName == commodity);
-
-                if (fromRow == null || toRow == null) continue;
-
-                int tradeRouteIncome = TradeRouteIncome(fromRow, toRow);
-                if (tradeRouteIncome > 0)
-                {
-                    resultsOutbound.Add(BuildTradeRouteViewItem(fromRow, toRow));
-                    outwardIncome = Math.Max(outwardIncome, tradeRouteIncome);
-                }
-
-                tradeRouteIncome = TradeRouteIncome(toRow, fromRow);
-                if (tradeRouteIncome > 0)
-                {
-                    resultsReturn.Add(BuildTradeRouteViewItem(toRow, fromRow));
-                    returnIncome = Math.Max(returnIncome, tradeRouteIncome);
-                }
-            }
-            bestRoundTrip = outwardIncome + returnIncome;
-            return new Tuple<List<ListViewItem>, List<ListViewItem>>(resultsOutbound, resultsReturn);
+            Tuple<IEnumerable<TradeRoute>, IEnumerable<TradeRoute>> traderoutes = TradeEngine.GetBestRoundTripBetweenTwoStations(stationFrom, stationTo, out bestRoundTrip);
+            return new Tuple<IEnumerable<ListViewItem>, IEnumerable<ListViewItem>>(traderoutes.Item1.Select(BuildTradeRouteViewItem).ToList(), traderoutes.Item2.Select(BuildTradeRouteViewItem).ToList());
         }
 
-        private static ListViewItem BuildTradeRouteViewItem(MarketDataRow fromRow, MarketDataRow toRow)
+        private static ListViewItem BuildTradeRouteViewItem(TradeRoute route)
         {
-            return new
-                ListViewItem(new string[]
-                {
-                    fromRow.CommodityName,
-                    fromRow.BuyPrice.ToString(CultureInfo.InvariantCulture),
-                    fromRow.Supply.ToString(CultureInfo.InvariantCulture),
-                    fromRow.SupplyLevel.Display(),
-                    toRow.SellPrice.ToString(CultureInfo.InvariantCulture),
-                    toRow.Demand.ToString(CultureInfo.InvariantCulture),
-                    toRow.DemandLevel.Display(),
-                    (toRow.SellPrice - fromRow.BuyPrice).ToString(CultureInfo.InvariantCulture)
-                });
+            return new ListViewItem(new string[]
+            {
+                route.CommodityName
+                , route.BuyPrice.ToString(CultureInfo.InvariantCulture)
+                , route.Supply.ToString(CultureInfo.InvariantCulture)
+                , route.SupplyLevel.Display()
+                , route.SellPrice.ToString(CultureInfo.InvariantCulture)
+                , route.Demand.ToString(CultureInfo.InvariantCulture)
+                , route.DemandLevel.Display()
+                , route.Profit.ToString(CultureInfo.InvariantCulture)
+                , route.Distance.ToString(CultureInfo.InvariantCulture)
+            });
         }
 
-        private static int TradeRouteIncome(MarketDataRow fromRow, MarketDataRow toRow)
-        {
-            if (fromRow.CommodityName == toRow.CommodityName
-                   && fromRow.BuyPrice > 0 && fromRow.Supply > 0
-                   && toRow.Demand > 0)
-            {
-                return toRow.SellPrice - fromRow.BuyPrice;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        //private static ListViewItem BuildTradeRouteViewItem(MarketDataRow fromRow, MarketDataRow toRow)
+        //{
+        //    return new
+        //        ListViewItem(new string[]
+        //        {
+        //            fromRow.CommodityName,
+        //            fromRow.BuyPrice.ToString(CultureInfo.InvariantCulture),
+        //            fromRow.Supply.ToString(CultureInfo.InvariantCulture),
+        //            fromRow.SupplyLevel.Display(),
+        //            toRow.SellPrice.ToString(CultureInfo.InvariantCulture),
+        //            toRow.Demand.ToString(CultureInfo.InvariantCulture),
+        //            toRow.DemandLevel.Display(),
+        //            (toRow.SellPrice - fromRow.BuyPrice).ToString(CultureInfo.InvariantCulture)
+        //        });
+        //}
 
         #endregion
 
@@ -4114,7 +4017,7 @@ namespace RegulatedNoise
                         double creditsDouble;
                         double distance = 1d;
 
-                        distance = DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom).ToUpper(), MarketDataRow.StationIdToSystemName(stationTo).ToUpper());
+                        distance = ApplicationContext.Milkyway.DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom).ToUpper(), MarketDataRow.StationIdToSystemName(stationTo).ToUpper());
 
                         if (cbPerLightYearRoundTrip.Checked)
                         {

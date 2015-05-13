@@ -11,6 +11,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
     public class MarketDataRow
     {
         private static readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+        private string _stationName;
+        private string _commodityName;
 
         [JsonProperty(PropertyName = "systemName")]
         public string SystemName { get; set; }
@@ -18,10 +20,18 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         public string StationID { get { return StationName + " [" + SystemName + "]"; } }
 
         [JsonProperty(PropertyName = "stationName")]
-        public string StationName { get; set; }
+        public string StationName
+        {
+            get { return _stationName; }
+            set { _stationName = Format(value); }
+        }
 
         [JsonProperty(PropertyName = "itemName")]
-        public string CommodityName { get; set; }
+        public string CommodityName
+        {
+            get { return _commodityName; }
+            set { _commodityName = Format(value); }
+        }
 
         [JsonProperty(PropertyName = "sellPrice")]
         public int SellPrice { get; set; }
@@ -107,7 +117,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         private static string Format(string source)
         {
-            return _textInfo.ToTitleCase(source.Trim().ToLower());
+            return String.IsNullOrWhiteSpace(source) ? String.Empty : _textInfo.ToTitleCase(source.Trim());
         }
 
         public static MarketDataRow ReadJson(string json)

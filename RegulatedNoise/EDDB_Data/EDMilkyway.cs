@@ -46,12 +46,15 @@ namespace RegulatedNoise.EDDB_Data
 
         // a quick cache for distances of stations
         private readonly Dictionary<string, int> m_cachedStationDistances;
+        private readonly Dictionary<string,double> _systemDistances;
+        public const double NO_DISTANCE = Double.MaxValue;
 
         /// <summary>
         /// creates a new Milkyway :-)
         /// </summary>
         public EDMilkyway()
         {
+            _systemDistances = new Dictionary<string, double>();
             ChangedSystems = false;
             int enumBound = Enum.GetNames(typeof(enDataType)).Length;
 
@@ -563,7 +566,6 @@ namespace RegulatedNoise.EDDB_Data
             }
         }
 
-
         /// <summary>
         /// calculates the min, max and average market price for supply and demand of each commodity
         /// </summary>
@@ -615,7 +617,7 @@ namespace RegulatedNoise.EDDB_Data
         /// </summary>
         /// <param name="CommodityId"></param>
         /// <returns></returns>
-        public EDCommoditiesExt getCommodity(string commodityName)
+        public EDCommoditiesExt GetCommodity(string commodityName)
         {
             return m_Commodities.Find(x => x.Name.Equals(commodityName, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -623,11 +625,11 @@ namespace RegulatedNoise.EDDB_Data
         /// <summary>
         /// returns the base data of a commodity
         /// </summary>
-        /// <param name="CommodityId"></param>
+        /// <param name="commodityId"></param>
         /// <returns></returns>
-        public EDCommoditiesExt getCommodity(int CommodityId)
+        public EDCommoditiesExt GetCommodity(int commodityId)
         {
-            return m_Commodities.Find(x => x.Id == CommodityId);
+            return m_Commodities.Find(x => x.Id == commodityId);
         }
 
         /// <summary>
@@ -635,8 +637,8 @@ namespace RegulatedNoise.EDDB_Data
         /// if "FileName" is not nothing the new data will is saves in this file
         /// 
         /// </summary>
-        /// <param name="FileName">name of the file to save to</param>
-        private void CalculateNewPriceLimits(string FileName = "")
+        /// <param name="fileName">name of the file to save to</param>
+        private void CalculateNewPriceLimits(string fileName = "")
         {
             Dictionary<int, MarketData> collectedData = CalculateAveragePrices();
 
@@ -715,8 +717,8 @@ namespace RegulatedNoise.EDDB_Data
                 //Debug.Print("Supply Sell Max\t\t" + Commodity.SellPrices_Supply.Max().ToString("F0"));
             }
 
-            if (!String.IsNullOrEmpty(FileName))
-                SaveRNCommodityData(FileName, true);
+            if (!String.IsNullOrEmpty(fileName))
+                SaveRNCommodityData(fileName, true);
         }
 
         /// <summary>
@@ -1109,7 +1111,7 @@ namespace RegulatedNoise.EDDB_Data
         public PlausibilityState IsImplausible(MarketDataRow marketData, bool simpleEDDNCheck)
         {
             EDCommoditiesExt commodityData =
-                getCommodity(
+                GetCommodity(
                     ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(marketData.CommodityName));
 
             if (marketData.CommodityName == "Panik")
@@ -1217,24 +1219,33 @@ namespace RegulatedNoise.EDDB_Data
             }
             return plausibility;
         }
-    }
 
-    internal struct PlausibilityState
-    {
-        public readonly bool Plausible;
-
-        public readonly string Comments;
-
-        public PlausibilityState(bool plausible) 
-            : this()
+        public double DistanceInLightYears(string system1, string system2)
         {
-            Plausible = plausible;
+            double distance;
+            string systemPairKey = GetSystemDistanceKey(system1, system2);
+            if (!_systemDistances.TryGetValue(systemPairKey, out distance))
+            {
+                distance = SystemDistance(GetSystemCoordinates(system1), GetSystemCoordinates(system2));
+                _systemDistances.Add(systemPairKey, distance);
+            }
+            return distance;
         }
 
-        public PlausibilityState(bool plausible, string comments)
-            :this(plausible)
+        private string GetSystemDistanceKey(string system1, string system2)
         {
-            Comments = comments;
+            if (String.IsNullOrWhiteSpace(system1)) throw new ArgumentException("system1");
+            if (String.IsNullOrWhiteSpace(system2)) throw new ArgumentException("system2");
+            return String.Compare(system1, system2, StringComparison.InvariantCultureIgnoreCase) > 0 ? system2.Trim().ToUpper() + "_" + system1.Trim().ToUpper() : system1.Trim().ToUpper() + "_" + system2.Trim().ToUpper();
+        }
+
+        private static double SystemDistance(Point3D currentSystemLocation, Point3D remoteSystemLocation)
+        {
+            if (currentSystemLocation == null || remoteSystemLocation == null) return NO_DISTANCE;
+            double xDelta = currentSystemLocation.X - remoteSystemLocation.X;
+            double yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
+            double zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
+            return Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
         }
     }
 }
