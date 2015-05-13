@@ -213,12 +213,6 @@ namespace RegulatedNoise
 
             try
             {
-                string[] Versions;
-                decimal MainVersion;
-                decimal DJVersion;
-                string release;
-                bool PR;
-
                 string response;
                 using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
                     response = responseReader.ReadToEnd();
@@ -232,30 +226,31 @@ namespace RegulatedNoise
 
                 foreach (var x in data)
                 {
-                    release = x.tag_name;
-                    PR = (bool)x.prerelease;
+                    string release = x.tag_name;
+                    var prerelease = (bool)x.prerelease;
 
-                    if (PR == false)
+                    if (prerelease == false)
                     {
                         release = release.Replace("v", "");
-                        Versions = release.Split('_');
+                        var versions = release.Split('_');
 
-                        MainVersion = Decimal.Parse(Versions[0], NumberStyles.Any, ci);
+                        var mainVersion = Decimal.Parse(versions[0], NumberStyles.Any, ci);
 
-                        if (Versions.GetUpperBound(0) > 0)
-                            DJVersion = Decimal.Parse(Versions[1], NumberStyles.Any, ci);
+                        decimal DJVersion;
+                        if (versions.GetUpperBound(0) > 0)
+                            DJVersion = Decimal.Parse(versions[1], NumberStyles.Any, ci);
                         else
                             DJVersion = Decimal.Parse("0.00", NumberStyles.Any, ci);
 
-                        if (maxVersion < MainVersion)
+                        if (maxVersion < mainVersion)
                         {
-                            maxVersion = MainVersion;
+                            maxVersion = mainVersion;
                             maxVersionDJ = DJVersion;
                             releaseDetails = x;
                         }
-                        else if ((maxVersion == MainVersion) && (maxVersionDJ < DJVersion))
+                        else if ((maxVersion == mainVersion) && (maxVersionDJ < DJVersion))
                         {
-                            maxVersion = MainVersion;
+                            maxVersion = mainVersion;
                             maxVersionDJ = DJVersion;
                             releaseDetails = x;
                         }
