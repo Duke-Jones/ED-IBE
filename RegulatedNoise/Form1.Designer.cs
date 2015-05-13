@@ -1399,7 +1399,7 @@
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(57, 13);
             this.label64.TabIndex = 119;
-            this.label64.Text = "Economies";
+            this.label64.Text = "Econonies";
             // 
             // txtStationUpdatedAt
             // 
