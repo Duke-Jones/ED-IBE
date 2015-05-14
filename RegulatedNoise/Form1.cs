@@ -21,6 +21,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using CodeProject.Dialog;
 using EdClasses.ClassDefinitions;
 using RegulatedNoise.Annotations;
+using RegulatedNoise.DomainModel;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;
@@ -97,9 +98,9 @@ namespace RegulatedNoise
         private String _oldStationName = null;
         private string _CmdrsLog_LastAutoEventID = string.Empty;
 
-        private Commodities Commodities
+        private GlobalMarket GlobalMarket
         {
-            get { return ApplicationContext.Commodities; }
+            get { return ApplicationContext.GlobalMarket; }
         }
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
@@ -866,7 +867,7 @@ namespace RegulatedNoise
                 var writer = new StreamWriter(File.OpenWrite(newFile));
 
                 writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
-                foreach (MarketDataRow commodity in Commodities)
+                foreach (MarketDataRow commodity in GlobalMarket)
                 {
                     // I'm sure that's not wanted vv
                     //if (cbExtendedInfoInCSV.Checked)
@@ -956,7 +957,7 @@ namespace RegulatedNoise
                     _StationHistory.addVisit(marketData.StationID);
                 }
 
-                if (Commodities.Update(marketData) != Market.UpdateState.Discarded)
+                if (GlobalMarket.Update(marketData) != Market.UpdateState.Discarded)
                 {
                     if (postToEddn && cbPostOnImport.Checked && marketData.SystemName != "SomeSystem")
                     {
@@ -965,10 +966,6 @@ namespace RegulatedNoise
                 }
             }
         }
-
-        private Point3D _cachedSystemLocation;
-        private string _cachedSystemName;
-        private Dictionary<string, double> _cachedRemoteSystemDistances;
 
         private bool Distance(string remoteSystemName)
         {
@@ -1111,7 +1108,7 @@ namespace RegulatedNoise
 
             var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
             cbIncludeWithinRegionOfStation.Items.Clear();
-            var systems = Commodities.StationNames.Distinct().OrderBy(x => x).ToArray();
+            var systems = GlobalMarket.StationNames.Distinct().OrderBy(x => x).ToArray();
             cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
             cbIncludeWithinRegionOfStation.Items.AddRange(systems);
 
@@ -1146,7 +1143,7 @@ namespace RegulatedNoise
 
             _pt.PrintAndReset("8");
 
-            foreach (var commodity in Commodities.CommodityNames.OrderBy(x => x))
+            foreach (var commodity in GlobalMarket.CommodityNames.OrderBy(x => x))
             {
                 cbCommodity.Items.Add(commodity);
             }
@@ -1160,9 +1157,9 @@ namespace RegulatedNoise
 
             //_pt.PrintAndReset("9");
 
-            Debug.Print("Anzahl = " + Commodities.CommodityNames.Count());
+            Debug.Print("Anzahl = " + GlobalMarket.CommodityNames.Count());
             // Populate all commodities tab
-            foreach (var commodity in Commodities.CommodityNames)
+            foreach (var commodity in GlobalMarket.CommodityNames)
             {
                 decimal bestBuyPrice;
                 decimal bestSellPrice;
@@ -1245,7 +1242,7 @@ namespace RegulatedNoise
             List<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionPreordered;
 
             // get the relevant stations
-            var selectionRaw = Commodities.StationIds.Where(IsSelected).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, Commodities.StationMarket(stationId))).Where(kvp => kvp.Value.Any()).ToList();
+            var selectionRaw = GlobalMarket.StationIds.Where(IsSelected).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, GlobalMarket.StationMarket(stationId))).Where(kvp => kvp.Value.Any()).ToList();
 
             if (rbSortBySystem.Checked)
             {
@@ -1509,7 +1506,7 @@ namespace RegulatedNoise
                     tbStationRename.Text = stationName.Substring(0, start - 1);
                     tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
 
-                    foreach (var row in Commodities.StationMarket(stationName))
+                    foreach (var row in GlobalMarket.StationMarket(stationName))
                     {
                         decimal bestBuyPrice;
                         decimal bestSellPrice;
@@ -1582,7 +1579,7 @@ namespace RegulatedNoise
             bestBuy = "";
             bestSell = "";
 
-            var l = Commodities.CommodityMarket(commodityName).Where(x => x.Stock != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
+            var l = GlobalMarket.CommodityMarket(commodityName).Where(x => x.Stock != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
             buyers = l.Count();
 
             if (l.Count() != 0)
@@ -1592,7 +1589,7 @@ namespace RegulatedNoise
                 bestBuy = string.Join(" ", l.Where(x => x.BuyPrice == bestBuyPriceCopy).Select(x => x.StationID + " (" + x.BuyPrice + ")"));
             }
 
-            var m = Commodities.CommodityMarket(commodityName).Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
+            var m = GlobalMarket.CommodityMarket(commodityName).Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
             sellers = m.Count();
             if (m.Count() != 0)
             {
@@ -1718,7 +1715,7 @@ namespace RegulatedNoise
 
             if (selectedCmbItem != null)
             {
-                foreach (var row in Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => getStationSelection(x)))
+                foreach (var row in GlobalMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => getStationSelection(x)))
                 {
                     lbCommodities.Items.Add(new ListViewItem(new string[] 
                     {   row.StationID,
@@ -1732,7 +1729,7 @@ namespace RegulatedNoise
                     }));
                 }
 
-                var l = Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice != 0 && x.Stock > 0).Where(x => getStationSelection(x)).ToList();
+                var l = GlobalMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice != 0 && x.Stock > 0).Where(x => getStationSelection(x)).ToList();
                 if (l.Any())
                 {
                     lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
@@ -1746,7 +1743,7 @@ namespace RegulatedNoise
                     lblAvg.Text = "N/A";
                 }
 
-                l = Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => getStationSelection(x)).ToList();
+                l = GlobalMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => getStationSelection(x)).ToList();
                 if (l.Any())
                 {
                     lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
@@ -1775,7 +1772,7 @@ namespace RegulatedNoise
         {
             if (lblMin.Text != "N/A")
             {
-                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = GlobalMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Min(y => y.BuyPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1785,7 +1782,7 @@ namespace RegulatedNoise
         {
             if (lblMinSell.Text != "N/A")
             {
-                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = GlobalMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.SellPrice == l.Min(y => y.SellPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1795,7 +1792,7 @@ namespace RegulatedNoise
         {
             if (lblMax.Text != "N/A")
             {
-                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = GlobalMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.BuyPrice == l.Max(y => y.BuyPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1805,7 +1802,7 @@ namespace RegulatedNoise
         {
             if (lblMaxSell.Text != "N/A")
             {
-                var l = Commodities.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
+                var l = GlobalMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
                 var m = l.Where(x => x.SellPrice == l.Max(y => y.SellPrice));
                 MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
             }
@@ -1836,7 +1833,7 @@ namespace RegulatedNoise
 
             chart1.Series.Add(series1);
 
-            foreach (var price in Commodities.CommodityMarket(senderName).Where(x => x.BuyPrice != 0 && x.Stock != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
+            foreach (var price in GlobalMarket.CommodityMarket(senderName).Where(x => x.BuyPrice != 0 && x.Stock != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
             {
                 series1.Points.AddXY(price.StationID, price.BuyPrice);
             }
@@ -1858,7 +1855,7 @@ namespace RegulatedNoise
 
             chart2.Series.Add(series2);
 
-            foreach (var price in Commodities.CommodityMarket(senderName).Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
+            foreach (var price in GlobalMarket.CommodityMarket(senderName).Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
             {
                 series2.Points.AddXY(price.StationID, price.SellPrice);
             }
@@ -1917,12 +1914,12 @@ namespace RegulatedNoise
             var existingStationName = getCmbItemKey(cmbStation.SelectedItem);
             tbStationRename.Text = _textInfo.ToTitleCase(tbStationRename.Text.ToLower());
             string newStationId = tbStationRename.Text + " [" + tbSystemRename.Text + "]";
-            foreach (MarketDataRow row in Commodities.StationMarket(existingStationName))
+            foreach (MarketDataRow row in GlobalMarket.StationMarket(existingStationName))
             {
-                Commodities.Remove(row);
+                GlobalMarket.Remove(row);
                 row.StationName = tbStationRename.Text;
                 row.SystemName = tbSystemRename.Text;
-                Commodities.Update(row);
+                GlobalMarket.Update(row);
             }
             _StationHistory.RenameStation(existingStationName, newStationId);
             SetupGui();
@@ -1986,7 +1983,7 @@ namespace RegulatedNoise
                 return (string)(Invoke(new EventArgsDelegate(GetLvAllCommsItems)));
             }
 
-            if (Commodities.Count == 0)
+            if (GlobalMarket.Count == 0)
                 return "No data loaded :-(";
 
             var s = new StringBuilder();
@@ -2370,7 +2367,7 @@ namespace RegulatedNoise
 
             tbOcrStationName.Text = s; // CLARK HUB
 
-            var systemNames = Commodities.Systems.Where(x => x.ToUpper().Contains(s)).ToList();
+            var systemNames = GlobalMarket.Systems.Where(x => x.ToUpper().Contains(s)).ToList();
             if (systemNames.Count == 1) // let's hope so!
             {
                 tbOcrSystemName.Text = systemNames.First();
@@ -3016,9 +3013,9 @@ namespace RegulatedNoise
 
         private void button12_Click_1(object sender, EventArgs e)
         {
-            foreach (var stationId in Commodities.StationIds)
+            foreach (var stationId in GlobalMarket.StationIds)
             {
-                var eventDates = Commodities.StationMarket(stationId).Select(x => x.SampleDate.AddSeconds(0 - x.SampleDate.Second)).Distinct();
+                var eventDates = GlobalMarket.StationMarket(stationId).Select(x => x.SampleDate.AddSeconds(0 - x.SampleDate.Second)).Distinct();
 
                 foreach (var d in eventDates)
                 {
@@ -3047,7 +3044,7 @@ namespace RegulatedNoise
                 ParseEddnJson(args.Message, checkboxImportEDDN.Checked);
             });
 
-            var stationCount = Commodities.StationIds.Count();
+            var stationCount = GlobalMarket.StationIds.Count();
             if (harvestStations && stationCount > harvestStationsCount)
             {
                 if (File.Exists("stations.txt"))
@@ -3056,7 +3053,7 @@ namespace RegulatedNoise
                 }
 
                 TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
-                foreach (var stationId in Commodities.StationIds.OrderBy(x => x))
+                foreach (var stationId in GlobalMarket.StationIds.OrderBy(x => x))
                 {
                     f.WriteLine(stationId);
                 }
@@ -3064,7 +3061,7 @@ namespace RegulatedNoise
                 harvestStationsCount = stationCount;
             }
 
-            var commodityCount = Commodities.CommodityNames.Count();
+            var commodityCount = GlobalMarket.CommodityNames.Count();
             if (harvestStations && commodityCount > harvestCommsCount)
             {
                 if (File.Exists("commodities.txt"))
@@ -3072,7 +3069,7 @@ namespace RegulatedNoise
                     File.Delete("commodities.txt");
                 }
                 TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
-                foreach (var commodity in Commodities.CommodityNames.OrderBy(x => x))
+                foreach (var commodity in GlobalMarket.CommodityNames.OrderBy(x => x))
                 {
                     f.WriteLine(commodity);
                 }
@@ -3565,7 +3562,7 @@ namespace RegulatedNoise
         private void cbLogCargoName_DropDown(object sender, EventArgs e)
         {
             cbLogCargoName.Items.Clear();
-            foreach (var x in Commodities.CommodityNames)
+            foreach (var x in GlobalMarket.CommodityNames)
             {
                 cbLogCargoName.Items.Add(x);
             }
@@ -3633,7 +3630,7 @@ namespace RegulatedNoise
         private void cbLogSystemName_DropDown(object sender, EventArgs e)
         {
             cbLogSystemName.Items.Clear();
-            foreach (var system in Commodities.Systems)
+            foreach (var system in GlobalMarket.Systems)
             {
                 cbLogSystemName.Items.Add(system);
             }
@@ -3896,12 +3893,12 @@ namespace RegulatedNoise
         private void EditMarketData(string stationId, string commodityName)
         {
             MarketDataRow marketData =
-                Commodities.StationMarket(stationId).First(x => x.CommodityName == commodityName);
-            using (var f = new EditPriceData(marketData, Commodities.CommodityNames))
+                GlobalMarket.StationMarket(stationId).First(x => x.CommodityName == commodityName);
+            using (var f = new EditPriceData(marketData, GlobalMarket.CommodityNames))
             {
                 if (f.ShowDialog() == DialogResult.OK)
                 {
-                    Commodities.Remove(marketData);
+                    GlobalMarket.Remove(marketData);
                     ImportMarketData(f.RowToEdit, false, false);
                 }
             }
@@ -3934,9 +3931,9 @@ namespace RegulatedNoise
             foreach (ListViewItem item in lbPrices.SelectedItems)
             {
                 var stationId = getCmbItemKey(cmbStation.SelectedItem);
-                var stationMarket = Commodities.StationMarket(stationId);
+                var stationMarket = GlobalMarket.StationMarket(stationId);
                 MarketDataRow marketDataRow = stationMarket.First(x => x.CommodityName == item.Text);
-                Commodities.Remove(marketDataRow);
+                GlobalMarket.Remove(marketDataRow);
                 if (!stationMarket.Any())
                 {
                     // if theres no commodity price anymore we can (must) delete the history data
@@ -3954,11 +3951,11 @@ namespace RegulatedNoise
         {
             foreach (ListViewItem item in lbCommodities.SelectedItems)
             {
-                IEnumerable<MarketDataRow> stationMarket = Commodities.StationMarket(item.Text);
+                IEnumerable<MarketDataRow> stationMarket = GlobalMarket.StationMarket(item.Text);
                 MarketDataRow marketData =
                      stationMarket.First(
                           x => x.CommodityName == cbCommodity.SelectedItem.ToString());
-                Commodities.Remove(marketData);
+                GlobalMarket.Remove(marketData);
 
                 if (!stationMarket.Any())
                 {
@@ -3981,7 +3978,7 @@ namespace RegulatedNoise
             ProgressView progress = new ProgressView();
             List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
 
-            var selectedStations = Commodities.StationIds.Where(IsSelected).ToList();
+            var selectedStations = GlobalMarket.StationIds.Where(IsSelected).ToList();
 
             int total = (selectedStations.Count*(selectedStations.Count + 1))/2;
             int current = 0;
@@ -4092,7 +4089,7 @@ namespace RegulatedNoise
 
         private void cmdPurgeEDDNData(object sender, EventArgs e)
         {
-            Commodities.RemoveAll(md => md.Source == EDDN.SOURCENAME);
+            GlobalMarket.RemoveAll(md => md.Source == EDDN.SOURCENAME);
             SetupGui();
         }
 
@@ -6158,7 +6155,7 @@ namespace RegulatedNoise
 
         private void PurgeObsoleteMarketData(DateTime deadline)
         {
-            Commodities.RemoveAll(md => md.SampleDate < deadline);
+            GlobalMarket.RemoveAll(md => md.SampleDate < deadline);
         }
 
         private void nudPurgeOldDataDays_ValueChanged(object sender, EventArgs e)

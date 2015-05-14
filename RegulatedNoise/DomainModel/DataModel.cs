@@ -13,6 +13,17 @@
             }
         }
 
+        private GlobalMarket _globalMarket;
+        public GlobalMarket GlobalMarket
+        {
+            get
+            {
+                if (_globalMarket == null)
+                    _globalMarket = new GlobalMarket();
+                return _globalMarket;
+            }
+        }
+
         private Universe _universe;
         public Universe Universe
         {

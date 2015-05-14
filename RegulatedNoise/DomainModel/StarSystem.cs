@@ -133,5 +133,10 @@ namespace RegulatedNoise.DomainModel
             if (station.System != Name) throw new ArgumentException("station system " + station.System + " does not match system " + Name, "station");
             _stations.UpdateFrom(station);
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

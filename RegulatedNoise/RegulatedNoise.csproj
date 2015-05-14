@@ -103,7 +103,6 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
-    <Compile Include="Commodities.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
@@ -112,6 +111,8 @@
     <Compile Include="Disposer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DomainModel\Commodities.cs" />
+    <Compile Include="DomainModel\GlobalMarket.cs" />
     <Compile Include="DomainModel\Commodity.cs" />
     <Compile Include="DomainModel\DataModel.cs" />
     <Compile Include="DomainModel\StarSystem.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="EDDB_Data\EDCommodityView.Designer.cs">
       <DependentUpon>EDCommodityView.cs</DependentUpon>
     </Compile>
+    <Compile Include="EDDB_Data\EddbDataProvider.cs" />
     <Compile Include="EDDB_Data\EddnMessage.cs" />
     <Compile Include="EDDB_Data\EDStations.cs" />
     <Compile Include="EDDB_Data\EDStationView.cs">

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using RegulatedNoise.Annotations;
+using RegulatedNoise.DomainModel;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise

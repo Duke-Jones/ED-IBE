@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.DomainModel
 {
@@ -9,7 +9,7 @@ namespace RegulatedNoise.DomainModel
 
         protected override string GetKeyForItem(Station item)
         {
-            return item.Name.ToLower();
+            return item.Name.ToCleanTitleCase();
         }
 
         public void UpdateFrom(Station station)

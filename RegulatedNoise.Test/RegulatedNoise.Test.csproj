@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommoditiesTest.cs" />
+    <Compile Include="GlobalMarketTest.cs" />
+    <Compile Include="DataProviders\EddbDataProviderTest.cs" />
     <Compile Include="DataProviders\EDSCDataProviderTest.cs" />
     <Compile Include="DataProviders\TradeDangerousDataProviderTest.cs" />
     <Compile Include="DomainModel\StarSystemTest.cs" />

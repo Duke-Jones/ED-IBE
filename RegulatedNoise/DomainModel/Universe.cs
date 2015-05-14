@@ -1,13 +1,25 @@
 using System;
 using System.Collections.Generic;
 using RegulatedNoise.Annotations;
-using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.DomainModel
 {
-    internal class Universe : SystemCollection
+    internal class Universe
     {
         private readonly object _updating = new object();
+
+        private readonly SystemCollection _systems;
+
+        public Universe()
+        {
+            _systems = new SystemCollection();
+        }
+
+        public StarSystem this[string systemName]
+        {
+            get { return _systems[systemName.ToCleanTitleCase()]; }
+        }
 
         public void UpdateRange([NotNull] IEnumerable<StarSystem> systems)
         {
@@ -23,9 +35,10 @@ namespace RegulatedNoise.DomainModel
             StarSystem existingSystem;
             lock (_updating)
             {
-                if (Dictionary == null || !Dictionary.TryGetValue(station.System, out existingSystem))
+                if (!_systems.TryGetValue(station.System, out existingSystem))
                 {
                     existingSystem = new StarSystem(station.System);
+                    _systems.Add(existingSystem);
                 }
                 existingSystem.UpdateStations(station);
             }
@@ -36,9 +49,9 @@ namespace RegulatedNoise.DomainModel
             StarSystem existingSystem;
             lock (_updating)
             {
-                if (Dictionary == null || !Dictionary.TryGetValue(system.Name, out existingSystem))
+                if (!_systems.TryGetValue(system.Name, out existingSystem))
                 {
-                    Add(system);
+                    _systems.Add(system);
                 }
                 else
                 {

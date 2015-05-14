@@ -11,6 +11,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using RegulatedNoise.DomainModel;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;
@@ -46,7 +47,7 @@ namespace RegulatedNoise
         private static EDMilkyway _milkyway;
         private static dsCommodities _commoditiesLocalisation;
         private static EDDN _eddn;
-        private static Commodities _commodities;
+        private static GlobalMarket _globalMarket;
         private static LogFilesScanner _eliteLogFilesScanner;
 
         public static EDMilkyway Milkyway
@@ -127,15 +128,15 @@ namespace RegulatedNoise
             }
         }
 
-        public static Commodities Commodities
+        public static GlobalMarket GlobalMarket
         {
             get
             {
-                if (_commodities == null)
-                    _commodities = new Commodities();
-                return _commodities;
+                if (_globalMarket == null)
+                    _globalMarket = new GlobalMarket();
+                return _globalMarket;
             }
-            set { _commodities = value; }
+            set { _globalMarket = value; }
         }
 
         public static LogFilesScanner EliteLogFilesScanner

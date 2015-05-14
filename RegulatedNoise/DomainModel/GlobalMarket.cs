@@ -7,9 +7,9 @@ using System.Linq;
 using RegulatedNoise.Annotations;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise
+namespace RegulatedNoise.DomainModel
 {
-    internal class Commodities : ICollection<MarketDataRow>
+    internal class GlobalMarket : ICollection<MarketDataRow>
     {
         public event EventHandler<MarketDataEventArgs> OnMarketDataUpdate
         {
@@ -78,7 +78,7 @@ namespace RegulatedNoise
 
         private readonly object _updating = new object();
 
-        public Commodities()
+        public GlobalMarket()
         {
             _byStation = new StationMarketCollection();
             _byCommodity = new CommodityMarketCollection();
@@ -201,7 +201,6 @@ namespace RegulatedNoise
         {
             return GetEnumerator();
         }
-
 
         protected class MarketDataCollection : Market
         {

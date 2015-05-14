@@ -172,6 +172,11 @@ namespace RegulatedNoise.DomainModel
                 UpdatedAt = source.UpdatedAt;
             base.UpdateFrom(source, updateMode);
         }
+
+        public override string ToString()
+        {
+            return Name + " [" + System + "]";
+        }
     }
 
     public enum LandingPadSize
