@@ -576,8 +576,8 @@ namespace RegulatedNoise.EDDB_Data
 
             foreach (EDStation station in m_Stations[(int)(enDataType.Data_Merged)])
             {
-                if (station.Listings != null)
-                    foreach (Listing stationCommodity in station.Listings)
+                if (station.EdMarketDatas != null)
+                    foreach (EDMarketData stationCommodity in station.EdMarketDatas)
                     {
                         MarketData commodityData;
                         if (!collectedData.TryGetValue(stationCommodity.CommodityId, out commodityData))

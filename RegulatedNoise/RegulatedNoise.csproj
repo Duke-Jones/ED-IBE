@@ -145,7 +145,7 @@
     </Compile>
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
-    <Compile Include="EDDB_Data\Listing.cs" />
+    <Compile Include="EDDB_Data\EDMarketData.cs" />
     <Compile Include="EDDB_Data\PlausibilityState.cs" />
     <Compile Include="EDDB_Data\ProposalLevel.cs" />
     <Compile Include="EDDN.cs" />
