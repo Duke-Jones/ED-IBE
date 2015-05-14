@@ -10,7 +10,7 @@ namespace RegulatedNoise.Trading
         public static int TradeRouteIncome(MarketDataRow fromRow, MarketDataRow toRow)
         {
             if (fromRow.CommodityName == toRow.CommodityName
-                && fromRow.BuyPrice > 0 && fromRow.Supply > 0
+                && fromRow.BuyPrice > 0 && fromRow.Stock > 0
                 && toRow.Demand > 0)
             {
                 return toRow.SellPrice - fromRow.BuyPrice;

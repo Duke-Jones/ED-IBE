@@ -48,9 +48,6 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         [JsonProperty(PropertyName = "demandLevel")]
         public ProposalLevel? DemandLevel { get; set; }
 
-        [JsonProperty(PropertyName = "supply")]
-        public int Supply { get; set; }
-
         [JsonProperty(PropertyName = "supplyLevel")]
         public ProposalLevel? SupplyLevel { get; set; }
 
@@ -87,7 +84,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 ,BuyPrice = String.IsNullOrWhiteSpace(fields[4]) ? -1 : Int32.Parse(fields[4].Trim())
                 ,Demand = String.IsNullOrWhiteSpace(fields[5]) ? -1 : Int32.Parse(fields[5].Trim())
                 ,DemandLevel = fields[6].ToProposalLevel()
-                ,Supply = String.IsNullOrWhiteSpace(fields[7]) ? -1 : Int32.Parse(fields[7].Trim())
+                ,Stock = String.IsNullOrWhiteSpace(fields[7]) ? -1 : Int32.Parse(fields[7].Trim())
                 ,SupplyLevel = fields[8].ToProposalLevel()
                 ,SampleDate = String.IsNullOrWhiteSpace(fields[9]) ? DateTime.MinValue : ReadCsvDate(fields[9])
             };
@@ -134,7 +131,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                         (BuyPrice != 0 ? BuyPrice.ToString(CultureInfo.InvariantCulture) : "") + ";" +
                         (Demand != 0 ? Demand.ToString(CultureInfo.InvariantCulture) : "") + ";" +
                         DemandLevel.Display() + ";" +
-                        (Supply != 0 ? Supply.ToString(CultureInfo.InvariantCulture) : "") + ";" +
+                        (Stock != 0 ? Stock.ToString(CultureInfo.InvariantCulture) : "") + ";" +
                         SupplyLevel.Display() + ";" +
                         XmlConvert.ToString(SampleDate, XmlDateTimeSerializationMode.Local) +
                         (useExtended ? ";" + Source : String.Empty);

@@ -47,7 +47,7 @@ namespace RegulatedNoise.Trading
             Distance = distance;
             Stock = origin.Stock;
             BuyPrice = origin.BuyPrice;
-            Supply = origin.Supply;
+            Supply = origin.Stock;
             SupplyLevel = origin.SupplyLevel;
             Demand = destination.Demand;
             DemandLevel = destination.DemandLevel;

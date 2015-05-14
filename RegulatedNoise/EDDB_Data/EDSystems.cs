@@ -2,18 +2,15 @@
 // http://www.xamasoft.com/json-class-generator
 
 using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RegulatedNoise.Enums_and_Utility_Classes;
 using System.Windows.Forms.DataVisualization.Charting;
+using Newtonsoft.Json;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
 
     public class EDSystem
     {
-
         [JsonProperty("id")]
         public int Id { get; set; }
 
@@ -157,7 +154,7 @@ namespace RegulatedNoise.EDDB_Data
         /// return the coordinates of the system
         /// </summary>
         /// <returns></returns>
-        internal System.Windows.Forms.DataVisualization.Charting.Point3D SystemCoordinates()
+        internal Point3D SystemCoordinates()
         {
             return new Point3D((float)X, (float)Y, (float)Z);
         }

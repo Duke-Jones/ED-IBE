@@ -1530,7 +1530,7 @@ namespace RegulatedNoise
                             row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
                             row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "", 
                             row.DemandLevel.Display(),
-                            row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
+                            row.Stock.ToString(CultureInfo.InvariantCulture) != "0" ? row.Stock.ToString(CultureInfo.InvariantCulture) : "",
                             row.SupplyLevel.Display(), 
                             bestBuy, 
                             bestSell,
@@ -1582,7 +1582,7 @@ namespace RegulatedNoise
             bestBuy = "";
             bestSell = "";
 
-            var l = Commodities.CommodityMarket(commodityName).Where(x => x.Supply != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
+            var l = Commodities.CommodityMarket(commodityName).Where(x => x.Stock != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
             buyers = l.Count();
 
             if (l.Count() != 0)
@@ -1726,13 +1726,13 @@ namespace RegulatedNoise
                         row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
                         row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "",
                         row.DemandLevel.Display(),
-                        row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
+                        row.Stock.ToString(CultureInfo.InvariantCulture) != "0" ? row.Stock.ToString(CultureInfo.InvariantCulture) : "",
                         row.SupplyLevel.Display(), 
                         row.SampleDate.ToString(CultureInfo.CurrentCulture) 
                     }));
                 }
 
-                var l = Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => getStationSelection(x)).ToList();
+                var l = Commodities.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice != 0 && x.Stock > 0).Where(x => getStationSelection(x)).ToList();
                 if (l.Any())
                 {
                     lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
@@ -1836,7 +1836,7 @@ namespace RegulatedNoise
 
             chart1.Series.Add(series1);
 
-            foreach (var price in Commodities.CommodityMarket(senderName).Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
+            foreach (var price in Commodities.CommodityMarket(senderName).Where(x => x.BuyPrice != 0 && x.Stock != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
             {
                 series1.Points.AddXY(price.StationID, price.BuyPrice);
             }

@@ -375,8 +375,8 @@ namespace RegulatedNoise.EDDB_Data
         }
 
         /// <summary>
-        /// check if the stations of two stations are equal if the system 
-        /// exists in the EDDB data and in the own data
+        /// check if the stations of two systems are equal if the system 
+        /// exists in both EDDB data and own data
         /// </summary>
         /// <param name="ownSystem">system from own data</param>
         /// <param name="existingEDDNSystem">system from EDDB data</param>
@@ -1131,7 +1131,7 @@ namespace RegulatedNoise.EDDB_Data
                     // both on 0 is not plausible
                     plausibility = new PlausibilityState(false, "nor sell, nor buy price");
                 }
-                else if (marketData.SupplyLevel.HasValue || (simpleEDDNCheck && (marketData.Supply > 0)))
+                else if (marketData.SupplyLevel.HasValue || (simpleEDDNCheck && (marketData.Stock > 0)))
                 {
                     if (marketData.BuyPrice <= 0)
                     {
@@ -1162,7 +1162,7 @@ namespace RegulatedNoise.EDDB_Data
                                                                     commodityData.PriceWarningLevel_Supply_Buy_High +
                                                                     "]");
                     }
-                    if (marketData.Supply <= 0)
+                    if (marketData.Stock <= 0)
                     {
                         // no supply quantity
                         plausibility = new PlausibilityState(false, "supply not provided");
