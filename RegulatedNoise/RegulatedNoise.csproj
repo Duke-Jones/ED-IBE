@@ -112,6 +112,15 @@
     <Compile Include="Disposer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DomainModel\Commodity.cs" />
+    <Compile Include="DomainModel\DataModel.cs" />
+    <Compile Include="DomainModel\StarSystem.cs" />
+    <Compile Include="DomainModel\Station.cs" />
+    <Compile Include="DomainModel\StationCollection.cs" />
+    <Compile Include="DomainModel\SystemCollection.cs" />
+    <Compile Include="DomainModel\Universe.cs" />
+    <Compile Include="DomainModel\UpdatableEntity.cs" />
+    <Compile Include="DomainModel\UpdateMode.cs" />
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDCommodityListView.cs">
@@ -269,7 +278,6 @@
     <Compile Include="SplashScreenForm.Designer.cs">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Station.cs" />
     <Compile Include="TestTab\TestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>

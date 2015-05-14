@@ -25,7 +25,7 @@ namespace RegulatedNoise.DomainModel
             {
                 if (Dictionary == null || !Dictionary.TryGetValue(station.System, out existingSystem))
                 {
-                    existingSystem = new StarSystem() { Name = station.System };
+                    existingSystem = new StarSystem(station.System);
                 }
                 existingSystem.UpdateStations(station);
             }

@@ -123,6 +123,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
     static class Extensions_StringNullable
     {
+        private static readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+
         /// <summary>
         /// converts a string that can be null to a string that represents null as a string ("undefined")
         /// </summary>
@@ -186,7 +188,10 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                     return defaultValue.ToNInt();
         }
 
-
+        public static string ToCleanTitleCase(this string value)
+        {
+            return String.IsNullOrWhiteSpace(value) ? String.Empty : _textInfo.ToTitleCase(value.Trim());
+        }
     }
 
     static class Extensions_Object

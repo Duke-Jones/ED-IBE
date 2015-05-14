@@ -2,21 +2,29 @@
 // http://www.xamasoft.com/json-class-generator
 
 using System;
+using System.Linq;
 using Newtonsoft.Json;
+using RegulatedNoise.Annotations;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.DomainModel
 {
-    public class Station
+    public class Station : UpdatableEntity
     {
+        private string _name;
+
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            private set { _name = value.ToCleanTitleCase(); }
+        }
 
         [JsonProperty("system")]
         public string System { get; set; }
 
         [JsonProperty("max_landing_pad_size")]
-        public string MaxLandingPadSize { get; set; }
+        public LandingPadSize? MaxLandingPadSize { get; set; }
 
         [JsonProperty("distance_to_star")]
         public int? DistanceToStar { get; set; }
@@ -75,80 +83,24 @@ namespace RegulatedNoise.DomainModel
         [JsonProperty("updated_at")]
         public int UpdatedAt { get; set; }
 
-        public string Source { get; set; }
 
         /// <summary>
         /// creates a new station 
         /// </summary>
-        public Station()
-        {
-            Reset();
-        }
-
-        /// <summary>
-        /// creates a new station as a copy of another station
-        /// only Id and SystemID must declared extra
-        /// </summary>
-        /// <param name="sourceStation">The source station.</param>
-        public Station(Station sourceStation)
-        {
-            Reset();
-            UpdateFrom(sourceStation, UpdateMode.Copy);
-        }
-
-        public void Reset()
+        protected Station()
         {
             Name = string.Empty;
-            MaxLandingPadSize = null;
-            DistanceToStar = null;
-            Faction = null;
-            Government = null;
-            Allegiance = null;
-            State = null;
-            Type = null;
-            HasBlackmarket = null;
-            HasCommodities = null;
-            HasRefuel = null;
-            HasRepair = null;
-            HasRearm = null;
-            HasOutfitting = null;
-            HasShipyard = null;
-
             ImportCommodities = new String[0];
             ExportCommodities = new String[0];
             ProhibitedCommodities = new String[0];
             Economies = new String[0];
         }
 
-        /// <summary>
-        /// true, if all data *except the two IDs* is equal (case insensitive)
-        /// </summary>
-        /// <param name="station">The station.</param>
-        /// <returns></returns>
-        public bool EquivalentTo(Station station)
+        public Station([NotNull] string name)
+            :this()
         {
-            if (ReferenceEquals(this, station)) return true;
-
-            if (station == null) return false;
-            return (ObjectCompare.EqualsNullable(this.Name, station.Name) &&
-                    ObjectCompare.EqualsNullable(this.MaxLandingPadSize, station.MaxLandingPadSize) &&
-                    ObjectCompare.EqualsNullable(this.DistanceToStar, station.DistanceToStar) &&
-                    ObjectCompare.EqualsNullable(this.Faction, station.Faction) &&
-                    ObjectCompare.EqualsNullable(this.Government, station.Government) &&
-                    ObjectCompare.EqualsNullable(this.Allegiance, station.Allegiance) &&
-                    ObjectCompare.EqualsNullable(this.State, station.State) &&
-                    ObjectCompare.EqualsNullable(this.Type, station.Type) &&
-                    ObjectCompare.EqualsNullable(this.HasBlackmarket, station.HasBlackmarket) &&
-                    ObjectCompare.EqualsNullable(this.HasCommodities, station.HasCommodities) &&
-                    ObjectCompare.EqualsNullable(this.HasRefuel, station.HasRefuel) &&
-                    ObjectCompare.EqualsNullable(this.HasRepair, station.HasRepair) &&
-                    ObjectCompare.EqualsNullable(this.HasRearm, station.HasRearm) &&
-                    ObjectCompare.EqualsNullable(this.HasOutfitting, station.HasOutfitting) &&
-                    ObjectCompare.EqualsNullable(this.HasShipyard, station.HasShipyard) &&
-                    ObjectCompare.EqualsNullable(this.ImportCommodities, station.ImportCommodities) &&
-                    ObjectCompare.EqualsNullable(this.ExportCommodities, station.ExportCommodities) &&
-                    ObjectCompare.EqualsNullable(this.ProhibitedCommodities, station.ProhibitedCommodities) &&
-                    ObjectCompare.EqualsNullable(this.Economies, station.Economies));
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException("invalid station name","name");
+            Name = name;
         }
 
         /// <summary>
@@ -158,28 +110,73 @@ namespace RegulatedNoise.DomainModel
         /// <param name="updateMode">The update mode.</param>
         public void UpdateFrom(Station source, UpdateMode updateMode)
         {
-            throw new NotImplementedException();
+            bool doCopy = updateMode == UpdateMode.Clone || updateMode == UpdateMode.Copy;
+            bool isNewer = UpdatedAt < source.UpdatedAt;
+            if (updateMode == UpdateMode.Clone)
+            {
+                Name = source.Name;
+            }
+            
+            if (doCopy || !MaxLandingPadSize.HasValue || (isNewer && source.MaxLandingPadSize.HasValue))
+                MaxLandingPadSize = source.MaxLandingPadSize;
+            if (doCopy || !DistanceToStar.HasValue || (isNewer && source.DistanceToStar.HasValue))
+                DistanceToStar = source.DistanceToStar;
+            if (doCopy || String.IsNullOrEmpty(Faction) || (isNewer && !String.IsNullOrEmpty(source.Faction)))
+                Faction = source.Faction;
+            if (doCopy || String.IsNullOrEmpty(Government) || (isNewer && !String.IsNullOrEmpty(source.Government)))
+                Government = source.Government;
+            if (doCopy || String.IsNullOrEmpty(Allegiance) || (isNewer && !String.IsNullOrEmpty(source.Allegiance)))
+                Allegiance = source.Allegiance;
+            if (doCopy || String.IsNullOrEmpty(State) || (isNewer && !String.IsNullOrEmpty(source.State)))
+                State = source.State;
+            if (doCopy || String.IsNullOrEmpty(Type) || (isNewer && !String.IsNullOrEmpty(source.Type)))
+                Type = source.Type;
+            if (doCopy || !HasBlackmarket.HasValue || (isNewer && source.HasBlackmarket.HasValue))
+                HasBlackmarket = source.HasBlackmarket;
+            if (doCopy || !HasCommodities.HasValue || (isNewer && source.HasCommodities.HasValue))
+                HasCommodities = source.HasCommodities;
+            if (doCopy || !HasRefuel.HasValue || (isNewer && source.HasRefuel.HasValue))
+                HasRefuel = source.HasRefuel;
+            if (doCopy || !HasRepair.HasValue || (isNewer && source.HasRepair.HasValue))
+                HasRepair = source.HasRepair;
+            if (doCopy || !HasRearm.HasValue || (isNewer && source.HasRearm.HasValue))
+                HasRearm = source.HasRearm;
+            if (doCopy || !HasOutfitting.HasValue || (isNewer && source.HasOutfitting.HasValue))
+                HasOutfitting = source.HasOutfitting;
+            if (doCopy || !HasShipyard.HasValue || (isNewer && source.HasShipyard.HasValue))
+                HasShipyard = source.HasShipyard;
 
-            Name = source.Name;
-            MaxLandingPadSize = source.MaxLandingPadSize;
-            DistanceToStar = source.DistanceToStar;
-            Faction = source.Faction;
-            Government = source.Government;
-            Allegiance = source.Allegiance;
-            State = source.State;
-            Type = source.Type;
-            HasBlackmarket = source.HasBlackmarket;
-            HasCommodities = source.HasCommodities;
-            HasRefuel = source.HasRefuel;
-            HasRepair = source.HasRepair;
-            HasRearm = source.HasRearm;
-            HasOutfitting = source.HasOutfitting;
-            HasShipyard = source.HasShipyard;
+            if (isNewer || updateMode == UpdateMode.Clone || updateMode == UpdateMode.Copy)
+            {
+                ImportCommodities = source.ImportCommodities.CloneN();
+                ExportCommodities = source.ExportCommodities.CloneN();
+                ProhibitedCommodities = source.ProhibitedCommodities.CloneN();
+                Economies = source.Economies.CloneN();
+                AvailableShips = source.AvailableShips.CloneN();
+            }
+            else if (updateMode == UpdateMode.Update)
+            {
+                if (source.ImportCommodities != null)
+                    ImportCommodities = ImportCommodities.Union(source.ImportCommodities).Distinct().ToArray();
+                if (source.ExportCommodities != null)
+                    ExportCommodities = ExportCommodities.Union(source.ExportCommodities).Distinct().ToArray();
+                if (source.ProhibitedCommodities != null)
+                    ProhibitedCommodities = ProhibitedCommodities.Union(source.ProhibitedCommodities).Distinct().ToArray();
+                if (source.Economies != null)
+                    Economies = Economies.Union(source.Economies).Distinct().ToArray();
+                if (source.AvailableShips != null)
+                    AvailableShips = AvailableShips.Union(source.AvailableShips).Distinct().ToArray();
+            }
 
-            ImportCommodities = source.ImportCommodities.CloneN();
-            ExportCommodities = source.ExportCommodities.CloneN();
-            ProhibitedCommodities = source.ProhibitedCommodities.CloneN();
-            Economies = source.Economies.CloneN();
+            if (doCopy || UpdatedAt == 0 || isNewer)
+                UpdatedAt = source.UpdatedAt;
+            base.UpdateFrom(source, updateMode);
         }
+    }
+
+    public enum LandingPadSize
+    {
+        M,
+        L
     }
 }

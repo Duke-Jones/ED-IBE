@@ -49,12 +49,15 @@
     <Compile Include="CommoditiesTest.cs" />
     <Compile Include="DataProviders\EDSCDataProviderTest.cs" />
     <Compile Include="DataProviders\TradeDangerousDataProviderTest.cs" />
+    <Compile Include="DomainModel\StarSystemTest.cs" />
+    <Compile Include="DomainModel\StationTest.cs" />
     <Compile Include="EddnMessageTest.cs" />
     <Compile Include="EddnTest.cs" />
     <Compile Include="EDMilyWayTest.cs" />
     <Compile Include="EliteInteractions\LogFilesScannerTest.cs" />
     <Compile Include="MarketDataRowTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="playground\TradeDangerous-3h.prices.txt">
