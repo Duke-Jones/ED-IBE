@@ -7,355 +7,79 @@
 {"name":"Consumer Technology", "ProducedBy": ["HighTech"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
 {"name":"Domestic Appliances", "ProducedBy": ["Industrial"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
 
-{"id":8,"name":"Beer","category_id":3,"average_price":165,"category":
-{"id":3,"name":"Legal Drugs"
-}
-},
-{"id":9,"name":"Liquor","category_id":3,"average_price":629,"category":
-{"id":3,"name":"Legal Drugs"
-}
-},
-{"id":10,"name":"Narcotics","category_id":3,"average_price":112,"category":
-{"id":3,"name":"Legal Drugs"
-}
-},
-{"id":11,"name":"Tobacco","category_id":3,"average_price":4819,"category":
-{"id":3,"name":"Legal Drugs"
-}
-},
-{"id":12,"name":"Wine","category_id":3,"average_price":248,"category":
-{"id":3,"name":"Legal Drugs"
-}
-},
-{"id":13,"name":"Algae","category_id":4,"average_price":111,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":14,"name":"Animal Meat","category_id":4,"average_price":1307,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":15,"name":"Coffee","category_id":4,"average_price":1283,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":16,"name":"Fish","category_id":4,"average_price":403,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":17,"name":"Food Cartridges","category_id":4,"average_price":88,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":18,"name":"Fruit and Vegetables","category_id":4,"average_price":295,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":19,"name":"Grain","category_id":4,"average_price":189,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":20,"name":"Synthetic Meat","category_id":4,"average_price":262,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":21,"name":"Tea","category_id":4,"average_price":1481,"category":
-{"id":4,"name":"Foods"
-}
-},
-{"id":22,"name":"Polymers","category_id":5,"average_price":116,"category":
-{"id":5,"name":"Industrial Materials"
-}
-},
-{"id":23,"name":"Semiconductors","category_id":5,"average_price":864,"category":
-{"id":5,"name":"Industrial Materials"
-}
-},
-{"id":24,"name":"Superconductors","category_id":5,"average_price":6688,"category":
-{"id":5,"name":"Industrial Materials"
-}
-},
-{"id":25,"name":"Atmospheric Processors","category_id":6,"average_price":325,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":26,"name":"Crop Harvesters","category_id":6,"average_price":1993,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":27,"name":"Marine Equipment","category_id":6,"average_price":3907,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":28,"name":"Microbial Furnaces","category_id":6,"average_price":208,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":29,"name":"Mineral Extractors","category_id":6,"average_price":519,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":30,"name":"Power Generators","category_id":6,"average_price":472,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":31,"name":"Water Purifiers","category_id":6,"average_price":253,"category":
-{"id":6,"name":"Machinery"
-}
-},
-{"id":32,"name":"Agri-Medicines","category_id":7,"average_price":957,"category":
-{"id":7,"name":"Medicines"
-}
-},
-{"id":33,"name":"Basic Medicines","category_id":7,"average_price":263,"category":
-{"id":7,"name":"Medicines"
-}
-},
-{"id":34,"name":"Combat Stabilisers","category_id":7,"average_price":2837,"category":
-{"id":7,"name":"Medicines"
-}
-},
-{"id":35,"name":"Performance Enhancers","category_id":7,"average_price":6929,"category":
-{"id":7,"name":"Medicines"
-}
-},
-{"id":36,"name":"Progenitor Cells","category_id":7,"average_price":6890,"category":
-{"id":7,"name":"Medicines"
-}
-},
-{"id":37,"name":"Aluminium","category_id":8,"average_price":288,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":38,"name":"Beryllium","category_id":8,"average_price":8232,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":39,"name":"Cobalt","category_id":8,"average_price":634,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":40,"name":"Copper","category_id":8,"average_price":419,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":41,"name":"Gallium","category_id":8,"average_price":5145,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":42,"name":"Gold","category_id":8,"average_price":9438,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":43,"name":"Indium","category_id":8,"average_price":5834,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":44,"name":"Lithium","category_id":8,"average_price":1546,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":45,"name":"Palladium","category_id":8,"average_price":13443,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":46,"name":"Platinum","category_id":8,"average_price":19709,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":47,"name":"Silver","category_id":8,"average_price":4774,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":48,"name":"Tantalum","category_id":8,"average_price":3923,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":49,"name":"Titanium","category_id":8,"average_price":944,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":50,"name":"Uranium","category_id":8,"average_price":2633,"category":
-{"id":8,"name":"Metals"
-}
-},
-{"id":51,"name":"Bauxite","category_id":9,"average_price":112,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":52,"name":"Bertrandite","category_id":9,"average_price":2427,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":53,"name":"Coltan","category_id":9,"average_price":1353,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":54,"name":"Gallite","category_id":9,"average_price":1871,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":55,"name":"Indite","category_id":9,"average_price":2139,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":56,"name":"Lepidolite","category_id":9,"average_price":555,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":57,"name":"Rutile","category_id":9,"average_price":294,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":58,"name":"Uraninite","category_id":9,"average_price":844,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":59,"name":"Imperial Slaves","category_id":10,"average_price":16066,"category":
-{"id":10,"name":"Slavery"
-}
-},
-{"id":60,"name":"Slaves","category_id":10,"average_price":10275,"category":
-{"id":10,"name":"Slavery"
-}
-},
-{"id":61,"name":"Advanced Catalysers","category_id":11,"average_price":2894,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":62,"name":"Animal Monitors","category_id":11,"average_price":266,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":63,"name":"Aquaponic Systems","category_id":11,"average_price":250,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":64,"name":"Auto-Fabricators","category_id":11,"average_price":3705,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":65,"name":"Bioreducing Lichen","category_id":11,"average_price":977,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":66,"name":"Computer Components","category_id":11,"average_price":416,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":67,"name":"H.E. Suits","category_id":11,"average_price":306,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":68,"name":"Land Enrichment Systems","category_id":11,"average_price":4747,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":69,"name":"Resonating Separators","category_id":11,"average_price":6030,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":70,"name":"Robotics","category_id":11,"average_price":1795,"category":
-{"id":11,"name":"Technology"
-}
-},
-{"id":72,"name":"Leather","category_id":12,"average_price":171,"category":
-{"id":12,"name":"Textiles"
-}
-},
-{"id":73,"name":"Natural Fabrics","category_id":12,"average_price":410,"category":
-{"id":12,"name":"Textiles"
-}
-},
-{"id":74,"name":"Synthetic Fabrics","category_id":12,"average_price":153,"category":
-{"id":12,"name":"Textiles"
-}
-},
-{"id":75,"name":"Biowaste","category_id":13,"average_price":20,"category":
-{"id":13,"name":"Waste"
-}
-},
-{"id":76,"name":"Chemical Waste","category_id":13,"average_price":60,"category":
-{"id":13,"name":"Waste"
-}
-},
-{"id":77,"name":"Scrap","category_id":13,"average_price":44,"category":
-{"id":13,"name":"Waste"
-}
-},
-{"id":78,"name":"Non-lethal Weapons","category_id":14,"average_price":1816,"category":
-{"id":14,"name":"Weapons"
-}
-},
-{"id":79,"name":"Personal Weapons","category_id":14,"average_price":4206,"category":
-{"id":14,"name":"Weapons"
-}
-},
-{"id":80,"name":"Reactive Armour","category_id":14,"average_price":2090,"category":
-{"id":14,"name":"Weapons"
-}
-},
-{"id":81,"name":"Battle Weapons","category_id":14,"average_price":6454,"category":
-{"id":14,"name":"Weapons"
-}
-},
-{"id":82,"name":"Toxic Waste","category_id":13,"average_price":null,"category":
-{"id":13,"name":"Waste"
-}
-},
-{"id":83,"name":"Painite","category_id":9,"average_price":35974,"category":
-{"id":9,"name":"Minerals"
-}
-},
-{"id":84,"name":"Limpet","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":85,"name":"Eranin Pearl Whiskey","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":86,"name":"Kamorin Historic Weapons","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":87,"name":"Lucan Onion Head","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":88,"name":"Motrona Experience Jelly","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":89,"name":"Onion Head","category_id":15,"average_price":765,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":90,"name":"Rusani Old Smokey","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":91,"name":"Tarach Spice","category_id":15,"average_price":1056,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":92,"name":"Terra Mater Blood Bores","category_id":15,"average_price":null,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":93,"name":"Wolf Fesh","category_id":15,"average_price":712,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":94,"name":"Wuthielo Ku Froth","category_id":15,"average_price":420,"category":
-{"id":15,"name":"Unknown"
-}
-},
-{"id":95,"name":"Ai Relics","category_id":16,"average_price":144735,"category":
-{"id":16,"name":"Salvage"
-}
-},
-{"id":96,"name":"Antiquities","category_id":16,"average_price":120613,"category":
-{"id":16,"name":"Salvage"
-}
-}]
+//{"name":"Beer"},
+//{"name":"Liquor"},
+//{"name":"Narcotics" },
+{"name":"Tobacco", "ProducedBy": ["Agriculture"] },
+//{"name":"Wine" },
+{"name":"Algae", "ProducedBy": ["Agriculture"], "ConsumedBy": ["Industrial"] },
+{"name":"Animal Meat", "ProducedBy": ["Agriculture"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+{"name":"Coffee", "ProducedBy": ["Agriculture"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+{"name":"Fish", "ProducedBy": ["Agriculture"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+{"name":"Food Cartridges", "ProducedBy": ["Industrial"], "ConsumedBy": ["HighTech", "Industrial", "Refinery", "Extraction"] },
+{"name":"Fruit and Vegetables", "ProducedBy": ["Agriculture"], "ConsumedBy": [] },
+{"name":"Grain", "ProducedBy": ["Agriculture"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+{"name":"Synthetic Meat", "ProducedBy": ["HighTech"], "ConsumedBy": ["HighTech", "Industrial", "Refinery", "Extraction"] },
+{"name":"Tea", "ProducedBy": ["Agriculture"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+{"name":"Polymers", "ProducedBy": ["Refinery"], "ConsumedBy": ["Industrial"] },
+{"name":"Semiconductors", "ProducedBy": ["Refinery"], "ConsumedBy": ["Industrial"] },
+{"name":"Superconductors", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", Industrial] },
+//{"name":"Atmospheric Processors", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Crop Harvesters", "ProducedBy": ["Industrial"], "ConsumedBy": ["Agriculture"] },
+{"name":"Marine Equipment", "ProducedBy": ["Industrial"], "ConsumedBy": ["Agriculture"] },
+{"name":"Microbial Furnaces", "ProducedBy": ["Industrial"], "ConsumedBy": ["HighTech", "Refinery"] },
+{"name":"Mineral Extractors", "ProducedBy": ["Industrial"], "ConsumedBy": ["Extraction"] },
+//{"name":"Power Generators", "ProducedBy": [], "ConsumedBy": [] },
+//{"name":"Water Purifiers", "ProducedBy": [], "ConsumedBy": [] },
+//{"name":"Agri-Medicines", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Basic Medicines", "ProducedBy": ["Industrial"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+{"name":"Combat Stabilisers", "ProducedBy": ["HighTech"], "ConsumedBy": [] },
+{"name":"Performance Enhancers", "ProducedBy": ["HighTech"], "ConsumedBy": [] },
+{"name":"Progenitor Cells", "ProducedBy": ["HighTech"], "ConsumedBy": ["Industrial", "Agriculture", "Refinery"] },
+{"name":"Aluminium", "ProducedBy": ["Refinery"], "ConsumedBy": ["Industrial"] },
+{"name":"Beryllium", "ProducedBy": ["Refinery"], "ConsumedBy": ["Industrial"] },
+{"name":"Cobalt", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech"] },
+{"name":"Copper", "ProducedBy": ["Refinery"], "ConsumedBy": ["Industrial"] },
+{"name":"Gallium", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", "Industrial"] },
+{"name":"Gold", "ProducedBy": ["Extraction"], "ConsumedBy": ["HighTech", "Industrial"] },
+{"name":"Indium", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", "Industrial"] },
+{"name":"Lithium", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", "Industrial"] },
+{"name":"Palladium", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech"] },
+//{"name":"Platinum", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Silver", "ProducedBy": ["Extraction"], "ConsumedBy": ["HighTech"] },
+{"name":"Tantalum", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", "Industrial"] },
+{"name":"Titanium", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", "Industrial"] },
+{"name":"Uranium", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech", "Industrial"] },
+//{"name":"Bauxite", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Bertrandite", "ProducedBy": ["Extraction"], "ConsumedBy": ["Refinery"] },
+{"name":"Coltan", "ProducedBy": ["Extraction"], "ConsumedBy": ["Refinery"] },
+{"name":"Gallite", "ProducedBy": ["Extraction"], "ConsumedBy": ["Refinery"] },
+{"name":"Indite", "ProducedBy": ["Extraction"], "ConsumedBy": ["Refinery"] },
+{"name":"Lepidolite", "ProducedBy": ["Refinery"], "ConsumedBy": ["HighTech"] },
+{"name":"Rutile", "ProducedBy": ["Extraction"], "ConsumedBy": ["Refinery"] },
+{"name":"Uraninite", "ProducedBy": ["Extraction"], "ConsumedBy": ["Refinery"] },
+//{"name":"Imperial Slaves", "ProducedBy": [], "ConsumedBy": [] },
+//{"name":"Slaves", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Advanced Catalysers", "ProducedBy": ["HighTech"], "ConsumedBy": ["Refinery"] },
+{"name":"Animal Monitors", "ProducedBy": ["HighTech"], "ConsumedBy": ["Agriculture"] },
+{"name":"Aquaponic Systems", "ProducedBy": ["HighTech"], "ConsumedBy": ["Agriculture"] },
+{"name":"Auto-Fabricators", "ProducedBy": ["HighTech"], "ConsumedBy": ["Industrial"] },
+{"name":"Bioreducing Lichen", "ProducedBy": ["HighTech"], "ConsumedBy": ["Extraction"] },
+{"name":"Computer Components", "ProducedBy": ["Industrial"], "ConsumedBy": ["HighTech"] },
+{"name":"H.E. Suits", "ProducedBy": ["HighTech"], "ConsumedBy": ["Industrial", "Extraction"] },
+{"name":"Land Enrichment Systems", "ProducedBy": ["HighTech"], "ConsumedBy": ["Agriculture"] },
+{"name":"Resonating Separators", "ProducedBy": ["HighTech"], "ConsumedBy": ["Refinery"] },
+{"name":"Robotics", "ProducedBy": ["HighTech"], "ConsumedBy": ["Industrial"] },
+{"name":"Leather", "ProducedBy": ["Agriculture"], "ConsumedBy": ["Industrial"] },
+{"name":"Natural Fabrics", "ProducedBy": ["Agriculture"], "ConsumedBy": ["Industrial"] },
+{"name":"Synthetic Fabrics", "ProducedBy": ["Refinery"], "ConsumedBy": ["Industrial"] },
+{"name":"Biowaste", "ProducedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"], "ConsumedBy": ["Agriculture"] },
+//{"name":"Chemical Waste", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Scrap", "ProducedBy": ["Industrial", "HighTech"], "ConsumedBy": ["Refinery"] },
+{"name":"Non-lethal Weapons", "ProducedBy": ["HighTech"], "ConsumedBy": ["HighTech", "Industrial", "Agriculture", "Refinery", "Extraction"] },
+//{"name":"Personal Weapons", "ProducedBy": [], "ConsumedBy": [] },
+{"name":"Reactive Armour", "ProducedBy": ["HighTech"], "ConsumedBy": [] },
+//{"name":"Battle Weapons", "ProducedBy": [], "ConsumedBy": [] },
+//{"name":"Toxic Waste", "ProducedBy": [], "ConsumedBy": [] },
+//{"name":"Painite", "ProducedBy": [], "ConsumedBy": [] }
+]

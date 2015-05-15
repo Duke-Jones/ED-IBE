@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using RegulatedNoise.DataProviders;
 using RegulatedNoise.DomainModel;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
@@ -93,5 +97,41 @@ namespace RegulatedNoise.TestTab
             var handler = OnFakeEddnMessage;
             if (handler != null) handler(this, e);
         }
+
+		  private void btImportfromTd_Click(object sender, EventArgs e)
+		  {
+			  btImportfromTd.Enabled = false;
+			  var progress = new ProgressView() { Text = "Trade dangerous import"};
+			  progress.progressStart("retrieving trade dangerous prices...");
+			  var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+			  ImportFromTradeDangerous((processed,total) => this.RunInGuiThread(() =>progress.progressUpdate(processed, total)))
+				  .ContinueWith(unused =>
+					{
+						btImportfromTd.Enabled = true;
+						progress.Dispose();
+					}, scheduler);
+		  }
+
+	    private static async Task ImportFromTradeDangerous(Action<int,int> onProgress)
+	    {
+		    var tdProvider = new TradeDangerousDataProvider();
+		    IEnumerable<MarketDataRow> marketDataRows = await tdProvider.RetrievePrices()
+				 .ConfigureAwait(false);
+		    int rows = marketDataRows.Count();
+		    int processed = 0;
+		    foreach (MarketDataRow marketDataRow in marketDataRows)
+		    {
+			    var plausibility =  ApplicationContext.Milkyway.IsImplausible(marketDataRow, true);
+				 if (plausibility.Plausible)
+				 {
+					 ApplicationContext.GalacticMarket.Update(marketDataRow);
+				 }
+				 else
+				 {
+					 
+				 }
+			    onProgress(++processed, rows);
+		    }
+	    }
     }
 }
