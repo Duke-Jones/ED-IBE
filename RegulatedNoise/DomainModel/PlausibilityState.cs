@@ -1,4 +1,4 @@
-namespace RegulatedNoise.EDDB_Data
+namespace RegulatedNoise.DomainModel
 {
     internal struct PlausibilityState
     {

@@ -5,11 +5,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using RegulatedNoise.Annotations;
+using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.DomainModel
 {
-    internal class GlobalMarket : ICollection<MarketDataRow>
+    internal class GalacticMarket : ICollection<MarketDataRow>
     {
         public event EventHandler<MarketDataEventArgs> OnMarketDataUpdate
         {
@@ -78,7 +79,7 @@ namespace RegulatedNoise.DomainModel
 
         private readonly object _updating = new object();
 
-        public GlobalMarket()
+        public GalacticMarket()
         {
             _byStation = new StationMarketCollection();
             _byCommodity = new CommodityMarketCollection();

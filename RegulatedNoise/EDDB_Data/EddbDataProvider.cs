@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RegulatedNoise.DomainModel;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
@@ -42,12 +43,45 @@ namespace RegulatedNoise.EDDB_Data
         {
             if (File.Exists(EDDB_STATIONS_FULL_DATAFILE))
             {
-                //imports stations and marketdatas
+                List<EDStation> eddbStations = ReadFile<List<EDStation>>(EDDB_STATIONS_FULL_DATAFILE);
+                foreach (EDStation eddbStation in eddbStations)
+                {
+                    universe.Update(ToStation(eddbStation));
+                }
             }
             else if (File.Exists(EDDB_STATIONS_LITE_DATAFILE))
             {
                 //imports only stations
             }
+        }
+
+        private Station ToStation(EDStation eddbStation)
+        {
+            Station station = new Station(eddbStation.Name.ToCleanTitleCase())
+            {
+                Allegiance = eddbStation.Allegiance
+                ,DistanceToStar = eddbStation.DistanceToStar
+                ,Economies = eddbStation.Economies
+                ,ExportCommodities = eddbStation.ExportCommodities
+                ,Faction = eddbStation.Faction
+                , Government = eddbStation.Government
+                , HasBlackmarket = eddbStation.HasBlackmarket
+                , HasCommodities = eddbStation.HasCommodities
+                , HasOutfitting = eddbStation.HasOutfitting
+                , HasRearm = eddbStation.HasRearm
+                , HasRepair = eddbStation.HasRepair
+                , HasRefuel = eddbStation.HasRefuel
+                , HasShipyard = eddbStation.HasShipyard
+                , ImportCommodities = eddbStation.ImportCommodities
+                , MaxLandingPadSize = eddbStation.MaxLandingPadSize
+                , ProhibitedCommodities = eddbStation.ProhibitedCommodities
+                , Source = "EDDB"
+                , State = eddbStation.State
+                , System
+                , Type = eddbStation.Type
+                , UpdatedAt = eddbStation.UpdatedAt
+            }
+
         }
 
         private void ImportSystems(Universe universe)

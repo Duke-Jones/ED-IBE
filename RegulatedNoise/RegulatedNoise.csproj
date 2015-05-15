@@ -112,9 +112,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DomainModel\Commodities.cs" />
-    <Compile Include="DomainModel\GlobalMarket.cs" />
+    <Compile Include="DomainModel\GalacticMarket.cs" />
     <Compile Include="DomainModel\Commodity.cs" />
     <Compile Include="DomainModel\DataModel.cs" />
+    <Compile Include="DomainModel\PlausibilityState.cs" />
     <Compile Include="DomainModel\StarSystem.cs" />
     <Compile Include="DomainModel\Station.cs" />
     <Compile Include="DomainModel\StationCollection.cs" />
@@ -148,7 +149,6 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\EDMarketData.cs" />
-    <Compile Include="EDDB_Data\PlausibilityState.cs" />
     <Compile Include="EDDB_Data\ProposalLevel.cs" />
     <Compile Include="EDDN.cs" />
     <Compile Include="EddnMessageEventArgs.cs" />

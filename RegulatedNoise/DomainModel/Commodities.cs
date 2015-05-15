@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using EdClasses.ClassDefinitions.Commodities;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.DomainModel
@@ -9,9 +10,12 @@ namespace RegulatedNoise.DomainModel
     {
         private readonly CommodityCollection _commodities;
 
+        private readonly dsCommodities _localization;
+
         public Commodities()
         {
             _commodities = new CommodityCollection();
+            _localization = new dsCommodities();
         }
 
         protected class CommodityCollection : KeyedCollection<string, Commodity>
@@ -38,6 +42,13 @@ namespace RegulatedNoise.DomainModel
         public Commodity this[string commodityName]
         {
             get { return _commodities[commodityName.ToCleanTitleCase()]; }
+        }
+
+        public Commodity TryGet(string commodityName)
+        {
+            Commodity commodity;
+            _commodities.TryGetValue(commodityName.ToCleanTitleCase(), out commodity);
+            return commodity;
         }
 
         public IEnumerator<Commodity> GetEnumerator()
@@ -81,7 +92,22 @@ namespace RegulatedNoise.DomainModel
 
         public void Update(Commodity commodity)
         {
-            throw new System.NotImplementedException();
+            commodity.Name = GetBasename(commodity.Name);
+            commodity.LocalizedName = _localization.GetLocalizedCommodity(commodity.Name);
+            Commodity existingCommodity;
+            if (!_commodities.TryGetValue(commodity.Name, out existingCommodity))
+            {
+                Add(commodity);
+            }
+            else
+            {
+                existingCommodity.UpdateFrom(commodity, UpdateMode.Update);
+            }
+        }
+
+        public string GetBasename(string commodityName)
+        {
+            return _localization.TranslateInEnglish(commodityName);
         }
     }
 }

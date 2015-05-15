@@ -47,7 +47,7 @@ namespace RegulatedNoise
         private static EDMilkyway _milkyway;
         private static dsCommodities _commoditiesLocalisation;
         private static EDDN _eddn;
-        private static GlobalMarket _globalMarket;
+        private static GalacticMarket _galacticMarket;
         private static LogFilesScanner _eliteLogFilesScanner;
 
         public static EDMilkyway Milkyway
@@ -128,15 +128,15 @@ namespace RegulatedNoise
             }
         }
 
-        public static GlobalMarket GlobalMarket
+        public static GalacticMarket GalacticMarket
         {
             get
             {
-                if (_globalMarket == null)
-                    _globalMarket = new GlobalMarket();
-                return _globalMarket;
+                if (_galacticMarket == null)
+                    _galacticMarket = new GalacticMarket();
+                return _galacticMarket;
             }
-            set { _globalMarket = value; }
+            set { _galacticMarket = value; }
         }
 
         public static LogFilesScanner EliteLogFilesScanner

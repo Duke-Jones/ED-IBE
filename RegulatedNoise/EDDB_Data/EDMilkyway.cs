@@ -7,6 +7,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
+using RegulatedNoise.DomainModel;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using RegulatedNoise.Exceptions;
 

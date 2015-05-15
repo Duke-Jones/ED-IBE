@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace RegulatedNoise.DomainModel
 {
-    public class Commodity
+    public class Commodity: UpdatableEntity
     {
+        private string _localizedName;
+
         [JsonProperty("name")]
         public string Name { get; set; }
 
@@ -18,6 +21,48 @@ namespace RegulatedNoise.DomainModel
 
         [JsonProperty("supply_price_levels")]
         public WarningLevels SupplyWarningLevels { get; set; }
+
+        [JsonIgnore]
+        public string LocalizedName
+        {
+            get
+            {
+                if(_localizedName == null)
+                {
+                    return Name;
+                }
+                else
+                {
+                    return _localizedName;
+                }
+            }
+            set
+            {
+                _localizedName = value;
+            }
+        }
+
+        public void UpdateFrom(Commodity sourceCommodity, UpdateMode updateMode)
+        {
+            bool doCopy = updateMode == UpdateMode.Clone || updateMode == UpdateMode.Copy;
+            if (updateMode == UpdateMode.Clone)
+            {
+                Name = sourceCommodity.Name;
+            }
+            if (doCopy || String.IsNullOrEmpty(Category))
+                Category = sourceCommodity.Category;
+            if (doCopy || !AveragePrice.HasValue)
+                AveragePrice = sourceCommodity.AveragePrice;
+            if (doCopy || !DemandWarningLevels.Buy.Low.HasValue)
+                DemandWarningLevels.Buy.Low = sourceCommodity.DemandWarningLevels.Buy.Low;
+            if (doCopy || !DemandWarningLevels.Buy.High.HasValue)
+                DemandWarningLevels.Buy.High = sourceCommodity.DemandWarningLevels.Buy.High;
+            if (doCopy || !SupplyWarningLevels.Buy.Low.HasValue)
+                SupplyWarningLevels.Buy.Low = sourceCommodity.SupplyWarningLevels.Buy.Low;
+            if (doCopy || !SupplyWarningLevels.Buy.High.HasValue)
+                SupplyWarningLevels.Buy.High = sourceCommodity.SupplyWarningLevels.Buy.High;
+            base.UpdateFrom(sourceCommodity, updateMode);
+        }
     }
 
     public class WarningLevels
@@ -42,5 +87,11 @@ namespace RegulatedNoise.DomainModel
 
         [JsonProperty("high")]
         public int? High { get; set; }
+
+        public bool IsInRange(int price)
+        {
+            return ((Low.HasValue) && (price < Low)) 
+                     || ((High.HasValue) && (price > High));
+        }
     }
 }

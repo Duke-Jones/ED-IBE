@@ -33,9 +33,9 @@ namespace RegulatedNoise.Trading
             var resultsReturn = new List<TradeRoute>();
             int outwardIncome = 0;
             int returnIncome = 0;
-            IEnumerable<MarketDataRow> toStationMarket = ApplicationContext.GlobalMarket.StationMarket(stationTo);
+            IEnumerable<MarketDataRow> toStationMarket = ApplicationContext.GalacticMarket.StationMarket(stationTo);
 
-            foreach (var fromRow in ApplicationContext.GlobalMarket.StationMarket(stationFrom))
+            foreach (var fromRow in ApplicationContext.GalacticMarket.StationMarket(stationFrom))
             {
                 MarketDataRow toRow = toStationMarket.FirstOrDefault(x => x.CommodityName == fromRow.CommodityName);
 

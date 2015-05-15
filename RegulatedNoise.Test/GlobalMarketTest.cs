@@ -13,28 +13,28 @@ namespace RegulatedNoise.Test
         [TestMethod]
         public void i_can_instantiate()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
         }
 
         [TestMethod]
         public void added_event_raised_on_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
+            galacticMarket.Update(marketData);
             Assert.IsTrue(events.Any(e => e.IsAdded && e.Actual == marketData), "no event raised");
         }
 
         [TestMethod]
         public void added_event_raised_on_bulk_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketDatas = Enumerable.Range(1,10).Select(i =>NewMarketData(DateTime.Now, i)).ToArray();
-            globalMarket.UpdateRange(marketDatas);
+            galacticMarket.UpdateRange(marketDatas);
             foreach (MarketDataRow marketData in marketDatas)
             {
                 Assert.IsTrue(events.Any(e => e.IsAdded && e.Actual == marketData), "no event raised");                
@@ -44,144 +44,144 @@ namespace RegulatedNoise.Test
         [TestMethod]
         public void removed_event_raised_on_remove()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
-            globalMarket.Remove(marketData);
+            galacticMarket.Update(marketData);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.Remove(marketData);
             Assert.IsTrue(events.Any(e => e.IsRemoved), "no event raised");
         }
 
         [TestMethod]
         public void replaced_event_raised_on_replace()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.Update(NewMarketData(DateTime.Now));
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
-            globalMarket.Update(NewMarketData(DateTime.Now.AddMinutes(2)));
+            galacticMarket.Update(NewMarketData(DateTime.Now));
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.Update(NewMarketData(DateTime.Now.AddMinutes(2)));
             Assert.IsTrue(events.Any(e => e.IsReplaced), "no event raised");
         }
 
         [TestMethod]
         public void data_is_added_on_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            Assert.AreEqual(marketData, globalMarket[marketData.MarketDataId], "data has not been added");
+            galacticMarket.Update(marketData);
+            Assert.AreEqual(marketData, galacticMarket[marketData.MarketDataId], "data has not been added");
         }
 
         [TestMethod]
         public void data_is_added_on_station_index_on_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            Assert.IsTrue(globalMarket.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
+            galacticMarket.Update(marketData);
+            Assert.IsTrue(galacticMarket.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
         }
 
         [TestMethod]
         public void data_is_added_on_commodities_index_on_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            Assert.IsTrue(globalMarket.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
+            galacticMarket.Update(marketData);
+            Assert.IsTrue(galacticMarket.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
         }
 
         [TestMethod]
         public void data_are_added_on_bulk_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketDatas = Enumerable.Range(1, 10).Select(i => NewMarketData(DateTime.Now, i)).ToArray();
-            globalMarket.UpdateRange(marketDatas);
+            galacticMarket.UpdateRange(marketDatas);
             foreach (MarketDataRow marketData in marketDatas)
             {
-                Assert.AreEqual(marketData, globalMarket[marketData.MarketDataId], "data has not been added");
+                Assert.AreEqual(marketData, galacticMarket[marketData.MarketDataId], "data has not been added");
             }
         }
 
         [TestMethod]
         public void data_are_added_in_station_index_on_bulk_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketDatas = Enumerable.Range(1, 10).Select(i => NewMarketData(DateTime.Now, i)).ToArray();
-            globalMarket.UpdateRange(marketDatas);
+            galacticMarket.UpdateRange(marketDatas);
             foreach (MarketDataRow marketData in marketDatas)
             {
-                Assert.IsTrue(globalMarket.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
+                Assert.IsTrue(galacticMarket.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
             }
         }
 
         [TestMethod]
         public void data_are_added_in_commodities_index_on_bulk_add()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
             var marketDatas = Enumerable.Range(1, 10).Select(i => NewMarketData(DateTime.Now, i)).ToArray();
-            globalMarket.UpdateRange(marketDatas);
+            galacticMarket.UpdateRange(marketDatas);
             foreach (MarketDataRow marketData in marketDatas)
             {
-                Assert.IsTrue(globalMarket.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
+                Assert.IsTrue(galacticMarket.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
             }
         }
 
         [TestMethod]
         public void data_is_removed_on_remove()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
-            globalMarket.Remove(marketData);
-            Assert.IsFalse(globalMarket.Contains(marketData), "marketdata has not been removed");
+            galacticMarket.Update(marketData);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.Remove(marketData);
+            Assert.IsFalse(galacticMarket.Contains(marketData), "marketdata has not been removed");
         }
 
         [TestMethod]
         public void data_is_removed_from_station_index_on_remove()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            globalMarket.Remove(marketData);
-            Assert.IsFalse(globalMarket.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
+            galacticMarket.Update(marketData);
+            galacticMarket.Remove(marketData);
+            Assert.IsFalse(galacticMarket.StationMarket(marketData.StationID).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through station index");
         }
 
         [TestMethod]
         public void data_is_removed_from_commodities_index_on_remove()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            globalMarket.Remove(marketData);
-            Assert.IsFalse(globalMarket.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
+            galacticMarket.Update(marketData);
+            galacticMarket.Remove(marketData);
+            Assert.IsFalse(galacticMarket.CommodityMarket(marketData.CommodityName).Any(m => m.MarketDataId == marketData.MarketDataId), "data is not available through comodities index");
         }
 
         [TestMethod]
         public void obsolete_data_is_silently_discarded()
         {
-            GlobalMarket globalMarket = NewCommodities();
+            GalacticMarket galacticMarket = NewCommodities();
             var events = new List<MarketDataEventArgs>();
             var marketData = NewMarketData(DateTime.Now);
-            globalMarket.Update(marketData);
-            globalMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
-            globalMarket.Update(NewMarketData(DateTime.Now.AddHours(-2)));
+            galacticMarket.Update(marketData);
+            galacticMarket.OnMarketDataUpdate += (sender, args) => events.Add(args);
+            galacticMarket.Update(NewMarketData(DateTime.Now.AddHours(-2)));
             Assert.IsFalse(events.Any(), "no event should have been raised");
-            Assert.AreEqual(marketData.SampleDate, globalMarket[marketData.MarketDataId].SampleDate, "marketdata should not have been replaced by obsolete data");
+            Assert.AreEqual(marketData.SampleDate, galacticMarket[marketData.MarketDataId].SampleDate, "marketdata should not have been replaced by obsolete data");
         }
 
         private MarketDataRow NewMarketData(DateTime timestamp, int? seed = null)
@@ -196,9 +196,9 @@ namespace RegulatedNoise.Test
             };
         }
 
-        private static GlobalMarket NewCommodities()
+        private static GalacticMarket NewCommodities()
         {
-            return new GlobalMarket();
+            return new GalacticMarket();
         }
     }
 }
