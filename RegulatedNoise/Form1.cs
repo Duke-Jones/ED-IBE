@@ -1285,10 +1285,10 @@ namespace RegulatedNoise
 							CommodityDirectory.Add(currentRow.CommodityName, new List<CsvRow>());
 
 						CommodityDirectory[currentRow.CommodityName].Add(currentRow);
-					}
 
-					if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-						Eddn.sendToEdDDN(currentRow);
+					    if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
+						    Eddn.sendToEdDDN(currentRow);
+					}
 				}
 			}
 		}
@@ -3158,8 +3158,9 @@ namespace RegulatedNoise
 			if (_screenshotResultsBuffer.Count == 0)
 			{
 				tbFinalOcrOutput.Text += _csvOutputSoFar;
-				_csvOutputSoFar = null;
+                tbFinalOcrOutput.Text = removeClones(tbFinalOcrOutput.Text);
 
+				_csvOutputSoFar = null;
 
 				pbOcrCurrent.Image = null;
 				if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
@@ -3216,10 +3217,31 @@ namespace RegulatedNoise
 				ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
 				BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
 			}
-
-
-
 		}
+
+        private string removeClones(string p)
+        {
+            StringBuilder cleanedEntries    = new StringBuilder();
+            HashSet<string> existing        = new HashSet<string>();
+
+			var rows = tbFinalOcrOutput.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var row in rows)
+			{
+                string Commodity = row.Split(new string[] {";"}, StringSplitOptions.None)[2].ToUpper();
+
+                if(!existing.Contains(Commodity))
+                { 
+				    cleanedEntries.Append(row + "\r\n");
+                    existing.Add(Commodity);
+                }
+
+			}
+
+			return cleanedEntries.ToString();
+        }
+
+
 		private string StripPunctuationFromScannedText(string input)
 		{
 			return _textInfo.ToUpper(input.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
@@ -4195,8 +4217,8 @@ namespace RegulatedNoise
 							{
 								var newestNetLog = netLogs[0];
 
-								Debug.Print("File opened : <" + newestNetLog + ">");
 #if extScanLog
+								Debug.Print("File opened : <" + newestNetLog + ">");
                                 logger.Log("File opened : <" + newestNetLog + ">");
 #endif
 								FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -4252,15 +4274,15 @@ namespace RegulatedNoise
 										{
 											if (logLump.Contains("System:"))
 											{
-												Debug.Print("Systemstring:" + logLump);
 #if extScanLog
+												Debug.Print("Systemstring:" + logLump);
                                                 logger.Log("Systemstring:" + logLump.Replace("\n", "").Replace("\r", ""));
 #endif
 												systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
 												systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
 
-												Debug.Print("System: " + systemName);
 #if extScanLog
+												Debug.Print("System: " + systemName);
                                                 logger.Log("System: " + systemName);
 #endif
 
@@ -4277,8 +4299,8 @@ namespace RegulatedNoise
 													// we may have candidates, check them and if nothing found search from the current position
 													foreach (string candidate in PossibleStations)
 													{
-														Debug.Print("check candidate : " + candidate);
 #if extScanLog
+														Debug.Print("check candidate : " + candidate);
                                                         logger.Log("check candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
 #endif
 														m = RegExTest.Match(candidate);
@@ -4289,8 +4311,8 @@ namespace RegulatedNoise
 														{
 #if extScanLog
                                                             logger.Log("Stationstring from candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-#endif
 															Debug.Print("Stationstring from candidate : " + candidate);
+#endif
 															getStation(ref stationName, m);
 															break;
 														}
@@ -4313,8 +4335,8 @@ namespace RegulatedNoise
 												{
 #if extScanLog
                                                     logger.Log("Candidate added : " + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
 													Debug.Print("Candidate : " + logLump);
+#endif
 													PossibleStations.Add(logLump);
 												}
 
@@ -4332,8 +4354,8 @@ namespace RegulatedNoise
 											{
 #if extScanLog
                                                 logger.Log("Stationstring (direct) : " + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
 												Debug.Print("Stationstring (direct) : " + logLump);
+#endif
 												getStation(ref stationName, m);
 											}
 										}
@@ -4349,8 +4371,8 @@ namespace RegulatedNoise
 
 								Datei.Close();
 								Datei.Dispose();
-								Debug.Print("Datei geschlossen");
 #if extScanLog
+								Debug.Print("Datei geschlossen");
                                 logger.Log("File closed");
 #endif
 
@@ -4429,8 +4451,8 @@ namespace RegulatedNoise
 #if extScanLog
                 logger.Log("sleeping...");
                 logger.Log("\n\n\n");
-#endif
 				Debug.Print("\n\n\n");
+#endif
 				m_LogfileScanner_ARE.WaitOne();
 #if extScanLog
                 logger.Log("awake...");
@@ -4438,7 +4460,9 @@ namespace RegulatedNoise
 
 			} while (!this.Disposing && !m_Closing);
 
+#if extScanLog
 			Debug.Print("out");
+#endif
 		}
 
 		private void CommandersLog_CreateJumpedToEvent(string Systemname)

@@ -91,8 +91,9 @@ namespace RegulatedNoise
                     
                     Thread.Sleep(1000);
 
-                    while (_SendItems.Count > 0)
+                    while ((_SendItems.Count > 0) && (!_caller.IsDisposed) && (!_caller.Disposing))
                     {
+                        System.Diagnostics.Debug.Print("Items in Queue : " + _SendItems.Count.ToString());
                         PostJsonToEddn((CsvRow)_SendItems.Dequeue());    
                     }
                 }
@@ -109,11 +110,16 @@ namespace RegulatedNoise
                 }
 	         
 	        } while ((!_caller.IsDisposed) && (!_caller.Disposing));
+
+            _SendItems.Clear();
         }
 
         public void sendToEdDDN(CsvRow CommodityData)
         {
+            System.Diagnostics.Debug.Print("Items in Queue : " + _SendItems.Count.ToString());
             _SendItems.Enqueue(CommodityData);
+            System.Diagnostics.Debug.Print("Items in Queue : " + _SendItems.Count.ToString() + ", added : " + CommodityData.ToString());
+
         }
 
         private void PostJsonToEddn(CsvRow rowToPost)

@@ -17,6 +17,11 @@ todo:
    * show the stations as a one look list
    * eddn layout v2
 
+1.84_0.21_1
+   * added a duplicate filter for recognized commodities
+   * recognized commodities are only uploaded if the datas are not already in local database
+   * EDDN uploader now stops work and reject data if RN is closed
+-------------------------------------------------------------------------------------      
 1.84_0.20_2
    * fixed: crash on first start while searching for ED-paths
    * fixed: designtime-crash
