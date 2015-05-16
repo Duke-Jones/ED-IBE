@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RegulatedNoise.DomainModel;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.Test
@@ -184,7 +184,7 @@ namespace RegulatedNoise.Test
             Assert.AreEqual(marketData.SampleDate, galacticMarket[marketData.MarketDataId].SampleDate, "marketdata should not have been replaced by obsolete data");
         }
 
-        private MarketDataRow NewMarketData(DateTime timestamp, int? seed = null)
+        private static MarketDataRow NewMarketData(DateTime timestamp, int? seed = null)
         {
             string index = (!seed.HasValue ? String.Empty : "_" + seed.Value.ToString("00"));
             return new MarketDataRow()

@@ -1,24 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using EdClasses.ClassDefinitions.Commodities;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Core.Helpers;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
-    internal class Commodities: ICollection<Commodity>
+	public class Commodities: ICollection<Commodity>
     {
         private readonly CommodityCollection _commodities;
 
-        private readonly dsCommodities _localization;
+        private readonly ILocalizer _localization;
 
-        public Commodities()
+        public Commodities(ILocalizer localizer)
         {
-            _commodities = new CommodityCollection();
-            _localization = new dsCommodities();
+	        if (localizer == null)
+	        {
+		        throw new ArgumentNullException("localizer");
+	        }
+	        _commodities = new CommodityCollection();
+	        _localization = localizer;
         }
 
-        protected class CommodityCollection : KeyedCollection<string, Commodity>
+		protected class CommodityCollection : KeyedCollection<string, Commodity>
         {
             protected override string GetKeyForItem(Commodity item)
             {
@@ -93,7 +97,7 @@ namespace RegulatedNoise.DomainModel
         public void Update(Commodity commodity)
         {
             commodity.Name = GetBasename(commodity.Name);
-            commodity.LocalizedName = _localization.GetLocalizedCommodity(commodity.Name);
+            commodity.LocalizedName = _localization.TranslateToCurrent(commodity.Name);
             Commodity existingCommodity;
             if (!_commodities.TryGetValue(commodity.Name, out existingCommodity))
             {
@@ -110,4 +114,10 @@ namespace RegulatedNoise.DomainModel
             return _localization.TranslateInEnglish(commodityName);
         }
     }
+
+	public interface ILocalizer
+	{
+		string TranslateToCurrent(string toLocalize);
+		string TranslateInEnglish(string commodityName);
+	}
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
     public abstract class UpdatableEntity
     {

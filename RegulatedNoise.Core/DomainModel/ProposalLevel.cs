@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RegulatedNoise.EDDB_Data
+namespace RegulatedNoise.Core.DomainModel
 {
     public enum ProposalLevel
     {

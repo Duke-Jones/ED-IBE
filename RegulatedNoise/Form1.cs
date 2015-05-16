@@ -20,8 +20,8 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using CodeProject.Dialog;
 using EdClasses.ClassDefinitions;
-using RegulatedNoise.Annotations;
-using RegulatedNoise.DomainModel;
+using RegulatedNoise.Core;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;
@@ -1027,7 +1027,7 @@ namespace RegulatedNoise
 
 		private double DistanceInLightYears(string remoteSystemName)
 		{
-			var localSystem = SystemToMeasureDistancesFrom();
+			string localSystem = SystemToMeasureDistancesFrom();
 			return ApplicationContext.Milkyway.DistanceInLightYears(remoteSystemName, localSystem);
 		}
 
@@ -1162,12 +1162,12 @@ namespace RegulatedNoise
 			// Populate all commodities tab
 			foreach (var commodity in GalacticMarket.CommodityNames)
 			{
-				decimal bestBuyPrice;
-				decimal bestSellPrice;
+				int bestBuyPrice;
+				int bestSellPrice;
 				string bestBuy;
 				string bestSell;
-				decimal buyers;
-				decimal sellers;
+				int buyers;
+				int sellers;
 
 				//_pt.PrintAndReset("9_1");
 
@@ -1509,12 +1509,12 @@ namespace RegulatedNoise
 
 					foreach (MarketDataRow row in GalacticMarket.StationMarket(stationName))
 					{
-						decimal bestBuyPrice;
-						decimal bestSellPrice;
+						int bestBuyPrice;
+						int bestSellPrice;
 						string bestBuy;
 						string bestSell;
-						decimal buyers;
-						decimal sellers;
+						int buyers;
+						int sellers;
 
 						_pt.stopMeasuring();
 

@@ -104,7 +104,6 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataProviders\TradeDangerousDataProvider.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
@@ -113,18 +112,6 @@
     <Compile Include="Disposer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DomainModel\Commodities.cs" />
-    <Compile Include="DomainModel\GalacticMarket.cs" />
-    <Compile Include="DomainModel\Commodity.cs" />
-    <Compile Include="DomainModel\DataModel.cs" />
-    <Compile Include="DomainModel\PlausibilityState.cs" />
-    <Compile Include="DomainModel\StarSystem.cs" />
-    <Compile Include="DomainModel\Station.cs" />
-    <Compile Include="DomainModel\StationCollection.cs" />
-    <Compile Include="DomainModel\SystemCollection.cs" />
-    <Compile Include="DomainModel\Universe.cs" />
-    <Compile Include="DomainModel\UpdatableEntity.cs" />
-    <Compile Include="DomainModel\UpdateMode.cs" />
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDCommodityListView.cs">
@@ -151,14 +138,12 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\EDMarketData.cs" />
-    <Compile Include="EDDB_Data\ProposalLevel.cs" />
     <Compile Include="EDDN.cs" />
     <Compile Include="EddnMessageEventArgs.cs" />
     <Compile Include="EliteInteractions\LogFilesScanner.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Enums and Utility Classes\MarketDataRow.cs" />
     <Compile Include="Enums and Utility Classes\Extensions.cs" />
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
@@ -188,7 +173,7 @@
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
-    <Compile Include="Market.cs" />
+    <Compile Include="MarketDataValidator.cs" />
     <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
@@ -268,7 +253,6 @@
     <Compile Include="ProgressView.Designer.cs">
       <DependentUpon>ProgressView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enums and Utility Classes\SortableBindingList.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -835,6 +819,10 @@
     <ProjectReference Include="..\EdClasses\EdClasses.csproj">
       <Project>{236a934b-5543-4751-baa2-018dfa825271}</Project>
       <Name>EdClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RegulatedNoise.Core\RegulatedNoise.Core.csproj">
+      <Project>{1c6e84c0-a944-48be-b196-6e6278b1f7d7}</Project>
+      <Name>RegulatedNoise.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

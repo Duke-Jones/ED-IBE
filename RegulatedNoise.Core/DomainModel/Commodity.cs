@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
     public class Commodity: UpdatableEntity
     {

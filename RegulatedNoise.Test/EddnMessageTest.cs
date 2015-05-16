@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.EDDB_Data;
 
 namespace RegulatedNoise.Test

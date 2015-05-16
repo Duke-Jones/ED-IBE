@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using RegulatedNoise.DomainModel;
+using RegulatedNoise.Core.DomainModel;
 
 namespace RegulatedNoise.Test.DomainModel
 {

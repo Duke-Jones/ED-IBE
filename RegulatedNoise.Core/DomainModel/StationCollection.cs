@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Core.Helpers;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
     internal class StationCollection : KeyedCollection<string, Station>
     {

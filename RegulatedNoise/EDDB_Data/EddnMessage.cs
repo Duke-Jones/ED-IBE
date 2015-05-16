@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data

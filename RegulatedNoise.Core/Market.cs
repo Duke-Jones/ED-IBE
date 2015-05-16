@@ -3,12 +3,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using RegulatedNoise.Annotations;
-using RegulatedNoise.DomainModel;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Core.DomainModel;
 
-namespace RegulatedNoise
+namespace RegulatedNoise.Core
 {
-    internal abstract class Market : KeyedCollection<string, MarketDataRow>
+	public abstract class Market : KeyedCollection<string, MarketDataRow>
     {
         public enum UpdateState
         {

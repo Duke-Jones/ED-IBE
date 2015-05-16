@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using RegulatedNoise.Annotations;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Core.Helpers;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
     /// <summary>
     /// 

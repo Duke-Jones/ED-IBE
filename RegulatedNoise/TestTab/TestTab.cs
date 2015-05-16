@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.DataProviders;
-using RegulatedNoise.DomainModel;
+using RegulatedNoise.Core.DataProviders;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
 

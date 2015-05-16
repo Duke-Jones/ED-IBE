@@ -11,7 +11,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using RegulatedNoise.DomainModel;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.EliteInteractions;
 using RegulatedNoise.Enums_and_Utility_Classes;

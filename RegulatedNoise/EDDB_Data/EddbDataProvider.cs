@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using RegulatedNoise.DomainModel;
+using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
 	internal class EddbDataProvider
 	{
-		private Dictionary<int,string> _systemIdToNameMap;
+		private readonly Dictionary<int,string> _systemIdToNameMap;
 		private const string EDDB_COMMODITIES_DATAFILE = @"./Data/commodities.json";
 		private const string EDDB_STATIONS_LITE_DATAFILE = @"./Data/stations_lite.json";
 		private const string EDDB_STATIONS_FULL_DATAFILE = @"./Data/stations.json";
@@ -68,46 +67,26 @@ namespace RegulatedNoise.EDDB_Data
 			Station station = new Station(eddbStation.Name.ToCleanTitleCase())
 			{
 				Allegiance = eddbStation.Allegiance
-				,
-				DistanceToStar = eddbStation.DistanceToStar
-				,
-				Economies = eddbStation.Economies
-				,
-				ExportCommodities = eddbStation.ExportCommodities
-				,
-				Faction = eddbStation.Faction
-				,
-				Government = eddbStation.Government
-				,
-				HasBlackmarket = ToNBool(eddbStation.HasBlackmarket)
-				,
-				HasCommodities = ToNBool(eddbStation.HasCommodities)
-				,
-				HasOutfitting = ToNBool(eddbStation.HasOutfitting)
-				,
-				HasRearm = ToNBool(eddbStation.HasRearm)
-				,
-				HasRepair = ToNBool(eddbStation.HasRepair)
-				,
-				HasRefuel = ToNBool(eddbStation.HasRefuel)
-				,
-				HasShipyard = ToNBool(eddbStation.HasShipyard)
-				,
-				ImportCommodities = eddbStation.ImportCommodities
-				,
-				MaxLandingPadSize = ParseLandingPadSize(eddbStation.MaxLandingPadSize)
-				,
-				ProhibitedCommodities = eddbStation.ProhibitedCommodities
-				,
-				Source = SOURCENAME
-				,
-				State = eddbStation.State
-				,
-				System = RetrieveSystemName(eddbStation.SystemId)
-				,
-				Type = eddbStation.Type
-				,
-				UpdatedAt = eddbStation.UpdatedAt
+				,DistanceToStar = eddbStation.DistanceToStar
+				,Economies = eddbStation.Economies
+				,ExportCommodities = eddbStation.ExportCommodities
+				,Faction = eddbStation.Faction
+				,Government = eddbStation.Government
+				,HasBlackmarket = ToNBool(eddbStation.HasBlackmarket)
+				,HasCommodities = ToNBool(eddbStation.HasCommodities)
+				,HasOutfitting = ToNBool(eddbStation.HasOutfitting)
+				,HasRearm = ToNBool(eddbStation.HasRearm)
+				,HasRepair = ToNBool(eddbStation.HasRepair)
+				,HasRefuel = ToNBool(eddbStation.HasRefuel)
+				,HasShipyard = ToNBool(eddbStation.HasShipyard)
+				,ImportCommodities = eddbStation.ImportCommodities
+				,MaxLandingPadSize = ParseLandingPadSize(eddbStation.MaxLandingPadSize)
+				,ProhibitedCommodities = eddbStation.ProhibitedCommodities
+				,Source = SOURCENAME
+				,State = eddbStation.State
+				,System = RetrieveSystemName(eddbStation.SystemId)
+				,Type = eddbStation.Type
+				,UpdatedAt = eddbStation.UpdatedAt
 			};
 			return station;
 		}
@@ -140,7 +119,7 @@ namespace RegulatedNoise.EDDB_Data
 			}
 		}
 
-		private TEntity ReadFile<TEntity>(string filepath)
+		private static TEntity ReadFile<TEntity>(string filepath)
 		{
 			if (File.Exists(filepath))
 			{
@@ -157,7 +136,7 @@ namespace RegulatedNoise.EDDB_Data
 			}
 		}
 
-		private StarSystem ToStarSystem(EDSystem eddbSystem)
+		private static StarSystem ToStarSystem(EDSystem eddbSystem)
 		{
 			var starSystem = new StarSystem(eddbSystem.Name)
 			{

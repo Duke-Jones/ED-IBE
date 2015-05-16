@@ -1,6 +1,6 @@
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
-    internal struct PlausibilityState
+	public struct PlausibilityState
     {
         public readonly bool Plausible;
 

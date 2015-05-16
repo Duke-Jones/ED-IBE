@@ -5,12 +5,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using RegulatedNoise.Annotations;
-using RegulatedNoise.EDDB_Data;
-using RegulatedNoise.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
-    internal class GalacticMarket : ICollection<MarketDataRow>
+	public class GalacticMarket : ICollection<MarketDataRow>
     {
         public event EventHandler<MarketDataEventArgs> OnMarketDataUpdate
         {
@@ -312,7 +310,7 @@ namespace RegulatedNoise.DomainModel
         }
     }
 
-    internal class MarketDataEventArgs : EventArgs
+	public class MarketDataEventArgs : EventArgs
     {
         public readonly MarketDataRow Previous;
 
@@ -341,7 +339,7 @@ namespace RegulatedNoise.DomainModel
         }
     }
 
-    internal class CommodityMarket : Market
+	public class CommodityMarket : Market
     {
         public string Commodity { get; private set; }
 
@@ -357,7 +355,7 @@ namespace RegulatedNoise.DomainModel
         }
     }
 
-    internal class StationMarket : Market
+	public class StationMarket : Market
     {
         public string StationName { get; private set; }
 

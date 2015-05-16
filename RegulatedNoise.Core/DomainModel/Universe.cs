@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using RegulatedNoise.Annotations;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Core.Helpers;
 
-namespace RegulatedNoise.DomainModel
+namespace RegulatedNoise.Core.DomainModel
 {
-    internal class Universe
+	public class Universe
     {
         private readonly object _updating = new object();
 

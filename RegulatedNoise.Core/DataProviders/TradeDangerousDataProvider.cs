@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using RegulatedNoise.EDDB_Data;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using RegulatedNoise.Core.DomainModel;
 
-namespace RegulatedNoise.DataProviders
+namespace RegulatedNoise.Core.DataProviders
 {
-	internal class TradeDangerousDataProvider
+	public class TradeDangerousDataProvider
 	{
+		public const string SOURCENAME = "TRADE_DANGEROUS";
 		private const string PRICES_3H_URL = "http://www.davek.com.au/td/prices-3h.asp";
 		private const string SYSTEMS_URL = "http://www.davek.com.au/td/System.csv";
 		private const string STATIONS_URL = "http://www.davek.com.au/td/station.asp";
@@ -111,7 +111,7 @@ namespace RegulatedNoise.DataProviders
 				}
 				else // commodity row
 				{
-					MarketDataRow currentRow = new MarketDataRow() { SystemName = _currentSystemName, StationName = _currentStationName };
+					MarketDataRow currentRow = new MarketDataRow() { SystemName = _currentSystemName, StationName = _currentStationName, Source = TradeDangerousDataProvider.SOURCENAME };
 					Match match = _rowRegex.Match(line);
 					Group commodity = match.Groups["commodity"];
 					if (commodity.Success)

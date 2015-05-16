@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using Newtonsoft.Json;
-using RegulatedNoise.EDDB_Data;
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace RegulatedNoise.Core.DomainModel
 {
     public class MarketDataRow
     {
