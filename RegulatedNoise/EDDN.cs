@@ -185,9 +185,11 @@ namespace RegulatedNoise
             {
                 try
                 {
-                    Thread.Sleep(10000);
-                    while (_sendItems.Count > 0)
+                    Thread.Sleep(1000);
+
+                    while ((_sendItems.Count > 0) && !_disposed)
                     {
+                        System.Diagnostics.Debug.Print("Items in Queue : " + _sendItems.Count);
                         PostJsonToEddn((MarketDataRow)_sendItems.Dequeue());
                     }
                 }
@@ -198,11 +200,16 @@ namespace RegulatedNoise
                 }
 
             } while (!_disposed);
+
+            _sendItems.Clear();
         }
 
         public void SendToEddn(MarketDataRow commodityData)
         {
+            System.Diagnostics.Debug.Print("Items in Queue : " + _sendItems.Count);
             _sendItems.Enqueue(commodityData);
+            System.Diagnostics.Debug.Print("Items in Queue : " + _sendItems.Count + ", added : " + commodityData);
+
         }
 
         private void PostJsonToEddn(MarketDataRow rowToPost)

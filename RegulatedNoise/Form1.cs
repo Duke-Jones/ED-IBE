@@ -2673,8 +2673,9 @@ namespace RegulatedNoise
 			if (_screenshotResultsBuffer.Count == 0)
 			{
 				tbFinalOcrOutput.Text += _csvOutputSoFar;
-				_csvOutputSoFar = null;
+                tbFinalOcrOutput.Text = removeClones(tbFinalOcrOutput.Text);
 
+				_csvOutputSoFar = null;
 
 				pbOcrCurrent.Image = null;
 				if (_preOcrBuffer.Count == 0 && ocr.ScreenshotBuffer.Count == 0)
@@ -2731,10 +2732,31 @@ namespace RegulatedNoise
 				ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
 				BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
 			}
-
-
-
 		}
+
+        private string removeClones(string p)
+        {
+            StringBuilder cleanedEntries    = new StringBuilder();
+            HashSet<string> existing        = new HashSet<string>();
+
+			var rows = tbFinalOcrOutput.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var row in rows)
+			{
+                string Commodity = row.Split(new string[] {";"}, StringSplitOptions.None)[2].ToUpper();
+
+                if(!existing.Contains(Commodity))
+                { 
+				    cleanedEntries.Append(row + "\r\n");
+                    existing.Add(Commodity);
+                }
+
+			}
+
+			return cleanedEntries.ToString();
+        }
+
+
 		private string StripPunctuationFromScannedText(string input)
 		{
 			return _textInfo.ToUpper(input.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
