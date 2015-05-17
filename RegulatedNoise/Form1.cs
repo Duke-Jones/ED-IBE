@@ -1533,8 +1533,10 @@ namespace RegulatedNoise
                             bestBuy, 
                             bestSell,
                             bestSell!= "" && bestBuy != "" ? (bestSellPrice-bestBuyPrice).ToString(CultureInfo.InvariantCulture) : "",
+									 row.SampleDate.ToString(CultureInfo.CurrentCulture),
                             row.Source
                         });
+						SetAgeColor(row.SampleDate, newItem.SubItems[10]);
 						newItem.UseItemStyleForSubItems = false;
 						if (bestBuy.Contains(stationName))
 						{
