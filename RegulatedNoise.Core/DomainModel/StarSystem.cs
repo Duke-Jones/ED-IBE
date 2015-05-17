@@ -18,7 +18,7 @@ namespace RegulatedNoise.Core.DomainModel
         public string Name
         {
             get { return _name; }
-            private set { _name = value.ToCleanTitleCase(); }
+            private set { _name = value.ToCleanUpperCase(); }
         }
 
         [JsonProperty("x")]
