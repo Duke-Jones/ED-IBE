@@ -1601,7 +1601,7 @@ namespace RegulatedNoise
 			bestBuy = "";
 			bestSell = "";
 
-			var commodityMarket = GalacticMarket.CommodityMarket(commodityName).Where(x => getStationSelection(x, !_InitDone));
+			var commodityMarket = GalacticMarket.CommodityMarket(commodityName).Where(x => IsInPerimeter(x, !_InitDone));
 			List<MarketDataRow> demandMarket = commodityMarket.Where(x => x.Stock > 0 && x.BuyPrice > 0).ToList();
 			buyers = demandMarket.Count();
 
@@ -1738,7 +1738,7 @@ namespace RegulatedNoise
 
 			if (selectedCmbItem != null)
 			{
-				foreach (var row in GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => getStationSelection(x)))
+				foreach (var row in GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => IsInPerimeter(x)))
 				{
 					var viewItem = new ListViewItem(new string[] 
 					{   row.StationID,
@@ -1755,7 +1755,7 @@ namespace RegulatedNoise
 					lbCommodities.Items.Add(viewItem);
 				}
 
-				var l = GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice > 0 && x.Stock > 0).Where(x => getStationSelection(x)).ToList();
+				var l = GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice > 0 && x.Stock > 0).Where(x => IsInPerimeter(x)).ToList();
 				if (l.Any())
 				{
 					lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
@@ -1769,7 +1769,7 @@ namespace RegulatedNoise
 					lblAvg.Text = "N/A";
 				}
 
-				l = GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.SellPrice > 0 && x.Demand > 0).Where(x => getStationSelection(x)).ToList();
+				l = GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.SellPrice > 0 && x.Demand > 0).Where(x => IsInPerimeter(x)).ToList();
 				if (l.Any())
 				{
 					lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
@@ -1798,7 +1798,7 @@ namespace RegulatedNoise
 		{
 			if (lblMin.Text != "N/A")
 			{
-				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice > 0).Where(x => getStationSelection(x)).ToList();
+				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice > 0).Where(x => IsInPerimeter(x)).ToList();
 				var m = l.Where(x => x.BuyPrice == l.Min(y => y.BuyPrice));
 				MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
 			}
@@ -1808,7 +1808,7 @@ namespace RegulatedNoise
 		{
 			if (lblMinSell.Text != "N/A")
 			{
-				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice > 0).Where(x => getStationSelection(x)).ToList();
+				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice > 0).Where(x => IsInPerimeter(x)).ToList();
 				var m = l.Where(x => x.SellPrice == l.Min(y => y.SellPrice));
 				MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
 			}
@@ -1818,7 +1818,7 @@ namespace RegulatedNoise
 		{
 			if (lblMax.Text != "N/A")
 			{
-				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice > 0).Where(x => getStationSelection(x)).ToList();
+				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.BuyPrice > 0).Where(x => IsInPerimeter(x)).ToList();
 				var m = l.Where(x => x.BuyPrice == l.Max(y => y.BuyPrice));
 				MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
 			}
@@ -1828,7 +1828,7 @@ namespace RegulatedNoise
 		{
 			if (lblMaxSell.Text != "N/A")
 			{
-				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice > 0).Where(x => getStationSelection(x)).ToList();
+				var l = GalacticMarket.CommodityMarket(cbCommodity.SelectedItem.ToString()).Where(x => x.SellPrice > 0).Where(x => IsInPerimeter(x)).ToList();
 				var m = l.Where(x => x.SellPrice == l.Max(y => y.SellPrice));
 				MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
 			}
@@ -1859,7 +1859,7 @@ namespace RegulatedNoise
 
 			chart1.Series.Add(series1);
 
-			foreach (var price in GalacticMarket.CommodityMarket(senderName).Where(x => x.BuyPrice > 0 && x.Stock > 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
+			foreach (var price in GalacticMarket.CommodityMarket(senderName).Where(x => x.BuyPrice > 0 && x.Stock > 0).Where(x => IsInPerimeter(x)).OrderBy(x => x.BuyPrice))
 			{
 				series1.Points.AddXY(price.StationID, price.BuyPrice);
 			}
@@ -1881,7 +1881,7 @@ namespace RegulatedNoise
 
 			chart2.Series.Add(series2);
 
-			foreach (var price in GalacticMarket.CommodityMarket(senderName).Where(x => x.SellPrice > 0 && x.Demand > 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
+			foreach (var price in GalacticMarket.CommodityMarket(senderName).Where(x => x.SellPrice > 0 && x.Demand > 0).Where(x => IsInPerimeter(x)).OrderByDescending(x => x.SellPrice))
 			{
 				series2.Points.AddXY(price.StationID, price.SellPrice);
 			}
@@ -4827,23 +4827,18 @@ namespace RegulatedNoise
 		/// <returns></returns>
 		private bool IsInPerimeter(string stationId)
 		{
-			return (!cbLimitLightYears.Checked || Distance(MarketDataRow.StationIdToSystemName(stationId))) &&
-						(!cbStationToStar.Checked || StationDistance(MarketDataRow.StationIdToSystemName(stationId), MarketDataRow.StationIdToStationName(stationId)));
-
+			string systemName = MarketDataRow.StationIdToSystemName(stationId);
+			return (!cbLimitLightYears.Checked || Distance(systemName)) 
+						&& (!cbStationToStar.Checked || StationDistance(systemName, MarketDataRow.StationIdToStationName(stationId)));
 		}
 
-		private bool getStationSelection(MarketDataRow x, bool noRestriction = false)
+		private bool IsInPerimeter(MarketDataRow x, bool noRestriction = false)
 		{
 			if (noRestriction)
 				return true;
 			else
 				return (!cbLimitLightYears.Checked || Distance(x.SystemName)) &&
 							(!cbStationToStar.Checked || StationDistance(x.SystemName, x.StationName));
-		}
-
-		private void label63_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		#region System / Station Tab
@@ -6053,10 +6048,10 @@ namespace RegulatedNoise
 
 		private void cmdTest_Click(object sender, EventArgs e)
 		{
-			this.cmbSystemsAllSystems.SelectedIndexChanged -= new EventHandler(this.cmbAllStations_SelectedIndexChanged);
+			this.cmbSystemsAllSystems.SelectedIndexChanged -= cmbAllStations_SelectedIndexChanged;
 			cmbSystemsAllSystems.SelectedIndex = -1;
 			cmbSystemsAllSystems.SelectedIndex = -1;
-			this.cmbSystemsAllSystems.SelectedIndexChanged += new EventHandler(this.cmbAllStations_SelectedIndexChanged);
+			this.cmbSystemsAllSystems.SelectedIndexChanged += cmbAllStations_SelectedIndexChanged;
 		}
 
 		private void cmbAllStations_SelectedIndexChanged(object sender, EventArgs e)
