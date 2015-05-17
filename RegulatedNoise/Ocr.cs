@@ -34,8 +34,9 @@ namespace RegulatedNoise
         private EBPixeltest PixelTest;
 
         Bitmap _bTrimmedHeader, _bTrimmed_4_OCR, _bOriginal, _bOriginalClone, _bTrimmed_4_View;
+	    public const string SOURCENAME = "OCR";
 
-        public Ocr(Form1 callingForm)
+	    public Ocr(Form1 callingForm)
         {
             _callingForm = callingForm;
             

@@ -846,7 +846,6 @@ namespace RegulatedNoise
 		private void SaveCommodityData(bool force = false)
 		{
 			SaveFileDialog saveFile = new SaveFileDialog();
-			string newFile, backupFile, currentFile;
 
 			if (force)
 				saveFile.FileName = "AutoSave.csv";
@@ -860,15 +859,15 @@ namespace RegulatedNoise
 
 			if (force || saveFile.ShowDialog() == DialogResult.OK)
 			{
-				currentFile = saveFile.FileName;
-				newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile),
-					 Path.GetExtension(currentFile));
-				backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile),
-					 Path.GetExtension(currentFile));
+				var currentFile = saveFile.FileName;
+				var newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile),
+					Path.GetExtension(currentFile));
+				var backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile),
+					Path.GetExtension(currentFile));
 
 				var writer = new StreamWriter(File.OpenWrite(newFile));
 
-				writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
+				writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;Demand Level;Supply;Supply Level;Date;Source");
 				foreach (MarketDataRow commodity in GalacticMarket)
 				{
 					// I'm sure that's not wanted vv
@@ -2948,7 +2947,9 @@ namespace RegulatedNoise
 			{
 				if (s.Contains(";"))
 				{
-					ImportCsvString(s, true, true);
+					var marketDataRow = MarketDataRow.ReadCsv(s);
+					marketDataRow.Source = Ocr.SOURCENAME;
+					ImportMarketData(marketDataRow, true, true);
 				}
 			}
 			CommandersLog_MarketDataCollectedEvent(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
@@ -4072,7 +4073,7 @@ namespace RegulatedNoise
 
 		private void cmdPurgeEDDNData(object sender, EventArgs e)
 		{
-			GalacticMarket.RemoveAll(md => md.Source == EDDN.SOURCENAME);
+			GalacticMarket.RemoveAll(md => md.Source == Eddn.SOURCENAME);
 			SetupGui();
 		}
 

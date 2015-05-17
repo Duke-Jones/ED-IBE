@@ -19,12 +19,12 @@ using ZeroMQ;
 
 namespace RegulatedNoise
 {
-    internal class EDDN : IDisposable, INotifyPropertyChanged
+    internal class Eddn : IDisposable, INotifyPropertyChanged
     {
         private const string POST_URL = "http://eddn-gateway.elite-markets.net:8080/upload/";
         private const string LISTEN_URL = "tcp://eddn-relay.elite-markets.net:9500";
         private const int DELAY_BETWEEN_POLL = 1000;
-        public const string SOURCENAME = "<From EDDN>";
+        public const string SOURCENAME = "EDDN";
         public event EventHandler<EddnMessageEventArgs> OnMessageReceived;
         private readonly Queue _sendItems;
         private readonly SingleThreadLogger _logger;
@@ -81,7 +81,7 @@ namespace RegulatedNoise
             }
         }
 
-        public EDDN([NotNull] dsCommodities commoditiesLocalisation,
+        public Eddn([NotNull] dsCommodities commoditiesLocalisation,
             [NotNull] RegulatedNoiseSettings regulatedNoiseSettings)
         {
             if (commoditiesLocalisation == null) throw new ArgumentNullException("commoditiesLocalisation");

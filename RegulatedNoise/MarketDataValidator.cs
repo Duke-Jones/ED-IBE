@@ -18,7 +18,7 @@ namespace RegulatedNoise
 	{
 		public PlausibilityState Validate(MarketDataRow marketDataRow)
 		{
-			return ApplicationContext.Milkyway.IsImplausible(marketDataRow, marketDataRow.Source == EDDN.SOURCENAME || marketDataRow.Source == EddbDataProvider.SOURCENAME || marketDataRow.Source == TradeDangerousDataProvider.SOURCENAME);
+			return ApplicationContext.Milkyway.IsImplausible(marketDataRow, marketDataRow.Source == Eddn.SOURCENAME || marketDataRow.Source == EddbDataProvider.SOURCENAME || marketDataRow.Source == TradeDangerousDataProvider.SOURCENAME);
 		}
 	}
 }

@@ -29,9 +29,9 @@ namespace RegulatedNoise.Test
             }
         }
 
-        private static EDDN NewEddn()
+        private static Eddn NewEddn()
         {
-            return new EDDN(ApplicationContext.CommoditiesLocalisation, ApplicationContext.RegulatedNoiseSettings) { TestMode = true };
+            return new Eddn(ApplicationContext.CommoditiesLocalisation, ApplicationContext.RegulatedNoiseSettings) { TestMode = true };
         }
     }
 }
