@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48173B0B-160E-4748-99F8-4079BAAE5754}"
 	ProjectSection(SolutionItems) = preProject
 		Performance1.psess = Performance1.psess
+		ToDo.txt = ToDo.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdClasses", "EdClasses\EdClasses.csproj", "{236A934B-5543-4751-BAA2-018DFA825271}"
