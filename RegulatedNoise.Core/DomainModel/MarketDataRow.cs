@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using RegulatedNoise.Core.Helpers;
 
 namespace RegulatedNoise.Core.DomainModel
@@ -20,6 +22,7 @@ namespace RegulatedNoise.Core.DomainModel
 			set { _systemName = value.ToCleanTitleCase(); }
 		}
 
+		[JsonIgnore]
 		public string StationID { get { return StationName + " [" + SystemName + "]"; } }
 
 		[JsonProperty(PropertyName = "stationName")]
@@ -48,15 +51,18 @@ namespace RegulatedNoise.Core.DomainModel
 		[JsonProperty(PropertyName = "demand")]
 		public int Demand { get; set; }
 
-		[JsonProperty(PropertyName = "demandLevel")]
+		[JsonProperty(PropertyName = "demandLevel", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ProposalLevel? DemandLevel { get; set; }
 
-		[JsonProperty(PropertyName = "supplyLevel")]
+		[JsonProperty(PropertyName = "supplyLevel", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ProposalLevel? SupplyLevel { get; set; }
 
 		[JsonProperty(PropertyName = "timestamp")]
 		public DateTime SampleDate { get; set; }
 
+		[JsonIgnore]
 		public string MarketDataId
 		{
 			get
@@ -78,7 +84,7 @@ namespace RegulatedNoise.Core.DomainModel
 			if (fields.Length < 10) throw new ArgumentException("invalid csv", "csv");
 			var marketData = new MarketDataRow()
 			{
-				SystemName = fields[0].ToLower().ToCleanTitleCase()
+				SystemName = fields[0].ToLower().ToCleanUpperCase()
 				 ,StationName = fields[1].ToLower().ToCleanTitleCase()
 				 ,CommodityName = fields[2].ToLower().ToCleanTitleCase()
 				 ,SellPrice = String.IsNullOrWhiteSpace(fields[3]) ? -1 : Int32.Parse(fields[3].Trim())
