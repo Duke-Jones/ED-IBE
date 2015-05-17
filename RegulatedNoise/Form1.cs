@@ -960,7 +960,7 @@ namespace RegulatedNoise
 
 				if (GalacticMarket.Update(marketData) != Market.UpdateState.Discarded)
 				{
-					if (postToEddn && cbPostOnImport.Checked && marketData.SystemName != "SomeSystem")
+					if (postToEddn && cbPostOnImport.Checked &&  ApplicationContext.Milkyway.SystemExists(marketData.SystemName))
 					{
 						ApplicationContext.Eddn.SendToEddn(marketData);
 					}
@@ -6170,6 +6170,30 @@ namespace RegulatedNoise
 		private void llVisitUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			Process.Start(((LinkLabel)sender).Text);
+		}
+
+		private void btSelectCurrentAsOrigin_Click(object sender, EventArgs e)
+		{
+			if (!String.IsNullOrEmpty(tbCurrentStationinfoFromLogs.Text) && !String.IsNullOrEmpty(tbCurrentSystemFromLogs.Text))
+			{
+				int listIndex;
+				if (_StationIndices.TryGetValue(tbCurrentStationinfoFromLogs.Text + " [" + tbCurrentSystemFromLogs.Text + "]", out listIndex))
+				{
+					cmbStationToStationFrom.SelectedIndex = listIndex;
+				}
+			}
+		}
+
+		private void btSelectCurrentAsTarget_Click(object sender, EventArgs e)
+		{
+			if (!String.IsNullOrEmpty(tbCurrentStationinfoFromLogs.Text) && !String.IsNullOrEmpty(tbCurrentSystemFromLogs.Text))
+			{
+				int listIndex;
+				if (_StationIndices.TryGetValue(tbCurrentStationinfoFromLogs.Text + " [" + tbCurrentSystemFromLogs.Text + "]", out listIndex))
+				{
+					cmbStationToStationTo.SelectedIndex = listIndex;
+				}
+			}
 		}
 	}
 }
