@@ -57,8 +57,6 @@ namespace RegulatedNoise.Core.DomainModel
 		[JsonProperty(PropertyName = "timestamp")]
 		public DateTime SampleDate { get; set; }
 
-		public string Source { get; set; }
-
 		public string MarketDataId
 		{
 			get
