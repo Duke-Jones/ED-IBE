@@ -2948,7 +2948,6 @@ namespace RegulatedNoise
 				if (s.Contains(";"))
 				{
 					var marketDataRow = MarketDataRow.ReadCsv(s);
-					marketDataRow.Source = Ocr.SOURCENAME;
 					ImportMarketData(marketDataRow, true, true);
 				}
 			}
