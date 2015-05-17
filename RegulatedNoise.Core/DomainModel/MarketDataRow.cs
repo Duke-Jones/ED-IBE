@@ -7,7 +7,7 @@ using RegulatedNoise.Core.Helpers;
 
 namespace RegulatedNoise.Core.DomainModel
 {
-	public class MarketDataRow
+	public class MarketDataRow: UpdatableEntity
 	{
 		private string _stationName;
 		private string _commodityName;
@@ -93,7 +93,11 @@ namespace RegulatedNoise.Core.DomainModel
 			};
 			if (fields.Length > 10)
 			{
-				marketData.Source = fields[8].Trim();
+				var source = fields[10];
+				if (!String.IsNullOrWhiteSpace(source))
+				{
+					marketData.Source = source.Trim();
+				}
 			}
 			return marketData;
 		}
