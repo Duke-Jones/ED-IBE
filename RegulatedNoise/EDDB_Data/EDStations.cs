@@ -81,7 +81,7 @@ namespace RegulatedNoise.EDDB_Data
         public int UpdatedAt { get; set; }
 
         [JsonProperty("listings")]
-        public Listing[] Listings { get; set; }
+        public EDMarketData[] EdMarketDatas { get; set; }
 
          /// <summary>
          /// creates a new station 

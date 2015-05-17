@@ -105,18 +105,39 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 		protected void Form_Resize(object sender, System.EventArgs e)
 		{
 			if (m_LoadingDone)
-				saveWindowPosition();
-		}
+                try
+                {
+                    saveWindowPosition();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.TraceError("unable to save window position " + ex);
+                }
+        }
 
 		protected void Form_ResizeEnd(object sender, System.EventArgs e)
 		{
 			if (m_LoadingDone)
-				saveWindowPosition();
+                try
+                {
+                    saveWindowPosition();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.TraceError("unable to save window position " + ex);
+                }
 		}
 
 		private void Form_Shown(object sender, System.EventArgs e)
 		{
-			loadWindowPosition();
+            try
+            {
+                loadWindowPosition();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("unable to load window position " + ex);
+            }
 		}
 
 	}

@@ -29,7 +29,7 @@ namespace RegulatedNoise.EDDB_Data
 
 			if (!string.IsNullOrEmpty(presetCommodity))
 			{
-				string baseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
+				string baseName = ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(presetCommodity);
 
 				if (string.IsNullOrEmpty(baseName))
 					baseName = presetCommodity;

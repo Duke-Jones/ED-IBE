@@ -9,7 +9,10 @@ namespace RegulatedNoise
 			InitializationStart,
 			InitializationProgress,
 			InitializationCompleted,
-			Information
+			Information,
+			Request,
+			FileRequest,
+		    Alert
 		}
 
 		public readonly EventType Event;
@@ -18,10 +21,15 @@ namespace RegulatedNoise
 
 		public string Title { get; set; }
 
+		public bool Cancel { get; set; }
+
+		public string Response { get; set; }
+
 		public NotificationEventArgs(string message, EventType @event)
 		{
 			Message = message;
 			Event = @event;
+			Cancel = true;
 		}
 	}
 }

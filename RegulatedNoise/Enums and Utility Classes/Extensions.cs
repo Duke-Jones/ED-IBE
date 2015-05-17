@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using System.Windows.Forms;
-using RegulatedNoise;
 
 namespace RegulatedNoise.Enums_and_Utility_Classes
 {
-    
+
     static class Extensions_CheckBox
     {
         public static int? toNInt(this CheckBox thisCheckBox)
         {
-            int? retValue = null ;
+            int? retValue = null;
 
             switch (thisCheckBox.CheckState)
             {
@@ -42,7 +38,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             CheckState retValue = CheckState.Indeterminate;
 
             switch (thisInt)
-	        {
+            {
                 case null:
                     retValue = CheckState.Indeterminate;
                     break;
@@ -52,7 +48,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 default:
                     retValue = CheckState.Checked;
                     break;
-	        }
+            }
 
             return retValue;
         }
@@ -62,14 +58,14 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             string retValue = null;
 
             switch (thisInt)
-	        {
+            {
                 case null:
                     retValue = Program.NULLSTRING;
                     break;
                 default:
                     retValue = thisInt.ToString();
                     break;
-	        }
+            }
 
             return retValue;
         }
@@ -80,7 +76,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         public static string ToNString(this long? thisLong)
         {
-            if(thisLong == null)
+            if (thisLong == null)
                 return Program.NULLSTRING;
             else
                 return thisLong.ToString();
@@ -88,7 +84,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         public static string ToNString(this long? thisLong, string format, IFormatProvider provider)
         {
-            if(thisLong == null)
+            if (thisLong == null)
                 return Program.NULLSTRING;
             else
                 return ((long)thisLong).ToString(format, provider);
@@ -96,14 +92,14 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         public static string ToNString(this int? thisInt, string format, IFormatProvider provider)
         {
-            if(thisInt == null)
+            if (thisInt == null)
                 return Program.NULLSTRING;
             else
                 return ((int)thisInt).ToString(format, provider);
         }
     }
-    
-    
+
+
     static class Extensions_StringArrayNullable
     {
         /// <summary>
@@ -113,7 +109,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// <returns></returns>
         public static string[] CloneN(this string[] thisStringArray)
         {
-            if(thisStringArray == null)
+            if (thisStringArray == null)
                 return null;
             else
                 return (string[])thisStringArray.Clone();
@@ -122,6 +118,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
     static class Extensions_StringNullable
     {
+        private static readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+
         /// <summary>
         /// converts a string that can be null to a string that represents null as a string ("undefined")
         /// </summary>
@@ -129,7 +127,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// <returns></returns>
         public static string NToString(this string thisString)
         {
-            if(thisString == null)
+            if (thisString == null)
                 return Program.NULLSTRING;
             else
                 return thisString;
@@ -143,49 +141,52 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         public static string ToNString(this string thisString)
         {
 
-            if(String.IsNullOrEmpty(thisString) || thisString.Equals(Program.NULLSTRING))
+            if (String.IsNullOrEmpty(thisString) || thisString.Equals(Program.NULLSTRING))
                 return null;
             else
                 return thisString;
         }
 
-        public static Double ToDouble(this string thisString, string defaultValue="")
+        public static Double ToDouble(this string thisString, string defaultValue = "")
         {
             Double Value = 0.0;
 
-            if(Double.TryParse(thisString, out Value))
+            if (Double.TryParse(thisString, out Value))
                 return Value;
             else
                 return Double.Parse(defaultValue);
         }
 
-        public static long? ToNLong(this string thisString, string defaultValue="")
+        public static long? ToNLong(this string thisString, string defaultValue = "")
         {
             long Value = 0;
 
-            if(String.IsNullOrEmpty(thisString) || thisString.Equals(Program.NULLSTRING))
+            if (String.IsNullOrEmpty(thisString) || thisString.Equals(Program.NULLSTRING))
                 return null;
             else
-                if(long.TryParse(thisString, out Value))
+                if (long.TryParse(thisString, out Value))
                     return (long?)Value;
                 else
                     return defaultValue.ToNLong();
         }
 
-        public static int? ToNInt(this string thisString, string defaultValue="")
+        public static int? ToNInt(this string thisString, string defaultValue = "")
         {
             long Value = 0;
 
-            if(String.IsNullOrEmpty(thisString) || thisString.Equals(Program.NULLSTRING))
+            if (String.IsNullOrEmpty(thisString) || thisString.Equals(Program.NULLSTRING))
                 return null;
             else
-                if(long.TryParse(thisString, out Value))
+                if (long.TryParse(thisString, out Value))
                     return (int?)Value;
                 else
                     return defaultValue.ToNInt();
         }
 
-
+        public static string ToCleanTitleCase(this string value)
+        {
+            return String.IsNullOrWhiteSpace(value) ? String.Empty : _textInfo.ToTitleCase(value.Trim());
+        }
     }
 
     static class Extensions_Object
@@ -198,7 +199,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         public static string NToString(this Object thisObject)
         {
 
-            if(thisObject == null)
+            if (thisObject == null)
                 return Program.NULLSTRING;
             else
                 return thisObject.ToString();
@@ -206,6 +207,65 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
     }
 
+    static class Extensions_Control
+    {
+        public static void Bind<TControl, TResult, TDataSource>(this TControl control,
+            Expression<Func<TControl, TResult>> controlMember, TDataSource dataSource,
+            Expression<Func<TDataSource, TResult>> dataMember) where TControl : Control
+        {
+            control.DataBindings.Add(controlMember.GetPropertyName(), dataSource, dataMember.GetPropertyName(), false, DataSourceUpdateMode.OnPropertyChanged);
+        }
 
+        public static void BindChecked<TDataSource>(this CheckBox checkBox, TDataSource dataSource,
+            Expression<Func<TDataSource, bool>> datamember)
+        {
+            checkBox.Bind(ctrl => ctrl.Checked, dataSource, datamember);
+        }
 
+        public static void BindText<TDataSource>(this TextBox textBox, TDataSource dataSource,
+            Expression<Func<TDataSource, string>> datamember)
+        {
+            textBox.Bind(ctrl => ctrl.Text, dataSource, datamember);
+        }
+
+        public static void RunInGuiThread(this Control control, Action action)
+        {
+            if (control.InvokeRequired)
+            {
+                control.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public static TResult RunInGuiThread<TResult>(this Control control, Func<TResult> action)
+        {
+            if (control.InvokeRequired)
+            {
+                return (TResult)control.Invoke(action);
+            }
+            else
+            {
+                return action();
+            }
+        }
+    }
+
+    static class ReflexionHelpers
+    {
+        public static string GetPropertyName<TItem,
+               TResult>(this Expression<Func<TItem, TResult>> expression)
+        {
+            if (expression.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                return ((MemberExpression)expression.Body).Member.Name;
+            }
+            else
+            {
+                throw new NotSupportedException("unable to retrieve property name from expression");
+            }
+        }
+    }
 }

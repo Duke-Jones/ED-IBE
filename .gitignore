@@ -23,3 +23,5 @@
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 
+RegulatedNoise/[Bb]in/
+RegulatedNoiseSettings*.xml

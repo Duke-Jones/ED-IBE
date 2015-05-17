@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RegulatedNoise
 {
 	internal static class EventBus
 	{
-		public static event EventHandler<NotificationEventArgs> OnInitializationProgress;
+		public static event EventHandler<NotificationEventArgs> OnNotificationEvent;
 
 		public static void InitializationStart(string message)
 		{
@@ -27,14 +28,33 @@ namespace RegulatedNoise
 			RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.Information) { Title = title });
 		}
 
-		private static void RaiseInitializationEvent(string message, NotificationEventArgs.EventType eventType)
+        public static void Alert(string message, string title = null)
+        {
+            RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.Alert) { Title = title });
+        }
+
+		public static bool Request(string message, string title = null)
 		{
-			RaiseInitializationEvent(new NotificationEventArgs(message, eventType));
+			return !RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.Request) { Title = title }).Cancel;
 		}
 
-		private static void RaiseInitializationEvent(NotificationEventArgs notificationEventArgs)
+		public static string FileRequest(string message, string title = null)
 		{
-			var handler = OnInitializationProgress;
+			return
+				RaiseInitializationEvent(new NotificationEventArgs(message, NotificationEventArgs.EventType.FileRequest)
+				{
+					Title = title
+				}).Response;
+		}
+
+		private static NotificationEventArgs RaiseInitializationEvent(string message, NotificationEventArgs.EventType eventType)
+		{
+			return RaiseInitializationEvent(new NotificationEventArgs(message, eventType));
+		}
+
+		private static NotificationEventArgs RaiseInitializationEvent(NotificationEventArgs notificationEventArgs)
+		{
+			var handler = OnNotificationEvent;
 			if (handler != null)
 			{
 				try
@@ -43,9 +63,10 @@ namespace RegulatedNoise
 				}
 				catch (Exception ex)
 				{
-					Trace.TraceError("initialization progress failure: " + ex);
+					Trace.TraceError("event notification failure: " + ex);
 				}
 			}
+			return notificationEventArgs;
 		}
 	}
 }

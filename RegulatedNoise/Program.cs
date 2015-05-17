@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RegulatedNoise
@@ -23,8 +21,18 @@ namespace RegulatedNoise
             Application.ThreadException += Application_ThreadException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+#if(DEBUG)
+            EventBus.OnNotificationEvent += NotificationEventHandler;
+#endif
             Application.Run(new Form1());
         }
+
+#if(DEBUG)
+        private static void NotificationEventHandler(object sender, NotificationEventArgs notificationEventArgs)
+        {
+            Trace.TraceInformation("[" + DateTime.Now + "] " + notificationEventArgs.Message);
+        }
+#endif
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
@@ -85,7 +93,7 @@ namespace RegulatedNoise
         {
             using (FileStream fs = new FileStream(".//" + Filename, FileMode.Create))
             {
-                using (System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess())
+                using (Process process = Process.GetCurrentProcess())
                 {
                     MiniDumpWriteDump(process.Handle,
                                                      process.Id,

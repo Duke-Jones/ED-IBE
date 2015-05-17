@@ -37,7 +37,7 @@ namespace RegulatedNoise
             if (ex.InnerException != null)
                 info += Environment.NewLine + ex.GetBaseException().Message;
 
-            info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
+            info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.LogPathName);
 
             info += string.Format("{0}{0}Suppress exception ? (App can be unstable!)", Environment.NewLine);
 
@@ -66,8 +66,8 @@ namespace RegulatedNoise
             if (ex.InnerException != null)
                 info += Environment.NewLine + ex.GetBaseException().Message;
 
-            info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
-            info += string.Format("(dumpfile \"RegulatedNoiseDump.dmp\" created)", Environment.NewLine, _logger.logPathName);
+            info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.LogPathName);
+            info += string.Format("(dumpfile \"RegulatedNoiseDump.dmp\" created)", Environment.NewLine, _logger.LogPathName);
 
             Program.CreateMiniDump("RegulatedNoiseDump.dmp");
 
