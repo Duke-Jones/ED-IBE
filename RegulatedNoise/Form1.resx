@@ -127,6 +127,51 @@
     <value>557, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="bShowStationToStationRouteAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
+        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
+        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
+        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
+        E38FHr4WWU6iAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="bShowStationRestrictionAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
+        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
+        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
+        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
+        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
+        E38FHr4WWU6iAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Tips:
+
+1) You DO NOT need to run this app as Administrator if you want to use the Webserver;
+2) You'll probably need to go to Windows Firewall and  create a rule to open port 8080 for incoming connections;
+3) Make sure you select the correct IP address above, for the local network you want to use;
+4) Click the link above to launch the page in a local browser;
+5) The data is organised on the page just as you organise it in the app.
+
+</value>
+  </data>
+  <data name="label50.Text" xml:space="preserve">
+    <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
+
+*) see the graphics in "Filter-Test"</value>
+  </data>
+  <data name="label52.Text" xml:space="preserve">
+    <value>In order to reduce the recognition time you can set a threshold quantity. The areas on which less dark pixels (= text) to see are as specified in the threshold will be completely ignored in the recognition. The threshold value should be greater than the number of pixels of a "-" be but also smaller than number of pixel number of a "1" (because this is the digit with the fewest number of pixels in it).
+So all "-" and less are ignored , all "1" and other digits are detected.</value>
+  </data>
+  <metadata name="contextMenuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>712, 17</value>
+  </metadata>
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAOUAAAD5CAIAAABXv2WhAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -1510,57 +1555,6 @@
         E38FHr4WWU6iAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="bShowStationToStationRouteAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
-        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
-        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
-        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
-        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
-        E38FHr4WWU6iAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="bShowStationRestrictionAtStarchartDotClub.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAIAAAAmKNuZAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAR9JREFUSEvVlEGqwkAQROMtBHdGjFuzUS/gFfwH+Aje4X/c6gUUbyEuQnAlBESC
-        NxIsayaFihpQ242PXmQ6mZr0dM0E30+vGzE0sDP++2FoYGf422doYKTbaQI7Bh+UshDHdWDDaEU1pSw0
-        wqqXSxfzkVIWttkUSHBYAvuKcgaA3Gk5uUyptwHWOK4kxwes9eJJ2L64XQ/Dqq8xv2hdFDNWvZiN2JnS
-        XtP04/8BzeU94fqo/SoLpP6bHadw4u2ZuZNLb+dfB1fSkiVyZ/j/UVRjLazI1fWg2Jz7wN3gnrxsbGsr
-        7nH/WMghV+pt6FtXtdNKttlEWQs8W0UfedqUskB/FX3kXaCUBbbPu+dDFxShuRga2Pnw5U7Tl/r+ewiC
-        E38FHr4WWU6iAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>Tips:
-
-1) You DO NOT need to run this app as Administrator if you want to use the Webserver;
-2) You'll probably need to go to Windows Firewall and  create a rule to open port 8080 for incoming connections;
-3) Make sure you select the correct IP address above, for the local network you want to use;
-4) Click the link above to launch the page in a local browser;
-5) The data is organised on the page just as you organise it in the app.
-
-</value>
-  </data>
-  <data name="label50.Text" xml:space="preserve">
-    <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
-
-*) see the graphics in "Filter-Test"</value>
-  </data>
-  <data name="label52.Text" xml:space="preserve">
-    <value>In order to reduce the recognition time you can set a threshold quantity. The areas on which less dark pixels (= text) to see are as specified in the threshold will be completely ignored in the recognition. The threshold value should be greater than the number of pixels of a "-" be but also smaller than number of pixel number of a "1" (because this is the digit with the fewest number of pixels in it).
-So all "-" and less are ignored , all "1" and other digits are detected.</value>
-  </data>
-  <metadata name="contextMenuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>712, 17</value>
-  </metadata>
-  <metadata name="dsCommodities.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>157, 17</value>
-  </metadata>
-  <metadata name="namesBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>294, 17</value>
-  </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>59</value>
   </metadata>

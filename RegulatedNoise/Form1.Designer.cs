@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.rbSortByDistance = new System.Windows.Forms.RadioButton();
@@ -65,7 +65,6 @@
 			this.cmdUpdate = new System.Windows.Forms.Button();
 			this.lblUpdateInfo = new System.Windows.Forms.Label();
 			this.lblUpdateDetail = new System.Windows.Forms.TextBox();
-			this.cmdDonate = new System.Windows.Forms.Button();
 			this.label42 = new System.Windows.Forms.Label();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.label44 = new System.Windows.Forms.Label();
@@ -83,9 +82,6 @@
 			this.button20 = new System.Windows.Forms.Button();
 			this.label47 = new System.Windows.Forms.Label();
 			this.label46 = new System.Windows.Forms.Label();
-			this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
-			this.pbForegroundColour = new System.Windows.Forms.PictureBox();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.button23 = new System.Windows.Forms.Button();
 			this.button22 = new System.Windows.Forms.Button();
 			this.lblSubtitle = new System.Windows.Forms.Label();
@@ -210,7 +206,6 @@
 			this.tbStationRename = new System.Windows.Forms.TextBox();
 			this.tbSystemRename = new System.Windows.Forms.TextBox();
 			this.cmdApplySystemRename = new System.Windows.Forms.Button();
-			this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
 			this.lbPrices = new System.Windows.Forms.ListView();
 			this.cmbStation = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -255,8 +250,6 @@
 			this.label29 = new System.Windows.Forms.Label();
 			this.cmbStationToStationTo = new System.Windows.Forms.ComboBox();
 			this.cmbStationToStationFrom = new System.Windows.Forms.ComboBox();
-			this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
-			this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
 			this.tabCommandersLog = new System.Windows.Forms.TabPage();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.lvCommandersLog = new System.Windows.Forms.ListView();
@@ -311,16 +304,12 @@
 			this.bContinueOcr = new System.Windows.Forms.Button();
 			this.tbConfidence = new System.Windows.Forms.TextBox();
 			this.tbCommoditiesOcrOutput = new System.Windows.Forms.TextBox();
-			this.pbOcrCurrent = new System.Windows.Forms.PictureBox();
 			this.tbOcrStationName = new System.Windows.Forms.TextBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.lblScreenshotsQueued = new System.Windows.Forms.Label();
 			this.button7 = new System.Windows.Forms.Button();
-			this.pbStation = new System.Windows.Forms.PictureBox();
 			this.label13 = new System.Windows.Forms.Label();
-			this.pbTrimmed = new System.Windows.Forms.PictureBox();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.pbOriginalImage = new System.Windows.Forms.PictureBox();
 			this.label11 = new System.Windows.Forms.Label();
 			this.tabWebserver = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -344,6 +333,7 @@
 			this.lbEddnImplausible = new System.Windows.Forms.ListBox();
 			this.tbEddnStats = new System.Windows.Forms.TextBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.cbAutoListenEddn = new System.Windows.Forms.CheckBox();
 			this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
 			this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
 			this.bPurgeAllEddnData = new System.Windows.Forms.Button();
@@ -394,15 +384,24 @@
 			this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cbAutoListenEddn = new System.Windows.Forms.CheckBox();
+			this.btSelectCurrentAsOrigin = new System.Windows.Forms.Button();
+			this.cmdDonate = new System.Windows.Forms.Button();
+			this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
+			this.pbForegroundColour = new System.Windows.Forms.PictureBox();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.bShowStationAtStarchartDotInfo = new System.Windows.Forms.Button();
+			this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
+			this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
+			this.pbOcrCurrent = new System.Windows.Forms.PictureBox();
+			this.pbStation = new System.Windows.Forms.PictureBox();
+			this.pbTrimmed = new System.Windows.Forms.PictureBox();
+			this.pbOriginalImage = new System.Windows.Forms.PictureBox();
+			this.btSelectCurrentAsTarget = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
 			this.contextMenuStrip1.SuspendLayout();
 			this.tabCtrlMain.SuspendLayout();
 			this.tabHelpAndChangeLog.SuspendLayout();
 			this.panel2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.tabSystemData.SuspendLayout();
 			this.groupBox14.SuspendLayout();
 			this.paEconomies.SuspendLayout();
@@ -442,12 +441,8 @@
 			this.tabCtrlOCR.SuspendLayout();
 			this.tabOCR.SuspendLayout();
 			this.groupBox4.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).BeginInit();
 			this.groupBox3.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbStation)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).BeginInit();
 			this.panel1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).BeginInit();
 			this.tabWebserver.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.tabEDDN.SuspendLayout();
@@ -460,6 +455,13 @@
 			this.groupBox9.SuspendLayout();
 			this.groupBox11.SuspendLayout();
 			this.contextMenuStrip2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbStation)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// openFileDialog1
@@ -813,19 +815,6 @@
 			this.lblUpdateDetail.Size = new System.Drawing.Size(664, 214);
 			this.lblUpdateDetail.TabIndex = 39;
 			// 
-			// cmdDonate
-			// 
-			this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
-			this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-			this.cmdDonate.FlatAppearance.BorderSize = 0;
-			this.cmdDonate.Location = new System.Drawing.Point(870, 380);
-			this.cmdDonate.Name = "cmdDonate";
-			this.cmdDonate.Size = new System.Drawing.Size(154, 36);
-			this.cmdDonate.TabIndex = 37;
-			this.cmdDonate.UseVisualStyleBackColor = true;
-			this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
-			// 
 			// label42
 			// 
 			this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1020,39 +1009,6 @@
 			this.label46.Size = new System.Drawing.Size(94, 13);
 			this.label46.TabIndex = 26;
 			this.label46.Text = "Foreground Colour";
-			// 
-			// pbBackgroundColour
-			// 
-			this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pbBackgroundColour.Location = new System.Drawing.Point(993, 186);
-			this.pbBackgroundColour.Name = "pbBackgroundColour";
-			this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
-			this.pbBackgroundColour.TabIndex = 25;
-			this.pbBackgroundColour.TabStop = false;
-			this.pbBackgroundColour.Click += new System.EventHandler(this.pbBackgroundColour_Click);
-			// 
-			// pbForegroundColour
-			// 
-			this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pbForegroundColour.Location = new System.Drawing.Point(993, 148);
-			this.pbForegroundColour.Name = "pbForegroundColour";
-			this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
-			this.pbForegroundColour.TabIndex = 24;
-			this.pbForegroundColour.TabStop = false;
-			this.pbForegroundColour.Click += new System.EventHandler(this.pbForegroundColour_Click);
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.Location = new System.Drawing.Point(877, 12);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(148, 130);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pictureBox1.TabIndex = 19;
-			this.pictureBox1.TabStop = false;
 			// 
 			// button23
 			// 
@@ -1394,9 +1350,9 @@
 			this.label64.ForeColor = System.Drawing.SystemColors.WindowText;
 			this.label64.Location = new System.Drawing.Point(22, 335);
 			this.label64.Name = "label64";
-			this.label64.Size = new System.Drawing.Size(57, 13);
+			this.label64.Size = new System.Drawing.Size(59, 13);
 			this.label64.TabIndex = 119;
-            this.label64.Text = "Economies";
+			this.label64.Text = "Economies";
 			// 
 			// txtStationUpdatedAt
 			// 
@@ -2422,14 +2378,14 @@
 			// 
 			// chart1
 			// 
-			chartArea1.Name = "ChartArea1";
-			this.chart1.ChartAreas.Add(chartArea1);
+			chartArea3.Name = "ChartArea1";
+			this.chart1.ChartAreas.Add(chartArea3);
 			this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chart1.Location = new System.Drawing.Point(0, 0);
 			this.chart1.Name = "chart1";
-			series1.ChartArea = "ChartArea1";
-			series1.Name = "Series1";
-			this.chart1.Series.Add(series1);
+			series3.ChartArea = "ChartArea1";
+			series3.Name = "Series1";
+			this.chart1.Series.Add(series3);
 			this.chart1.Size = new System.Drawing.Size(210, 224);
 			this.chart1.TabIndex = 5;
 			this.chart1.Text = "chart1";
@@ -2447,14 +2403,14 @@
 			// 
 			// chart2
 			// 
-			chartArea2.Name = "ChartArea1";
-			this.chart2.ChartAreas.Add(chartArea2);
+			chartArea4.Name = "ChartArea1";
+			this.chart2.ChartAreas.Add(chartArea4);
 			this.chart2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chart2.Location = new System.Drawing.Point(0, 0);
 			this.chart2.Name = "chart2";
-			series2.ChartArea = "ChartArea1";
-			series2.Name = "Series1";
-			this.chart2.Series.Add(series2);
+			series4.ChartArea = "ChartArea1";
+			series4.Name = "Series1";
+			this.chart2.Series.Add(series4);
 			this.chart2.Size = new System.Drawing.Size(210, 269);
 			this.chart2.TabIndex = 6;
 			this.chart2.Text = "chart2";
@@ -2538,16 +2494,6 @@
 			this.cmdApplySystemRename.Text = "Apply Changes";
 			this.cmdApplySystemRename.UseVisualStyleBackColor = true;
 			this.cmdApplySystemRename.Click += new System.EventHandler(this.RenameStation);
-			// 
-			// bShowStationAtStarchartDotInfo
-			// 
-			this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
-			this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(304, 12);
-			this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
-			this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
-			this.bShowStationAtStarchartDotInfo.TabIndex = 14;
-			this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
-			this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
 			// 
 			// lbPrices
 			// 
@@ -2841,6 +2787,8 @@
 			// 
 			// tabStationToStation
 			// 
+			this.tabStationToStation.Controls.Add(this.btSelectCurrentAsTarget);
+			this.tabStationToStation.Controls.Add(this.btSelectCurrentAsOrigin);
 			this.tabStationToStation.Controls.Add(this.splitContainer4);
 			this.tabStationToStation.Controls.Add(this.groupBox7);
 			this.tabStationToStation.Controls.Add(this.lblStationToStationLightYears);
@@ -3031,7 +2979,7 @@
 			// 
 			// bSwapStationToStations
 			// 
-			this.bSwapStationToStations.Location = new System.Drawing.Point(306, 6);
+			this.bSwapStationToStations.Location = new System.Drawing.Point(294, 6);
 			this.bSwapStationToStations.Name = "bSwapStationToStations";
 			this.bSwapStationToStations.Size = new System.Drawing.Size(31, 21);
 			this.bSwapStationToStations.TabIndex = 9;
@@ -3042,7 +2990,7 @@
 			// label30
 			// 
 			this.label30.AutoSize = true;
-			this.label30.Location = new System.Drawing.Point(346, 9);
+			this.label30.Location = new System.Drawing.Point(332, 9);
 			this.label30.Name = "label30";
 			this.label30.Size = new System.Drawing.Size(20, 13);
 			this.label30.TabIndex = 8;
@@ -3063,9 +3011,9 @@
 			this.cmbStationToStationTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
 			this.cmbStationToStationTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cmbStationToStationTo.FormattingEnabled = true;
-			this.cmbStationToStationTo.Location = new System.Drawing.Point(366, 6);
+			this.cmbStationToStationTo.Location = new System.Drawing.Point(353, 6);
 			this.cmbStationToStationTo.Name = "cmbStationToStationTo";
-			this.cmbStationToStationTo.Size = new System.Drawing.Size(250, 21);
+			this.cmbStationToStationTo.Size = new System.Drawing.Size(231, 21);
 			this.cmbStationToStationTo.TabIndex = 6;
 			this.cmbStationToStationTo.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationTo_SelectedIndexChanged);
 			// 
@@ -3077,29 +3025,9 @@
 			this.cmbStationToStationFrom.FormattingEnabled = true;
 			this.cmbStationToStationFrom.Location = new System.Drawing.Point(37, 6);
 			this.cmbStationToStationFrom.Name = "cmbStationToStationFrom";
-			this.cmbStationToStationFrom.Size = new System.Drawing.Size(250, 21);
+			this.cmbStationToStationFrom.Size = new System.Drawing.Size(208, 21);
 			this.cmbStationToStationFrom.TabIndex = 5;
 			this.cmbStationToStationFrom.SelectedIndexChanged += new System.EventHandler(this.cbStationToStationFrom_SelectedIndexChanged);
-			// 
-			// bShowStationToStationRouteAtStarchartDotClub
-			// 
-			this.bShowStationToStationRouteAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationToStationRouteAtStarchartDotClub.Image")));
-			this.bShowStationToStationRouteAtStarchartDotClub.Location = new System.Drawing.Point(626, 3);
-			this.bShowStationToStationRouteAtStarchartDotClub.Name = "bShowStationToStationRouteAtStarchartDotClub";
-			this.bShowStationToStationRouteAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
-			this.bShowStationToStationRouteAtStarchartDotClub.TabIndex = 13;
-			this.bShowStationToStationRouteAtStarchartDotClub.UseVisualStyleBackColor = true;
-			this.bShowStationToStationRouteAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationToStationRouteAtStarchartDotClub_Click);
-			// 
-			// bShowStationRestrictionAtStarchartDotClub
-			// 
-			this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
-			this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
-			this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
-			this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
-			this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
-			this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
-			this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
 			// 
 			// tabCommandersLog
 			// 
@@ -3716,16 +3644,6 @@
 			this.tbCommoditiesOcrOutput.TabIndex = 12;
 			this.tbCommoditiesOcrOutput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCommoditiesOcrOutput_Keypress);
 			// 
-			// pbOcrCurrent
-			// 
-			this.pbOcrCurrent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pbOcrCurrent.Location = new System.Drawing.Point(110, 79);
-			this.pbOcrCurrent.Name = "pbOcrCurrent";
-			this.pbOcrCurrent.Size = new System.Drawing.Size(231, 43);
-			this.pbOcrCurrent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pbOcrCurrent.TabIndex = 11;
-			this.pbOcrCurrent.TabStop = false;
-			// 
 			// tbOcrStationName
 			// 
 			this.tbOcrStationName.Location = new System.Drawing.Point(110, 27);
@@ -3771,16 +3689,6 @@
 			this.button7.UseVisualStyleBackColor = true;
 			this.button7.Click += new System.EventHandler(this.button7_Click);
 			// 
-			// pbStation
-			// 
-			this.pbStation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pbStation.Location = new System.Drawing.Point(8, 325);
-			this.pbStation.Name = "pbStation";
-			this.pbStation.Size = new System.Drawing.Size(205, 19);
-			this.pbStation.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pbStation.TabIndex = 9;
-			this.pbStation.TabStop = false;
-			// 
 			// label13
 			// 
 			this.label13.AutoSize = true;
@@ -3790,16 +3698,6 @@
 			this.label13.TabIndex = 8;
 			this.label13.Text = "Trimmed";
 			// 
-			// pbTrimmed
-			// 
-			this.pbTrimmed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pbTrimmed.Location = new System.Drawing.Point(8, 355);
-			this.pbTrimmed.Name = "pbTrimmed";
-			this.pbTrimmed.Size = new System.Drawing.Size(241, 179);
-			this.pbTrimmed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pbTrimmed.TabIndex = 7;
-			this.pbTrimmed.TabStop = false;
-			// 
 			// panel1
 			// 
 			this.panel1.AutoScroll = true;
@@ -3808,19 +3706,6 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(415, 233);
 			this.panel1.TabIndex = 3;
-			// 
-			// pbOriginalImage
-			// 
-			this.pbOriginalImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.pbOriginalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pbOriginalImage.Location = new System.Drawing.Point(3, 3);
-			this.pbOriginalImage.Name = "pbOriginalImage";
-			this.pbOriginalImage.Size = new System.Drawing.Size(409, 227);
-			this.pbOriginalImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pbOriginalImage.TabIndex = 1;
-			this.pbOriginalImage.TabStop = false;
 			// 
 			// label11
 			// 
@@ -4059,7 +3944,7 @@
 			// 
 			// groupBox2
 			// 
-            this.groupBox2.Controls.Add(this.cbAutoListenEddn);
+			this.groupBox2.Controls.Add(this.cbAutoListenEddn);
 			this.groupBox2.Controls.Add(this.cbSpoolImplausibleToFile);
 			this.groupBox2.Controls.Add(this.cbSpoolEddnToFile);
 			this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
@@ -4078,6 +3963,16 @@
 			this.groupBox2.TabIndex = 0;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Listen for EDDN Events";
+			// 
+			// cbAutoListenEddn
+			// 
+			this.cbAutoListenEddn.AutoSize = true;
+			this.cbAutoListenEddn.Location = new System.Drawing.Point(300, 24);
+			this.cbAutoListenEddn.Name = "cbAutoListenEddn";
+			this.cbAutoListenEddn.Size = new System.Drawing.Size(139, 17);
+			this.cbAutoListenEddn.TabIndex = 16;
+			this.cbAutoListenEddn.Text = "Listen To EDDN at start";
+			this.cbAutoListenEddn.UseVisualStyleBackColor = true;
 			// 
 			// cbSpoolImplausibleToFile
 			// 
@@ -4607,16 +4502,145 @@
 			this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
 			this.removeEconomyToolStripMenuItem.Text = "remove Economy";
 			// 
-            // cbAutoListenEddn
-            // 
-            this.cbAutoListenEddn.AutoSize = true;
-            this.cbAutoListenEddn.Location = new System.Drawing.Point(300, 24);
-            this.cbAutoListenEddn.Name = "cbAutoListenEddn";
-            this.cbAutoListenEddn.Size = new System.Drawing.Size(204, 24);
-            this.cbAutoListenEddn.TabIndex = 16;
-            this.cbAutoListenEddn.Text = "Listen To EDDN at start";
-            this.cbAutoListenEddn.UseVisualStyleBackColor = true;
-            // 
+			// btSelectCurrentAsOrigin
+			// 
+			this.btSelectCurrentAsOrigin.Image = global::RegulatedNoise.Properties.Resources.target;
+			this.btSelectCurrentAsOrigin.Location = new System.Drawing.Point(250, 6);
+			this.btSelectCurrentAsOrigin.Name = "btSelectCurrentAsOrigin";
+			this.btSelectCurrentAsOrigin.Size = new System.Drawing.Size(30, 24);
+			this.btSelectCurrentAsOrigin.TabIndex = 20;
+			this.btSelectCurrentAsOrigin.UseVisualStyleBackColor = true;
+			this.btSelectCurrentAsOrigin.Click += new System.EventHandler(this.btSelectCurrentAsOrigin_Click);
+			// 
+			// cmdDonate
+			// 
+			this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
+			this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.cmdDonate.FlatAppearance.BorderSize = 0;
+			this.cmdDonate.Location = new System.Drawing.Point(870, 380);
+			this.cmdDonate.Name = "cmdDonate";
+			this.cmdDonate.Size = new System.Drawing.Size(154, 36);
+			this.cmdDonate.TabIndex = 37;
+			this.cmdDonate.UseVisualStyleBackColor = true;
+			this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
+			// 
+			// pbBackgroundColour
+			// 
+			this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pbBackgroundColour.Location = new System.Drawing.Point(993, 186);
+			this.pbBackgroundColour.Name = "pbBackgroundColour";
+			this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
+			this.pbBackgroundColour.TabIndex = 25;
+			this.pbBackgroundColour.TabStop = false;
+			this.pbBackgroundColour.Click += new System.EventHandler(this.pbBackgroundColour_Click);
+			// 
+			// pbForegroundColour
+			// 
+			this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pbForegroundColour.Location = new System.Drawing.Point(993, 148);
+			this.pbForegroundColour.Name = "pbForegroundColour";
+			this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
+			this.pbForegroundColour.TabIndex = 24;
+			this.pbForegroundColour.TabStop = false;
+			this.pbForegroundColour.Click += new System.EventHandler(this.pbForegroundColour_Click);
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox1.Location = new System.Drawing.Point(877, 12);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(148, 130);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBox1.TabIndex = 19;
+			this.pictureBox1.TabStop = false;
+			// 
+			// bShowStationAtStarchartDotInfo
+			// 
+			this.bShowStationAtStarchartDotInfo.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationAtStarchartDotInfo.Image")));
+			this.bShowStationAtStarchartDotInfo.Location = new System.Drawing.Point(304, 12);
+			this.bShowStationAtStarchartDotInfo.Name = "bShowStationAtStarchartDotInfo";
+			this.bShowStationAtStarchartDotInfo.Size = new System.Drawing.Size(29, 27);
+			this.bShowStationAtStarchartDotInfo.TabIndex = 14;
+			this.bShowStationAtStarchartDotInfo.UseVisualStyleBackColor = true;
+			this.bShowStationAtStarchartDotInfo.Click += new System.EventHandler(this.bShowStationAtStarchartDotInfo_Click);
+			// 
+			// bShowStationToStationRouteAtStarchartDotClub
+			// 
+			this.bShowStationToStationRouteAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationToStationRouteAtStarchartDotClub.Image")));
+			this.bShowStationToStationRouteAtStarchartDotClub.Location = new System.Drawing.Point(626, 3);
+			this.bShowStationToStationRouteAtStarchartDotClub.Name = "bShowStationToStationRouteAtStarchartDotClub";
+			this.bShowStationToStationRouteAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+			this.bShowStationToStationRouteAtStarchartDotClub.TabIndex = 13;
+			this.bShowStationToStationRouteAtStarchartDotClub.UseVisualStyleBackColor = true;
+			this.bShowStationToStationRouteAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationToStationRouteAtStarchartDotClub_Click);
+			// 
+			// bShowStationRestrictionAtStarchartDotClub
+			// 
+			this.bShowStationRestrictionAtStarchartDotClub.Image = ((System.Drawing.Image)(resources.GetObject("bShowStationRestrictionAtStarchartDotClub.Image")));
+			this.bShowStationRestrictionAtStarchartDotClub.Location = new System.Drawing.Point(500, 2);
+			this.bShowStationRestrictionAtStarchartDotClub.Name = "bShowStationRestrictionAtStarchartDotClub";
+			this.bShowStationRestrictionAtStarchartDotClub.Size = new System.Drawing.Size(29, 27);
+			this.bShowStationRestrictionAtStarchartDotClub.TabIndex = 14;
+			this.bShowStationRestrictionAtStarchartDotClub.UseVisualStyleBackColor = true;
+			this.bShowStationRestrictionAtStarchartDotClub.Click += new System.EventHandler(this.bShowStationRestrictionAtStarchartDotClub_Click);
+			// 
+			// pbOcrCurrent
+			// 
+			this.pbOcrCurrent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pbOcrCurrent.Location = new System.Drawing.Point(110, 79);
+			this.pbOcrCurrent.Name = "pbOcrCurrent";
+			this.pbOcrCurrent.Size = new System.Drawing.Size(231, 43);
+			this.pbOcrCurrent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pbOcrCurrent.TabIndex = 11;
+			this.pbOcrCurrent.TabStop = false;
+			// 
+			// pbStation
+			// 
+			this.pbStation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pbStation.Location = new System.Drawing.Point(8, 325);
+			this.pbStation.Name = "pbStation";
+			this.pbStation.Size = new System.Drawing.Size(205, 19);
+			this.pbStation.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pbStation.TabIndex = 9;
+			this.pbStation.TabStop = false;
+			// 
+			// pbTrimmed
+			// 
+			this.pbTrimmed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pbTrimmed.Location = new System.Drawing.Point(8, 355);
+			this.pbTrimmed.Name = "pbTrimmed";
+			this.pbTrimmed.Size = new System.Drawing.Size(241, 179);
+			this.pbTrimmed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pbTrimmed.TabIndex = 7;
+			this.pbTrimmed.TabStop = false;
+			// 
+			// pbOriginalImage
+			// 
+			this.pbOriginalImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pbOriginalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pbOriginalImage.Location = new System.Drawing.Point(3, 3);
+			this.pbOriginalImage.Name = "pbOriginalImage";
+			this.pbOriginalImage.Size = new System.Drawing.Size(409, 227);
+			this.pbOriginalImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pbOriginalImage.TabIndex = 1;
+			this.pbOriginalImage.TabStop = false;
+			// 
+			// btSelectCurrentAsTarget
+			// 
+			this.btSelectCurrentAsTarget.Image = global::RegulatedNoise.Properties.Resources.target;
+			this.btSelectCurrentAsTarget.Location = new System.Drawing.Point(587, 5);
+			this.btSelectCurrentAsTarget.Name = "btSelectCurrentAsTarget";
+			this.btSelectCurrentAsTarget.Size = new System.Drawing.Size(30, 24);
+			this.btSelectCurrentAsTarget.TabIndex = 21;
+			this.btSelectCurrentAsTarget.UseVisualStyleBackColor = true;
+			this.btSelectCurrentAsTarget.Click += new System.EventHandler(this.btSelectCurrentAsTarget_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4650,9 +4674,6 @@
 			this.tabHelpAndChangeLog.PerformLayout();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.tabSystemData.ResumeLayout(false);
 			this.groupBox14.ResumeLayout(false);
 			this.groupBox14.PerformLayout();
@@ -4706,14 +4727,10 @@
 			this.tabOCR.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox4.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).EndInit();
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbStation)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).EndInit();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).EndInit();
 			this.tabWebserver.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
@@ -4735,6 +4752,13 @@
 			this.groupBox11.ResumeLayout(false);
 			this.groupBox11.PerformLayout();
 			this.contextMenuStrip2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbOcrCurrent)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbStation)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -5104,6 +5128,8 @@
         private System.Windows.Forms.LinkLabel linkLabel10;
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.CheckBox cbAutoListenEddn;
+		  private System.Windows.Forms.Button btSelectCurrentAsOrigin;
+		  private System.Windows.Forms.Button btSelectCurrentAsTarget;
 
         
     }

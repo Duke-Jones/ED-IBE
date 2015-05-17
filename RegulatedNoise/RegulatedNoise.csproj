@@ -801,6 +801,7 @@
     <None Include="Resources\PayPalDonate.jpg" />
     <None Include="Resources\RNSplash.png" />
     <Content Include="logo.ico" />
+    <None Include="Resources\target.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

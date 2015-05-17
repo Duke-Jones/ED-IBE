@@ -21,6 +21,10 @@ todo:
    * added a duplicate filter for recognized commodities
    * recognized commodities are only uploaded if the datas are not already in local database
    * EDDN uploader now stops work and reject data if RN is closed
+   * Added Logo
+   * New Listen to EDDN at start option
+   * download data files at startup if missing
+   * add Age colored column in prices list
 -------------------------------------------------------------------------------------      
 1.84_0.20_2
    * fixed: crash on first start while searching for ED-paths

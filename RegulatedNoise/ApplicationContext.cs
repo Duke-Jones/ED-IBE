@@ -46,7 +46,7 @@ namespace RegulatedNoise
 
         private static EDMilkyway _milkyway;
         private static dsCommodities _commoditiesLocalisation;
-        private static EDDN _eddn;
+        private static Eddn _eddn;
         private static GalacticMarket _galacticMarket;
         private static LogFilesScanner _eliteLogFilesScanner;
 
@@ -106,14 +106,14 @@ namespace RegulatedNoise
             }
         }
 
-        public static EDDN Eddn
+        public static Eddn Eddn
         {
             get
             {
                 if(_eddn == null)
                 {
                     EventBus.InitializationStart("prepare EDDN interface");
-                    _eddn = new EDDN(ApplicationContext.CommoditiesLocalisation, ApplicationContext.RegulatedNoiseSettings);
+                    _eddn = new Eddn(ApplicationContext.CommoditiesLocalisation, ApplicationContext.RegulatedNoiseSettings);
                     Trace.TraceInformation("  - EDDN object created");
                     if (RegulatedNoiseSettings.StartListeningEddnOnLoad)
                     {
