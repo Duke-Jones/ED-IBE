@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RegulatedNoise.Core.DomainModel;
-using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.Test
 {
     [TestClass]
-    public class GlobalMarketTest
+    public class GalacticMarketTest
     {
         [TestMethod]
         public void i_can_instantiate()

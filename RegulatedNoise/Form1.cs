@@ -16,6 +16,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using CodeProject.Dialog;
@@ -1243,7 +1244,7 @@ namespace RegulatedNoise
 			List<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionPreordered;
 
 			// get the relevant stations
-			var selectionRaw = GalacticMarket.StationIds.Where(IsSelected).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, GalacticMarket.StationMarket(stationId))).Where(kvp => kvp.Value.Any()).ToList();
+			var selectionRaw = GalacticMarket.StationIds.Where(IsInPerimeter).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, GalacticMarket.StationMarket(stationId))).Where(kvp => kvp.Value.Any()).ToList();
 
 			if (rbSortBySystem.Checked)
 			{
@@ -1572,7 +1573,7 @@ namespace RegulatedNoise
 
 		private static void SetAgeColor(DateTime sampleDate, ListViewItem.ListViewSubItem subItem)
 		{
-			double age = (sampleDate - DateTime.Now).TotalHours;
+			double age = (DateTime.Now - sampleDate).TotalHours;
 			if (age < 6)
 			{
 				subItem.ForeColor = Color.FromArgb(0,68,0);
@@ -3284,7 +3285,6 @@ namespace RegulatedNoise
 
 		private Tuple<IEnumerable<ListViewItem>, IEnumerable<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
 		{
-			if (stationFrom == null || stationTo == null) { bestRoundTrip = 0; return null; }
 			Tuple<IEnumerable<TradeRoute>, IEnumerable<TradeRoute>> traderoutes = TradeEngine.GetBestRoundTripBetweenTwoStations(stationFrom, stationTo, out bestRoundTrip);
 			return new Tuple<IEnumerable<ListViewItem>, IEnumerable<ListViewItem>>(traderoutes.Item1.Select(BuildTradeRouteViewItem).ToList(), traderoutes.Item2.Select(BuildTradeRouteViewItem).ToList());
 		}
@@ -4014,99 +4014,37 @@ namespace RegulatedNoise
 			cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
 		}
 
-		private void btnBestRoundTrip_Click(object sender, EventArgs e)
+		private async void btnBestRoundTrip_Click(object sender, EventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
-
-			lbAllRoundTrips.Items.Clear();
-			int bestRoundTrip = -1;
-			ProgressView progress = new ProgressView();
-			List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
-
-			var selectedStations = GalacticMarket.StationIds.Where(IsSelected).ToList();
-
-			int total = (selectedStations.Count * (selectedStations.Count + 1)) / 2;
-			int current = 0;
-
-			progress.progressStart(string.Format("calculating best routes: {0} abilities from {1} stations", total, selectedStations.Count()));
-
-			for (int i = 0; i < selectedStations.Count - 1; i++)
-			{
-				for (int j = i + 1; j < selectedStations.Count; j++)
+			btnBestRoundTrip.Enabled = false;
+			var cancellationTokenSource = new CancellationTokenSource();
+			ProgressView progress = new ProgressView(cancellationTokenSource) { Text = "computing best round trips"};
+			TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+			progress.ProgressStart("");
+			await TradeEngine.GetBestRoundTripsAsync(
+				GalacticMarket.StationIds.Where(IsInPerimeter).ToList()
+				,cbMaxRouteDistance.Checked ? (double?) Double.Parse(cmbMaxRouteDistance.Text) : null
+				,cbPerLightYearRoundTrip.Checked
+				,progress.NewProgress()
+				,cancellationTokenSource.Token)
+				.ContinueWith(task =>
 				{
-					string stationFrom = selectedStations[i];
-					string stationTo = selectedStations[j];
-
-					current += 1;
-					progress.progressUpdate(current, total);
-					Debug.Print(current + "/" + total);
-					int bestThisTrip;
-					GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestThisTrip);
-					if (bestThisTrip > 0)
+					lbAllRoundTrips.BeginUpdate();
+					lbAllRoundTrips.Items.Clear();
+					foreach (Tuple<string, double> roundTrip in task.Result.OrderByDescending(x => x.Item2))
 					{
-						string key1, key2;
-						if (String.Compare(stationFrom, stationTo) < 0)
-						{
-							key1 = stationFrom;
-							key2 = stationTo;
-						}
-						else
-						{
-							key1 = stationTo;
-							key2 = stationFrom;
-						}
-						string credits;
-						double creditsDouble;
-						double distance = 1d;
-
-						distance = ApplicationContext.Milkyway.DistanceInLightYears(MarketDataRow.StationIdToSystemName(stationFrom).ToUpper(), MarketDataRow.StationIdToSystemName(stationTo).ToUpper());
-
-						if (cbPerLightYearRoundTrip.Checked)
-						{
-							creditsDouble = bestThisTrip / (2.0 * distance);
-							credits = String.Format("{0:0.000}", creditsDouble / (2.0 * distance)) + " Cr/Ly";
-						}
-						else
-						{
-							creditsDouble = bestThisTrip;
-							credits = (bestThisTrip + " Cr");
-						}
-
-						if ((!cbMaxRouteDistance.Checked) || (double.Parse(cmbMaxRouteDistance.Text) >= distance))
-						{
-							allRoundTrips.Add(
-								  new Tuple<string, double>(
-										 credits.PadRight(13) + " :" +
-										 key1
-										 + "..." +
-										 key2
-										 , creditsDouble));
-
-							if (bestThisTrip > bestRoundTrip)
-							{
-								bestRoundTrip = bestThisTrip;
-							}
-						}
-
+						lbAllRoundTrips.Items.Add(roundTrip.Item1);
 					}
-
-					if (progress.Cancelled)
-						break;
-				}
-
-				if (progress.Cancelled)
-					break;
-			}
-
-			progress.progressStop();
-
-			var ordered = allRoundTrips.OrderByDescending(x => x.Item2).Select(x => x.Item1).Distinct().ToList().Cast<object>().ToArray();
-
-			lbAllRoundTrips.Items.AddRange(ordered);
-			if (lbAllRoundTrips.Items.Count > 0)
-				lbAllRoundTrips.SelectedIndex = 0;
-
-			this.Cursor = Cursors.Default;
+					if (lbAllRoundTrips.Items.Count > 0)
+					{
+						lbAllRoundTrips.SelectedIndex = 0;
+					}
+					lbAllRoundTrips.EndUpdate();
+					progress.Dispose();
+					btnBestRoundTrip.Enabled = true;
+					Cursor = Cursors.Default;
+				}, cancellationTokenSource.Token, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted, uiScheduler);
 		}
 
 		private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
@@ -4151,35 +4089,36 @@ namespace RegulatedNoise
 
 		private void lbAllRoundTrips_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			var t = lbAllRoundTrips.Text;
-			var fromStation = t.Substring(t.IndexOf(':') + 1);
-			fromStation = fromStation.Substring(0, fromStation.IndexOf("..."));
-			var toStation = t.Substring(t.IndexOf("...") + 3);
-
-			//            Debug.Print("v : " + fromStation + " / c:" + cmbStationToStationFrom.SelectedValue+ " / c:" + cmbStationToStationFrom.SelectedItem, cmbStationToStationFrom.SelectedIndex);
-			int fromIndex = -1;
-			int toIndex = -1;
-
-			if (!_StationIndices.TryGetValue(fromStation, out fromIndex))
-				fromIndex = -1;
-
-			if (!_StationIndices.TryGetValue(toStation, out toIndex))
-				toIndex = -1;
-
 			try
 			{
+				var t = lbAllRoundTrips.Text;
+				string fromStation = t.Substring(t.IndexOf(":") + 1);
+				fromStation = fromStation.Substring(0, fromStation.IndexOf("<")).Trim();
+				string toStation = t.Substring(t.LastIndexOf(">") + 1).Trim();
+
+				//            Debug.Print("v : " + fromStation + " / c:" + cmbStationToStationFrom.SelectedValue+ " / c:" + cmbStationToStationFrom.SelectedItem, cmbStationToStationFrom.SelectedIndex);
+				int fromIndex = -1;
+				int toIndex = -1;
+
+				if (!_StationIndices.TryGetValue(fromStation, out fromIndex))
+					fromIndex = -1;
+
+				if (!_StationIndices.TryGetValue(toStation, out toIndex))
+					toIndex = -1;
 				cmbStationToStationFrom.SelectedIndex = fromIndex;
 				cmbStationToStationTo.SelectedIndex = toIndex;
+
+				Debug.Print(
+					"n : " + fromStation + " / c:" + cmbStationToStationFrom.SelectedValue + " / c:" +
+					cmbStationToStationFrom.SelectedItem,
+					cmbStationToStationFrom.SelectedIndex);
+				Debug.Print("");
+				UpdateStationToStation();
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				_logger.Log("unable to update on roundTrip selection: " + ex, true);
 			}
-
-			Debug.Print("n : " + fromStation + " / c:" + cmbStationToStationFrom.SelectedValue + " / c:" + cmbStationToStationFrom.SelectedItem, cmbStationToStationFrom.SelectedIndex);
-			Debug.Print("");
-
-			UpdateStationToStation();
 		}
 
 		private void lvStationToStationReturn_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -4886,7 +4825,7 @@ namespace RegulatedNoise
 		/// </summary>
 		/// <param name="stationId">The station identifier.</param>
 		/// <returns></returns>
-		private bool IsSelected(string stationId)
+		private bool IsInPerimeter(string stationId)
 		{
 			return (!cbLimitLightYears.Checked || Distance(MarketDataRow.StationIdToSystemName(stationId))) &&
 						(!cbStationToStar.Checked || StationDistance(MarketDataRow.StationIdToSystemName(stationId), MarketDataRow.StationIdToStationName(stationId)));
