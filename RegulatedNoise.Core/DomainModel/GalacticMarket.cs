@@ -8,7 +8,7 @@ using RegulatedNoise.Annotations;
 
 namespace RegulatedNoise.Core.DomainModel
 {
-	public class GalacticMarket : ICollection<MarketDataRow>
+	public class GalacticMarket : IReadOnlyCollection<MarketDataRow>
 	{
 		public event EventHandler<MarketDataEventArgs> OnMarketDataUpdate
 		{
@@ -108,19 +108,9 @@ namespace RegulatedNoise.Core.DomainModel
 			}
 		}
 
-		public void Add(MarketDataRow marketData)
-		{
-			_allMarketDatas.Add(marketData);
-		}
-
 		public bool Contains(MarketDataRow marketData)
 		{
 			return _allMarketDatas.Contains(marketData);
-		}
-
-		public void CopyTo(MarketDataRow[] array, int arrayIndex)
-		{
-			_allMarketDatas.CopyTo(array, arrayIndex);
 		}
 
 		public bool Remove([NotNull] MarketDataRow marketDataRow)

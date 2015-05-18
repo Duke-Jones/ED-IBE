@@ -30,7 +30,7 @@ namespace RegulatedNoise.Core.DataProviders
 			await RetrieveData(ITEMS_URL, s => Debug.WriteLine("[4]: " + Thread.CurrentThread.ManagedThreadId + " -> " + s));
 		}
 
-		public async Task<IEnumerable<MarketDataRow>> RetrievePrices()
+		public async Task<IReadOnlyCollection<MarketDataRow>> RetrievePrices()
 		{
 			PriceParser parser = new PriceParser();
 			await RetrieveData(PRICES_3H_URL, line => parser.Parse(line));
@@ -48,9 +48,7 @@ namespace RegulatedNoise.Core.DataProviders
 
 			using (var client = new HttpClient())
 			{
-				Debug.WriteLine("[1]: " + Thread.CurrentThread.ManagedThreadId);
 				httpResponse = await client.GetAsync(new Uri(uri));
-				Debug.WriteLine("[2]: " + Thread.CurrentThread.ManagedThreadId);
 			}
 			try
 			{
@@ -59,7 +57,6 @@ namespace RegulatedNoise.Core.DataProviders
 					while(!reader.EndOfStream)
 					{
 						onLineRead(await reader.ReadLineAsync());
-						Debug.WriteLine("[3]: " + Thread.CurrentThread.ManagedThreadId);
 					}
 				}
 			}
@@ -115,7 +112,7 @@ namespace RegulatedNoise.Core.DataProviders
 					Match match = _rowRegex.Match(line);
 					Group commodity = match.Groups["commodity"];
 					if (commodity.Success)
-						currentRow.CommodityName = commodity.Value.Trim();
+						currentRow.CommodityName = commodity.Value.ToLower().Trim();
 					Group sell = match.Groups["sell"];
 					if (sell.Success)
 						currentRow.SellPrice = Int32.Parse(sell.Value);
@@ -166,7 +163,7 @@ namespace RegulatedNoise.Core.DataProviders
 			}
 		}
 
-		public IEnumerable<MarketDataRow> MarketDatas
+		public IReadOnlyCollection<MarketDataRow> MarketDatas
 		{
 			get { return _marketDatas; }
 		}

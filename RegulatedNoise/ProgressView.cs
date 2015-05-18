@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
@@ -55,7 +56,7 @@ namespace RegulatedNoise
 			int prozValue;
 			if ((total > 0))
 			{
-				prozValue = (int) Math.Round(current/(double) (total)*100.0, 0);
+				prozValue = (int)Math.Round(current / (double)(total) * 100.0, 0);
 
 				if ((prozValue < 0))
 				{
@@ -135,13 +136,10 @@ namespace RegulatedNoise
 			get { return _canceled; }
 			private set
 			{
-				if (value && !_cancellationTokenSource.IsCancellationRequested)
+				if (value)
 				{
 					_canceled = true;
-					if (_cancellationTokenSource != null && _cancellationTokenSource.IsCancellationRequested)
-					{
-						_cancellationTokenSource.Cancel();
-					}
+					Cancel();
 				}
 			}
 		}
@@ -154,9 +152,16 @@ namespace RegulatedNoise
 		private void cmdCancel_Click(object sender, EventArgs e)
 		{
 			Canceled = true;
-			cmdCancel.Enabled = false;
-			lblInfotext.Text = "canceling " + lblInfotext.Text;
 		}
 
+		private void Cancel()
+		{
+			cmdCancel.Enabled = false;
+			lblInfotext.Text = "canceling " + lblInfotext.Text;
+			if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+			{
+				_cancellationTokenSource.Cancel();
+			}
+		}
 	}
 }
