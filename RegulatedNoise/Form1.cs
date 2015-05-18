@@ -3303,7 +3303,7 @@ namespace RegulatedNoise
 				, route.Demand.ToString(CultureInfo.InvariantCulture)
 				, route.DemandLevel.Display()
 				, route.Profit.ToString(CultureInfo.InvariantCulture)
-				, (DateTime.Now - route.Age).Hours.ToString(CultureInfo.CurrentCulture) + "h"
+				, (DateTime.Now - route.Age).TotalHours.ToString(CultureInfo.CurrentCulture) + "h"
 				, route.Distance.ToString(CultureInfo.InvariantCulture)
 			});
 			listViewItem.UseItemStyleForSubItems = false;
