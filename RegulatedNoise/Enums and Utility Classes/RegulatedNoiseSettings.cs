@@ -66,7 +66,7 @@ namespace RegulatedNoise
         private const string SETTINGS_FILENAME = "RegulatedNoiseSettings.xml";
         public const string EDDN_OUTPUT_FILEPATH = "EddnOutput.txt";
         public readonly decimal Version = 1.84m;
-		public readonly decimal VersionDJ = 0.20m;
+		public readonly decimal VersionDJ = 0.21m;
         public const string COMMODITIES_LOCALISATION_FILEPATH = "Data/Commodities.xml";
         
         public string ProductsPath = "";
