@@ -30,7 +30,7 @@ namespace RegulatedNoise.Core.DataProviders
 			await RetrieveData(ITEMS_URL, s => Debug.WriteLine("[4]: " + Thread.CurrentThread.ManagedThreadId + " -> " + s));
 		}
 
-		public async Task<IEnumerable<MarketDataRow>> RetrievePrices()
+		public async Task<IReadOnlyCollection<MarketDataRow>> RetrievePrices()
 		{
 			PriceParser parser = new PriceParser();
 			await RetrieveData(PRICES_3H_URL, line => parser.Parse(line));
@@ -166,7 +166,7 @@ namespace RegulatedNoise.Core.DataProviders
 			}
 		}
 
-		public IEnumerable<MarketDataRow> MarketDatas
+		public IReadOnlyCollection<MarketDataRow> MarketDatas
 		{
 			get { return _marketDatas; }
 		}

@@ -10,16 +10,11 @@ using RegulatedNoise.Core.DomainModel;
 
 namespace RegulatedNoise.Core
 {
-	public abstract class Market: ICollection<MarketDataRow>
+	public abstract class Market : IReadOnlyCollection<MarketDataRow>
 	{
 		protected readonly SortedDictionary<string, MarketDataRow> Dictionary;
 
 		public int Count { get { return Dictionary.Count; } }
-
-		public bool IsReadOnly
-		{
-			get { throw new NotImplementedException(); }
-		}
 
 		public MarketDataRow this[string marketdataId]
 		{
