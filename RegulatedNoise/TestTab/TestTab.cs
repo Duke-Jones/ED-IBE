@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,7 +70,8 @@ namespace RegulatedNoise.TestTab
 		{
 			this.RunInGuiThread(() =>
 			{
-				_commoditiesLogs.Add(new MarketDataEventDisplay(marketDataEventArgs));
+				_commoditiesLogs.Insert(0, new MarketDataEventDisplay(marketDataEventArgs));
+				lbCommoditiesLog.SelectedIndex = 0;
 			});
 		}
 
@@ -108,23 +110,30 @@ namespace RegulatedNoise.TestTab
 			var progress = new ProgressView(tokenSource) { Text = "Trade dangerous import" };
 			progress.ProgressStart("retrieving trade dangerous prices...");
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-			ImportFromTradeDangerous(tokenSource.Token, new Progress<Tuple<string, int, int>>(report =>
+			try
 			{
-				if (!String.IsNullOrEmpty(report.Item1))
+				ImportFromTradeDangerous(tokenSource.Token, new Progress<Tuple<string, int, int>>(report =>
 				{
-					progress.ProgressInfo(report.Item1);
-				}
-				progress.ProgressUpdate(report.Item2, report.Item3);
-			}))
-				.ContinueWith(task =>
-				 {
-					 progress.Dispose();
-					 if (task.IsCanceled)
-					 {
-						 MsgBox.Show("trade dangerous import canceled");
-					 }
-					 btImportfromTd.Enabled = true;
-				 }, scheduler);
+					if (!String.IsNullOrEmpty(report.Item1))
+					{
+						progress.ProgressInfo(report.Item1);
+					}
+					progress.ProgressUpdate(report.Item2, report.Item3);
+				}))
+					.ContinueWith(task =>
+					{
+						progress.Dispose();
+						if (task.IsCanceled)
+						{
+							MsgBox.Show("trade dangerous import canceled");
+						}
+						btImportfromTd.Enabled = true;
+					}, scheduler);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine("exception raised: " + ex);
+			}
 		}
 
 		private static async Task ImportFromTradeDangerous(CancellationToken cancellationToken, IProgress<Tuple<string, int, int>> onProgress)
@@ -144,10 +153,6 @@ namespace RegulatedNoise.TestTab
 				if (plausibility.Plausible)
 				{
 					ApplicationContext.GalacticMarket.Update(marketDataRow);
-				}
-				else
-				{
-
 				}
 				++processed;
 				onProgress.Report(new Tuple<string, int, int>("importing data...", processed, rows));
