@@ -1113,7 +1113,7 @@ namespace RegulatedNoise.EDDB_Data
         {
             EDCommoditiesExt commodityData =
                 GetCommodity(
-                    ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(marketData.CommodityName));
+                    ApplicationContext.CommoditiesLocalisation.TranslateInEnglish(marketData.CommodityName));
 
             if (marketData.CommodityName == "Panik")
                 Debug.Print("STOP");
@@ -1217,6 +1217,10 @@ namespace RegulatedNoise.EDDB_Data
                     // nothing ?!
                     plausibility = new PlausibilityState(false, "nor demand,nor supply provided");
                 }
+            }
+            else
+            {
+	            plausibility = new PlausibilityState(false, "unknown commodity");
             }
             return plausibility;
         }

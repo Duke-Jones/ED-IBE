@@ -112,7 +112,7 @@ namespace RegulatedNoise.Core.DataProviders
 					Match match = _rowRegex.Match(line);
 					Group commodity = match.Groups["commodity"];
 					if (commodity.Success)
-						currentRow.CommodityName = commodity.Value.Trim();
+						currentRow.CommodityName = commodity.Value.ToLower().Trim();
 					Group sell = match.Groups["sell"];
 					if (sell.Success)
 						currentRow.SellPrice = Int32.Parse(sell.Value);

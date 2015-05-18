@@ -152,6 +152,7 @@ namespace RegulatedNoise.TestTab
 				var plausibility = ApplicationContext.Milkyway.IsImplausible(marketDataRow, true);
 				if (plausibility.Plausible)
 				{
+					marketDataRow.CommodityName = ApplicationContext.CommoditiesLocalisation.TranslateInEnglish(marketDataRow.CommodityName);
 					ApplicationContext.GalacticMarket.Update(marketDataRow);
 				}
 				++processed;
