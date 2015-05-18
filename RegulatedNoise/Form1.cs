@@ -471,7 +471,8 @@ namespace RegulatedNoise
 			lbCommodities.Columns.Add("Demand Level");
 			lbCommodities.Columns.Add("Supply");
 			lbCommodities.Columns.Add("Supply Level");
-			lbCommodities.Columns.Add("Sample Date").Width = 150;
+			lbCommodities.Columns.Add("Sample Date").Width = 130;
+			lbCommodities.Columns.Add("distance");
 
 			lvAllComms.Columns.Add("Commodity Name").Width = 150;
 			lvAllComms.Columns.Add("Best Buy Price");
@@ -1735,12 +1736,14 @@ namespace RegulatedNoise
 		private void cbCommodity_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			object selectedCmbItem = ((ComboBox)sender).SelectedItem;
-			lbCommodities.Items.Clear();
 
+			lbCommodities.Items.Clear();
 			if (selectedCmbItem != null)
 			{
-				foreach (var row in GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => IsInPerimeter(x)))
+				lbCommodities.BeginUpdate();
+				foreach (MarketDataRow row in GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => IsInPerimeter(x)))
 				{
+					double distance = ApplicationContext.Milkyway.DistanceInLightYears(tbCurrentSystemFromLogs.Text, row.SystemName);
 					var viewItem = new ListViewItem(new string[] 
 					{   row.StationID,
 						row.SellPrice > 0 ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
@@ -1750,11 +1753,13 @@ namespace RegulatedNoise
 						row.Stock > 0 ? row.Stock.ToString(CultureInfo.InvariantCulture) : "",
 						row.SupplyLevel.Display(), 
 						row.SampleDate.ToString(CultureInfo.CurrentCulture) 
+						,distance != EDMilkyway.NO_DISTANCE ? Math.Round(distance,1).ToString(CultureInfo.CurrentCulture) : "N/A"
 					});
 					viewItem.UseItemStyleForSubItems = false;
 					SetAgeColor(row.SampleDate, viewItem.SubItems[7]);
 					lbCommodities.Items.Add(viewItem);
 				}
+				lbCommodities.EndUpdate();
 
 				var l = GalacticMarket.CommodityMarket(selectedCmbItem.ToString()).Where(x => x.BuyPrice > 0 && x.Stock > 0).Where(x => IsInPerimeter(x)).ToList();
 				if (l.Any())
