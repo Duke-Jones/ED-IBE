@@ -48,9 +48,7 @@ namespace RegulatedNoise.Core.DataProviders
 
 			using (var client = new HttpClient())
 			{
-				Debug.WriteLine("[1]: " + Thread.CurrentThread.ManagedThreadId);
 				httpResponse = await client.GetAsync(new Uri(uri));
-				Debug.WriteLine("[2]: " + Thread.CurrentThread.ManagedThreadId);
 			}
 			try
 			{
@@ -59,7 +57,6 @@ namespace RegulatedNoise.Core.DataProviders
 					while(!reader.EndOfStream)
 					{
 						onLineRead(await reader.ReadLineAsync());
-						Debug.WriteLine("[3]: " + Thread.CurrentThread.ManagedThreadId);
 					}
 				}
 			}
