@@ -960,7 +960,7 @@ namespace RegulatedNoise
 
 				if (GalacticMarket.Update(marketData) != Market.UpdateState.Discarded)
 				{
-					if (postToEddn && cbPostOnImport.Checked &&  ApplicationContext.Milkyway.SystemExists(marketData.SystemName))
+					if (postToEddn && cbPostOnImport.Checked && ApplicationContext.Milkyway.SystemExists(marketData.SystemName))
 					{
 						ApplicationContext.Eddn.SendToEddn(marketData);
 					}
@@ -1577,7 +1577,7 @@ namespace RegulatedNoise
 			double age = (DateTime.Now - sampleDate).TotalHours;
 			if (age < 6)
 			{
-				subItem.ForeColor = Color.FromArgb(0,68,0);
+				subItem.ForeColor = Color.FromArgb(0, 68, 0);
 				subItem.BackColor = Color.FromArgb(136, 204, 136);
 			}
 			else if (age < 12)
@@ -1590,7 +1590,7 @@ namespace RegulatedNoise
 			}
 			else
 			{
-				subItem.BackColor = Color.FromArgb(255, 170, 170);				
+				subItem.BackColor = Color.FromArgb(255, 170, 170);
 			}
 		}
 
@@ -2675,7 +2675,7 @@ namespace RegulatedNoise
 			if (_screenshotResultsBuffer.Count == 0)
 			{
 				tbFinalOcrOutput.Text += _csvOutputSoFar;
-                tbFinalOcrOutput.Text = removeClones(tbFinalOcrOutput.Text);
+				tbFinalOcrOutput.Text = removeClones(tbFinalOcrOutput.Text);
 
 				_csvOutputSoFar = null;
 
@@ -2736,27 +2736,27 @@ namespace RegulatedNoise
 			}
 		}
 
-        private string removeClones(string p)
-        {
-            StringBuilder cleanedEntries    = new StringBuilder();
-            HashSet<string> existing        = new HashSet<string>();
+		private string removeClones(string p)
+		{
+			StringBuilder cleanedEntries = new StringBuilder();
+			HashSet<string> existing = new HashSet<string>();
 
 			var rows = tbFinalOcrOutput.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
 			foreach (var row in rows)
 			{
-                string Commodity = row.Split(new string[] {";"}, StringSplitOptions.None)[2].ToUpper();
+				string Commodity = row.Split(new string[] { ";" }, StringSplitOptions.None)[2].ToUpper();
 
-                if(!existing.Contains(Commodity))
-                { 
-				    cleanedEntries.Append(row + "\r\n");
-                    existing.Add(Commodity);
-                }
+				if (!existing.Contains(Commodity))
+				{
+					cleanedEntries.Append(row + "\r\n");
+					existing.Add(Commodity);
+				}
 
 			}
 
 			return cleanedEntries.ToString();
-        }
+		}
 
 
 		private string StripPunctuationFromScannedText(string input)
@@ -3293,6 +3293,7 @@ namespace RegulatedNoise
 
 		private ListViewItem BuildTradeRouteViewItem(TradeRoute route)
 		{
+			TimeSpan age = (DateTime.Now - route.Age);
 			var listViewItem = new ListViewItem(new string[]
 			{
 				route.CommodityName
@@ -3303,12 +3304,17 @@ namespace RegulatedNoise
 				, route.Demand.ToString(CultureInfo.InvariantCulture)
 				, route.DemandLevel.Display()
 				, route.Profit.ToString(CultureInfo.InvariantCulture)
-				, (DateTime.Now - route.Age).TotalHours.ToString(CultureInfo.CurrentCulture) + "h"
+				, Display(age)
 				, route.Distance.ToString(CultureInfo.InvariantCulture)
 			});
 			listViewItem.UseItemStyleForSubItems = false;
 			SetAgeColor(route.Age, listViewItem.SubItems[8]); // color profit according to age
 			return listViewItem;
+		}
+
+		private static string Display(TimeSpan age)
+		{
+			return age.TotalDays > 1 ? Math.Round(age.TotalDays).ToString(CultureInfo.CurrentCulture) + "d" : Math.Round(age.TotalHours).ToString(CultureInfo.CurrentCulture) + "h";
 		}
 
 		//private static ListViewItem BuildTradeRouteViewItem(MarketDataRow fromRow, MarketDataRow toRow)
@@ -4021,15 +4027,15 @@ namespace RegulatedNoise
 			Cursor = Cursors.WaitCursor;
 			btnBestRoundTrip.Enabled = false;
 			var cancellationTokenSource = new CancellationTokenSource();
-			ProgressView progress = new ProgressView(cancellationTokenSource) { Text = "computing best round trips"};
+			ProgressView progress = new ProgressView(cancellationTokenSource) { Text = "computing best round trips" };
 			TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 			progress.ProgressStart("");
 			await TradeEngine.GetBestRoundTripsAsync(
 				GalacticMarket.StationIds.Where(IsInPerimeter).ToList()
-				,cbMaxRouteDistance.Checked ? (double?) Double.Parse(cmbMaxRouteDistance.Text) : null
-				,cbPerLightYearRoundTrip.Checked
-				,progress.NewProgress()
-				,cancellationTokenSource.Token)
+				, cbMaxRouteDistance.Checked ? (double?)Double.Parse(cmbMaxRouteDistance.Text) : null
+				, cbPerLightYearRoundTrip.Checked
+				, progress.NewProgress()
+				, cancellationTokenSource.Token)
 				.ContinueWith(task =>
 				{
 					lbAllRoundTrips.BeginUpdate();
@@ -4830,7 +4836,7 @@ namespace RegulatedNoise
 		private bool IsInPerimeter(string stationId)
 		{
 			string systemName = MarketDataRow.StationIdToSystemName(stationId);
-			return (!cbLimitLightYears.Checked || Distance(systemName)) 
+			return (!cbLimitLightYears.Checked || Distance(systemName))
 						&& (!cbStationToStar.Checked || StationDistance(systemName, MarketDataRow.StationIdToStationName(stationId)));
 		}
 
@@ -6175,25 +6181,25 @@ namespace RegulatedNoise
 
 		private void btSelectCurrentAsOrigin_Click(object sender, EventArgs e)
 		{
+			if (cmbStationToStationFrom.Items.Count == 0)
+				return;
 			if (!String.IsNullOrEmpty(tbCurrentStationinfoFromLogs.Text) && !String.IsNullOrEmpty(tbCurrentSystemFromLogs.Text))
 			{
 				int listIndex;
-				if (_StationIndices.TryGetValue(tbCurrentStationinfoFromLogs.Text + " [" + tbCurrentSystemFromLogs.Text + "]", out listIndex))
-				{
-					cmbStationToStationFrom.SelectedIndex = listIndex;
-				}
+				_StationIndices.TryGetValue(tbCurrentStationinfoFromLogs.Text + " [" + tbCurrentSystemFromLogs.Text + "]", out listIndex);
+				cmbStationToStationFrom.SelectedIndex = listIndex;
 			}
 		}
 
 		private void btSelectCurrentAsTarget_Click(object sender, EventArgs e)
 		{
+			if (cmbStationToStationTo.Items.Count == 0)
+				return;
 			if (!String.IsNullOrEmpty(tbCurrentStationinfoFromLogs.Text) && !String.IsNullOrEmpty(tbCurrentSystemFromLogs.Text))
 			{
 				int listIndex;
-				if (_StationIndices.TryGetValue(tbCurrentStationinfoFromLogs.Text + " [" + tbCurrentSystemFromLogs.Text + "]", out listIndex))
-				{
-					cmbStationToStationTo.SelectedIndex = listIndex;
-				}
+				_StationIndices.TryGetValue(tbCurrentStationinfoFromLogs.Text + " [" + tbCurrentSystemFromLogs.Text + "]", out listIndex);
+				cmbStationToStationTo.SelectedIndex = listIndex;
 			}
 		}
 	}
