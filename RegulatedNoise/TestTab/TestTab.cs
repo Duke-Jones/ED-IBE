@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeProject.Dialog;
+using Newtonsoft.Json;
 using RegulatedNoise.Core.DataProviders;
 using RegulatedNoise.Core.DomainModel;
 using RegulatedNoise.EDDB_Data;
@@ -150,6 +151,45 @@ namespace RegulatedNoise.TestTab
 				}
 				++processed;
 				onProgress.Report(new Tuple<string, int, int>("importing data...", processed, rows));
+			}
+		}
+
+		private void btFindSystem_Click(object sender, EventArgs e)
+		{
+			EDSystem system = ApplicationContext.Milkyway.GetSystem(tbFinderRequest.Text);
+			if (system == null)
+			{
+				tbFinderResult.Text = "N/A";
+			}
+			else
+			{
+				tbFinderResult.Text = JsonConvert.SerializeObject(system);
+			}
+		}
+
+		private void btFindStation_Click(object sender, EventArgs e)
+		{
+			EDStation station = ApplicationContext.Milkyway.GetStation(MarketDataRow.StationIdToSystemName(tbFinderRequest.Text), MarketDataRow.StationIdToStationName(tbFinderRequest.Text));
+			if (station == null)
+			{
+				tbFinderResult.Text = "N/A";
+			}
+			else
+			{
+				tbFinderResult.Text = JsonConvert.SerializeObject(station);
+			}
+		}
+
+		private void btFindMarketData_Click(object sender, EventArgs e)
+		{
+			MarketDataRow marketData = ApplicationContext.GalacticMarket[tbFinderRequest.Text];
+			if (marketData == null)
+			{
+				tbFinderResult.Text = "N/A";
+			}
+			else
+			{
+				tbFinderResult.Text = JsonConvert.SerializeObject(marketData);
 			}
 		}
 	}

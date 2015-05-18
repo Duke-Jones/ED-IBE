@@ -107,7 +107,7 @@ namespace RegulatedNoise.EDDB_Data
         {
             EDStation retValue;
 
-            EDSystem SystemData = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name == systemName);
+				EDSystem SystemData = m_Systems[(int)enDataType.Data_Merged].Find(x => x.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
 
             if (SystemData != null)
                 retValue = m_Stations[(int)enDataType.Data_Merged].Find(x => x.SystemId == SystemData.Id && x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase));
@@ -482,7 +482,7 @@ namespace RegulatedNoise.EDDB_Data
         {
             List<EDStation> retValue;
 
-            EDSystem SystemData = m_Systems[(int)wantedType].Find(x => x.Name == systemname);
+				EDSystem SystemData = m_Systems[(int)wantedType].Find(x => x.Name.Equals(systemname, StringComparison.InvariantCultureIgnoreCase));
 
             if (SystemData != null)
                 retValue = m_Stations[(int)wantedType].FindAll(x => x.SystemId == SystemData.Id);

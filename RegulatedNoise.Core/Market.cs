@@ -1,14 +1,37 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using RegulatedNoise.Annotations;
 using RegulatedNoise.Core.DomainModel;
 
 namespace RegulatedNoise.Core
 {
-	public abstract class Market : KeyedCollection<string, MarketDataRow>
+	public abstract class Market: ICollection<MarketDataRow>
 	{
+		protected readonly SortedDictionary<string, MarketDataRow> Dictionary;
+
+		public int Count { get { return Dictionary.Count; } }
+
+		public bool IsReadOnly
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public MarketDataRow this[string marketdataId]
+		{
+			get { return Dictionary[marketdataId]; }
+			internal set { Dictionary[marketdataId] = value; }
+		}
+
+		protected Market()
+		{
+			Dictionary = new SortedDictionary<string, MarketDataRow>();
+		}
+
 		public enum UpdateState
 		{
 			Added,
@@ -61,6 +84,43 @@ namespace RegulatedNoise.Core
 			}
 			return updateState;
 		}
+		
+		public void Add(MarketDataRow marketDataRow)
+		{
+			Dictionary.Add(GetKeyForItem(marketDataRow), marketDataRow);
+		}
+
+		public void Set(MarketDataRow marketDataRow)
+		{
+			Dictionary[GetKeyForItem(marketDataRow)] = marketDataRow;
+		}
+
+		public bool Remove(MarketDataRow marketDataRow)
+		{
+			return Dictionary.Remove(GetKeyForItem(marketDataRow));
+		}
+
+		public void Clear()
+		{
+			Dictionary.Clear();
+		}
+
+		public bool Contains(string marketDataId)
+		{
+			return Dictionary.ContainsKey(marketDataId);
+		}
+
+		public bool Contains(MarketDataRow marketData)
+		{
+			return Dictionary.ContainsKey(GetKeyForItem(marketData));
+		}
+
+		public void CopyTo(MarketDataRow[] array, int arrayIndex)
+		{
+			Dictionary.Values.CopyTo(array, arrayIndex);
+		}
+
+		protected abstract string GetKeyForItem(MarketDataRow marketDataRow);
 
 		public bool NotifiedRemove([NotNull] MarketDataRow marketDataRow)
 		{
@@ -111,6 +171,16 @@ namespace RegulatedNoise.Core
 				{
 					Trace.TraceWarning("marketdata update notification failure " + ex);
 				}
+		}
+
+		public IEnumerator<MarketDataRow> GetEnumerator()
+		{
+			return Dictionary.Values.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }
