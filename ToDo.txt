@@ -1,22 +1,26 @@
 todo:
    * option "take jumps into account"
-   * show distance in lists
    * Cmdrs Log must using ED-Time
    * single station/time export
    * english data base with possibility of import (file/ocr) from other languages
    * if theres a comodity with a warnlevel of -1 found in a station 
      so ask the user to set currnet values
-   * by commodity : show distance to current system
    * new commodity added and looking on the warn levels (small form) results in crash
    * commodity selection is resetted if changing the system distance filter
-   * showing distance to system in the "by station" and "by commodity" view
-   * copy system name with context menu in the "by station" and "by commodity" view
    * if implausibe prices show warnlevel direct under the price data
    * show hint with age of market prices if location is a station
    * add rejected marketdata from eddn with rightclick contextmenue
    * show the stations as a one look list
    * eddn layout v2
+   * more user friendly UI
+   * Add shipyard info
+   * Add outfitting info
+   * Add Rare Tab
 
+next
+   * show distance in list
+   * by commodity : show distance to current system
+   * copy system name with context menu in the "by station" and "by commodity" view
 1.84_0.21_1
    * added a duplicate filter for recognized commodities
    * recognized commodities are only uploaded if the datas are not already in local database
