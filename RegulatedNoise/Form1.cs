@@ -1244,12 +1244,12 @@ namespace RegulatedNoise
 			List<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionPreordered;
 
 			// get the relevant stations
-			var selectionRaw = GalacticMarket.StationIds.Where(IsInPerimeter).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, GalacticMarket.StationMarket(stationId))).Where(kvp => kvp.Value.Any()).ToList();
+			IEnumerable<KeyValuePair<string, IEnumerable<MarketDataRow>>> selectionRaw = GalacticMarket.StationIds.Where(IsInPerimeter).Select(stationId => new KeyValuePair<string, IEnumerable<MarketDataRow>>(stationId, GalacticMarket.StationMarket(stationId))).Where(kvp => kvp.Value.Any());
 
 			if (rbSortBySystem.Checked)
 			{
 				// get the list ordered as wanted -> order by system
-				selectionPreordered = selectionRaw.OrderBy(x => x.Key).ToList();
+				selectionPreordered = selectionRaw.OrderBy(x => MarketDataRow.StationIdToSystemName(x.Key)).ToList();
 				if (cblastVisitedFirst.Checked)
 				{
 					GetVisitedListPart(ref maxLength, lengthInfo1, selectionOrdered, selectionPreordered);
