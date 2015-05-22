@@ -91,9 +91,10 @@ namespace RegulatedNoise
                     
                     Thread.Sleep(1000);
 
-                    while (_SendItems.Count > 0)
+                    while ((_SendItems.Count > 0) && (!_caller.IsDisposed))
                     {
                         PostJsonToEddn((CsvRow)_SendItems.Dequeue());    
+                        System.Diagnostics.Debug.Print("Items in Queue : " + _SendItems.Count.ToString());
                     }
                 }
                 catch (Exception ex)
@@ -108,7 +109,9 @@ namespace RegulatedNoise
                     cErr.showError(ex, "Error in EDDN-Sending-Thread");
                 }
 	         
-	        } while ((!_caller.IsDisposed) && (!_caller.Disposing));
+	        } while (!_caller.IsDisposed);
+
+            _SendItems.Clear();
         }
 
         public void sendToEdDDN(CsvRow CommodityData)

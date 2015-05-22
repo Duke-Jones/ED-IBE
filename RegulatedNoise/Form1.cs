@@ -583,15 +583,17 @@ namespace RegulatedNoise
                     if (key.GetValue(Names[i]).ToString() == ProgramName)
                     {
                         ProgramPath = Names[i].ToString();
-                        ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf("\\Products\\") + 9);
-                        return ProgramPath;
+
+					    ProgramPath = ProgramPath.Substring(0, ProgramPath.LastIndexOf(@"\Products\") + 9);
+						returnValue = Directory.Exists(ProgramPath) ? ProgramPath : null;
+                        break;					
                     }
 
                 }
                
             }
 
-            return null;
+            return returnValue;
         }
         private string getProductPathManually()
         {
@@ -1378,10 +1380,10 @@ namespace RegulatedNoise
                             CommodityDirectory.Add(currentRow.CommodityName, new List<CsvRow>());
 
                         CommodityDirectory[currentRow.CommodityName].Add(currentRow);
-                    }
 
-                    if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-                        Eddn.sendToEdDDN(currentRow);
+                        if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
+                            Eddn.sendToEdDDN(currentRow);
+                    }
                 }
             }
         }
@@ -3241,6 +3243,7 @@ namespace RegulatedNoise
             if (_screenshotResultsBuffer.Count == 0)
             {
                 tbFinalOcrOutput.Text += _csvOutputSoFar;
+                tbFinalOcrOutput.Text = removeClones(tbFinalOcrOutput.Text);
                 _csvOutputSoFar = null;
 
 
@@ -3300,9 +3303,30 @@ namespace RegulatedNoise
                 BeginCorrectingScreenshot(nextScreenshot.s, nextScreenshot.originalBitmaps, nextScreenshot.originalBitmapConfidences, nextScreenshot.rowIds, nextScreenshot.screenshotName);
             }
 
-
-
         }
+
+        private string removeClones(string p)
+        {
+            StringBuilder cleanedEntries    = new StringBuilder();
+            HashSet<string> existing        = new HashSet<string>();
+
+			var rows = tbFinalOcrOutput.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var row in rows)
+			{
+                string Commodity = row.Split(new string[] {";"}, StringSplitOptions.None)[2].ToUpper();
+
+                if(!existing.Contains(Commodity))
+                { 
+				    cleanedEntries.Append(row + "\r\n");
+                    existing.Add(Commodity);
+                }
+
+			}
+
+			return cleanedEntries.ToString();
+        }
+
         private string StripPunctuationFromScannedText(string input)
         {
             return _textInfo.ToUpper(input.Replace(" ", "").Replace("-", "").Replace(".", "").Replace(",", ""));
@@ -4253,20 +4277,20 @@ namespace RegulatedNoise
 
                         if (versions.Count() == 0)
                         {
-                            #if extScanLog
+#if extScanLog
                                 logger.Log("no dirs with <FORC-FDEV> found");
                                 var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
                                 foreach (string SubPath in versions2)
                                 {
                                     logger.Log("but found <" +  SubPath + ">");   
                                 }
-                            #endif
+#endif
                         }
                         else
                         {
-                            #if extScanLog
+#if extScanLog
                                 logger.Log("lookin' for files in <" + versions[0] + ">");
-                            #endif
+#endif
 
                             // We'll just go right ahead and use the latest log...
                             var netLogs =
@@ -4335,15 +4359,15 @@ namespace RegulatedNoise
                                         {
                                             if (logLump.Contains("System:"))
                                             {
-                                                Debug.Print("Systemstring:" + logLump);
 #if extScanLog
+                                                Debug.Print("Systemstring:" + logLump);
                                                 logger.Log("Systemstring:" + logLump.Replace("\n", "").Replace("\r", ""));
 #endif
                                                 systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
                                                 systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
 
-                                                Debug.Print("System: " + systemName);
 #if extScanLog
+                                                Debug.Print("System: " + systemName);
                                                 logger.Log("System: " + systemName);
 #endif
 
@@ -4360,8 +4384,8 @@ namespace RegulatedNoise
                                                     // we may have candidates, check them and if nothing found search from the current position
                                                     foreach (string candidate in PossibleStations)
                                                     {
-                                                        Debug.Print("check candidate : " + candidate);
 #if extScanLog
+                                                        Debug.Print("check candidate : " + candidate);
                                                         logger.Log("check candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
 #endif
                                                         m = RegExTest.Match(candidate);
@@ -4371,9 +4395,9 @@ namespace RegulatedNoise
                                                         if (m.Success)
                                                         {
 #if extScanLog
+                                                            Debug.Print("Stationstring from candidate : " + candidate);
                                                             logger.Log("Stationstring from candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
 #endif
-                                                            Debug.Print("Stationstring from candidate : " + candidate);
                                                             getStation(ref stationName, m);
                                                             break;
                                                         }
@@ -4395,9 +4419,9 @@ namespace RegulatedNoise
                                                 if (m.Success)
                                                 {
 #if extScanLog
+                                                    Debug.Print("Candidate : " + logLump);
                                                     logger.Log("Candidate added : " + logLump.Replace("\n", "").Replace("\r", ""));
 #endif
-                                                    Debug.Print("Candidate : " + logLump);
                                                     PossibleStations.Add(logLump);
                                                 }
 
@@ -4414,9 +4438,9 @@ namespace RegulatedNoise
                                             if (m.Success)
                                             {
 #if extScanLog
+                                                Debug.Print("Stationstring (direct) : " + logLump);
                                                 logger.Log("Stationstring (direct) : " + logLump.Replace("\n", "").Replace("\r", ""));
 #endif
-                                                Debug.Print("Stationstring (direct) : " + logLump);
                                                 getStation(ref stationName, m);
                                             }
                                         }
@@ -4432,74 +4456,14 @@ namespace RegulatedNoise
 
                                 Datei.Close();
                                 Datei.Dispose();
-                                Debug.Print("Datei geschlossen");
 #if extScanLog
+                                Debug.Print("Datei geschlossen");
                                 logger.Log("File closed");
 #endif
 
                                 setLocationInfo(systemName, stationName);
 
-//                                if (systemName != "")
-//                                {
-//                                    Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-
-//                                    setSystemInfo(systemName);
-
-//                                }
-
-//                                if (stationName != "")
-//                                {
-//                                    Debug.Print("<" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-
-//                                    setSystemInfo(systemName);
-
-//                                }
-
-//                                    if (_LoggedSystem != systemName)
-//                                    {
-//#if extScanLog
-//                                        logger.Log("1 <" + systemName + "> - <" + tbCurrentSystemFromLogs.Text + ">");
-//                                        logger.Log("1 <" + stationName + "> - <" + tbCurrentStationinfoFromLogs.Text + ">");
-//#endif
-
-//                                        // "ClientArrivedtoNewSystem()" was often faster - so nothing was logged
-//                                        if (cbAutoAdd_JumpedTo.Checked)
-//                                        {
-//                                            CommandersLog_CreateJumpedToEvent(systemName);
-//                                        }
-
-//                                        _LoggedSystem = systemName;
-
-//                                        if (!String.IsNullOrEmpty(stationName))
-//                                            m_lastestStationInfo = stationName;
-//                                        else
-//                                            m_lastestStationInfo = "scanning...";
-//                                    }
-//                                    else if (!String.IsNullOrEmpty(stationName))
-//                                    { 
-//#if extScanLog
-//                                        logger.Log("2 <" + stationName + "> - <" + tbCurrentStationinfoFromLogs.Text + ">");
-//#endif
-//                                        m_lastestStationInfo = stationName;
-//                                    }
-
-//                                    //if (tbLogEventID.Text != "" && tbLogEventID.Text != systemName)
-//                                    //{
-//                                        setSystemInfo(systemName);
-//                                    //}
-
-//#if extScanLog
-//                                    logger.Log("Found <" + systemName + "> - <" + m_lastestStationInfo + ">");
-//                                    logger.Log("GUI   <" + tbCurrentSystemFromLogs.Text + "> - <" + tbCurrentStationinfoFromLogs.Text + ">");
-//#endif
-//                                }
-
-                                
-
-//                                setStationInfo();
-
                             }
-
                         }
                     }
                 }
@@ -4512,8 +4476,8 @@ namespace RegulatedNoise
 #if extScanLog
                 logger.Log("sleeping...");
                 logger.Log("\n\n\n");
-#endif
                 Debug.Print("\n\n\n");
+#endif
                 m_LogfileScanner_ARE.WaitOne();
 #if extScanLog
                 logger.Log("awake...");
@@ -4521,7 +4485,9 @@ namespace RegulatedNoise
 
             }while (!this.Disposing && !m_Closing);
 
+#if extScanLog
             Debug.Print("out");
+#endif
         }
 
         private void CommandersLog_CreateJumpedToEvent(string Systemname)
@@ -6301,17 +6267,18 @@ namespace RegulatedNoise
 
                 if(!isNew)
                 { 
-                    cmdSystemNew.Enabled        = true;
-                    cmdSystemEdit.Enabled       = true;
-                    cmdSystemSave.Enabled       = false;
-                    cmdSystemCancel.Enabled     = cmdSystemSave.Enabled;
+                    cmdSystemNew.Enabled            = true;
+                    cmdSystemEdit.Enabled           = true;
+                    cmdSystemSave.Enabled           = false;
+                    cmdSystemCancel.Enabled         = cmdSystemSave.Enabled;
 
-                    cmdStationNew.Enabled       = true;
-                    cmdStationEdit.Enabled      = false;
-                    cmdStationSave.Enabled      = false;
-                    cmdStationCancel.Enabled    = cmdStationSave.Enabled;
+                    cmdStationNew.Enabled           = true;
+                    cmdStationEdit.Enabled          = false;
+                    cmdStationSave.Enabled          = false;
+                    cmdStationCancel.Enabled        = cmdStationSave.Enabled;
 
-                    cmbSystemsAllSystems.ReadOnly = isNew;
+				    cmbSystemsAllSystems.ReadOnly   = false;
+                    cmbStationStations.ReadOnly     = false;
                 }
 
                 List<EDStation> StationsInSystem = _Milkyway.getStations(Systemname);

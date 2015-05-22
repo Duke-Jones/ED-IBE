@@ -17,6 +17,13 @@ todo:
    * Add outfitting info
    * Add Rare Tab
 
+   
+1.84_0.22_2
+   * re-insert: added a duplicate filter for recognized commodities
+   * re-insert: recognized commodities are only uploaded if the datas are not already in local database
+   * re-insert: EDDN uploader now stops work and reject data if RN is closed
+   * re-insert: corrected readonly-behaviour of stations-dropdown (system tab)
+   * re-insert: fixed: crash on first start while searching for ED-paths   
 1.84_0.22_1
    * reverted to v1.84_0.19
 -------------------------------------------------------------------------------------      
