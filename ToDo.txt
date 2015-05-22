@@ -18,8 +18,11 @@ todo:
    * Add Rare Tab
 
    
+1.84_0.22_4
+   * Mistake german commoditie translation #61 fixed
+   * added latest EDDB data files
 1.84_0.22_3
-   *  EDDN Timestamp missing timezone #50 fixed
+   * EDDN Timestamp missing timezone #50 fixed
 1.84_0.22_2
    * re-insert: added a duplicate filter for recognized commodities
    * re-insert: recognized commodities are only uploaded if the datas are not already in local database

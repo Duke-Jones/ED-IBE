@@ -4967,6 +4967,54 @@ namespace RegulatedNoise
                         SaveSettings();
                     }
                 }
+
+                // do all the things that must be done for the new versions
+                if ((RegulatedNoiseSettings.Version == 1.84m) && (RegulatedNoiseSettings.VersionDJ == 0.22m))
+                { 
+                    String currentFile = "AutoSave.csv";
+                    String newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                    String backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+
+                    // change name Resonanzbegrenzer -> Resonanzabgrenzer
+                    if (File.Exists(currentFile))
+                    {
+                        // delete old backup
+                        if (File.Exists(newFile))
+                            File.Delete(newFile);
+
+                        StringBuilder line = new StringBuilder();
+
+                        StreamReader reader = new StreamReader(File.OpenRead(currentFile));
+                        StreamWriter writer = new StreamWriter(File.OpenWrite(newFile));
+
+                        string header = reader.ReadLine();
+
+                        writer.WriteLine(header);
+
+                        while (!reader.EndOfStream)
+                        {
+                            line.Clear();
+                            line.Append(reader.ReadLine());
+                            line.Replace("Resonanzbegrenzer", "Resonanzabgrenzer");
+                            writer.WriteLine(line.ToString());
+                        }
+                        reader.Close();
+                        writer.Close();
+
+                        // delete old backup
+                        if (File.Exists(backupFile))
+                            File.Delete(backupFile);
+
+                        // rename current file to old backup
+                        if (File.Exists(currentFile))
+                            File.Move(currentFile, backupFile);
+
+                        // rename new file to current file
+                        File.Move(newFile, currentFile);
+
+                    }
+                }
+
             }
         }
 
