@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using System.Diagnostics;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
@@ -21,7 +26,7 @@ namespace RegulatedNoise.EDDB_Data
             InitializeComponent();
             int selectedRow;
 
-            Commodities = ApplicationContext.Milkyway.CloneCommodities().OrderBy(x => x.Name).ToList();
+            Commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
 
             foreach (EDCommoditiesExt Commodity in Commodities)
             {
@@ -44,7 +49,7 @@ namespace RegulatedNoise.EDDB_Data
 
             if (!string.IsNullOrEmpty(presetCommodity))
             {
-                string BaseName = ApplicationContext.CommoditiesLocalisation.GetCommodityBasename(presetCommodity);
+                string BaseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
                 if(string.IsNullOrEmpty(BaseName))
                     BaseName = presetCommodity;
 
@@ -82,16 +87,16 @@ namespace RegulatedNoise.EDDB_Data
         {
             if (m_DataChanged)
             {
-                if (MessageBox.Show("Save Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == DialogResult.OK)
+                if (MessageBox.Show("Save Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
                 { 
                     // save and change
                     updateCommodityList();
-                    ApplicationContext.Milkyway.SetCommodities(Commodities.OrderBy(x => x.Id).ToList());
+                    Form1.InstanceObject.myMilkyway.setCommodities(Commodities.OrderBy(x => x.Id).ToList());
                     this.Close();
                 }
                 else
                 {
-                    this.DialogResult = DialogResult.None;
+                    this.DialogResult = System.Windows.Forms.DialogResult.None;
                 }
             }
             else
@@ -102,13 +107,13 @@ namespace RegulatedNoise.EDDB_Data
         {
             if (m_DataChanged)
             {
-                if (MessageBox.Show("Dismiss Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == DialogResult.OK)
+                if (MessageBox.Show("Dismiss Changed Data ?", "Commodity Data Changed",  MessageBoxButtons.OKCancel,  MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
                 { 
                     this.Close();
                 }
                 else
                 {
-                    this.DialogResult = DialogResult.None;
+                    this.DialogResult = System.Windows.Forms.DialogResult.None;
                 }
             }
             else

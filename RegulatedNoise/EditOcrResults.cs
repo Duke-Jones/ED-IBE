@@ -38,7 +38,7 @@ namespace RegulatedNoise
 
             foreach (var row in rows)
             {
-               bool implausible = Form1.InstanceObject.CheckPricePlausibility(new string[] {row});
+               bool implausible = Form1.InstanceObject.checkPricePlausibility(new string[] {row});
 
                 string[] Splitted = row.Split(';');
 
@@ -101,7 +101,7 @@ namespace RegulatedNoise
                     SBuilder.Append(dgvData.Rows[lastRow].Cells[i].Value.ToString());
                 }
 
-                bool implausible = Form1.InstanceObject.CheckPricePlausibility(new string[] {SBuilder.ToString()});
+                bool implausible = Form1.InstanceObject.checkPricePlausibility(new string[] {SBuilder.ToString()});
                 dgvData.Rows[lastRow].Cells[12].Value = implausible.ToString();
 
                 setRowStyle(dgvData.Rows[lastRow], implausible);
@@ -248,7 +248,7 @@ namespace RegulatedNoise
                     SBuilder.Append(currentRow.Cells[i].Value.ToString());
                 }
 
-                currentRow.Cells[12].Value = Form1.InstanceObject.CheckPricePlausibility(new string[] {SBuilder.ToString()}).ToString();
+                currentRow.Cells[12].Value = Form1.InstanceObject.checkPricePlausibility(new string[] {SBuilder.ToString()}).ToString();
             }
 
         }

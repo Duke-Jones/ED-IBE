@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.Core.DomainModel;
-using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
 {
@@ -54,12 +52,12 @@ namespace RegulatedNoise
 
         private void bShowStationAtStarchartDotInfo_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/system/" + MarketDataRow.StationIdToSystemName(cmbStation.Text));
+            Process.Start(@"http://starchart.club/map/system/" + CombinedNameToSystemName(cmbStation.Text));
         }
 
         private void bShowStationToStationRouteAtStarchartDotClub_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/route/" + MarketDataRow.StationIdToSystemName(cmbStationToStationFrom.Text) + @"/" + MarketDataRow.StationIdToSystemName(cmbStationToStationTo.Text) + @"/@" + MarketDataRow.StationIdToSystemName(cmbStationToStationFrom.Text));
+            Process.Start(@"http://starchart.club/map/route/" + CombinedNameToSystemName(cmbStationToStationFrom.Text) + @"/" + CombinedNameToSystemName(cmbStationToStationTo.Text) + @"/@" + CombinedNameToSystemName(cmbStationToStationFrom.Text));
         }
 
         private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)

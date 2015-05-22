@@ -17,7 +17,9 @@ todo:
    * Add outfitting info
    * Add Rare Tab
 
-next
+1.84_0.22_1
+   * reverted to v1.84_0.19
+-------------------------------------------------------------------------------------      
    * show distance in list
    * by commodity : show distance to current system
    * copy system name with context menu in the "by station" and "by commodity" view

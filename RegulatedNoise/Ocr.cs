@@ -34,9 +34,8 @@ namespace RegulatedNoise
         private EBPixeltest PixelTest;
 
         Bitmap _bTrimmedHeader, _bTrimmed_4_OCR, _bOriginal, _bOriginalClone, _bTrimmed_4_View;
-	    public const string SOURCENAME = "OCR";
 
-	    public Ocr(Form1 callingForm)
+        public Ocr(Form1 callingForm)
         {
             _callingForm = callingForm;
             
@@ -102,7 +101,7 @@ namespace RegulatedNoise
             _bTrimmed_4_View = (Bitmap)(_bTrimmed_4_OCR.Clone());
 
             // set all dark colors to black - this removes all crap
-				_bTrimmed_4_OCR = RNGraphics.changeColour(_bTrimmed_4_OCR, Color.Black, Color.Black, ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel, RNGraphics.enPixelCompare.pc_RGB_all);
+            _bTrimmed_4_OCR = RNGraphics.changeColour(_bTrimmed_4_OCR, Color.Black, Color.Black, Form1.RegulatedNoiseSettings.GUIColorCutoffLevel , RNGraphics.enPixelCompare.pc_RGB_all);
 
             // find automatically the textlines in the commodity area 
             var textRowLocations = new List<Tuple<int, int>>();
@@ -138,10 +137,10 @@ namespace RegulatedNoise
                                               _calibrationPoints[1].Y  - _calibrationPoints[0].Y);
 
             // RNGraphics.Crop image to the header area and preprocess for OCR
-            _bTrimmedHeader = RNGraphics.PreprocessScreenshot(RNGraphics.Crop(_bOriginalClone, trim_4_Header),1, ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel);
+            _bTrimmedHeader = RNGraphics.PreprocessScreenshot(RNGraphics.Crop(_bOriginalClone, trim_4_Header),1, Form1.RegulatedNoiseSettings.GUIColorCutoffLevel);
 
             // now process screenshot for OCR and Elitebrainerous 
-				_bTrimmed_4_OCR = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR, 1, ApplicationContext.RegulatedNoiseSettings.GUIColorCutoffLevel);
+            _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Form1.RegulatedNoiseSettings.GUIColorCutoffLevel);
 
             // show preprocessed parts on the GUI
             _callingForm.UpdateTrimmedImage(_bTrimmed_4_OCR, _bTrimmedHeader);
@@ -188,7 +187,7 @@ namespace RegulatedNoise
             else
                 Directory.CreateDirectory("./Brainerous/images");
 
-				using (var engine = new TesseractEngine(@"./tessdata", ApplicationContext.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
+            using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
             {
                 using (var page = engine.Process(p))
                 {
@@ -197,7 +196,7 @@ namespace RegulatedNoise
                 }
             }
 
-				string[] StationsInSystem = ApplicationContext.Milkyway.GetStationNames(SystemAtTimeOfScreenshot);
+            string[] StationsInSystem = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
             string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(_callingForm.tbCurrentStationinfoFromLogs.Text, StringComparison.InvariantCultureIgnoreCase));
 
             if(headerResult_temp == null)
@@ -311,7 +310,7 @@ namespace RegulatedNoise
                             // check how much dark pixels are on the bitmap
                             for (int i = 0; i < brainerousOut.Height; i++)
                                 for (int j = 0; j < brainerousOut.Width; j++)
-											  if (brainerousOut.GetPixel(j, i).GetBrightness() < ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold)
+                                    if (brainerousOut.GetPixel(j, i).GetBrightness() < Form1.RegulatedNoiseSettings.EBPixelThreshold)
                                         DarkPixels++;
 
                             PixelTest.addPicture(brainerousOut, DarkPixels);
@@ -328,17 +327,17 @@ namespace RegulatedNoise
                         {   //If it's a numeric column write it out for Brainerous to process later
                             var brainerousOut = RNGraphics.Crop(_bTrimmed_4_OCR, new Rectangle(left, startRow, width, heightRow));
 
-                            if (ApplicationContext.RegulatedNoiseSettings.EBPixelAmount > 0)
+                            if (Form1.RegulatedNoiseSettings.EBPixelAmount > 0)
                             {
                                 // check how much dark pixels are on the bitmap -> we process only bitmaps 
                                 // with something on it (minimum one digit supposed, a "1" hat about 25 pixels in default 1920x1200)
                                 for (int i = 0; i < brainerousOut.Height; i++)
                                     for (int j = 0; j < brainerousOut.Width; j++)
-													if (brainerousOut.GetPixel(j, i).GetBrightness() < ApplicationContext.RegulatedNoiseSettings.EBPixelThreshold)
+                                        if (brainerousOut.GetPixel(j, i).GetBrightness() < Form1.RegulatedNoiseSettings.EBPixelThreshold)
                                             DarkPixels++;
                             }
 
-									 if (DarkPixels >= ApplicationContext.RegulatedNoiseSettings.EBPixelAmount)
+                            if (DarkPixels >= Form1.RegulatedNoiseSettings.EBPixelAmount)
                                 brainerousOut.Save("./Brainerous/images/" + bitmapCtr + ".png");
 
                             bitmapCtr++;
@@ -359,7 +358,7 @@ namespace RegulatedNoise
                             var t = new string[c.Length];
                             var cf = new float[c.Length];
 
-									 using (var engine = new TesseractEngine(@"./tessdata", ApplicationContext.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
+                            using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
                             {
                                 for (int i = 0; i < c.Length; i++)
                                 {

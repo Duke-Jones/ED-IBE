@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NO_SPLASH</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ ep|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ ep\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1 NO_SPLASH</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,9 +69,6 @@
   <PropertyGroup>
     <StartupObject>RegulatedNoise.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
       <HintPath>.\clrzmq.dll</HintPath>
@@ -81,7 +78,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -97,7 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
-    <Compile Include="ApplicationContext.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,9 +104,6 @@
     <Compile Include="DialogBox\Win32API.cs" />
     <Compile Include="DialogBox\WindowsHook.cs" />
     <Compile Include="DialogBox\WndProcRetHook.cs" />
-    <Compile Include="Disposer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDCommodityListView.cs">
@@ -126,8 +118,6 @@
     <Compile Include="EDDB_Data\EDCommodityView.Designer.cs">
       <DependentUpon>EDCommodityView.cs</DependentUpon>
     </Compile>
-    <Compile Include="EDDB_Data\EddbDataProvider.cs" />
-    <Compile Include="EDDB_Data\EddnMessage.cs" />
     <Compile Include="EDDB_Data\EDStations.cs" />
     <Compile Include="EDDB_Data\EDStationView.cs">
       <SubType>Form</SubType>
@@ -137,13 +127,11 @@
     </Compile>
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
-    <Compile Include="EDDB_Data\EDMarketData.cs" />
-    <Compile Include="EDDN.cs" />
-    <Compile Include="EddnMessageEventArgs.cs" />
-    <Compile Include="EliteInteractions\LogFilesScanner.cs" />
+    <Compile Include="EDDB_Data\Listing.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Enums and Utility Classes\CsvRow.cs" />
     <Compile Include="Enums and Utility Classes\Extensions.cs" />
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
@@ -171,10 +159,6 @@
     <Compile Include="Enums and Utility Classes\SerializableDictionary.cs" />
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
-    <Compile Include="EventBus.cs" />
-    <Compile Include="Exceptions\InitializationException.cs" />
-    <Compile Include="MarketDataValidator.cs" />
-    <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -188,7 +172,9 @@
       <DependentUpon>Picturedata.cs</DependentUpon>
     </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
+    <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
+    <Compile Include="EDDN.cs" />
     <Compile Include="CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
       <SubType>Form</SubType>
@@ -266,14 +252,9 @@
     <Compile Include="SplashScreenForm.Designer.cs">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestTab\TestTab.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TestTab\TestTab.Designer.cs">
-      <DependentUpon>TestTab.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Trading\TradeEngine.cs" />
-    <Compile Include="Trading\TradeRoute.cs" />
+    <Compile Include="Station.cs" />
+    <Compile Include="ObjectDirectory.cs" />
+    <Compile Include="StationDirectory.cs" />
     <Compile Include="Webserver.cs" />
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
@@ -327,9 +308,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Enums and Utility Classes\Enums.cs" />
-    <EmbeddedResource Include="TestTab\TestTab.resx">
-      <DependentUpon>TestTab.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="bin\Debug DJ\OCR Correction Images\ff8384ca-c5e4-4642-a19a-0d1adc256018.png" />
     <None Include="bin\Debug DJ\OCR Correction Images\fefa1584-8397-48a7-9a96-759ea434b412.png" />
     <Content Include="Brainerous\bz2.pyd">
@@ -800,8 +778,6 @@
     <None Include="Resources\SampleTooLow.png" />
     <None Include="Resources\PayPalDonate.jpg" />
     <None Include="Resources\RNSplash.png" />
-    <Content Include="logo.ico" />
-    <None Include="Resources\target.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -820,10 +796,6 @@
     <ProjectReference Include="..\EdClasses\EdClasses.csproj">
       <Project>{236a934b-5543-4751-baa2-018dfa825271}</Project>
       <Name>EdClasses</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RegulatedNoise.Core\RegulatedNoise.Core.csproj">
-      <Project>{1c6e84c0-a944-48be-b196-6e6278b1f7d7}</Project>
-      <Name>RegulatedNoise.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

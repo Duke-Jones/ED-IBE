@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.Core.DomainModel;
-using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise
@@ -12,13 +15,13 @@ namespace RegulatedNoise
     {
         public override string thisObjectName { get { return "EditPriceData"; } }
 
-        public MarketDataRow RowToEdit;
+        public CsvRow RowToEdit;
 
-        public EditPriceData(MarketDataRow marketDataRow, IEnumerable<string> commodities)
+        public EditPriceData(CsvRow csvRow, List<string> commodities)
         {
             InitializeComponent();
 
-            RowToEdit = marketDataRow;
+            RowToEdit = csvRow;
 
             tbEditSystem.Text        = RowToEdit.SystemName;
             tbEditStation.Text       = RowToEdit.StationID;
@@ -26,11 +29,11 @@ namespace RegulatedNoise
             nEditSell.Value          = RowToEdit.SellPrice;
             nEditBuy.Value           = RowToEdit.BuyPrice;
             nEditDemand.Value        = RowToEdit.Demand;
-            nEditSupply.Value        = RowToEdit.Stock;
-            tbEditDemandLevel.Text   = RowToEdit.DemandLevel.Display();
-            tbEditSupplyLevel.Text   = RowToEdit.SupplyLevel.Display();
+            nEditSupply.Value        = RowToEdit.Supply;
+            tbEditDemandLevel.Text   = RowToEdit.DemandLevel;
+            tbEditSupplyLevel.Text   = RowToEdit.SupplyLevel;
             dtpEditSampleDate.Value  = RowToEdit.SampleDate;
-            tbEditFilename.Text      = RowToEdit.Source;
+            tbEditFilename.Text      = RowToEdit.SourceFileName;
 
             foreach (var x in commodities.OrderBy(y => y))
                 cbEditCommodityName.Items.Add(x);
@@ -40,18 +43,19 @@ namespace RegulatedNoise
         {
             DialogResult = DialogResult.OK;
 
-            var returnValue = new MarketDataRow
+            var returnValue = new CsvRow
             {
                 SystemName = tbEditSystem.Text,
+                StationID = tbEditStation.Text + " ["+tbEditSystem.Text+"]",
                 CommodityName = cbEditCommodityName.Text,
-                SellPrice = (int)nEditSell.Value,
-                BuyPrice = (int)nEditBuy.Value,
-                Demand = (int)nEditDemand.Value,
-                Stock = (int)nEditSupply.Value,
-                DemandLevel = tbEditDemandLevel.Text.ToProposalLevel(),
-                SupplyLevel = tbEditSupplyLevel.Text.ToProposalLevel(),
+                SellPrice = nEditSell.Value,
+                BuyPrice = nEditBuy.Value,
+                Demand = nEditDemand.Value,
+                Supply = nEditSupply.Value,
+                DemandLevel = tbEditDemandLevel.Text,
+                SupplyLevel = tbEditSupplyLevel.Text,
                 SampleDate = dtpEditSampleDate.Value,
-                Source = tbEditFilename.Text
+                SourceFileName = tbEditFilename.Text
             };
 
             RowToEdit = returnValue;
