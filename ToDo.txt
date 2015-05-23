@@ -16,8 +16,13 @@ todo:
    * Add shipyard info
    * Add outfitting info
    * Add Rare Tab
-
+   * save Comanders Log immediately afer every change
    
+1.84_0.23_1
+   * fixed: crash reason in EDCommodityView
+   * Cmdr's Log: - cargo quantity up to 10000
+                 - commodity name will be saved
+-------------------------------------------------------------------------------------      
 1.84_0.22_4
    * Mistake german commoditie translation #61 fixed
    * added latest EDDB data files

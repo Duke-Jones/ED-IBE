@@ -72,17 +72,24 @@ namespace RegulatedNoise.EDDB_Data
 		private EDCommoditiesExt CurrentCommodity
 		{
 			get
-			{
-				var edCommoditiesExt = ((EDCommoditiesExt)cmdCommodity.SelectedValue);
-				if (edCommoditiesExt != null)
-				{
-					return m_commodities.Find(x => x.Id == edCommoditiesExt.Id);
-				}
-				else
-				{
-					Trace.TraceWarning("no commodity selected");
-					return null;
-				}
+            {
+                try
+                {
+                    var edCommoditiesExt = ((EDCommoditiesExt)cmdCommodity.SelectedItem);
+                    if (edCommoditiesExt != null)
+                    {
+                        return m_commodities.Find(x => x.Id == edCommoditiesExt.Id);
+                    }
+                    else
+                    {
+                        Trace.TraceWarning("no commodity selected");
+                        return null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error while getting the current commodity", ex);
+                }
 			}
 		}
 

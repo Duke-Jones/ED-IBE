@@ -4627,6 +4627,7 @@ namespace RegulatedNoise
                 logEvent.CargoVolume = cbLogQuantity.Value;
                 logEvent.Station = cbLogStationName.Text;
                 logEvent.System = cbLogSystemName.Text;
+                logEvent.Cargo = cbLogCargoName.Text;
                 logEvent.CargoAction = cbCargoModifier.Text;
                 logEvent.EventDate = dtpLogEventDate.Value;
 

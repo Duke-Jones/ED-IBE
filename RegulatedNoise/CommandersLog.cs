@@ -41,7 +41,7 @@ namespace RegulatedNoise
                 CargoAction =_callingForm.cbCargoModifier.Text,
                 CargoVolume =int.Parse(_callingForm.cbLogQuantity.Text),
                 Notes =_callingForm.tbLogNotes.Text,
-                EventDate =DateTime.Parse(_callingForm.dtpLogEventDate.Text, CultureInfo.CurrentUICulture , DateTimeStyles.None),
+                EventDate = _callingForm.dtpLogEventDate.Value,
                 EventID = newEventID
             });
 
@@ -77,7 +77,7 @@ namespace RegulatedNoise
             //var now =DateTime.UtcNow;
             var now = DateTime.Now;
             ClearLogEventFields();
-            _callingForm.dtpLogEventDate.Value =now;
+            _callingForm.dtpLogEventDate.Value = now;
             _callingForm.tbLogEventID.Text ="";
             _callingForm.btCreateAddEntry.Text = "Save As New Entry";
         }

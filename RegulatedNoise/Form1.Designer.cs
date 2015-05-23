@@ -3347,6 +3347,11 @@
             // cbLogQuantity
             // 
             this.cbLogQuantity.Location = new System.Drawing.Point(365, 216);
+            this.cbLogQuantity.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.cbLogQuantity.Name = "cbLogQuantity";
             this.cbLogQuantity.Size = new System.Drawing.Size(120, 20);
             this.cbLogQuantity.TabIndex = 17;

@@ -300,13 +300,19 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         #region Image-Processing Utilities
         internal static Bitmap Crop(Bitmap b, Rectangle r)
         {
-         // From http://stackoverflow.com/questions/734930/how-to-crop-an-image-using-c
-            if (r.Width < 1 || r.Height < 1)
-                Debug.WriteLine("Yikes!");
-            var nb = new Bitmap(r.Width, r.Height, b.PixelFormat);
-            var g = Graphics.FromImage(nb);
-            g.DrawImage(b, -r.X, -r.Y);
-            return nb;
+            try
+            {
+                // From http://stackoverflow.com/questions/734930/how-to-crop-an-image-using-c
+                if (r.Width < 1 || r.Height < 1)
+                    Debug.WriteLine("Yikes!");
+                var nb = new Bitmap(r.Width, r.Height, b.PixelFormat);
+                var g = Graphics.FromImage(nb);
+                g.DrawImage(b, -r.X, -r.Y);
+                return nb;
+            }
+            catch (Exception ex) { 
+                throw new Exception("Error while cropping image", ex);}
+
         }
 
         #region Deleted but might be useful
