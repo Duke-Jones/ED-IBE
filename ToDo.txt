@@ -16,8 +16,12 @@ todo:
    * Add shipyard info
    * Add outfitting info
    * Add Rare Tab
-   * save Comanders Log immediately afer every change
+   * add coordinate calculation for new star systems
+   * show hint (new star system, changed data, original data)
    
+1.84_0.23_2
+   * Cmdr's Log: immediately save after every change
+-------------------------------------------------------------------------------------      
 1.84_0.23_1
    * fixed: crash reason in EDCommodityView
    * Cmdr's Log: - cargo quantity up to 10000

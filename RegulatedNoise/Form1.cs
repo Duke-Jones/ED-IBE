@@ -3350,6 +3350,7 @@ namespace RegulatedNoise
             {
                 case AppDelegateType.AddEventToLog:
                     CommandersLog.CreateEvent((CommandersLogEvent)o);
+                    CommandersLog.SaveLog();
                     break;
                 case AppDelegateType.ChangeGridSort:
                     ChangeGridSort((string)o);
@@ -3737,6 +3738,7 @@ namespace RegulatedNoise
         private void button11_Click(object sender, EventArgs e)
         {
             CommandersLog.CreateNewEvent();
+            CommandersLog.SaveLog();
         }
 
         private void button12_Click_1(object sender, EventArgs e)
@@ -3748,6 +3750,7 @@ namespace RegulatedNoise
                 foreach (var d in eventDates)
                 {
                     CommandersLog.CreateEvent("Market Data Collected", s.Key, s.Key, null, null, 0, null, d);
+                    CommandersLog.SaveLog();
                 }
             }
         }
@@ -4499,6 +4502,7 @@ namespace RegulatedNoise
             else
             {
                 _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
+                CommandersLog.SaveLog();
                 setActiveItem(_CmdrsLog_LastAutoEventID);
             }
         }
@@ -4520,6 +4524,7 @@ namespace RegulatedNoise
                     if(cbAutoAdd_Visited.Checked && !noLogging)
                     { 
                         _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Visited", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                        CommandersLog.SaveLog();
                         setActiveItem(_CmdrsLog_LastAutoEventID);
                     }
                 }
@@ -4557,12 +4562,14 @@ namespace RegulatedNoise
                                 else
                                 {
                                     _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                    CommandersLog.SaveLog();
                                     setActiveItem(_CmdrsLog_LastAutoEventID);
                                 }
                             }
                             else
                             {
                                 _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                CommandersLog.SaveLog();
                                 setActiveItem(_CmdrsLog_LastAutoEventID);
                             }
 
@@ -4611,6 +4618,7 @@ namespace RegulatedNoise
                 // tbLogEventID.Text = newGuid;
 
                 var newGuid = CommandersLog.CreateEvent();
+
                 CommandersLog.UpdateCommandersLogListView();
                 //CommandersLog.CreateNewEvent();
                 setActiveItem(newGuid);

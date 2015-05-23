@@ -80,6 +80,7 @@ namespace RegulatedNoise
             _callingForm.dtpLogEventDate.Value = now;
             _callingForm.tbLogEventID.Text ="";
             _callingForm.btCreateAddEntry.Text = "Save As New Entry";
+
         }
 
         public void CreateEvent(CommandersLogEvent partiallyCompleteCommandersLogEventEvent) // when we create from the webserver
@@ -96,6 +97,7 @@ namespace RegulatedNoise
             partiallyCompleteCommandersLogEventEvent.EventDate = now;
             
             LogEvents.Add(partiallyCompleteCommandersLogEventEvent);
+
         }
 
         private void ClearLogEventFields()
