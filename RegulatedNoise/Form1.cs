@@ -30,6 +30,12 @@ namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
     {
+        private enum enDoSpecial
+        {
+            onStart,
+            afterMilkyway
+        }
+
         private const string STR_START_MARKER = "<START>";
         private SplashScreenForm _Splash;
 
@@ -147,7 +153,7 @@ namespace RegulatedNoise
                 _Splash.InfoChange("initialize components...<OK>");
 
                 _Splash.InfoAdd("doing special work if something to do...");
-                doSpecial();
+                doSpecial(enDoSpecial.onStart);
                 _logger.Log("  - special things done");
                 _Splash.InfoChange("doing special work if something to do...<OK>");
 
@@ -201,6 +207,8 @@ namespace RegulatedNoise
                 ImportSystemLocations();
                 _logger.Log("  - system locations imported");
 
+                doSpecial(enDoSpecial.afterMilkyway);
+
                 _Splash.InfoAdd("prepare 'Commander's Log'...");
                 CommandersLog = new CommandersLog(this);
                 dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern + " " + 
@@ -214,7 +222,6 @@ namespace RegulatedNoise
                 _logger.Log("  - updated Commander's Log List View");
                 _Splash.InfoChange("prepare 'Commander's Log'...<OK>");
                 
-
                 _Splash.InfoAdd("load collected market data...");
                 if (File.Exists("AutoSave.csv"))
                 {
@@ -1144,6 +1151,7 @@ namespace RegulatedNoise
 
             var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
             var x = new XmlSerializer(RegulatedNoiseSettings.GetType());
+            RegulatedNoiseSettings.prepareVersion();
             x.Serialize(stream, RegulatedNoiseSettings);
             stream.Close();
 
@@ -3350,7 +3358,7 @@ namespace RegulatedNoise
             {
                 case AppDelegateType.AddEventToLog:
                     CommandersLog.CreateEvent((CommandersLogEvent)o);
-                    CommandersLog.SaveLog();
+                    CommandersLog.SaveLog(true);
                     break;
                 case AppDelegateType.ChangeGridSort:
                     ChangeGridSort((string)o);
@@ -3738,7 +3746,7 @@ namespace RegulatedNoise
         private void button11_Click(object sender, EventArgs e)
         {
             CommandersLog.CreateNewEvent();
-            CommandersLog.SaveLog();
+            CommandersLog.SaveLog(true);
         }
 
         private void button12_Click_1(object sender, EventArgs e)
@@ -3750,7 +3758,7 @@ namespace RegulatedNoise
                 foreach (var d in eventDates)
                 {
                     CommandersLog.CreateEvent("Market Data Collected", s.Key, s.Key, null, null, 0, null, d);
-                    CommandersLog.SaveLog();
+                    CommandersLog.SaveLog(true);
                 }
             }
         }
@@ -4502,7 +4510,7 @@ namespace RegulatedNoise
             else
             {
                 _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
-                CommandersLog.SaveLog();
+                CommandersLog.SaveLog(true);
                 setActiveItem(_CmdrsLog_LastAutoEventID);
             }
         }
@@ -4524,7 +4532,7 @@ namespace RegulatedNoise
                     if(cbAutoAdd_Visited.Checked && !noLogging)
                     { 
                         _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Visited", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                        CommandersLog.SaveLog();
+                        CommandersLog.SaveLog(true);
                         setActiveItem(_CmdrsLog_LastAutoEventID);
                     }
                 }
@@ -4562,14 +4570,14 @@ namespace RegulatedNoise
                                 else
                                 {
                                     _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                                    CommandersLog.SaveLog();
+                                    CommandersLog.SaveLog(true);
                                     setActiveItem(_CmdrsLog_LastAutoEventID);
                                 }
                             }
                             else
                             {
                                 _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                                CommandersLog.SaveLog();
+                                CommandersLog.SaveLog(true);
                                 setActiveItem(_CmdrsLog_LastAutoEventID);
                             }
 
@@ -4918,15 +4926,16 @@ namespace RegulatedNoise
             }
         }
 
-        private void doSpecial()
+        private void doSpecial(enDoSpecial when)
         {
             decimal lastVersion   = RegulatedNoiseSettings.lastVersion;
             decimal lastVersionDJ = RegulatedNoiseSettings.lastVersionDJ;
 
             if (RegulatedNoiseSettings.isFirstVersionRun())
             {
+
                 // do all the things that must be done for the new versions
-                if ((RegulatedNoiseSettings.Version == 1.84m) && (RegulatedNoiseSettings.VersionDJ == 0.09m))
+                if((when == enDoSpecial.onStart) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.09m)))
                 { 
                     // this value works much better
                     RegulatedNoiseSettings.EBPixelThreshold = 0.6f;
@@ -4934,7 +4943,7 @@ namespace RegulatedNoise
                 }
 
                 // do all the things that must be done for the new versions
-                if ((RegulatedNoiseSettings.Version == 1.84m) && (RegulatedNoiseSettings.VersionDJ == 0.17m))
+                if((when == enDoSpecial.onStart) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.17m)))
                 { 
                     if(RegulatedNoiseSettings.UseEddnTestSchema)
                     { 
@@ -4949,36 +4958,8 @@ namespace RegulatedNoise
                     }
                 }
 
-
-                if(!RegulatedNoiseSettings.checkedTestEDDNSetting)
-                { 
-                    if((lastVersion.Equals(1.84m) && lastVersionDJ.Equals(0.17m)))
-                    {
-                        // last was 0.17 - so we can be sure, we did the check
-                        RegulatedNoiseSettings.checkedTestEDDNSetting = true;
-                        SaveSettings();
-                    }
-                    else
-                    {
-                        // check did never run yet
-                        if(RegulatedNoiseSettings.UseEddnTestSchema)
-                        { 
-                            RegulatedNoiseSettings.UseEddnTestSchema = false;
-                            SaveSettings();
-                            if(RegulatedNoiseSettings.PostToEddnOnImport)
-                            { 
-                                MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
-                                                "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", 
-                                                "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
-                        }
-                        RegulatedNoiseSettings.checkedTestEDDNSetting = true;
-                        SaveSettings();
-                    }
-                }
-
                 // do all the things that must be done for the new versions
-                if ((RegulatedNoiseSettings.Version == 1.84m) && (RegulatedNoiseSettings.VersionDJ == 0.22m))
+                if((when == enDoSpecial.onStart) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.22m)))
                 { 
                     String currentFile = "AutoSave.csv";
                     String newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
@@ -5020,6 +5001,95 @@ namespace RegulatedNoise
 
                         // rename new file to current file
                         File.Move(newFile, currentFile);
+
+                    }
+                }
+
+                // do all the things that must be done for the new versions
+                if((when == enDoSpecial.afterMilkyway) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.23m)))
+                { 
+                    _Splash.InfoAdd("one time action: correct capitalisation of systemnames...");
+                    String Info             = "  >> ********** records checked ";
+                    StringBuilder InfoOut   = new StringBuilder(Info);
+                    Int32 Count             = 0;
+                    Int32 Count2            = 0;
+                    String currentFile      = "AutoSave.csv";
+                    String newFile          = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                    String backupFile       = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                    String lastSystemName   = String.Empty;
+                    EDSystem System         = null;
+                    Int32 CountPos          = Info.IndexOf("**********");
+
+                    _Splash.InfoAdd(Info);
+
+                    // change name Resonanzbegrenzer -> Resonanzabgrenzer
+                    if (File.Exists(currentFile))
+                    {
+                        // delete old backup
+                        if (File.Exists(newFile))
+                            File.Delete(newFile);
+
+                        StringBuilder line = new StringBuilder();
+
+                        StreamReader reader = new StreamReader(File.OpenRead(currentFile));
+                        StreamWriter writer = new StreamWriter(File.OpenWrite(newFile));
+
+                        string header = reader.ReadLine();
+
+                        writer.WriteLine(header);
+
+                        while (!reader.EndOfStream)
+                        {
+                            line.Clear();
+                            line.Append(reader.ReadLine());
+
+                            Int32 semicolon1 = line.ToString().IndexOf(";",0);
+                            String SystemName = line.ToString().Substring(0, semicolon1);
+
+                            if(!lastSystemName.Equals(SystemName, StringComparison.InvariantCultureIgnoreCase) || (System == null))
+                               System = _Milkyway.getSystem(SystemName);
+
+                            if(System != null)
+                            {
+                                line = line.Replace(SystemName, System.Name, 0, semicolon1);
+                                lastSystemName =  SystemName;
+                            }
+                            else
+                            {
+                                line.Replace(SystemName, _textInfo.ToTitleCase(SystemName), semicolon1, SystemName.Length);    
+                            }
+
+                            writer.WriteLine(line.ToString());
+
+                            if((Count2 % 20) == 0)
+                            { 
+                                InfoOut.Append("*");
+                                if((InfoOut.Length % 120) == 0)
+                                { 
+                                    InfoOut.Clear();
+                                    InfoOut.Append(Info);
+                                }
+                                InfoOut.Remove(CountPos, 10).Insert(CountPos, Count2.ToString("D10"));
+                                _Splash.InfoChange(InfoOut.ToString());
+                                Count ++;
+                            }
+                            Count2++;
+                        }
+                        reader.Close();
+                        writer.Close();
+
+                        // delete old backup
+                        if (File.Exists(backupFile))
+                            File.Delete(backupFile);
+
+                        // rename current file to old backup
+                        if (File.Exists(currentFile))
+                            File.Move(currentFile, backupFile);
+
+                        // rename new file to current file
+                        File.Move(newFile, currentFile);
+
+                        _Splash.InfoChange(InfoOut.ToString() + "<OK>");
 
                     }
                 }

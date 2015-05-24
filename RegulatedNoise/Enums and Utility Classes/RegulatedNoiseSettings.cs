@@ -59,10 +59,8 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.22m;
+        public readonly decimal VersionDJ = 0.23m;
 #endif
-        private int _isFirstRun = -1;
-
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
         public string ProductAppData = ""; //2nd location for game configuration files
@@ -244,28 +242,27 @@ namespace RegulatedNoise
         /// <returns></returns>
         public bool isFirstVersionRun()
         {
-            bool retValue = false;
+            
+            return lastVersionIsBefore(Version, VersionDJ);
+        }
 
-            if (_isFirstRun == -1)
-            { 
-                if ((lastVersion < Version) || ((lastVersion == Version) && (lastVersionDJ < VersionDJ)))
+        public bool lastVersionIsBefore(Decimal Version_Main, Decimal Version_DJ)
+        {
+            try
+            {
+                bool retValue = false;
+
+                if ((lastVersion < Version_Main) || ((lastVersion == Version_Main) && (lastVersionDJ < Version_DJ)))
                 { 
                     retValue = true;
                 }
 
-                lastVersion     = Version;
-                lastVersionDJ   = VersionDJ;
-
+                return retValue;
             }
-            else
-            { 
-                if (_isFirstRun == 0)
-                    retValue = false;
-                else
-                    retValue = true;
+            catch (Exception ex)
+            {
+                throw new Exception("Error when checking last version", ex);
             }
-
-            return retValue;
         }
 
         /// <summary>
@@ -301,7 +298,16 @@ namespace RegulatedNoise
                                   int.Parse(BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
         }
 
-}
+
+        /// <summary>
+        /// really dirty but quick
+        /// </summary>
+        public void prepareVersion()
+        {
+            lastVersion     = Version;
+            lastVersionDJ   = VersionDJ;
+        }
+    }
 
     public partial class Form1
     {

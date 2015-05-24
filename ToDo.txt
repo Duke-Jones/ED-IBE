@@ -18,7 +18,15 @@ todo:
    * Add Rare Tab
    * add coordinate calculation for new star systems
    * show hint (new star system, changed data, original data)
+   * check if Cmdr's Log autosave saving in the wrong file
+   * EDDN timestamp: gateway timestamp still wrong format without timezone?
+   * crash after adding new system in a unknown system
    
+   
+1.84_0.24_1
+   * Cmdr's Log: autosaving no longer generates new filenames
+   * onetime action: correcting capitalisation of systemnames (can take a few minutes)
+-------------------------------------------------------------------------------------      
 1.84_0.23_2
    * Cmdr's Log: immediately save after every change
 -------------------------------------------------------------------------------------      
