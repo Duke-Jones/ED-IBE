@@ -5071,7 +5071,7 @@ namespace RegulatedNoise
                 }
 
                 // do all the things that must be done for the new versions
-                if((when == enDoSpecial.afterMilkyway) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.23m)))
+                if((when == enDoSpecial.afterMilkyway) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.24m)))
                 { 
                     _Splash.InfoAdd("one time action: correcting capitalisation of systemnames...");
                     String Info             = "  >> ********** records checked ";
