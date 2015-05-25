@@ -59,8 +59,11 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.23m;
+        public readonly decimal VersionDJ = 0.24m;
 #endif
+        public string PilotsName                                        = String.Empty;
+        public string UserName                                          = String.Empty;
+        public bool usePilotsName                                       = true;
         public string ProductsPath = "";
         public string GamePath = ""; //Should Replace ProductsPath by always contain the newest FORC-FDEV dir.
         public string ProductAppData = ""; //2nd location for game configuration files
@@ -71,7 +74,6 @@ namespace RegulatedNoise
         public string WebserverForegroundColor = "#000000";
         public string MostRecentOCRFolder = "";
         public bool StartOCROnLoad = false;
-        public string UserName = "";
         public bool IncludeExtendedCSVInfo = true;
         public bool PostToEddnOnImport = false;
         public bool DeleteScreenshotOnImport = false;
@@ -106,7 +108,6 @@ namespace RegulatedNoise
         public int GUIColorCutoffLevel                                  = 150;
         public bool AutoActivateOCRTab                                  = true;
         public bool AutoActivateSystemTab                               = true;
-        public string PilotsName                                        = String.Empty;
         public bool IncludeUnknownDTS                                   = true;
         public bool LoadStationsJSON                                    = false;
         public Int32 oldDataPurgeDeadlineDays                           = 14;   

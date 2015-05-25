@@ -289,7 +289,9 @@
             this.tabCtrlOCR = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label94 = new System.Windows.Forms.Label();
+            this.rbCmdrsName = new System.Windows.Forms.RadioButton();
+            this.rbUserID = new System.Windows.Forms.RadioButton();
+            this.txtCmdrsName = new System.Windows.Forms.TextBox();
             this.bIgnoreTrash = new System.Windows.Forms.Button();
             this.bClearOcrOutput = new System.Windows.Forms.Button();
             this.bEditResults = new System.Windows.Forms.Button();
@@ -1174,7 +1176,7 @@
             this.cmbStationStations.ReadOnly = false;
             this.cmbStationStations.Size = new System.Drawing.Size(236, 23);
             this.cmbStationStations.TabIndex = 130;
-            this.cmbStationStations.Visible_ro = true;
+            this.cmbStationStations.Visible_ro = false;
             // 
             // paEconomies
             // 
@@ -1539,7 +1541,7 @@
             this.cmbStationType.ReadOnly = false;
             this.cmbStationType.Size = new System.Drawing.Size(151, 23);
             this.cmbStationType.TabIndex = 9;
-            this.cmbStationType.Visible_ro = true;
+            this.cmbStationType.Visible_ro = false;
             // 
             // label75
             // 
@@ -1562,7 +1564,7 @@
             this.cmbStationState.ReadOnly = false;
             this.cmbStationState.Size = new System.Drawing.Size(151, 23);
             this.cmbStationState.TabIndex = 8;
-            this.cmbStationState.Visible_ro = true;
+            this.cmbStationState.Visible_ro = false;
             // 
             // label76
             // 
@@ -1585,7 +1587,7 @@
             this.cmbStationAllegiance.ReadOnly = false;
             this.cmbStationAllegiance.Size = new System.Drawing.Size(151, 23);
             this.cmbStationAllegiance.TabIndex = 7;
-            this.cmbStationAllegiance.Visible_ro = true;
+            this.cmbStationAllegiance.Visible_ro = false;
             // 
             // label77
             // 
@@ -1608,7 +1610,7 @@
             this.cmbStationGovernment.ReadOnly = false;
             this.cmbStationGovernment.Size = new System.Drawing.Size(151, 23);
             this.cmbStationGovernment.TabIndex = 6;
-            this.cmbStationGovernment.Visible_ro = true;
+            this.cmbStationGovernment.Visible_ro = false;
             // 
             // label78
             // 
@@ -1668,7 +1670,7 @@
             this.cmbStationMaxLandingPadSize.ReadOnly = false;
             this.cmbStationMaxLandingPadSize.Size = new System.Drawing.Size(68, 23);
             this.cmbStationMaxLandingPadSize.TabIndex = 4;
-            this.cmbStationMaxLandingPadSize.Visible_ro = true;
+            this.cmbStationMaxLandingPadSize.Visible_ro = false;
             // 
             // label81
             // 
@@ -1845,7 +1847,7 @@
             this.cmbSystemsAllSystems.ReadOnly = false;
             this.cmbSystemsAllSystems.Size = new System.Drawing.Size(254, 23);
             this.cmbSystemsAllSystems.TabIndex = 0;
-            this.cmbSystemsAllSystems.Visible_ro = true;
+            this.cmbSystemsAllSystems.Visible_ro = false;
             this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
             // 
             // label88
@@ -1930,7 +1932,7 @@
             this.cmbSystemPrimaryEconomy.ReadOnly = false;
             this.cmbSystemPrimaryEconomy.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemPrimaryEconomy.TabIndex = 13;
-            this.cmbSystemPrimaryEconomy.Visible_ro = true;
+            this.cmbSystemPrimaryEconomy.Visible_ro = false;
             // 
             // label65
             // 
@@ -1953,7 +1955,7 @@
             this.cmbSystemSecurity.ReadOnly = false;
             this.cmbSystemSecurity.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemSecurity.TabIndex = 8;
-            this.cmbSystemSecurity.Visible_ro = true;
+            this.cmbSystemSecurity.Visible_ro = false;
             // 
             // label66
             // 
@@ -1976,7 +1978,7 @@
             this.cmbSystemState.ReadOnly = false;
             this.cmbSystemState.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemState.TabIndex = 12;
-            this.cmbSystemState.Visible_ro = true;
+            this.cmbSystemState.Visible_ro = false;
             // 
             // label67
             // 
@@ -1999,7 +2001,7 @@
             this.cmbSystemAllegiance.ReadOnly = false;
             this.cmbSystemAllegiance.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemAllegiance.TabIndex = 11;
-            this.cmbSystemAllegiance.Visible_ro = true;
+            this.cmbSystemAllegiance.Visible_ro = false;
             // 
             // label68
             // 
@@ -2022,7 +2024,7 @@
             this.cmbSystemGovernment.ReadOnly = false;
             this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemGovernment.TabIndex = 10;
-            this.cmbSystemGovernment.Visible_ro = true;
+            this.cmbSystemGovernment.Visible_ro = false;
             // 
             // label69
             // 
@@ -3471,7 +3473,9 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox4.Controls.Add(this.label94);
+            this.groupBox4.Controls.Add(this.rbCmdrsName);
+            this.groupBox4.Controls.Add(this.rbUserID);
+            this.groupBox4.Controls.Add(this.txtCmdrsName);
             this.groupBox4.Controls.Add(this.bIgnoreTrash);
             this.groupBox4.Controls.Add(this.bClearOcrOutput);
             this.groupBox4.Controls.Add(this.bEditResults);
@@ -3502,14 +3506,39 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
             // 
-            // label94
+            // rbCmdrsName
             // 
-            this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(286, 472);
-            this.label94.Name = "label94";
-            this.label94.Size = new System.Drawing.Size(55, 13);
-            this.label94.TabIndex = 35;
-            this.label94.Text = "Username";
+            this.rbCmdrsName.AutoSize = true;
+            this.rbCmdrsName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rbCmdrsName.Location = new System.Drawing.Point(253, 493);
+            this.rbCmdrsName.Name = "rbCmdrsName";
+            this.rbCmdrsName.Size = new System.Drawing.Size(85, 17);
+            this.rbCmdrsName.TabIndex = 39;
+            this.rbCmdrsName.TabStop = true;
+            this.rbCmdrsName.Text = "Cmdrs Name";
+            this.rbCmdrsName.UseVisualStyleBackColor = true;
+            this.rbCmdrsName.CheckedChanged += new System.EventHandler(this.rbCmdrsName_CheckedChanged);
+            // 
+            // rbUserID
+            // 
+            this.rbUserID.AutoSize = true;
+            this.rbUserID.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rbUserID.Location = new System.Drawing.Point(277, 472);
+            this.rbUserID.Name = "rbUserID";
+            this.rbUserID.Size = new System.Drawing.Size(61, 17);
+            this.rbUserID.TabIndex = 38;
+            this.rbUserID.TabStop = true;
+            this.rbUserID.Text = "User ID";
+            this.rbUserID.UseVisualStyleBackColor = true;
+            this.rbUserID.CheckedChanged += new System.EventHandler(this.rbUserID_CheckedChanged);
+            // 
+            // txtCmdrsName
+            // 
+            this.txtCmdrsName.Location = new System.Drawing.Point(347, 493);
+            this.txtCmdrsName.Name = "txtCmdrsName";
+            this.txtCmdrsName.ReadOnly = true;
+            this.txtCmdrsName.Size = new System.Drawing.Size(230, 20);
+            this.txtCmdrsName.TabIndex = 36;
             // 
             // bIgnoreTrash
             // 
@@ -3558,7 +3587,7 @@
             // cbUseEddnTestSchema
             // 
             this.cbUseEddnTestSchema.AutoSize = true;
-            this.cbUseEddnTestSchema.Location = new System.Drawing.Point(169, 471);
+            this.cbUseEddnTestSchema.Location = new System.Drawing.Point(6, 492);
             this.cbUseEddnTestSchema.Name = "cbUseEddnTestSchema";
             this.cbUseEddnTestSchema.Size = new System.Drawing.Size(89, 17);
             this.cbUseEddnTestSchema.TabIndex = 30;
@@ -5112,7 +5141,9 @@
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.LinkLabel linkLabel11;
         private System.Windows.Forms.LinkLabel linkLabel10;
-        private System.Windows.Forms.Label label94;
+        private System.Windows.Forms.RadioButton rbCmdrsName;
+        private System.Windows.Forms.RadioButton rbUserID;
+        internal System.Windows.Forms.TextBox txtCmdrsName;
 
         
     }

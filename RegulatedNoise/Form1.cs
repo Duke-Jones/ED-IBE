@@ -787,6 +787,13 @@ namespace RegulatedNoise
                 tbUsername.Text = RegulatedNoiseSettings.UserName;
             else
                 tbUsername.Text = Guid.NewGuid().ToString();
+
+            txtCmdrsName.Text = RegulatedNoiseSettings.PilotsName;
+            
+            selectEDDN_ID();
+
+
+
             if (RegulatedNoiseSettings.StartWebserverOnLoad)
             {
                 cbStartWebserverOnLoad.Checked = true;
@@ -872,6 +879,31 @@ namespace RegulatedNoise
             // Set the MinDate and MaxDate.
             nudPurgeOldDataDays.Value = RegulatedNoiseSettings.oldDataPurgeDeadlineDays;
         }
+
+        /// <summary>
+        /// selects, which ID to use for sending to EDDN
+        /// </summary>
+        private void selectEDDN_ID()
+        {
+            if(RegulatedNoiseSettings.usePilotsName)
+            {
+                if(!String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
+                {
+                    rbCmdrsName.Checked = true;
+                }
+                else
+                { 
+                    rbUserID.Checked = true;
+                    RegulatedNoiseSettings.usePilotsName = false;
+                    rbCmdrsName.Enabled = false;
+                }
+            }
+            else
+                rbUserID.Checked = true; 
+
+            rbCmdrsName.Enabled = !String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName);
+        }
+
 
         /// <summary>
         /// prepares the commodities in the correct language
@@ -3840,6 +3872,9 @@ namespace RegulatedNoise
         }
 
         private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
+        private EDSystem  cachedSystem;
+        private EDStation cachedStation;
+
         private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
         {
             string txt = text.ToString();
@@ -3905,14 +3940,34 @@ namespace RegulatedNoise
 
                         string commodity = getLocalizedCommodity(RegulatedNoiseSettings.Language, messageDictionary["itemName"]);
 
+                        if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            cachedSystem = _Milkyway.getSystem(messageDictionary["systemName"]);
+                        }
+                        if(cachedSystem == null)
+                        {
+                            cachedSystem = new EDSystem();
+                            cachedSystem.Name = messageDictionary["systemName"];
+                        }
+
+                        if((cachedSystem != null) && ((cachedStation == null) || (!messageDictionary["stationName"].Equals(cachedStation.Name, StringComparison.InvariantCultureIgnoreCase))))
+                        {
+                            cachedStation = _Milkyway.getStation(messageDictionary["systemName"], messageDictionary["stationName"]);
+                        }
+                        if(cachedStation == null)
+                        {
+                            cachedStation = new EDStation();
+                            cachedStation.Name = messageDictionary["stationName"];
+                        }
+
                         if(!String.IsNullOrEmpty(commodity))
                         {
 
                             //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
                             if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
                             {
-                                string csvFormatted = messageDictionary["systemName"] + ";" +
-                                                      messageDictionary["stationName"] + ";" +
+                                string csvFormatted = cachedSystem.Name + ";" +
+                                                      cachedStation.Name + ";" +
                                                       commodity + ";" +
                                                       (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
                                                       (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
@@ -4313,8 +4368,8 @@ namespace RegulatedNoise
                             {
                                 var newestNetLog = netLogs[0];
 
-                                Debug.Print("File opened : <" + newestNetLog + ">");
 #if extScanLog
+                                Debug.Print("File opened : <" + newestNetLog + ">");
                                 logger.Log("File opened : <" + newestNetLog + ">");
 #endif
                                 FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -4602,12 +4657,22 @@ namespace RegulatedNoise
                 if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
                 {
                     if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                        RegulatedNoiseSettings.PilotsName = parts[1];
+                    { 
+                        RegulatedNoiseSettings.PilotsName       = parts[1];
+                        txtCmdrsName.Text                       = RegulatedNoiseSettings.PilotsName;
+                        RegulatedNoiseSettings.usePilotsName    = true;
+                        selectEDDN_ID();
+                    }
                 }
                 else
                 {
                     if (String.IsNullOrEmpty(RegulatedNoiseSettings.PilotsName))
-                        RegulatedNoiseSettings.PilotsName = parts[0];
+                    { 
+                        RegulatedNoiseSettings.PilotsName       = parts[0];
+                        txtCmdrsName.Text                       = RegulatedNoiseSettings.PilotsName;
+                        RegulatedNoiseSettings.usePilotsName    = true;
+                        selectEDDN_ID();
+                    }
                 }
             }
         }
@@ -5008,7 +5073,7 @@ namespace RegulatedNoise
                 // do all the things that must be done for the new versions
                 if((when == enDoSpecial.afterMilkyway) && (RegulatedNoiseSettings.lastVersionIsBefore(1.84m, 0.23m)))
                 { 
-                    _Splash.InfoAdd("one time action: correct capitalisation of systemnames...");
+                    _Splash.InfoAdd("one time action: correcting capitalisation of systemnames...");
                     String Info             = "  >> ********** records checked ";
                     StringBuilder InfoOut   = new StringBuilder(Info);
                     Int32 Count             = 0;
@@ -7663,5 +7728,19 @@ namespace RegulatedNoise
             System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
         }
 
+        private void rbUserID_CheckedChanged(object sender, EventArgs e)
+        {
+            tbUsername.Enabled   = rbUserID.Checked;
+            txtCmdrsName.Enabled = rbCmdrsName.Checked;
+        }
+
+
+        private void rbCmdrsName_CheckedChanged(object sender, EventArgs e)
+        {
+            tbUsername.Enabled   = rbUserID.Checked;
+            txtCmdrsName.Enabled = rbCmdrsName.Checked;
+
+            RegulatedNoiseSettings.usePilotsName = rbCmdrsName.Checked;
+        }
     }
 }

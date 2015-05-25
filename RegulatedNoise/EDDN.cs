@@ -21,9 +21,6 @@ namespace RegulatedNoise
         private Queue _SendItems = new Queue(100,10);
         private SingleThreadLogger _logger;
 
-        private String m_Timezone;
-
-
         public EDDN(Form1 caller)
         { 
         
@@ -37,12 +34,6 @@ namespace RegulatedNoise
             _Spool2EDDN.Start();
 
             _logger.Log("Initialising...<OK>\n");
-            TimeSpan span = new TimeSpan(-14, 0, 0, 0, 0);
-
-
-            TimeSpan Zone = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
-
-            m_Timezone = ((Zone < TimeSpan.Zero) ? "-" : "+") + Zone.ToString(@"hh\:mm");
 
         }
 
@@ -134,6 +125,7 @@ namespace RegulatedNoise
         private void PostJsonToEddn(CsvRow rowToPost)
         {
             string json;
+            string UserID;
 
             System.Diagnostics.Debug.Print("eddn send : " + rowToPost.ToString());
 
@@ -156,9 +148,14 @@ namespace RegulatedNoise
 
             if(!String.IsNullOrEmpty(commodity))
             {
-                string commodityJson = json.Replace("$0$", _caller.tbUsername.Text.Replace("$1$", ""))
+                if(Form1.RegulatedNoiseSettings.usePilotsName)
+                    UserID = System.Net.WebUtility.HtmlEncode(Form1.RegulatedNoiseSettings.PilotsName);
+                else
+                    UserID = System.Net.WebUtility.HtmlEncode(Form1.RegulatedNoiseSettings.UserName);
+
+                string commodityJson = json.Replace("$0$", UserID)
                     .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))
-                    .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.InvariantCulture) + m_Timezone))
+                    .Replace("$3$", (rowToPost.SampleDate.ToString("s", CultureInfo.InvariantCulture) + rowToPost.SampleDate.ToString("zzz", CultureInfo.InvariantCulture)))
                     .Replace("$4$", (rowToPost.Supply.ToString(CultureInfo.InvariantCulture)))
                     .Replace("$5$", (rowToPost.StationID.Replace(" [" + rowToPost.SystemName + "]", "")))
                     .Replace("$6$", (rowToPost.SystemName))
