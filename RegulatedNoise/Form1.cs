@@ -7280,7 +7280,6 @@ namespace RegulatedNoise
                 }
                 else
                 {
-                    setSystemEditable(true);
 
                     cmdSystemNew.Enabled        = false;
                     cmdSystemEdit.Enabled       = false;
@@ -7304,6 +7303,9 @@ namespace RegulatedNoise
 
                     loadSystemData(newSystemname, true);
                     loadStationData(newSystemname, "", false);
+
+                    setSystemEditable(true);
+
                 }
             }
         }
@@ -7405,6 +7407,7 @@ namespace RegulatedNoise
                 txtSystemUpdatedAt.ReadOnly         = true;
 
                 if(enabled)
+                    //EDSystem System = 
                     if (_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         txtSystemName.ReadOnly      = true;

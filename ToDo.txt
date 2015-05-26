@@ -19,8 +19,14 @@ todo:
    * add coordinate calculation for new star systems
    * show hint (new star system, changed data, original data)
    * crash after adding new system in a unknown system
+   * default setting for new systems
    
-   
+1.84_0.25_1
+   * fixed crash while adding new, unknown systems
+-------------------------------------------------------------------------------------      
+1.84_0.24_3
+   * fixed wrong version info for update function
+-------------------------------------------------------------------------------------      
 1.84_0.24_2
    * set ED cmdr's name as default id for EDDN 
    * EDDN import : auto-correcting capitalisation of system-/station-names
