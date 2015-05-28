@@ -146,6 +146,7 @@
     <Compile Include="Elite Dangerous Specifics\EdLogLine.cs" />
     <Compile Include="Elite Dangerous Specifics\EdLogWatcher.cs" />
     <Compile Include="Enums and Utility Classes\EddnPublisherVersionStats.cs" />
+    <Compile Include="Enums and Utility Classes\FileSaver.cs" />
     <Compile Include="Enums and Utility Classes\InputBox.cs" />
     <Compile Include="Enums and Utility Classes\ObjectCompare.cs" />
     <Compile Include="Enums and Utility Classes\PerformanceTimer.cs" />

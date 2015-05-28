@@ -21,6 +21,9 @@ todo:
    * crash after adding new system in a unknown system
    * default setting for new systems
    
+1.84_0.25_2
+   * saves now commodities added by user, even if RN is updated ( --> \Data\Commodities_own.xml)
+-------------------------------------------------------------------------------------      
 1.84_0.25_1
    * fixed crash while adding new, unknown systems
 -------------------------------------------------------------------------------------      

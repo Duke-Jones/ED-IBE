@@ -275,7 +275,7 @@ namespace RegulatedNoise
 
                 _Splash.InfoAdd("load and prepare international commodity names...");
                 // read the commodities and prepare language depending list
-                _commodities.ReadXml(".//Data//Commodities.xml");
+                prepareCommodityNames();
 
                 // depending of the language this will be removed
                 _EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
@@ -319,6 +319,68 @@ namespace RegulatedNoise
 
             Cursor = Cursors.Default;
             _InitDone = true;
+        }
+
+        /// <summary>
+        /// loads the localized commodity names and check if 
+        /// the self added names now included in the official dictionary
+        /// </summary>
+        private void prepareCommodityNames()
+        {
+            dsCommodities                ownCommodities = new dsCommodities();
+            List<dsCommodities.NamesRow> forDeleting    = new List<dsCommodities.NamesRow>();
+            bool found;
+
+            try
+            {
+                _commodities.ReadXml(@".\Data\Commodities.xml");
+
+                if(File.Exists(@".\Data\Commodities_own.xml"))
+                { 
+                    ownCommodities.ReadXml(@".\Data\Commodities_own.xml");
+
+                    foreach (dsCommodities.NamesRow Commodity in ownCommodities.Tables["Names"].Rows)
+                    {
+                        found = false;
+
+                        foreach (enLanguage language in Enum.GetValues(typeof(enLanguage)))
+                        {
+                            dsCommodities.NamesRow[] existing = (dsCommodities.NamesRow[])(_commodities.Tables["Names"].Select(String.Format("{0} = '{1}'" , language.ToString(), Commodity[language.ToString()])));
+
+                            Debug.Print(String.Format("{0} = '{1}'" , language.ToString(), Commodity[language.ToString()]));
+
+                            if(existing.GetUpperBound(0) == 0)
+                            {
+                                // commodity exists in the official directory
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        // if commodity is existing at least in one language we remove it
+                        if(found)
+                            forDeleting.Add(Commodity);
+
+                    }
+                }
+
+                // now delete the existing double commodities and save the cleaned data again
+                foreach (dsCommodities.NamesRow item in forDeleting)
+                    ownCommodities.Tables["Names"].Rows.Remove(item);
+
+                // save the reviewed "own" commodity list
+                ownCommodities.WriteXml(@".\Data\Commodities_own_new.xml");
+                FileSaver.rotateSaveFiles(@".\Data\Commodities_own.xml");
+
+                // merge both tables
+                _commodities.Tables["Names"].Merge(ownCommodities.Tables["Names"]);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading commodity names", ex);
+            }
+
         }
 
         private void loadToolTips()
@@ -5806,25 +5868,37 @@ namespace RegulatedNoise
         /// <param name="language"></param>
         private void addCommodity(string commodity, enLanguage language)
         {
-            dsCommodities.NamesRow newCommodity = (dsCommodities.NamesRow)_commodities.Names.NewRow();
+            dsCommodities                ownCommodities = new dsCommodities();
 
-            newCommodity.eng = "???";
-            newCommodity.ger = "???";
-            newCommodity.fra = "???";
+            if(File.Exists(@".\Data\Commodities_own.xml"))
+                ownCommodities.ReadXml(@".\Data\Commodities_own.xml");
+
+            dsCommodities.NamesRow newCommodity     = (dsCommodities.NamesRow)_commodities.Names.NewRow();
+            dsCommodities.NamesRow newOwnCommodity  = (dsCommodities.NamesRow)ownCommodities.Names.NewRow();
+
+            newOwnCommodity.eng = "???";
+            newOwnCommodity.ger = "???";
+            newOwnCommodity.fra = "???";
 
             if (language == enLanguage.eng)
-                newCommodity.eng = commodity;
+                newOwnCommodity.eng = commodity;
 
             else if (language == enLanguage.ger)
-                newCommodity.ger = commodity;
+                newOwnCommodity.ger = commodity;
 
             else
-                newCommodity.fra = commodity;
+                newOwnCommodity.fra = commodity;
 
+            foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
+                newCommodity[availableLanguage.ToString()] = newOwnCommodity[availableLanguage.ToString()];
+
+            // add to both dictionaries
+            ownCommodities.Names.AddNamesRow(newOwnCommodity);
             _commodities.Names.AddNamesRow(newCommodity);
 
-            // save to file
-            _commodities.WriteXml(".//Data//Commodities.xml");
+            // save to "own" file
+            ownCommodities.WriteXml(@".\Data\Commodities_own_new.xml");
+            FileSaver.rotateSaveFiles(@".\Data\Commodities_own.xml");
 
             // reload in working array
             loadCommodities(RegulatedNoiseSettings.Language);
