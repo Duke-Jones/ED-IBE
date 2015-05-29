@@ -942,7 +942,12 @@ namespace RegulatedNoise
             }
             
             // Set the MinDate and MaxDate.
-            nudPurgeOldDataDays.Value = RegulatedNoiseSettings.oldDataPurgeDeadlineDays;
+            nudPurgeOldDataDays.Value               = RegulatedNoiseSettings.oldDataPurgeDeadlineDays;
+
+            cbSpoolEddnToFile.Checked               = RegulatedNoiseSettings.SpoolEddnToFile;
+            cbSpoolImplausibleToFile.Checked        = RegulatedNoiseSettings.SpoolImplausibleToFile;
+            cbEDDNAutoListen.Checked                = RegulatedNoiseSettings.EDDNAutoListen;
+            checkboxImportEDDN.Checked              = RegulatedNoiseSettings.EDDNAutoImport;
         }
 
         /// <summary>
@@ -3853,6 +3858,11 @@ namespace RegulatedNoise
 
         private void button15_Click(object sender, EventArgs e)
         {
+            startEDDNListening();
+        }
+
+        private void startEDDNListening()
+        {
             _eddnSubscriberThread = new Thread(() => Eddn.Subscribe());
             _eddnSubscriberThread.IsBackground = true;
             _eddnSubscriberThread.Start();
@@ -4020,7 +4030,7 @@ namespace RegulatedNoise
                         {
 
                             //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
-                            if (import && headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
+                            if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
                             {
                                 string csvFormatted = cachedSystem.Name + ";" +
                                                       cachedStation.Name + ";" +
@@ -4037,7 +4047,8 @@ namespace RegulatedNoise
 
                                 if(!checkPricePlausibility(new string[] {csvFormatted}, true))
                                 {
-                                    ImportCsvString(csvFormatted);
+                                    if(import)
+                                        ImportCsvString(csvFormatted);
                                 }
                                 else
                                 {
@@ -4061,7 +4072,7 @@ namespace RegulatedNoise
                                             LogFileStream = File.Create(FileName);
                                         }
 
-                                       LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString), 0, System.Text.Encoding.Default.GetByteCount(InfoString));
+                                       LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n"), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
                                        LogFileStream.Close();
                                     }
 
@@ -4090,10 +4101,31 @@ namespace RegulatedNoise
                                                     messageDictionary["timestamp"] + ";"
                                                     +
                                                     "<From EDDN>" + ";";
+                            string InfoString = string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted );
 
-                            lbEddnImplausible.Items.Add(string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted ));
+                            lbEddnImplausible.Items.Add(InfoString);
                             lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
                             lbEddnImplausible.SelectedIndex = -1;
+
+                            if(cbSpoolImplausibleToFile.Checked)
+                            {
+
+                                FileStream LogFileStream = null;
+                                string FileName = @".\EddnImplausibleOutput.txt";
+
+                                if(File.Exists(FileName))
+                                { 
+                                    LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                                }
+                                else
+                                {
+                                    LogFileStream = File.Create(FileName);
+                                }
+
+                                LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n" ), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
+                                LogFileStream.Close();
+                            }
+
                         }
                     }
                 }
@@ -4988,6 +5020,9 @@ namespace RegulatedNoise
             showSystemNumbers();
 
             SetupGui();
+
+            if(cbEDDNAutoListen.Checked)
+                startEDDNListening();
 
         }
 
@@ -7805,5 +7840,30 @@ namespace RegulatedNoise
 
             RegulatedNoiseSettings.usePilotsName = rbCmdrsName.Checked;
         }
-    }
+
+        private void cbSpoolEddnToFile_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.SpoolEddnToFile = cbSpoolEddnToFile.Checked;
+            SaveSettings();
+        }
+
+        private void cbSpoolImplausibleToFile_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.SpoolImplausibleToFile = cbSpoolImplausibleToFile.Checked;
+            SaveSettings();
+        }
+
+        private void cbEDDNAutoListen_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.EDDNAutoListen = cbEDDNAutoListen.Checked;
+            SaveSettings();
+        }
+
+        private void checkboxImportEDDN_CheckedChanged(object sender, EventArgs e)
+        {
+            RegulatedNoiseSettings.EDDNAutoImport = checkboxImportEDDN.Checked;
+            SaveSettings();
+        }
+
+     }
 }

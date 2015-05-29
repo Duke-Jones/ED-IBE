@@ -112,6 +112,10 @@ namespace RegulatedNoise
         public bool LoadStationsJSON                                    = false;
         public Int32 oldDataPurgeDeadlineDays                           = 14;   
         public bool checkedTestEDDNSetting                              = false;   
+        public bool SpoolEddnToFile                                     = false;   
+        public bool SpoolImplausibleToFile                              = false;   
+        public bool EDDNAutoListen                                      = false;   
+        public bool EDDNAutoImport                                      = true;   
 
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},

@@ -23,43 +23,50 @@ namespace RegulatedNoise.EDDB_Data
 
         public EDCommodityListView(string presetCommodity = "")
         {
-            InitializeComponent();
-            int selectedRow;
-
-            Commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
-
-            foreach (EDCommoditiesExt Commodity in Commodities)
+            try
             {
-                dgvWarnlevels.Rows.Add(Commodity.Id, Commodity.Name, Commodity.Category, Commodity.AveragePrice, 
-                                       Commodity.PriceWarningLevel_Demand_Sell_Low, Commodity.PriceWarningLevel_Demand_Sell_High, 
-                                       Commodity.PriceWarningLevel_Demand_Buy_Low, Commodity.PriceWarningLevel_Demand_Buy_High,
-                                       Commodity.PriceWarningLevel_Supply_Sell_Low, Commodity.PriceWarningLevel_Supply_Sell_High, 
-                                       Commodity.PriceWarningLevel_Supply_Buy_Low, Commodity.PriceWarningLevel_Supply_Buy_High);
-            } 
+                InitializeComponent();
+                int selectedRow;
 
-            dgvWarnlevels.Columns[4].HeaderCell.Style.ForeColor = Color.DarkGreen;
-            dgvWarnlevels.Columns[5].HeaderCell.Style.ForeColor = Color.DarkGreen;
-            dgvWarnlevels.Columns[6].HeaderCell.Style.ForeColor = Color.DarkGreen;
-            dgvWarnlevels.Columns[7].HeaderCell.Style.ForeColor = Color.DarkGreen;
+                Commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
 
-            dgvWarnlevels.Columns[8].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
-            dgvWarnlevels.Columns[9].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
-            dgvWarnlevels.Columns[10].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
-            dgvWarnlevels.Columns[11].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
+                foreach (EDCommoditiesExt Commodity in Commodities)
+                {
+                    dgvWarnlevels.Rows.Add(Commodity.Id, Commodity.Name, Commodity.Category, Commodity.AveragePrice,
+                                           Commodity.PriceWarningLevel_Demand_Sell_Low, Commodity.PriceWarningLevel_Demand_Sell_High,
+                                           Commodity.PriceWarningLevel_Demand_Buy_Low, Commodity.PriceWarningLevel_Demand_Buy_High,
+                                           Commodity.PriceWarningLevel_Supply_Sell_Low, Commodity.PriceWarningLevel_Supply_Sell_High,
+                                           Commodity.PriceWarningLevel_Supply_Buy_Low, Commodity.PriceWarningLevel_Supply_Buy_High);
+                }
 
-            if (!string.IsNullOrEmpty(presetCommodity))
-            {
-                string BaseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
-                if(string.IsNullOrEmpty(BaseName))
-                    BaseName = presetCommodity;
+                dgvWarnlevels.Columns[4].HeaderCell.Style.ForeColor = Color.DarkGreen;
+                dgvWarnlevels.Columns[5].HeaderCell.Style.ForeColor = Color.DarkGreen;
+                dgvWarnlevels.Columns[6].HeaderCell.Style.ForeColor = Color.DarkGreen;
+                dgvWarnlevels.Columns[7].HeaderCell.Style.ForeColor = Color.DarkGreen;
 
-                selectedRow   = Commodities.FindIndex(x => x.Name.Equals(BaseName, StringComparison.InvariantCultureIgnoreCase));
+                dgvWarnlevels.Columns[8].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
+                dgvWarnlevels.Columns[9].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
+                dgvWarnlevels.Columns[10].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
+                dgvWarnlevels.Columns[11].HeaderCell.Style.ForeColor = Color.DarkGoldenrod;
 
-                dgvWarnlevels.CurrentCell = dgvWarnlevels.Rows[selectedRow].Cells[4]; 
+                if (!string.IsNullOrEmpty(presetCommodity))
+                {
+                    string BaseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
+                    if (BaseName == Program.COMMODITY_NOT_SET)
+                        BaseName = presetCommodity;
+
+                    selectedRow = Commodities.FindIndex(x => x.Name.Equals(BaseName, StringComparison.InvariantCultureIgnoreCase));
+
+                    dgvWarnlevels.CurrentCell = dgvWarnlevels.Rows[selectedRow].Cells[4];
+                }
+                else
+                {
+                    dgvWarnlevels.CurrentCell = dgvWarnlevels.Rows[0].Cells[4];
+                }
             }
-            else
-            { 
-                dgvWarnlevels.CurrentCell = dgvWarnlevels.Rows[0].Cells[4]; 
+            catch (Exception ex)
+            {
+                throw new Exception("error while starting CommodityListView", ex);
             }
         }
 

@@ -346,6 +346,7 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.tbEddnStats = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbEDDNAutoListen = new System.Windows.Forms.CheckBox();
             this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
             this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
             this.bPurgeAllEddnData = new System.Windows.Forms.Button();
@@ -4065,7 +4066,7 @@
             // label83
             // 
             this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(6, 348);
+            this.label83.Location = new System.Drawing.Point(6, 385);
             this.label83.Name = "label83";
             this.label83.Size = new System.Drawing.Size(76, 13);
             this.label83.TabIndex = 6;
@@ -4078,10 +4079,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbEddnImplausible.FormattingEnabled = true;
             this.lbEddnImplausible.HorizontalScrollbar = true;
-            this.lbEddnImplausible.Location = new System.Drawing.Point(3, 362);
+            this.lbEddnImplausible.Location = new System.Drawing.Point(3, 401);
             this.lbEddnImplausible.Name = "lbEddnImplausible";
             this.lbEddnImplausible.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbEddnImplausible.Size = new System.Drawing.Size(1045, 212);
+            this.lbEddnImplausible.Size = new System.Drawing.Size(1045, 173);
             this.lbEddnImplausible.TabIndex = 2;
             // 
             // tbEddnStats
@@ -4091,11 +4092,12 @@
             this.tbEddnStats.Location = new System.Drawing.Point(459, 3);
             this.tbEddnStats.Multiline = true;
             this.tbEddnStats.Name = "tbEddnStats";
-            this.tbEddnStats.Size = new System.Drawing.Size(589, 340);
+            this.tbEddnStats.Size = new System.Drawing.Size(589, 379);
             this.tbEddnStats.TabIndex = 1;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cbEDDNAutoListen);
             this.groupBox2.Controls.Add(this.cbSpoolImplausibleToFile);
             this.groupBox2.Controls.Add(this.cbSpoolEddnToFile);
             this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
@@ -4110,35 +4112,48 @@
             this.groupBox2.Controls.Add(this.button15);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(450, 340);
+            this.groupBox2.Size = new System.Drawing.Size(450, 379);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
+            // 
+            // cbEDDNAutoListen
+            // 
+            this.cbEDDNAutoListen.AutoSize = true;
+            this.cbEDDNAutoListen.Location = new System.Drawing.Point(10, 67);
+            this.cbEDDNAutoListen.Name = "cbEDDNAutoListen";
+            this.cbEDDNAutoListen.Size = new System.Drawing.Size(187, 17);
+            this.cbEDDNAutoListen.TabIndex = 15;
+            this.cbEDDNAutoListen.Text = "autostart listening on program start";
+            this.cbEDDNAutoListen.UseVisualStyleBackColor = true;
+            this.cbEDDNAutoListen.CheckedChanged += new System.EventHandler(this.cbEDDNAutoListen_CheckedChanged);
             // 
             // cbSpoolImplausibleToFile
             // 
             this.cbSpoolImplausibleToFile.AutoSize = true;
             this.cbSpoolImplausibleToFile.Location = new System.Drawing.Point(10, 50);
             this.cbSpoolImplausibleToFile.Name = "cbSpoolImplausibleToFile";
-            this.cbSpoolImplausibleToFile.Size = new System.Drawing.Size(210, 17);
+            this.cbSpoolImplausibleToFile.Size = new System.Drawing.Size(208, 17);
             this.cbSpoolImplausibleToFile.TabIndex = 14;
-            this.cbSpoolImplausibleToFile.Text = "Spool implausible to EddnImpOutput.txt";
+            this.cbSpoolImplausibleToFile.Text = "spool implausible to EddnImpOutput.txt";
             this.cbSpoolImplausibleToFile.UseVisualStyleBackColor = true;
+            this.cbSpoolImplausibleToFile.CheckedChanged += new System.EventHandler(this.cbSpoolImplausibleToFile_CheckedChanged);
             // 
             // cbSpoolEddnToFile
             // 
             this.cbSpoolEddnToFile.AutoSize = true;
             this.cbSpoolEddnToFile.Location = new System.Drawing.Point(10, 34);
             this.cbSpoolEddnToFile.Name = "cbSpoolEddnToFile";
-            this.cbSpoolEddnToFile.Size = new System.Drawing.Size(139, 17);
+            this.cbSpoolEddnToFile.Size = new System.Drawing.Size(137, 17);
             this.cbSpoolEddnToFile.TabIndex = 13;
-            this.cbSpoolEddnToFile.Text = "Spool to EddnOutput.txt";
+            this.cbSpoolEddnToFile.Text = "spool to EddnOutput.txt";
             this.cbSpoolEddnToFile.UseVisualStyleBackColor = true;
+            this.cbSpoolEddnToFile.CheckedChanged += new System.EventHandler(this.cbSpoolEddnToFile_CheckedChanged);
             // 
             // bPurgeAllEddnData
             // 
             this.bPurgeAllEddnData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 309);
+            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 348);
             this.bPurgeAllEddnData.Name = "bPurgeAllEddnData";
             this.bPurgeAllEddnData.Size = new System.Drawing.Size(129, 23);
             this.bPurgeAllEddnData.TabIndex = 12;
@@ -4148,7 +4163,7 @@
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(283, 127);
+            this.button17.Location = new System.Drawing.Point(283, 161);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(161, 23);
             this.button17.TabIndex = 11;
@@ -4159,7 +4174,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(7, 112);
+            this.label28.Location = new System.Drawing.Point(7, 142);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(280, 13);
             this.label28.TabIndex = 10;
@@ -4168,7 +4183,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(7, 94);
+            this.label27.Location = new System.Drawing.Point(7, 124);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(241, 13);
             this.label27.TabIndex = 9;
@@ -4177,7 +4192,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(7, 77);
+            this.label25.Location = new System.Drawing.Point(7, 107);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(271, 13);
             this.label25.TabIndex = 7;
@@ -4190,15 +4205,16 @@
             this.checkboxImportEDDN.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkboxImportEDDN.Location = new System.Drawing.Point(10, 18);
             this.checkboxImportEDDN.Name = "checkboxImportEDDN";
-            this.checkboxImportEDDN.Size = new System.Drawing.Size(222, 17);
+            this.checkboxImportEDDN.Size = new System.Drawing.Size(221, 17);
             this.checkboxImportEDDN.TabIndex = 6;
-            this.checkboxImportEDDN.Text = "Import received data into RegulatedNoise";
+            this.checkboxImportEDDN.Text = "import received data into RegulatedNoise";
             this.checkboxImportEDDN.UseVisualStyleBackColor = true;
+            this.checkboxImportEDDN.CheckedChanged += new System.EventHandler(this.checkboxImportEDDN_CheckedChanged);
             // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 139);
+            this.label24.Location = new System.Drawing.Point(7, 174);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(64, 13);
             this.label24.TabIndex = 5;
@@ -4206,7 +4222,7 @@
             // 
             // cmdStopEDDNListening
             // 
-            this.cmdStopEDDNListening.Location = new System.Drawing.Point(351, 93);
+            this.cmdStopEDDNListening.Location = new System.Drawing.Point(351, 127);
             this.cmdStopEDDNListening.Name = "cmdStopEDDNListening";
             this.cmdStopEDDNListening.Size = new System.Drawing.Size(93, 23);
             this.cmdStopEDDNListening.TabIndex = 4;
@@ -4219,10 +4235,10 @@
             this.tbEDDNOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbEDDNOutput.Location = new System.Drawing.Point(6, 155);
+            this.tbEDDNOutput.Location = new System.Drawing.Point(6, 190);
             this.tbEDDNOutput.Multiline = true;
             this.tbEDDNOutput.Name = "tbEDDNOutput";
-            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 148);
+            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 152);
             this.tbEDDNOutput.TabIndex = 3;
             // 
             // button15
@@ -5144,6 +5160,7 @@
         private System.Windows.Forms.RadioButton rbCmdrsName;
         private System.Windows.Forms.RadioButton rbUserID;
         internal System.Windows.Forms.TextBox txtCmdrsName;
+        private System.Windows.Forms.CheckBox cbEDDNAutoListen;
 
         
     }

@@ -21,6 +21,11 @@ todo:
    * default setting for new systems
    
    
+1.84_0.25_4
+   * all EDDN setting are saved 
+   * autostart of EDDN is possible
+   * fixed: crash when open warnlevel-listview 
+-------------------------------------------------------------------------------------      
 1.84_0.25_3
    * add warnlevel-object for user added commodities
    * fixed: crash when open warnlevel-view from "edit/delete ocr results" table
