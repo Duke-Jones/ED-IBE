@@ -18,9 +18,13 @@ todo:
    * Add Rare Tab
    * add coordinate calculation for new star systems
    * show hint (new star system, changed data, original data)
-   * crash after adding new system in a unknown system
    * default setting for new systems
    
+   
+1.84_0.25_3
+   * add warnlevel-object for user added commodities
+   * fixed: crash when open warnlevel-view from "edit/delete ocr results" table
+-------------------------------------------------------------------------------------      
 1.84_0.25_2
    * saves now commodities added by user, even if RN is updated ( --> \Data\Commodities_own.xml)
 -------------------------------------------------------------------------------------      

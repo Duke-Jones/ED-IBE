@@ -146,6 +146,10 @@ namespace RegulatedNoise
 
             string commodity = _caller.getCommodityBasename(rowToPost.CommodityName);
 
+            // if it's a user added commodity send it anyhow to see that there's a unknown commodities
+            if(commodity.Equals(Program.COMMODITY_NOT_SET))
+                commodity = rowToPost.CommodityName;
+
             if(!String.IsNullOrEmpty(commodity))
             {
                 if(Form1.RegulatedNoiseSettings.usePilotsName)

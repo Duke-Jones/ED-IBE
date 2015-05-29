@@ -18,55 +18,69 @@ namespace RegulatedNoise.EDDB_Data
 
 		public EDCommodityView(string presetCommodity = "")
 		{
-			InitializeComponent();
-			cmdCommodity.Sorted = false;
+            InitializeComponent();
+            try
+            {
+                cmdCommodity.Sorted = false;
 
-			m_commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
+                m_commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
 
-			cmdCommodity.DataSource = m_commodities;
-			cmdCommodity.ValueMember = "ID";
-			cmdCommodity.DisplayMember = "Name";
+                cmdCommodity.DataSource = m_commodities;
+                cmdCommodity.ValueMember = "ID";
+                cmdCommodity.DisplayMember = "Name";
 
-			if (!string.IsNullOrEmpty(presetCommodity))
-			{
-				string baseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
+                if (!string.IsNullOrEmpty(presetCommodity))
+                {
+                    string baseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
 
-				if (string.IsNullOrEmpty(baseName))
-					baseName = presetCommodity;
+                    if (baseName == Program.COMMODITY_NOT_SET)
+                        baseName = presetCommodity;
 
-				cmdCommodity.SelectedIndex = m_commodities.FindIndex(x => x.Name.Equals(baseName, StringComparison.InvariantCultureIgnoreCase));
-			}
-			else
-			{
-				cmdCommodity.SelectedIndex = 0;
-				cmdCommodity_SelectedIndexChanged(this, new EventArgs());
-			}
+                    cmdCommodity.SelectedIndex = m_commodities.FindIndex(x => x.Name.Equals(baseName, StringComparison.InvariantCultureIgnoreCase));
+                }
+                else
+                {
+                    cmdCommodity.SelectedIndex = 0;
+                    cmdCommodity_SelectedIndexChanged(this, new EventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("error while initializing the commodity view", ex);
+            }
 
 		}
 
 		private void cmdCommodity_SelectedIndexChanged(object sender, EventArgs e)
-		{
+        {
 
-			m_NoRefresh = true;
+            try
+            {
+                m_NoRefresh = true;
 
-			EDCommoditiesExt currentCommodity = CurrentCommodity;
-			if (currentCommodity == null)
-				return;
-			
-			txtId.Text = currentCommodity.Id.ToString();
-			txtCategory.Text = currentCommodity.Category.ToString();
-			txtAveragePrice.Text = currentCommodity.AveragePrice.ToString();
-			txtDemandSellLow.Text = currentCommodity.PriceWarningLevel_Demand_Sell_Low.ToString();
-			txtDemandSellHigh.Text = currentCommodity.PriceWarningLevel_Demand_Sell_High.ToString();
-			txtDemandBuyLow.Text = currentCommodity.PriceWarningLevel_Demand_Buy_Low.ToString();
-			txtDemandBuyHigh.Text = currentCommodity.PriceWarningLevel_Demand_Buy_High.ToString();
+                EDCommoditiesExt currentCommodity = CurrentCommodity;
+                if (currentCommodity == null)
+                    return;
 
-			txtSupplySellLow.Text = currentCommodity.PriceWarningLevel_Supply_Sell_Low.ToString();
-			txtSupplySellHigh.Text = currentCommodity.PriceWarningLevel_Supply_Sell_High.ToString();
-			txtSupplyBuyLow.Text = currentCommodity.PriceWarningLevel_Supply_Buy_Low.ToString();
-			txtSupplyBuyHigh.Text = currentCommodity.PriceWarningLevel_Supply_Buy_High.ToString();
+                txtId.Text = currentCommodity.Id.ToString();
+                txtCategory.Text = currentCommodity.Category.NToString();
+                txtAveragePrice.Text = currentCommodity.AveragePrice.ToString();
+                txtDemandSellLow.Text = currentCommodity.PriceWarningLevel_Demand_Sell_Low.ToString();
+                txtDemandSellHigh.Text = currentCommodity.PriceWarningLevel_Demand_Sell_High.ToString();
+                txtDemandBuyLow.Text = currentCommodity.PriceWarningLevel_Demand_Buy_Low.ToString();
+                txtDemandBuyHigh.Text = currentCommodity.PriceWarningLevel_Demand_Buy_High.ToString();
 
-			m_NoRefresh = false;
+                txtSupplySellLow.Text = currentCommodity.PriceWarningLevel_Supply_Sell_Low.ToString();
+                txtSupplySellHigh.Text = currentCommodity.PriceWarningLevel_Supply_Sell_High.ToString();
+                txtSupplyBuyLow.Text = currentCommodity.PriceWarningLevel_Supply_Buy_Low.ToString();
+                txtSupplyBuyHigh.Text = currentCommodity.PriceWarningLevel_Supply_Buy_High.ToString();
+
+                m_NoRefresh = false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("error in cmdCommodity_SelectedIndexChanged method", ex);
+            }
 		}
 
 		private EDCommoditiesExt CurrentCommodity

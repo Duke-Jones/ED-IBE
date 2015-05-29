@@ -11,7 +11,8 @@ namespace RegulatedNoise
 {
     static class Program
     {
-        public const  string NULLSTRING = "?";
+        public const string NULLSTRING              = "?";
+        public const string COMMODITY_NOT_SET       = "???";
 
         /// <summary>
         /// The main entry point for the application.

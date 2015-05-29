@@ -289,6 +289,9 @@ namespace RegulatedNoise
                 loadCommodityLevels(RegulatedNoiseSettings.Language);
                 _Splash.InfoChange("load and prepare international commodity names...<OK>");
 
+                // check consistency of different commodity dictionaries
+                _Milkyway.addLocalized2RN(_commodities.Names);
+
                 setOCRCalibrationTabVisibility();
 
                 _Splash.InfoAdd("load tool tips...");
@@ -976,17 +979,7 @@ namespace RegulatedNoise
             KnownCommodityNames.Clear();
 
             foreach (dsCommodities.NamesRow currentCommodity in _commodities.Names)
-            {
-                if (Language == enLanguage.eng)
-                    KnownCommodityNames.Add(currentCommodity.eng);
-
-                else if (Language == enLanguage.ger)
-                    KnownCommodityNames.Add(currentCommodity.ger);
-
-                else
-                    KnownCommodityNames.Add(currentCommodity.fra);
-
-            }
+                KnownCommodityNames.Add(currentCommodity[Enum.GetName(typeof(enLanguage), Language)].ToString());
 
         }
 
@@ -3561,6 +3554,7 @@ namespace RegulatedNoise
                 {
                     // yes, it's really new
                     addCommodity(commodity, RegulatedNoiseSettings.Language);
+                    _Milkyway.addLocalized2RN(_commodities.Names);
                     isOK = true;
                 }
             }
@@ -5876,18 +5870,10 @@ namespace RegulatedNoise
             dsCommodities.NamesRow newCommodity     = (dsCommodities.NamesRow)_commodities.Names.NewRow();
             dsCommodities.NamesRow newOwnCommodity  = (dsCommodities.NamesRow)ownCommodities.Names.NewRow();
 
-            newOwnCommodity.eng = "???";
-            newOwnCommodity.ger = "???";
-            newOwnCommodity.fra = "???";
+            foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
+                newOwnCommodity[availableLanguage.ToString()] = Program.COMMODITY_NOT_SET;
 
-            if (language == enLanguage.eng)
-                newOwnCommodity.eng = commodity;
-
-            else if (language == enLanguage.ger)
-                newOwnCommodity.ger = commodity;
-
-            else
-                newOwnCommodity.fra = commodity;
+            newOwnCommodity[language.ToString()] = commodity;
 
             foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
                 newCommodity[availableLanguage.ToString()] = newOwnCommodity[availableLanguage.ToString()];

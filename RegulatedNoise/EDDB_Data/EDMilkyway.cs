@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
+using RegulatedNoise.Enums_and_Utility_Classes;
 
 namespace RegulatedNoise.EDDB_Data
 {
@@ -757,6 +758,70 @@ namespace RegulatedNoise.EDDB_Data
             saveRNCommodityData(RNCommodityDatafile, true);
 
             return true;
+        }
+
+        /// <summary>
+        /// adds objects for not yet existing localized commodities
+        /// </summary>
+        internal void addLocalized2RN(dsCommodities.NamesDataTable localizedCommodities)
+        {
+            EDCommoditiesExt EDCommodity    = null;
+            enLanguage foundLanguage        = enLanguage.eng;
+            bool changed                    = false;
+
+            foreach (dsCommodities.NamesRow localizedItem in localizedCommodities)
+            {
+
+                // look if the name is available at least in one language
+                foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
+                { 
+                    foundLanguage = availableLanguage;
+                    EDCommodity =  m_Commodities.Find(x => x.Name.Equals(localizedItem[availableLanguage.ToString()].ToString(), StringComparison.InvariantCultureIgnoreCase));
+                    if(EDCommodity != null)
+                        break;
+                }
+
+                if(EDCommodity != null)
+                { 
+                    // found
+                    if((foundLanguage != enLanguage.eng) && (localizedItem.eng != Program.COMMODITY_NOT_SET))
+                    { 
+                        // it's not the base(=english) name, but the base(=english) name is available -> change this
+                        EDCommodity.Name = localizedItem.eng;
+                        changed = true;
+                    }
+                }
+                else
+                {
+                    // not found, add it with the available 
+                    EDCommodity = new EDCommoditiesExt();
+                    EDCommodity.Name = localizedItem.eng;
+
+                    if(EDCommodity.Name == Program.COMMODITY_NOT_SET)
+                    {
+                        // base(=english) name not available, get the next existing name
+                        foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
+                        {
+                            if(localizedItem[availableLanguage.ToString()].ToString() != Program.COMMODITY_NOT_SET)
+                            {
+                                // got it -> break
+                                EDCommodity.Name = localizedItem[availableLanguage.ToString()].ToString();
+                                break;
+                            }
+                        }                  
+                    }
+                    EDCommodity.Id = m_Commodities.Max(x => x.Id) + 1;
+                    EDCommodity.AveragePrice = -1;
+
+                    m_Commodities.Add(EDCommodity);
+
+                    changed = true;
+                }
+
+                if(changed)
+                    saveRNCommodityData(@"./Data/commodities_RN.json", true);
+            }
+
         }
 
         /// <summary>
