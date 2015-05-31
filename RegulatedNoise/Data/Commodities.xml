@@ -410,6 +410,11 @@
     <ger>Osmium</ger>
     <fra>Osmium</fra>
   </Names>
+  <Names>
+    <eng>Zeessze Ant Grub Glue</eng>
+    <ger>Zeessze-Ameisenkleber</ger>
+    <fra>Colle de Larve de Fourmi De</fra>  
+  </Names>
   <Levels>
     <ID>0</ID>
     <eng>low</eng>

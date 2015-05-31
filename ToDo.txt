@@ -21,6 +21,10 @@ todo:
    * default setting for new systems
    
    
+1.84_0.25_5
+   * added new translations to commodities
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------         
 1.84_0.25_4
    * all EDDN setting are saved 
    * autostart of EDDN is possible
