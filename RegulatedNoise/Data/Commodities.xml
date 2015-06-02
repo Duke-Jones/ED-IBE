@@ -415,6 +415,12 @@
     <ger>Zeessze-Ameisenkleber</ger>
     <fra>Colle de Larve de Fourmi De</fra>  
   </Names>
+  <Names>
+    <eng>Tauri Chimes</eng>
+    <ger>Tauri-Glockenspiel</ger>
+    <fra>Carillons Taurins</fra>  
+  </Names>
+  <Name></Name>
   <Levels>
     <ID>0</ID>
     <eng>low</eng>

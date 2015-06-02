@@ -348,7 +348,7 @@ namespace RegulatedNoise
 
                         foreach (enLanguage language in Enum.GetValues(typeof(enLanguage)))
                         {
-                            dsCommodities.NamesRow[] existing = (dsCommodities.NamesRow[])(_commodities.Tables["Names"].Select(String.Format("{0} = '{1}'" , language.ToString(), Commodity[language.ToString()])));
+                            dsCommodities.NamesRow[] existing = (dsCommodities.NamesRow[])(_commodities.Tables["Names"].Select(String.Format("{0} = '{1}'" , language.ToString(), EscapeLikeValue(Commodity[language.ToString()].ToString()))));
 
                             Debug.Print(String.Format("{0} = '{1}'" , language.ToString(), Commodity[language.ToString()]));
 
@@ -386,6 +386,30 @@ namespace RegulatedNoise
 
         }
 
+        private string EscapeLikeValue(string value)
+        {
+            StringBuilder sb = new StringBuilder(value.Length);
+            for (int i = 0; i < value.Length; i++)
+            {
+                char c = value[i];
+                switch (c)
+                {
+                    case ']':
+                    case '[':
+                    case '%':
+                    case '*':
+                        sb.Append("[").Append(c).Append("]");
+                        break;
+                    case '\'':
+                        sb.Append("''");
+                        break;
+                    default:
+                        sb.Append(c);
+                        break;
+                }
+            }
+            return sb.ToString();
+        }
         private void loadToolTips()
         {
             toolTip1.SetToolTip(txtPixelAmount, "if the bitmap has less dark pixels it will not processed by EliteBrainerous, is set to 0 all bitmaps will be processed");
@@ -1009,13 +1033,13 @@ namespace RegulatedNoise
             switch (Language)
             {
                 case enLanguage.eng:
-                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("eng='" + CommodityName + "'"));
+                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("eng='" + EscapeLikeValue(CommodityName) + "'"));
                     break;
                 case enLanguage.ger:
-                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("ger='" + CommodityName + "'"));
+                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("ger='" + EscapeLikeValue(CommodityName) + "'"));
                     break;
                 case enLanguage.fra:
-                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("fra='" + CommodityName + "'"));
+                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("fra='" + EscapeLikeValue(CommodityName) + "'"));
                     break;
             }
             
@@ -6757,6 +6781,7 @@ namespace RegulatedNoise
             cmbSystemGovernment.Items.Add("None");
 
             cmbSystemState.Items.Add(Program.NULLSTRING);
+            cmbSystemState.Items.Add("Boom");
             cmbSystemState.Items.Add("Bust");
             cmbSystemState.Items.Add("Civil Unrest");
             cmbSystemState.Items.Add("Civil War");

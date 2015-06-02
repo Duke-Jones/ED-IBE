@@ -21,6 +21,10 @@ todo:
    * default setting for new systems
    
    
+1.84_0.26_1
+   * fixed a crash when commodity names with special 
+     character are found like "<something> from Baltah'sine"
+-------------------------------------------------------------------------------------         
 1.84_0.25_5
    * added new translations to commodities
    * added latest EDDB data files
