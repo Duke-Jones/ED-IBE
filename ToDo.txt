@@ -21,6 +21,9 @@ todo:
    * default setting for new systems
    
    
+1.84_0.26_2
+   * optimized ocr for station recognition
+-------------------------------------------------------------------------------------         
 1.84_0.26_1
    * fixed a crash when commodity names with special 
      character are found like "<something> from Baltah'sine"

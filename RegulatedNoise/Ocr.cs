@@ -174,9 +174,8 @@ namespace RegulatedNoise
         public void PerformOcr(List<Tuple<int, int>> textRowLocations)
         {
             int DarkPixels;
-            var conv = new BitmapToPixConverter();
-
-            Pix p = conv.Convert(_bTrimmedHeader);
+            var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default);
+            engine.DefaultPageSegMode = PageSegMode.SingleLine;
 
             string headerResult;
 
@@ -187,14 +186,10 @@ namespace RegulatedNoise
             else
                 Directory.CreateDirectory("./Brainerous/images");
 
-            using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
-            {
-                using (var page = engine.Process(p))
-                {
-                    var text = page.GetText();
-                    headerResult = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
-                }
-            }
+            float level;
+            var text = AnalyseFrameUsingTesseract(_bTrimmedHeader, engine, out level);
+            headerResult = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
+
 
             string[] StationsInSystem = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
             string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(_callingForm.tbCurrentStationinfoFromLogs.Text, StringComparison.InvariantCultureIgnoreCase));
@@ -209,7 +204,7 @@ namespace RegulatedNoise
                     var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].ToUpper());
                 
                     // this depends on the length of the word - this factor works really good
-                    double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Length * 0.7), 0);
+                    double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Length * 1.0), 0);
 
                     if (ld <= LevenshteinLimit)
                         headerResult = matchesInStationReferenceList[0].ToUpper();
@@ -358,12 +353,10 @@ namespace RegulatedNoise
                             var t = new string[c.Length];
                             var cf = new float[c.Length];
 
-                            using (var engine = new TesseractEngine(@"./tessdata", Form1.RegulatedNoiseSettings.TraineddataFile, EngineMode.Default))
+
+                            for (int i = 0; i < c.Length; i++)
                             {
-                                for (int i = 0; i < c.Length; i++)
-                                {
-                                    t[i] = AnalyseFrameUsingTesseract((Bitmap)(c[i].Clone()), engine, out cf[i]);
-                                }
+                                t[i] = AnalyseFrameUsingTesseract((Bitmap)(c[i].Clone()), engine, out cf[i]);
                             }
 
                             int result = 0;
@@ -490,6 +483,7 @@ namespace RegulatedNoise
 
             _bOriginal.Dispose();
             _bOriginalClone.Dispose();
+            engine.Dispose();
 
             if (_callingForm.cbCheckAOne.Checked)
             {
