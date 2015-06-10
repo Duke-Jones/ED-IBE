@@ -23,3 +23,6 @@
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 
+/RNDatabase/Database/data
+/RNDatabase/Database/script/thoughts.txt
+/RNDatabase/SQL-Model/*.bak
