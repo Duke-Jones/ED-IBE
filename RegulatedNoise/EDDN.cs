@@ -129,18 +129,18 @@ namespace RegulatedNoise
 
             System.Diagnostics.Debug.Print("eddn send : " + rowToPost.ToString());
 
-            if (Form1.RegulatedNoiseSettings.UseEddnTestSchema)
+            if (Program.Settings.UseEddnTestSchema)
             {
                 json =
                     @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1/test"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                    Form1.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + Form1.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
+                    Program.Settings.Version.ToString(CultureInfo.InvariantCulture) + "_" + Program.Settings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
             }
             else
             {
                 json =
                     @"{""$schemaRef"": ""http://schemas.elite-markets.net/eddn/commodity/1"",""header"": {""uploaderID"": ""$0$"",""softwareName"": ""RegulatedNoise__DJ"",""softwareVersion"": ""v" +
-                    Form1.RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture) + "_" + Form1.RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
+                    Program.Settings.Version.ToString(CultureInfo.InvariantCulture) + "_" + Program.Settings.VersionDJ.ToString(CultureInfo.InvariantCulture) +
                     @"""},""message"": {""buyPrice"": $2$,""timestamp"": ""$3$"",""stationStock"": $4$,""stationName"": ""$5$"",""systemName"": ""$6$"",""demand"": $7$,""sellPrice"": $8$,""itemName"": ""$9$""}}";
              }
 
@@ -152,10 +152,10 @@ namespace RegulatedNoise
 
             if(!String.IsNullOrEmpty(commodity))
             {
-                if(Form1.RegulatedNoiseSettings.usePilotsName)
-                    UserID = System.Net.WebUtility.HtmlEncode(Form1.RegulatedNoiseSettings.PilotsName);
+                if(Program.Settings.usePilotsName)
+                    UserID = System.Net.WebUtility.HtmlEncode(Program.Settings.PilotsName);
                 else
-                    UserID = System.Net.WebUtility.HtmlEncode(Form1.RegulatedNoiseSettings.UserName);
+                    UserID = System.Net.WebUtility.HtmlEncode(Program.Settings.UserName);
 
                 string commodityJson = json.Replace("$0$", UserID)
                     .Replace("$2$", (rowToPost.BuyPrice.ToString(CultureInfo.InvariantCulture)))

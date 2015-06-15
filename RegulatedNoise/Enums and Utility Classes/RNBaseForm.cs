@@ -23,13 +23,13 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         protected void loadWindowPosition()
         {
-            if (Form1.RegulatedNoiseSettings == null)
+            if (Program.Settings == null)
                 return;
 
             string Classname        = this.GetType().Name;
             WindowData FormPosition;
 
-            if (Form1.RegulatedNoiseSettings.WindowBaseData.TryGetValue(Classname, out FormPosition))
+            if (Program.Settings.WindowBaseData.TryGetValue(Classname, out FormPosition))
             {
 
                 if (FormPosition.Position.Height > -1)
@@ -54,7 +54,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             }
             else
             {
-                Form1.RegulatedNoiseSettings.WindowBaseData.Add(Classname, new WindowData());
+                Program.Settings.WindowBaseData.Add(Classname, new WindowData());
                 loadWindowPosition();
                 //MessageBox.Show("Not positioninfo for <" + Classname + "> found !");
             }
@@ -69,7 +69,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             string Classname        = this.GetType().Name;
             WindowData FormPosition;
 
-            if (Form1.RegulatedNoiseSettings.WindowBaseData.TryGetValue(Classname, out FormPosition))
+            if (Program.Settings.WindowBaseData.TryGetValue(Classname, out FormPosition))
             {
                 if (this.WindowState != FormWindowState.Minimized)
                     if (FormPosition.State != this.WindowState)

@@ -6,6 +6,7 @@
 
 set EliteDBName=Elite_DB
 set ROOT_PW=EliteAdmin
+set RN_USER=RN_User
 set USER_PW=Elite
 
 SET SOURCE_DIR=%~dp0
@@ -35,10 +36,10 @@ start .\bin\mysqld.exe --defaults-file=Elite.ini --console
 
 .\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE SCHEMA IF NOT EXISTS `%EliteDBName%` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
                     
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER 'RN_User'@'localhost' IDENTIFIED BY '%USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant Insert, Select, Update, Delete On `%EliteDBName%`.* To 'RN_User'@'localhost';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER 'RN_User'@'127.0.0.1' IDENTIFIED BY '%USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant Insert, Select, Update, Delete On `%EliteDBName%`.* To 'RN_User'@'127.0.0.1';"
+.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'localhost' IDENTIFIED BY '%USER_PW%';"
+.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant Insert, Select, Update, Delete On `%EliteDBName%`.* To '%RN_USER%'@'localhost';"
+.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'127.0.0.1' IDENTIFIED BY '%USER_PW%';"
+.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant Insert, Select, Update, Delete On `%EliteDBName%`.* To '%RN_USER%'@'127.0.0.1';"
 
 .\bin\mysql -u root --password=%ROOT_PW% < .\script\create_Elite_DB.sql
 

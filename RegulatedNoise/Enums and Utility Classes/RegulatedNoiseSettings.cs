@@ -9,9 +9,13 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using System.Xml;
+using System.Xml.Serialization;
+
 
 namespace RegulatedNoise
 {
+
     [Serializable]
     public class WindowData
     {
@@ -53,8 +57,10 @@ namespace RegulatedNoise
 
 
     [Serializable]
-    public class RegulatedNoiseSettings
+    public class RegulatedNoiseSettings 
     {
+        public static RegulatedNoiseSettings instance = null;
+
         public readonly decimal Version   = 1.84m;
 
 #if DukeJones
@@ -117,6 +123,21 @@ namespace RegulatedNoise
         public bool EDDNAutoListen                                      = false;   
         public bool EDDNAutoImport                                      = true;   
 
+        public String           SQL_Name                                = "master";
+        public String           SQL_Server                              = "localhost";
+        public String           SQL_Database                            = "Elite_DB";
+        public String           SQL_User                                = "RN_User";
+        public String           SQL_Pass                                = "Elite";
+        public Int32            SQL_TimeOut                             = 60;
+        public Boolean          SQL_StayAlive                           = false;
+        public Int32            SQL_ConnectTimeout                      = 10;
+        public String           SQL_Commandline                         = @"bin\mysqld.exe ";
+        public String           SQL_Workingdirectory                    = @"..\..\..\RNDatabase\Database";
+        public String           SQL_CommandArgs                         = @"--defaults-file=Elite.ini --console";
+        public Int32            SQL_Port                                = 3306;
+        public Int32            DBStartTimeout                          = 60;
+
+
         public SerializableDictionary<string, WindowData> WindowBaseData = new SerializableDictionary<string, WindowData>() { 
                                                                                                                   {"Form1",                 new WindowData()},
                                                                                                                   {"EditOcrResults",        new WindowData()},
@@ -147,6 +168,31 @@ namespace RegulatedNoise
                                                                                                                   {"lvAllComms",            new List<ColumnData>() { new ColumnData("") }},
                                                                                                                   {"lbPrices",              new List<ColumnData>() { new ColumnData("") }}
                                                                                                                 };
+
+        public static RegulatedNoiseSettings LoadSettings()
+        {
+            
+            var serializer = new XmlSerializer(typeof(RegulatedNoiseSettings));
+
+            if (File.Exists("RegulatedNoiseSettings.xml"))
+            {
+                var fs = new FileStream("RegulatedNoiseSettings.xml", FileMode.Open);
+                var reader = XmlReader.Create(fs);
+
+                try
+                {
+                    instance = (RegulatedNoiseSettings)serializer.Deserialize(reader);
+                }
+                catch (Exception)
+                {
+                    instance = new RegulatedNoiseSettings();
+                }
+                fs.Close();
+            }
+            else instance = new RegulatedNoiseSettings();
+
+            return instance;
+        }
 
         public void CheckVersion2()
         {
@@ -314,157 +360,4 @@ namespace RegulatedNoise
         }
     }
 
-    public partial class Form1
-    {
-        private void cbAutoImport_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.AutoImport = cbAutoImport.Checked;
-        }
-
-        private void cbStartWebserverOnLoad_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.StartWebserverOnLoad = cbStartWebserverOnLoad.Checked;
-        }
-
-        private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbStartOCROnLoad.Checked && RegulatedNoiseSettings.MostRecentOCRFolder == "")
-            {
-                MessageBox.Show("You need to pick a directory first, using the Monitor Directory button.  Once you've done that, you can enable Start OCR On Load.");
-                RegulatedNoiseSettings.StartOCROnLoad = false;
-                cbStartOCROnLoad.Checked = false;
-            }
-            else
-            {
-                RegulatedNoiseSettings.StartOCROnLoad = cbStartOCROnLoad.Checked;
-            }
-        }
-
-        private void tbUsername_TextChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.UserName = tbUsername.Text;
-        }
-
-        private void cbExtendedInfoInCSV_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.IncludeExtendedCSVInfo = cbExtendedInfoInCSV.Checked;
-        }
-
-        private void cbPostOnImport_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.PostToEddnOnImport = cbPostOnImport.Checked;
-        }
-
-
-        private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.DeleteScreenshotOnImport = cbDeleteScreenshotOnImport.Checked;
-        }
-
-        private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
-        }
-
-        #region Theming
-        private void pbForegroundColour_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2");
-
-                ShowSelectedUiColours();
-                Retheme();
-            }
-
-        }
-
-        private void pbBackgroundColour_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2");
-                ShowSelectedUiColours();
-                Retheme();
-            }
-        }
-
-        private void ShowSelectedUiColours()
-        {
-            if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
-            if (RegulatedNoiseSettings.ForegroundColour != null)
-            {
-                ForegroundSet.Visible = false;
-                Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(RegulatedNoiseSettings.ForegroundColour.Substring(1, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(RegulatedNoiseSettings.ForegroundColour.Substring(3, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(RegulatedNoiseSettings.ForegroundColour.Substring(5, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-
-                using (var g = Graphics.FromImage(b))
-                {
-                    g.Clear(Color.FromArgb(red, green, blue));
-                }
-                pbForegroundColour.Image = b;
-            }
-            else ForegroundSet.Visible = true;
-
-            if (RegulatedNoiseSettings.BackgroundColour != null)
-            {
-                BackgroundSet.Visible = false;
-                if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
-                Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(RegulatedNoiseSettings.BackgroundColour.Substring(1, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(RegulatedNoiseSettings.BackgroundColour.Substring(3, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(RegulatedNoiseSettings.BackgroundColour.Substring(5, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                using (var g = Graphics.FromImage(b))
-                {
-                    g.Clear(Color.FromArgb(red, green, blue));
-                }
-                pbBackgroundColour.Image = b;
-            }
-            else BackgroundSet.Visible = true;
-        }
-
-        private void button20_Click(object sender, EventArgs e)
-        {
-            RegulatedNoiseSettings.ForegroundColour = null;
-            RegulatedNoiseSettings.BackgroundColour = null;
-        }
-
-        private void ForegroundSet_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2");
-
-                ShowSelectedUiColours();
-                Retheme();
-            }
-        }
-
-        private void BackgroundSet_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
-            {
-                RegulatedNoiseSettings.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2");
-                ShowSelectedUiColours();
-                Retheme();
-            }
-        }
-        #endregion
-    }
 }

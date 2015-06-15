@@ -6,13 +6,23 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Serialization;
+using RegulatedNoise.EDDB_Data;
+using RegulatedNoise.Web;
+using RegulatedNoise.SQL;
 
 namespace RegulatedNoise
 {
     static class Program
     {
+
         public const string NULLSTRING              = "?";
         public const string COMMODITY_NOT_SET       = "???";
+
+
+    #region main object creation and disposing
 
         /// <summary>
         /// The main entry point for the application.
@@ -22,10 +32,21 @@ namespace RegulatedNoise
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.ThreadException += Application_ThreadException;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            Init();
+
             Application.Run(new Form1());
+
+            Cleanup();
+
         }
+
+        #endregion
+
+    #region Exception Handling
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
@@ -98,5 +119,82 @@ namespace RegulatedNoise
                 }
             }
         }
+
+    #endregion// Exception Handling
+
+    #region global objects
+
+        private static Boolean                  m_initDone                  = false;
+
+        public static CompanionInterface        CompanionIO;
+        public static DBConnector               DBCon;
+        public static RegulatedNoiseSettings    Settings;
+        private static DBProcess                EliteDBProcess;
+
+        /// <summary>
+        /// starts the initialization of the global objects
+        /// </summary>
+        public static void Init()
+        {
+
+            if(!m_initDone)
+            { 
+                // loading settings from file
+                Settings = RegulatedNoiseSettings.LoadSettings();
+
+
+                // starting database process (if not running)
+                DBProcess.DBProcessParams newProcessParams = new DBProcess.DBProcessParams() { };
+                newProcessParams.Commandline                = Settings.SQL_Commandline;    
+                newProcessParams.Commandargs                = Settings.SQL_CommandArgs;
+                newProcessParams.Workingdirectory           = Settings.SQL_Workingdirectory;
+                newProcessParams.Port                       = Settings.SQL_Port;
+                newProcessParams.DBStartTimeout             = Settings.DBStartTimeout;
+                
+                EliteDBProcess                              = new DBProcess(newProcessParams);
+
+
+                // connecting to the database
+                DBConnector.ConnectionParams newConnectionParams = new DBConnector.ConnectionParams() { };
+
+                newConnectionParams.Name                    = Settings.SQL_Name;    
+                newConnectionParams.Server                  = Settings.SQL_Server;
+                newConnectionParams.Database                = Settings.SQL_Database;
+                newConnectionParams.User                    = Settings.SQL_User;
+                newConnectionParams.Pass                    = Settings.SQL_Pass;
+                newConnectionParams.ConnectTimeout          = Settings.SQL_TimeOut;
+                newConnectionParams.StayAlive               = Settings.SQL_StayAlive;
+                newConnectionParams.TimeOut                 = Settings.SQL_ConnectTimeout;
+
+                DBCon                                       = new DBConnector(newConnectionParams);
+
+                DBCon.Connect();
+
+                // initializing the Companion-Interface
+                //CompanionIO         = new CompanionInterface();
+                CompanionIO = null;
+
+
+                m_initDone = true;
+            }
+        }
+
+        public static void Cleanup()
+        { 
+            if(DBCon != null)
+            { 
+                DBCon.Dispose();
+                DBCon = null;
+            }
+
+            if(EliteDBProcess != null)
+            { 
+                EliteDBProcess.Dispose();
+                EliteDBProcess = null;
+            }
+        }
+
+    #endregion //global objects
+
     }
 }

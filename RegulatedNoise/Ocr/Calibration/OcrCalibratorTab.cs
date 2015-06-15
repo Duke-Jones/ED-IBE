@@ -26,7 +26,7 @@ namespace RegulatedNoise
 
             FillRawData();
 
-            tb_uicolor.Text = Form1.RegulatedNoiseSettings.UiColour;
+            tb_uicolor.Text = Program.Settings.UiColour;
         }
 
         private void SetResolutionValues()
@@ -310,7 +310,7 @@ namespace RegulatedNoise
 
                 pb_uicolor.BackColor = Color.FromArgb(red, green, blue);
 
-                Form1.RegulatedNoiseSettings.UiColour = tb_uicolor.Text;
+                Program.Settings.UiColour = tb_uicolor.Text;
             }
 // ReSharper disable once EmptyGeneralCatchClause
             catch

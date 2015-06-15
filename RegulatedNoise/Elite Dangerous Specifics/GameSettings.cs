@@ -46,7 +46,7 @@ namespace RegulatedNoise
 
                 if (setLog == DialogResult.Yes)
                 {
-                    var appconfig = Path.Combine(Form1.RegulatedNoiseSettings.GamePath, "AppConfig.xml");
+                    var appconfig = Path.Combine(Program.Settings.GamePath, "AppConfig.xml");
 
                     //Make backup
                     File.Copy(appconfig, appconfig+".bak", true);
@@ -87,7 +87,7 @@ namespace RegulatedNoise
             AppConfig locAppConfig;
 
             DialogResult MBResult = DialogResult.Ignore;
-            string configFile = Path.Combine(Form1.RegulatedNoiseSettings.GamePath, "AppConfig.xml");
+            string configFile = Path.Combine(Program.Settings.GamePath, "AppConfig.xml");
             XmlSerializer serializer; 
 
             do{
@@ -134,7 +134,7 @@ namespace RegulatedNoise
             DialogResult MBResult = DialogResult.Ignore;
             EdDisplayConfig locDisplay;
 
-            var configFile = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
+            var configFile = Path.Combine(Program.Settings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
             if (!File.Exists(configFile))
             {
                 return;
@@ -186,7 +186,7 @@ namespace RegulatedNoise
         private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();
         void WatcherDisplaySettings()
         {
-            var path = Path.Combine(Form1.RegulatedNoiseSettings.ProductAppData, "Graphics");
+            var path = Path.Combine(Program.Settings.ProductAppData, "Graphics");
             if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "DisplaySettings.xml")))
                 return;
 
@@ -200,7 +200,7 @@ namespace RegulatedNoise
         private readonly FileSystemWatcher _appdataWatcher = new FileSystemWatcher();
         void WatcherAppDataSettings()
         {
-            _appdataWatcher.Path = Form1.RegulatedNoiseSettings.GamePath;
+            _appdataWatcher.Path = Program.Settings.GamePath;
             _appdataWatcher.Filter = "AppConfig.xml";
             _appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
             _appdataWatcher.Changed += AppData_Changed;

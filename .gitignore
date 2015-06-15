@@ -26,3 +26,6 @@
 /RNDatabase/Database/data
 /RNDatabase/Database/script/thoughts.txt
 /RNDatabase/SQL-Model/*.bak
+/RegulatedNoise/Data/commodities.json
+/RegulatedNoise/Data/stations.json
+/RegulatedNoise/Data/systems.json
