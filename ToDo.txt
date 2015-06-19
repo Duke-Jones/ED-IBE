@@ -1,3 +1,25 @@
+todo:
+   * option "take jumps into account"
+   * Cmdrs Log must using ED-Time
+   * single station/time export
+   * english data base with possibility of import (file/ocr) from other languages
+   * if theres a comodity with a warnlevel of -1 found in a station 
+     so ask the user to set currnet values
+   * new commodity added and looking on the warn levels (small form) results in crash
+   * commodity selection is resetted if changing the system distance filter
+   * if implausibe prices show warnlevel direct under the price data
+   * show hint with age of market prices if location is a station
+   * add rejected marketdata from eddn with rightclick contextmenue
+   * show the stations as a one look list
+   * eddn layout v2
+   * more user friendly UI
+   * Add shipyard info
+   * Add outfitting info
+   * Add Rare Tab
+   * add coordinate calculation for new star systems
+   * show hint (new star system, changed data, original data)
+   * default setting for new systems
+   
 SQL 0.0.6
    * added "is_changed" to station- and system-tables
    * optimized scripts for sql creation "create.cmd"
@@ -5,4 +27,389 @@ SQL 0.0.6
    * added new classes for handling sql related stuff
    * import of systems from EDDB json-files is working
    * added script for staring MySQL server "start_server.cmd"
-   
+-------------------------------------------------------------------------------------         
+1.84_0.26_3
+   * added latest EDDB files
+-------------------------------------------------------------------------------------         
+1.84_0.26_2
+   * optimized ocr for station recognition
+-------------------------------------------------------------------------------------         
+1.84_0.26_1
+   * fixed a crash when commodity names with special 
+     character are found like "<something> from Baltah'sine"
+-------------------------------------------------------------------------------------         
+1.84_0.25_5
+   * added new translations to commodities
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------         
+1.84_0.25_4
+   * all EDDN setting are saved 
+   * autostart of EDDN is possible
+   * fixed: crash when open warnlevel-listview 
+-------------------------------------------------------------------------------------      
+1.84_0.25_3
+   * add warnlevel-object for user added commodities
+   * fixed: crash when open warnlevel-view from "edit/delete ocr results" table
+-------------------------------------------------------------------------------------      
+1.84_0.25_2
+   * saves now commodities added by user, even if RN is updated ( --> \Data\Commodities_own.xml)
+-------------------------------------------------------------------------------------      
+1.84_0.25_1
+   * fixed crash while adding new, unknown systems
+-------------------------------------------------------------------------------------      
+1.84_0.24_3
+   * fixed wrong version info for update function
+-------------------------------------------------------------------------------------      
+1.84_0.24_2
+   * set ED cmdr's name as default id for EDDN 
+   * EDDN import : auto-correcting capitalisation of system-/station-names
+-------------------------------------------------------------------------------------      
+1.84_0.24_1
+   * Cmdr's Log: autosaving no longer generates new filenames
+   * onetime action: correcting capitalisation of systemnames (can take a few minutes)
+-------------------------------------------------------------------------------------      
+1.84_0.23_2
+   * Cmdr's Log: immediately save after every change
+-------------------------------------------------------------------------------------      
+1.84_0.23_1
+   * fixed: crash reason in EDCommodityView
+   * Cmdr's Log: - cargo quantity up to 10000
+                 - commodity name will be saved
+-------------------------------------------------------------------------------------      
+1.84_0.22_4
+   * Mistake german commoditie translation #61 fixed
+   * added latest EDDB data files
+1.84_0.22_3
+   * EDDN Timestamp missing timezone #50 fixed
+1.84_0.22_2
+   * re-insert: added a duplicate filter for recognized commodities
+   * re-insert: recognized commodities are only uploaded if the datas are not already in local database
+   * re-insert: EDDN uploader now stops work and reject data if RN is closed
+   * re-insert: corrected readonly-behaviour of stations-dropdown (system tab)
+   * re-insert: fixed: crash on first start while searching for ED-paths   
+1.84_0.22_1
+   * reverted to v1.84_0.19
+-------------------------------------------------------------------------------------      
+   * show distance in list
+   * by commodity : show distance to current system
+   * copy system name with context menu in the "by station" and "by commodity" view
+1.84_0.21_1
+   * added a duplicate filter for recognized commodities
+   * recognized commodities are only uploaded if the datas are not already in local database
+   * EDDN uploader now stops work and reject data if RN is closed
+   * Added Logo
+   * New Listen to EDDN at start option
+   * download data files at startup if missing
+   * add Age colored column in prices list
+-------------------------------------------------------------------------------------      
+1.84_0.20_2
+   * fixed: crash on first start while searching for ED-paths
+   * fixed: designtime-crash
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------      
+1.84_0.20_1
+   * fix warn level edit view (zericco)
+   * remove initialization logic from Form1 (zericco)
+   * introduce ApplicationContext (zericco)
+   * corrected readonly-behaviour of stations-dropdown (system tab)
+-------------------------------------------------------------------------------------      
+1.84_0.19_2
+   * completed changes for sorting datevalues in Commanders Log   
+   * some GUI corrections on start tab
+   * showing changedate of systems and stations in a readable format
+   * correction on trigger for "Market Data Collected" event 
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------      
+1.84_0.19_1
+   * fix invalid cast from EDCommoditiesExt to int (thx to zericco)
+   * test: changes to sorting of datevalues in Commanders Log   
+-------------------------------------------------------------------------------------      
+1.84_0.18_2
+   * put eddn sending routine into a backgroundthread
+   * if test-schema is not active, so all data coming from test schema will also be ignored
+   * Commander's Log sets station information on new entrys
+   * only known stations in a system are suggested in "Commander's Log" station-dropdown
+   * new AutoEvents: 
+            - "Visited" (Stations)
+			- "Market Data Collected"
+   * optimized refresh behaviour of Commander's Log
+   * added some RN specific infos on the start tab
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------      
+1.84_0.18_2
+   * put eddn sending routine into a backgroundthread
+   * if test-schema is not active, so all data coming from test schema will also be ignored
+   * Commander's Log sets station information on new entrys
+   * only known stations in a system are suggested in "Commander's Log" station-dropdown
+   * new AutoEvents: 
+            - "Visited" (Stations)
+			- "Market Data Collected"
+   * optimized refresh behaviour of Commander's Log
+   * added some RN specific infos on the start tab
+   * added latest EDDB data files
+-------------------------------------------------------------------------------------
+      1.84_0.18_1
+   * positons of Messageboxes and Inputboxes are centered over the parent window
+   * added "Alt-O" shortcut for "Continue" on OCR tab
+   * get stationname for OCR from "location from logfile" if the stationname is 
+     confirmed as "existing in system" by database
+   * added possibility to purge old data on settings tab
+   * added "None" to items in station and system data
+   * correction on <test> EDDN schema check
+-------------------------------------------------------------------------------------      
+1.84_0.17
+   * it's possible to add new stations
+   * default value for EDDN is no longer <test> because it's only for dev testing
+   * set value for EDDN schema from <test> to <normal> and add a hint for users who have EDDN active
+-------------------------------------------------------------------------------------      
+1.84_0.17_4
+   * it's possible to change data of existing stations
+-------------------------------------------------------------------------------------      
+1.84_0.17_3
+   * many steps for adding and changing station data done
+-------------------------------------------------------------------------------------      
+1.84_0.17_2
+   * data system can be added and changed - station data still open
+-------------------------------------------------------------------------------------      
+1.84_0.17_1
+   * set "unset"-value for EDDB station and system properties to null
+   * option to cancel while asked for needed directorys on first start
+   * systems in general now editable, not only the current system
+   * cleaned up system tab
+   * added new helper classes "controls_ext", "Extensions", "ObjectCompare"
+-------------------------------------------------------------------------------------      
+1.84_0.16
+   * translating of EDDN messages, EDDN now possible with other languages than english
+   * fixed a bug in the internal translating logic
+   * added a plausibility filter to the incoming EDDN logic
+   * added last EDDB data files
+-------------------------------------------------------------------------------------      
+1.84_0.15_2
+   * sorting of comboboxes is saved now
+   * search for 'products' path can be cancelled
+-------------------------------------------------------------------------------------      
+1.84_0.15_1
+   * auto show systemdata
+   * port of webserver is adjustable
+   * show number of stations in system
+   * completed splash screen
+   * optimized program start behaviour
+-------------------------------------------------------------------------------------      
+1.84_0.14
+   * added a progress view for calculating best routes with cancel option
+   * filter added : max. distance for trade routes
+-------------------------------------------------------------------------------------      
+1.84_0.14_1
+   * changes on log scanning issue + additional log info
+-------------------------------------------------------------------------------------      
+1.84_0.13
+   * fixed: sometimes OCR calibration tab is opened instead of "capture and correct" tab
+   * fixed: crash if asking for unknown systemdata
+   * fixed: auto adding Cmdr's Log after jump scrolls the whole list
+   * added current EDDN json files
+-------------------------------------------------------------------------------------      
+1.84_0.13_5
+   * only added a special for log for location issue 
+-------------------------------------------------------------------------------------      
+1.84_0.13_4
+   * added first version of gui for showing and editing system data
+   * "station distance to star" filter full included 
+     ! some stations have still no distance information yet (station-edit needed -> next versions). 
+	   On settings tab you can choose if they should be incuded or excluded
+   * still changings on log scanning issue (maybe finished now)
+-------------------------------------------------------------------------------------      
+1.84_0.13_3
+   * first rows for "station distance to star" filter
+   * saving column widths of Cmdr's Log if changed
+   * optimized standard column widths of Cmdr's Log
+     vsorting of date columns now should be correct
+   * still changings on log scanning issue
+-------------------------------------------------------------------------------------      
+1.84_0.13_2
+   * fixed some issues while looking for location in logfiles
+-------------------------------------------------------------------------------------   
+1.84_0.13_1
+   * fixed some issues while looking for location in logfiles
+   * changed GUI from CorrectingOCRResults in cause of viewing issues
+-------------------------------------------------------------------------------------   
+1.84_0.12_2
+   * delete setting.ini if calibrating new (previous calculated digit width can result in bad OCR)
+   * commodity warnlevels are now saved if changed
+   * fixed crash reason if deleting all commodities from a station
+   * Cmdr's Log now showing dates in local culture settings
+-------------------------------------------------------------------------------------   
+1.84_0.12_1
+   * getting also current location in the current system from logfile
+   * clock added (local and ingame time)
+-------------------------------------------------------------------------------------   
+1.84_0.11
+   * if a station is renamed the new name gets now the correct format
+   * fixed another crash reason while changing data
+   * another few gui cleanups and object reconnectings
+-------------------------------------------------------------------------------------   
+1.84_0.11_1
+   * fixed: removing price data crashing the program
+   * removing and changing of price data showing changes immediately
+   * a few gui cleanups and small repositionings
+   * removed "commodities_RN.json" (it' auto generated at the first start or it exists already)
+-------------------------------------------------------------------------------------   
+1.84_0.10
+   * completed base class for easy position saving
+   * saving now the positions of all windows
+   * added a donation button 
+   * included a new class for saving dictionaries as XML-file
+-------------------------------------------------------------------------------------   
+1.84_0.10_4
+   * added up-to-date data files from EDDB
+   * additional table view for viewing and editing the plausibility limits
+   * added a abstract window base class for supporting default actions like saving window positions
+   * timer for checking the OCRBuffer now is stopping again if nothing more to do
+   * OCR-tab is automatically shown if ocr starts (optional)
+-------------------------------------------------------------------------------------
+1.84_0.10_3
+   * "checking for a one" cleans now up the GUI
+   * fixed a few errors around the plausibility check
+   * single result lines of ocr are now erasable
+   * added function to auto-activate OCR tab if recognition starts
+   * already recognized commodities will not added again anymore during a single ocr cycle
+-------------------------------------------------------------------------------------
+1.84_0.10_2
+   * checking plausibility for the prices          ** "Auto Import" will be possible in future ** 
+   * mark implausible prices in "Result Edit Window"
+   * removed "Auto Uppercase" option - it's now always on
+-------------------------------------------------------------------------------------
+1.84_0.10_1
+   * compiled nn_traing.exe with option "noconsole" 
+   * added classes for calculating plausibility limits for the prices
+-------------------------------------------------------------------------------------
+1.84_0.09
+   * added up-to-date data files from EDDB (v3) and expand internal structure 
+   * changed default "dark pixel amount" to 22
+   * changed default "dark pixel threshold" to 0.6
+   * changed from "1.84_0.09_1" to "1.84_0.09_2"
+-------------------------------------------------------------------------------------
+1.84_0.09_2
+   * improved segmenting capability of EliteBrainerous again
+   * splitting for OCR reasons from 1.84_0.09_1 removed again
+   * added a test for checking the color-cutoff value with samples
+   * clean up some code
+-------------------------------------------------------------------------------------
+1.84_0.09_1
+   * fixed: "perLightYearRoundTrip" was not switchable anymore
+   * improved segmenting capability of EliteBrainerous
+   * splittet OCR base picture into 2 differenzt optimized pictures 
+     in cause of different working methods of EliteBrainerous and Tesseract
+   * added the possibility to start one-time-operations for necessary
+     setting changes for new versions
+-------------------------------------------------------------------------------------
+1.84_0.08
+   * Comboboxes hold their selected item if reordering or anything other
+     change the list of the DropDown items
+   * "Edit Row" for commodities is working again
+   * CSV-Import: if there already recordset that is younger than 
+     the recordset to import so the older recordset gets ignored
+   * if there are more than one recordset for a commodity on a station
+     so only the younger one gets considered for route calculations
+   * order of colums for station and system names in dropdown 
+     depends on the order of the dropdown itself 
+   * setting of checkbox "perLightYearRoundTrip" is also saved
+   * repeatedly language switching result not anymore in a crash
+   * a different language than englisch is saved again
+-------------------------------------------------------------------------------------
+1.84_0.07_4 (prerelease)
+   * comboboxes (station/system) can be sorted by 
+      - station only 
+	  - system and station
+	  - distance
+	  - additional can "n" last visited stations shown on top of the list
+   * internal structure is completed for considering the "size of landingpads",
+     "distances of station to stars" and other data based on EDDB
+   * more settings are saved when closing the application
+-------------------------------------------------------------------------------------
+1.84_0.07_3
+   * fixed a error in the new Milkyway-class
+   * locations of the systems are saved in a quick cache
+-------------------------------------------------------------------------------------
+1.84_0.07_2
+   * added support for EDDB data (systems/stations/commodities)
+   * implemented a new internal structure for managing the system and station data
+-------------------------------------------------------------------------------------
+1.84_0.07_1
+   * find the path to the ED game directoy (first start) even if it's no standard path
+   * Pixeltest is now sure visible in foreground of RN
+   * saving and restoring position and state of main window 
+-------------------------------------------------------------------------------------
+1.84_0.06
+   * fixed a crash reason while running improved OCR process 
+   * included current station and system data (22.02.15)
+-------------------------------------------------------------------------------------
+1.84_0.05
+   * set the correct path for update for DJ version
+   * speed of OCR process improved
+-------------------------------------------------------------------------------------
+1.84_0.04
+   * in the distance dropdown can own distances typed in again (issue #9)
+   * included current station and system data (17.02.15)
+   * included a performancetimer for checking for bottlenecks (not active now)
+   * saving the sort order of "Cmdr's Log" on exit 
+   * last written "Cmdr's Log" event is the active event 
+   * autogenerated "Jumped To" event can be disabled
+-------------------------------------------------------------------------------------
+1.84_0.03
+   * loading display- and app-data from ED: improved handling of errors while re-reading files
+   * check both versions ("official" and "international") of RegulatedNoise for updates
+   * New datafiles will not be activated until savings done without errors.
+     old data files (AutoSave.csv/CommandersLogAutoSave.xml, RegulatedNoiseSettings.xml) 
+	 will be saved as "*_bak.<ext>" instead of deleted
+   * fixed : commodity data was not written if "include extended info" was disabled
+   * changed Comboboxes from DropDown to DropDownList with "suggest" AutoCompleteMode
+   * comboboxes that wasn't sorted can be sorted (Settings)
+-------------------------------------------------------------------------------------
+1.84_0.03b
+   * added new error handling in some functions
+   * automatically generated "Jumped To ..." event is working again
+   * crash while re-reading GameSettings.xml fixed
+-------------------------------------------------------------------------------------
+1.84_0.02
+   * added "Microbial Furnaces", "Advanced Catalysers" and "Resonating Separators" as commodity
+   * added missing Dataset "dsCommodities" and class "enumBindTo" to repositiory (relevant for compiling source)
+-------------------------------------------------------------------------------------
+1.84_0.01
+   * language selection (english-german-french)
+   * immediately autosave if data changed (prices, commodities, some settings)
+   * invoking crash bug fixed while OCR 
+   * used traineddata-file vom OCR is selectable
+   * EDDN reactivated if language is english
+   * fixed commodity base for better OCR (language dependent), possibility to add new commodities if confirmed 
+   * bug fixed while ocr notification
+   * recognition of levels "high/medium/low" corrected (language dependent)
+   * behavior of "AutoUppercase"-Checkbox corrected
+-------------------------------------------------------------------------------------
+1.84_0.00
+   * changes merged based on 1.8.4
+   * update-hint of original added again
+------------------------------------------------------------------------------------- 
+1.82_1.04
+   * update-hint of original removed
+   * EDDN deactivated (please use english original due to different language dependent names)
+   * behavior of "clear Results" button after ocr corrected
+   * stateful enabling of ocr buttons
+   * recognition of stations: level for Levenshtein algorithm depends on the length of the name
+-------------------------------------------------------------------------------------
+1.82_1.03
+   * optimized filter-processing for screenshots before ocr (tested on commandline tesseractOCR)
+   * bug while procesing the results from EliteBrainerous removed
+   * "really" empty strings gets ignored
+   * level for Levenshtein algorithm depends on the length of the word
+   * base dictionary adapted ffor german
+-------------------------------------------------------------------------------------
+1.82_1.02
+   * optional "auto-uppercasing" saved in global settings
+   * added personal changelog/todo
+-------------------------------------------------------------------------------------
+1.82_1.01 
+   * optional "auto-uppercasing" checkbox during ocr-correction added
+   * button "Ignore As Trash" during ocr-correction added
+-------------------------------------------------------------------------------------
+1.82_1.00 
+   * initial version from Git-Hub 
