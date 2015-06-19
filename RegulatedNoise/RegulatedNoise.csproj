@@ -271,6 +271,8 @@
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SQL\DBConnector.cs" />
+    <Compile Include="SQL\DBConvert.cs" />
+    <Compile Include="SQL\DBPorter.cs" />
     <Compile Include="SQL\DBProcess.cs" />
     <Compile Include="Station.cs" />
     <Compile Include="ObjectDirectory.cs" />

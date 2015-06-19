@@ -7,6 +7,7 @@ using System.Data.Common;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using System.Data;
 
 
 namespace RegulatedNoise.SQL
@@ -25,29 +26,31 @@ namespace RegulatedNoise.SQL
             public Int32                                ConnectTimeout;
         }
 
+        private double DEFAULT_MAX_TIME                 = 10.0;
+
         private ConnectionParams                        m_ConfigData;
         private DbConnection                            m_Connection;
         private DbCommand                               m_Command;
         private DbTransaction                           m_Transaction;
         private bool                                    disposed                = false;
-    
+
         //private string                                  m_SQLServer;
         //private string                                  m_DataBase;
     
         private Int32                                   m_Transcount;
     
-        //private bool                                    m_RollBackPending;          // rollback is running
+       private bool                                    m_RollBackPending;          // rollback is running
     
-        //private double                                  m_maxTransactionTime;       //  max. time for transactions
-        //private DateTime                                m_TransStartTime;
+        private double                                  m_maxTransactionTime;       //  max. time for transactions
+        private DateTime                                m_TransStartTime;
     
-        ////  Startzeitpunkt der Transaktion
-        //private System.Timers.Timer                     m_Watchdog_Trans;
-        //private System.Timers.Timer                     m_Watchdog_Alive;
+        //  Startzeitpunkt der Transaktion
+        private System.Timers.Timer                     m_Watchdog_Trans;
+        private System.Timers.Timer                     m_Watchdog_Alive;
     
-        //private string                                  m_TransActString;
+        private string                                  m_TransActString;
     
-        //private Dictionary<string, DbDataAdapter>       m_UpdateObjects;
+        private Dictionary<string, DbDataAdapter>       m_UpdateObjects;
 
         /// <summary>
         /// simple constructor
@@ -64,10 +67,10 @@ namespace RegulatedNoise.SQL
         {
             try 
             {
-                m_ConfigData                    = Parameter;
-
                 m_Connection                    = new MySqlConnection();
                 m_Command                       = new MySqlCommand();
+
+                Init(Parameter);
 
             }
             catch (Exception ex) {
@@ -128,6 +131,7 @@ namespace RegulatedNoise.SQL
                 m_Connection                    = new MySqlConnection();
                 m_Command                       = new MySqlCommand();
 
+                m_UpdateObjects = new Dictionary<string, DbDataAdapter>(); 
             }
             catch (Exception ex) {
                 throw new Exception("Error in Init function", ex);
@@ -377,7 +381,7 @@ namespace RegulatedNoise.SQL
             }
             catch (Exception ex) {
                 MonitorExit(this);
-                throw new Exception(("Fehler bei \'ExecuteReader\', SQLString = <" 
+                throw new Exception(("Error on \'ExecuteReader\', SQLString = <" 
                                 + (CommandText + (">" + ("(" 
                                 + (m_ConfigData.Name + ")"))))), ex);
             }
@@ -385,11 +389,391 @@ namespace RegulatedNoise.SQL
 
             return retValue;
         }
+
+
+        public Int32 TableRead(string CommandText, string Tablename, ref System.Data.DataSet Data) 
+        {
+            Int32 retValue = 0;
+
+            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
+                throw new Exception("Timeout while waiting for monitor-lock for TableRead()");
+            }
+
+            try {
+                if (!m_UpdateObjects.ContainsKey(Tablename)) {
+                    //  loading data first time
+                    if (string.IsNullOrEmpty(CommandText)) 
+                        throw new Exception("no sql command specified");
+
+                    DbCommand Command                   = new MySqlCommand();
+                    DbCommandBuilder CommandBuilder     = new MySqlCommandBuilder();
+                    DbDataAdapter DataAdapter           = new MySqlDataAdapter();
+
+                    //  prepare command
+                    Command.CommandText     = CommandText;
+                    Command.Connection      = m_Connection;
+
+                    if (m_Transaction != null) 
+                        Command.Transaction = m_Transaction;
+
+                    //  preparing dataadapter and stringbuilder (for changes on the tables) 
+                    CommandBuilder.DataAdapter          = DataAdapter;
+                    DataAdapter.MissingSchemaAction     = System.Data.MissingSchemaAction.AddWithKey;
+                    DataAdapter.SelectCommand           = Command;
+
+                    //  read data and fill table
+                    DataAdapter.Fill(Data, Tablename);
+
+                    //  save commandbuilder object 
+                    m_UpdateObjects.Add(Tablename, DataAdapter);
+                    retValue  = Data.Tables.Count;
+                }
+                else 
+                {
+                    //  data already loaded - now only refreshing
+                    Data.Tables[Tablename].Rows.Clear();
+                    m_UpdateObjects[Tablename].Fill(Data.Tables[Tablename]);
+                }
+            }
+            catch (Exception ex) 
+            {
+                MonitorExit(this);
+                throw new Exception(("Error on \'TableRead\', SQLString = <" 
+                                + (CommandText + (">" + ("(" 
+                                + (m_ConfigData.Name + ")"))))), ex);
+            }
+            MonitorExit(this);
+
+            return retValue;
+        }
+
+        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data) {
+            return TableUpdate(Tablename, ref Data, false, null);
+        }
     
+        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, bool removeTableReadObject) {
+            return TableUpdate(Tablename, ref Data, removeTableReadObject, null);
+        }
+    
+        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, System.Data.DataViewRowState recordStates) {
+            return TableUpdate(Tablename, ref Data, false, null);
+        }
+    
+        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, System.Data.DataViewRowState recordStates, bool removeTableReadObject) {
+            return TableUpdate(Tablename, ref Data, false, null);
+        }
+    
+        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, DbDataAdapter DataAdapter) {
+            return TableUpdate(Tablename, ref Data, false, DataAdapter);
+        }
+
+        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, bool removeTableReadObject, DbDataAdapter DataAdapter){
+
+            Int32         retValue = 0;
+            DbDataAdapter lDataAdapter;
+
+            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                throw new Exception("Timeout while waiting for monitor-lock for TableUpdate()");
+
+            try{
+                if ((DataAdapter == null) && !m_UpdateObjects.ContainsKey(Tablename)){
+                    //  table is unknown
+                    throw new Exception(string.Format("Table {0} is not existing", Tablename));
+
+                }else{
+                    //  select dataadapter
+                    if (DataAdapter != null) 
+                        lDataAdapter = DataAdapter;
+                    else 
+                        lDataAdapter = m_UpdateObjects[Tablename];
+
+                    // refresh data
+                    lDataAdapter.Update(Data, Tablename);
+                }
+
+                if ((DataAdapter == null) && removeTableReadObject) 
+                    TableReadRemove(Tablename);
+
+            }catch (Exception ex) {
+                MonitorExit(this);
+                throw new Exception(("Error on \'TableUpdate\', SQLString <" 
+                                + (Tablename + (">" + ("(" 
+                                + (m_ConfigData.Name + ")"))))), ex);
+            }
+
+            MonitorExit(this);
+
+            return retValue;
+        }
+
+        public void TableReadRemove(string Tablename) 
+        {
+            try{
+                if (m_UpdateObjects.ContainsKey(Tablename)){
+
+                    m_UpdateObjects[Tablename].Dispose();
+                    m_UpdateObjects.Remove(Tablename);
+
+                }
+            }catch (Exception ex) {
+                throw new Exception("Error on \'TableReadRemove\'", ex);
+            }
+        }
+
+        public static String SQLNow(){
+            return SQLDateTime(DateTime.Now);
+        }
+    
+        public static String SQLToday() {
+            return SQLDate(DateTime.Now);
+        }
+    
+        public static String SQLDateTime(DateTime datDateTime) {
+            return string.Format("{{ts \'{0:yyyy-MM-dd HH:mm:ss}\'}}", datDateTime);
+        }
+    
+        public static String SQLDate(DateTime datDateTime) {
+            return string.Format("{{ts \'{0:yyyy-MM-dd}\'}}", datDateTime);
+        }
+    
+        public static String SQLDateOracle(DateTime datDateTime) {
+            return string.Format("to_Date(\'{0:dd.MM.yyyy}\', \'DD.MM.YYYY\')", datDateTime);
+        }
+    
+        public static String SQLAString(string DBString) {
+            DBString = DBString.Replace("\'", "");
+            return ("\'" + (DBString + "\'"));
+        }
+    
+        public static string SQLDecimal(double DBDouble) {
+            return DBDouble.ToString("g", new System.Globalization.CultureInfo("en-US"));
+        }
+    
+        public static string SQLDecimal(float DBFloat) {
+            return DBFloat.ToString("g", new System.Globalization.CultureInfo("en-US"));
+        }
+
+
+        /// <summary>
+        /// starts a transaction on the connection
+        /// </summary>
+        /// <param name="maxTransactionTime">max. allowed runtime</param>
+        /// <param name="ProcedureName">Name for level tracing</param>
+        /// <returns></returns>
+        public Int32 TransBegin(double maxTransactionTime, string ProcedureName){
+            try {
+
+                //make it thread-save with a monitor
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut))
+                    throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Transbegin(Double)");
+
+                if (m_RollBackPending) {
+                    //  remove this layer in the monitor and tell all other
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                    throw new Exception("Aufruf von BeginTrans trotz laufendem Rollback");
+
+                }else if ((m_Transcount == 0)) {
+                    // this is the first level - initiate the transaction
+
+                    TransStringAdd(ProcedureName);
+
+                    m_Transaction    = m_Connection.BeginTransaction();
+                    m_TransStartTime = DateTime.Now;
+                    
+                    if (m_maxTransactionTime < maxTransactionTime) 
+                        m_maxTransactionTime = DEFAULT_MAX_TIME;
+
+                    m_Watchdog_Trans.Start();
+                    m_Transcount = 1;
+                }
+                else {
+                    // this is a higher level - only increase transaction level counter
+                    TransStringAdd(ProcedureName);
+                    m_Transcount++;
+                }
+
+                return m_Transcount;
+
+            }
+            catch (Exception ex) {
+                try {
+                    //  diese Ebene im Monitor wieder entfernen und den anderen Bescheid sagen
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                }catch (Exception) {}
+
+                throw new Exception("Fehler beim Transaktions-Start", ex);
+            }
+        }
+
+        public Int32 TransBegin(String ProcedureName){
+            try {
+
+                //make it thread-save with a monitor
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Transbegin()");
+
+                if (m_RollBackPending) {
+                    //  remove this layer in the monitor and tell all other
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                    throw new Exception("Aufruf von BeginTrans trotz laufendem Rollback");
+                }
+                else if ((m_Transcount == 0)) {
+                    // this is the first level - initiate the transaction
+                    TransStringAdd(ProcedureName);
+                    m_Transaction = m_Connection.BeginTransaction();
+                    m_TransStartTime = DateTime.Now;
+                    m_Watchdog_Trans.Start();
+                    m_Transcount = 1;
+                }
+                else {
+                    // this is a higher level - only increase transaction level counter
+                    TransStringAdd(ProcedureName);
+                    m_Transcount++;
+                }
+
+                return m_Transcount;
+
+            }catch (Exception ex) {
+                try {
+                    //  diese Ebene im Monitor wieder entfernen und den anderen Bescheid sagen
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                }
+                catch (Exception) {}
+
+                throw new Exception("Fehler beim Transaktions-Start", ex);
+            }
+        }
+
+        // '' <summary>
+        // '' Best�tigt eine Transaktion und setzt den Transaktionz�hler zur�ck
+        // '' </summary>
+        // '' <returns></returns>
+        // '' <remarks></remarks>
+        public Int32 TransCommit(){
+            try {
+                //make it thread-save with a monitor
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Transbegin()");
+
+                if (m_RollBackPending) {
+                    //  remove this layer in the monitor and tell all other
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                    throw new Exception("Aufruf von CommitTrans trotz laufendem Rollback");
+                }
+                else if ((m_Transcount == 1)) {
+                    TransStringRemove();
+                    m_Watchdog_Trans.Stop();
+                    m_Transaction.Commit();
+                    m_Transcount = 0;
+                    m_Transaction = null;
+                    m_maxTransactionTime = 0;
+                    //  eine Ebene im Monitor wieder entfernen
+                    MonitorExit(this);
+                }
+                else if ((m_Transcount > 1)) {
+                    //  eine Ebene im Monitor wieder entfernen
+                    TransStringRemove();
+                    m_Transcount--;
+                    MonitorExit(this);
+                }
+                else {
+                    //  remove this layer in the monitor and tell all other
+                    TransStringRemove();
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                    throw new Exception("Keine Transaktion aktiv");
+                }
+                
+                MonitorPulse(this);
+                MonitorExit(this);
+                // LogFile.Write("Aussprung TransCommit, Transstring <" & m_TransActString & ">")         
+
+                return m_Transcount;
+            }
+            catch (Exception ex) {
+
+                try {
+                    //  remove this layer in the monitor and tell all other
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                }
+                catch (System.Exception) {}
+
+                throw new Exception("Fehler beim Transaktions-Commit", ex);
+            }
+        }
+
+
+        public Int32 TransRollback(){
+            try {
+                //make it thread-save with a monitor
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut))
+                    throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Transbegin()");
+
+                if (m_Transcount == 1) {
+                    m_Watchdog_Trans.Stop();
+                    if (!(m_Transaction == null)) 
+                        m_Transaction.Rollback();
+
+                    m_Transcount = 0;
+                    m_Transaction = null;
+                    m_RollBackPending = false;
+                    m_maxTransactionTime = 0;
+                    //  eine Ebene im Monitor wieder
+                    MonitorExit(this);
+                }
+                else if ((m_Transcount > 1)) {
+                    // LogFile.Write("TransRollback 2")       
+                    m_RollBackPending = true;
+                    m_Transcount--;
+                    //  eine Ebene im Monitor wieder
+                    MonitorExit(this);
+                }
+
+                //  remove this layer in the monitor and tell all other
+                MonitorPulse(this);
+                MonitorExit(this);
+
+                return m_Transcount;
+            }
+            catch (Exception ex) {
+                try {
+                    //  diese Ebene im Monitor wieder entfernen und den anderen Bescheid sagen
+                    MonitorPulse(this);
+                    MonitorExit(this);
+                }
+                catch (Exception) {}
+
+                throw new Exception("Fehler beim Transaktions-Commit", ex);
+            }   
+        }
+
+        public void TransStringAdd(String Name){
+
+            if (String.IsNullOrEmpty(m_TransActString) || (m_TransActString.Trim().Length > 0))
+                m_TransActString = string.Format("{0}({1})", Name, m_Transcount);
+            else 
+                m_TransActString = string.Format("{0},{1}({2})", m_TransActString, Name, m_Transcount);
+
+        }
+
+        public void TransStringRemove(){
+
+            if (string.IsNullOrEmpty(m_TransActString) || (m_TransActString.Trim().Length > 0))
+                m_TransActString = String.Empty;
+
+            else if (m_TransActString.LastIndexOf(",") > -1)
+                m_TransActString = m_TransActString.Substring(0, (m_TransActString.LastIndexOf(",") - 1));
+
+            else
+                m_TransActString = String.Empty;
+        }
     }
-
-
-
 
 #if false
     public class DBConnector {
@@ -1178,7 +1562,7 @@ namespace RegulatedNoise.SQL
         }
     
         public static string SQLNow() {
-            return SQLDateTime(DateAndTime.Now);
+            return SQLDateTime(DateTime.Now);
         }
     
         // '' <summary>
@@ -1187,7 +1571,7 @@ namespace RegulatedNoise.SQL
         // '' <returns></returns>
         // '' <remarks></remarks>
         public static string SQLToday() {
-            return SQLDate(DateAndTime.Now);
+            return SQLDate(DateTime.Now);
         }
     
         // '' <summary>
@@ -1388,11 +1772,11 @@ namespace RegulatedNoise.SQL
                     TransStringAdd(ProcedureName);
                     // LogFile.Write("Starte Transaktion ")
                     m_Transaction = m_Connection.BeginTransaction();
-                    m_TransStartTime = DateAndTime.Now;
+                    m_TransStartTime = DateTime.Now;
                     if ((m_maxTransactionTime < maxTransactionTime)) {
                         m_maxTransactionTime = DEFAULT_MAX_TIME;
                     }
-                    m_Watchdog_Trans.Start;
+                    m_Watchdog_Trans.Start();
                     m_Transcount = 1;
                 }
                 else {
@@ -1437,8 +1821,8 @@ namespace RegulatedNoise.SQL
                         // LogFile.Write("TransBegin 2")       
                         TransStringAdd(ProcedureName);
                         m_Transaction = m_Connection.BeginTransaction();
-                        m_TransStartTime = DateAndTime.Now;
-                        m_Watchdog_Trans.Start;
+                        m_TransStartTime = DateTime.Now;
+                        m_Watchdog_Trans.Start();
                         m_Transcount = 1;
                     }
                     else {
@@ -1482,8 +1866,8 @@ namespace RegulatedNoise.SQL
                         else if ((m_Transcount == 1)) {
                             // LogFile.Write("TransCommit 2")       
                             TransStringRemove();
-                            m_Watchdog_Trans.Stop;
-                            m_Transaction.Commit;
+                            m_Watchdog_Trans.Stop();
+                            m_Transaction.Commit();
                             m_Transcount = 0;
                             m_Transaction = null;
                             m_maxTransactionTime = 0;
@@ -1537,9 +1921,9 @@ namespace RegulatedNoise.SQL
                             }
                             if ((m_Transcount == 1)) {
                                 // LogFile.Write("TransRollback 1")       
-                                m_Watchdog_Trans.Stop;
+                                m_Watchdog_Trans.Stop();
                                 if (!(m_Transaction == null)) {
-                                    m_Transaction.Rollback;
+                                    m_Transaction.Rollback();
                                 }
                                 m_Transcount = 0;
                                 m_Transaction = null;
@@ -1583,7 +1967,7 @@ namespace RegulatedNoise.SQL
     double tempTime;
     ((epPerformanceTimer)(AliveTimer));
     try {
-        m_Watchdog_Trans.Stop;
+        m_Watchdog_Trans.Stop();
         if (m_ConfigData.getValue(Of, Boolean)["StayAlive) {
             if ((AliveTimer == null)) {
                 AliveTimer = new epPerformanceTimer();
@@ -1598,8 +1982,8 @@ namespace RegulatedNoise.SQL
         }
         if (!(m_Transaction == null)) {
             if (((m_maxTransactionTime > 0) 
-                        && (DateAndTime.Now.Subtract(m_TransStartTime).Seconds > m_maxTransactionTime))) {
-                m_Transaction.Rollback;
+                        && (DateTime.Now.Subtract(m_TransStartTime).Seconds > m_maxTransactionTime))) {
+                m_Transaction.Rollback();
                 m_Transaction = null;
                 m_RollBackPending = true;
                 tempTime = m_maxTransactionTime;
@@ -1608,7 +1992,7 @@ namespace RegulatedNoise.SQL
                                 + (tempTime.ToString("0.0") + "s) initiiert.")));
             }
             else {
-                m_Watchdog_Trans.Start;
+                m_Watchdog_Trans.Start();
             }
         }
     }

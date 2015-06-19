@@ -29,3 +29,5 @@
 /RegulatedNoise/Data/commodities.json
 /RegulatedNoise/Data/stations.json
 /RegulatedNoise/Data/systems.json
+/RNDatabase/Database/script/create_Elite_DB_MyISAM.sql
+/RNDatabase/SQL-Model/Elite_DB  MyISAM.mwb

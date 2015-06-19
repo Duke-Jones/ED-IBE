@@ -7675,11 +7675,16 @@ namespace RegulatedNoise
 
         private void cmdTest_Click(object sender, EventArgs e)
         {
-            System.Data.DataTable Data  = new System.Data.DataTable();
+            //System.Data.DataTable Data  = new System.Data.DataTable();
 
-            Program.DBCon.Execute("select * from tbeconomy", ref Data);
+            //Program.DBCon.Execute("select * from tbeconomy", ref Data);
 
-            Debug.Print(Data.Rows.Count.ToString());
+
+            RegulatedNoise.SQL.DBPorter Import = new RegulatedNoise.SQL.DBPorter();
+
+            Import.ImportSystems(@"./Data/systems.json");
+
+            Debug.Print("swds");
 
         }
 
