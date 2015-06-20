@@ -21,6 +21,11 @@ todo:
    * default setting for new systems
    
    
+   
+1.84_0.27_1
+   * changed EDDN sending routine to v2 schema
+   * cleaned up a little bit the involved codes
+-------------------------------------------------------------------------------------         
 1.84_0.26_3
    * added latest EDDB files
 -------------------------------------------------------------------------------------         

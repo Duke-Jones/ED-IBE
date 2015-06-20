@@ -26,6 +26,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using CodeProject.Dialog;
 
+
 namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
@@ -54,7 +55,7 @@ namespace RegulatedNoise
 
         public static Form1 InstanceObject;
         
-        public EDDN Eddn;
+        public RegulatedNoise.EDDN.EDDNCommunicator EDDNComm;
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
@@ -200,7 +201,7 @@ namespace RegulatedNoise
                 _Splash.InfoChange("create ocr calibrator...<OK>");
 
                 _Splash.InfoAdd("prepare EDDN interface...");
-                Eddn = new EDDN(this);
+                EDDNComm = new RegulatedNoise.EDDN.EDDNCommunicator(this);
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
                 
@@ -453,7 +454,7 @@ namespace RegulatedNoise
                 _Splash.InfoAdd("create milkyway...");
                 _Milkyway = new EDMilkyway();
                 
-                // 1. load the EDDN data
+                // 1. load the EDDNCommunicator data
                 { 
                     bool needPriceCalculation = !myMilkyway.loadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true, true);
 
@@ -975,7 +976,7 @@ namespace RegulatedNoise
         }
 
         /// <summary>
-        /// selects, which ID to use for sending to EDDN
+        /// selects, which ID to use for sending to EDDNCommunicator
         /// </summary>
         private void selectEDDN_ID()
         {
@@ -1506,7 +1507,7 @@ namespace RegulatedNoise
                         CommodityDirectory[currentRow.CommodityName].Add(currentRow);
 
                         if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-                            Eddn.sendToEdDDN(currentRow);
+                            EDDNComm.sendToEdDDN(currentRow);
                     }
                 }
             }
@@ -3887,12 +3888,12 @@ namespace RegulatedNoise
 
         private void startEDDNListening()
         {
-            _eddnSubscriberThread = new Thread(() => Eddn.Subscribe());
+            _eddnSubscriberThread = new Thread(() => EDDNComm.Subscribe());
             _eddnSubscriberThread.IsBackground = true;
             _eddnSubscriberThread.Start();
         }
 
-        #region EDDN Delegates
+        #region EDDNCommunicator Delegates
         private DateTime _lastGuiUpdate;
 
         private delegate void SetTextCallback(object text);
@@ -3968,7 +3969,7 @@ namespace RegulatedNoise
         private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
         {
             string txt = text.ToString();
-            // .. we're here because we've received some data from EDDN
+            // .. we're here because we've received some data from EDDNCommunicator
 
             if (txt != "")
                 try
@@ -4053,7 +4054,7 @@ namespace RegulatedNoise
                         if(!String.IsNullOrEmpty(commodity))
                         {
 
-                            //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
+                            //System;Station;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
                             if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
                             {
                                 string csvFormatted = cachedSystem.Name + ";" +
@@ -5053,13 +5054,7 @@ namespace RegulatedNoise
         private void Form_Load(object sender, EventArgs e)
         {
 
-            Text += RegulatedNoiseSettings.Version.ToString(CultureInfo.InvariantCulture);
-
-#if DukeJones
-            RegulatedNoiseSettings.CheckVersion2();
-            Text += "_" + RegulatedNoiseSettings.VersionDJ.ToString(CultureInfo.InvariantCulture);
-#endif
-
+            Text += RegulatedNoiseSettings.getVersionString();
 
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
                  DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||

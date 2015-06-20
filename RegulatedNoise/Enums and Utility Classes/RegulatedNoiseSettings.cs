@@ -312,6 +312,11 @@ namespace RegulatedNoise
             lastVersion     = Version;
             lastVersionDJ   = VersionDJ;
         }
+
+        public String getVersionString()
+        {
+            return Version.ToString(CultureInfo.InvariantCulture) + "_" + VersionDJ.ToString(CultureInfo.InvariantCulture);
+        }
     }
 
     public partial class Form1

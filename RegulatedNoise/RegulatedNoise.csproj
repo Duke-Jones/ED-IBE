@@ -128,6 +128,7 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
+    <Compile Include="EDDN\Schema_v2.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -175,7 +176,7 @@
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
     <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
-    <Compile Include="EDDN.cs" />
+    <Compile Include="EDDN\EDDNCommunicator.cs" />
     <Compile Include="CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
       <SubType>Form</SubType>

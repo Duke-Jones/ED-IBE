@@ -226,7 +226,7 @@
             this.Stationname.ReadOnly = true;
             this.Stationname.Width = 150;
             // 
-            // Commodity
+            // Commodity_Class
             // 
             this.Commodity.HeaderText = "Commodity";
             this.Commodity.Name = "Commodity";

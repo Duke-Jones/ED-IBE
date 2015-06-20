@@ -703,21 +703,21 @@ namespace RegulatedNoise.EDDB_Data
                 //Debug.Print("");
                 //Debug.Print("");
                 //Debug.Print(CommodityBasedata.Name + " :");
-                //Debug.Print("Demand Buy Min \t\t" + Commodity.BuyPrices_Demand.Min().ToString("F0"));
-                //Debug.Print("Demand Buy Average\t" + Commodity.BuyPrices_Demand.Average().ToString("F0") + " (" + Commodity.BuyPrices_Demand.Count() + " values)");
-                //Debug.Print("Demand Buy Max\t\t" + Commodity.BuyPrices_Demand.Max().ToString("F0"));
+                //Debug.Print("Demand Buy Min \t\t" + Commodity_Class.BuyPrices_Demand.Min().ToString("F0"));
+                //Debug.Print("Demand Buy Average\t" + Commodity_Class.BuyPrices_Demand.Average().ToString("F0") + " (" + Commodity_Class.BuyPrices_Demand.Count() + " values)");
+                //Debug.Print("Demand Buy Max\t\t" + Commodity_Class.BuyPrices_Demand.Max().ToString("F0"));
                 //Debug.Print("");
-                //Debug.Print("Demand Sell Min\t\t" + Commodity.SellPrices_Demand.Min().ToString("F0"));
-                //Debug.Print("Demand Sell Average\t" + Commodity.SellPrices_Demand.Average().ToString("F0") + " (" + Commodity.SellPrices_Demand.Count() + " values)");
-                //Debug.Print("Demand Sell Max\t\t" + Commodity.SellPrices_Demand.Max().ToString("F0"));
+                //Debug.Print("Demand Sell Min\t\t" + Commodity_Class.SellPrices_Demand.Min().ToString("F0"));
+                //Debug.Print("Demand Sell Average\t" + Commodity_Class.SellPrices_Demand.Average().ToString("F0") + " (" + Commodity_Class.SellPrices_Demand.Count() + " values)");
+                //Debug.Print("Demand Sell Max\t\t" + Commodity_Class.SellPrices_Demand.Max().ToString("F0"));
                 //Debug.Print("");
-                //Debug.Print("Supply Buy Min\t\t" + Commodity.BuyPrices_Supply.Min().ToString("F0"));
-                //Debug.Print("Supply Buy Average\t" + Commodity.BuyPrices_Supply.Average().ToString("F0") + " (" + Commodity.BuyPrices_Supply.Count() + " values)");
-                //Debug.Print("Supply Buy Max\t\t" + Commodity.BuyPrices_Supply.Max().ToString("F0"));
+                //Debug.Print("Supply Buy Min\t\t" + Commodity_Class.BuyPrices_Supply.Min().ToString("F0"));
+                //Debug.Print("Supply Buy Average\t" + Commodity_Class.BuyPrices_Supply.Average().ToString("F0") + " (" + Commodity_Class.BuyPrices_Supply.Count() + " values)");
+                //Debug.Print("Supply Buy Max\t\t" + Commodity_Class.BuyPrices_Supply.Max().ToString("F0"));
                 //Debug.Print("");
-                //Debug.Print("Supply Sell Min\t\t" + Commodity.SellPrices_Supply.Min().ToString("F0"));
-                //Debug.Print("Supply Sell Average\t" + Commodity.SellPrices_Supply.Average().ToString("F0") + " (" + Commodity.SellPrices_Supply.Count() + " values)");
-                //Debug.Print("Supply Sell Max\t\t" + Commodity.SellPrices_Supply.Max().ToString("F0"));
+                //Debug.Print("Supply Sell Min\t\t" + Commodity_Class.SellPrices_Supply.Min().ToString("F0"));
+                //Debug.Print("Supply Sell Average\t" + Commodity_Class.SellPrices_Supply.Average().ToString("F0") + " (" + Commodity_Class.SellPrices_Supply.Count() + " values)");
+                //Debug.Print("Supply Sell Max\t\t" + Commodity_Class.SellPrices_Supply.Max().ToString("F0"));
             }
 
             if (!String.IsNullOrEmpty(FileName))
@@ -937,7 +937,7 @@ namespace RegulatedNoise.EDDB_Data
             System = ownSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
             if(System == null)
             {
-                // own system is not existing, look for a EDDN system
+                // own system is not existing, look for a EDDNCommunicator system
                 System = mergedSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
 
                 if(System == null)
@@ -948,7 +948,7 @@ namespace RegulatedNoise.EDDB_Data
                 if (m_Systems[(int)enDataType.Data_Own].Count > 0)
                    newSystemIndex = m_Systems[(int)enDataType.Data_Own].Max(X => X.Id) + 1;
 
-                // and add the EDDN system as a new system to the local list
+                // and add the EDDNCommunicator system as a new system to the local list
                 System = new EDSystem(newSystemIndex, System);
                 ownSystems.Add(System);
 
