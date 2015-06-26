@@ -420,7 +420,11 @@
     <ger>Tauri-Glockenspiel</ger>
     <fra>Carillons Taurins</fra>  
   </Names>
-  <Name></Name>
+  <Names>
+    <eng>SAP 8 CORE CONTAINER</eng>
+    <ger>Container Mit Sap 8-Kern</ger>
+    <fra>SAP 8 CORE CONTAINER</fra>
+  </Names>
   <Levels>
     <ID>0</ID>
     <eng>low</eng>

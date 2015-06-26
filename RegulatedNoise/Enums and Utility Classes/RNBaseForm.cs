@@ -116,6 +116,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         private void Form_Shown(object sender, System.EventArgs e)
         {
             loadWindowPosition();
+            if (Form1.RegulatedNoiseSettings != null)
+                this.Icon = Properties.Resources.RegulatedNoise;
         }
 
     }
