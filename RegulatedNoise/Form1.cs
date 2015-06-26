@@ -3904,13 +3904,6 @@ namespace RegulatedNoise
             _eddnSubscriberThread = new Thread(() => EDDNComm.Subscribe());
             _eddnSubscriberThread.IsBackground = true;
             _eddnSubscriberThread.Start();
-<<<<<<< HEAD
-=======
-        }
-
-        #region EDDNCommunicator Delegates
-        private DateTime _lastGuiUpdate;
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
 
             EDDNComm.DataRecieved += RecievedEDDNData;
 

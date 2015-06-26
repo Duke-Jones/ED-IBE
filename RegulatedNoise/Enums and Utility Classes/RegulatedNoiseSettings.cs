@@ -320,7 +320,6 @@ namespace RegulatedNoise
         {
             return Version.ToString(CultureInfo.InvariantCulture) + "_" + VersionDJ.ToString(CultureInfo.InvariantCulture);
         }
-<<<<<<< HEAD
 
         public String GetUserID()
         {
@@ -333,8 +332,6 @@ namespace RegulatedNoise
 
             return UserID;
         }
-=======
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
     }
 
     public partial class Form1

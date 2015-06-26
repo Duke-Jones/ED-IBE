@@ -132,10 +132,7 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
-<<<<<<< HEAD
     <Compile Include="EDDN\Schema_v1.cs" />
-=======
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
     <Compile Include="EDDN\Schema_v2.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>

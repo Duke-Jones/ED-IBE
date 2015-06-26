@@ -31,10 +31,7 @@ namespace RegulatedNoise.EDDN
             [JsonProperty("uploaderID")]
             public string UploaderID { get; set; }
         }
-<<<<<<< HEAD
 
-=======
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
     }
 
     internal partial class Schema_v2
@@ -95,7 +92,6 @@ namespace RegulatedNoise.EDDN
 
         [JsonProperty("message")]
         public Message_Class Message { get; set; }
-<<<<<<< HEAD
 
         /// changes data to a RN-importable stringarray
         internal String[] getEDDNCSVImportStrings()
@@ -135,8 +131,6 @@ namespace RegulatedNoise.EDDN
         }
 
 
-=======
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
     }
 
 }

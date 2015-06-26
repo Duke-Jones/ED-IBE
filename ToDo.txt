@@ -22,7 +22,6 @@ todo:
    
    
    
-<<<<<<< HEAD
 1.84_0.27
    * changed EDDN receiving routine to v2/v1 schema
    * cleaned up a little bit the involved codes
@@ -36,8 +35,6 @@ todo:
    * added latest EDDB files
    * added a icon (thanks to SpyMaster356)
 -------------------------------------------------------------------------------------         
-=======
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
 1.84_0.27_1
    * changed EDDN sending routine to v2 schema
    * cleaned up a little bit the involved codes

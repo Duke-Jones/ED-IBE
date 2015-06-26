@@ -15,7 +15,6 @@ using Newtonsoft.Json;
 
 namespace RegulatedNoise.EDDN
 {
-<<<<<<< HEAD
     public class RecievedEDDNArgs : EventArgs
     {
         public enum enMessageInfo
@@ -38,10 +37,6 @@ namespace RegulatedNoise.EDDN
         public delegate void RecievedEDDNHandler(object sender, RecievedEDDNArgs e);
 
         public event RecievedEDDNHandler DataRecieved;
-=======
-    public class EDDNCommunicator
-    {
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
 
         private Form1                   _caller;
         private Thread                  _Spool2EDDN;   
@@ -51,11 +46,7 @@ namespace RegulatedNoise.EDDN
 
         public EDDNCommunicator(Form1 caller)
         { 
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
             _caller                     = caller;
             _SendDelayTimer             = new System.Timers.Timer(2000);
             _SendDelayTimer.AutoReset   = false;
@@ -76,11 +67,7 @@ namespace RegulatedNoise.EDDN
 
                     socket.Connect("tcp://eddn-relay.elite-markets.net:9500");
 
-<<<<<<< HEAD
                     _caller.setText(_caller.tbEDDNOutput, "Listening...");
-=======
-                    _caller.SetListening();
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
 
                     while (true)
                     {
@@ -106,20 +93,15 @@ namespace RegulatedNoise.EDDN
                                 var sr = new StreamReader(decompressedFileStream);
                                 var myStr = sr.ReadToEnd();
 
-<<<<<<< HEAD
                                 //_caller.OutputEddnRawData(myStr);
                                 parseEDDNRawData(myStr);
 
-=======
-                                _caller.OutputEddnRawData(myStr);
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
                                 decompressedFileStream.Close();
                             }
                             Thread.Sleep(10);
                     }
                 }
             }
-<<<<<<< HEAD
         }
 
         /// <summary>
@@ -170,20 +152,13 @@ namespace RegulatedNoise.EDDN
                                                             RawData     = RawData, 
                                                             Data        = null});
             }
-=======
-// ReSharper disable once FunctionNeverReturns
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
         }
 
         /// <summary>
         /// sending routine for registered data:
         /// It's called by the delay-timer "_SendDelayTimer"
         /// </summary>
-<<<<<<< HEAD
         private void sendToEDDN()
-=======
-        private void  EDDNSender()
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
         {
             try
             {
@@ -194,15 +169,7 @@ namespace RegulatedNoise.EDDN
 
                 TimeStamp = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
 
-<<<<<<< HEAD
                 UserID = Form1.RegulatedNoiseSettings.GetUserID();
-=======
-                // get the user id
-                if(Form1.RegulatedNoiseSettings.usePilotsName)
-                    UserID = System.Net.WebUtility.HtmlEncode(Form1.RegulatedNoiseSettings.PilotsName);
-                else
-                    UserID = System.Net.WebUtility.HtmlEncode(Form1.RegulatedNoiseSettings.UserName);
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
 
                 // test or real ?
                 if (Form1.RegulatedNoiseSettings.UseEddnTestSchema)
@@ -325,11 +292,7 @@ namespace RegulatedNoise.EDDN
             try{
 
                 // it's time to start the EDDN transmission
-<<<<<<< HEAD
                 _Spool2EDDN                 = new Thread(new ThreadStart(sendToEDDN));
-=======
-                _Spool2EDDN                 = new Thread(new ThreadStart(EDDNSender));
->>>>>>> 0ab1473d22bd17088215e369eb85a28c621b6a31
                 _Spool2EDDN.Name            = "Spool2EDDN";
                 _Spool2EDDN.IsBackground    = true;
 
