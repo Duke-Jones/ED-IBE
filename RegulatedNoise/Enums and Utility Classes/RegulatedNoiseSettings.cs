@@ -65,7 +65,7 @@ namespace RegulatedNoise
 
 #if DukeJones
 
-        public readonly decimal VersionDJ = 0.26m;
+        public readonly decimal VersionDJ = 0.27m;
 #endif
         public string PilotsName                                        = String.Empty;
         public string UserName                                          = String.Empty;
@@ -122,6 +122,9 @@ namespace RegulatedNoise
         public bool SpoolImplausibleToFile                              = false;   
         public bool EDDNAutoListen                                      = false;   
         public bool EDDNAutoImport                                      = true;   
+        public List<String> trustedSenders                              = new List<string> {"E:D Market Connector [Windows]", 
+                                                                                            "E:D Market Connector [Mac OS]", 
+                                                                                            "EDAPI Trade Dangerous Plugin"};
 
         public String           SQL_Name                                = "master";
         public String           SQL_Server                              = "localhost";
@@ -357,6 +360,23 @@ namespace RegulatedNoise
         {
             lastVersion     = Version;
             lastVersionDJ   = VersionDJ;
+        }
+
+        public String getVersionString()
+        {
+            return Version.ToString(CultureInfo.InvariantCulture) + "_" + VersionDJ.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public String GetUserID()
+        {
+            String UserID;
+            // get the user id
+            if (usePilotsName)
+                UserID = System.Net.WebUtility.HtmlEncode(PilotsName);
+            else
+                UserID = System.Net.WebUtility.HtmlEncode(UserName);
+
+            return UserID;
         }
     }
 

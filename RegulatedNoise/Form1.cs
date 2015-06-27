@@ -26,6 +26,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using CodeProject.Dialog;
 
+
 namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
@@ -51,10 +52,11 @@ namespace RegulatedNoise
 
         private delegate void delButtonInvoker(Button myButton, bool enable);
         private delegate void delCheckboxInvoker(CheckBox myCheckbox, bool setChecked);
+        private delegate void delParamBool(bool Value);
 
         public static Form1 InstanceObject;
         
-        public EDDN Eddn;
+        public RegulatedNoise.EDDN.EDDNCommunicator EDDNComm;
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
@@ -98,6 +100,7 @@ namespace RegulatedNoise
         private bool m_Closing = false;
         private AutoResetEvent m_LogfileScanner_ARE                     = new AutoResetEvent(false);
         private Thread m_LogfileScanner_Thread;
+        private DateTime m_TimestampLastScan                            = DateTime.MinValue;
         private EDSystem m_loadedSystemdata                             = new EDSystem();
         private EDSystem m_currentSystemdata                            = new EDSystem();
         private EDStation m_loadedStationdata                           = new EDStation();
@@ -116,7 +119,8 @@ namespace RegulatedNoise
         private String _oldSystemName                                   = null;
         private String _oldStationName                                  = null;
         private string _CmdrsLog_LastAutoEventID                        = string.Empty;
-        
+        private DateTime m_lastEDDNAutoImport                           = DateTime.MinValue;
+        private System.Timers.Timer _AutoImportDelayTimer;
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -195,7 +199,7 @@ namespace RegulatedNoise
                 _Splash.InfoChange("create ocr calibrator...<OK>");
 
                 _Splash.InfoAdd("prepare EDDN interface...");
-                Eddn = new EDDN(this);
+                EDDNComm = new RegulatedNoise.EDDN.EDDNCommunicator(this);
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
                 
@@ -448,7 +452,7 @@ namespace RegulatedNoise
                 _Splash.InfoAdd("create milkyway...");
                 _Milkyway = new EDMilkyway();
                 
-                // 1. load the EDDN data
+                // 1. load the EDDNCommunicator data
                 { 
                     bool needPriceCalculation = !myMilkyway.loadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true, true);
 
@@ -940,7 +944,7 @@ namespace RegulatedNoise
         }
 
         /// <summary>
-        /// selects, which ID to use for sending to EDDN
+        /// selects, which ID to use for sending to EDDNCommunicator
         /// </summary>
         private void selectEDDN_ID()
         {
@@ -1191,7 +1195,8 @@ namespace RegulatedNoise
 
         public delegate void ScreenshotsQueuedDelegate(string s);
         public delegate void del_setControlText(Control CtrlObject, string newText);
-        public delegate void del_setLocationInfo(string System, string Location);
+        public delegate void del_setLocationInfo(string System, string Location, Boolean ForceChangedLocation);
+        public delegate void del_EventLocationInfo(string System, string Location);
 
         public void ScreenshotsQueued(string s)
         {
@@ -1471,7 +1476,7 @@ namespace RegulatedNoise
                         CommodityDirectory[currentRow.CommodityName].Add(currentRow);
 
                         if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-                            Eddn.sendToEdDDN(currentRow);
+                            EDDNComm.sendToEdDDN(currentRow);
                     }
                 }
             }
@@ -1650,7 +1655,15 @@ namespace RegulatedNoise
             
         }
 
-        private void SetupGui(bool force= false)
+        private void SetupGui(bool force= false){
+
+            if(this.InvokeRequired)
+                this.Invoke(new delParamBool(iSetupGui), force);
+            else
+                iSetupGui(force);
+        }
+
+        private void iSetupGui(bool force= false)
         {
             System.Windows.Forms.Cursor oldCursor = Cursor;
             Cursor = Cursors.WaitCursor;
@@ -3619,8 +3632,8 @@ namespace RegulatedNoise
 
                     DateTime.TryParse(values[9], out currentRow.SampleDate);
 
-                    EDCommoditiesExt CommodityData = myMilkyway.getCommodity(getCommodityBasename(Program.Settings.Language, currentRow.CommodityName));
-    
+                    EDCommoditiesExt CommodityData = myMilkyway.getCommodity(getLocalizedCommodity(enLanguage.eng, currentRow.CommodityName));
+
                     if (currentRow.CommodityName == "Panik")
                         Debug.Print("STOP");
                             
@@ -3716,12 +3729,13 @@ namespace RegulatedNoise
             {
                 if (s.Contains(";"))
                 {
-                    
                     ImportCsvString(s, false, true, true);
                 }
             }
             
-            CommandersLog_MarketDataCollectedEvent(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
+            CommandersLog_MarketDataCollectedEvent(tbOcrSystemName.Text, tbOcrStationName.Text);
+            if(tbCurrentStationinfoFromLogs.Text.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
+                tbCurrentStationinfoFromLogs.Text = tbOcrStationName.Text;
 
             SetupGui();
         }
@@ -3852,79 +3866,217 @@ namespace RegulatedNoise
 
         private void startEDDNListening()
         {
-            _eddnSubscriberThread = new Thread(() => Eddn.Subscribe());
+            _eddnSubscriberThread = new Thread(() => EDDNComm.Subscribe());
             _eddnSubscriberThread.IsBackground = true;
             _eddnSubscriberThread.Start();
+
+            EDDNComm.DataRecieved += RecievedEDDNData;
+
         }
 
-        #region EDDN Delegates
-        private DateTime _lastGuiUpdate;
-
-        private delegate void SetTextCallback(object text);
-
-        private bool harvestStations = false;
-        private int harvestStationsCount = -1;
-        private int harvestCommsCount = -1;
-        private StreamWriter _eddnSpooler = null;
-
-        public void OutputEddnRawData(object text)
+        private void RecievedEDDNData(object sender, EDDN.RecievedEDDNArgs e)
         {
-            if (InvokeRequired)
-            {
-                SetTextCallback d = OutputEddnRawData;
-                BeginInvoke(d, new { text });
-            }
-            else
-            {
-                tbEDDNOutput.Text = text.ToString();
+            String[] DataRows           = new String[0];
+            String   nameAndVersion     = String.Empty;
+            String   name               = String.Empty;
+            String   uploaderID         = String.Empty; 
+            Boolean  SimpleEDDNCheck    = false;
 
-                if (cbSpoolEddnToFile.Checked)
-                {
-                    if (_eddnSpooler == null)
-                    {
+            try{
+                setText(tbEDDNOutput, String.Format("{0}\n{1}", e.Message, e.RawData));
+
+                if (cbSpoolEddnToFile.Checked){
+                    if (_eddnSpooler == null){
                         if (!File.Exists(".//EddnOutput.txt"))
                             _eddnSpooler = File.CreateText(".//EddnOutput.txt");
                         else
                             _eddnSpooler = File.AppendText(".//EddnOutput.txt");
                     }
-
-                    _eddnSpooler.WriteLine(text);
+                    _eddnSpooler.WriteLine(e.RawData);
                 }
 
-                var headerDictionary    = new Dictionary<string, string>();
-                var messageDictionary   = new Dictionary<string, string>();
+                switch (e.InfoType){
 
-                ParseEddnJson(text, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
+                	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v1_Recieved:
+                        
+                        // process only if it's the correct schema
+                        if(!(Program.Settings.UseEddnTestSchema ^ ((EDDN.Schema_v1)e.Data).isTest()))
+                        {
+                            Debug.Print("handle v1 message");
+                            EDDN.Schema_v1 DataObject   = (EDDN.Schema_v1)e.Data;
 
-                if (harvestStations && StationDirectory.Count > harvestStationsCount)
+                            // Don't import our own uploads...
+                            if(DataObject.Header.UploaderID != Program.Settings.GetUserID()) 
+                            { 
+                                DataRows                    = new String[1] {DataObject.getEDDNCSVImportString()};
+                                nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
+                                name                        = String.Format("{0}", DataObject.Header.SoftwareName);
+                                uploaderID                  = DataObject.Header.UploaderID;
+                                SimpleEDDNCheck             = true;
+                            }
+                            else
+                                Debug.Print("handle v1 rejected (it's our own message)");
+                            
+                        }else 
+                            Debug.Print("handle v1 rejected (wrong schema)");
+
+                		break;
+
+                	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v2_Recieved:
+
+                        // process only if it's the correct schema
+                        if(!(Program.Settings.UseEddnTestSchema ^ ((EDDN.Schema_v2)e.Data).isTest()))
+                        {
+                            Debug.Print("handle v2 message");
+
+                                
+                            EDDN.Schema_v2 DataObject   = (EDDN.Schema_v2)e.Data;
+
+                            // Don't import our own uploads...
+                            if(DataObject.Header.UploaderID != Program.Settings.GetUserID()) 
+                            { 
+                                DataRows                    = DataObject.getEDDNCSVImportStrings();
+                                nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
+                                name                        = String.Format("{0}", DataObject.Header.SoftwareName);
+                                uploaderID                  = DataObject.Header.UploaderID;
+                            }
+                            else
+                                Debug.Print("handle v2 rejected (it's our own message)");
+
+                        }else  
+                            Debug.Print("handle v2 rejected (wrong schema)");
+
+                		break;
+
+                	case EDDN.RecievedEDDNArgs.enMessageInfo.UnknownData:
+                        setText(tbEDDNOutput, "Recieved a unknown EDDN message:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
+                		Debug.Print("handle unkown message");
+                		break;
+
+                	case EDDN.RecievedEDDNArgs.enMessageInfo.ParseError:
+                		Debug.Print("handle error message");
+                        setText(tbEDDNOutput, "Error while processing recieved EDDN data:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
+
+                		break;
+
+                } 
+
+                if(DataRows != null && DataRows.GetUpperBound(0) >= 0)
                 {
-                    if (File.Exists("stations.txt"))
-                        File.Delete("stations.txt");
+                    updatePublisherStats(nameAndVersion, DataRows.GetUpperBound(0)+1);
 
-                    TextWriter f = new StreamWriter(File.OpenWrite("stations.txt"));
-                    foreach (var x in StationDirectory.OrderBy(x => x.Key))
-                    {
-                        f.WriteLine(x.Key);
-                    }
-                    f.Close();
-                    harvestStationsCount = StationDirectory.Count;
+                    bool isTrusty = Program.Settings.trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+
+                    foreach (String DataRow in DataRows){
+
+                        // data is plausible ?
+                        if(isTrusty || (!checkPricePlausibility(new string[] {DataRow}, SimpleEDDNCheck))){
+
+                            // import is wanted ?
+                            if(checkboxImportEDDN.Checked)
+                            {
+                                Debug.Print("import :" + DataRow);
+                                ImportCsvString(DataRow);
+                            }
+
+                        }else{
+                            Debug.Print("implausible :" + DataRow);
+                            // data is implausible
+                            string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
+
+                            addTextLine(lbEddnImplausible, InfoString);
+
+                            if(cbSpoolImplausibleToFile.Checked){
+
+                                FileStream LogFileStream = null;
+                                string FileName = @".\EddnImplausibleOutput.txt";
+
+                                if(File.Exists(FileName))
+                                    LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                                else
+                                    LogFileStream = File.Create(FileName);
+
+                                LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n"), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
+                                LogFileStream.Close();
+                            }
+                        }
+                    }  
+ 
+
+                    if(!_AutoImportDelayTimer.Enabled)
+                        _AutoImportDelayTimer.Start();
+
                 }
-
-                if (harvestStations && CommodityDirectory.Count > harvestCommsCount)
-                {
-                    if (File.Exists("commodities.txt"))
-                        File.Delete("commodities.txt");
-
-                    TextWriter f = new StreamWriter(File.OpenWrite("commodities.txt"));
-                    foreach (var x in CommodityDirectory.OrderBy(x => x.Key))
-                    {
-                        f.WriteLine(x.Key);
-                    }
-                    f.Close();
-                    harvestCommsCount = CommodityDirectory.Count;
-                }
-            }
+            }catch (Exception ex){
+                setText(tbEDDNOutput, "Error while processing recieved EDDN data:" + Environment.NewLine + ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
+            }      
         }
+
+        private void AutoImportDelayTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e){
+            SetupGui();   
+        }
+
+        /// <summary>
+        /// refreshes the info about software versions and recieved messages
+        /// </summary>
+        /// <param name="SoftwareID"></param>
+        /// <param name="MessageCount"></param>
+        private void updatePublisherStats(string SoftwareID,int MessageCount)
+        {
+            if (!_eddnPublisherStats.ContainsKey(SoftwareID))
+                _eddnPublisherStats.Add(SoftwareID, new EddnPublisherVersionStats());
+
+            _eddnPublisherStats[SoftwareID].MessagesReceived += MessageCount;
+
+            
+
+            System.Text.StringBuilder output = new System.Text.StringBuilder();
+            foreach (var appVersion in _eddnPublisherStats.OrderByDescending(x => x.Value.MessagesReceived))
+            {
+                output.Append(appVersion.Key + " : " + appVersion.Value.MessagesReceived + " messages\r\n");
+            }
+
+            setText(tbEddnStats, output.ToString());
+        }
+
+        #region EDDNCommunicator Delegates
+        private DateTime _lastGuiUpdate;
+
+        private delegate void SetTextCallback(object text);
+
+        private StreamWriter _eddnSpooler = null;
+
+        //public void OutputEddnRawData(object text)
+        //{
+        //    if (InvokeRequired)
+        //    {
+        //        SetTextCallback d = OutputEddnRawData;
+        //        BeginInvoke(d, new { text });
+        //    }
+        //    else
+        //    {
+        //        tbEDDNOutput.Text = text.ToString();
+
+        //        if (cbSpoolEddnToFile.Checked)
+        //        {
+        //            if (_eddnSpooler == null)
+        //            {
+        //                if (!File.Exists(".//EddnOutput.txt"))
+        //                    _eddnSpooler = File.CreateText(".//EddnOutput.txt");
+        //                else
+        //                    _eddnSpooler = File.AppendText(".//EddnOutput.txt");
+        //            }
+
+        //            _eddnSpooler.WriteLine(text);
+        //        }
+
+        //        var headerDictionary    = new Dictionary<string, string>();
+        //        var messageDictionary   = new Dictionary<string, string>();
+
+        //        ParseEddnJson(text, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
+
+        //    }
+        //}
 
         private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
         private EDSystem  cachedSystem;
@@ -3933,7 +4085,7 @@ namespace RegulatedNoise
         private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
         {
             string txt = text.ToString();
-            // .. we're here because we've received some data from EDDN
+            // .. we're here because we've received some data from EDDNCommunicator
 
             if (txt != "")
                 try
@@ -4018,7 +4170,7 @@ namespace RegulatedNoise
                         if(!String.IsNullOrEmpty(commodity))
                         {
 
-                            //System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;
+                            //System;Station;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
                             if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
                             {
                                 string csvFormatted = cachedSystem.Name + ";" +
@@ -4038,9 +4190,9 @@ namespace RegulatedNoise
                                 {
                                     if(import)
                                         ImportCsvString(csvFormatted);
-                                }
-                                else
-                                {
+
+                                }else{
+
                                     string InfoString = string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted );
 
                                     lbEddnImplausible.Items.Add(InfoString);
@@ -4124,20 +4276,30 @@ namespace RegulatedNoise
                 }
         }
 
-        private delegate void SetListeningDelegate();
+        private delegate void del_setText(Control Destination, String newText);
 
-        public void SetListening()
+        public void setText(Control Destination, String newText)
         {
-            if (tbEDDNOutput.InvokeRequired)
-            {
-                SetListeningDelegate d = SetListening;
-                BeginInvoke(d);
-            }
+            if(Destination.InvokeRequired)
+                Destination.Invoke(new del_setControlText(setText), Destination, newText);
+            else
+                Destination.Text = newText;
+        }
+
+        private delegate void del_addText(ListBox Destination, String newLine);
+
+        public void addTextLine(ListBox Destination, String newLine)
+        {
+            if(Destination.InvokeRequired)
+                Destination.Invoke(new del_addText(addTextLine), Destination, newLine);
             else
             {
-                tbEDDNOutput.Text = "Listening...";
+                Destination.Items.Add(newLine);
+                Destination.SelectedIndex = lbEddnImplausible.Items.Count-1;
+                Destination.SelectedIndex = -1;
             }
         }
+
         #endregion
 
         private void cmdStopEDDNListening_Click(object sender, EventArgs e)
@@ -4400,17 +4562,23 @@ namespace RegulatedNoise
             {
                 try
                 {
+                    DateTime TimestampCurrentLine = DateTime.MinValue;
+                    DateTime TimestampLastRecognized = DateTime.MinValue;
+                    Boolean EndNow = false;
+                    Boolean LocationChanged = false;
                     string systemName = "";
                     string stationName = "";
                     string logLump;
                     Regex RegExTest = null;
+                    Regex RegExTest2 = null;
                     Match m = null;
                     List<String> PossibleStations = new List<string>();
 
 #if extScanLog
                     logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.RegulatedNoiseSettings.PilotsName)) + ">");
 #endif
-                    RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.Settings.PilotsName)), RegexOptions.IgnoreCase);
+                    RegExTest  = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.Settings.PilotsName)), RegexOptions.IgnoreCase);
+                    RegExTest2 = new Regex(String.Format("vvv------------ ISLAND .+ CLAIMED ------------vvv"), RegexOptions.IgnoreCase);
 
                     var appConfigPath = Program.Settings.ProductsPath;
 
@@ -4455,7 +4623,7 @@ namespace RegulatedNoise
 
                                 Datei.Seek(0, SeekOrigin.End);
 
-                                while (String.IsNullOrEmpty(stationName) && (Datei.Position >= 2))
+                                while (!EndNow && String.IsNullOrEmpty(stationName) && (Datei.Position >= 2))
                                 {
                                     long StartPos = -1;
                                     long EndPos = -1;
@@ -4497,63 +4665,120 @@ namespace RegulatedNoise
                                         // and convert to string
                                         logLump = Encoding.ASCII.GetString(LineBuffer, 0, (int)(EndPos - StartPos) );
 
-                                        // first looking for the systemname
+                                        
                                         if (logLump != null && String.IsNullOrEmpty(systemName))
                                         {
-                                            if (logLump.Contains("System:"))
-                                            {
-#if extScanLog
-                                                Debug.Print("Systemstring:" + logLump);
-                                                logger.Log("Systemstring:" + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
-                                                systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+                                            // check the timestamp of the current line to avoid to re-analyse older data
+                                            TimestampCurrentLine = DateTime.MaxValue;
+                                            Int32 StartBracket = logLump.IndexOf('{', 0, 5);
+                                            Int32 EndBracket   = logLump.IndexOf('}', 0, 15);
 
-#if extScanLog
-                                                Debug.Print("System: " + systemName);
-                                                logger.Log("System: " + systemName);
-#endif
-
-                                                // preparing search for station info
-                                                RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
-#if extScanLog
-                                                logger.Log("new Regex : <" + String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)) + ">");
-#endif
-
-                                                // start search at the beginning
-
-                                                if (RegExTest != null)
+                                            if((StartBracket >= 0) && (EndBracket >= 0) && ((EndBracket - StartBracket) > 0))
+                                                if(DateTime.TryParse(logLump.Substring(StartBracket+1, EndBracket - (StartBracket+1)), out TimestampCurrentLine))
                                                 {
-                                                    // we may have candidates, check them and if nothing found search from the current position
-                                                    foreach (string candidate in PossibleStations)
+                                                    if(TimestampLastRecognized.Equals(DateTime.MinValue))
+                                                        TimestampLastRecognized = TimestampCurrentLine;
+
+                                                    if(TimestampCurrentLine < m_TimestampLastScan)
+                                                    { 
+                                                        // everything is coming now is older
+                                                        EndNow = true;
+                                                    }
+                                                }
+
+                                            if(!EndNow)
+                                            {
+                                                // first looking for the systemname
+                                                if (logLump.Contains("System:"))
+                                                {
+    #if extScanLog
+                                                    Debug.Print("Systemstring:" + logLump);
+                                                    logger.Log("Systemstring:" + logLump.Replace("\n", "").Replace("\r", ""));
+    #endif
+                                                    systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
+                                                    systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
+
+    #if extScanLog
+                                                    Debug.Print("System: " + systemName);
+                                                    logger.Log("System: " + systemName);
+    #endif
+
+                                                    // preparing search for station info
+                                                    RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
+    #if extScanLog
+                                                    logger.Log("new Regex : <" + String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)) + ">");
+    #endif
+
+                                                    // start search at the beginning
+
+                                                    if (RegExTest != null)
                                                     {
-#if extScanLog
-                                                        Debug.Print("check candidate : " + candidate);
-                                                        logger.Log("check candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                        m = RegExTest.Match(candidate);
-                                                        //Debug.Print(logLump);
-                                                        //if (logLump.Contains("Duke Jones"))
-                                                        //    Debug.Print("Stop");
+                                                        // we may have candidates, check them and if nothing found search from the current position
+                                                        foreach (string candidate in PossibleStations)
+                                                        {
+    #if extScanLog
+                                                            Debug.Print("check candidate : " + candidate);
+                                                            logger.Log("check candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
+    #endif
+                                                            m = RegExTest.Match(candidate);
+                                                            //Debug.Print(logLump);
+                                                            //if (logLump.Contains("Duke Jones"))
+                                                            //    Debug.Print("Stop");
+                                                            if (m.Success)
+                                                            {
+    #if extScanLog
+                                                                Debug.Print("Stationstring from candidate : " + candidate);
+                                                                logger.Log("Stationstring from candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
+    #endif
+                                                                getStation(ref stationName, m);
+                                                                break;
+                                                            }
+
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        // we must start from the end
+                                                        Datei.Seek(0, SeekOrigin.End);
+                                                    }
+                                                }
+                                                else if (RegExTest != null)
+                                                {
+                                                    m = RegExTest.Match(logLump);
+                                                    //Debug.Print(logLump);
+                                                    //if (logLump.Contains("Duke Jones"))
+                                                    //    Debug.Print("Stop");
+                                                    if (m.Success)
+                                                    {
+    #if extScanLog
+                                                        Debug.Print("Candidate : " + logLump);
+                                                        logger.Log("Candidate added : " + logLump.Replace("\n", "").Replace("\r", ""));
+    #endif
+                                                        PossibleStations.Add(logLump);
+                                                    }
+                                                    else
+                                                    {
+                                                        Debug.Print(logLump);
+                                                        m = RegExTest2.Match(logLump);
                                                         if (m.Success)
                                                         {
-#if extScanLog
-                                                            Debug.Print("Stationstring from candidate : " + candidate);
-                                                            logger.Log("Stationstring from candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                            getStation(ref stationName, m);
-                                                            break;
+                                                            LocationChanged = true;
+        #if extScanLog
+                                                            Debug.Print("Location changed");
+                                                            logger.Log("Location changed : " + logLump.Replace("\n", "").Replace("\r", ""));
+        #endif
                                                         }
 
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    // we must start from the end
-                                                    Datei.Seek(0, SeekOrigin.End);
+
                                                 }
                                             }
-                                            else if (RegExTest != null)
+                                        }
+
+                                        if(!EndNow)
+                                        { 
+                                            // if we have the systemname we're looking for the stationname
+                                            if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
                                             {
                                                 m = RegExTest.Match(logLump);
                                                 //Debug.Print(logLump);
@@ -4561,41 +4786,29 @@ namespace RegulatedNoise
                                                 //    Debug.Print("Stop");
                                                 if (m.Success)
                                                 {
-#if extScanLog
-                                                    Debug.Print("Candidate : " + logLump);
-                                                    logger.Log("Candidate added : " + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                    PossibleStations.Add(logLump);
+    #if extScanLog
+                                                    Debug.Print("Stationstring (direct) : " + logLump);
+                                                    logger.Log("Stationstring (direct) : " + logLump.Replace("\n", "").Replace("\r", ""));
+    #endif
+                                                    getStation(ref stationName, m);
                                                 }
-
                                             }
                                         }
+                                    }
 
-                                        // if we have the systemname we're looking for the stationname
-                                        if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
+                                    if(!EndNow)
+                                    { 
+                                        if (StartPos >= 3)
                                         {
-                                            m = RegExTest.Match(logLump);
-                                            //Debug.Print(logLump);
-                                            //if (logLump.Contains("Duke Jones"))
-                                            //    Debug.Print("Stop");
-                                            if (m.Success)
-                                            {
-#if extScanLog
-                                                Debug.Print("Stationstring (direct) : " + logLump);
-                                                logger.Log("Stationstring (direct) : " + logLump.Replace("\n", "").Replace("\r", ""));
-#endif
-                                                getStation(ref stationName, m);
-                                            }
+                                            Datei.Seek(StartPos-1, SeekOrigin.Begin);
                                         }
+                                        else
+                                            Datei.Seek(0, SeekOrigin.Begin);
                                     }
-
-                                    if (StartPos >= 3)
-                                    {
-                                        Datei.Seek(StartPos-1, SeekOrigin.Begin);
-                                    }
-                                    else
-                                        Datei.Seek(0, SeekOrigin.Begin);
                                 }
+
+                                if(m_TimestampLastScan < TimestampLastRecognized)
+                                    m_TimestampLastScan = TimestampLastRecognized;
 
                                 Datei.Close();
                                 Datei.Dispose();
@@ -4604,7 +4817,7 @@ namespace RegulatedNoise
                                 logger.Log("File closed");
 #endif
 
-                                setLocationInfo(systemName, stationName);
+                                setLocationInfo(systemName, stationName, LocationChanged);
 
                             }
                         }
@@ -4651,7 +4864,7 @@ namespace RegulatedNoise
         {
             if (InvokeRequired)
             {
-                Invoke(new del_setLocationInfo(CommandersLog_StationVisitedEvent), Systemname, StationName);
+                Invoke(new del_EventLocationInfo(CommandersLog_StationVisitedEvent), Systemname, StationName);
             }
             else
             {
@@ -4675,7 +4888,7 @@ namespace RegulatedNoise
         {
             if (InvokeRequired)
             {
-                Invoke(new del_setLocationInfo(CommandersLog_MarketDataCollectedEvent), Systemname, StationName);
+                Invoke(new del_EventLocationInfo(CommandersLog_MarketDataCollectedEvent), Systemname, StationName);
             }
             else
             {
@@ -5052,6 +5265,11 @@ namespace RegulatedNoise
             Clock.Tick += Clock_Tick;
 
             cmdTest.Visible = System.Diagnostics.Debugger.IsAttached;
+
+            _AutoImportDelayTimer            = new System.Timers.Timer(10000);
+            _AutoImportDelayTimer.AutoReset  = false;
+            _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
+
 
         }
 
@@ -6337,12 +6555,12 @@ namespace RegulatedNoise
             }
         }
 
-        private void setLocationInfo(string systemName, string stationName)
+        private void setLocationInfo(string systemName, string stationName, Boolean ForceChangedLocation)
         {
 
             if(InvokeRequired)
             { 
-                Invoke(new del_setLocationInfo(setLocationInfo), systemName, stationName);
+                Invoke(new del_setLocationInfo(setLocationInfo), systemName, stationName, ForceChangedLocation);
                 return;
             }
 
@@ -6412,7 +6630,9 @@ namespace RegulatedNoise
                     _LoggedVisited = "";
 
                 }
-            }
+            }else if(newSystem || ForceChangedLocation)
+                tbCurrentStationinfoFromLogs.Text = "scanning...";
+            
 
             if((newSystem || newLocation) && (!InitialRun))
             { 

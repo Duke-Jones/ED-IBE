@@ -177,7 +177,8 @@ namespace RegulatedNoise
             var engine = new TesseractEngine(@"./tessdata", Program.Settings.TraineddataFile, EngineMode.Default);
             engine.DefaultPageSegMode = PageSegMode.SingleLine;
 
-            string headerResult;
+            string Stationname_OCR;
+            string StationameAnalysisBase;
 
             // delete the old brainerous images - otherwise Brainerous will process older but not relevant images too
             if (Directory.Exists(@".\Brainerous\images"))
@@ -188,36 +189,42 @@ namespace RegulatedNoise
 
             float level;
             var text = AnalyseFrameUsingTesseract(_bTrimmedHeader, engine, out level);
-            headerResult = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
+            Stationname_OCR = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
 
-
+            // debug: SystemAtTimeOfScreenshot = "BD+65 1846"
             string[] StationsInSystem = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
-            string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(_callingForm.tbCurrentStationinfoFromLogs.Text, StringComparison.InvariantCultureIgnoreCase));
+
+            if(_callingForm.tbCurrentStationinfoFromLogs.Text.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
+                StationameAnalysisBase = Stationname_OCR;
+            else
+                StationameAnalysisBase = _callingForm.tbCurrentStationinfoFromLogs.Text;
+
+            string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(StationameAnalysisBase, StringComparison.InvariantCultureIgnoreCase));
 
             if(headerResult_temp == null)
             { 
                 // station not found in database
-                var matchesInStationReferenceList = StationsInSystem.OrderBy(x => _levenshtein.LD2(headerResult, x)).ToList();
+                var matchesInStationReferenceList = StationsInSystem.OrderBy(x => _levenshtein.LD2(Stationname_OCR, x)).ToList();
 
                 if(matchesInStationReferenceList.Count > 0)
                 {
-                    var ld = _levenshtein.LD2(headerResult, matchesInStationReferenceList[0].ToUpper());
+                    var ld = _levenshtein.LD2(Stationname_OCR, matchesInStationReferenceList[0].ToUpper());
                 
                     // this depends on the length of the word - this factor works really good
                     double LevenshteinLimit = Math.Round((matchesInStationReferenceList[0].Length * 1.0), 0);
 
                     if (ld <= LevenshteinLimit)
-                        headerResult = matchesInStationReferenceList[0].ToUpper();
+                        Stationname_OCR = matchesInStationReferenceList[0];
                 }
             }
             else
             {
-                headerResult = headerResult_temp;
+                Stationname_OCR = headerResult_temp;
             }
-
+            
             // show station on GUI
 
-            _callingForm.DisplayResults(headerResult);
+            _callingForm.DisplayResults(Stationname_OCR);
             
             var commodityColumnText         = new string[textRowLocations.Count(), 8]; 
             var originalBitmaps             = new Bitmap[textRowLocations.Count(),8];
