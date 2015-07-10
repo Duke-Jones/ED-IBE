@@ -44,20 +44,16 @@ namespace RegulatedNoise.SQL
         private double                                  m_maxTransactionTime;       //  max. time for transactions
         private DateTime                                m_TransStartTime;
     
-        //  Startzeitpunkt der Transaktion
-        private System.Timers.Timer                     m_Watchdog_Trans;
-        private System.Timers.Timer                     m_Watchdog_Alive;
-    
         private string                                  m_TransActString;
     
         private Dictionary<string, DbDataAdapter>       m_UpdateObjects;
 
-        /// <summary>
-        /// simple constructor
-        /// </summary>
-        public DBConnector() 
-        {
-        }
+        ///// <summary>
+        ///// simple constructor
+        ///// </summary>
+        //public DBConnector() 
+        //{
+        //}
     
         /// <summary>
         /// constructor for predefined settings
@@ -553,58 +549,10 @@ namespace RegulatedNoise.SQL
             return DBFloat.ToString("g", new System.Globalization.CultureInfo("en-US"));
         }
 
-
-        /// <summary>
-        /// starts a transaction on the connection
-        /// </summary>
-        /// <param name="maxTransactionTime">max. allowed runtime</param>
-        /// <param name="ProcedureName">Name for level tracing</param>
-        /// <returns></returns>
-        public Int32 TransBegin(double maxTransactionTime, string ProcedureName){
-            try {
-
-                //make it thread-save with a monitor
-                if (!MonitorTryEnter(this, m_ConfigData.TimeOut))
-                    throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Transbegin(Double)");
-
-                if (m_RollBackPending) {
-                    //  remove this layer in the monitor and tell all other
-                    MonitorPulse(this);
-                    MonitorExit(this);
-                    throw new Exception("Aufruf von BeginTrans trotz laufendem Rollback");
-
-                }else if ((m_Transcount == 0)) {
-                    // this is the first level - initiate the transaction
-
-                    TransStringAdd(ProcedureName);
-
-                    m_Transaction    = m_Connection.BeginTransaction();
-                    m_TransStartTime = DateTime.Now;
-                    
-                    if (m_maxTransactionTime < maxTransactionTime) 
-                        m_maxTransactionTime = DEFAULT_MAX_TIME;
-
-                    m_Watchdog_Trans.Start();
-                    m_Transcount = 1;
-                }
-                else {
-                    // this is a higher level - only increase transaction level counter
-                    TransStringAdd(ProcedureName);
-                    m_Transcount++;
-                }
-
-                return m_Transcount;
-
-            }
-            catch (Exception ex) {
-                try {
-                    //  diese Ebene im Monitor wieder entfernen und den anderen Bescheid sagen
-                    MonitorPulse(this);
-                    MonitorExit(this);
-                }catch (Exception) {}
-
-                throw new Exception("Fehler beim Transaktions-Start", ex);
-            }
+        public Int32 TransBegin()
+        {
+            String procedureName = String.Empty;
+            return TransBegin(procedureName);
         }
 
         public Int32 TransBegin(String ProcedureName){
@@ -625,7 +573,6 @@ namespace RegulatedNoise.SQL
                     TransStringAdd(ProcedureName);
                     m_Transaction = m_Connection.BeginTransaction();
                     m_TransStartTime = DateTime.Now;
-                    m_Watchdog_Trans.Start();
                     m_Transcount = 1;
                 }
                 else {
@@ -667,7 +614,6 @@ namespace RegulatedNoise.SQL
                 }
                 else if ((m_Transcount == 1)) {
                     TransStringRemove();
-                    m_Watchdog_Trans.Stop();
                     m_Transaction.Commit();
                     m_Transcount = 0;
                     m_Transaction = null;
@@ -716,7 +662,6 @@ namespace RegulatedNoise.SQL
                     throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Transbegin()");
 
                 if (m_Transcount == 1) {
-                    m_Watchdog_Trans.Stop();
                     if (!(m_Transaction == null)) 
                         m_Transaction.Rollback();
 
@@ -773,6 +718,7 @@ namespace RegulatedNoise.SQL
             else
                 m_TransActString = String.Empty;
         }
+
     }
 
 #if false

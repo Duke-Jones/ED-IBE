@@ -7902,7 +7902,9 @@ namespace RegulatedNoise
 
             RegulatedNoise.SQL.DBPorter Import = new RegulatedNoise.SQL.DBPorter();
 
+            Import.ImportCommodities(@"./Data/commodities.json");
             Import.ImportSystems(@"./Data/systems.json");
+            Import.ImportStations(@"./Data/stations.json");
 
             Debug.Print("swds");
 

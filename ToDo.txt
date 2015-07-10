@@ -20,6 +20,11 @@ todo:
    * show hint (new star system, changed data, original data)
    * default setting for new systems
    
+SQL 0.0.7
+   * import of commodities/categories from EDDB json-files is working
+   * import of stations from EDDB json-files is working
+   * optimized structure of sql tables
+-------------------------------------------------------------------------------------         
 SQL 0.0.6
    * added "is_changed" to station- and system-tables
    * optimized scripts for sql creation "create.cmd"
@@ -28,7 +33,6 @@ SQL 0.0.6
    * import of systems from EDDB json-files is working
    * added script for staring MySQL server "start_server.cmd"
 -------------------------------------------------------------------------------------         
-   
 1.84_0.27
    * changed EDDN receiving routine to v2/v1 schema
    * cleaned up a little bit the involved codes

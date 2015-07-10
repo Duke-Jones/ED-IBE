@@ -76,5 +76,28 @@ namespace RegulatedNoise.SQL
 		    else
 			    return value;
 	    }
+
+        /// <summary>
+	    /// Simplifies setting SqlParameter values by handling null issues
+	    /// </summary>
+	    /// <param name="value">The value to return</param>
+	    /// <returns>DBNull if value == null, otherwise we pass through value</returns>
+	    public static string ToString(object value)
+	    {
+		    if (value == null)
+			    return "null";
+		    else
+			    return value.ToString();
+	    }
+
+        /// <summary>
+	    /// Simplifies setting SqlParameter values by handling null issues
+	    /// </summary>
+	    /// <param name="value">The value to return</param>
+	    /// <returns>DBNull if value == null, otherwise we pass through value</returns>
+	    public static string ToStringA(object value)
+	    {
+		    return "'" + ToString(value) + "'";
+	    }
     }
 }
