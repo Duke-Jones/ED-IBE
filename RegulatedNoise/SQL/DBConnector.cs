@@ -386,6 +386,17 @@ namespace RegulatedNoise.SQL
             return retValue;
         }
 
+        /// <summary>
+        /// refreshes a with "TableRead" already loaded table out of the database
+        /// </summary>
+        /// <param name="Tablename">name of the table to refresh</param>
+        /// <param name="Data">used dataset which is holding the table</param>
+        /// <returns></returns>
+        public Int32 TableRefresh(string Tablename, ref System.Data.DataSet Data)
+        {
+            string commandText = String.Empty;
+            return TableRead(commandText, Tablename, ref Data);
+        }
 
         public Int32 TableRead(string CommandText, string Tablename, ref System.Data.DataSet Data) 
         {

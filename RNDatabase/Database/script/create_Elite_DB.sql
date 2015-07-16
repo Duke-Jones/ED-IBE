@@ -163,8 +163,8 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations` (
   CONSTRAINT `fk_tbStations_tbSystems`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
     REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
@@ -239,13 +239,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbImportCommodity` (
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -261,13 +261,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbExportCommodity` (
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations10`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities10`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -283,13 +283,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbProhibitedCommodity` (
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations100`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities100`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -319,13 +319,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPrice` (
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations2`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities2`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbPrice_tbSources1`
     FOREIGN KEY (`source_id`)
     REFERENCES `Elite_DB`.`tbSources` (`id`)
@@ -350,8 +350,8 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPriceHistory` (
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbStations1`
     FOREIGN KEY (`tbStations_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbCommodities1`
     FOREIGN KEY (`tbCommodities_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
@@ -377,8 +377,8 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStationEconomy` (
   CONSTRAINT `fk_tbStations_has_tbEconomy_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbEconomy_tbEconomy1`
     FOREIGN KEY (`economy_id`)
     REFERENCES `Elite_DB`.`tbEconomy` (`id`)
@@ -409,13 +409,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityLocalization` (
   CONSTRAINT `fk_tbLocalization_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLocalization_tbLanguage1`
     FOREIGN KEY (`language_id`)
     REFERENCES `Elite_DB`.`tbLanguage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -431,13 +431,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCategoryLocalization` (
   CONSTRAINT `fk_tbLocalization_tbLanguage10`
     FOREIGN KEY (`language_id`)
     REFERENCES `Elite_DB`.`tbLanguage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbCategoryLocalization_tbCategory1`
     FOREIGN KEY (`category_id`)
     REFERENCES `Elite_DB`.`tbCategory` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -501,13 +501,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLog` (
   CONSTRAINT `fk_tbLog_tbSystems1`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbEventType1`
     FOREIGN KEY (`event_id`)
     REFERENCES `Elite_DB`.`tbEventType` (`id`)
@@ -610,7 +610,7 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
   CONSTRAINT `fk_tbStations_tbSystems0`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbAllegiance10`
     FOREIGN KEY (`allegiance_id`)

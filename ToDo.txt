@@ -19,7 +19,27 @@ todo:
    * add coordinate calculation for new star systems
    * show hint (new star system, changed data, original data)
    * default setting for new systems
+-------------------------------------------------------------------------------------         
+sql_todo
+   * import of commodities.xml (localized names)
+   * import of commodities_RN.json (price warn levels)
+   * import of stationhistory.json (last visited stations)
+   * import of commodities_own.xml (self added commodities)
+
+   * think about : remove the vistied flag from stations and systems ? 
+                   -> create a master "visited-table" and copy the info on demand to the systems-"visited-field" 
+				      (good performance (no additionally join) and secure (master-info in another table))
    
+*************************************************************************************
+*************************************************************************************
+*************************************************************************************
+
+SQL 0.0.8
+   * import of systems_own.json  (self added systems)
+   * import of station_own.json (self added stations)
+   * corrected behaviour on import stations/system from new EDDB data
+   * optimized structure of sql tables
+-------------------------------------------------------------------------------------         
 SQL 0.0.7
    * import of commodities/categories from EDDB json-files is working
    * import of stations from EDDB json-files is working

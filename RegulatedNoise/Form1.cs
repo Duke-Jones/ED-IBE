@@ -7902,9 +7902,18 @@ namespace RegulatedNoise
 
             RegulatedNoise.SQL.DBPorter Import = new RegulatedNoise.SQL.DBPorter();
 
+            // import the commodities from EDDB
             Import.ImportCommodities(@"./Data/commodities.json");
+
+            // import the systems and stations from EDDB
             Import.ImportSystems(@"./Data/systems.json");
             Import.ImportStations(@"./Data/stations.json");
+
+            // import (once) the self-changed or added systems and stations 
+            Dictionary<Int32, Int32> changedSystemIDs;
+            changedSystemIDs = Import.ImportSystems_Own(@"./Data/systems_own.json");
+            Import.ImportStations_Own(@"./Data/stations_own.json", changedSystemIDs);
+
 
             Debug.Print("swds");
 

@@ -42,7 +42,6 @@ namespace RegulatedNoise.SQL
         {
             String sqlString;
             List<EDCommodities> Commodities;
-            Int32 Counter = 0;
 
             try
             {
@@ -122,10 +121,10 @@ namespace RegulatedNoise.SQL
             DataRow[] FoundRows, FoundRows_org;
             DateTime Timestamp_new, Timestamp_old;
             Int32 Counter = 0;
+            Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<Int32, Int32>();
 
             try
             {
-
                 Data = new DataSet();
 
                 PrepareBaseTables(Data);
@@ -145,7 +144,6 @@ namespace RegulatedNoise.SQL
 
                 foreach (EDSystem System in Systems)
                 {
-
                     FoundRows = Data.Tables["tbSystems"].Select("id=" + System.Id.ToString());
 
                     if ((FoundRows != null) && (FoundRows.Count() > 0))
@@ -172,7 +170,6 @@ namespace RegulatedNoise.SQL
                                     Counter += 1;
                                 }
                             }
-
                         }
                         else
                         {
@@ -190,10 +187,24 @@ namespace RegulatedNoise.SQL
                     }
                     else
                     {
-                        // add a new system
-                        var newRow = Data.Tables["tbSystems"].NewRow();
-                        CopyEDSystemToDataRow(System, ref newRow);
-                        Data.Tables["tbSystems"].Rows.Add(newRow);
+                        // check if theres a user generated system
+                        // self-created systems don't have the correct id so it must be identified by name    
+                        FoundRows = Data.Tables["tbSystems"].Select("     systemname = " + DBConnector.SQLAString(System.Name.ToString()) +
+                                                                    " and id         < 0");
+
+                        if (FoundRows.Count() > 0)
+                        {
+                            // self created systems is existing -> correct id and get new data from EDDB
+                            // (changed system_id in tbStations are automatically internal updated by the database itself)
+                            CopyEDSystemToDataRow(System, ref FoundRows[0]);
+                        }
+                        else
+                        {
+                            // add a new system
+                            var newRow = Data.Tables["tbSystems"].NewRow();
+                            CopyEDSystemToDataRow(System, ref newRow);
+                            Data.Tables["tbSystems"].Rows.Add(newRow);
+                        }
 
                         Counter += 1;
                     }
@@ -240,16 +251,159 @@ namespace RegulatedNoise.SQL
         }
 
         /// <summary>
+        /// imports the own data from the file into the database (only initially once needed)
+        /// </summary>
+        /// <param name="Filename"></param>
+        public Dictionary<Int32, Int32> ImportSystems_Own(String Filename)
+        {
+            String sqlString;
+            List<EDSystem> Systems;
+            DataRow[] FoundRows;
+            DateTime Timestamp_new, Timestamp_old;
+            Int32 Counter = 0;
+            Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<Int32, Int32>();
+            Int32 currentSelfCreatedIndex = -1;
+
+            try
+            {
+
+                Data = new DataSet();
+
+                PrepareBaseTables(Data);
+
+                // gettin' some freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
+                Systems = JsonConvert.DeserializeObject<List<EDSystem>>(File.ReadAllText(Filename));
+
+                Program.DBCon.TransBegin();
+
+                sqlString = "select * from tbSystems lock in share mode";
+                Program.DBCon.TableRead(sqlString, "tbSystems", ref Data);
+
+                sqlString = "select * from tbSystems_org lock in share mode";
+                Program.DBCon.TableRead(sqlString, "tbSystems_org", ref Data);
+
+                sqlString = "select min(id) As min_id from tbSystems";
+                Program.DBCon.Execute(sqlString, "minID", ref Data);
+
+                if(Convert.IsDBNull(Data.Tables["minID"].Rows[0]["min_id"]))
+                    currentSelfCreatedIndex = -1;
+                else
+                {
+                    currentSelfCreatedIndex = ((Int32)Data.Tables["minID"].Rows[0]["min_id"]) - 1;
+                    if(currentSelfCreatedIndex >= 0)
+                        currentSelfCreatedIndex = -1;
+                }
+
+                foreach (EDSystem System in Systems)
+                {
+                    // self-created systems don't have the correct id so it must be identified by name    
+                    FoundRows = Data.Tables["tbSystems"].Select("systemname=" + DBConnector.SQLAString(System.Name.ToString()));
+
+                    if ((FoundRows != null) && (FoundRows.Count() > 0))
+                    {
+                        // system is existing
+                        // memorize the changed system ids for importing user changed stations in the (recommend) second step
+                        changedSystemIDs.Add(System.Id, (Int32)FoundRows[0]["id"]);
+                        System.Id = (Int32)FoundRows[0]["id"];
+
+                        if ((bool)(FoundRows[0]["is_changed"]))
+                        {
+                            // old data is changed by user and the new data is also a user changed data
+                            // keep the newer version in the main table 
+                            Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
+                            Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(System.UpdatedAt);
+
+                            if (Timestamp_new > Timestamp_old)
+                            {
+                                // data from file is newer -> take it but hold the old id
+                                CopyEDSystemToDataRow(System, ref FoundRows[0], true);
+
+                                Counter += 1;
+                            }
+                        }
+                        else
+                        {
+                            // new data is user changed data, old data is original data
+                            // copy the original data ("tbSystems") to the saving data table ("tbSystems_org")
+                            // and get the correct system ID
+                            Data.Tables["tbSystems_org"].LoadDataRow(FoundRows[0].ItemArray, false);
+                            CopyEDSystemToDataRow(System, ref FoundRows[0], true);
+
+                            Counter += 1;
+                        }
+                    }
+                    else
+                    {
+                        // add a new system
+                        // memorize the changed system ids for importing user changed stations in the (recommend) second step
+                        changedSystemIDs.Add(System.Id, currentSelfCreatedIndex);
+                        System.Id = currentSelfCreatedIndex;
+
+                        var newRow = Data.Tables["tbSystems"].NewRow();
+                        CopyEDSystemToDataRow(System, ref newRow, true);
+                        Data.Tables["tbSystems"].Rows.Add(newRow);
+
+
+                        currentSelfCreatedIndex -= 1;
+                        Counter += 1;
+                    }
+
+                    if ((Counter > 0) && ((Counter % 100) == 0))
+                    {
+                        // save changes
+                        Debug.Print("added Systems : " + Counter.ToString());
+
+                        Program.DBCon.TableUpdate("tbSystems", ref Data);
+                        Program.DBCon.TableUpdate("tbSystems_org", ref Data);
+                    }
+
+                }
+
+                // save changes
+                Program.DBCon.TableUpdate("tbSystems", ref Data, true);
+                Program.DBCon.TableUpdate("tbSystems_org", ref Data, true);
+
+                Program.DBCon.TransCommit();
+
+                // reset freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                // return all changed ids
+                return changedSystemIDs;
+            }
+            catch (Exception ex)
+            {
+                if(Program.DBCon.TransActive())
+                    Program.DBCon.TransRollback();
+
+                try
+                {
+                    // reset freaky perfomance
+                    Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                    Program.DBCon.TableReadRemove("tbSystems");
+                    Program.DBCon.TableReadRemove("tbSystems_org");
+
+                }
+                catch (Exception) { }
+
+                throw new Exception("Error while importing system data", ex);
+            }
+        }
+
+        /// <summary>
         /// copies the data from a "EDSystem"-object to a Datarow from table "tbSystems"
         /// </summary>
         /// <param name="SystemObject"></param>
         /// <param name="SystemRow"></param>
-        private void CopyEDSystemToDataRow(EDSystem SystemObject, ref System.Data.DataRow SystemRow)
+        private void CopyEDSystemToDataRow(EDSystem SystemObject, ref System.Data.DataRow SystemRow, Boolean OwnData = false, int? SystemID = null)
         {
             try
             {
 
-                SystemRow["id"]                     = DBConvert.From(SystemObject.Id);
+                SystemRow["id"]                     = SystemID == null ? DBConvert.From(SystemObject.Id) : SystemID;
                 SystemRow["systemname"]             = DBConvert.From(SystemObject.Name);
                 SystemRow["x"]                      = DBConvert.From(SystemObject.X);
                 SystemRow["y"]                      = DBConvert.From(SystemObject.Y);
@@ -263,7 +417,7 @@ namespace RegulatedNoise.SQL
                 SystemRow["primary_economy_id"]     = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy));
                 SystemRow["needs_permit"]           = DBConvert.From(SystemObject.NeedsPermit);
                 SystemRow["updated_at"]             = DBConvert.From(UnixTimeStamp.UnixTimeStampToDateTime(SystemObject.UpdatedAt));
-                SystemRow["is_changed"]             = DBConvert.From(0);
+                SystemRow["is_changed"]             = OwnData ? DBConvert.From(1) : DBConvert.From(0);
                 SystemRow["visited"]                = DBConvert.From(0);
 
             }
@@ -321,7 +475,7 @@ namespace RegulatedNoise.SQL
 
                     FoundRows = Data.Tables["tbStations"].Select("id=" + Station.Id.ToString());
 
-                    if ((FoundRows != null) && (FoundRows.Count() > 0))
+                    if (FoundRows.Count() > 0)
                     {
                         // Station is existing
 
@@ -376,11 +530,38 @@ namespace RegulatedNoise.SQL
                     }
                     else
                     {
-                        // add a new Station
-                        DataRow   newStationRow           = Data.Tables["tbStations"].NewRow();
+
+                        // self-created stations don't have the correct id so they must be identified by name    
+                        FoundRows = Data.Tables["tbStations"].Select("stationname = " + DBConnector.SQLAString(Station.Name.ToString()) + " and " + 
+                                                                     "  system_id = " + Station.SystemId + " and " + 
+                                                                     "  id        < 0");
+
+                        if (FoundRows.Count() > 0)
+                        {
+                            // self created station is existing -> correct id and get new data from EDDB
+                            CopyEDStationToDataRow(Station, ref FoundRows[0]); 
+
+                            // update immediately because otherwise the references are wrong after changing a id
+                            Program.DBCon.TableUpdate("tbStations", ref Data);
+                            Program.DBCon.TableUpdate("tbStations_org", ref Data);
+                            Program.DBCon.TableUpdate("tbStationEconomy", ref Data);
+                            Program.DBCon.TableUpdate("tbImportCommodity", ref Data);
+                            Program.DBCon.TableUpdate("tbExportCommodity", ref Data);
+                            Program.DBCon.TableUpdate("tbProhibitedCommodity", ref Data);
+
+                            Program.DBCon.TableRefresh("tbStationEconomy", ref Data);
+                            Program.DBCon.TableRefresh("tbImportCommodity", ref Data);
+                            Program.DBCon.TableRefresh("tbExportCommodity", ref Data);
+                            Program.DBCon.TableRefresh("tbProhibitedCommodity", ref Data);
+                        }
+                        else
+                        {
+                            // add a new Station
+                            DataRow   newStationRow           = Data.Tables["tbStations"].NewRow();
                         
-                        CopyEDStationToDataRow(Station, ref newStationRow);
-                        Data.Tables["tbStations"].Rows.Add(newStationRow);
+                            CopyEDStationToDataRow(Station, ref newStationRow);
+                            Data.Tables["tbStations"].Rows.Add(newStationRow);
+                        }
 
                         CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
                         CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbImportCommodity"]);
@@ -444,16 +625,172 @@ namespace RegulatedNoise.SQL
         }
 
         /// <summary>
+        /// imports the own data from the file into the database (only initially once needed)
+        /// </summary>
+        /// <param name="Filename"></param>
+        public void ImportStations_Own(String Filename, Dictionary<Int32, Int32> changedSystemIDs)
+        {
+            String sqlString;
+            List<EDStation> Stations;
+            DataRow[] FoundRows;
+            DateTime Timestamp_new, Timestamp_old;
+            Int32 Counter = 0;
+            Int32 currentSelfCreatedIndex = -1;
+
+            try
+            {
+                Data = new DataSet();
+
+                PrepareBaseTables(Data);
+
+                // gettin' some freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
+                Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename));
+
+                Program.DBCon.TransBegin();
+
+                sqlString = "select * from tbStations lock in share mode";
+                Program.DBCon.TableRead(sqlString, "tbStations", ref Data);
+                sqlString = "select * from tbStations_org lock in share mode";
+                Program.DBCon.TableRead(sqlString, "tbStations_org", ref Data);
+                sqlString = "select * from tbStationEconomy lock in share mode";
+                Program.DBCon.TableRead(sqlString, "tbStationEconomy", ref Data);
+
+                // get the smallest ID for self added stations
+                sqlString = "select min(id) As min_id from tbStations";
+                Program.DBCon.Execute(sqlString, "minID", ref Data);
+
+                if(Convert.IsDBNull(Data.Tables["minID"].Rows[0]["min_id"]))
+                    currentSelfCreatedIndex = -1;
+                else
+                {
+                    currentSelfCreatedIndex = ((Int32)Data.Tables["minID"].Rows[0]["min_id"]) - 1;
+                    if(currentSelfCreatedIndex >= 0)
+                        currentSelfCreatedIndex = -1;
+                }
+
+                foreach (EDStation Station in Stations)
+                {
+                    Int32 SystemID;
+
+                    // is the system id changed ? --> get the new system id, otherwise the original
+                    if( changedSystemIDs.TryGetValue(Station.SystemId, out SystemID) )
+                        Station.SystemId = SystemID;
+
+                    // self-created stations don't have the correct id so they must be identified by name    
+                    FoundRows = Data.Tables["tbStations"].Select("stationname=" + DBConnector.SQLAString(Station.Name.ToString()) + " and " + 
+                                                                 "system_id =  " + Station.SystemId);
+
+                    if ((FoundRows != null) && (FoundRows.Count() > 0))
+                    {
+                        // Station is existing, get the same Id
+                        Station.Id = (Int32)FoundRows[0]["id"];
+
+                        if ((bool)(FoundRows[0]["is_changed"]))
+                        {
+                            // existing data data is also changed by user - keep the newer version 
+                            Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
+                            Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
+
+                            if (Timestamp_new > Timestamp_old)
+                            {
+                                // data from file is newer
+                                CopyEDStationToDataRow(Station, ref FoundRows[0], true);
+
+                                CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
+                                // commodities are not considered because there was no possibility for input in the old RN
+
+                                Counter += 1;
+                            }
+                        }
+                        else
+                        {
+                            // new data is user changed data, old data is original data
+                            // copy the original data ("tbSystems") to the saving data table ("tbSystems_org")
+                            // and get the correct system ID
+                            Data.Tables["tbStations_org"].LoadDataRow(FoundRows[0].ItemArray, false);
+                            CopyEDStationToDataRow(Station, ref FoundRows[0], true);
+                            
+                            CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
+                            // commodities are not considered because there was no possibility for input in the old RN
+
+                            Counter += 1;
+                        }
+                    }
+                    else
+                    {
+                        // add a new system
+                        Station.Id = currentSelfCreatedIndex;
+
+                        var newRow = Data.Tables["tbStations"].NewRow();
+                        
+                        CopyEDStationToDataRow(Station, ref newRow, true);
+                        Data.Tables["tbStations"].Rows.Add(newRow);
+
+                        currentSelfCreatedIndex -= 1;
+                        Counter += 1;
+
+                        CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
+                        // commodities are not considered because there was no possibility for input in the old RN
+
+                        Counter += 1;
+                    }
+
+                    if ((Counter > 0) && ((Counter % 100) == 0))
+                    {
+                        // save changes
+                        Debug.Print("added Stations : " + Counter.ToString());
+
+                        Program.DBCon.TableUpdate("tbStations", ref Data);
+                        Program.DBCon.TableUpdate("tbStations_org", ref Data);
+                        Program.DBCon.TableUpdate("tbStationEconomy", ref Data);
+                    }
+
+                }
+
+                // save changes
+                Program.DBCon.TableUpdate("tbStations", ref Data, true);
+                Program.DBCon.TableUpdate("tbStations_org", ref Data, true);
+                Program.DBCon.TableUpdate("tbStationEconomy", ref Data, true);
+
+                Program.DBCon.TransCommit();
+
+                // reset freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+            }
+            catch (Exception ex)
+            {
+                if(Program.DBCon.TransActive())
+                    Program.DBCon.TransRollback();
+
+                try
+                {
+                    // reset freaky perfomance
+                    Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                    Program.DBCon.TableReadRemove("tbStations");
+                    Program.DBCon.TableReadRemove("tbStations_org");
+                    Program.DBCon.TableReadRemove("tbStationEconomy");
+                }
+                catch (Exception) { }
+
+                throw new Exception("Error while importing Station data", ex);
+            }
+        }
+
+        /// <summary>
         /// copies the data from a "EDStation"-object to a Datarow from table "tbStations"
         /// </summary>
         /// <param name="SystemObject"></param>
         /// <param name="SystemRow"></param>
-        private void CopyEDStationToDataRow(EDStation StationObject, ref System.Data.DataRow StationRow)
+        private void CopyEDStationToDataRow(EDStation StationObject, ref System.Data.DataRow StationRow, Boolean OwnData = false, int? StationID = null)
         {
             try
             {
 
-                StationRow["id"]                    = DBConvert.From(StationObject.Id);
+                StationRow["id"]                    = StationID == null ? DBConvert.From(StationObject.Id) : StationID;
                 StationRow["stationname"]           = DBConvert.From(StationObject.Name);
                 StationRow["system_id"]             = DBConvert.From(StationObject.SystemId);
                 StationRow["max_landing_pad_size"]  = DBConvert.From(StationObject.MaxLandingPadSize);
@@ -470,7 +807,7 @@ namespace RegulatedNoise.SQL
                 StationRow["has_rearm"]             = DBConvert.From(StationObject.HasRearm);
                 StationRow["has_outfitting"]        = DBConvert.From(StationObject.HasOutfitting);
                 StationRow["updated_at"]            = DBConvert.From(UnixTimeStamp.UnixTimeStampToDateTime(StationObject.UpdatedAt));
-                StationRow["is_changed"]            = DBConvert.From(0);
+                StationRow["is_changed"]            = OwnData ? DBConvert.From(1) : DBConvert.From(0);
                 StationRow["visited"]               = DBConvert.From(0);
 
             }
@@ -490,8 +827,9 @@ namespace RegulatedNoise.SQL
         {
             try
             {
+
                 // get all existing economies from the database (memory list)
-                DataRow[] Existing = EconomyTable.Select("station_id = " + StationObject.Id);
+                List<DataRow> Existing = EconomyTable.Select("station_id = " + StationObject.Id).ToList();
 
                 foreach (String Economy in StationObject.Economies)
                 {
@@ -499,10 +837,12 @@ namespace RegulatedNoise.SQL
                     Int32 EconomyID = (Int32)DBConvert.From(BaseTableNameToID("economy", Economy));
 
                     // and check, if it is already existing
-                    object[] Found = Existing.Select(x => x[EconomyID]).ToArray();
-
+                    var Found = from DataRow relevantEconomy in Existing
+                                where relevantEconomy.Field<Int32>("economy_id") == EconomyID
+                                select relevantEconomy;
+ 
                     // if it's not existing, insert it
-                    if((Found == null) || (Found.GetUpperBound(0) == -1))
+                    if(Found.Count() == 0)
                     {
                         DataRow newRow = EconomyTable.NewRow();
 
@@ -510,15 +850,15 @@ namespace RegulatedNoise.SQL
                         newRow["economy_id"]        = EconomyID;
 
                         EconomyTable.Rows.Add(newRow);
+
                     }
-                    // otherwise remove it from the memory list
                     else
                     {
-                        //EconomyTable.Rows.Remove(Found[0]);
+                        Existing.Remove(Found.First());
                     }
                 }
 
-                // remove all old, deleted data
+                // remove all old, not more existing data
                 foreach (DataRow RemovedRow in Existing)
                     EconomyTable.Rows.Remove(RemovedRow);    
 
@@ -541,7 +881,7 @@ namespace RegulatedNoise.SQL
                 string[] Commodities    = null;
 
                 // get all existing economies from the database (memory list)
-                DataRow[] Existing      = CommodityTable.Select("station_id = " + StationObject.Id);
+                List<DataRow> Existing      = CommodityTable.Select("station_id = " + StationObject.Id).ToList();
 
                 switch (CommodityTable.TableName)
                 {
@@ -562,10 +902,12 @@ namespace RegulatedNoise.SQL
                     Int32 CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", Commodity));
 
                     // and check, if it is already existing
-                    object[] Found = Existing.Select(x => x[CommodityID]).ToArray();
+                    var Found = from DataRow relevantCommodity in Existing
+                                where relevantCommodity.Field<Int32>("commodity_id") == CommodityID
+                                select relevantCommodity;
 
                     // if it's not existing, insert it
-                    if((Found == null) || (Found.GetUpperBound(0) == -1))
+                    if(Found.Count() == 0)
                     {
                         DataRow newRow = CommodityTable.NewRow();
 
@@ -574,14 +916,13 @@ namespace RegulatedNoise.SQL
 
                         CommodityTable.Rows.Add(newRow);
                     }
-                    // otherwise remove it from the memory list
                     else
                     {
-                        //EconomyTable.Rows.Remove(Found[0]);
+                        Existing.Remove(Found.First());
                     }
                 }
 
-                // remove all old, deleted data
+                // remove all old, not more existing data
                 foreach (DataRow RemovedRow in Existing)
                     CommodityTable.Rows.Remove(RemovedRow);    
 

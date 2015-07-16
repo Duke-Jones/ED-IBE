@@ -93,7 +93,7 @@ namespace RegulatedNoise.EDDB_Data
 
         /// <summary>
          /// creates a new station as a copy of another station
-         /// only Id and SystemID must declared extra
+         /// only Id and StationID must declared extra
          /// </summary>
          /// <param name="newId"></param>
          /// <param name="sourceSystemID"></param>
