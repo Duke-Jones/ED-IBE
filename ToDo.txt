@@ -21,8 +21,6 @@ todo:
    * default setting for new systems
 -------------------------------------------------------------------------------------         
 sql_todo
-   * import of commodities.xml (localized names)
-   * import of commodities_RN.json (price warn levels)
    * import of stationhistory.json (last visited stations)
    * import of commodities_own.xml (self added commodities)
 
@@ -34,6 +32,11 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.9
+   * added master tables for visited-flag	
+   * import of commodities.xml (localized names)
+   * import of commodities_RN.json (price warn levels)
+-------------------------------------------------------------------------------------         
 SQL 0.0.8
    * import of systems_own.json  (self added systems)
    * import of station_own.json (self added stations)

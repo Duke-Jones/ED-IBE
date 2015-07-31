@@ -18,8 +18,10 @@ namespace RegulatedNoise
     static class Program
     {
 
-        public const string NULLSTRING              = "?";
-        public const string COMMODITY_NOT_SET       = "???";
+        public const String NULLSTRING              = "?";
+        public const String COMMODITY_NOT_SET       = "???";
+
+        public const String BASE_LANGUAGE           = "eng";
 
 
     #region main object creation and disposing

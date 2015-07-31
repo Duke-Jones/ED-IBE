@@ -105,6 +105,180 @@ namespace RegulatedNoise.SQL
             }
         }
 
+        /// <summary>
+        /// loads the localized commodity names and check if 
+        /// the self added names now included in the official dictionary
+        /// </summary>
+        internal void ImportCommodityLocalizations(String Filename)
+        {
+            DataSet                   Data;
+            Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
+            Int32                     LanguageID;
+            String                    sqlString;
+            Int32                     currentSelfCreatedIndex;
+
+            try
+            {
+                Data = new DataSet();
+                Data.ReadXml(Filename);
+
+                sqlString = "select min(id) As min_id from tbCommodity";
+                Program.DBCon.Execute(sqlString, "minID", ref Data);
+
+                if(Convert.IsDBNull(Data.Tables["minID"].Rows[0]["min_id"]))
+                    currentSelfCreatedIndex = -1;
+                else
+                {
+                    currentSelfCreatedIndex = ((Int32)Data.Tables["minID"].Rows[0]["min_id"]) - 1;
+                    if(currentSelfCreatedIndex >= 0)
+                        currentSelfCreatedIndex = -1;
+                }
+
+                Program.DBCon.TableRead("select * from tbLanguage", "tbLanguage", ref Data);
+                Program.DBCon.TableRead("select * from tbCommodityLocalization", "tbCommodityLocalization", ref Data);
+                Program.DBCon.TableRead("select * from tbCommodity", "tbCommodity", ref Data);
+
+                // first check if there's a new language
+                foreach (DataColumn LanguageFromFile in Data.Tables["Names"].Columns)
+                {
+                    DataRow[] LanguageName  = Data.Tables["tbLanguage"].Select("language  = " + DBConnector.SQLAString(LanguageFromFile.ColumnName));
+
+                    if(LanguageName.Count() == 0)
+                    {
+                        // add a non existing language
+                        DataRow newRow  = Data.Tables["tbLanguage"].NewRow();
+                        int?    Wert    = DBConvert.To<int?>(Data.Tables["tbLanguage"].Compute("max(id)", ""));
+
+                        if(Wert == null)
+                            Wert = 0;
+
+                        newRow["id"]        = Wert;
+                        newRow["language"]  = LanguageFromFile.ColumnName;
+
+                        Data.Tables["tbLanguage"].Rows.Add(newRow);
+
+                        foundLanguagesFromFile.Add(LanguageFromFile.ColumnName, (Int32)Wert);
+                    }
+                    else
+                        foundLanguagesFromFile.Add((String)LanguageName[0]["language"], (Int32)LanguageName[0]["id"]);
+                    
+                }
+                
+                // submit changes (tbLanguage)
+                Program.DBCon.TableUpdate("tbLanguage", ref Data);
+
+                // compare and add the localized names
+                foreach (DataRow LocalizationFromFile in Data.Tables["Names"].AsEnumerable())
+                {
+                    String    BaseName              = (String)LocalizationFromFile[Program.BASE_LANGUAGE];
+                    DataRow[] Commodity             = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(BaseName));
+
+                    if (Commodity.Count() == 0)
+                    { 
+                        // completely unknown commodity - add first new entry to "tbCommodities"
+                        DataRow newRow = Data.Tables["tbCommodity"].NewRow();
+
+                        newRow["id"]            = currentSelfCreatedIndex;
+                        newRow["commodity"]     = BaseName;
+                        newRow["is_rare"]       = 0;
+
+                        Data.Tables["tbCommodity"].Rows.Add(newRow);
+
+                        currentSelfCreatedIndex -= 1;
+
+                        // submit changes (tbCommodity)
+                        Program.DBCon.TableUpdate("tbCommodity", ref Data);
+
+                        Commodity             = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(BaseName));
+                    }
+
+                    foreach (KeyValuePair<String, Int32> LanguageFormFile in foundLanguagesFromFile)
+	                {
+                        DataRow[] currentLocalizations  = Data.Tables["tbCommodityLocalization"].Select("     commodity_id  = " + Commodity[0]["id"] + 
+                                                                                                        " and language_id   = " + LanguageFormFile.Value);
+
+                        if(currentLocalizations.Count() == 0)
+                        {
+                            // add a new localization
+                            DataRow newRow = Data.Tables["tbCommodityLocalization"].NewRow();
+
+                            newRow["commodity_id"]  = Commodity[0]["id"];
+                            newRow["language_id"]   = LanguageFormFile.Value;
+                            newRow["locname"]       = (String)LocalizationFromFile[LanguageFormFile.Key];
+
+                            Data.Tables["tbCommodityLocalization"].Rows.Add(newRow);
+                        }
+	                }
+                }
+
+                // submit changes
+                Program.DBCon.TableUpdate("tbCommodityLocalization", ref Data);
+
+                Program.DBCon.TableReadRemove("tbLanguage");
+                Program.DBCon.TableReadRemove("tbCommodityLocalization");
+                Program.DBCon.TableReadRemove("tbCommodity");
+
+            }
+            catch (Exception ex)
+            {
+                Program.DBCon.TableReadRemove("tbLanguage");
+                Program.DBCon.TableReadRemove("tbCommodityLocalization");
+                Program.DBCon.TableReadRemove("tbCommodity");
+
+                throw new Exception("Error while loading commodity names", ex);
+            }
+
+        }
+
+        /// <summary>
+        /// loads the existing price-warnlevel data
+        /// </summary>
+        internal void ImportCommodityPriceWarnLevels(String Filename)
+        {
+            DataSet                           Data;
+            List<EDCommoditiesWarningLevels>  WarnLevels;
+
+            WarnLevels = JsonConvert.DeserializeObject<List<EDCommoditiesWarningLevels>>(File.ReadAllText(Filename));
+
+            try
+            {
+                Data = new DataSet();
+
+                Program.DBCon.TableRead("select * from tbCommodity", "tbCommodity", ref Data);
+
+                // first check if there's a new language
+                foreach (EDCommoditiesWarningLevels Warnlevel in WarnLevels)
+                {
+                    DataRow[] Commodity = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(Warnlevel.Name));
+
+                    if(Commodity.Count() > 0)
+                    {
+                        Commodity[0]["pwl_demand_buy_low"]    = Warnlevel.PriceWarningLevel_Demand_Buy_Low;
+                        Commodity[0]["pwl_demand_buy_high"]   = Warnlevel.PriceWarningLevel_Demand_Buy_High;
+                        Commodity[0]["pwl_supply_buy_low"]    = Warnlevel.PriceWarningLevel_Supply_Buy_Low;
+                        Commodity[0]["pwl_supply_buy_high"]   = Warnlevel.PriceWarningLevel_Supply_Buy_High;
+                        Commodity[0]["pwl_demand_sell_low"]   = Warnlevel.PriceWarningLevel_Demand_Sell_Low;
+                        Commodity[0]["pwl_demand_sell_high"]  = Warnlevel.PriceWarningLevel_Demand_Sell_High;
+                        Commodity[0]["pwl_supply_sell_low"]   = Warnlevel.PriceWarningLevel_Supply_Sell_Low;
+                        Commodity[0]["pwl_supply_sell_high"]  = Warnlevel.PriceWarningLevel_Supply_Sell_High;
+                    }
+                }
+                
+                // submit changes (tbLanguage)
+                Program.DBCon.TableUpdate("tbCommodity", ref Data);
+
+                Program.DBCon.TableReadRemove("tbCommodity");
+
+            }
+            catch (Exception ex)
+            {
+                Program.DBCon.TableReadRemove("tbCommodity");
+
+                throw new Exception("Error while loading commodity names", ex);
+            }
+
+        }
+
 #endregion
 
 #region handling of systems

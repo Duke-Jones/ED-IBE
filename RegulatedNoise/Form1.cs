@@ -706,6 +706,8 @@ namespace RegulatedNoise
                         
                     }
                 }
+                else
+                    return null;
 
                 var MBResult = MsgBox.Show(
                     "Hm, that doesn't seem right" +
@@ -713,7 +715,7 @@ namespace RegulatedNoise
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
-                    Application.Exit();
+                    return null;
             }
         }
         private void SetProductPath()
@@ -729,45 +731,46 @@ namespace RegulatedNoise
             {
                 var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
 
-                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
-                    Application.Exit();
-
-                path = getProductPathManually();
+                if (MBResult != System.Windows.Forms.DialogResult.Cancel)
+                    path = getProductPathManually();
             }
 
-            //Verify that path contains FORC-FDEV
-            var dirs = Directory.GetDirectories(path);
-                
-            var b = false;
-            while(!b)
+            if (path != null)
             {
-                var gamedirs = new List<string>();
-                foreach (var dir in dirs)
+                //Verify that path contains FORC-FDEV
+                var dirs = Directory.GetDirectories(path);
+
+                var b = false;
+                while (!b)
                 {
-                    if (Path.GetFileName(dir).StartsWith("FORC-FDEV"))
+                    var gamedirs = new List<string>();
+                    foreach (var dir in dirs)
                     {
-                        gamedirs.Add(dir);
+                        if (Path.GetFileName(dir).StartsWith("FORC-FDEV"))
+                        {
+                            gamedirs.Add(dir);
+                        }
                     }
+
+                    if (gamedirs.Count > 0)
+                    {
+                        //Get highest Forc-fdev dir.
+                        Program.Settings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
+                        b = true;
+                        continue;
+                    }
+
+                    var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
+
+                    if (MBResult == System.Windows.Forms.DialogResult.Cancel)
+                        Application.Exit();
+
+                    path = getProductPathManually();
+                    dirs = Directory.GetDirectories(path);
                 }
 
-                if (gamedirs.Count > 0)
-                {
-                    //Get highest Forc-fdev dir.
-                    Program.Settings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
-                    b = true;
-                    continue;
-                }
-                
-                var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
-
-                if (MBResult == System.Windows.Forms.DialogResult.Cancel)
-                    Application.Exit();
-
-                path = getProductPathManually();
-                dirs = Directory.GetDirectories(path);
+                Program.Settings.ProductsPath = path;
             }
-
-            Program.Settings.ProductsPath = path;
         }
 
         private string getProductAppDataPathAutomatically()
@@ -7901,6 +7904,12 @@ namespace RegulatedNoise
 
 
             RegulatedNoise.SQL.DBPorter Import = new RegulatedNoise.SQL.DBPorter();
+
+            // import the localizations from the old RN files
+            Import.ImportCommodityLocalizations(@".\Data\Commodities.xml");
+
+            // import the pricewarnlevels from the old RN files
+            Import.ImportCommodityPriceWarnLevels(@".\Data\Commodities_RN.json");
 
             // import the commodities from EDDB
             Import.ImportCommodities(@"./Data/commodities.json");

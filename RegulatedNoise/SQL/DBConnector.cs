@@ -730,6 +730,135 @@ namespace RegulatedNoise.SQL
                 m_TransActString = String.Empty;
         }
 
+
+        /// <summary>
+        /// Liest einen Wert aus der Init-Tabelle der verbundenen Datenbank und gibt ihn als Typ (Of T) zurück
+        /// </summary>
+        /// <param name="Group">Gruppe des zu lesenden Datums</param>
+        /// <param name="Key">Key  des zu lesenden Datums</param>
+        /// <param name="DefaultValue">optionaler Defaultwert. Wird gesetzt, wenn Wert leer oder nicht vorhanden ist</param>
+        /// <param name="AllowEmptyValue">True: Leerstring ist erlaubt, False: Leerstring wird durch DefaultValue ersetzt</param>
+        /// <param name="RewriteOnBadCast">True: ist eine Typkonvertierung in (Of T) nicht möglich wird der Defaultwert eingesetzt und auch in die Datenbank geschrieben</param>
+        /// <returns></returns>
+        public T getIniValue<T>(string Group, string Key, string DefaultValue = "", bool AllowEmptyValue = true, bool RewriteOnBadCast = true)
+        {
+	        T functionReturnValue = default(T);
+	        try {
+                functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
+	        } catch (ArgumentNullException ex) {
+		        throw new Exception("conversionType ist Nothing", ex);
+	        } catch (Exception ex) {
+		        if (RewriteOnBadCast) {
+			        // Versuchen, den Defaultwert einzutragen
+			        try {
+				        setIniValue(Group, Key, DefaultValue);
+				        functionReturnValue = getIniValue<T>(Group, Key, DefaultValue, AllowEmptyValue, false);
+			        } catch {
+				        // Defaultwert ist ebenfalls ungültig -> Abbruch
+				        throw new Exception("Diese Konvertierung wird nicht unterstützt oder der Wert ist Nothing und conversionType ist ein Werttyp (Value-Rewrite done), R", ex);
+			        }
+		        } else {
+			        // direkter Abbruch
+			        throw new Exception("Diese Konvertierung wird nicht unterstützt oder der Wert ist Nothing und conversionType ist ein Werttyp", ex);
+		        }
+	        }
+	        return functionReturnValue;
+
+        }
+
+        /// <summary>
+        /// Liest einen Wert aus der Init-Tabelle der verbundenen Datenbank
+        /// </summary>
+        /// <param name="Group">Gruppe des zu lesenden Datums</param>
+        /// <param name="Key">Key  des zu lesenden Datums</param>
+        /// <param name="DefaultValue">optionaler Defaultwert. Wird gesetzt, wenn Wert leer oder nicht vorhanden ist</param>
+        /// <param name="AllowEmptyValue">True: Leerstring ist erlaubt, False: Leerstring wird durch DefaultValue ersetzt</param>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        public string getIniValue(string Group, string Key, string DefaultValue = "", bool AllowEmptyValue = true, bool WriteEmptyValue = false)
+        {
+	        string functionReturnValue = null;
+
+	        DataTable Data = new DataTable();
+	        string sqlString = null;
+	        string Result = null;
+
+	        functionReturnValue = string.Empty;
+	        Result = string.Empty;
+
+	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+
+	        Execute(sqlString, ref Data);
+
+	        if (Data.Rows.Count > 0) {
+		        // Datum gefunden
+		        Result = Data.Rows[0]["InitValue"].ToString();
+	        }
+
+	        if ((Data.Rows.Count == 0)) {
+		        // Wert gar nicht vorhanden
+
+		        if (!AllowEmptyValue & string.IsNullOrEmpty(DefaultValue)) {
+			        // Leerwert nicht erlaubt aber kein Wert vorhanden
+			        throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (1): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")>");
+		        }
+                else if(WriteEmptyValue)
+                {
+		            // Defaultwert eintragen
+		            sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(DefaultValue) + ")";
+		            Execute(sqlString);
+                }
+
+		        Result = DefaultValue;
+	        } else if (string.IsNullOrEmpty(Result) & !AllowEmptyValue) {
+		        // Wert ist leer, Leerwerte sind aber nicht erlaubt
+
+		        if (string.IsNullOrEmpty(DefaultValue)) {
+			        // Leerwert nicht erlaubt aber kein Wert vorhanden
+			        throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (2): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")");
+		        }
+
+		        sqlString = "update tbInitValue" + " set InitValue = " + SQLAString(DefaultValue);
+		        Execute(sqlString);
+
+		        Result = DefaultValue;
+	        }
+
+	        functionReturnValue = Result;
+	        return functionReturnValue;
+
+        }
+
+        /// <summary>
+        /// Schreibt einen Wert in die Init-Tabelle der verbundenen Datenbank
+        /// </summary>
+        /// <param name="Group">Gruppe des zu schreibenden Datums</param>
+        /// <param name="Key">Key des zu schreibenden Datums</param>
+        /// <param name="Value">zu setzender Wert</param>
+        /// <remarks></remarks>
+        public void setIniValue(string Group, string Key, string Value)
+        {
+
+	        DataTable Data = new DataTable();
+	        string sqlString = null;
+
+	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+
+	        Execute(sqlString, ref Data);
+
+	        if ((Data.Rows.Count == 0)) {
+		        // Wert gar nicht vorhanden
+
+		        // Wert eintragen
+		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(Value) + ")";
+		        Execute(sqlString);
+	        } else {
+		        // Wert bereits vorhanden
+		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAString(Value) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+		        Execute(sqlString);
+	        }
+
+        }
     }
 
 #if false
