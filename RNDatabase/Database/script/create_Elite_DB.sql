@@ -205,8 +205,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity` (
   `id` INT NOT NULL,
   `commodity` VARCHAR(80) NOT NULL,
-  `loccommodity` VARCHAR(80) NOT NULL,
-  `category_id` INT NOT NULL,
+  `loccommodity` VARCHAR(80) NULL,
+  `category_id` INT NULL,
   `average_price` INT NULL DEFAULT -1,
   `pwl_demand_buy_low` INT NULL DEFAULT -1,
   `pwl_demand_buy_high` INT NULL DEFAULT -1,
@@ -448,7 +448,7 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbInitValue` (
   `InitGroup` VARCHAR(80) NOT NULL,
   `InitKey` VARCHAR(80) NOT NULL,
   `InitValue` VARCHAR(255) NULL,
-  PRIMARY KEY (`InitGroup`))
+  PRIMARY KEY (`InitGroup`, `InitKey`))
 ENGINE = InnoDB;
 
 
@@ -476,37 +476,36 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbLog`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLog` (
-  `id` INT NOT NULL,
   `time` DATETIME NOT NULL,
-  `system_id` INT NOT NULL,
+  `system_id` INT NULL,
   `station_id` INT NULL,
   `event_id` INT NOT NULL,
   `commodity_id` INT NULL,
   `cargoaction_id` INT NULL,
   `cargovolume` INT NULL,
-  `credits_transcation` INT NULL,
+  `credits_transaction` INT NULL,
   `credits_total` INT NULL,
   `notes` VARCHAR(1024) NULL,
-  PRIMARY KEY (`id`),
   INDEX `fk_tbLog_tbCommodities1_idx` (`commodity_id` ASC),
   INDEX `fk_tbLog_tbSystems1_idx` (`system_id` ASC),
   INDEX `fk_tbLog_tbStations1_idx` (`station_id` ASC),
   INDEX `fk_tbLog_tbEventType1_idx` (`event_id` ASC),
   INDEX `fk_tbLog_tbCargoAction1_idx` (`cargoaction_id` ASC),
+  PRIMARY KEY (`time`),
   CONSTRAINT `fk_tbLog_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbSystems1`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
-    ON DELETE CASCADE
+    ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE CASCADE
+    ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbEventType1`
     FOREIGN KEY (`event_id`)
@@ -635,6 +634,36 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbVisitedSystems`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedSystems` (
+  `system_id` INT NOT NULL,
+  `time` DATETIME NOT NULL,
+  PRIMARY KEY (`system_id`),
+  CONSTRAINT `fk_tbSystems_tbVisitedSystems`
+    FOREIGN KEY (`system_id`)
+    REFERENCES `Elite_DB`.`tbSystems` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbVisitedStations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedStations` (
+  `station_id` INT NOT NULL,
+  `time` DATETIME NOT NULL,
+  PRIMARY KEY (`station_id`),
+  CONSTRAINT `fk_tbStations_tbVisitedStations`
+    FOREIGN KEY (`station_id`)
+    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -752,9 +781,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (0, 'English');
-INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (1, 'German');
-INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (2, 'French');
+INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (0, 'eng');
+INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (1, 'ger');
+INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (2, 'fra');
 
 COMMIT;
 
@@ -765,6 +794,41 @@ COMMIT;
 START TRANSACTION;
 USE `Elite_DB`;
 INSERT INTO `Elite_DB`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('DB', 'StructureRev', '1');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Elite_DB`.`tbEventType`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Elite_DB`;
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (1, 'Jumped To');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (2, 'Visited');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (3, 'Market Data Collected');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (4, 'Cargo');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (5, 'Fight');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (6, 'Docked');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (7, 'Took Off');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (8, 'Saved Game');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (9, 'Loaded Game');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (10, 'Accepted Mission');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (11, 'Completed Mission');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (12, 'Other');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Elite_DB`.`tbCargoAction`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Elite_DB`;
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (1, 'Bought');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (2, 'Sold');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (3, 'Mined');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (4, 'Stolen');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (5, 'Found');
 
 COMMIT;
 

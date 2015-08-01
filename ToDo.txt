@@ -32,6 +32,10 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.10
+   * import of CommandersLogAutoSave (Commander's Log)
+   * optimized structure of sql tables
+-------------------------------------------------------------------------------------         
 SQL 0.0.9
    * added master tables for visited-flag	
    * import of commodities.xml (localized names)

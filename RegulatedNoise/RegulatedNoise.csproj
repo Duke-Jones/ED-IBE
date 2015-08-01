@@ -183,6 +183,7 @@
     <Compile Include="Enums and Utility Classes\RNGraphics.cs" />
     <Compile Include="Enums and Utility Classes\SerializableDictionary.cs" />
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
+    <Compile Include="Enums and Utility Classes\StructureHelper.cs" />
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
     <Compile Include="MRmPTestTab\MRmPTestTab.cs">
       <SubType>UserControl</SubType>

@@ -9,6 +9,7 @@ using System.IO;
 using System.Data;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace RegulatedNoise.SQL
 {
@@ -21,13 +22,13 @@ namespace RegulatedNoise.SQL
             prohibited
         }
 
-        private String[] BaseTables = new String[] {"tbGovernment", 
-                                                    "tbAllegiance", 
-                                                    "tbState", 
-                                                    "tbSecurity", 
-                                                    "tbEconomy", 
-                                                    "tbStationtype",
-                                                    "tbCommodity"};
+        private String[] BaseTables_Systems = new String[] {"tbGovernment", 
+                                                            "tbAllegiance", 
+                                                            "tbState", 
+                                                            "tbSecurity", 
+                                                            "tbEconomy", 
+                                                            "tbStationtype",
+                                                            "tbCommodity"};
 
         DataSet Data = null;
 
@@ -113,7 +114,6 @@ namespace RegulatedNoise.SQL
         {
             DataSet                   Data;
             Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
-            Int32                     LanguageID;
             String                    sqlString;
             Int32                     currentSelfCreatedIndex;
 
@@ -1110,7 +1110,88 @@ namespace RegulatedNoise.SQL
 
 #endregion
 
-#region basetable handling
+#region Commander's Log
+
+        /// <summary>
+        /// imports the "Commander's Log" into the database
+        /// </summary>
+        /// <param name="Filename"></param>
+        public void ImportCommandersLog(String Filename)
+        {
+            DataSet Data;
+            String  sqlString;
+            Int32   added = 0;
+
+            try
+            {
+                Data = new DataSet();
+
+                Data.ReadXml(Filename);
+
+                // gettin' some freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
+                //Program.DBCon.TableRead("select * from tbLog for update", "tbLog", ref Data);
+                if(Data.Tables.Contains("CommandersLogEvent"))
+                    foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
+                    {
+                        DateTime EventTime = DateTime.Parse((String)Event["EventDate"], CultureInfo.CurrentUICulture , DateTimeStyles.None);
+                        String   Station   = StructureHelper.CombinedNameToStationName((String)Event["Station"]);
+                        String   EventType = Event["EventType"].ToString().Trim().Length == 0 ? "Other" : Event["EventType"].ToString().Trim();
+
+                        sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
+                                                  "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
+                                                  " SELECT d.* FROM (SELECT" +
+                                                  "          {0} AS time," +
+                                                  "          (select id from tbSystems  where systemname  = {1}" +
+                                                  "          ) AS system_id," +
+                                                  "          (select id from tbStations where stationname = {2} " + 
+                                                  "                                     and   system_id   = (select id from tbSystems" + 
+                                                  "                                                           where systemname = {1})" +
+                                                  "          ) AS station_id," +
+                                                  "          (select id from tbEventType   where event     = {3}) As event_id," +
+                                                  "          (select id from tbCommodity   where commodity = {4} or loccommodity = {4} limit 1) As commodity_id," +
+                                                  "          (select id from tbCargoAction where action    = {5}) AS cargoaction_id," +
+                                                  "          {6} AS cargovolume," +
+                                                  "          {7} AS credits_transaction," +
+                                                  "          {8} AS credits_total," +
+                                                  "          {9} AS notes) AS d" +
+                                                  " WHERE 0 IN (SELECT COUNT(*)" +
+                                                  "                     FROM tbLog" +
+                                                  "                     WHERE time     = {0})",
+                                                  DBConnector.SQLDateTime(EventTime), 
+                                                  DBConnector.SQLAString(Event["System"].ToString()),
+                                                  DBConnector.SQLAString(Station), 
+                                                  DBConnector.SQLAString(EventType),
+                                                  DBConnector.SQLAString(Event["Cargo"].ToString()),
+                                                  DBConnector.SQLAString(Event["CargoAction"].ToString()),
+                                                  Event["CargoVolume"],
+                                                  Event["TransactionAmount"],
+                                                  Event["Credits"],
+                                                  Event["Notes"].ToString().Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(Event["Notes"].ToString())));
+
+                        added += Program.DBCon.Execute(sqlString);
+
+                        if ((added > 0) && ((added % 10) == 0))
+                            Debug.Print(added.ToString());
+                    }
+
+                // reset freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+            }
+            catch (Exception ex)
+            {
+                // reset freaky perfomance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                throw new Exception("Error when importing the Commander's Log ", ex);
+            }
+        }
+
+#endregion
+
+        #region basetable handling
 
         /// <summary>
         /// loads the data from the basetables into memory
@@ -1121,7 +1202,7 @@ namespace RegulatedNoise.SQL
             try
             {
 
-                foreach (String BaseTable in BaseTables)
+                foreach (String BaseTable in BaseTables_Systems)
                 {
                     // preload all tables with base data
                     Program.DBCon.Execute(String.Format("select * from {0}", BaseTable), BaseTable, ref Data);

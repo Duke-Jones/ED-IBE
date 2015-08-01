@@ -1634,30 +1634,6 @@ namespace RegulatedNoise
             return localSystem;
         }
 
-        private string CombinedNameToStationName(string combinedName)
-        {
-            var ret = combinedName.Substring(0, combinedName.IndexOf("[") - 1);
-            return ret;
-        }
-
-        private string CombinedNameToSystemName(string combinedName)
-        {
-            try
-            {
-                var ret = combinedName.Substring(combinedName.IndexOf("[") + 1);
-                ret = ret.TrimEnd(']');
-                return ret;
-
-            }
-            catch (Exception ex)
-            {
-                
-                throw ex;
-            }
-
-            
-        }
-
         private void SetupGui(bool force= false){
 
             if(this.InvokeRequired)
@@ -1733,7 +1709,7 @@ namespace RegulatedNoise
 
             var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
             cbIncludeWithinRegionOfStation.Items.Clear();
-            var systems = StationDirectory.Keys.Select(x => (object)(CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
+            var systems = StationDirectory.Keys.Select(x => (object)(StructureHelper.CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
             cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
             cbIncludeWithinRegionOfStation.Items.AddRange(systems);
 
@@ -1875,7 +1851,7 @@ namespace RegulatedNoise
             if (rbSortBySystem.Checked)
             {
                 // get the list ordered as wanted -> order by system
-                SelectionPreordered = SelectionRaw.OrderBy(x => CombinedNameToSystemName(x.Key)).ThenBy(x => CombinedNameToStationName(x.Key)).ToList();
+                SelectionPreordered = SelectionRaw.OrderBy(x => StructureHelper.CombinedNameToSystemName(x.Key)).ThenBy(x => StructureHelper.CombinedNameToStationName(x.Key)).ToList();
 
                 if (cblastVisitedFirst.Checked)
                 {
@@ -1937,7 +1913,7 @@ namespace RegulatedNoise
             else if (rbSortByStation.Checked)
             {
                 // get the list ordered as wanted -> order by station
-                SelectionPreordered = SelectionRaw.OrderBy(x => CombinedNameToStationName(x.Key)).ToList();;
+                SelectionPreordered = SelectionRaw.OrderBy(x => StructureHelper.CombinedNameToStationName(x.Key)).ToList();;
 
                 if (cblastVisitedFirst.Checked)
                 {
@@ -1989,7 +1965,7 @@ namespace RegulatedNoise
             else if (rbSortByDistance.Checked)
             {
                 // get the list ordered as wanted -> order by distance 
-                SelectionPreordered = SelectionRaw.OrderBy(x => DistanceInLightYears(CombinedNameToSystemName(x.Key))).ToList();
+                SelectionPreordered = SelectionRaw.OrderBy(x => DistanceInLightYears(StructureHelper.CombinedNameToSystemName(x.Key))).ToList();
 
                 if (cblastVisitedFirst.Checked)
                 {
@@ -2112,7 +2088,7 @@ namespace RegulatedNoise
 
             if (selectedItem != null)
             { 
-                var dist = DistanceInLightYears(CombinedNameToSystemName(getCmbItemKey(selectedItem)));
+                var dist = DistanceInLightYears(StructureHelper.CombinedNameToSystemName(getCmbItemKey(selectedItem)));
 
                 if (dist < double.MaxValue)
                     lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
@@ -4359,11 +4335,11 @@ namespace RegulatedNoise
                 if (_stationToStationReturnColumnSorter.SortColumn != 7)
                     lvStationToStationReturn_ColumnClick(null, new ColumnClickEventArgs(7));
 
-                if (myMilkyway.existSystem(CombinedNameToSystemName(stationFrom)))
+                if (myMilkyway.existSystem(StructureHelper.CombinedNameToSystemName(stationFrom)))
                 {
                     var dist = DistanceInLightYears(
-                                                         CombinedNameToSystemName(stationFrom).ToUpper(),
-                                                         myMilkyway.getSystemCoordinates(CombinedNameToSystemName(stationTo)));
+                                                         StructureHelper.CombinedNameToSystemName(stationFrom).ToUpper(),
+                                                         myMilkyway.getSystemCoordinates(StructureHelper.CombinedNameToSystemName(stationTo)));
 
                     if (dist < double.MaxValue)
                         lblStationToStationLightYears.Text = "(" +
@@ -5777,7 +5753,7 @@ namespace RegulatedNoise
                         double creditsDouble;
                         double distance = 1d;
 
-                        distance = DistanceInLightYears(CombinedNameToSystemName(a.Key).ToUpper(), CombinedNameToSystemName(b.Key).ToUpper());
+                        distance = DistanceInLightYears(StructureHelper.CombinedNameToSystemName(a.Key).ToUpper(), StructureHelper.CombinedNameToSystemName(b.Key).ToUpper());
 
                         if (cbPerLightYearRoundTrip.Checked)
                         {
@@ -6668,8 +6644,8 @@ namespace RegulatedNoise
         /// <returns></returns>
         private bool getStationSelection(KeyValuePair<string, List<CsvRow>> x)
         {
-            return (!cbLimitLightYears.Checked || Distance(CombinedNameToSystemName(x.Key))) &&
-                   (!cbStationToStar.Checked   || StationDistance(CombinedNameToSystemName(x.Key), CombinedNameToStationName(x.Key)));
+            return (!cbLimitLightYears.Checked || Distance(StructureHelper.CombinedNameToSystemName(x.Key))) &&
+                   (!cbStationToStar.Checked   || StationDistance(StructureHelper.CombinedNameToSystemName(x.Key), StructureHelper.CombinedNameToStationName(x.Key)));
 
         }
 
@@ -7908,6 +7884,9 @@ namespace RegulatedNoise
             // import the localizations from the old RN files
             Import.ImportCommodityLocalizations(@".\Data\Commodities.xml");
 
+            // import the localizations from the old RN files
+            Import.ImportCommandersLog(@".\CommandersLogAutoSave.xml");
+            
             // import the pricewarnlevels from the old RN files
             Import.ImportCommodityPriceWarnLevels(@".\Data\Commodities_RN.json");
 

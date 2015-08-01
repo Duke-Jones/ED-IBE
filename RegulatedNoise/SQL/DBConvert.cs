@@ -99,5 +99,6 @@ namespace RegulatedNoise.SQL
 	    {
 		    return "'" + ToString(value) + "'";
 	    }
+
     }
 }
