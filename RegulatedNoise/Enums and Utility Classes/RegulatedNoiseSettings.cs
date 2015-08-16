@@ -152,7 +152,8 @@ namespace RegulatedNoise
                                                                                                                   {"HelpOCR",               new WindowData()},
                                                                                                                   {"HelpCommodities",       new WindowData()},
                                                                                                                   {"EBPixeltest",           new WindowData()},
-                                                                                                                  {"ProgressView",          new WindowData()}
+                                                                                                                  {"ProgressView",          new WindowData()},
+                                                                                                                  {"DatabaseOp",            new WindowData()}
                                                                                                                 };
 
         public SerializableDictionary<string, List<ColumnData>> ListViewColumnData = new SerializableDictionary<string, List<ColumnData>>() { 
@@ -177,7 +178,7 @@ namespace RegulatedNoise
             
             var serializer = new XmlSerializer(typeof(RegulatedNoiseSettings));
 
-            if (File.Exists("RegulatedNoiseSettings.xml"))
+            if (File.Exists(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @".\RegulatedNoiseSettings.xml")))
             {
                 var fs = new FileStream("RegulatedNoiseSettings.xml", FileMode.Open);
                 var reader = XmlReader.Create(fs);

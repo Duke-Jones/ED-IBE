@@ -120,5 +120,16 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 this.Icon = Properties.Resources.RegulatedNoise;
         }
 
+        /// <summary>
+        /// shows the form, also if it's minimized or in the background
+        /// </summary>
+        public void ShowEx()
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+                this.WindowState = FormWindowState.Normal;
+
+            this.Show();
+            this.BringToFront();
+        }
     }
 }

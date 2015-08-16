@@ -21,7 +21,6 @@ todo:
    * default setting for new systems
 -------------------------------------------------------------------------------------         
 sql_todo
-   * import of stationhistory.json (last visited stations)
    * import of commodities_own.xml (self added commodities)
 
    * think about : remove the vistied flag from stations and systems ? 
@@ -32,6 +31,9 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.11
+   * import of the history of visited stations 
+-------------------------------------------------------------------------------------         
 SQL 0.0.10
    * import of CommandersLogAutoSave (Commander's Log)
    * optimized structure of sql tables

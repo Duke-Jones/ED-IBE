@@ -399,6 +399,7 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cmdDatabaseOp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
@@ -4270,6 +4271,7 @@
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.cmdDatabaseOp);
             this.groupBox12.Controls.Add(this.label89);
             this.groupBox12.Controls.Add(this.nudPurgeOldDataDays);
             this.groupBox12.Controls.Add(this.cmdPurgeOldData);
@@ -4668,6 +4670,18 @@
             // 
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
+            // 
+            // cmdDatabaseOp
+            // 
+            this.cmdDatabaseOp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmdDatabaseOp.Location = new System.Drawing.Point(32, 255);
+            this.cmdDatabaseOp.Name = "cmdDatabaseOp";
+            this.cmdDatabaseOp.Size = new System.Drawing.Size(116, 42);
+            this.cmdDatabaseOp.TabIndex = 63;
+            this.cmdDatabaseOp.Text = "SQL-Database Operations";
+            this.toolTip1.SetToolTip(this.cmdDatabaseOp, "0 purges all but todays price data, -1 purges ALL price data");
+            this.cmdDatabaseOp.UseVisualStyleBackColor = true;
+            this.cmdDatabaseOp.Click += new System.EventHandler(this.cmdDatabaseOp_Click);
             // 
             // Form1
             // 
@@ -5161,6 +5175,7 @@
         private System.Windows.Forms.RadioButton rbUserID;
         internal System.Windows.Forms.TextBox txtCmdrsName;
         private System.Windows.Forms.CheckBox cbEDDNAutoListen;
+        private System.Windows.Forms.Button cmdDatabaseOp;
 
         
     }

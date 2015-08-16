@@ -39,7 +39,7 @@ namespace RegulatedNoise.SQL
     
         private Int32                                   m_Transcount;
     
-       private bool                                    m_RollBackPending;          // rollback is running
+        private bool                                    m_RollBackPending;          // rollback is running
     
         private double                                  m_maxTransactionTime;       //  max. time for transactions
         private DateTime                                m_TransStartTime;
@@ -548,7 +548,7 @@ namespace RegulatedNoise.SQL
         }
     
         public static String SQLAString(string DBString) {
-            DBString = DBString.Replace("\'", "");
+            // DBString = DBString.Replace("\'", "");
             return ("\'" + (DBString + "\'"));
         }
     

@@ -51,7 +51,7 @@ namespace RegulatedNoise.SQL
 
                 Commodities = JsonConvert.DeserializeObject<List<EDCommodities>>(File.ReadAllText(Filename));
 
-                // gettin' some freaky perfomance
+                // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 Program.DBCon.TransBegin();
@@ -86,7 +86,7 @@ namespace RegulatedNoise.SQL
 
                 Program.DBCon.TransCommit();
 
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
             }
@@ -97,7 +97,7 @@ namespace RegulatedNoise.SQL
 
                 try
                 {
-                    // reset freaky perfomance
+                    // reset freaky performance
                     Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
                 }
                 catch (Exception) { }
@@ -138,79 +138,81 @@ namespace RegulatedNoise.SQL
                 Program.DBCon.TableRead("select * from tbCommodityLocalization", "tbCommodityLocalization", ref Data);
                 Program.DBCon.TableRead("select * from tbCommodity", "tbCommodity", ref Data);
 
-                // first check if there's a new language
-                foreach (DataColumn LanguageFromFile in Data.Tables["Names"].Columns)
-                {
-                    DataRow[] LanguageName  = Data.Tables["tbLanguage"].Select("language  = " + DBConnector.SQLAString(LanguageFromFile.ColumnName));
-
-                    if(LanguageName.Count() == 0)
+                if(Data.Tables["Names"] != null)
+                { 
+                    // first check if there's a new language
+                    foreach (DataColumn LanguageFromFile in Data.Tables["Names"].Columns)
                     {
-                        // add a non existing language
-                        DataRow newRow  = Data.Tables["tbLanguage"].NewRow();
-                        int?    Wert    = DBConvert.To<int?>(Data.Tables["tbLanguage"].Compute("max(id)", ""));
+                        DataRow[] LanguageName  = Data.Tables["tbLanguage"].Select("language  = " + DBConnector.SQLAString(LanguageFromFile.ColumnName));
 
-                        if(Wert == null)
-                            Wert = 0;
-
-                        newRow["id"]        = Wert;
-                        newRow["language"]  = LanguageFromFile.ColumnName;
-
-                        Data.Tables["tbLanguage"].Rows.Add(newRow);
-
-                        foundLanguagesFromFile.Add(LanguageFromFile.ColumnName, (Int32)Wert);
-                    }
-                    else
-                        foundLanguagesFromFile.Add((String)LanguageName[0]["language"], (Int32)LanguageName[0]["id"]);
-                    
-                }
-                
-                // submit changes (tbLanguage)
-                Program.DBCon.TableUpdate("tbLanguage", ref Data);
-
-                // compare and add the localized names
-                foreach (DataRow LocalizationFromFile in Data.Tables["Names"].AsEnumerable())
-                {
-                    String    BaseName              = (String)LocalizationFromFile[Program.BASE_LANGUAGE];
-                    DataRow[] Commodity             = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(BaseName));
-
-                    if (Commodity.Count() == 0)
-                    { 
-                        // completely unknown commodity - add first new entry to "tbCommodities"
-                        DataRow newRow = Data.Tables["tbCommodity"].NewRow();
-
-                        newRow["id"]            = currentSelfCreatedIndex;
-                        newRow["commodity"]     = BaseName;
-                        newRow["is_rare"]       = 0;
-
-                        Data.Tables["tbCommodity"].Rows.Add(newRow);
-
-                        currentSelfCreatedIndex -= 1;
-
-                        // submit changes (tbCommodity)
-                        Program.DBCon.TableUpdate("tbCommodity", ref Data);
-
-                        Commodity             = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(BaseName));
-                    }
-
-                    foreach (KeyValuePair<String, Int32> LanguageFormFile in foundLanguagesFromFile)
-	                {
-                        DataRow[] currentLocalizations  = Data.Tables["tbCommodityLocalization"].Select("     commodity_id  = " + Commodity[0]["id"] + 
-                                                                                                        " and language_id   = " + LanguageFormFile.Value);
-
-                        if(currentLocalizations.Count() == 0)
+                        if(LanguageName.Count() == 0)
                         {
-                            // add a new localization
-                            DataRow newRow = Data.Tables["tbCommodityLocalization"].NewRow();
+                            // add a non existing language
+                            DataRow newRow  = Data.Tables["tbLanguage"].NewRow();
+                            int?    Wert    = DBConvert.To<int?>(Data.Tables["tbLanguage"].Compute("max(id)", ""));
 
-                            newRow["commodity_id"]  = Commodity[0]["id"];
-                            newRow["language_id"]   = LanguageFormFile.Value;
-                            newRow["locname"]       = (String)LocalizationFromFile[LanguageFormFile.Key];
+                            if(Wert == null)
+                                Wert = 0;
 
-                            Data.Tables["tbCommodityLocalization"].Rows.Add(newRow);
+                            newRow["id"]        = Wert;
+                            newRow["language"]  = LanguageFromFile.ColumnName;
+
+                            Data.Tables["tbLanguage"].Rows.Add(newRow);
+
+                            foundLanguagesFromFile.Add(LanguageFromFile.ColumnName, (Int32)Wert);
                         }
-	                }
-                }
+                        else
+                            foundLanguagesFromFile.Add((String)LanguageName[0]["language"], (Int32)LanguageName[0]["id"]);
+                    
+                    }
+                
+                    // submit changes (tbLanguage)
+                    Program.DBCon.TableUpdate("tbLanguage", ref Data);
 
+                    // compare and add the localized names
+                    foreach (DataRow LocalizationFromFile in Data.Tables["Names"].AsEnumerable())
+                    {
+                        String    BaseName              = (String)LocalizationFromFile[Program.BASE_LANGUAGE];
+                        DataRow[] Commodity             = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(BaseName));
+
+                        if (Commodity.Count() == 0)
+                        { 
+                            // completely unknown commodity - add first new entry to "tbCommodities"
+                            DataRow newRow = Data.Tables["tbCommodity"].NewRow();
+
+                            newRow["id"]            = currentSelfCreatedIndex;
+                            newRow["commodity"]     = BaseName;
+                            newRow["is_rare"]       = 0;
+
+                            Data.Tables["tbCommodity"].Rows.Add(newRow);
+
+                            currentSelfCreatedIndex -= 1;
+
+                            // submit changes (tbCommodity)
+                            Program.DBCon.TableUpdate("tbCommodity", ref Data);
+
+                            Commodity             = Data.Tables["tbCommodity"].Select("commodity = " + DBConnector.SQLAString(BaseName));
+                        }
+
+                        foreach (KeyValuePair<String, Int32> LanguageFormFile in foundLanguagesFromFile)
+	                    {
+                            DataRow[] currentLocalizations  = Data.Tables["tbCommodityLocalization"].Select("     commodity_id  = " + Commodity[0]["id"] + 
+                                                                                                            " and language_id   = " + LanguageFormFile.Value);
+
+                            if(currentLocalizations.Count() == 0)
+                            {
+                                // add a new localization
+                                DataRow newRow = Data.Tables["tbCommodityLocalization"].NewRow();
+
+                                newRow["commodity_id"]  = Commodity[0]["id"];
+                                newRow["language_id"]   = LanguageFormFile.Value;
+                                newRow["locname"]       = (String)LocalizationFromFile[LanguageFormFile.Key];
+
+                                Data.Tables["tbCommodityLocalization"].Rows.Add(newRow);
+                            }
+	                    }
+                    }
+                }
                 // submit changes
                 Program.DBCon.TableUpdate("tbCommodityLocalization", ref Data);
 
@@ -303,7 +305,7 @@ namespace RegulatedNoise.SQL
 
                 PrepareBaseTables(Data);
 
-                // gettin' some freaky perfomance
+                // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 Systems = JsonConvert.DeserializeObject<List<EDSystem>>(File.ReadAllText(Filename));
@@ -400,7 +402,7 @@ namespace RegulatedNoise.SQL
 
                 Program.DBCon.TransCommit();
 
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
             }
@@ -411,7 +413,7 @@ namespace RegulatedNoise.SQL
 
                 try
                 {
-                    // reset freaky perfomance
+                    // reset freaky performance
                     Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                     Program.DBCon.TableReadRemove("tbSystems");
@@ -445,7 +447,7 @@ namespace RegulatedNoise.SQL
 
                 PrepareBaseTables(Data);
 
-                // gettin' some freaky perfomance
+                // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 Systems = JsonConvert.DeserializeObject<List<EDSystem>>(File.ReadAllText(Filename));
@@ -541,7 +543,7 @@ namespace RegulatedNoise.SQL
 
                 Program.DBCon.TransCommit();
 
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                 // return all changed ids
@@ -554,7 +556,7 @@ namespace RegulatedNoise.SQL
 
                 try
                 {
-                    // reset freaky perfomance
+                    // reset freaky performance
                     Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                     Program.DBCon.TableReadRemove("tbSystems");
@@ -624,7 +626,7 @@ namespace RegulatedNoise.SQL
 
                 PrepareBaseTables(Data);
 
-                // gettin' some freaky perfomance
+                // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename));
@@ -770,7 +772,7 @@ namespace RegulatedNoise.SQL
 
                 Program.DBCon.TransCommit();
 
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
             }
@@ -781,7 +783,7 @@ namespace RegulatedNoise.SQL
 
                 try
                 {
-                    // reset freaky perfomance
+                    // reset freaky performance
                     Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                     Program.DBCon.TableReadRemove("tbStations");
@@ -817,7 +819,7 @@ namespace RegulatedNoise.SQL
 
                 PrepareBaseTables(Data);
 
-                // gettin' some freaky perfomance
+                // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename));
@@ -930,7 +932,7 @@ namespace RegulatedNoise.SQL
 
                 Program.DBCon.TransCommit();
 
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
             }
@@ -941,7 +943,7 @@ namespace RegulatedNoise.SQL
 
                 try
                 {
-                    // reset freaky perfomance
+                    // reset freaky performance
                     Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                     Program.DBCon.TableReadRemove("tbStations");
@@ -1107,6 +1109,80 @@ namespace RegulatedNoise.SQL
             }
         }
 
+        /// <summary>
+        /// imports the old list of visited stations to the database
+        /// </summary>
+        /// <param name="StationObject"></param>
+        /// <param name="EconomyRow"></param>
+        public void ImportVisitedStations(string Filename)
+        {
+            String sqlString;
+
+            try
+            {
+                List<StationVisit> History  = JsonConvert.DeserializeObject<List<StationVisit>>(File.ReadAllText(Filename));
+
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
+                Program.DBCon.TransBegin("ImportVisitedStations");
+
+                foreach(StationVisit VisitEvent in History)
+                {
+                    String System  = StructureHelper.CombinedNameToSystemName(VisitEvent.Station);                    
+                    String Station = StructureHelper.CombinedNameToStationName(VisitEvent.Station);
+
+                    Debug.Print(System + "," + Station);
+
+                    try
+                    {
+                        sqlString = String.Format("insert ignore into tbVisitedSystems(system_id, time)" +
+                                                  " SELECT d.* FROM (SELECT" +
+                                                  " (select id from tbSystems where systemname = {0}) as system_id," +
+                                                  " {1} as time) as d", 
+                                                  DBConnector.SQLAString(DBConnector.SQLEscape(System)), 
+                                                  DBConnector.SQLDateTime(VisitEvent.Visited));
+
+                        Program.DBCon.Execute(sqlString);
+                    }
+                    catch (Exception)
+                    {
+                        Debug.Print("Error while importing system in history :" + System);
+                    };
+
+                    try
+                    {
+                        sqlString = String.Format("insert ignore into tbVisitedStations(station_id, time)" +
+                                                  " SELECT d.* FROM (SELECT" +
+                                                  " (select id from tbStations" + 
+                                                  "        where stationname = {0}" + 
+                                                  "          and system_id   = (select id from tbSystems where systemname = {1})) as station_id," +
+                                                  " {2} as time) as d", 
+                                                  DBConnector.SQLAString(DBConnector.SQLEscape(Station)), 
+                                                  DBConnector.SQLAString(DBConnector.SQLEscape(System)),
+                                                  DBConnector.SQLDateTime(VisitEvent.Visited));
+
+                        Program.DBCon.Execute(sqlString);
+                    }
+                    catch (Exception)
+                    {
+                        Debug.Print("Error while importing station in history :" + Station);
+                    };
+                    
+                }
+
+                Program.DBCon.TransCommit();
+                
+            }
+            catch (Exception ex)
+            {
+                if(Program.DBCon.TransActive())
+                    Program.DBCon.TransRollback();
+
+                throw new Exception("Error while importing the history of visited stations", ex);
+            }
+        }
+
 
 #endregion
 
@@ -1128,7 +1204,7 @@ namespace RegulatedNoise.SQL
 
                 Data.ReadXml(Filename);
 
-                // gettin' some freaky perfomance
+                // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 //Program.DBCon.TableRead("select * from tbLog for update", "tbLog", ref Data);
@@ -1176,18 +1252,19 @@ namespace RegulatedNoise.SQL
                             Debug.Print(added.ToString());
                     }
 
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
             }
             catch (Exception ex)
             {
-                // reset freaky perfomance
+                // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                 throw new Exception("Error when importing the Commander's Log ", ex);
             }
         }
+
 
 #endregion
 

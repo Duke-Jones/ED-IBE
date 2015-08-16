@@ -25,7 +25,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using CodeProject.Dialog;
-
+using RegulatedNoise.SQL;
 
 namespace RegulatedNoise
 {
@@ -121,6 +121,9 @@ namespace RegulatedNoise
         private string _CmdrsLog_LastAutoEventID                        = string.Empty;
         private DateTime m_lastEDDNAutoImport                           = DateTime.MinValue;
         private System.Timers.Timer _AutoImportDelayTimer;
+
+        private DatabaseOp WND_DatabaseOp;
+
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -675,6 +678,7 @@ namespace RegulatedNoise
 
                 for (int i = 0; i < Names.Count(); i++)
                 {
+                    Debug.Print(key.GetValue(Names[i]).ToString());
                     if (key.GetValue(Names[i]).ToString() == ProgramName)
                     {
                         ProgramPath = Names[i].ToString();
@@ -1233,7 +1237,7 @@ namespace RegulatedNoise
         {
             string newFile, backupFile, currentFile;
 
-            currentFile = "Program.RegulatedNoiseSettings.xml";
+            currentFile = "RegulatedNoiseSettings.xml";
 
             newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
             backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
@@ -7874,34 +7878,35 @@ namespace RegulatedNoise
 
         private void cmdTest_Click(object sender, EventArgs e)
         {
-            //System.Data.DataTable Data  = new System.Data.DataTable();
-
-            //Program.DBCon.Execute("select * from tbeconomy", ref Data);
-
 
             RegulatedNoise.SQL.DBPorter Import = new RegulatedNoise.SQL.DBPorter();
 
-            // import the localizations from the old RN files
-            Import.ImportCommodityLocalizations(@".\Data\Commodities.xml");
+            //// import the localizations from the old RN files
+            //Import.ImportCommodityLocalizations(@".\Data\Commodities.xml");
 
-            // import the localizations from the old RN files
-            Import.ImportCommandersLog(@".\CommandersLogAutoSave.xml");
+            // import the self added localizations from the old RN files
+            Import.ImportCommodityLocalizations(@".\Data\Commodities_own.xml");
+
+            //// import the Commander's Log from the old RN files
+            //Import.ImportCommandersLog(@".\CommandersLogAutoSave.xml");
             
-            // import the pricewarnlevels from the old RN files
-            Import.ImportCommodityPriceWarnLevels(@".\Data\Commodities_RN.json");
+            //// import the pricewarnlevels from the old RN files
+            //Import.ImportCommodityPriceWarnLevels(@".\Data\Commodities_RN.json");
 
-            // import the commodities from EDDB
-            Import.ImportCommodities(@"./Data/commodities.json");
+            //// import the commodities from EDDB
+            //Import.ImportCommodities(@"./Data/commodities.json");
 
-            // import the systems and stations from EDDB
-            Import.ImportSystems(@"./Data/systems.json");
-            Import.ImportStations(@"./Data/stations.json");
+            //// import the systems and stations from EDDB
+            //Import.ImportSystems(@"./Data/systems.json");
+            //Import.ImportStations(@"./Data/stations.json");
 
-            // import (once) the self-changed or added systems and stations 
-            Dictionary<Int32, Int32> changedSystemIDs;
-            changedSystemIDs = Import.ImportSystems_Own(@"./Data/systems_own.json");
-            Import.ImportStations_Own(@"./Data/stations_own.json", changedSystemIDs);
+            //// import (once) the self-changed or added systems and stations 
+            //Dictionary<Int32, Int32> changedSystemIDs;
+            //changedSystemIDs = Import.ImportSystems_Own(@"./Data/systems_own.json");
+            //Import.ImportStations_Own(@"./Data/stations_own.json", changedSystemIDs);
 
+            //import the history of visited stations
+            //Import.ImportVisitedStations(@"./Data/StationHistory.json");
 
             Debug.Print("swds");
 
@@ -8232,5 +8237,15 @@ namespace RegulatedNoise
         }
 
         #endregion
+
+        private void cmdDatabaseOp_Click(object sender, EventArgs e)
+        {
+            if(WND_DatabaseOp == null || WND_DatabaseOp.IsDisposed)
+            {
+                WND_DatabaseOp = new DatabaseOp();
+            }
+                
+            WND_DatabaseOp.ShowEx();
+        }
      }
 }
