@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,40 +11,39 @@ namespace RegulatedNoise
 {
     public class CommandersLog
     {
-        // Commander's Log Functionality
-        public SortableBindingList<CommandersLogEvent> LogEvents { get; set; }
-
-        private readonly Form1 _callingForm;
-        public bool isLoaded { get; set; }
-
-        public CommandersLog(Form1 callingForm)
+        public enum enGUIElements
         {
-            _callingForm = callingForm;
-            
-            LogEvents = new SortableBindingList<CommandersLogEvent>();
+            cmbEventType
+        }
 
-            isLoaded = false;
 
+        BindingSource m_BindingSource;
+        DataTable     m_Datatable;
+
+        public CommandersLog()
+        {
+            m_BindingSource = new BindingSource();
+            m_Datatable     = new DataTable();
+
+            m_BindingSource.DataSource = m_Datatable;
         }
 
         public string CreateEvent()
         {
             String newEventID = Guid.NewGuid().ToString();
 
-            _callingForm.tbLogEventID.Text = newEventID;
-
-            LogEvents.Add(new CommandersLogEvent 
-            {
-                EventType =_callingForm.cbLogEventType.Text,
-                Station =_callingForm.cbLogStationName.Text,
-                System =_callingForm.cbLogSystemName.Text,
-                Cargo =_callingForm.cbLogCargoName.Text,
-                CargoAction =_callingForm.cbCargoModifier.Text,
-                CargoVolume =int.Parse(_callingForm.cbLogQuantity.Text),
-                Notes =_callingForm.tbLogNotes.Text,
-                EventDate = _callingForm.dtpLogEventDate.Value,
-                EventID = newEventID
-            });
+            //LogEvents.Add(new CommandersLogEvent 
+            //{
+            //    EventType =_callingForm.cbLogEventType.Text,
+            //    Station =_callingForm.cbLogStationName.Text,
+            //    System =_callingForm.cbLogSystemName.Text,
+            //    Cargo =_callingForm.cbLogCargoName.Text,
+            //    CargoAction =_callingForm.cbCargoModifier.Text,
+            //    CargoVolume =int.Parse(_callingForm.cbLogQuantity.Text),
+            //    Notes =_callingForm.tbLogNotes.Text,
+            //    EventDate = _callingForm.dtpLogEventDate.Value,
+            //    EventID = newEventID
+            //});
 
             return newEventID;
         }
@@ -52,20 +52,20 @@ namespace RegulatedNoise
         {
             String newEventID = Guid.NewGuid().ToString();
 
-            LogEvents.Add(new CommandersLogEvent
-            {
-                EventType =               eventType                  ,
-                Station =                 station                    ,
-                System =                  system                     ,
-                Cargo =                   cargo                      ,
-                CargoAction =             cargoAction                ,
-                CargoVolume =             cargoVolume                ,
-                Notes =                   notes                      ,
-                EventDate        =        eventDate                  ,
-                EventID = newEventID  
-            });
+            //LogEvents.Add(new CommandersLogEvent
+            //{
+            //    EventType =               eventType                  ,
+            //    Station =                 station                    ,
+            //    System =                  system                     ,
+            //    Cargo =                   cargo                      ,
+            //    CargoAction =             cargoAction                ,
+            //    CargoVolume =             cargoVolume                ,
+            //    Notes =                   notes                      ,
+            //    EventDate        =        eventDate                  ,
+            //    EventID = newEventID  
+            //});
 
-            UpdateCommandersLogListView();
+            //UpdateCommandersLogListView();
 
             return newEventID;
         }
@@ -75,11 +75,11 @@ namespace RegulatedNoise
             // set it to UTC everywhere or nowhere -> pay attention to the different timezones
             // if you wan't to concatenate ED-time and local pc time
             //var now =DateTime.UtcNow;
-            var now = DateTime.Now;
-            ClearLogEventFields();
-            _callingForm.dtpLogEventDate.Value = now;
-            _callingForm.tbLogEventID.Text ="";
-            _callingForm.btCreateAddEntry.Text = "Save As New Entry";
+            //var now = DateTime.Now;
+            //ClearLogEventFields();
+            //_callingForm.dtpLogEventDate.Value = now;
+            //_callingForm.tbLogEventID.Text ="";
+            //_callingForm.btCreateAddEntry.Text = "Save As New Entry";
 
         }
 
@@ -87,145 +87,203 @@ namespace RegulatedNoise
         {
             // set it to UTC everywhere or nowhere -> pay attention to the different timezones
             // if you wan't to concatenate ED-time and local pc time
-            //var now =DateTime.UtcNow;
-            var now = DateTime.Now;
-            var newGuid = Guid.NewGuid().ToString();
-            ClearLogEventFields();
-            _callingForm.dtpLogEventDate.Value = now;
-            _callingForm.tbLogEventID.Text = newGuid;
-            partiallyCompleteCommandersLogEventEvent.EventID = Guid.NewGuid().ToString();
-            partiallyCompleteCommandersLogEventEvent.EventDate = now;
+            ////var now =DateTime.UtcNow;
+            //var now = DateTime.Now;
+            //var newGuid = Guid.NewGuid().ToString();
+            //ClearLogEventFields();
+            //_callingForm.dtpLogEventDate.Value = now;
+            //_callingForm.tbLogEventID.Text = newGuid;
+            //partiallyCompleteCommandersLogEventEvent.EventID = Guid.NewGuid().ToString();
+            //partiallyCompleteCommandersLogEventEvent.EventDate = now;
             
-            LogEvents.Add(partiallyCompleteCommandersLogEventEvent);
+            //LogEvents.Add(partiallyCompleteCommandersLogEventEvent);
 
         }
 
         private void ClearLogEventFields()
         {
-            _callingForm.cbLogEventType.Text = "";
-            _callingForm.cbLogStationName.Text = "";
-            _callingForm.cbLogSystemName.Text = "";
-            _callingForm.cbLogCargoName.Text = "";
-            _callingForm.cbCargoModifier.Text = "";
-            _callingForm.cbLogQuantity.Text = "0";
-            _callingForm.tbLogNotes.Text = "";
-            _callingForm.nbTransactionAmount.Text = "0";
+            //_callingForm.cbLogEventType.Text = "";
+            //_callingForm.cbLogStationName.Text = "";
+            //_callingForm.cbLogSystemName.Text = "";
+            //_callingForm.cbLogCargoName.Text = "";
+            //_callingForm.cbCargoModifier.Text = "";
+            //_callingForm.cbLogQuantity.Text = "0";
+            //_callingForm.tbLogNotes.Text = "";
+            //_callingForm.nbTransactionAmount.Text = "0";
 
-            _callingForm.UpdateSystemNameFromLogFile();
+            //_callingForm.UpdateSystemNameFromLogFile();
 
-            if (_callingForm.tbCurrentSystemFromLogs.Text != "")
-                _callingForm.cbLogSystemName.Text = _callingForm.tbCurrentSystemFromLogs.Text;
+            //if (_callingForm.tbCurrentSystemFromLogs.Text != "")
+            //    _callingForm.cbLogSystemName.Text = _callingForm.tbCurrentSystemFromLogs.Text;
 
-            if (_callingForm.tbCurrentStationinfoFromLogs.Text != "")
-                _callingForm.cbLogStationName.Text = _callingForm.tbCurrentStationinfoFromLogs.Text;
+            //if (_callingForm.tbCurrentStationinfoFromLogs.Text != "")
+            //    _callingForm.cbLogStationName.Text = _callingForm.tbCurrentStationinfoFromLogs.Text;
         }
 
-        public void SaveLog(bool force = false)
-        {
-            string newFile, backupFile, currentFile;
+        //public void SaveLog(bool force = false)
+        //{
+        //    string newFile, backupFile, currentFile;
 
-            if (force)
-                currentFile = "CommandersLogAutoSave.xml";
-            else
-                currentFile = "Commander's Log Events to " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".xml";
+        //    if (force)
+        //        currentFile = "CommandersLogAutoSave.xml";
+        //    else
+        //        currentFile = "Commander's Log Events to " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".xml";
 
-            newFile     = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-            backupFile  = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+        //    newFile     = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+        //    backupFile  = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
 
-            Stream stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
-            var x =new XmlSerializer(LogEvents.GetType());
-            x.Serialize(stream, LogEvents);
-            stream.Close();
+        //    Stream stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
+        //    var x =new XmlSerializer(LogEvents.GetType());
+        //    x.Serialize(stream, LogEvents);
+        //    stream.Close();
 
-            // we delete the current file not until the new file is written without errors
+        //    // we delete the current file not until the new file is written without errors
 
-            if (force)
-            {
-                // delete old backup
-                if (File.Exists(backupFile))
-                    File.Delete(backupFile);
+        //    if (force)
+        //    {
+        //        // delete old backup
+        //        if (File.Exists(backupFile))
+        //            File.Delete(backupFile);
 
-                // rename current file to old backup
-                if (File.Exists(currentFile))
-                    File.Move(currentFile, backupFile);
-            }
-            else
-            {
-                // delete file if exists
-                if (File.Exists(currentFile))
-                    File.Delete(currentFile);
+        //        // rename current file to old backup
+        //        if (File.Exists(currentFile))
+        //            File.Move(currentFile, backupFile);
+        //    }
+        //    else
+        //    {
+        //        // delete file if exists
+        //        if (File.Exists(currentFile))
+        //            File.Delete(currentFile);
 
-            }
+        //    }
 
-            // rename new file to current file
-            File.Move(newFile, currentFile);
+        //    // rename new file to current file
+        //    File.Move(newFile, currentFile);
 
-        }
+        //}
 
-        public void LoadLog(bool force = false)
-        {
-            try
-            {
-                var openFile = new OpenFileDialog
-                {
-                    DefaultExt = "xml",
-                    Multiselect = false,
-                    Filter = "XML (*.xml)|*.xml",
-                    InitialDirectory = Environment.CurrentDirectory
-                };
+        //public void LoadLog(bool force = false)
+        //{
+        //    try
+        //    {
+        //        var openFile = new OpenFileDialog
+        //        {
+        //            DefaultExt = "xml",
+        //            Multiselect = false,
+        //            Filter = "XML (*.xml)|*.xml",
+        //            InitialDirectory = Environment.CurrentDirectory
+        //        };
 
-                if (!force)
-                    openFile.ShowDialog();
+        //        if (!force)
+        //            openFile.ShowDialog();
 
-                if (force || openFile.FileNames.Length > 0)
-                {
-                    var serializer = new XmlSerializer(typeof(SortableBindingList<CommandersLogEvent>));
+        //        if (force || openFile.FileNames.Length > 0)
+        //        {
+        //            var serializer = new XmlSerializer(typeof(SortableBindingList<CommandersLogEvent>));
 
-                    if (force && !File.Exists("CommandersLogAutoSave.xml"))
-                        return;
+        //            if (force && !File.Exists("CommandersLogAutoSave.xml"))
+        //                return;
 
-                    var fs = new FileStream(force ? "CommandersLogAutoSave.xml" : openFile.FileName, FileMode.Open);
-                    var reader = XmlReader.Create(fs);
+        //            var fs = new FileStream(force ? "CommandersLogAutoSave.xml" : openFile.FileName, FileMode.Open);
+        //            var reader = XmlReader.Create(fs);
 
-                    var logEvents2 = (SortableBindingList<CommandersLogEvent>)serializer.Deserialize(reader);
-                    LogEvents = logEvents2;
-                    fs.Close();
-                }
+        //            var logEvents2 = (SortableBindingList<CommandersLogEvent>)serializer.Deserialize(reader);
+        //            LogEvents = logEvents2;
+        //            fs.Close();
+        //        }
 
-                isLoaded = true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error loading CommandersLog", ex);
-            }
-        }
+        //        isLoaded = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error loading CommandersLog", ex);
+        //    }
+        //}
 
         public void UpdateCommandersLogListView()
         {
-            _callingForm.lvCommandersLog.SuspendLayout();
-            _callingForm.lvCommandersLog.BeginUpdate();
+            //_callingForm.lvCommandersLog.SuspendLayout();
+            //_callingForm.lvCommandersLog.BeginUpdate();
 
-            _callingForm.lvCommandersLog.Items.Clear();
-            foreach (var x in LogEvents)
+            //_callingForm.lvCommandersLog.Items.Clear();
+            //foreach (var x in LogEvents)
+            //{
+            //    var listViewData = new string[_callingForm.LogEventProperties.Count()];
+
+            //    listViewData[0] = x.EventDate.ToString(CultureInfo.CurrentUICulture);
+
+            //    int ctr = 1;
+            //    foreach (var y in _callingForm.LogEventProperties)
+            //    {
+            //        if (y.Name != "EventDate")
+            //        {
+            //            listViewData[ctr] = y.GetValue(x).ToString();
+            //            ctr++;
+            //        }
+            //    }
+
+            //    _callingForm.lvCommandersLog.Items.Add(new ListViewItem(listViewData));
+            //}
+            //_callingForm.lvCommandersLog.EndUpdate();
+            //_callingForm.lvCommandersLog.ResumeLayout();
+        }
+
+        public class RequestParams
+        {
+            public Int32 Limit;
+
+           
+
+        }
+
+        internal void LoadData(DataGridView dataGridView, RequestParams Parameters)
+        {
+            try
             {
-                var listViewData = new string[_callingForm.LogEventProperties.Count()];
+                
+                dataGridView.SuspendLayout();
 
-                listViewData[0] = x.EventDate.ToString(CultureInfo.CurrentUICulture);
+                String sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action, Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
+                                   " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
+                                   "              left join tbCargoAction C on L.cargoaction_id = C.id" +
+                                   "              left join tbSystems S     on L.system_id      = S.id" +
+                                   "              left join tbStations St   on L.station_id     = St.id" +
+                                   "              left join tbCommodity Co  on L.commodity_id   = Co.id" +
+                                   " order by time desc limit 1000";
 
-                int ctr = 1;
-                foreach (var y in _callingForm.LogEventProperties)
+                Program.DBCon.Execute(sqlString, ref m_Datatable);
+
+                m_BindingSource.DataSource = m_Datatable;
+
+                dataGridView.DataSource = null;
+                dataGridView.DataSource = m_BindingSource;
+
+                dataGridView.ResumeLayout();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading Commanders Log", ex);    
+            }
+        }
+
+        internal void prepareCmb_EventTypes(ref ComboBox_ro cbLogEventType, enGUIElements GUIElement, DataSet BaseData)
+        {
+            try
+            {
+                switch (GUIElement)
                 {
-                    if (y.Name != "EventDate")
-                    {
-                        listViewData[ctr] = y.GetValue(x).ToString();
-                        ctr++;
-                    }
+                    case enGUIElements.cmbEventType:
+                        cbLogEventType.DataSource       = BaseData.Tables["tbEventType"];
+                        cbLogEventType.ValueMember      = "id";
+                        cbLogEventType.DisplayMember    = "event";
+                        break;
                 }
 
-                _callingForm.lvCommandersLog.Items.Add(new ListViewItem(listViewData));
             }
-            _callingForm.lvCommandersLog.EndUpdate();
-            _callingForm.lvCommandersLog.ResumeLayout();
+            catch (Exception ex)
+            {
+                throw new Exception("Error in <prepareCmb_EventTypes> while preparing '" + GUIElement.ToString() + "'", ex);
+            }
         }
     }
 
@@ -245,4 +303,6 @@ namespace RegulatedNoise
         public decimal  TransactionAmount { get; set; }
         public decimal  Credits { get; set; }
     }
+
 }
+

@@ -206,6 +206,35 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
     }
 
+    static class Extensions_Control
+    {
+        /// <summary>
+        /// Checks whether a control or its parent is in design mode.
+        /// </summary>
+        /// <param name="c">The control to check.</param>
+        /// <returns>Returns TRUE if in design mode, false otherwise.</returns>
+        public static bool IsDesignMode(this System.Windows.Forms.Control c)
+        {
+            if ( c == null )
+            {
+                return false;
+            }
+            else
+            {
+                while ( c != null )
+                {
+                if ( c.Site != null && c.Site.DesignMode )
+                {
+                    return true;
+                }
+                else
+                {
+                    c = c.Parent;
+                }
+                }
 
-
+                return false;
+            }
+        }
+    }
 }

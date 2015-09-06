@@ -272,14 +272,14 @@ namespace RegulatedNoise.EDDB_Data
             //if (false)
             //{ 
             //    // create some data for testing 
-            //    if (File.Exists(@".\Data\systems_own.json"))
-            //        File.Delete(@".\Data\systems_own.json");
-            //    if (File.Exists(@".\Data\stations_own.json"))
-            //        File.Delete(@".\Data\stations_own.json");
+            //    if (File.Exists(@".\m_BaseData\systems_own.json"))
+            //        File.Delete(@".\m_BaseData\systems_own.json");
+            //    if (File.Exists(@".\m_BaseData\stations_own.json"))
+            //        File.Delete(@".\m_BaseData\stations_own.json");
             //    m_Systems[(int)enMessageInfo.Data_Merged] = new List<EDSystem>(m_Systems[(int)enMessageInfo.Data_EDDB].Where(x => x.Id <= 10));
             //    m_Stations[(int)enMessageInfo.Data_Merged] = new List<EDStation>(m_Stations[(int)enMessageInfo.Data_EDDB].Where(x => x.SystemId <= 10));
-            //    saveSystemData(@".\Data\systems_own.json", enMessageInfo.Data_Merged, false);
-            //    saveStationData(@".\Data\stations_own.json", enMessageInfo.Data_Merged, false);
+            //    saveSystemData(@".\m_BaseData\systems_own.json", enMessageInfo.Data_Merged, false);
+            //    saveStationData(@".\m_BaseData\stations_own.json", enMessageInfo.Data_Merged, false);
             //}
             
             

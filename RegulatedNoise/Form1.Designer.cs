@@ -34,16 +34,29 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.rbSortByDistance = new System.Windows.Forms.RadioButton();
             this.rbSortByStation = new System.Windows.Forms.RadioButton();
             this.rbSortBySystem = new System.Windows.Forms.RadioButton();
+            this.cmdDatabaseOp = new System.Windows.Forms.Button();
             this.label89 = new System.Windows.Forms.Label();
             this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
             this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
+            this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
             this.label54 = new System.Windows.Forms.Label();
@@ -125,48 +138,43 @@
             this.label87 = new System.Windows.Forms.Label();
             this.cmdStationNew = new System.Windows.Forms.Button();
             this.cmdStationSave = new System.Windows.Forms.Button();
-            this.cmbStationType = new System.Windows.Forms.ComboBox_ro();
             this.label75 = new System.Windows.Forms.Label();
-            this.cmbStationState = new System.Windows.Forms.ComboBox_ro();
             this.label76 = new System.Windows.Forms.Label();
-            this.cmbStationAllegiance = new System.Windows.Forms.ComboBox_ro();
             this.label77 = new System.Windows.Forms.Label();
-            this.cmbStationGovernment = new System.Windows.Forms.ComboBox_ro();
             this.label78 = new System.Windows.Forms.Label();
             this.txtStationFaction = new System.Windows.Forms.TextBox();
             this.label79 = new System.Windows.Forms.Label();
             this.txtStationDistanceToStar = new System.Windows.Forms.TextBox();
             this.label80 = new System.Windows.Forms.Label();
-            this.cmbStationMaxLandingPadSize = new System.Windows.Forms.ComboBox_ro();
             this.label81 = new System.Windows.Forms.Label();
             this.txtStationName = new System.Windows.Forms.TextBox();
             this.label85 = new System.Windows.Forms.Label();
             this.txtStationId = new System.Windows.Forms.TextBox();
             this.label86 = new System.Windows.Forms.Label();
             this.lblStationRenameHint = new System.Windows.Forms.Label();
+            this.cmbStationType = new System.Windows.Forms.ComboBox_ro();
+            this.cmbStationState = new System.Windows.Forms.ComboBox_ro();
+            this.cmbStationAllegiance = new System.Windows.Forms.ComboBox_ro();
+            this.cmbStationGovernment = new System.Windows.Forms.ComboBox_ro();
+            this.cmbStationMaxLandingPadSize = new System.Windows.Forms.ComboBox_ro();
             this.gbSystemSystemData = new System.Windows.Forms.GroupBox();
             this.cmdTest = new System.Windows.Forms.Button();
             this.cmdSystemCancel = new System.Windows.Forms.Button();
             this.lblSystemCountTotal = new System.Windows.Forms.Label();
             this.label82 = new System.Windows.Forms.Label();
             this.label84 = new System.Windows.Forms.Label();
-            this.cmbSystemsAllSystems = new System.Windows.Forms.ComboBox_ro();
             this.label88 = new System.Windows.Forms.Label();
             this.cmdSystemEdit = new System.Windows.Forms.Button();
+            this.cmbSystemsAllSystems = new System.Windows.Forms.ComboBox_ro();
             this.cbSystemNeedsPermit = new System.Windows.Forms.CheckBox_ro();
             this.cmdSystemNew = new System.Windows.Forms.Button();
             this.cmdSystemSave = new System.Windows.Forms.Button();
             this.txtSystemUpdatedAt = new System.Windows.Forms.TextBox();
             this.label63 = new System.Windows.Forms.Label();
-            this.cmbSystemPrimaryEconomy = new System.Windows.Forms.ComboBox_ro();
             this.label65 = new System.Windows.Forms.Label();
-            this.cmbSystemSecurity = new System.Windows.Forms.ComboBox_ro();
             this.label66 = new System.Windows.Forms.Label();
-            this.cmbSystemState = new System.Windows.Forms.ComboBox_ro();
             this.label67 = new System.Windows.Forms.Label();
-            this.cmbSystemAllegiance = new System.Windows.Forms.ComboBox_ro();
             this.label68 = new System.Windows.Forms.Label();
-            this.cmbSystemGovernment = new System.Windows.Forms.ComboBox_ro();
             this.label69 = new System.Windows.Forms.Label();
             this.txtSystemPopulation = new System.Windows.Forms.MaskedTextBox();
             this.label62 = new System.Windows.Forms.Label();
@@ -183,6 +191,11 @@
             this.txtSystemId = new System.Windows.Forms.TextBox();
             this.label56 = new System.Windows.Forms.Label();
             this.lblSystemRenameHint = new System.Windows.Forms.Label();
+            this.cmbSystemPrimaryEconomy = new System.Windows.Forms.ComboBox_ro();
+            this.cmbSystemSecurity = new System.Windows.Forms.ComboBox_ro();
+            this.cmbSystemState = new System.Windows.Forms.ComboBox_ro();
+            this.cmbSystemAllegiance = new System.Windows.Forms.ComboBox_ro();
+            this.cmbSystemGovernment = new System.Windows.Forms.ComboBox_ro();
             this.tabPriceAnalysis = new System.Windows.Forms.TabPage();
             this.label55 = new System.Windows.Forms.Label();
             this.cmbStationToStar = new System.Windows.Forms.ComboBox();
@@ -258,33 +271,48 @@
             this.bShowStationToStationRouteAtStarchartDotClub = new System.Windows.Forms.Button();
             this.bShowStationRestrictionAtStarchartDotClub = new System.Windows.Forms.Button();
             this.tabCommandersLog = new System.Windows.Forms.TabPage();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.lvCommandersLog = new System.Windows.Forms.ListView();
-            this.cbLogSystemName = new System.Windows.Forms.ComboBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.cmdCLReload = new System.Windows.Forms.Button();
+            this.gbCL_LogEdit = new System.Windows.Forms.GroupBox();
+            this.cmdCL_Cancel = new System.Windows.Forms.Button();
+            this.cmdCL_EditEntry = new System.Windows.Forms.Button();
+            this.label94 = new System.Windows.Forms.Label();
+            this.label95 = new System.Windows.Forms.Label();
+            this.cmdCL_PrepareNew = new System.Windows.Forms.Button();
+            this.cbLogSystemName = new System.Windows.Forms.ComboBox_ro();
+            this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker_ro();
             this.label41 = new System.Windows.Forms.Label();
-            this.cbLogEventType = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.cbLogEventType = new System.Windows.Forms.ComboBox_ro();
+            this.tbLogNotes = new System.Windows.Forms.TextBox();
             this.label40 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.btCreateAddEntry = new System.Windows.Forms.Button();
-            this.cbLogStationName = new System.Windows.Forms.ComboBox();
+            this.cbCargoModifier = new System.Windows.Forms.ComboBox_ro();
+            this.cmdCL_Save = new System.Windows.Forms.Button();
+            this.cbLogStationName = new System.Windows.Forms.ComboBox_ro();
+            this.nbLogQuantity = new System.Windows.Forms.NumericUpDown_ro();
             this.label39 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.nbCurrentCredits = new System.Windows.Forms.NumericUpDown();
-            this.cbLogCargoName = new System.Windows.Forms.ComboBox();
-            this.nbTransactionAmount = new System.Windows.Forms.NumericUpDown();
             this.label22 = new System.Windows.Forms.Label();
-            this.cbPrepareNewEntry = new System.Windows.Forms.Button();
-            this.cbLogQuantity = new System.Windows.Forms.NumericUpDown();
-            this.label23 = new System.Windows.Forms.Label();
-            this.cbCargoModifier = new System.Windows.Forms.ComboBox();
-            this.tbLogEventID = new System.Windows.Forms.TextBox();
-            this.tbLogNotes = new System.Windows.Forms.TextBox();
-            this.button10 = new System.Windows.Forms.Button();
-            this.label21 = new System.Windows.Forms.Label();
-            this.button9 = new System.Windows.Forms.Button();
-            this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker();
+            this.label19 = new System.Windows.Forms.Label();
+            this.nbTransactionAmount = new System.Windows.Forms.NumericUpDown_ro();
+            this.label38 = new System.Windows.Forms.Label();
+            this.cbLogCargoName = new System.Windows.Forms.ComboBox_ro();
+            this.label20 = new System.Windows.Forms.Label();
+            this.nbCurrentCredits = new System.Windows.Forms.NumericUpDown_ro();
+            this.dgvCommandersLog = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.stationname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.eevent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.action = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.loccommodity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cargovolume = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.credits_transaction = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.credits_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtCL_Limit = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.cmdCL_ShowHide = new System.Windows.Forms.Button();
             this.tabOCRGroup = new System.Windows.Forms.TabPage();
             this.tabCtrlOCR = new System.Windows.Forms.TabControl();
             this.tabOCR = new System.Windows.Forms.TabPage();
@@ -367,6 +395,7 @@
             this.cbIncludeUnknownDTS = new System.Windows.Forms.CheckBox();
             this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
             this.button6 = new System.Windows.Forms.Button();
+            this.bOpen = new System.Windows.Forms.Button();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.cbAutoAdd_ReplaceVisited = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Marketdata = new System.Windows.Forms.CheckBox();
@@ -392,16 +421,11 @@
             this.txtTraineddataFile = new System.Windows.Forms.TextBox();
             this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
-            this.bOpen = new System.Windows.Forms.Button();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
-            this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.cmdDatabaseOp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -436,13 +460,11 @@
             this.splitContainer4.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.tabCommandersLog.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).BeginInit();
+            this.gbCL_LogEdit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbLogQuantity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).BeginInit();
             this.tabOCRGroup.SuspendLayout();
             this.tabCtrlOCR.SuspendLayout();
             this.tabOCR.SuspendLayout();
@@ -464,9 +486,6 @@
             this.groupBox6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -513,6 +532,18 @@
             this.toolTip1.SetToolTip(this.rbSortBySystem, "sorting by system");
             this.rbSortBySystem.UseVisualStyleBackColor = true;
             this.rbSortBySystem.CheckedChanged += new System.EventHandler(this.rbSortBy_CheckedChanged);
+            // 
+            // cmdDatabaseOp
+            // 
+            this.cmdDatabaseOp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmdDatabaseOp.Location = new System.Drawing.Point(32, 255);
+            this.cmdDatabaseOp.Name = "cmdDatabaseOp";
+            this.cmdDatabaseOp.Size = new System.Drawing.Size(116, 42);
+            this.cmdDatabaseOp.TabIndex = 63;
+            this.cmdDatabaseOp.Text = "SQL-Database Operations";
+            this.toolTip1.SetToolTip(this.cmdDatabaseOp, "0 purges all but todays price data, -1 purges ALL price data");
+            this.cmdDatabaseOp.UseVisualStyleBackColor = true;
+            this.cmdDatabaseOp.Click += new System.EventHandler(this.cmdDatabaseOp_Click);
             // 
             // label89
             // 
@@ -572,10 +603,51 @@
             this.copySystenmameToClipboardToolStripMenuItem.Text = "Copy Systemname To Clipboard";
             this.copySystenmameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystenmameToClipboardToolStripMenuItem_Click);
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.removeEconomyToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip1";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(168, 48);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.toolStripMenuItem1.Text = "add Economy";
+            // 
+            // removeEconomyToolStripMenuItem
+            // 
+            this.removeEconomyToolStripMenuItem.Name = "removeEconomyToolStripMenuItem";
+            this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.removeEconomyToolStripMenuItem.Text = "remove Economy";
+            // 
+            // dsCommodities
+            // 
+            this.dsCommodities.DataSetName = "dsCommodities";
+            this.dsCommodities.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // namesBindingSource
+            // 
+            this.namesBindingSource.DataMember = "Names";
+            this.namesBindingSource.DataSource = this.dsCommodities;
+            // 
+            // cmdLoadCurrentSystem
+            // 
+            this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(930, 45);
+            this.cmdLoadCurrentSystem.Name = "cmdLoadCurrentSystem";
+            this.cmdLoadCurrentSystem.Size = new System.Drawing.Size(148, 21);
+            this.cmdLoadCurrentSystem.TabIndex = 60;
+            this.cmdLoadCurrentSystem.Text = "Show Current System Data";
+            this.cmdLoadCurrentSystem.UseVisualStyleBackColor = true;
+            this.cmdLoadCurrentSystem.Click += new System.EventHandler(this.cmdLoadCurrentSystem_Click);
+            // 
             // label53
             // 
             this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(499, 41);
+            this.label53.Location = new System.Drawing.Point(499, 31);
             this.label53.Name = "label53";
             this.label53.Size = new System.Drawing.Size(49, 13);
             this.label53.TabIndex = 15;
@@ -584,7 +656,7 @@
             // txtEDTime
             // 
             this.txtEDTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEDTime.Location = new System.Drawing.Point(554, 36);
+            this.txtEDTime.Location = new System.Drawing.Point(554, 26);
             this.txtEDTime.Name = "txtEDTime";
             this.txtEDTime.ReadOnly = true;
             this.txtEDTime.Size = new System.Drawing.Size(69, 22);
@@ -595,7 +667,7 @@
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(515, 17);
+            this.label54.Location = new System.Drawing.Point(515, 7);
             this.label54.Name = "label54";
             this.label54.Size = new System.Drawing.Size(33, 13);
             this.label54.TabIndex = 13;
@@ -604,7 +676,7 @@
             // txtLocalTime
             // 
             this.txtLocalTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLocalTime.Location = new System.Drawing.Point(554, 12);
+            this.txtLocalTime.Location = new System.Drawing.Point(554, 2);
             this.txtLocalTime.Name = "txtLocalTime";
             this.txtLocalTime.ReadOnly = true;
             this.txtLocalTime.Size = new System.Drawing.Size(69, 22);
@@ -616,7 +688,7 @@
             // 
             this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(667, 38);
+            this.label45.Location = new System.Drawing.Point(667, 28);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(152, 13);
             this.label45.TabIndex = 10;
@@ -625,7 +697,7 @@
             // tbCurrentStationinfoFromLogs
             // 
             this.tbCurrentStationinfoFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(823, 35);
+            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(823, 25);
             this.tbCurrentStationinfoFromLogs.Name = "tbCurrentStationinfoFromLogs";
             this.tbCurrentStationinfoFromLogs.ReadOnly = true;
             this.tbCurrentStationinfoFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -636,7 +708,7 @@
             // 
             this.label37.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(672, 17);
+            this.label37.Location = new System.Drawing.Point(672, 7);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(145, 13);
             this.label37.TabIndex = 8;
@@ -645,7 +717,7 @@
             // tbCurrentSystemFromLogs
             // 
             this.tbCurrentSystemFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(823, 14);
+            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(823, 4);
             this.tbCurrentSystemFromLogs.Name = "tbCurrentSystemFromLogs";
             this.tbCurrentSystemFromLogs.ReadOnly = true;
             this.tbCurrentSystemFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -654,7 +726,7 @@
             // 
             // button19
             // 
-            this.button19.Location = new System.Drawing.Point(125, 12);
+            this.button19.Location = new System.Drawing.Point(206, 225);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(160, 23);
             this.button19.TabIndex = 6;
@@ -664,9 +736,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(291, 12);
+            this.button5.Location = new System.Drawing.Point(206, 298);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(116, 23);
+            this.button5.Size = new System.Drawing.Size(160, 23);
             this.button5.TabIndex = 5;
             this.button5.Text = "Save Unified CSV";
             this.button5.UseVisualStyleBackColor = true;
@@ -685,10 +757,10 @@
             this.tabCtrlMain.Controls.Add(this.tabWebserver);
             this.tabCtrlMain.Controls.Add(this.tabEDDN);
             this.tabCtrlMain.Controls.Add(this.tabSettings);
-            this.tabCtrlMain.Location = new System.Drawing.Point(18, 64);
+            this.tabCtrlMain.Location = new System.Drawing.Point(3, 48);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1059, 615);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1084, 637);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.SelectedIndexChanged += new System.EventHandler(this.tabCtrlMain_SelectedIndexChanged);
             this.tabCtrlMain.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabCtrlMain_Selecting);
@@ -722,7 +794,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1051, 589);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1076, 611);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -1107,7 +1179,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1051, 589);
+            this.tabSystemData.Size = new System.Drawing.Size(1076, 611);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -1139,25 +1211,25 @@
             this.groupBox14.Controls.Add(this.label87);
             this.groupBox14.Controls.Add(this.cmdStationNew);
             this.groupBox14.Controls.Add(this.cmdStationSave);
-            this.groupBox14.Controls.Add(this.cmbStationType);
             this.groupBox14.Controls.Add(this.label75);
-            this.groupBox14.Controls.Add(this.cmbStationState);
             this.groupBox14.Controls.Add(this.label76);
-            this.groupBox14.Controls.Add(this.cmbStationAllegiance);
             this.groupBox14.Controls.Add(this.label77);
-            this.groupBox14.Controls.Add(this.cmbStationGovernment);
             this.groupBox14.Controls.Add(this.label78);
             this.groupBox14.Controls.Add(this.txtStationFaction);
             this.groupBox14.Controls.Add(this.label79);
             this.groupBox14.Controls.Add(this.txtStationDistanceToStar);
             this.groupBox14.Controls.Add(this.label80);
-            this.groupBox14.Controls.Add(this.cmbStationMaxLandingPadSize);
             this.groupBox14.Controls.Add(this.label81);
             this.groupBox14.Controls.Add(this.txtStationName);
             this.groupBox14.Controls.Add(this.label85);
             this.groupBox14.Controls.Add(this.txtStationId);
             this.groupBox14.Controls.Add(this.label86);
             this.groupBox14.Controls.Add(this.lblStationRenameHint);
+            this.groupBox14.Controls.Add(this.cmbStationType);
+            this.groupBox14.Controls.Add(this.cmbStationState);
+            this.groupBox14.Controls.Add(this.cmbStationAllegiance);
+            this.groupBox14.Controls.Add(this.cmbStationGovernment);
+            this.groupBox14.Controls.Add(this.cmbStationMaxLandingPadSize);
             this.groupBox14.Location = new System.Drawing.Point(506, 49);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(530, 524);
@@ -1178,7 +1250,6 @@
             this.cmbStationStations.ReadOnly = false;
             this.cmbStationStations.Size = new System.Drawing.Size(236, 23);
             this.cmbStationStations.TabIndex = 130;
-            this.cmbStationStations.Visible_ro = false;
             // 
             // paEconomies
             // 
@@ -1532,19 +1603,6 @@
             this.cmdStationSave.UseVisualStyleBackColor = true;
             this.cmdStationSave.Click += new System.EventHandler(this.cmdStationSave_Click);
             // 
-            // cmbStationType
-            // 
-            this.cmbStationType.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbStationType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbStationType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationType.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbStationType.Location = new System.Drawing.Point(127, 202);
-            this.cmbStationType.Name = "cmbStationType";
-            this.cmbStationType.ReadOnly = false;
-            this.cmbStationType.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationType.TabIndex = 9;
-            this.cmbStationType.Visible_ro = false;
-            // 
             // label75
             // 
             this.label75.AutoSize = true;
@@ -1554,19 +1612,6 @@
             this.label75.Size = new System.Drawing.Size(31, 13);
             this.label75.TabIndex = 86;
             this.label75.Text = "Type";
-            // 
-            // cmbStationState
-            // 
-            this.cmbStationState.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbStationState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbStationState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationState.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbStationState.Location = new System.Drawing.Point(127, 281);
-            this.cmbStationState.Name = "cmbStationState";
-            this.cmbStationState.ReadOnly = false;
-            this.cmbStationState.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationState.TabIndex = 8;
-            this.cmbStationState.Visible_ro = false;
             // 
             // label76
             // 
@@ -1578,19 +1623,6 @@
             this.label76.TabIndex = 84;
             this.label76.Text = "State";
             // 
-            // cmbStationAllegiance
-            // 
-            this.cmbStationAllegiance.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbStationAllegiance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbStationAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationAllegiance.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbStationAllegiance.Location = new System.Drawing.Point(127, 255);
-            this.cmbStationAllegiance.Name = "cmbStationAllegiance";
-            this.cmbStationAllegiance.ReadOnly = false;
-            this.cmbStationAllegiance.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationAllegiance.TabIndex = 7;
-            this.cmbStationAllegiance.Visible_ro = false;
-            // 
             // label77
             // 
             this.label77.AutoSize = true;
@@ -1600,19 +1632,6 @@
             this.label77.Size = new System.Drawing.Size(56, 13);
             this.label77.TabIndex = 82;
             this.label77.Text = "Allegiance";
-            // 
-            // cmbStationGovernment
-            // 
-            this.cmbStationGovernment.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbStationGovernment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbStationGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationGovernment.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbStationGovernment.Location = new System.Drawing.Point(127, 229);
-            this.cmbStationGovernment.Name = "cmbStationGovernment";
-            this.cmbStationGovernment.ReadOnly = false;
-            this.cmbStationGovernment.Size = new System.Drawing.Size(151, 23);
-            this.cmbStationGovernment.TabIndex = 6;
-            this.cmbStationGovernment.Visible_ro = false;
             // 
             // label78
             // 
@@ -1660,19 +1679,6 @@
             this.label80.Size = new System.Drawing.Size(103, 13);
             this.label80.TabIndex = 76;
             this.label80.Text = "Distance To Star (ls)";
-            // 
-            // cmbStationMaxLandingPadSize
-            // 
-            this.cmbStationMaxLandingPadSize.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbStationMaxLandingPadSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbStationMaxLandingPadSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbStationMaxLandingPadSize.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbStationMaxLandingPadSize.Location = new System.Drawing.Point(127, 174);
-            this.cmbStationMaxLandingPadSize.Name = "cmbStationMaxLandingPadSize";
-            this.cmbStationMaxLandingPadSize.ReadOnly = false;
-            this.cmbStationMaxLandingPadSize.Size = new System.Drawing.Size(68, 23);
-            this.cmbStationMaxLandingPadSize.TabIndex = 4;
-            this.cmbStationMaxLandingPadSize.Visible_ro = false;
             // 
             // label81
             // 
@@ -1734,6 +1740,66 @@
             this.lblStationRenameHint.Text = "Name of station not editable because it comes from the EDDB data.";
             this.lblStationRenameHint.Visible = false;
             // 
+            // cmbStationType
+            // 
+            this.cmbStationType.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbStationType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationType.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbStationType.Location = new System.Drawing.Point(127, 202);
+            this.cmbStationType.Name = "cmbStationType";
+            this.cmbStationType.ReadOnly = false;
+            this.cmbStationType.Size = new System.Drawing.Size(151, 23);
+            this.cmbStationType.TabIndex = 9;
+            // 
+            // cmbStationState
+            // 
+            this.cmbStationState.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbStationState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationState.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbStationState.Location = new System.Drawing.Point(127, 281);
+            this.cmbStationState.Name = "cmbStationState";
+            this.cmbStationState.ReadOnly = false;
+            this.cmbStationState.Size = new System.Drawing.Size(151, 23);
+            this.cmbStationState.TabIndex = 8;
+            // 
+            // cmbStationAllegiance
+            // 
+            this.cmbStationAllegiance.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbStationAllegiance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationAllegiance.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbStationAllegiance.Location = new System.Drawing.Point(127, 255);
+            this.cmbStationAllegiance.Name = "cmbStationAllegiance";
+            this.cmbStationAllegiance.ReadOnly = false;
+            this.cmbStationAllegiance.Size = new System.Drawing.Size(151, 23);
+            this.cmbStationAllegiance.TabIndex = 7;
+            // 
+            // cmbStationGovernment
+            // 
+            this.cmbStationGovernment.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbStationGovernment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationGovernment.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbStationGovernment.Location = new System.Drawing.Point(127, 229);
+            this.cmbStationGovernment.Name = "cmbStationGovernment";
+            this.cmbStationGovernment.ReadOnly = false;
+            this.cmbStationGovernment.Size = new System.Drawing.Size(151, 23);
+            this.cmbStationGovernment.TabIndex = 6;
+            // 
+            // cmbStationMaxLandingPadSize
+            // 
+            this.cmbStationMaxLandingPadSize.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbStationMaxLandingPadSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStationMaxLandingPadSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbStationMaxLandingPadSize.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbStationMaxLandingPadSize.Location = new System.Drawing.Point(127, 174);
+            this.cmbStationMaxLandingPadSize.Name = "cmbStationMaxLandingPadSize";
+            this.cmbStationMaxLandingPadSize.ReadOnly = false;
+            this.cmbStationMaxLandingPadSize.Size = new System.Drawing.Size(68, 23);
+            this.cmbStationMaxLandingPadSize.TabIndex = 4;
+            // 
             // gbSystemSystemData
             // 
             this.gbSystemSystemData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1743,23 +1809,18 @@
             this.gbSystemSystemData.Controls.Add(this.lblSystemCountTotal);
             this.gbSystemSystemData.Controls.Add(this.label82);
             this.gbSystemSystemData.Controls.Add(this.label84);
-            this.gbSystemSystemData.Controls.Add(this.cmbSystemsAllSystems);
             this.gbSystemSystemData.Controls.Add(this.label88);
             this.gbSystemSystemData.Controls.Add(this.cmdSystemEdit);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemsAllSystems);
             this.gbSystemSystemData.Controls.Add(this.cbSystemNeedsPermit);
             this.gbSystemSystemData.Controls.Add(this.cmdSystemNew);
             this.gbSystemSystemData.Controls.Add(this.cmdSystemSave);
             this.gbSystemSystemData.Controls.Add(this.txtSystemUpdatedAt);
             this.gbSystemSystemData.Controls.Add(this.label63);
-            this.gbSystemSystemData.Controls.Add(this.cmbSystemPrimaryEconomy);
             this.gbSystemSystemData.Controls.Add(this.label65);
-            this.gbSystemSystemData.Controls.Add(this.cmbSystemSecurity);
             this.gbSystemSystemData.Controls.Add(this.label66);
-            this.gbSystemSystemData.Controls.Add(this.cmbSystemState);
             this.gbSystemSystemData.Controls.Add(this.label67);
-            this.gbSystemSystemData.Controls.Add(this.cmbSystemAllegiance);
             this.gbSystemSystemData.Controls.Add(this.label68);
-            this.gbSystemSystemData.Controls.Add(this.cmbSystemGovernment);
             this.gbSystemSystemData.Controls.Add(this.label69);
             this.gbSystemSystemData.Controls.Add(this.txtSystemPopulation);
             this.gbSystemSystemData.Controls.Add(this.label62);
@@ -1776,6 +1837,11 @@
             this.gbSystemSystemData.Controls.Add(this.txtSystemId);
             this.gbSystemSystemData.Controls.Add(this.label56);
             this.gbSystemSystemData.Controls.Add(this.lblSystemRenameHint);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemPrimaryEconomy);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemSecurity);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemState);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemAllegiance);
+            this.gbSystemSystemData.Controls.Add(this.cmbSystemGovernment);
             this.gbSystemSystemData.Location = new System.Drawing.Point(14, 49);
             this.gbSystemSystemData.Name = "gbSystemSystemData";
             this.gbSystemSystemData.Size = new System.Drawing.Size(486, 524);
@@ -1836,22 +1902,6 @@
             this.label84.TabIndex = 128;
             this.label84.Text = "Number Of Systems \r\nIn Database : ";
             // 
-            // cmbSystemsAllSystems
-            // 
-            this.cmbSystemsAllSystems.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.cmbSystemsAllSystems.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cmbSystemsAllSystems.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbSystemsAllSystems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSystemsAllSystems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemsAllSystems.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbSystemsAllSystems.Location = new System.Drawing.Point(89, 33);
-            this.cmbSystemsAllSystems.Name = "cmbSystemsAllSystems";
-            this.cmbSystemsAllSystems.ReadOnly = false;
-            this.cmbSystemsAllSystems.Size = new System.Drawing.Size(254, 23);
-            this.cmbSystemsAllSystems.TabIndex = 0;
-            this.cmbSystemsAllSystems.Visible_ro = false;
-            this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
-            // 
             // label88
             // 
             this.label88.AutoSize = true;
@@ -1871,6 +1921,21 @@
             this.cmdSystemEdit.Text = "Edit System";
             this.cmdSystemEdit.UseVisualStyleBackColor = false;
             this.cmdSystemEdit.Click += new System.EventHandler(this.cmdSystemEdit_Click);
+            // 
+            // cmbSystemsAllSystems
+            // 
+            this.cmbSystemsAllSystems.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cmbSystemsAllSystems.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbSystemsAllSystems.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbSystemsAllSystems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSystemsAllSystems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemsAllSystems.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbSystemsAllSystems.Location = new System.Drawing.Point(89, 33);
+            this.cmbSystemsAllSystems.Name = "cmbSystemsAllSystems";
+            this.cmbSystemsAllSystems.ReadOnly = false;
+            this.cmbSystemsAllSystems.Size = new System.Drawing.Size(254, 23);
+            this.cmbSystemsAllSystems.TabIndex = 0;
+            this.cmbSystemsAllSystems.SelectedIndexChanged += new System.EventHandler(this.cmbAllStations_SelectedIndexChanged);
             // 
             // cbSystemNeedsPermit
             // 
@@ -1923,19 +1988,6 @@
             this.label63.TabIndex = 58;
             this.label63.Text = "Updated";
             // 
-            // cmbSystemPrimaryEconomy
-            // 
-            this.cmbSystemPrimaryEconomy.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbSystemPrimaryEconomy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSystemPrimaryEconomy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemPrimaryEconomy.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbSystemPrimaryEconomy.Location = new System.Drawing.Point(295, 201);
-            this.cmbSystemPrimaryEconomy.Name = "cmbSystemPrimaryEconomy";
-            this.cmbSystemPrimaryEconomy.ReadOnly = false;
-            this.cmbSystemPrimaryEconomy.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemPrimaryEconomy.TabIndex = 13;
-            this.cmbSystemPrimaryEconomy.Visible_ro = false;
-            // 
             // label65
             // 
             this.label65.AutoSize = true;
@@ -1945,19 +1997,6 @@
             this.label65.Size = new System.Drawing.Size(88, 13);
             this.label65.TabIndex = 54;
             this.label65.Text = "Primary Economy";
-            // 
-            // cmbSystemSecurity
-            // 
-            this.cmbSystemSecurity.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbSystemSecurity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSystemSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemSecurity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbSystemSecurity.Location = new System.Drawing.Point(295, 174);
-            this.cmbSystemSecurity.Name = "cmbSystemSecurity";
-            this.cmbSystemSecurity.ReadOnly = false;
-            this.cmbSystemSecurity.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemSecurity.TabIndex = 8;
-            this.cmbSystemSecurity.Visible_ro = false;
             // 
             // label66
             // 
@@ -1969,19 +2008,6 @@
             this.label66.TabIndex = 52;
             this.label66.Text = "Security";
             // 
-            // cmbSystemState
-            // 
-            this.cmbSystemState.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbSystemState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSystemState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemState.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbSystemState.Location = new System.Drawing.Point(295, 283);
-            this.cmbSystemState.Name = "cmbSystemState";
-            this.cmbSystemState.ReadOnly = false;
-            this.cmbSystemState.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemState.TabIndex = 12;
-            this.cmbSystemState.Visible_ro = false;
-            // 
             // label67
             // 
             this.label67.AutoSize = true;
@@ -1992,19 +2018,6 @@
             this.label67.TabIndex = 50;
             this.label67.Text = "State";
             // 
-            // cmbSystemAllegiance
-            // 
-            this.cmbSystemAllegiance.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbSystemAllegiance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSystemAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemAllegiance.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbSystemAllegiance.Location = new System.Drawing.Point(295, 256);
-            this.cmbSystemAllegiance.Name = "cmbSystemAllegiance";
-            this.cmbSystemAllegiance.ReadOnly = false;
-            this.cmbSystemAllegiance.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemAllegiance.TabIndex = 11;
-            this.cmbSystemAllegiance.Visible_ro = false;
-            // 
             // label68
             // 
             this.label68.AutoSize = true;
@@ -2014,19 +2027,6 @@
             this.label68.Size = new System.Drawing.Size(56, 13);
             this.label68.TabIndex = 48;
             this.label68.Text = "Allegiance";
-            // 
-            // cmbSystemGovernment
-            // 
-            this.cmbSystemGovernment.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cmbSystemGovernment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSystemGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbSystemGovernment.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cmbSystemGovernment.Location = new System.Drawing.Point(295, 228);
-            this.cmbSystemGovernment.Name = "cmbSystemGovernment";
-            this.cmbSystemGovernment.ReadOnly = false;
-            this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
-            this.cmbSystemGovernment.TabIndex = 10;
-            this.cmbSystemGovernment.Visible_ro = false;
             // 
             // label69
             // 
@@ -2187,6 +2187,66 @@
             this.lblSystemRenameHint.Text = "Name of system not editable because it comes from the EDDB data.";
             this.lblSystemRenameHint.Visible = false;
             // 
+            // cmbSystemPrimaryEconomy
+            // 
+            this.cmbSystemPrimaryEconomy.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbSystemPrimaryEconomy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSystemPrimaryEconomy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemPrimaryEconomy.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbSystemPrimaryEconomy.Location = new System.Drawing.Point(295, 201);
+            this.cmbSystemPrimaryEconomy.Name = "cmbSystemPrimaryEconomy";
+            this.cmbSystemPrimaryEconomy.ReadOnly = false;
+            this.cmbSystemPrimaryEconomy.Size = new System.Drawing.Size(151, 23);
+            this.cmbSystemPrimaryEconomy.TabIndex = 13;
+            // 
+            // cmbSystemSecurity
+            // 
+            this.cmbSystemSecurity.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbSystemSecurity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSystemSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemSecurity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbSystemSecurity.Location = new System.Drawing.Point(295, 174);
+            this.cmbSystemSecurity.Name = "cmbSystemSecurity";
+            this.cmbSystemSecurity.ReadOnly = false;
+            this.cmbSystemSecurity.Size = new System.Drawing.Size(151, 23);
+            this.cmbSystemSecurity.TabIndex = 8;
+            // 
+            // cmbSystemState
+            // 
+            this.cmbSystemState.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbSystemState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSystemState.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemState.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbSystemState.Location = new System.Drawing.Point(295, 283);
+            this.cmbSystemState.Name = "cmbSystemState";
+            this.cmbSystemState.ReadOnly = false;
+            this.cmbSystemState.Size = new System.Drawing.Size(151, 23);
+            this.cmbSystemState.TabIndex = 12;
+            // 
+            // cmbSystemAllegiance
+            // 
+            this.cmbSystemAllegiance.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbSystemAllegiance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSystemAllegiance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemAllegiance.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbSystemAllegiance.Location = new System.Drawing.Point(295, 256);
+            this.cmbSystemAllegiance.Name = "cmbSystemAllegiance";
+            this.cmbSystemAllegiance.ReadOnly = false;
+            this.cmbSystemAllegiance.Size = new System.Drawing.Size(151, 23);
+            this.cmbSystemAllegiance.TabIndex = 11;
+            // 
+            // cmbSystemGovernment
+            // 
+            this.cmbSystemGovernment.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cmbSystemGovernment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSystemGovernment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSystemGovernment.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cmbSystemGovernment.Location = new System.Drawing.Point(295, 228);
+            this.cmbSystemGovernment.Name = "cmbSystemGovernment";
+            this.cmbSystemGovernment.ReadOnly = false;
+            this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
+            this.cmbSystemGovernment.TabIndex = 10;
+            // 
             // tabPriceAnalysis
             // 
             this.tabPriceAnalysis.Controls.Add(this.label55);
@@ -2201,7 +2261,7 @@
             this.tabPriceAnalysis.Controls.Add(this.bShowStationRestrictionAtStarchartDotClub);
             this.tabPriceAnalysis.Location = new System.Drawing.Point(4, 22);
             this.tabPriceAnalysis.Name = "tabPriceAnalysis";
-            this.tabPriceAnalysis.Size = new System.Drawing.Size(1051, 589);
+            this.tabPriceAnalysis.Size = new System.Drawing.Size(1076, 611);
             this.tabPriceAnalysis.TabIndex = 10;
             this.tabPriceAnalysis.Text = "Price Analysis";
             this.tabPriceAnalysis.UseVisualStyleBackColor = true;
@@ -3110,123 +3170,188 @@
             // 
             // tabCommandersLog
             // 
-            this.tabCommandersLog.Controls.Add(this.splitContainer3);
+            this.tabCommandersLog.Controls.Add(this.label23);
+            this.tabCommandersLog.Controls.Add(this.cmdCLReload);
+            this.tabCommandersLog.Controls.Add(this.gbCL_LogEdit);
+            this.tabCommandersLog.Controls.Add(this.dgvCommandersLog);
+            this.tabCommandersLog.Controls.Add(this.txtCL_Limit);
+            this.tabCommandersLog.Controls.Add(this.label31);
+            this.tabCommandersLog.Controls.Add(this.cmdCL_ShowHide);
             this.tabCommandersLog.Location = new System.Drawing.Point(4, 22);
             this.tabCommandersLog.Name = "tabCommandersLog";
-            this.tabCommandersLog.Size = new System.Drawing.Size(1051, 589);
+            this.tabCommandersLog.Size = new System.Drawing.Size(1076, 611);
             this.tabCommandersLog.TabIndex = 6;
             this.tabCommandersLog.Text = "Commander\'s Log";
             this.tabCommandersLog.UseVisualStyleBackColor = true;
             // 
-            // splitContainer3
+            // label23
             // 
-            this.splitContainer3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(97, 8);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(56, 13);
+            this.label23.TabIndex = 43;
+            this.label23.Text = "recordsets";
             // 
-            // splitContainer3.Panel1
+            // cmdCLReload
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.lvCommandersLog);
+            this.cmdCLReload.Location = new System.Drawing.Point(165, 3);
+            this.cmdCLReload.Name = "cmdCLReload";
+            this.cmdCLReload.Size = new System.Drawing.Size(78, 23);
+            this.cmdCLReload.TabIndex = 38;
+            this.cmdCLReload.Text = "Reload Data";
+            this.cmdCLReload.UseVisualStyleBackColor = true;
+            this.cmdCLReload.Click += new System.EventHandler(this.cmdCLReload_Click);
             // 
-            // splitContainer3.Panel2
+            // gbCL_LogEdit
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.cbLogSystemName);
-            this.splitContainer3.Panel2.Controls.Add(this.label41);
-            this.splitContainer3.Panel2.Controls.Add(this.cbLogEventType);
-            this.splitContainer3.Panel2.Controls.Add(this.label40);
-            this.splitContainer3.Panel2.Controls.Add(this.label18);
-            this.splitContainer3.Panel2.Controls.Add(this.btCreateAddEntry);
-            this.splitContainer3.Panel2.Controls.Add(this.cbLogStationName);
-            this.splitContainer3.Panel2.Controls.Add(this.label39);
-            this.splitContainer3.Panel2.Controls.Add(this.label19);
-            this.splitContainer3.Panel2.Controls.Add(this.label38);
-            this.splitContainer3.Panel2.Controls.Add(this.label20);
-            this.splitContainer3.Panel2.Controls.Add(this.nbCurrentCredits);
-            this.splitContainer3.Panel2.Controls.Add(this.cbLogCargoName);
-            this.splitContainer3.Panel2.Controls.Add(this.nbTransactionAmount);
-            this.splitContainer3.Panel2.Controls.Add(this.label22);
-            this.splitContainer3.Panel2.Controls.Add(this.cbPrepareNewEntry);
-            this.splitContainer3.Panel2.Controls.Add(this.cbLogQuantity);
-            this.splitContainer3.Panel2.Controls.Add(this.label23);
-            this.splitContainer3.Panel2.Controls.Add(this.cbCargoModifier);
-            this.splitContainer3.Panel2.Controls.Add(this.tbLogEventID);
-            this.splitContainer3.Panel2.Controls.Add(this.tbLogNotes);
-            this.splitContainer3.Panel2.Controls.Add(this.button10);
-            this.splitContainer3.Panel2.Controls.Add(this.label21);
-            this.splitContainer3.Panel2.Controls.Add(this.button9);
-            this.splitContainer3.Panel2.Controls.Add(this.dtpLogEventDate);
-            this.splitContainer3.Size = new System.Drawing.Size(1059, 583);
-            this.splitContainer3.SplitterDistance = 535;
-            this.splitContainer3.TabIndex = 38;
+            this.gbCL_LogEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbCL_LogEdit.Controls.Add(this.cmdCL_Cancel);
+            this.gbCL_LogEdit.Controls.Add(this.cmdCL_EditEntry);
+            this.gbCL_LogEdit.Controls.Add(this.label94);
+            this.gbCL_LogEdit.Controls.Add(this.label95);
+            this.gbCL_LogEdit.Controls.Add(this.cmdCL_PrepareNew);
+            this.gbCL_LogEdit.Controls.Add(this.cbLogSystemName);
+            this.gbCL_LogEdit.Controls.Add(this.dtpLogEventDate);
+            this.gbCL_LogEdit.Controls.Add(this.label41);
+            this.gbCL_LogEdit.Controls.Add(this.label21);
+            this.gbCL_LogEdit.Controls.Add(this.cbLogEventType);
+            this.gbCL_LogEdit.Controls.Add(this.tbLogNotes);
+            this.gbCL_LogEdit.Controls.Add(this.label40);
+            this.gbCL_LogEdit.Controls.Add(this.label18);
+            this.gbCL_LogEdit.Controls.Add(this.cbCargoModifier);
+            this.gbCL_LogEdit.Controls.Add(this.cmdCL_Save);
+            this.gbCL_LogEdit.Controls.Add(this.cbLogStationName);
+            this.gbCL_LogEdit.Controls.Add(this.nbLogQuantity);
+            this.gbCL_LogEdit.Controls.Add(this.label39);
+            this.gbCL_LogEdit.Controls.Add(this.label22);
+            this.gbCL_LogEdit.Controls.Add(this.label19);
+            this.gbCL_LogEdit.Controls.Add(this.nbTransactionAmount);
+            this.gbCL_LogEdit.Controls.Add(this.label38);
+            this.gbCL_LogEdit.Controls.Add(this.cbLogCargoName);
+            this.gbCL_LogEdit.Controls.Add(this.label20);
+            this.gbCL_LogEdit.Controls.Add(this.nbCurrentCredits);
+            this.gbCL_LogEdit.Location = new System.Drawing.Point(619, 251);
+            this.gbCL_LogEdit.Name = "gbCL_LogEdit";
+            this.gbCL_LogEdit.Size = new System.Drawing.Size(454, 360);
+            this.gbCL_LogEdit.TabIndex = 42;
+            this.gbCL_LogEdit.TabStop = false;
+            this.gbCL_LogEdit.Text = "Edit Data";
             // 
-            // lvCommandersLog
+            // cmdCL_Cancel
             // 
-            this.lvCommandersLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvCommandersLog.FullRowSelect = true;
-            this.lvCommandersLog.HideSelection = false;
-            this.lvCommandersLog.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.lvCommandersLog.Location = new System.Drawing.Point(0, 0);
-            this.lvCommandersLog.MultiSelect = false;
-            this.lvCommandersLog.Name = "lvCommandersLog";
-            this.lvCommandersLog.Size = new System.Drawing.Size(532, 586);
-            this.lvCommandersLog.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.lvCommandersLog.TabIndex = 35;
-            this.lvCommandersLog.UseCompatibleStateImageBehavior = false;
-            this.lvCommandersLog.View = System.Windows.Forms.View.Details;
-            this.lvCommandersLog.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvCommandersLog_ColumnClick);
-            this.lvCommandersLog.SelectedIndexChanged += new System.EventHandler(this.lvCommandersLog_SelectedIndexChanged);
-            this.lvCommandersLog.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCommandersLog_MouseClick);
+            this.cmdCL_Cancel.Location = new System.Drawing.Point(90, 330);
+            this.cmdCL_Cancel.Name = "cmdCL_Cancel";
+            this.cmdCL_Cancel.Size = new System.Drawing.Size(134, 23);
+            this.cmdCL_Cancel.TabIndex = 43;
+            this.cmdCL_Cancel.Text = "Cancel";
+            this.cmdCL_Cancel.UseVisualStyleBackColor = false;
+            this.cmdCL_Cancel.Click += new System.EventHandler(this.cmdCL_Cancel_Click);
+            // 
+            // cmdCL_EditEntry
+            // 
+            this.cmdCL_EditEntry.Location = new System.Drawing.Point(90, 301);
+            this.cmdCL_EditEntry.Name = "cmdCL_EditEntry";
+            this.cmdCL_EditEntry.Size = new System.Drawing.Size(134, 23);
+            this.cmdCL_EditEntry.TabIndex = 41;
+            this.cmdCL_EditEntry.Text = "Edit";
+            this.cmdCL_EditEntry.UseVisualStyleBackColor = false;
+            this.cmdCL_EditEntry.Click += new System.EventHandler(this.cmdCL_EditEntry_Click);
+            // 
+            // label94
+            // 
+            this.label94.AutoSize = true;
+            this.label94.Location = new System.Drawing.Point(193, 125);
+            this.label94.Name = "label94";
+            this.label94.Size = new System.Drawing.Size(20, 13);
+            this.label94.TabIndex = 40;
+            this.label94.Text = "Cr.";
+            // 
+            // label95
+            // 
+            this.label95.AutoSize = true;
+            this.label95.Location = new System.Drawing.Point(193, 100);
+            this.label95.Name = "label95";
+            this.label95.Size = new System.Drawing.Size(20, 13);
+            this.label95.TabIndex = 39;
+            this.label95.Text = "Cr.";
+            // 
+            // cmdCL_PrepareNew
+            // 
+            this.cmdCL_PrepareNew.Location = new System.Drawing.Point(230, 301);
+            this.cmdCL_PrepareNew.Name = "cmdCL_PrepareNew";
+            this.cmdCL_PrepareNew.Size = new System.Drawing.Size(134, 23);
+            this.cmdCL_PrepareNew.TabIndex = 38;
+            this.cmdCL_PrepareNew.Text = "Prepare New";
+            this.cmdCL_PrepareNew.UseVisualStyleBackColor = true;
+            this.cmdCL_PrepareNew.Click += new System.EventHandler(this.cmdCL_PrepareNew_Click);
             // 
             // cbLogSystemName
             // 
+            this.cbLogSystemName.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogSystemName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cbLogSystemName.FormattingEnabled = true;
-            this.cbLogSystemName.Location = new System.Drawing.Point(111, 111);
+            this.cbLogSystemName.Location = new System.Drawing.Point(69, 44);
             this.cbLogSystemName.Name = "cbLogSystemName";
+            this.cbLogSystemName.ReadOnly = false;
             this.cbLogSystemName.Size = new System.Drawing.Size(334, 21);
             this.cbLogSystemName.TabIndex = 9;
             this.cbLogSystemName.DropDown += new System.EventHandler(this.cbLogSystemName_DropDown);
             this.cbLogSystemName.SelectedIndexChanged += new System.EventHandler(this.cbLogSystemName_SelectedIndexChanged);
             this.cbLogSystemName.TextChanged += new System.EventHandler(this.cbLogSystemName_TextChanged);
             // 
+            // dtpLogEventDate
+            // 
+            this.dtpLogEventDate.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.dtpLogEventDate.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.dtpLogEventDate.Location = new System.Drawing.Point(196, 17);
+            this.dtpLogEventDate.Name = "dtpLogEventDate";
+            this.dtpLogEventDate.ReadOnly = false;
+            this.dtpLogEventDate.Size = new System.Drawing.Size(207, 20);
+            this.dtpLogEventDate.TabIndex = 21;
+            // 
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(256, 190);
+            this.label41.Location = new System.Drawing.Point(227, 123);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(170, 13);
             this.label41.TabIndex = 37;
             this.label41.Text = "have to use the suggested values.";
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(28, 179);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(35, 13);
+            this.label21.TabIndex = 20;
+            this.label21.Text = "Notes";
+            // 
             // cbLogEventType
             // 
+            this.cbLogEventType.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogEventType.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cbLogEventType.FormattingEnabled = true;
-            this.cbLogEventType.Items.AddRange(new object[] {
-            "Jumped To",
-            "Visited",
-            "Market Data Collected",
-            "Cargo",
-            "Fight",
-            "Docked",
-            "Took Off",
-            "Saved Game",
-            "Loaded Game",
-            "Accepted Mission",
-            "Completed Mission",
-            "Other"});
-            this.cbLogEventType.Location = new System.Drawing.Point(111, 84);
+            this.cbLogEventType.Location = new System.Drawing.Point(69, 17);
             this.cbLogEventType.Name = "cbLogEventType";
+            this.cbLogEventType.ReadOnly = false;
             this.cbLogEventType.Size = new System.Drawing.Size(121, 21);
             this.cbLogEventType.TabIndex = 6;
+            // 
+            // tbLogNotes
+            // 
+            this.tbLogNotes.Location = new System.Drawing.Point(69, 176);
+            this.tbLogNotes.Multiline = true;
+            this.tbLogNotes.Name = "tbLogNotes";
+            this.tbLogNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbLogNotes.Size = new System.Drawing.Size(374, 119);
+            this.tbLogNotes.TabIndex = 19;
             // 
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(256, 175);
+            this.label40.Location = new System.Drawing.Point(227, 108);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(225, 13);
             this.label40.TabIndex = 36;
@@ -3235,91 +3360,97 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(70, 87);
+            this.label18.Location = new System.Drawing.Point(28, 20);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(35, 13);
             this.label18.TabIndex = 7;
             this.label18.Text = "Event";
             // 
-            // btCreateAddEntry
+            // cbCargoModifier
             // 
-            this.btCreateAddEntry.Location = new System.Drawing.Point(114, 424);
-            this.btCreateAddEntry.Name = "btCreateAddEntry";
-            this.btCreateAddEntry.Size = new System.Drawing.Size(164, 23);
-            this.btCreateAddEntry.TabIndex = 34;
-            this.btCreateAddEntry.Text = "Save Changed Data";
-            this.btCreateAddEntry.UseVisualStyleBackColor = true;
-            this.btCreateAddEntry.Click += new System.EventHandler(this.saveLogEntry);
+            this.cbCargoModifier.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbCargoModifier.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cbCargoModifier.FormattingEnabled = true;
+            this.cbCargoModifier.Items.AddRange(new object[] {
+            "Bought",
+            "Sold",
+            "Mined",
+            "Stolen"});
+            this.cbCargoModifier.Location = new System.Drawing.Point(196, 149);
+            this.cbCargoModifier.Name = "cbCargoModifier";
+            this.cbCargoModifier.ReadOnly = false;
+            this.cbCargoModifier.Size = new System.Drawing.Size(121, 21);
+            this.cbCargoModifier.TabIndex = 18;
+            // 
+            // cmdCL_Save
+            // 
+            this.cmdCL_Save.Location = new System.Drawing.Point(230, 330);
+            this.cmdCL_Save.Name = "cmdCL_Save";
+            this.cmdCL_Save.Size = new System.Drawing.Size(134, 23);
+            this.cmdCL_Save.TabIndex = 34;
+            this.cmdCL_Save.Text = "Save Changes";
+            this.cmdCL_Save.UseVisualStyleBackColor = true;
+            this.cmdCL_Save.Click += new System.EventHandler(this.saveLogEntry);
             // 
             // cbLogStationName
             // 
+            this.cbLogStationName.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogStationName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cbLogStationName.FormattingEnabled = true;
-            this.cbLogStationName.Location = new System.Drawing.Point(111, 138);
+            this.cbLogStationName.Location = new System.Drawing.Point(69, 71);
             this.cbLogStationName.Name = "cbLogStationName";
+            this.cbLogStationName.ReadOnly = false;
             this.cbLogStationName.Size = new System.Drawing.Size(334, 21);
             this.cbLogStationName.TabIndex = 8;
             this.cbLogStationName.DropDown += new System.EventHandler(this.cbLogStationName_DropDown);
             // 
+            // nbLogQuantity
+            // 
+            this.nbLogQuantity.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.nbLogQuantity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.nbLogQuantity.Location = new System.Drawing.Point(323, 149);
+            this.nbLogQuantity.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.nbLogQuantity.Name = "nbLogQuantity";
+            this.nbLogQuantity.Size = new System.Drawing.Size(120, 20);
+            this.nbLogQuantity.TabIndex = 17;
+            this.nbLogQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(29, 192);
+            this.label39.Location = new System.Drawing.Point(20, 125);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(76, 13);
+            this.label39.Size = new System.Drawing.Size(41, 13);
             this.label39.TabIndex = 33;
-            this.label39.Text = "Current Credits";
+            this.label39.Text = "Current";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(28, 152);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(35, 13);
+            this.label22.TabIndex = 14;
+            this.label22.Text = "Cargo";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(65, 141);
+            this.label19.Location = new System.Drawing.Point(23, 74);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(40, 13);
             this.label19.TabIndex = 10;
             this.label19.Text = "Station";
             // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(7, 167);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(98, 13);
-            this.label38.TabIndex = 32;
-            this.label38.Text = "Transaction Credits";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(62, 114);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(41, 13);
-            this.label20.TabIndex = 11;
-            this.label20.Text = "System";
-            // 
-            // nbCurrentCredits
-            // 
-            this.nbCurrentCredits.Location = new System.Drawing.Point(111, 190);
-            this.nbCurrentCredits.Maximum = new decimal(new int[] {
-            1410065408,
-            2,
-            0,
-            0});
-            this.nbCurrentCredits.Name = "nbCurrentCredits";
-            this.nbCurrentCredits.Size = new System.Drawing.Size(120, 20);
-            this.nbCurrentCredits.TabIndex = 31;
-            // 
-            // cbLogCargoName
-            // 
-            this.cbLogCargoName.FormattingEnabled = true;
-            this.cbLogCargoName.Location = new System.Drawing.Point(111, 216);
-            this.cbLogCargoName.Name = "cbLogCargoName";
-            this.cbLogCargoName.Size = new System.Drawing.Size(121, 21);
-            this.cbLogCargoName.TabIndex = 12;
-            this.cbLogCargoName.DropDown += new System.EventHandler(this.cbLogCargoName_DropDown);
-            // 
             // nbTransactionAmount
             // 
-            this.nbTransactionAmount.Location = new System.Drawing.Point(111, 165);
+            this.nbTransactionAmount.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.nbTransactionAmount.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.nbTransactionAmount.Location = new System.Drawing.Point(69, 98);
             this.nbTransactionAmount.Maximum = new decimal(new int[] {
             1410065408,
             2,
@@ -3328,121 +3459,209 @@
             this.nbTransactionAmount.Name = "nbTransactionAmount";
             this.nbTransactionAmount.Size = new System.Drawing.Size(120, 20);
             this.nbTransactionAmount.TabIndex = 30;
+            this.nbTransactionAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // label22
+            // label38
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(70, 219);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(35, 13);
-            this.label22.TabIndex = 14;
-            this.label22.Text = "Cargo";
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(1, 100);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(63, 13);
+            this.label38.TabIndex = 32;
+            this.label38.Text = "Transaction";
             // 
-            // cbPrepareNewEntry
+            // cbLogCargoName
             // 
-            this.cbPrepareNewEntry.Location = new System.Drawing.Point(111, 55);
-            this.cbPrepareNewEntry.Name = "cbPrepareNewEntry";
-            this.cbPrepareNewEntry.Size = new System.Drawing.Size(164, 23);
-            this.cbPrepareNewEntry.TabIndex = 26;
-            this.cbPrepareNewEntry.Text = "prepare for new entry";
-            this.cbPrepareNewEntry.UseVisualStyleBackColor = true;
-            this.cbPrepareNewEntry.Click += new System.EventHandler(this.button11_Click);
+            this.cbLogCargoName.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogCargoName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cbLogCargoName.FormattingEnabled = true;
+            this.cbLogCargoName.Location = new System.Drawing.Point(69, 149);
+            this.cbLogCargoName.Name = "cbLogCargoName";
+            this.cbLogCargoName.ReadOnly = false;
+            this.cbLogCargoName.Size = new System.Drawing.Size(121, 21);
+            this.cbLogCargoName.TabIndex = 12;
+            this.cbLogCargoName.DropDown += new System.EventHandler(this.cbLogCargoName_DropDown);
             // 
-            // cbLogQuantity
+            // label20
             // 
-            this.cbLogQuantity.Location = new System.Drawing.Point(365, 216);
-            this.cbLogQuantity.Maximum = new decimal(new int[] {
-            10000,
-            0,
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(20, 47);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(41, 13);
+            this.label20.TabIndex = 11;
+            this.label20.Text = "System";
+            // 
+            // nbCurrentCredits
+            // 
+            this.nbCurrentCredits.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.nbCurrentCredits.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.nbCurrentCredits.Location = new System.Drawing.Point(69, 123);
+            this.nbCurrentCredits.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
             0,
             0});
-            this.cbLogQuantity.Name = "cbLogQuantity";
-            this.cbLogQuantity.Size = new System.Drawing.Size(120, 20);
-            this.cbLogQuantity.TabIndex = 17;
+            this.nbCurrentCredits.Name = "nbCurrentCredits";
+            this.nbCurrentCredits.Size = new System.Drawing.Size(120, 20);
+            this.nbCurrentCredits.TabIndex = 31;
+            this.nbCurrentCredits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // label23
+            // dgvCommandersLog
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(56, 399);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(49, 13);
-            this.label23.TabIndex = 25;
-            this.label23.Text = "Event ID";
+            this.dgvCommandersLog.AllowUserToAddRows = false;
+            this.dgvCommandersLog.AllowUserToDeleteRows = false;
+            this.dgvCommandersLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvCommandersLog.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvCommandersLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCommandersLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.time,
+            this.systemname,
+            this.stationname,
+            this.eevent,
+            this.action,
+            this.loccommodity,
+            this.cargovolume,
+            this.credits_transaction,
+            this.credits_total,
+            this.notes});
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvCommandersLog.DoubleBuffer = true;
+            this.dgvCommandersLog.Location = new System.Drawing.Point(3, 58);
+            this.dgvCommandersLog.Name = "dgvCommandersLog";
+            this.dgvCommandersLog.ReadOnly = true;
+            this.dgvCommandersLog.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvCommandersLog.RowTemplate.Height = 33;
+            this.dgvCommandersLog.Size = new System.Drawing.Size(1070, 550);
+            this.dgvCommandersLog.TabIndex = 36;
             // 
-            // cbCargoModifier
+            // time
             // 
-            this.cbCargoModifier.FormattingEnabled = true;
-            this.cbCargoModifier.Items.AddRange(new object[] {
-            "Bought",
-            "Sold",
-            "Mined",
-            "Stolen"});
-            this.cbCargoModifier.Location = new System.Drawing.Point(238, 216);
-            this.cbCargoModifier.Name = "cbCargoModifier";
-            this.cbCargoModifier.Size = new System.Drawing.Size(121, 21);
-            this.cbCargoModifier.TabIndex = 18;
+            this.time.DataPropertyName = "time";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.time.DefaultCellStyle = dataGridViewCellStyle1;
+            this.time.HeaderText = "Time";
+            this.time.Name = "time";
+            this.time.ReadOnly = true;
+            this.time.Width = 70;
             // 
-            // tbLogEventID
+            // systemname
             // 
-            this.tbLogEventID.Location = new System.Drawing.Point(111, 399);
-            this.tbLogEventID.Name = "tbLogEventID";
-            this.tbLogEventID.ReadOnly = true;
-            this.tbLogEventID.Size = new System.Drawing.Size(374, 20);
-            this.tbLogEventID.TabIndex = 24;
+            this.systemname.DataPropertyName = "systemname";
+            this.systemname.HeaderText = "System";
+            this.systemname.Name = "systemname";
+            this.systemname.ReadOnly = true;
             // 
-            // tbLogNotes
+            // stationname
             // 
-            this.tbLogNotes.Location = new System.Drawing.Point(111, 243);
-            this.tbLogNotes.Multiline = true;
-            this.tbLogNotes.Name = "tbLogNotes";
-            this.tbLogNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLogNotes.Size = new System.Drawing.Size(374, 150);
-            this.tbLogNotes.TabIndex = 19;
+            this.stationname.DataPropertyName = "stationname";
+            this.stationname.HeaderText = "Station";
+            this.stationname.Name = "stationname";
+            this.stationname.ReadOnly = true;
             // 
-            // button10
+            // eevent
             // 
-            this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button10.Location = new System.Drawing.Point(400, 550);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(85, 23);
-            this.button10.TabIndex = 23;
-            this.button10.Text = "Load from File";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.eevent.DataPropertyName = "eevent";
+            this.eevent.HeaderText = "Event";
+            this.eevent.Name = "eevent";
+            this.eevent.ReadOnly = true;
             // 
-            // label21
+            // action
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(70, 246);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(35, 13);
-            this.label21.TabIndex = 20;
-            this.label21.Text = "Notes";
+            this.action.DataPropertyName = "action";
+            this.action.HeaderText = "Action";
+            this.action.Name = "action";
+            this.action.ReadOnly = true;
             // 
-            // button9
+            // loccommodity
             // 
-            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button9.Location = new System.Drawing.Point(311, 550);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(85, 23);
-            this.button9.TabIndex = 22;
-            this.button9.Text = "Save to File";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.loccommodity.DataPropertyName = "loccommodity";
+            this.loccommodity.HeaderText = "Commodity";
+            this.loccommodity.Name = "loccommodity";
+            this.loccommodity.ReadOnly = true;
             // 
-            // dtpLogEventDate
+            // cargovolume
             // 
-            this.dtpLogEventDate.Location = new System.Drawing.Point(238, 85);
-            this.dtpLogEventDate.Name = "dtpLogEventDate";
-            this.dtpLogEventDate.Size = new System.Drawing.Size(207, 20);
-            this.dtpLogEventDate.TabIndex = 21;
+            this.cargovolume.DataPropertyName = "cargovolume";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle2;
+            this.cargovolume.HeaderText = "Volume";
+            this.cargovolume.Name = "cargovolume";
+            this.cargovolume.ReadOnly = true;
+            this.cargovolume.Width = 70;
+            // 
+            // credits_transaction
+            // 
+            this.credits_transaction.DataPropertyName = "credits_transaction";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle3;
+            this.credits_transaction.HeaderText = "Transaction";
+            this.credits_transaction.Name = "credits_transaction";
+            this.credits_transaction.ReadOnly = true;
+            this.credits_transaction.Width = 70;
+            // 
+            // credits_total
+            // 
+            this.credits_total.DataPropertyName = "credits_total";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.credits_total.DefaultCellStyle = dataGridViewCellStyle4;
+            this.credits_total.HeaderText = "Cr. total";
+            this.credits_total.Name = "credits_total";
+            this.credits_total.ReadOnly = true;
+            this.credits_total.Width = 70;
+            // 
+            // notes
+            // 
+            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.notes.DataPropertyName = "notes";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.notes.DefaultCellStyle = dataGridViewCellStyle5;
+            this.notes.HeaderText = "notes";
+            this.notes.Name = "notes";
+            this.notes.ReadOnly = true;
+            // 
+            // txtCL_Limit
+            // 
+            this.txtCL_Limit.Location = new System.Drawing.Point(62, 5);
+            this.txtCL_Limit.Name = "txtCL_Limit";
+            this.txtCL_Limit.Size = new System.Drawing.Size(32, 20);
+            this.txtCL_Limit.TabIndex = 41;
+            this.txtCL_Limit.Text = "1000";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(7, 8);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(57, 13);
+            this.label31.TabIndex = 40;
+            this.label31.Text = "fetch limit :";
+            // 
+            // cmdCL_ShowHide
+            // 
+            this.cmdCL_ShowHide.Location = new System.Drawing.Point(945, 3);
+            this.cmdCL_ShowHide.Name = "cmdCL_ShowHide";
+            this.cmdCL_ShowHide.Size = new System.Drawing.Size(126, 23);
+            this.cmdCL_ShowHide.TabIndex = 39;
+            this.cmdCL_ShowHide.Text = "Show/Hide Edit-Panel";
+            this.cmdCL_ShowHide.UseVisualStyleBackColor = true;
+            this.cmdCL_ShowHide.Click += new System.EventHandler(this.cmdCLShowHide_Click);
             // 
             // tabOCRGroup
             // 
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1051, 589);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1076, 611);
             this.tabOCRGroup.TabIndex = 11;
             this.tabOCRGroup.Text = "Optical Character Recognition";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
@@ -3875,7 +4094,7 @@
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1051, 589);
+            this.tabWebserver.Size = new System.Drawing.Size(1076, 611);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -4059,7 +4278,7 @@
             this.tabEDDN.Controls.Add(this.groupBox2);
             this.tabEDDN.Location = new System.Drawing.Point(4, 22);
             this.tabEDDN.Name = "tabEDDN";
-            this.tabEDDN.Size = new System.Drawing.Size(1051, 589);
+            this.tabEDDN.Size = new System.Drawing.Size(1076, 611);
             this.tabEDDN.TabIndex = 7;
             this.tabEDDN.Text = "EDDN";
             this.tabEDDN.UseVisualStyleBackColor = true;
@@ -4261,7 +4480,7 @@
             this.tabSettings.Location = new System.Drawing.Point(4, 22);
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSettings.Size = new System.Drawing.Size(1051, 589);
+            this.tabSettings.Size = new System.Drawing.Size(1076, 611);
             this.tabSettings.TabIndex = 12;
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
@@ -4281,6 +4500,9 @@
             this.groupBox12.Controls.Add(this.cbIncludeUnknownDTS);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
+            this.groupBox12.Controls.Add(this.button19);
+            this.groupBox12.Controls.Add(this.bOpen);
+            this.groupBox12.Controls.Add(this.button5);
             this.groupBox12.Location = new System.Drawing.Point(653, 166);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(400, 421);
@@ -4357,6 +4579,16 @@
             this.button6.Text = "Edit Commodity Price Warn levels";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.cmdWarnLevels_Click);
+            // 
+            // bOpen
+            // 
+            this.bOpen.Location = new System.Drawing.Point(206, 254);
+            this.bOpen.Name = "bOpen";
+            this.bOpen.Size = new System.Drawing.Size(160, 23);
+            this.bOpen.TabIndex = 0;
+            this.bOpen.Text = "Open CSV Files";
+            this.bOpen.UseVisualStyleBackColor = false;
+            this.bOpen.Click += new System.EventHandler(this.bOpen_Click);
             // 
             // groupBox10
             // 
@@ -4620,69 +4852,6 @@
             this.label12.TabIndex = 7;
             this.label12.Text = "\"traineddata\"-File for TesseractOCR";
             // 
-            // cmdLoadCurrentSystem
-            // 
-            this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(929, 57);
-            this.cmdLoadCurrentSystem.Name = "cmdLoadCurrentSystem";
-            this.cmdLoadCurrentSystem.Size = new System.Drawing.Size(148, 23);
-            this.cmdLoadCurrentSystem.TabIndex = 60;
-            this.cmdLoadCurrentSystem.Text = "Show Current System Data";
-            this.cmdLoadCurrentSystem.UseVisualStyleBackColor = true;
-            this.cmdLoadCurrentSystem.Click += new System.EventHandler(this.cmdLoadCurrentSystem_Click);
-            // 
-            // bOpen
-            // 
-            this.bOpen.Location = new System.Drawing.Point(18, 12);
-            this.bOpen.Name = "bOpen";
-            this.bOpen.Size = new System.Drawing.Size(101, 23);
-            this.bOpen.TabIndex = 0;
-            this.bOpen.Text = "Open CSV Files";
-            this.bOpen.UseVisualStyleBackColor = false;
-            this.bOpen.Click += new System.EventHandler(this.bOpen_Click);
-            // 
-            // contextMenuStrip2
-            // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.removeEconomyToolStripMenuItem});
-            this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(168, 48);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
-            this.toolStripMenuItem1.Text = "add Economy";
-            // 
-            // removeEconomyToolStripMenuItem
-            // 
-            this.removeEconomyToolStripMenuItem.Name = "removeEconomyToolStripMenuItem";
-            this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.removeEconomyToolStripMenuItem.Text = "remove Economy";
-            // 
-            // dsCommodities
-            // 
-            this.dsCommodities.DataSetName = "dsCommodities";
-            this.dsCommodities.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // namesBindingSource
-            // 
-            this.namesBindingSource.DataMember = "Names";
-            this.namesBindingSource.DataSource = this.dsCommodities;
-            // 
-            // cmdDatabaseOp
-            // 
-            this.cmdDatabaseOp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmdDatabaseOp.Location = new System.Drawing.Point(32, 255);
-            this.cmdDatabaseOp.Name = "cmdDatabaseOp";
-            this.cmdDatabaseOp.Size = new System.Drawing.Size(116, 42);
-            this.cmdDatabaseOp.TabIndex = 63;
-            this.cmdDatabaseOp.Text = "SQL-Database Operations";
-            this.toolTip1.SetToolTip(this.cmdDatabaseOp, "0 purges all but todays price data, -1 purges ALL price data");
-            this.cmdDatabaseOp.UseVisualStyleBackColor = true;
-            this.cmdDatabaseOp.Click += new System.EventHandler(this.cmdDatabaseOp_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4698,10 +4867,7 @@
             this.Controls.Add(this.tbCurrentStationinfoFromLogs);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
-            this.Controls.Add(this.button19);
-            this.Controls.Add(this.button5);
             this.Controls.Add(this.tabCtrlMain);
-            this.Controls.Add(this.bOpen);
             this.KeyPreview = true;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
@@ -4710,6 +4876,9 @@
             this.Shown += new System.EventHandler(this.Form_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.tabCtrlMain.ResumeLayout(false);
             this.tabHelpAndChangeLog.ResumeLayout(false);
             this.tabHelpAndChangeLog.PerformLayout();
@@ -4758,14 +4927,13 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.tabCommandersLog.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            this.splitContainer3.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).EndInit();
+            this.tabCommandersLog.PerformLayout();
+            this.gbCL_LogEdit.ResumeLayout(false);
+            this.gbCL_LogEdit.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbLogQuantity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).EndInit();
             this.tabOCRGroup.ResumeLayout(false);
             this.tabCtrlOCR.ResumeLayout(false);
             this.tabOCR.ResumeLayout(false);
@@ -4799,9 +4967,6 @@
             this.groupBox9.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
-            this.contextMenuStrip2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4866,19 +5031,14 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label21;
-        public System.Windows.Forms.ComboBox cbLogEventType;
-        public System.Windows.Forms.ComboBox cbCargoModifier;
-        public System.Windows.Forms.NumericUpDown cbLogQuantity;
-        public System.Windows.Forms.ComboBox cbLogCargoName;
-        public System.Windows.Forms.ComboBox cbLogSystemName;
-        public System.Windows.Forms.ComboBox cbLogStationName;
-        public System.Windows.Forms.TextBox tbLogNotes;
-        public System.Windows.Forms.DateTimePicker dtpLogEventDate;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Label label23;
-        public System.Windows.Forms.TextBox tbLogEventID;
-        private System.Windows.Forms.Button cbPrepareNewEntry;
+        private System.Windows.Forms.ComboBox_ro cbLogEventType;
+        private System.Windows.Forms.ComboBox_ro cbCargoModifier;
+        private System.Windows.Forms.NumericUpDown_ro nbLogQuantity;
+        private System.Windows.Forms.ComboBox_ro cbLogCargoName;
+        private System.Windows.Forms.ComboBox_ro cbLogSystemName;
+        private System.Windows.Forms.ComboBox_ro cbLogStationName;
+        private System.Windows.Forms.TextBox tbLogNotes;
+        private System.Windows.Forms.DateTimePicker_ro dtpLogEventDate;
         private System.Windows.Forms.TabPage tabEDDN;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button15;
@@ -4900,11 +5060,10 @@
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label38;
-        public System.Windows.Forms.NumericUpDown nbCurrentCredits;
-        public System.Windows.Forms.NumericUpDown nbTransactionAmount;
-        public System.Windows.Forms.TextBox tbCurrentSystemFromLogs;
-        public System.Windows.Forms.ListView lvCommandersLog;
-        public System.Windows.Forms.Button btCreateAddEntry;
+        private System.Windows.Forms.NumericUpDown_ro nbCurrentCredits;
+        private System.Windows.Forms.NumericUpDown_ro nbTransactionAmount;
+        private System.Windows.Forms.TextBox tbCurrentSystemFromLogs;
+        private System.Windows.Forms.Button cmdCL_Save;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.TabPage tabHelpAndChangeLog;
@@ -4917,7 +5076,6 @@
         private System.Windows.Forms.TabPage tabOCRGroup;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox cbStartWebserverOnLoad;
-        private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox tbStationRename;
         private System.Windows.Forms.Button bSwapStationToStations;
@@ -5176,6 +5334,28 @@
         internal System.Windows.Forms.TextBox txtCmdrsName;
         private System.Windows.Forms.CheckBox cbEDDNAutoListen;
         private System.Windows.Forms.Button cmdDatabaseOp;
+        private RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt dgvCommandersLog;
+        public System.Windows.Forms.Button cmdCLReload;
+        private System.Windows.Forms.Button cmdCL_ShowHide;
+        private System.Windows.Forms.TextBox txtCL_Limit;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.DataGridViewTextBoxColumn time;
+        private System.Windows.Forms.DataGridViewTextBoxColumn systemname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn stationname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn eevent;
+        private System.Windows.Forms.DataGridViewTextBoxColumn action;
+        private System.Windows.Forms.DataGridViewTextBoxColumn loccommodity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cargovolume;
+        private System.Windows.Forms.DataGridViewTextBoxColumn credits_transaction;
+        private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
+        private System.Windows.Forms.DataGridViewTextBoxColumn notes;
+        private System.Windows.Forms.GroupBox gbCL_LogEdit;
+        private System.Windows.Forms.Label label23;
+        public System.Windows.Forms.Button cmdCL_PrepareNew;
+        private System.Windows.Forms.Button cmdCL_Cancel;
+        private System.Windows.Forms.Button cmdCL_EditEntry;
+        private System.Windows.Forms.Label label94;
+        private System.Windows.Forms.Label label95;
 
         
     }

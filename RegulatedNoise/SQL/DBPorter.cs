@@ -22,15 +22,111 @@ namespace RegulatedNoise.SQL
             prohibited
         }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        public DBPorter()
+        {
+            try
+            {
+                PrepareBaseTables();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in constructor", ex);
+            }
+        }
+
+#region basedata
+
         private String[] BaseTables_Systems = new String[] {"tbGovernment", 
                                                             "tbAllegiance", 
                                                             "tbState", 
                                                             "tbSecurity", 
                                                             "tbEconomy", 
                                                             "tbStationtype",
-                                                            "tbCommodity"};
+                                                            "tbCommodity", 
+                                                            "tbEventType"};
 
-        DataSet Data = null;
+        // dataset with base data
+        private DataSet m_BaseData = null;
+
+        /// <summary>
+        /// access to the dataset with the base data
+        /// </summary>
+        public DataSet BaseData { get{ return m_BaseData; } }
+
+
+        /// <summary>
+        /// loads the data from the basetables into memory
+        /// </summary>
+        /// <param name="m_BaseData"></param>
+        private void PrepareBaseTables()
+        {
+            try
+            {
+                m_BaseData = new DataSet();
+
+                foreach (String BaseTable in BaseTables_Systems)
+                {
+                    // preload all tables with base data
+                    Program.DBCon.Execute(String.Format("select * from {0}", BaseTable), BaseTable, ref m_BaseData);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while preparing base tables", ex);
+            }
+        }
+
+        /// <summary>
+        /// looks for the id of a name from a base table
+        /// </summary>
+        /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        private object BaseTableNameToID(String Tablename, String Name)
+        {
+            try
+            {
+
+                if (Name == null)
+                    return null;
+                else
+                    return (Int32)(m_BaseData.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("{0} = '{1}'", Tablename, Name))[0]["id"]);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Error while searching for the id of <{0}> in table <tb{1}>", Name, Tablename), ex);
+            }
+        }
+
+        /// <summary>
+        /// looks for the name of a id from a base table
+        /// </summary>
+        /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private object BaseTableIDToName(String Tablename, int? id)
+        {
+            try
+            {
+
+                if (id == null)
+                    return null;
+                else
+                    return (String)(m_BaseData.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("id = {0}", id))[0][Tablename]);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Format("Error while searching for the name of <{0}> in table <tb{1}>", id.ToNString(), Tablename), ex);
+            }
+        }
+
+#endregion
 
 #region handling of commodities
 
@@ -47,7 +143,7 @@ namespace RegulatedNoise.SQL
             try
             {
 
-                Data = new DataSet();
+                m_BaseData = new DataSet();
 
                 Commodities = JsonConvert.DeserializeObject<List<EDCommodities>>(File.ReadAllText(Filename));
 
@@ -301,9 +397,7 @@ namespace RegulatedNoise.SQL
 
             try
             {
-                Data = new DataSet();
-
-                PrepareBaseTables(Data);
+                m_BaseData = new DataSet();
 
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -313,14 +407,14 @@ namespace RegulatedNoise.SQL
                 Program.DBCon.TransBegin();
 
                 sqlString = "select * from tbSystems lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbSystems", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbSystems", ref m_BaseData);
 
                 sqlString = "select * from tbSystems_org lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbSystems_org", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbSystems_org", ref m_BaseData);
 
                 foreach (EDSystem System in Systems)
                 {
-                    FoundRows = Data.Tables["tbSystems"].Select("id=" + System.Id.ToString());
+                    FoundRows = m_BaseData.Tables["tbSystems"].Select("id=" + System.Id.ToString());
 
                     if ((FoundRows != null) && (FoundRows.Count() > 0))
                     {
@@ -331,7 +425,7 @@ namespace RegulatedNoise.SQL
                             // data is changed by user - hold it ...
 
                             // ...and check table "tbSystems_org" for the original data
-                            FoundRows_org = Data.Tables["tbSystems_org"].Select("id=" + System.Id.ToString());
+                            FoundRows_org = m_BaseData.Tables["tbSystems_org"].Select("id=" + System.Id.ToString());
 
                             if ((FoundRows_org != null) && (FoundRows_org.Count() > 0))
                             {
@@ -365,7 +459,7 @@ namespace RegulatedNoise.SQL
                     {
                         // check if theres a user generated system
                         // self-created systems don't have the correct id so it must be identified by name    
-                        FoundRows = Data.Tables["tbSystems"].Select("     systemname = " + DBConnector.SQLAString(System.Name.ToString()) +
+                        FoundRows = m_BaseData.Tables["tbSystems"].Select("     systemname = " + DBConnector.SQLAString(System.Name.ToString()) +
                                                                     " and id         < 0");
 
                         if (FoundRows.Count() > 0)
@@ -377,9 +471,9 @@ namespace RegulatedNoise.SQL
                         else
                         {
                             // add a new system
-                            var newRow = Data.Tables["tbSystems"].NewRow();
+                            var newRow = m_BaseData.Tables["tbSystems"].NewRow();
                             CopyEDSystemToDataRow(System, ref newRow);
-                            Data.Tables["tbSystems"].Rows.Add(newRow);
+                            m_BaseData.Tables["tbSystems"].Rows.Add(newRow);
                         }
 
                         Counter += 1;
@@ -390,15 +484,15 @@ namespace RegulatedNoise.SQL
                         // save changes
                         Debug.Print("added Systems : " + Counter.ToString());
 
-                        Program.DBCon.TableUpdate("tbSystems", ref Data);
-                        Program.DBCon.TableUpdate("tbSystems_org", ref Data);
+                        Program.DBCon.TableUpdate("tbSystems", ref m_BaseData);
+                        Program.DBCon.TableUpdate("tbSystems_org", ref m_BaseData);
                     }
 
                 }
 
                 // save changes
-                Program.DBCon.TableUpdate("tbSystems", ref Data, true);
-                Program.DBCon.TableUpdate("tbSystems_org", ref Data, true);
+                Program.DBCon.TableUpdate("tbSystems", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbSystems_org", ref m_BaseData, true);
 
                 Program.DBCon.TransCommit();
 
@@ -430,10 +524,43 @@ namespace RegulatedNoise.SQL
         /// imports the own data from the file into the database (only initially once needed)
         /// </summary>
         /// <param name="Filename"></param>
-        public Dictionary<Int32, Int32> ImportSystems_Own(String Filename)
+        public Dictionary<Int32, Int32> ImportSystems_Own(String Filename, Boolean OnlyAddUnknown = false)
+        {
+            try
+            {
+                List<EDSystem> SystemList = JsonConvert.DeserializeObject<List<EDSystem>>(File.ReadAllText(Filename));
+                return ImportSystems_Own(ref SystemList, OnlyAddUnknown);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in <ImportSystems_Own> from file", ex);
+            }
+        }
+            
+        /// <summary>
+        /// imports the data from the list of systems
+        /// </summary>
+        /// <param name="Filename"></param>
+        public Dictionary<Int32, Int32> ImportSystems_Own(EDSystem System, Boolean OnlyAddUnknown = false)
+        {
+            try
+            {
+                List<EDSystem> SystemList = new List<EDSystem>() {System};
+                return ImportSystems_Own(ref SystemList, OnlyAddUnknown);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in <ImportSystems_Own> from single station", ex);
+            }
+        }
+
+        /// <summary>
+        /// imports the data from the list of systems
+        /// </summary>
+        /// <param name="Filename"></param>
+        public Dictionary<Int32, Int32> ImportSystems_Own(ref List<EDSystem> Systems, Boolean OnlyAddUnknown = false)
         {
             String sqlString;
-            List<EDSystem> Systems;
             DataRow[] FoundRows;
             DateTime Timestamp_new, Timestamp_old;
             Int32 Counter = 0;
@@ -443,103 +570,101 @@ namespace RegulatedNoise.SQL
             try
             {
 
-                Data = new DataSet();
-
-                PrepareBaseTables(Data);
+                m_BaseData = new DataSet();
 
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
-                Systems = JsonConvert.DeserializeObject<List<EDSystem>>(File.ReadAllText(Filename));
-
                 Program.DBCon.TransBegin();
 
                 sqlString = "select * from tbSystems lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbSystems", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbSystems", ref m_BaseData);
 
                 sqlString = "select * from tbSystems_org lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbSystems_org", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbSystems_org", ref m_BaseData);
 
-                sqlString = "select min(id) As min_id from tbSystems";
-                Program.DBCon.Execute(sqlString, "minID", ref Data);
-
-                if(Convert.IsDBNull(Data.Tables["minID"].Rows[0]["min_id"]))
-                    currentSelfCreatedIndex = -1;
-                else
-                {
-                    currentSelfCreatedIndex = ((Int32)Data.Tables["minID"].Rows[0]["min_id"]) - 1;
-                    if(currentSelfCreatedIndex >= 0)
-                        currentSelfCreatedIndex = -1;
-                }
+                currentSelfCreatedIndex = getNextOwnSystemIndex();
 
                 foreach (EDSystem System in Systems)
                 {
-                    // self-created systems don't have the correct id so it must be identified by name    
-                    FoundRows = Data.Tables["tbSystems"].Select("systemname=" + DBConnector.SQLAString(System.Name.ToString()));
+                    if(!String.IsNullOrEmpty(System.Name.ToString().Trim()))
+                    { 
+                        // self-created systems don't have the correct id so it must be identified by name    
+                        FoundRows = m_BaseData.Tables["tbSystems"].Select("systemname=" + DBConnector.SQLAString(DBConnector.DTEscape(System.Name.ToString())));
 
-                    if ((FoundRows != null) && (FoundRows.Count() > 0))
-                    {
-                        // system is existing
-                        // memorize the changed system ids for importing user changed stations in the (recommend) second step
-                        changedSystemIDs.Add(System.Id, (Int32)FoundRows[0]["id"]);
-                        System.Id = (Int32)FoundRows[0]["id"];
-
-                        if ((bool)(FoundRows[0]["is_changed"]))
+                        if ((FoundRows != null) && (FoundRows.Count() > 0))
                         {
-                            // old data is changed by user and the new data is also a user changed data
-                            // keep the newer version in the main table 
-                            Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                            Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(System.UpdatedAt);
+                            if (!OnlyAddUnknown)
+                            { 
+                                // system is existing
+                                // memorize the changed system ids for importing user changed stations in the (recommend) second step
+                                changedSystemIDs.Add(System.Id, (Int32)FoundRows[0]["id"]);
+                                System.Id = (Int32)FoundRows[0]["id"];
 
-                            if (Timestamp_new > Timestamp_old)
+                                if ((bool)(FoundRows[0]["is_changed"]))
+                                {
+                                    // old data is changed by user and the new data is also a user changed data
+                                    // keep the newer version in the main table 
+                                    Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
+                                    Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(System.UpdatedAt);
+
+                                    if (Timestamp_new > Timestamp_old)
+                                    {
+                                        // data from file is newer -> take it but hold the old id
+                                        CopyEDSystemToDataRow(System, ref FoundRows[0], true);
+
+                                        Counter += 1;
+                                    }
+                                }
+                                else
+                                {
+                                    // new data is user changed data, old data is original data
+                                    // copy the original data ("tbSystems") to the saving data table ("tbSystems_org")
+                                    // and get the correct system ID
+                                    m_BaseData.Tables["tbSystems_org"].LoadDataRow(FoundRows[0].ItemArray, false);
+                                    CopyEDSystemToDataRow(System, ref FoundRows[0], true);
+
+                                    Counter += 1;
+                                }
+                            }
+                            else
                             {
-                                // data from file is newer -> take it but hold the old id
-                                CopyEDSystemToDataRow(System, ref FoundRows[0], true);
-
-                                Counter += 1;
+                                System.Id = (Int32)FoundRows[0]["id"];
                             }
                         }
                         else
                         {
-                            // new data is user changed data, old data is original data
-                            // copy the original data ("tbSystems") to the saving data table ("tbSystems_org")
-                            // and get the correct system ID
-                            Data.Tables["tbSystems_org"].LoadDataRow(FoundRows[0].ItemArray, false);
-                            CopyEDSystemToDataRow(System, ref FoundRows[0], true);
+                            // add a new system
+                            // memorize the changed system ids for importing user changed stations in the (recommend) second step
+                            if(!OnlyAddUnknown)
+                                changedSystemIDs.Add(System.Id, currentSelfCreatedIndex);
 
+                            System.Id = currentSelfCreatedIndex;
+
+                            var newRow = m_BaseData.Tables["tbSystems"].NewRow();
+                            CopyEDSystemToDataRow(System, ref newRow, true);
+                            m_BaseData.Tables["tbSystems"].Rows.Add(newRow);
+
+
+                            currentSelfCreatedIndex -= 1;
                             Counter += 1;
+
+                        }
+
+                        if ((Counter > 0) && ((Counter % 100) == 0))
+                        {
+                            // save changes
+                            Debug.Print("added Systems : " + Counter.ToString());
+
+                            Program.DBCon.TableUpdate("tbSystems", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbSystems_org", ref m_BaseData);
                         }
                     }
-                    else
-                    {
-                        // add a new system
-                        // memorize the changed system ids for importing user changed stations in the (recommend) second step
-                        changedSystemIDs.Add(System.Id, currentSelfCreatedIndex);
-                        System.Id = currentSelfCreatedIndex;
-
-                        var newRow = Data.Tables["tbSystems"].NewRow();
-                        CopyEDSystemToDataRow(System, ref newRow, true);
-                        Data.Tables["tbSystems"].Rows.Add(newRow);
-
-
-                        currentSelfCreatedIndex -= 1;
-                        Counter += 1;
-                    }
-
-                    if ((Counter > 0) && ((Counter % 100) == 0))
-                    {
-                        // save changes
-                        Debug.Print("added Systems : " + Counter.ToString());
-
-                        Program.DBCon.TableUpdate("tbSystems", ref Data);
-                        Program.DBCon.TableUpdate("tbSystems_org", ref Data);
-                    }
-
                 }
 
                 // save changes
-                Program.DBCon.TableUpdate("tbSystems", ref Data, true);
-                Program.DBCon.TableUpdate("tbSystems_org", ref Data, true);
+                Program.DBCon.TableUpdate("tbSystems", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbSystems_org", ref m_BaseData, true);
 
                 Program.DBCon.TransCommit();
 
@@ -563,10 +688,46 @@ namespace RegulatedNoise.SQL
                     Program.DBCon.TableReadRemove("tbSystems_org");
 
                 }
-                catch (Exception) { }
+                catch (Exception)
+                { }
 
                 throw new Exception("Error while importing system data", ex);
             }
+        }
+
+        /// <summary>
+        /// gets the next free system-id for user added systems
+        /// </summary>
+        /// <returns></returns>
+        private int getNextOwnSystemIndex()
+        {
+            String      sqlString;
+            Int32       currentSelfCreatedIndex;
+            DataTable   Data;
+
+            try
+            {
+                Data        = new DataTable();
+                sqlString   = "select min(id) As min_id from tbSystems";
+
+                Program.DBCon.Execute(sqlString, ref Data);
+
+                if(Convert.IsDBNull(Data.Rows[0]["min_id"]))
+                    currentSelfCreatedIndex = -1;
+                else
+                {
+                    currentSelfCreatedIndex = ((Int32)Data.Rows[0]["min_id"]) - 1;
+                    if(currentSelfCreatedIndex >= 0)
+                        currentSelfCreatedIndex = -1;
+                }
+
+                return currentSelfCreatedIndex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting next free <own> system index", ex);
+            }
+
         }
 
         /// <summary>
@@ -603,6 +764,43 @@ namespace RegulatedNoise.SQL
             }
         }
 
+        //public bool AddUnknownSystem(String Systemname)
+        //{
+        //    Boolean     retValue;
+        //    Int32       nextIndex;
+        //    String      sqlString;
+        //    DataTable   m_BaseData;
+
+        //    try
+        //    {
+        //        retValue    = false;
+        //        m_BaseData        = new DataTable();
+
+        //        sqlString = "select count(*) from tbSystems" +
+        //                    " where systemname = " + DBConnector.SQLAString(Systemname);
+
+        //        Program.DBCon.Execute(sqlString, ref m_BaseData)
+
+        //        if (((int32)m_BaseData.Rows[0][0]) == 0)
+        //        {
+        //            // system is not existing
+        //            sqlString = "insert into tbSystems(id, systemname, x, y, z, faction, population, government_id, )"
+
+        //        }
+
+
+        //        nextIndex = getNextOwnSystemIndex();
+
+
+
+        //        return retValue;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while checking unknown system for adding", ex);
+        //    }
+        //}
+
 #endregion
 
 #region handling of stations
@@ -622,9 +820,7 @@ namespace RegulatedNoise.SQL
 
             try
             {
-                Data = new DataSet();
-
-                PrepareBaseTables(Data);
+                m_BaseData = new DataSet();
 
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -634,22 +830,22 @@ namespace RegulatedNoise.SQL
                 Program.DBCon.TransBegin();
 
                 sqlString = "select * from tbStations lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbStations", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbStations", ref m_BaseData);
                 sqlString = "select * from tbStations_org lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbStations_org", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbStations_org", ref m_BaseData);
                 sqlString = "select * from tbStationEconomy lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbStationEconomy", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbStationEconomy", ref m_BaseData);
                 sqlString = "select * from tbImportCommodity lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbImportCommodity", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbImportCommodity", ref m_BaseData);
                 sqlString = "select * from tbExportCommodity lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbExportCommodity", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbExportCommodity", ref m_BaseData);
                 sqlString = "select * from tbProhibitedCommodity lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbProhibitedCommodity", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbProhibitedCommodity", ref m_BaseData);
 
                 foreach (EDStation Station in Stations)
                 {
 
-                    FoundRows = Data.Tables["tbStations"].Select("id=" + Station.Id.ToString());
+                    FoundRows = m_BaseData.Tables["tbStations"].Select("id=" + Station.Id.ToString());
 
                     if (FoundRows.Count() > 0)
                     {
@@ -660,7 +856,7 @@ namespace RegulatedNoise.SQL
                             // data is changed by user - hold it ...
 
                             // ...and check table "tbStations_org" for the original data
-                            FoundRows_org = Data.Tables["tbStations_org"].Select("id=" + Station.Id.ToString());
+                            FoundRows_org = m_BaseData.Tables["tbStations_org"].Select("id=" + Station.Id.ToString());
 
                             if ((FoundRows_org != null) && (FoundRows_org.Count() > 0))
                             {
@@ -673,10 +869,10 @@ namespace RegulatedNoise.SQL
                                     // data from file is newer
                                     CopyEDStationToDataRow(Station, ref FoundRows_org[0]);
 
-                                    CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
-                                    CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbImportCommodity"]);
-                                    CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbExportCommodity"]);
-                                    CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbProhibitedCommodity"]);
+                                    CopyEDStationEconomiesToDataRows(Station, m_BaseData.Tables["tbStationEconomy"]);
+                                    CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbImportCommodity"]);
+                                    CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbExportCommodity"]);
+                                    CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbProhibitedCommodity"]);
 
                                     Counter += 1;
 
@@ -695,10 +891,10 @@ namespace RegulatedNoise.SQL
                                 // data from file is newer
                                 CopyEDStationToDataRow(Station, ref FoundRows[0]);
 
-                                CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
-                                CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbImportCommodity"]);
-                                CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbExportCommodity"]);
-                                CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbProhibitedCommodity"]);
+                                CopyEDStationEconomiesToDataRows(Station, m_BaseData.Tables["tbStationEconomy"]);
+                                CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbImportCommodity"]);
+                                CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbExportCommodity"]);
+                                CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbProhibitedCommodity"]);
 
                                 Counter += 1;
                             }
@@ -708,7 +904,7 @@ namespace RegulatedNoise.SQL
                     {
 
                         // self-created stations don't have the correct id so they must be identified by name    
-                        FoundRows = Data.Tables["tbStations"].Select("stationname = " + DBConnector.SQLAString(Station.Name.ToString()) + " and " + 
+                        FoundRows = m_BaseData.Tables["tbStations"].Select("stationname = " + DBConnector.SQLAString(Station.Name.ToString()) + " and " + 
                                                                      "  system_id = " + Station.SystemId + " and " + 
                                                                      "  id        < 0");
 
@@ -718,31 +914,31 @@ namespace RegulatedNoise.SQL
                             CopyEDStationToDataRow(Station, ref FoundRows[0]); 
 
                             // update immediately because otherwise the references are wrong after changing a id
-                            Program.DBCon.TableUpdate("tbStations", ref Data);
-                            Program.DBCon.TableUpdate("tbStations_org", ref Data);
-                            Program.DBCon.TableUpdate("tbStationEconomy", ref Data);
-                            Program.DBCon.TableUpdate("tbImportCommodity", ref Data);
-                            Program.DBCon.TableUpdate("tbExportCommodity", ref Data);
-                            Program.DBCon.TableUpdate("tbProhibitedCommodity", ref Data);
+                            Program.DBCon.TableUpdate("tbStations", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbStations_org", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbStationEconomy", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbImportCommodity", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbExportCommodity", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbProhibitedCommodity", ref m_BaseData);
 
-                            Program.DBCon.TableRefresh("tbStationEconomy", ref Data);
-                            Program.DBCon.TableRefresh("tbImportCommodity", ref Data);
-                            Program.DBCon.TableRefresh("tbExportCommodity", ref Data);
-                            Program.DBCon.TableRefresh("tbProhibitedCommodity", ref Data);
+                            Program.DBCon.TableRefresh("tbStationEconomy", ref m_BaseData);
+                            Program.DBCon.TableRefresh("tbImportCommodity", ref m_BaseData);
+                            Program.DBCon.TableRefresh("tbExportCommodity", ref m_BaseData);
+                            Program.DBCon.TableRefresh("tbProhibitedCommodity", ref m_BaseData);
                         }
                         else
                         {
                             // add a new Station
-                            DataRow   newStationRow           = Data.Tables["tbStations"].NewRow();
+                            DataRow   newStationRow           = m_BaseData.Tables["tbStations"].NewRow();
                         
                             CopyEDStationToDataRow(Station, ref newStationRow);
-                            Data.Tables["tbStations"].Rows.Add(newStationRow);
+                            m_BaseData.Tables["tbStations"].Rows.Add(newStationRow);
                         }
 
-                        CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
-                        CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbImportCommodity"]);
-                        CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbExportCommodity"]);
-                        CopyEDStationCommodityToDataRow(Station,  Data.Tables["tbProhibitedCommodity"]);
+                        CopyEDStationEconomiesToDataRows(Station, m_BaseData.Tables["tbStationEconomy"]);
+                        CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbImportCommodity"]);
+                        CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbExportCommodity"]);
+                        CopyEDStationCommodityToDataRow(Station,  m_BaseData.Tables["tbProhibitedCommodity"]);
 
                         Counter += 1;
                     }
@@ -752,23 +948,23 @@ namespace RegulatedNoise.SQL
                         // save changes
                         Debug.Print("added Stations : " + Counter.ToString());
 
-                        Program.DBCon.TableUpdate("tbStations", ref Data);
-                        Program.DBCon.TableUpdate("tbStations_org", ref Data);
-                        Program.DBCon.TableUpdate("tbStationEconomy", ref Data);
-                        Program.DBCon.TableUpdate("tbImportCommodity", ref Data);
-                        Program.DBCon.TableUpdate("tbExportCommodity", ref Data);
-                        Program.DBCon.TableUpdate("tbProhibitedCommodity", ref Data);
+                        Program.DBCon.TableUpdate("tbStations", ref m_BaseData);
+                        Program.DBCon.TableUpdate("tbStations_org", ref m_BaseData);
+                        Program.DBCon.TableUpdate("tbStationEconomy", ref m_BaseData);
+                        Program.DBCon.TableUpdate("tbImportCommodity", ref m_BaseData);
+                        Program.DBCon.TableUpdate("tbExportCommodity", ref m_BaseData);
+                        Program.DBCon.TableUpdate("tbProhibitedCommodity", ref m_BaseData);
                     }
 
                 }
 
                 // save changes
-                Program.DBCon.TableUpdate("tbStations", ref Data, true);
-                Program.DBCon.TableUpdate("tbStations_org", ref Data, true);
-                Program.DBCon.TableUpdate("tbStationEconomy", ref Data, true);
-                Program.DBCon.TableUpdate("tbImportCommodity", ref Data, true);
-                Program.DBCon.TableUpdate("tbExportCommodity", ref Data, true);
-                Program.DBCon.TableUpdate("tbProhibitedCommodity", ref Data, true);
+                Program.DBCon.TableUpdate("tbStations", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbStations_org", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbStationEconomy", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbImportCommodity", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbExportCommodity", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbProhibitedCommodity", ref m_BaseData, true);
 
                 Program.DBCon.TransCommit();
 
@@ -800,14 +996,46 @@ namespace RegulatedNoise.SQL
             }
         }
 
+
         /// <summary>
-        /// imports the own data from the file into the database (only initially once needed)
+        /// imports the "own" station data from the file into the database (only initially once needed)
         /// </summary>
         /// <param name="Filename"></param>
-        public void ImportStations_Own(String Filename, Dictionary<Int32, Int32> changedSystemIDs)
+        public void ImportStations_Own(String Filename, Boolean OnlyAddUnknown = false)
+        {
+            try
+            {
+                ImportStations_Own(JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename)), new Dictionary<Int32, Int32>(), OnlyAddUnknown);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in <ImportSystems_Own> from file", ex);
+            }
+        }
+            
+        /// <summary>
+        /// imports the "own" station data from the list of stations
+        /// </summary>
+        /// <param name="Filename"></param>
+        public void ImportStations_Own(EDStation Station, Boolean OnlyAddUnknown = false)
+        {
+            try
+            {
+                ImportStations_Own(new List<EDStation>() {Station}, new Dictionary<Int32, Int32>(), OnlyAddUnknown);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in <ImportSystems_Own> from single station", ex);
+            }
+        }
+
+        /// <summary>
+        /// imports the "own" station data into the database
+        /// </summary>
+        /// <param name="Filename"></param>
+        public void ImportStations_Own(List<EDStation> Stations, Dictionary<Int32, Int32> changedSystemIDs, Boolean OnlyAddUnknown = false)
         {
             String sqlString;
-            List<EDStation> Stations;
             DataRow[] FoundRows;
             DateTime Timestamp_new, Timestamp_old;
             Int32 Counter = 0;
@@ -815,33 +1043,29 @@ namespace RegulatedNoise.SQL
 
             try
             {
-                Data = new DataSet();
-
-                PrepareBaseTables(Data);
+                m_BaseData = new DataSet();
 
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
-                Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename));
-
                 Program.DBCon.TransBegin();
 
                 sqlString = "select * from tbStations lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbStations", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbStations", ref m_BaseData);
                 sqlString = "select * from tbStations_org lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbStations_org", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbStations_org", ref m_BaseData);
                 sqlString = "select * from tbStationEconomy lock in share mode";
-                Program.DBCon.TableRead(sqlString, "tbStationEconomy", ref Data);
+                Program.DBCon.TableRead(sqlString, "tbStationEconomy", ref m_BaseData);
 
                 // get the smallest ID for self added stations
                 sqlString = "select min(id) As min_id from tbStations";
-                Program.DBCon.Execute(sqlString, "minID", ref Data);
+                Program.DBCon.Execute(sqlString, "minID", ref m_BaseData);
 
-                if(Convert.IsDBNull(Data.Tables["minID"].Rows[0]["min_id"]))
+                if(Convert.IsDBNull(m_BaseData.Tables["minID"].Rows[0]["min_id"]))
                     currentSelfCreatedIndex = -1;
                 else
                 {
-                    currentSelfCreatedIndex = ((Int32)Data.Tables["minID"].Rows[0]["min_id"]) - 1;
+                    currentSelfCreatedIndex = ((Int32)m_BaseData.Tables["minID"].Rows[0]["min_id"]) - 1;
                     if(currentSelfCreatedIndex >= 0)
                         currentSelfCreatedIndex = -1;
                 }
@@ -850,85 +1074,90 @@ namespace RegulatedNoise.SQL
                 {
                     Int32 SystemID;
 
-                    // is the system id changed ? --> get the new system id, otherwise the original
-                    if( changedSystemIDs.TryGetValue(Station.SystemId, out SystemID) )
-                        Station.SystemId = SystemID;
+                    if(!String.IsNullOrEmpty(Station.Name.Trim()) && (Station.SystemId > 0))
+                    { 
+                        // is the system id changed ? --> get the new system id, otherwise the original
+                        if( changedSystemIDs.TryGetValue(Station.SystemId, out SystemID) )
+                            Station.SystemId = SystemID;
 
-                    // self-created stations don't have the correct id so they must be identified by name    
-                    FoundRows = Data.Tables["tbStations"].Select("stationname=" + DBConnector.SQLAString(Station.Name.ToString()) + " and " + 
-                                                                 "system_id =  " + Station.SystemId);
+                        // self-created stations don't have the correct id so they must be identified by name    
+                        FoundRows = m_BaseData.Tables["tbStations"].Select("stationname=" + DBConnector.SQLAString(DBConnector.DTEscape(Station.Name)) + " and " + 
+                                                                     "system_id =  " + Station.SystemId);
 
-                    if ((FoundRows != null) && (FoundRows.Count() > 0))
-                    {
-                        // Station is existing, get the same Id
-                        Station.Id = (Int32)FoundRows[0]["id"];
-
-                        if ((bool)(FoundRows[0]["is_changed"]))
+                        if ((FoundRows != null) && (FoundRows.Count() > 0))
                         {
-                            // existing data data is also changed by user - keep the newer version 
-                            Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                            Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
+                            if (!OnlyAddUnknown)
+                            { 
+                                // Station is existing, get the same Id
+                                Station.Id = (Int32)FoundRows[0]["id"];
 
-                            if (Timestamp_new > Timestamp_old)
-                            {
-                                // data from file is newer
-                                CopyEDStationToDataRow(Station, ref FoundRows[0], true);
+                                if ((bool)(FoundRows[0]["is_changed"]))
+                                {
+                                    // existing data data is also changed by user - keep the newer version 
+                                    Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
+                                    Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
 
-                                CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
-                                // commodities are not considered because there was no possibility for input in the old RN
+                                    if (Timestamp_new > Timestamp_old)
+                                    {
+                                        // data from file is newer
+                                        CopyEDStationToDataRow(Station, ref FoundRows[0], true);
 
-                                Counter += 1;
+                                        CopyEDStationEconomiesToDataRows(Station, m_BaseData.Tables["tbStationEconomy"]);
+                                        // commodities are not considered because there was no possibility for input in the old RN
+
+                                        Counter += 1;
+                                    }
+                                }
+                                else
+                                {
+                                    // new data is user changed data, old data is original data
+                                    // copy the original data ("tbSystems") to the saving data table ("tbSystems_org")
+                                    // and get the correct system ID
+                                    m_BaseData.Tables["tbStations_org"].LoadDataRow(FoundRows[0].ItemArray, false);
+                                    CopyEDStationToDataRow(Station, ref FoundRows[0], true);
+                            
+                                    CopyEDStationEconomiesToDataRows(Station, m_BaseData.Tables["tbStationEconomy"]);
+                                    // commodities are not considered because there was no possibility for input in the old RN
+
+                                    Counter += 1;
+                                }
                             }
                         }
                         else
                         {
-                            // new data is user changed data, old data is original data
-                            // copy the original data ("tbSystems") to the saving data table ("tbSystems_org")
-                            // and get the correct system ID
-                            Data.Tables["tbStations_org"].LoadDataRow(FoundRows[0].ItemArray, false);
-                            CopyEDStationToDataRow(Station, ref FoundRows[0], true);
-                            
-                            CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
+                            // add a new station
+                            Station.Id = currentSelfCreatedIndex;
+
+                            var newRow = m_BaseData.Tables["tbStations"].NewRow();
+                        
+                            CopyEDStationToDataRow(Station, ref newRow, true);
+                            m_BaseData.Tables["tbStations"].Rows.Add(newRow);
+
+                            currentSelfCreatedIndex -= 1;
+                            Counter += 1;
+
+                            CopyEDStationEconomiesToDataRows(Station, m_BaseData.Tables["tbStationEconomy"]);
                             // commodities are not considered because there was no possibility for input in the old RN
 
                             Counter += 1;
                         }
+
+                        if ((Counter > 0) && ((Counter % 100) == 0))
+                        {
+                            // save changes
+                            Debug.Print("added Stations : " + Counter.ToString());
+
+                            Program.DBCon.TableUpdate("tbStations", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbStations_org", ref m_BaseData);
+                            Program.DBCon.TableUpdate("tbStationEconomy", ref m_BaseData);
+                        }
                     }
-                    else
-                    {
-                        // add a new system
-                        Station.Id = currentSelfCreatedIndex;
-
-                        var newRow = Data.Tables["tbStations"].NewRow();
-                        
-                        CopyEDStationToDataRow(Station, ref newRow, true);
-                        Data.Tables["tbStations"].Rows.Add(newRow);
-
-                        currentSelfCreatedIndex -= 1;
-                        Counter += 1;
-
-                        CopyEDStationEconomiesToDataRows(Station, Data.Tables["tbStationEconomy"]);
-                        // commodities are not considered because there was no possibility for input in the old RN
-
-                        Counter += 1;
-                    }
-
-                    if ((Counter > 0) && ((Counter % 100) == 0))
-                    {
-                        // save changes
-                        Debug.Print("added Stations : " + Counter.ToString());
-
-                        Program.DBCon.TableUpdate("tbStations", ref Data);
-                        Program.DBCon.TableUpdate("tbStations_org", ref Data);
-                        Program.DBCon.TableUpdate("tbStationEconomy", ref Data);
-                    }
-
                 }
 
                 // save changes
-                Program.DBCon.TableUpdate("tbStations", ref Data, true);
-                Program.DBCon.TableUpdate("tbStations_org", ref Data, true);
-                Program.DBCon.TableUpdate("tbStationEconomy", ref Data, true);
+                Program.DBCon.TableUpdate("tbStations", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbStations_org", ref m_BaseData, true);
+                Program.DBCon.TableUpdate("tbStationEconomy", ref m_BaseData, true);
 
                 Program.DBCon.TransCommit();
 
@@ -1197,6 +1426,9 @@ namespace RegulatedNoise.SQL
             DataSet Data;
             String  sqlString;
             Int32   added = 0;
+            List<EDSystem> Systems   = new List<EDSystem>();
+            List<EDStation> Stations = new List<EDStation>();
+            Int32 currentIndex = 0;
 
             try
             {
@@ -1207,14 +1439,31 @@ namespace RegulatedNoise.SQL
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
-                //Program.DBCon.TableRead("select * from tbLog for update", "tbLog", ref Data);
+                //Program.DBCon.TableRead("select * from tbLog for update", "tbLog", ref m_BaseData);
                 if(Data.Tables.Contains("CommandersLogEvent"))
                     foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
                     {
+                        String   System    = Event["System"].ToString().Trim();
+                        Systems.Add(new EDSystem{Name = System});
+                    }
+                    ImportSystems_Own(ref Systems, true);
+
+                    foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
+                    {
+                        String   Station   = StructureHelper.CombinedNameToStationName((String)Event["Station"]).Trim();
+                        Stations.Add(new EDStation{Name = Station, SystemId = Systems[currentIndex].Id});
+                        currentIndex++;
+                    }
+                    ImportStations_Own(Stations, new Dictionary<Int32, Int32>(), true);
+
+                    foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
+                    {
                         DateTime EventTime = DateTime.Parse((String)Event["EventDate"], CultureInfo.CurrentUICulture , DateTimeStyles.None);
-                        String   Station   = StructureHelper.CombinedNameToStationName((String)Event["Station"]);
+                        String   System    = Event["System"].ToString().Trim();
+                        String   Station   = StructureHelper.CombinedNameToStationName((String)Event["Station"]).Trim();
                         String   EventType = Event["EventType"].ToString().Trim().Length == 0 ? "Other" : Event["EventType"].ToString().Trim();
 
+                        // add a new log entry
                         sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
                                                   "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
                                                   " SELECT d.* FROM (SELECT" +
@@ -1236,8 +1485,8 @@ namespace RegulatedNoise.SQL
                                                   "                     FROM tbLog" +
                                                   "                     WHERE time     = {0})",
                                                   DBConnector.SQLDateTime(EventTime), 
-                                                  DBConnector.SQLAString(Event["System"].ToString()),
-                                                  DBConnector.SQLAString(Station), 
+                                                  DBConnector.SQLAString(DBConnector.SQLEscape(Event["System"].ToString())),
+                                                  DBConnector.SQLAString(DBConnector.SQLEscape(Station)), 
                                                   DBConnector.SQLAString(EventType),
                                                   DBConnector.SQLAString(Event["Cargo"].ToString()),
                                                   DBConnector.SQLAString(Event["CargoAction"].ToString()),
@@ -1268,78 +1517,7 @@ namespace RegulatedNoise.SQL
 
 #endregion
 
-        #region basetable handling
-
-        /// <summary>
-        /// loads the data from the basetables into memory
-        /// </summary>
-        /// <param name="Data"></param>
-        private void PrepareBaseTables(DataSet Data)
-        {
-            try
-            {
-
-                foreach (String BaseTable in BaseTables_Systems)
-                {
-                    // preload all tables with base data
-                    Program.DBCon.Execute(String.Format("select * from {0}", BaseTable), BaseTable, ref Data);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while preparing base tables", ex);
-            }
-        }
-
-        /// <summary>
-        /// looks for the id of a name from a base table
-        /// </summary>
-        /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
-        /// <param name="Name"></param>
-        /// <returns></returns>
-        private object BaseTableNameToID(String Tablename, String Name)
-        {
-            try
-            {
-
-                if (Name == null)
-                    return null;
-                else
-                    return (Int32)(Data.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("{0} = '{1}'", Tablename, Name))[0]["id"]);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(String.Format("Error while searching for the id of <{0}> in table <tb{1}>", Name, Tablename), ex);
-            }
-        }
-
-        /// <summary>
-        /// looks for the name of a id from a base table
-        /// </summary>
-        /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private object BaseTableIDToName(String Tablename, int? id)
-        {
-            try
-            {
-
-                if (id == null)
-                    return null;
-                else
-                    return (String)(Data.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("id = {0}", id))[0][Tablename]);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(String.Format("Error while searching for the name of <{0}> in table <tb{1}>", id.ToNString(), Tablename), ex);
-            }
-        }
 
     }
-
-#endregion
 
 }

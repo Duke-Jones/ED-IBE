@@ -126,6 +126,17 @@
     <Compile Include="DialogBox\Win32API.cs" />
     <Compile Include="DialogBox\WindowsHook.cs" />
     <Compile Include="DialogBox\WndProcRetHook.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExt.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewExt.Designer.cs">
+      <DependentUpon>DataGridViewExt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SQL\dsElite_DB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsElite_DB.xsd</DependentUpon>
+    </Compile>
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
     <Compile Include="EDDB_Data\EDCommodityListView.cs">
@@ -692,6 +703,17 @@
     </None>
     <None Include="Data\systems.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SQL\dsElite_DB.xsc">
+      <DependentUpon>dsElite_DB.xsd</DependentUpon>
+    </None>
+    <None Include="SQL\dsElite_DB.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsElite_DB.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="SQL\dsElite_DB.xss">
+      <DependentUpon>dsElite_DB.xsd</DependentUpon>
     </None>
     <None Include="Enums and Utility Classes\dsCommodities.xsc">
       <DependentUpon>dsCommodities.xsd</DependentUpon>

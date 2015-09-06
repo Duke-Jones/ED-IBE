@@ -132,6 +132,9 @@ namespace RegulatedNoise
         public static DBConnector               DBCon;
         public static RegulatedNoiseSettings    Settings;
         private static DBProcess                EliteDBProcess;
+        public static CommandersLog             CommandersLog;
+        public static DBPorter                  Data;
+
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -139,46 +142,60 @@ namespace RegulatedNoise
         public static void Init()
         {
 
-            if(!m_initDone)
-            { 
-                // loading settings from file
-                Settings = RegulatedNoiseSettings.LoadSettings();
+            try
+            {
+                if(!m_initDone)
+                { 
+                    // loading settings from file
+                    Settings = RegulatedNoiseSettings.LoadSettings();
 
 
-                // starting database process (if not running)
-                DBProcess.DBProcessParams newProcessParams = new DBProcess.DBProcessParams() { };
-                newProcessParams.Commandline                = Settings.SQL_Commandline;    
-                newProcessParams.Commandargs                = Settings.SQL_CommandArgs;
-                newProcessParams.Workingdirectory           = Settings.SQL_Workingdirectory;
-                newProcessParams.Port                       = Settings.SQL_Port;
-                newProcessParams.DBStartTimeout             = Settings.DBStartTimeout;
+                    // starting database process (if not running)
+                    DBProcess.DBProcessParams newProcessParams = new DBProcess.DBProcessParams() { };
+                    newProcessParams.Commandline                = Settings.SQL_Commandline;    
+                    newProcessParams.Commandargs                = Settings.SQL_CommandArgs;
+                    newProcessParams.Workingdirectory           = Settings.SQL_Workingdirectory;
+                    newProcessParams.Port                       = Settings.SQL_Port;
+                    newProcessParams.DBStartTimeout             = Settings.DBStartTimeout;
                 
-                EliteDBProcess                              = new DBProcess(newProcessParams);
+                    EliteDBProcess                              = new DBProcess(newProcessParams);
 
 
-                // connecting to the database
-                DBConnector.ConnectionParams newConnectionParams = new DBConnector.ConnectionParams() { };
+                    // connecting to the database
+                    DBConnector.ConnectionParams newConnectionParams = new DBConnector.ConnectionParams() { };
 
-                newConnectionParams.Name                    = Settings.SQL_Name;    
-                newConnectionParams.Server                  = Settings.SQL_Server;
-                newConnectionParams.Database                = Settings.SQL_Database;
-                newConnectionParams.User                    = Settings.SQL_User;
-                newConnectionParams.Pass                    = Settings.SQL_Pass;
-                newConnectionParams.ConnectTimeout          = Settings.SQL_TimeOut;
-                newConnectionParams.StayAlive               = Settings.SQL_StayAlive;
-                newConnectionParams.TimeOut                 = Settings.SQL_ConnectTimeout;
+                    newConnectionParams.Name                    = Settings.SQL_Name;    
+                    newConnectionParams.Server                  = Settings.SQL_Server;
+                    newConnectionParams.Database                = Settings.SQL_Database;
+                    newConnectionParams.User                    = Settings.SQL_User;
+                    newConnectionParams.Pass                    = Settings.SQL_Pass;
+                    newConnectionParams.ConnectTimeout          = Settings.SQL_TimeOut;
+                    newConnectionParams.StayAlive               = Settings.SQL_StayAlive;
+                    newConnectionParams.TimeOut                 = Settings.SQL_ConnectTimeout;
 
-                DBCon                                       = new DBConnector(newConnectionParams);
+                    DBCon                                       = new DBConnector(newConnectionParams);
 
-                DBCon.Connect();
+                    DBCon.Connect();
 
-                // initializing the Companion-Interface
-                //CompanionIO         = new CompanionInterface();
-                CompanionIO = null;
+                    // preprare main data object
+                    Data                                        = new RegulatedNoise.SQL.DBPorter();
+
+                    // prepare commanders log 
+                    CommandersLog                               = new CommandersLog();
+
+                    // initializing the Companion-Interface
+                    //CompanionIO         = new CompanionInterface();
+                    CompanionIO = null;
 
 
-                m_initDone = true;
+                    m_initDone = true;
+                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while initializing the program object");
+            }
+
         }
 
         public static void Cleanup()

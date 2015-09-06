@@ -11,7 +11,6 @@ todo:
    * show hint with age of market prices if location is a station
    * add rejected marketdata from eddn with rightclick contextmenue
    * show the stations as a one look list
-   * eddn layout v2
    * more user friendly UI
    * Add shipyard info
    * Add outfitting info
@@ -22,8 +21,8 @@ todo:
 -------------------------------------------------------------------------------------         
 sql_todo
    * import of commodities_own.xml (self added commodities)
-
-   * think about : remove the vistied flag from stations and systems ? 
+   * import of "Cmdr's Log": unknown systems must be added
+   * think about : remove the visitied flag from stations and systems ? 
                    -> create a master "visited-table" and copy the info on demand to the systems-"visited-field" 
 				      (good performance (no additionally join) and secure (master-info in another table))
    
@@ -31,6 +30,11 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.12
+   * "Commander's Log" has the first view of data from the new database
+   * if "Commander's Log" has entrys with unknown systems/station thy will be automatically added
+   * added the data object to the program object for general access
+-------------------------------------------------------------------------------------         
 SQL 0.0.11
    * import of the history of visited stations 
 -------------------------------------------------------------------------------------         

@@ -31,6 +31,8 @@ namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
     {
+        private const string STR_Scanning = "scanning...";
+
         private enum enDoSpecial
         {
             onStart,
@@ -61,7 +63,6 @@ namespace RegulatedNoise
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
         // public static Settings Settings;
-        public CommandersLog CommandersLog;
         public ObjectDirectory StationDirectory = new StationDirectory();
         public ObjectDirectory CommodityDirectory = new CommodityDirectory();
         private EDMilkyway _Milkyway;
@@ -212,16 +213,9 @@ namespace RegulatedNoise
                 doSpecial(enDoSpecial.afterMilkyway);
 
                 _Splash.InfoAdd("prepare 'Commander's Log'...");
-                CommandersLog = new CommandersLog(this);
                 dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern + " " + 
                                                             System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
                 dtpLogEventDate.Format       = System.Windows.Forms.DateTimePickerFormat.Custom;
-
-                _logger.Log("  - created Commander's Log object");
-                CommandersLog.LoadLog(true);
-                _logger.Log("  - loaded Commander's Log");
-                CommandersLog.UpdateCommandersLogListView();
-                _logger.Log("  - updated Commander's Log List View");
                 _Splash.InfoChange("prepare 'Commander's Log'...<OK>");
                 
                 _Splash.InfoAdd("load collected market data...");
@@ -599,21 +593,6 @@ namespace RegulatedNoise
             AddColumnsToStationToStationListView(lvStationToStation);
             AddColumnsToStationToStationListView(lvStationToStationReturn);
 
-            var c = new ColumnHeader("EventDate") { Text = "EventDate", Name = "EventDate", ImageKey = "EventDate" };
-            lvCommandersLog.Columns.Add(c);
-
-            LogEventProperties = typeof(CommandersLogEvent).GetProperties();
-            foreach (var property in LogEventProperties)
-            {
-                if (property.Name != "EventDate")
-                {
-                    c = new ColumnHeader(property.Name) { Name = property.Name, Text = property.Name, ImageKey = property.Name };
-                    lvCommandersLog.Columns.Add(c);
-                }
-            }
-
-            setColumns(lvCommandersLog);
-
             // Create an instance of a ListView column sorter and assign it 
             // to the ListView control.
             _stationColumnSorter = new ListViewColumnSorter(0);
@@ -628,7 +607,6 @@ namespace RegulatedNoise
             lvAllComms.ListViewItemSorter = _allCommodityColumnSorter;
             lvStationToStation.ListViewItemSorter = _stationToStationColumnSorter;
             lvStationToStationReturn.ListViewItemSorter = _stationToStationReturnColumnSorter;
-            lvCommandersLog.ListViewItemSorter = _commandersLogColumnSorter;
         }
 
         private static void AddColumnsToStationToStationListView(ListView listView)
@@ -892,9 +870,6 @@ namespace RegulatedNoise
 
             txtTraineddataFile.Text                 = Program.Settings.TraineddataFile;
             
-            _commandersLogColumnSorter.SortColumn   = Program.Settings.CmdrsLogSortColumn;
-            _commandersLogColumnSorter.Order        = Program.Settings.CmdrsLogSortOrder;
-
             cbAutoAdd_JumpedTo.Checked              = Program.Settings.AutoEvent_JumpedTo;
             cbAutoAdd_Visited.Checked               = Program.Settings.AutoEvent_Visited;
             cbAutoAdd_Marketdata.Checked            = Program.Settings.AutoEvent_MarketDataCollected;
@@ -904,8 +879,6 @@ namespace RegulatedNoise
             txtPixelAmount.Text                     = Program.Settings.EBPixelAmount.ToString();
             txtGUIColorCutoffLevel.Text             = Program.Settings.GUIColorCutoffLevel.ToString();
 
-            // perform the sort with the last sort options.
-            this.lvCommandersLog.Sort();
 
             txtlastStationCount.Text                = Program.Settings.lastStationCount.ToString();
             cmbLightYears.Text                      = Program.Settings.lastLightYears.ToString();
@@ -1225,7 +1198,6 @@ namespace RegulatedNoise
             if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
 
             SaveCommodityData(true);
-            CommandersLog.SaveLog(true);
 
             SaveSettings();
 
@@ -3434,8 +3406,7 @@ namespace RegulatedNoise
             switch (a)
             {
                 case AppDelegateType.AddEventToLog:
-                    CommandersLog.CreateEvent((CommandersLogEvent)o);
-                    CommandersLog.SaveLog(true);
+                    Program.CommandersLog.CreateEvent((CommandersLogEvent)o);
                     break;
                 case AppDelegateType.ChangeGridSort:
                     ChangeGridSort((string)o);
@@ -3717,7 +3688,7 @@ namespace RegulatedNoise
             }
             
             CommandersLog_MarketDataCollectedEvent(tbOcrSystemName.Text, tbOcrStationName.Text);
-            if(tbCurrentStationinfoFromLogs.Text.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
+            if(tbCurrentStationinfoFromLogs.Text.Equals(STR_Scanning, StringComparison.InvariantCultureIgnoreCase))
                 tbCurrentStationinfoFromLogs.Text = tbOcrStationName.Text;
 
             SetupGui();
@@ -3805,29 +3776,6 @@ namespace RegulatedNoise
             Program.Settings.WebserverBackgroundColor = tbBackgroundColour.Text;
         }
 
-        private void button9_Click(object sender, EventArgs e)
-        {
-            CommandersLog.SaveLog();
-        }
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                CommandersLog.LoadLog();
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error while loading Commanders Log");
-            }
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
-            CommandersLog.CreateNewEvent();
-            CommandersLog.SaveLog(true);
-        }
-
         private void button12_Click_1(object sender, EventArgs e)
         {
             foreach (var s in StationDirectory)
@@ -3836,8 +3784,7 @@ namespace RegulatedNoise
 
                 foreach (var d in eventDates)
                 {
-                    CommandersLog.CreateEvent("Market Data Collected", s.Key, s.Key, null, null, 0, null, d);
-                    CommandersLog.SaveLog(true);
+                    Program.CommandersLog.CreateEvent("Market Data Collected", s.Key, s.Key, null, null, 0, null, d);
                 }
             }
         }
@@ -4837,9 +4784,8 @@ namespace RegulatedNoise
             }
             else
             {
-                _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
-                CommandersLog.SaveLog(true);
-                setActiveItem(_CmdrsLog_LastAutoEventID);
+                _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
+                //setActiveItem(_CmdrsLog_LastAutoEventID);
             }
         }
 
@@ -4859,9 +4805,8 @@ namespace RegulatedNoise
 
                     if(cbAutoAdd_Visited.Checked && !noLogging)
                     { 
-                        _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Visited", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                        CommandersLog.SaveLog(true);
-                        setActiveItem(_CmdrsLog_LastAutoEventID);
+                        _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Visited", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                        //setActiveItem(_CmdrsLog_LastAutoEventID);
                     }
                 }
             }
@@ -4885,31 +4830,29 @@ namespace RegulatedNoise
                         {
                             if (cbAutoAdd_ReplaceVisited.Checked)
                             {
-                                var logEvent = CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
+                                //object logEvent = Program.CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
 
-                                if (logEvent != null &&
-                                   logEvent.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase) &&
-                                   logEvent.Station.Equals(StationName, StringComparison.InvariantCultureIgnoreCase) &&
-                                   logEvent.EventType.Equals("Visited", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    logEvent.EventType = "Market Data Collected";
-                                    CommandersLog.UpdateCommandersLogListView();
-                                }
-                                else
-                                {
-                                    _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                                    CommandersLog.SaveLog(true);
-                                    setActiveItem(_CmdrsLog_LastAutoEventID);
-                                }
+                                //if (logEvent != null &&
+                                //   logEvent.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase) &&
+                                //   logEvent.Station.Equals(StationName, StringComparison.InvariantCultureIgnoreCase) &&
+                                //   logEvent.EventType.Equals("Visited", StringComparison.InvariantCultureIgnoreCase))
+                                //{
+                                //    logEvent.EventType = "Market m_BaseData Collected";
+                                //    Program.CommandersLog.UpdateCommandersLogListView();
+                                //}
+                                //else
+                                //{
+                                //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                //    setActiveItem(_CmdrsLog_LastAutoEventID);
+                                //}
                             }
                             else
                             {
-                                _CmdrsLog_LastAutoEventID = CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                                CommandersLog.SaveLog(true);
-                                setActiveItem(_CmdrsLog_LastAutoEventID);
+                                _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                //setActiveItem(_CmdrsLog_LastAutoEventID);
                             }
 
-                            setActiveItem(_CmdrsLog_LastAutoEventID);
+//                            setActiveItem(_CmdrsLog_LastAutoEventID);
                         }
                     }
                 }
@@ -4955,65 +4898,6 @@ namespace RegulatedNoise
             UpdateSystemNameFromLogFile();
         }
 
-        private void saveLogEntry(object sender, EventArgs e)
-        {
-            if (tbLogEventID.Text == "")
-            {
-                // this is done by CommandersLog.CreateEvent() itself
-                // var newGuid = Guid.NewGuid().ToString();
-                // tbLogEventID.Text = newGuid;
-
-                var newGuid = CommandersLog.CreateEvent();
-
-                CommandersLog.UpdateCommandersLogListView();
-                //CommandersLog.CreateNewEvent();
-                setActiveItem(newGuid);
-            }
-            else
-            {
-                var logEvent = CommandersLog.LogEvents.Single(x => x.EventID == tbLogEventID.Text);
-
-                logEvent.EventType = cbLogEventType.Text;
-                logEvent.EventID = tbLogEventID.Text;
-                logEvent.Notes = tbLogNotes.Text;
-                logEvent.Credits = nbCurrentCredits.Value;
-                logEvent.TransactionAmount = nbTransactionAmount.Value;
-                logEvent.CargoVolume = cbLogQuantity.Value;
-                logEvent.Station = cbLogStationName.Text;
-                logEvent.System = cbLogSystemName.Text;
-                logEvent.Cargo = cbLogCargoName.Text;
-                logEvent.CargoAction = cbCargoModifier.Text;
-                logEvent.EventDate = dtpLogEventDate.Value;
-
-                var listViewData = new string[LogEventProperties.Count()];
-
-                listViewData[0] = logEvent.EventDate.ToString(CultureInfo.CurrentCulture);
-
-                int ctr = 1;
-                foreach (var y in LogEventProperties)
-                {
-                    if (y.Name != "EventDate")
-                    {
-                        listViewData[ctr] = y.GetValue(logEvent).ToString();
-                        ctr++;
-                    }
-                }
-
-                lvCommandersLog.SelectedIndexChanged -= lvCommandersLog_SelectedIndexChanged;
-                var columnIndex = lvCommandersLog.Items.IndexOf(theClickedOne);
-                lvCommandersLog.Items.RemoveAt(columnIndex);
-                var newItem = new ListViewItem(listViewData);
-                theClickedOne = newItem;
-                lvCommandersLog.Items.Insert(columnIndex, newItem);
-                lvCommandersLog.SelectedIndexChanged += lvCommandersLog_SelectedIndexChanged;
-                //CommandersLog.CreateNewEvent();
-
-                setActiveItem(((ListViewItem)newItem).SubItems[8].Text);
-            }
-
-            // save new datat immediatly
-            CommandersLog.SaveLog(true);
-        }
 
         private ListViewItem theClickedOne;
 
@@ -5024,20 +4908,20 @@ namespace RegulatedNoise
             theClickedOne = lv.SelectedItems[0];
             var selectedGuid = theClickedOne.SubItems[lv.Columns.IndexOfKey("EventID")].Text;
 
-            var logEvent = CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
+            //var logEvent = Program.CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
 
-            cbLogEventType.Text = logEvent.EventType;
-            tbLogEventID.Text = logEvent.EventID;
-            tbLogNotes.Text = logEvent.Notes;
-            nbCurrentCredits.Text = logEvent.Credits.ToString(CultureInfo.InvariantCulture);
-            nbTransactionAmount.Text = logEvent.TransactionAmount.ToString(CultureInfo.InvariantCulture);
-            cbLogQuantity.Text = logEvent.CargoVolume.ToString(CultureInfo.InvariantCulture);
-            cbLogStationName.Text = logEvent.Station;
-            cbLogSystemName.Text = logEvent.System;
-            cbCargoModifier.Text = logEvent.CargoAction;
-            cbLogCargoName.Text = logEvent.Cargo;
-            dtpLogEventDate.Value = logEvent.EventDate;
-            btCreateAddEntry.Text = "Save Changed Data";
+            //cbLogEventType.Text = logEvent.EventType;
+            //tbLogEventID.Text = logEvent.EventID;
+            //tbLogNotes.Text = logEvent.Notes;
+            //nbCurrentCredits.Text = logEvent.Credits.ToString(CultureInfo.InvariantCulture);
+            //nbTransactionAmount.Text = logEvent.TransactionAmount.ToString(CultureInfo.InvariantCulture);
+            //cbLogQuantity.Text = logEvent.CargoVolume.ToString(CultureInfo.InvariantCulture);
+            //cbLogStationName.Text = logEvent.Station;
+            //cbLogSystemName.Text = logEvent.System;
+            //cbCargoModifier.Text = logEvent.CargoAction;
+            //cbLogCargoName.Text = logEvent.Cargo;
+            //dtpLogEventDate.Value = logEvent.EventDate;
+            //btCreateAddEntry.Text = "Save Changed m_BaseData";
 
         }
 
@@ -5113,11 +4997,6 @@ namespace RegulatedNoise
                 _commandersLogColumnSorter.Order = SortOrder.Ascending;
             }
 
-            // Perform the sort with these new sort options.
-            this.lvCommandersLog.Sort();
-
-            Program.Settings.CmdrsLogSortColumn = _commandersLogColumnSorter.SortColumn;
-            Program.Settings.CmdrsLogSortOrder = _commandersLogColumnSorter.Order;
         }
 
         /// <summary>
@@ -5137,7 +5016,7 @@ namespace RegulatedNoise
                 if(theClickedOne != null)
                 {
                     var selectedGuid = theClickedOne.SubItems[currentListView.Columns.IndexOfKey("EventID")].Text;
-                    m_RightMouseSelectedLogEvent = CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
+                    //m_RightMouseSelectedLogEvent = Program.CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
 
                     contextMenuStrip1.Show(currentListView.PointToScreen(e.Location));
                 }
@@ -5213,6 +5092,7 @@ namespace RegulatedNoise
 
         private void Form_Load(object sender, EventArgs e)
         {
+            // TODO: Diese Codezeile lädt Daten in die Tabelle "dsElite_DB.tbsystems". Sie können sie bei Bedarf verschieben oder entfernen.
 
             Text += Program.Settings.Version.ToString(CultureInfo.InvariantCulture);
 
@@ -5253,6 +5133,7 @@ namespace RegulatedNoise
             _AutoImportDelayTimer.AutoReset  = false;
             _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
 
+            CommandersLog_Init();
 
         }
 
@@ -6135,25 +6016,6 @@ namespace RegulatedNoise
             SaveSettings();
         }
 
-        /// <summary>
-        /// selects the wanted ListViewItem
-        /// </summary>
-        /// <param name="wantedItem"></param>
-        public void setActiveItem(String wantedItem)
-        {
-            int EventIDIndex = lvCommandersLog.Columns.IndexOfKey("EventID");
-
-            foreach (ListViewItem x in lvCommandersLog.Items)
-            {
-                if (x.SubItems[EventIDIndex].Text == wantedItem)
-                {
-                    x.Selected = true;
-                }
-
-            }
-
-        }
-
         private void txtPixelThreshold_LostFocus(object sender, EventArgs e)
         {
             float newValue;
@@ -6614,7 +6476,7 @@ namespace RegulatedNoise
 
                 }
             }else if(newSystem || ForceChangedLocation)
-                tbCurrentStationinfoFromLogs.Text = "scanning...";
+                tbCurrentStationinfoFromLogs.Text = STR_Scanning;
             
 
             if((newSystem || newLocation) && (!InitialRun))
@@ -7879,34 +7741,34 @@ namespace RegulatedNoise
         private void cmdTest_Click(object sender, EventArgs e)
         {
 
-            RegulatedNoise.SQL.DBPorter Import = new RegulatedNoise.SQL.DBPorter();
+            
 
             //// import the localizations from the old RN files
-            //Import.ImportCommodityLocalizations(@".\Data\Commodities.xml");
+            //Import.ImportCommodityLocalizations(@".\m_BaseData\Commodities.xml");
 
             // import the self added localizations from the old RN files
-            Import.ImportCommodityLocalizations(@".\Data\Commodities_own.xml");
+            //Import.ImportCommodityLocalizations(@".\m_BaseData\Commodities_own.xml");
 
             //// import the Commander's Log from the old RN files
-            //Import.ImportCommandersLog(@".\CommandersLogAutoSave.xml");
+            //Import.ImportCommanders//Log(@".\CommandersLogAutoSave.xml");
             
             //// import the pricewarnlevels from the old RN files
-            //Import.ImportCommodityPriceWarnLevels(@".\Data\Commodities_RN.json");
+            //Import.ImportCommodityPriceWarnLevels(@".\m_BaseData\Commodities_RN.json");
 
             //// import the commodities from EDDB
-            //Import.ImportCommodities(@"./Data/commodities.json");
+            //Import.ImportCommodities(@"./m_BaseData/commodities.json");
 
             //// import the systems and stations from EDDB
-            //Import.ImportSystems(@"./Data/systems.json");
-            //Import.ImportStations(@"./Data/stations.json");
+            //Import.ImportSystems(@"./m_BaseData/systems.json");
+            //Import.ImportStations(@"./m_BaseData/stations.json");
 
             //// import (once) the self-changed or added systems and stations 
             //Dictionary<Int32, Int32> changedSystemIDs;
-            //changedSystemIDs = Import.ImportSystems_Own(@"./Data/systems_own.json");
-            //Import.ImportStations_Own(@"./Data/stations_own.json", changedSystemIDs);
+            //changedSystemIDs = Import.ImportSystems_Own(@"./m_BaseData/systems_own.json");
+            //Import.ImportStations_Own(@"./m_BaseData/stations_own.json", changedSystemIDs);
 
             //import the history of visited stations
-            //Import.ImportVisitedStations(@"./Data/StationHistory.json");
+            //Import.ImportVisitedStations(@"./m_BaseData/StationHistory.json");
 
             Debug.Print("swds");
 
@@ -8247,5 +8109,185 @@ namespace RegulatedNoise
                 
             WND_DatabaseOp.ShowEx();
         }
-     }
+
+
+#region Commander's Log
+
+        private void CommandersLog_Init()
+        {
+            String sqlString;
+            this.dgvCommandersLog.RowEnter += dgvCommandersLog_RowEnter;
+
+            Program.CommandersLog.prepareCmb_EventTypes(ref cbLogEventType, CommandersLog.enGUIElements.cmbEventType, Program.Data.BaseData);
+    
+
+            setCLFieldsEditable(false);
+        }
+
+        private void cmdCLReload_Click(object sender, EventArgs e)
+        {
+            Program.CommandersLog.LoadData(this.dgvCommandersLog, new CommandersLog.RequestParams {Limit = (Int32.Parse(txtCL_Limit.Text))});
+        }
+
+        private void cmdCLShowHide_Click(object sender, EventArgs e)
+        {
+            gbCL_LogEdit.Visible = !gbCL_LogEdit.Visible;
+        }
+
+        private void cmdCL_EditEntry_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                setCLFieldsEditable(true);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while start editing entry");
+            }
+        }
+
+        private void cmdCL_PrepareNew_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                setCLFieldsEditable(true, true);
+
+                cbLogEventType.SelectedValue    = (Int32)12;
+                dtpLogEventDate.Value           = (DateTime)DateTime.Now;
+                cbLogSystemName.Text            = tbCurrentSystemFromLogs.Text      != STR_Scanning ? tbCurrentSystemFromLogs.Text      : "";
+                cbLogStationName.Text           = tbCurrentStationinfoFromLogs.Text != STR_Scanning ? tbCurrentStationinfoFromLogs.Text : "";
+                nbTransactionAmount.Text        = "0";
+                nbCurrentCredits.Text           = "0";
+                cbLogCargoName.Text             = "";
+                cbCargoModifier.Text            = "";
+                nbLogQuantity.Text              = "0";
+                tbLogNotes.Text                 = "";
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while preparing new entry");
+            }
+        }
+
+        private void saveLogEntry(object sender, EventArgs e)
+        {
+            try
+            {
+                setCLFieldsEditable(false);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while save entry");
+            }
+
+        }
+
+        private void cmdCL_Cancel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(dgvCommandersLog.CurrentRow != null)
+                {
+                    cbLogEventType.Text         = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value.ToString();
+                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["time"].Value;
+                    cbLogSystemName.Text        = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["systemname"].Value.ToString();
+                    cbLogStationName.Text       = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["stationname"].Value.ToString();
+                    nbTransactionAmount.Text    = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_transaction"].Value.ToString();
+                    nbCurrentCredits.Text       = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_total"].Value.ToString();
+                    cbLogCargoName.Text         = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["loccommodity"].Value.ToString();
+                    cbCargoModifier.Text        = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value.ToString();
+                    nbLogQuantity.Text          = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value.ToString();
+                    tbLogNotes.Text             = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value.ToString();
+                }
+                else
+                {
+                    cbLogEventType.Text         = "";
+                    dtpLogEventDate.Value       = DateTime.Now;
+                    cbLogSystemName.Text        = "";
+                    cbLogStationName.Text       = "";
+                    nbTransactionAmount.Text    = "";
+                    nbCurrentCredits.Text       = "";
+                    cbLogCargoName.Text         = "";
+                    cbCargoModifier.Text        = "";
+                    nbLogQuantity.Text          = "";
+                    tbLogNotes.Text             = "";
+                }
+
+                setCLFieldsEditable(false);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while cancel editing entry");
+            }
+        }
+
+        private void dgvCommandersLog_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if(e.RowIndex >= 0)
+                {
+                    cbLogEventType.Text         = dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
+                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value;
+                    cbLogSystemName.Text        = dgvCommandersLog.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
+                    cbLogStationName.Text       = dgvCommandersLog.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
+                    nbTransactionAmount.Text    = dgvCommandersLog.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
+                    nbCurrentCredits.Text       = dgvCommandersLog.Rows[e.RowIndex].Cells["credits_total"].Value.ToString();
+                    cbLogCargoName.Text         = dgvCommandersLog.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
+                    cbCargoModifier.Text        = dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
+                    nbLogQuantity.Text          = dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value.ToString();
+                    tbLogNotes.Text             = dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString();
+                }
+                else
+                {
+                    cbLogEventType.Text         = "";
+                    dtpLogEventDate.Value       = DateTime.Now;
+                    cbLogSystemName.Text        = "";
+                    cbLogStationName.Text       = "";
+                    nbTransactionAmount.Text    = "";
+                    nbCurrentCredits.Text       = "";
+                    cbLogCargoName.Text         = "";
+                    cbCargoModifier.Text        = "";
+                    nbLogQuantity.Text          = "";
+                    tbLogNotes.Text             = "";
+                }
+
+                setCLFieldsEditable(false);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while dgvCommandersLog_RowEnter-event");
+            }
+        }
+
+
+        private void setCLFieldsEditable(Boolean Enabled, Boolean TimeEditable = false)
+        {
+            try
+            {
+
+                cbLogEventType.ReadOnly           = !Enabled;
+                dtpLogEventDate.ReadOnly          = !TimeEditable;
+                cbLogSystemName.ReadOnly          = !Enabled;
+                cbLogStationName.ReadOnly         = !Enabled;
+                nbTransactionAmount.ReadOnly      = !Enabled;
+                nbCurrentCredits.ReadOnly         = !Enabled;
+                cbLogCargoName.ReadOnly           = !Enabled;
+                cbCargoModifier.ReadOnly          = !Enabled;
+                nbLogQuantity.ReadOnly            = !Enabled;
+                tbLogNotes.ReadOnly               = !Enabled;
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in setCLFieldsEditable()");
+            }
+        }
+
+#endregion
+
+
+
+    }
+
+
 }

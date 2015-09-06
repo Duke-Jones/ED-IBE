@@ -309,7 +309,7 @@ namespace RegulatedNoise.SQL
         /// </summary>
         /// <param name="CommandText"></param>
         /// <param name="Tablename"></param>
-        /// <param name="Data"></param>
+        /// <param name="m_BaseData"></param>
         /// <returns></returns>
         public Int32 Execute(string CommandText, string Tablename, ref System.Data.DataSet Data) 
         {
@@ -351,7 +351,7 @@ namespace RegulatedNoise.SQL
         /// executes a query and puts the result in a datatable
         /// </summary>
         /// <param name="CommandText"></param>
-        /// <param name="Data"></param>
+        /// <param name="m_BaseData"></param>
         /// <returns></returns>
         public Int32 Execute(string CommandText, ref System.Data.DataTable Data) {
             Int32 retValue;
@@ -390,7 +390,7 @@ namespace RegulatedNoise.SQL
         /// refreshes a with "TableRead" already loaded table out of the database
         /// </summary>
         /// <param name="Tablename">name of the table to refresh</param>
-        /// <param name="Data">used dataset which is holding the table</param>
+        /// <param name="m_BaseData">used dataset which is holding the table</param>
         /// <returns></returns>
         public Int32 TableRefresh(string Tablename, ref System.Data.DataSet Data)
         {
@@ -861,7 +861,7 @@ namespace RegulatedNoise.SQL
         }
 
         /// <summary>
-        /// return a fully escaped string
+        /// returns a fully escaped string for a database query
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -885,6 +885,39 @@ namespace RegulatedNoise.SQL
                             return "\\t";
                         case "\u001A":          // Ctrl-Z
                             return "\\Z";
+                        default:
+                            return "\\" + v;
+                    }
+                });
+        } 
+
+        /// <summary>
+        /// return a fully escaped string for a datatable
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string DTEscape(string str)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(str, @"[\x00'""\b\n\r\t\cZ\\%_]",
+                delegate(System.Text.RegularExpressions.Match match)
+                {
+                    string v = match.Value;
+                    switch (v)
+                    {
+                        case "\x00":            // ASCII NUL (0x00) character
+                            return "\\0";   
+                        case "\b":              // BACKSPACE character
+                            return "\\b";
+                        case "\n":              // NEWLINE (linefeed) character
+                            return "\\n";
+                        case "\r":              // CARRIAGE RETURN character
+                            return "\\r";
+                        case "\t":              // TAB
+                            return "\\t";
+                        case "\u001A":          // Ctrl-Z
+                            return "\\Z";
+                        case "'":       
+                            return "''";
                         default:
                             return "\\" + v;
                     }
