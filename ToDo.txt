@@ -30,6 +30,12 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.13
+   * "Commander's Log" uses the virtual mode for quicker loading and caching 
+   * restructuring of the access to global objects/data
+   * removed MRmP-Testtab (but using this idea in Commander's Log)
+   * using a typed dataset for global base data
+-------------------------------------------------------------------------------------         
 SQL 0.0.12
    * "Commander's Log" has the first view of data from the new database
    * if "Commander's Log" has entrys with unknown systems/station thy will be automatically added

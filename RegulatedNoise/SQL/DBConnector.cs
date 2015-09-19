@@ -311,7 +311,7 @@ namespace RegulatedNoise.SQL
         /// <param name="Tablename"></param>
         /// <param name="m_BaseData"></param>
         /// <returns></returns>
-        public Int32 Execute(string CommandText, string Tablename, ref System.Data.DataSet Data) 
+        public Int32 Execute(string CommandText, string Tablename, System.Data.DataSet Data) 
         {
             Int32 retValue = 0;
 
@@ -353,7 +353,7 @@ namespace RegulatedNoise.SQL
         /// <param name="CommandText"></param>
         /// <param name="m_BaseData"></param>
         /// <returns></returns>
-        public Int32 Execute(string CommandText, ref System.Data.DataTable Data) {
+        public Int32 Execute(string CommandText, System.Data.DataTable Data) {
             Int32 retValue;
 
             if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
@@ -362,8 +362,6 @@ namespace RegulatedNoise.SQL
             try {
                 DbCommand Command = new MySqlCommand();
                 DbDataAdapter DataAdapter = new MySqlDataAdapter();
-                if (Data == null) 
-                    Data = new System.Data.DataTable();
 
                 Command.CommandText = CommandText;
                 Command.Connection = m_Connection;
@@ -392,13 +390,13 @@ namespace RegulatedNoise.SQL
         /// <param name="Tablename">name of the table to refresh</param>
         /// <param name="m_BaseData">used dataset which is holding the table</param>
         /// <returns></returns>
-        public Int32 TableRefresh(string Tablename, ref System.Data.DataSet Data)
+        public Int32 TableRefresh(string Tablename, System.Data.DataSet Data)
         {
             string commandText = String.Empty;
-            return TableRead(commandText, Tablename, ref Data);
+            return TableRead(commandText, Tablename, Data);
         }
 
-        public Int32 TableRead(string CommandText, string Tablename, ref System.Data.DataSet Data) 
+        public Int32 TableRead(string CommandText, string Tablename, System.Data.DataSet Data) 
         {
             Int32 retValue = 0;
 
@@ -454,27 +452,27 @@ namespace RegulatedNoise.SQL
             return retValue;
         }
 
-        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data) {
-            return TableUpdate(Tablename, ref Data, false, null);
+        public Int32 TableUpdate(string Tablename, System.Data.DataSet Data) {
+            return TableUpdate(Tablename, Data, false, null);
         }
     
-        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, bool removeTableReadObject) {
-            return TableUpdate(Tablename, ref Data, removeTableReadObject, null);
+        public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, bool removeTableReadObject) {
+            return TableUpdate(Tablename, Data, removeTableReadObject, null);
         }
     
-        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, System.Data.DataViewRowState recordStates) {
-            return TableUpdate(Tablename, ref Data, false, null);
+        public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, System.Data.DataViewRowState recordStates) {
+            return TableUpdate(Tablename, Data, false, null);
         }
     
-        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, System.Data.DataViewRowState recordStates, bool removeTableReadObject) {
-            return TableUpdate(Tablename, ref Data, false, null);
+        public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, System.Data.DataViewRowState recordStates, bool removeTableReadObject) {
+            return TableUpdate(Tablename, Data, false, null);
         }
     
-        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, DbDataAdapter DataAdapter) {
-            return TableUpdate(Tablename, ref Data, false, DataAdapter);
+        public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, DbDataAdapter DataAdapter) {
+            return TableUpdate(Tablename, Data, false, DataAdapter);
         }
 
-        public Int32 TableUpdate(string Tablename, ref System.Data.DataSet Data, bool removeTableReadObject, DbDataAdapter DataAdapter){
+        public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, bool removeTableReadObject, DbDataAdapter DataAdapter){
 
             Int32         retValue = 0;
             DbDataAdapter lDataAdapter;
@@ -788,7 +786,7 @@ namespace RegulatedNoise.SQL
 
 	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 
-	        Execute(sqlString, ref Data);
+	        Execute(sqlString, Data);
 
 	        if (Data.Rows.Count > 0) {
 		        // Datum gefunden
@@ -844,7 +842,7 @@ namespace RegulatedNoise.SQL
 
 	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 
-	        Execute(sqlString, ref Data);
+	        Execute(sqlString, Data);
 
 	        if ((Data.Rows.Count == 0)) {
 		        // Wert gar nicht vorhanden

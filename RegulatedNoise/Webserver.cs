@@ -251,7 +251,7 @@ namespace RegulatedNoise
             var parameterString = requestedUrl.Replace("/createnote.html?","").Replace("+"," ");
             var x = parameterString.Split('&');
 
-            var newEvent = new CommandersLogEvent();
+            var newEvent = new object();
 
             foreach (var parameter in x)
             {

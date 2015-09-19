@@ -26,13 +26,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using CodeProject.Dialog;
 using RegulatedNoise.SQL;
+using RegulatedNoise.Commander_s_Log;
+
 
 namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
     {
-        private const string STR_Scanning = "scanning...";
-
         private enum enDoSpecial
         {
             onStart,
@@ -212,12 +212,7 @@ namespace RegulatedNoise
 
                 doSpecial(enDoSpecial.afterMilkyway);
 
-                _Splash.InfoAdd("prepare 'Commander's Log'...");
-                dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern + " " + 
-                                                            System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
-                dtpLogEventDate.Format       = System.Windows.Forms.DateTimePickerFormat.Custom;
-                _Splash.InfoChange("prepare 'Commander's Log'...<OK>");
-                
+               
                 _Splash.InfoAdd("load collected market data...");
                 if (File.Exists("AutoSave.csv"))
                 {
@@ -245,16 +240,6 @@ namespace RegulatedNoise
                     Directory.CreateDirectory(".//OCR Correction Images");
 
                 _logger.Log("Initialisation complete");
-
-                if (Program.Settings.TestMode)
-                {
-                    //Testing
-                    var testtab = new TabPage("MRmP Test Tab");
-                    var testtb = new MRmPTestTab.MRmPTestTab { Dock = DockStyle.Fill };
-                    testtab.Controls.Add(testtb);
-                    tabCtrlMain.Controls.Add(testtab);
-                }
-
 
                 // two methods with the same functionality 
                 // maybe this was the better way but I've already improved the other 
@@ -432,7 +417,7 @@ namespace RegulatedNoise
         //private void ClientArrivedtoNewSystem(EdSystem System)
         //{
         //    CurrentSystem = System;
-        //    tbCurrentSystemFromLogs.Text  = System.Name;
+        //    Program.actualCondition.System  = System.Name;
         //    //replace UpdateSystemNameFromLogFile
         //}
        
@@ -513,49 +498,6 @@ namespace RegulatedNoise
             }
         }
 
-        private void setColumns(ListView currentListView)
-        {
-            List<ColumnData> currentData = Program.Settings.ListViewColumnData[currentListView.Name];
-
-            switch (currentListView.Name)
-            {
-                case "lvCommandersLog":
-                    currentListView.Columns[0].Width 	=  113;
-                    currentListView.Columns[1].Width 	=  119;
-                    currentListView.Columns[2].Width 	=  122;
-                    currentListView.Columns[3].Width 	=  141;
-                    currentListView.Columns[4].Width 	=   96;
-                    currentListView.Columns[5].Width 	=   72;
-                    currentListView.Columns[6].Width 	=   77;
-                    currentListView.Columns[7].Width 	=  127;
-                    currentListView.Columns[8].Width 	=   60;
-                    currentListView.Columns[9].Width 	=   63;
-                    currentListView.Columns[10].Width 	=   60;
-                    break;
-            }
-
-            foreach (ColumnHeader currentHeader in currentListView.Columns)
-            {
-                ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (Data.Width > -1)
-                    currentHeader.Width = Data.Width;
-            }
-
-            currentListView.ColumnWidthChanged += lvCommandersLog_ColumnWidthChanged;
-        }
-
-        private void saveColumns(ListView currentListView)
-        {
-            List<ColumnData> currentData = Program.Settings.ListViewColumnData[currentListView.Name];
-
-            foreach (ColumnHeader currentHeader in currentListView.Columns)
-            {
-                ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
-                Data.Width = currentHeader.Width;
-            }
-
-            SaveSettings();
-        }
 
         private void SetListViewColumnsAndSorters()
         {
@@ -1099,7 +1041,7 @@ namespace RegulatedNoise
                 setButton(bClearOcrOutput, false);
                 setButton(bEditResults, false);
 
-                _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, tbCurrentSystemFromLogs.Text));
+                _ocrThread = new Thread(() => ocr.ScreenshotCreated(fileSystemEventArgs.FullPath, Program.actualCondition.System));
                 _ocrThread.IsBackground = false;
                 _ocrThread.Start();
             }
@@ -1127,7 +1069,7 @@ namespace RegulatedNoise
 
                     var s = _preOcrBuffer[0];
                     _preOcrBuffer.RemoveAt(0);
-                    _ocrThread = new Thread(() => ocr.ScreenshotCreated(s, tbCurrentSystemFromLogs.Text));
+                    _ocrThread = new Thread(() => ocr.ScreenshotCreated(s, Program.actualCondition.System));
                     _ocrThread.IsBackground = false;
                     _ocrThread.Start();
                     ScreenshotsQueued("(" +
@@ -1603,10 +1545,10 @@ namespace RegulatedNoise
             string localSystem;
             if (cbIncludeWithinRegionOfStation.SelectedItem != null)
                 localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>"
-                    ? tbCurrentSystemFromLogs.Text
+                    ? Program.actualCondition.System
                     : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
             else
-                localSystem = tbCurrentSystemFromLogs.Text;
+                localSystem = Program.actualCondition.System;
             return localSystem;
         }
 
@@ -3041,8 +2983,8 @@ namespace RegulatedNoise
             {
                 UpdateSystemNameFromLogFile();
 
-                if (tbCurrentSystemFromLogs.Text != "")
-                    tbOcrSystemName.Text = tbCurrentSystemFromLogs.Text;
+                if (Program.actualCondition.System != "")
+                    tbOcrSystemName.Text = Program.actualCondition.System;
                 else
                     tbOcrSystemName.Text = "SomeSystem";
 
@@ -3688,8 +3630,8 @@ namespace RegulatedNoise
             }
             
             CommandersLog_MarketDataCollectedEvent(tbOcrSystemName.Text, tbOcrStationName.Text);
-            if(tbCurrentStationinfoFromLogs.Text.Equals(STR_Scanning, StringComparison.InvariantCultureIgnoreCase))
-                tbCurrentStationinfoFromLogs.Text = tbOcrStationName.Text;
+            if(Program.actualCondition.Station.Equals(Condition.STR_Scanning, StringComparison.InvariantCultureIgnoreCase))
+                Program.actualCondition.Station = tbOcrStationName.Text;
 
             SetupGui();
         }
@@ -4918,123 +4860,13 @@ namespace RegulatedNoise
             //cbLogQuantity.Text = logEvent.CargoVolume.ToString(CultureInfo.InvariantCulture);
             //cbLogStationName.Text = logEvent.Station;
             //cbLogSystemName.Text = logEvent.System;
-            //cbCargoModifier.Text = logEvent.CargoAction;
+            //cbLogCargoAction.Text = logEvent.CargoAction;
             //cbLogCargoName.Text = logEvent.Cargo;
             //dtpLogEventDate.Value = logEvent.EventDate;
             //btCreateAddEntry.Text = "Save Changed m_BaseData";
 
         }
 
-        bool _cbLogStationNameIsDirty = false;
-
-        private void cbLogStationName_DropDown(object sender, EventArgs e)
-        {
-
-            if(_cbLogStationNameIsDirty)
-            {
-                cbLogStationName.Items.Clear();
-
-                List<EDStation> StationsInSystem = _Milkyway.getStations(cbLogSystemName.Text);
-
-                if(StationsInSystem != null)
-                {
-                    foreach (EDStation Station in StationsInSystem)
-                        cbLogStationName.Items.Add(Station.Name);
-                }
-
-                _cbLogStationNameIsDirty = false;
-            }
-        }
-
-        private void cbLogSystemName_TextChanged(object sender, System.EventArgs e)
-        {
-            _cbLogStationNameIsDirty = true;
-        }
-
-        private void cbLogSystemName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            cbLogStationName.Items.Clear();
-            
-            List<EDStation> StationsInSystem = _Milkyway.getStations(cbLogSystemName.Text);
-
-            if(StationsInSystem != null)
-            {
-                foreach (EDStation Station in StationsInSystem)
-                    cbLogStationName.Items.Add(Station.Name);
-            }
-
-            _cbLogStationNameIsDirty = false;
-
-        }
-
-        private void cbLogCargoName_DropDown(object sender, EventArgs e)
-        {
-            cbLogCargoName.Items.Clear();
-
-            foreach (var x in CommodityDirectory)
-                cbLogCargoName.Items.Add(x.Key);
-        }
-
-        private void lvCommandersLog_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == _commandersLogColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                if (_commandersLogColumnSorter.Order == SortOrder.Ascending)
-                {
-                    _commandersLogColumnSorter.Order = SortOrder.Descending;
-                }
-                else
-                {
-                    _commandersLogColumnSorter.Order = SortOrder.Ascending;
-                }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                _commandersLogColumnSorter.SortColumn = e.Column;
-                _commandersLogColumnSorter.Order = SortOrder.Ascending;
-            }
-
-        }
-
-        /// <summary>
-        /// handles mouse clicks on the Commanders Log
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void lvCommandersLog_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            ListView currentListView = ((ListView)sender);
-
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                m_RightMouseSelectedLogEvent = null;
-                ListViewItem theClickedOne = currentListView.GetItemAt(e.X, e.Y);
-
-                if(theClickedOne != null)
-                {
-                    var selectedGuid = theClickedOne.SubItems[currentListView.Columns.IndexOfKey("EventID")].Text;
-                    //m_RightMouseSelectedLogEvent = Program.CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
-
-                    contextMenuStrip1.Show(currentListView.PointToScreen(e.Location));
-                }
-
-            }
-        }
-
-        void lvCommandersLog_ColumnWidthChanged(object sender, System.Windows.Forms.ColumnWidthChangedEventArgs e)
-        {
-            saveColumns((ListView)sender);            
-        }
-
-        private void cbLogSystemName_DropDown(object sender, EventArgs e)
-        {
-            cbLogSystemName.Items.Clear();
-            foreach (var q in StationDirectory.Select(x => x.Key.Substring(x.Key.IndexOf("[", StringComparison.Ordinal) + 1, x.Key.IndexOf("]", StringComparison.Ordinal) - (x.Key.IndexOf("[", StringComparison.Ordinal) + 1))))
-                cbLogSystemName.Items.Add(q);
-        }
 
         #region Help button handlers
         private void ShowOcrHelpClick(object sender, EventArgs e)
@@ -5078,8 +4910,8 @@ namespace RegulatedNoise
         {
             _Splash.CloseDelayed();
 
-            loadSystemData(tbCurrentSystemFromLogs.Text);
-            loadStationData(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
+            loadSystemData(Program.actualCondition.System);
+            loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
 
             showSystemNumbers();
 
@@ -5128,12 +4960,22 @@ namespace RegulatedNoise
             Clock.Tick += Clock_Tick;
 
             cmdTest.Visible = System.Diagnostics.Debugger.IsAttached;
-
+            cmdTest2.Visible = System.Diagnostics.Debugger.IsAttached;
+            
             _AutoImportDelayTimer            = new System.Timers.Timer(10000);
             _AutoImportDelayTimer.AutoReset  = false;
             _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
 
-            CommandersLog_Init();
+
+            // Commander's Log
+            tabCommandersLog newControl     = new tabCommandersLog();
+            newControl.DataSource           = Program.CommandersLog;
+ 
+            TabPage     newTab     = new TabPage("Commander's Log");
+            newTab.Controls.Add(newControl);
+            tabCtrlMain.TabPages.Insert(3, newTab);
+
+            newControl.Init();
 
         }
 
@@ -6360,7 +6202,7 @@ namespace RegulatedNoise
 
         //        if (!_LoggedLocation.Equals(m_lastestStationInfo, StringComparison.InvariantCultureIgnoreCase))
         //        {                    
-        //            tbCurrentStationinfoFromLogs.Text = m_lastestStationInfo;
+        //            Program.actualCondition.Station = m_lastestStationInfo;
         //            _LoggedLocation = m_lastestStationInfo;
     
         //            if(cbAutoActivateSystemTab.Checked)
@@ -6386,7 +6228,7 @@ namespace RegulatedNoise
         //        Invoke(new ScreenshotsQueuedDelegate(setSystemInfo), SystemInfo);
         //    else
         //    { 
-        //        tbCurrentSystemFromLogs.Text = SystemInfo;
+        //        Program.actualCondition.System = SystemInfo;
         //    }
         //}
 
@@ -6417,11 +6259,11 @@ namespace RegulatedNoise
             if(!String.IsNullOrEmpty(systemName))
             { 
                 // system info found
-                if(!tbCurrentSystemFromLogs.Text.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
+                if(!Program.actualCondition.System.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                 { 
                     // it's a new system
                     Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
-                    tbCurrentSystemFromLogs.Text = systemName;
+                    Program.actualCondition.System = systemName;
                     newSystem = true;
                 }
 
@@ -6454,10 +6296,10 @@ namespace RegulatedNoise
             if(!String.IsNullOrEmpty(stationName))
             { 
                 // system info found
-                if(!tbCurrentStationinfoFromLogs.Text.Equals(stationName, StringComparison.InvariantCultureIgnoreCase))
+                if(!Program.actualCondition.Station.Equals(stationName, StringComparison.InvariantCultureIgnoreCase))
                 { 
                     // it's a new location
-                    tbCurrentStationinfoFromLogs.Text = stationName;
+                    Program.actualCondition.Station = stationName;
                     newLocation = true;
 
                     List<EDStation> SystemStations = _Milkyway.getStations(systemName);
@@ -6476,7 +6318,7 @@ namespace RegulatedNoise
 
                 }
             }else if(newSystem || ForceChangedLocation)
-                tbCurrentStationinfoFromLogs.Text = STR_Scanning;
+                Program.actualCondition.Station = Condition.STR_Scanning;
             
 
             if((newSystem || newLocation) && (!InitialRun))
@@ -6487,6 +6329,9 @@ namespace RegulatedNoise
                 if(cbAutoActivateSystemTab.Checked)
                     tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
             }
+
+            tbCurrentSystemFromLogs.Text        = Program.actualCondition.System;
+            tbCurrentStationinfoFromLogs.Text   = Program.actualCondition.Station;
 
         }
 
@@ -6555,8 +6400,8 @@ namespace RegulatedNoise
         private void cmdLoadCurrentSystem_Click(object sender, EventArgs e)
         {
 
-            loadSystemData(tbCurrentSystemFromLogs.Text);
-            loadStationData(tbCurrentSystemFromLogs.Text, tbCurrentStationinfoFromLogs.Text);
+            loadSystemData(Program.actualCondition.System);
+            loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
 
             tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
 
@@ -7417,7 +7262,7 @@ namespace RegulatedNoise
             _oldSystemName  = m_currentSystemdata.Name;
             _oldStationName = m_currentStationdata.Name;
 
-            string newSystemname = tbCurrentSystemFromLogs.Text;
+            string newSystemname = Program.actualCondition.System;
 
             if(InpBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == System.Windows.Forms.DialogResult.OK)
             { 
@@ -7465,7 +7310,7 @@ namespace RegulatedNoise
             _oldSystemName  = m_currentSystemdata.Name;
             _oldStationName = m_currentStationdata.Name;
 
-            string newStationname = tbCurrentStationinfoFromLogs.Text;
+            string newStationname = Program.actualCondition.Station;
 
             EDStation existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
                                                                                                     (x.SystemId.Equals(m_currentSystemdata.Id)));
@@ -7744,16 +7589,16 @@ namespace RegulatedNoise
             
 
             //// import the localizations from the old RN files
-            //Import.ImportCommodityLocalizations(@".\m_BaseData\Commodities.xml");
+            //Import.ImportCommodityLocalizations(@".\mm_BaseData\Commodities.xml");
 
             // import the self added localizations from the old RN files
-            //Import.ImportCommodityLocalizations(@".\m_BaseData\Commodities_own.xml");
+            //Import.ImportCommodityLocalizations(@".\mm_BaseData\Commodities_own.xml");
 
             //// import the Commander's Log from the old RN files
             //Import.ImportCommanders//Log(@".\CommandersLogAutoSave.xml");
             
             //// import the pricewarnlevels from the old RN files
-            //Import.ImportCommodityPriceWarnLevels(@".\m_BaseData\Commodities_RN.json");
+            //Import.ImportCommodityPriceWarnLevels(@".\mm_BaseData\Commodities_RN.json");
 
             //// import the commodities from EDDB
             //Import.ImportCommodities(@"./m_BaseData/commodities.json");
@@ -8110,182 +7955,20 @@ namespace RegulatedNoise
             WND_DatabaseOp.ShowEx();
         }
 
-
-#region Commander's Log
-
-        private void CommandersLog_Init()
+        private void cmdTest2_Click(object sender, EventArgs e)
         {
-            String sqlString;
-            this.dgvCommandersLog.RowEnter += dgvCommandersLog_RowEnter;
+            
+            //try
+            //{
+            //    VirtualJustInTimeDemo Demo = new VirtualJustInTimeDemo(Program.DBCon);
 
-            Program.CommandersLog.prepareCmb_EventTypes(ref cbLogEventType, CommandersLog.enGUIElements.cmbEventType, Program.Data.BaseData);
-    
-
-            setCLFieldsEditable(false);
+            //    Demo.Show();
+            //}
+            //catch (Exception ex)
+            //{
+            //    cErr.showError(ex, "Error in cmdTest2_Click");
+            //}
         }
-
-        private void cmdCLReload_Click(object sender, EventArgs e)
-        {
-            Program.CommandersLog.LoadData(this.dgvCommandersLog, new CommandersLog.RequestParams {Limit = (Int32.Parse(txtCL_Limit.Text))});
-        }
-
-        private void cmdCLShowHide_Click(object sender, EventArgs e)
-        {
-            gbCL_LogEdit.Visible = !gbCL_LogEdit.Visible;
-        }
-
-        private void cmdCL_EditEntry_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                setCLFieldsEditable(true);
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while start editing entry");
-            }
-        }
-
-        private void cmdCL_PrepareNew_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                setCLFieldsEditable(true, true);
-
-                cbLogEventType.SelectedValue    = (Int32)12;
-                dtpLogEventDate.Value           = (DateTime)DateTime.Now;
-                cbLogSystemName.Text            = tbCurrentSystemFromLogs.Text      != STR_Scanning ? tbCurrentSystemFromLogs.Text      : "";
-                cbLogStationName.Text           = tbCurrentStationinfoFromLogs.Text != STR_Scanning ? tbCurrentStationinfoFromLogs.Text : "";
-                nbTransactionAmount.Text        = "0";
-                nbCurrentCredits.Text           = "0";
-                cbLogCargoName.Text             = "";
-                cbCargoModifier.Text            = "";
-                nbLogQuantity.Text              = "0";
-                tbLogNotes.Text                 = "";
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while preparing new entry");
-            }
-        }
-
-        private void saveLogEntry(object sender, EventArgs e)
-        {
-            try
-            {
-                setCLFieldsEditable(false);
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while save entry");
-            }
-
-        }
-
-        private void cmdCL_Cancel_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if(dgvCommandersLog.CurrentRow != null)
-                {
-                    cbLogEventType.Text         = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["time"].Value;
-                    cbLogSystemName.Text        = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["systemname"].Value.ToString();
-                    cbLogStationName.Text       = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["stationname"].Value.ToString();
-                    nbTransactionAmount.Text    = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Text       = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_total"].Value.ToString();
-                    cbLogCargoName.Text         = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["loccommodity"].Value.ToString();
-                    cbCargoModifier.Text        = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value.ToString();
-                    nbLogQuantity.Text          = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value.ToString();
-                    tbLogNotes.Text             = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value.ToString();
-                }
-                else
-                {
-                    cbLogEventType.Text         = "";
-                    dtpLogEventDate.Value       = DateTime.Now;
-                    cbLogSystemName.Text        = "";
-                    cbLogStationName.Text       = "";
-                    nbTransactionAmount.Text    = "";
-                    nbCurrentCredits.Text       = "";
-                    cbLogCargoName.Text         = "";
-                    cbCargoModifier.Text        = "";
-                    nbLogQuantity.Text          = "";
-                    tbLogNotes.Text             = "";
-                }
-
-                setCLFieldsEditable(false);
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while cancel editing entry");
-            }
-        }
-
-        private void dgvCommandersLog_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                if(e.RowIndex >= 0)
-                {
-                    cbLogEventType.Text         = dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value;
-                    cbLogSystemName.Text        = dgvCommandersLog.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
-                    cbLogStationName.Text       = dgvCommandersLog.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
-                    nbTransactionAmount.Text    = dgvCommandersLog.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Text       = dgvCommandersLog.Rows[e.RowIndex].Cells["credits_total"].Value.ToString();
-                    cbLogCargoName.Text         = dgvCommandersLog.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
-                    cbCargoModifier.Text        = dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
-                    nbLogQuantity.Text          = dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value.ToString();
-                    tbLogNotes.Text             = dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString();
-                }
-                else
-                {
-                    cbLogEventType.Text         = "";
-                    dtpLogEventDate.Value       = DateTime.Now;
-                    cbLogSystemName.Text        = "";
-                    cbLogStationName.Text       = "";
-                    nbTransactionAmount.Text    = "";
-                    nbCurrentCredits.Text       = "";
-                    cbLogCargoName.Text         = "";
-                    cbCargoModifier.Text        = "";
-                    nbLogQuantity.Text          = "";
-                    tbLogNotes.Text             = "";
-                }
-
-                setCLFieldsEditable(false);
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while dgvCommandersLog_RowEnter-event");
-            }
-        }
-
-
-        private void setCLFieldsEditable(Boolean Enabled, Boolean TimeEditable = false)
-        {
-            try
-            {
-
-                cbLogEventType.ReadOnly           = !Enabled;
-                dtpLogEventDate.ReadOnly          = !TimeEditable;
-                cbLogSystemName.ReadOnly          = !Enabled;
-                cbLogStationName.ReadOnly         = !Enabled;
-                nbTransactionAmount.ReadOnly      = !Enabled;
-                nbCurrentCredits.ReadOnly         = !Enabled;
-                cbLogCargoName.ReadOnly           = !Enabled;
-                cbCargoModifier.ReadOnly          = !Enabled;
-                nbLogQuantity.ReadOnly            = !Enabled;
-                tbLogNotes.ReadOnly               = !Enabled;
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error in setCLFieldsEditable()");
-            }
-        }
-
-#endregion
-
-
 
     }
 

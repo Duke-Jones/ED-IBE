@@ -66,7 +66,7 @@ namespace RegulatedNoise
             var systemName = cbIncludeWithinRegionOfStation.Text;
             if (systemName == "<Current System>")
             {
-                systemName = tbCurrentSystemFromLogs.Text;
+                systemName = Program.actualCondition.System;
             }
             Process.Start(@"http://starchart.club/map/system/" + systemName);
         }

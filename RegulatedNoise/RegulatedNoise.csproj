@@ -11,6 +11,7 @@
     <AssemblyName>RegulatedNoise</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -121,21 +121,24 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Commander%27s Log\tabCommandersLog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Commander%27s Log\tabCommandersLog.Designer.cs">
+      <DependentUpon>tabCommandersLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Condition.cs" />
     <Compile Include="DialogBox\CbtHook.cs" />
     <Compile Include="DialogBox\DialogBox.cs" />
     <Compile Include="DialogBox\Win32API.cs" />
     <Compile Include="DialogBox\WindowsHook.cs" />
     <Compile Include="DialogBox\WndProcRetHook.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewCache.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExt.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\DataGridViewExt.Designer.cs">
       <DependentUpon>DataGridViewExt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SQL\dsElite_DB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>dsElite_DB.xsd</DependentUpon>
     </Compile>
     <Compile Include="EDDB_Data\EDCommodities.cs" />
     <Compile Include="EDDB_Data\EDCategory.cs" />
@@ -196,12 +199,6 @@
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="Enums and Utility Classes\StructureHelper.cs" />
     <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
-    <Compile Include="MRmPTestTab\MRmPTestTab.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MRmPTestTab\MRmPTestTab.Designer.cs">
-      <DependentUpon>MRmPTestTab.cs</DependentUpon>
-    </Compile>
     <Compile Include="Brainerous Pixeltest\Picturedata.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -212,7 +209,7 @@
     <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN\EDDNCommunicator.cs" />
-    <Compile Include="CommandersLog.cs" />
+    <Compile Include="Commander%27s Log\CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -293,6 +290,11 @@
     <Compile Include="SQL\DatabaseOp.Designer.cs">
       <DependentUpon>DatabaseOp.cs</DependentUpon>
     </Compile>
+    <Compile Include="SQL\Datasets\dsCommandersLog.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsCommandersLog.xsd</DependentUpon>
+    </Compile>
     <Compile Include="SQL\DBConnector.cs" />
     <Compile Include="SQL\DBConvert.cs" />
     <Compile Include="SQL\DBPorter.cs" />
@@ -307,6 +309,9 @@
     </Compile>
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Commander%27s Log\tabCommandersLog.resx">
+      <DependentUpon>tabCommandersLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EDDB_Data\EDCommodityListView.resx">
       <DependentUpon>EDCommodityListView.cs</DependentUpon>
@@ -336,9 +341,6 @@
     <EmbeddedResource Include="Help Forms\HelpOCR.resx">
       <DependentUpon>HelpOCR.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MRmPTestTab\MRmPTestTab.resx">
-      <DependentUpon>MRmPTestTab.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Brainerous Pixeltest\Picturedata.resx">
       <DependentUpon>Picturedata.cs</DependentUpon>
     </EmbeddedResource>
@@ -360,8 +362,6 @@
     <EmbeddedResource Include="SQL\DatabaseOp.resx">
       <DependentUpon>DatabaseOp.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="bin\Debug DJ\OCR Correction Images\ff8384ca-c5e4-4642-a19a-0d1adc256018.png" />
-    <None Include="bin\Debug DJ\OCR Correction Images\fefa1584-8397-48a7-9a96-759ea434b412.png" />
     <Content Include="Brainerous\bz2.pyd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -704,17 +704,6 @@
     <None Include="Data\systems.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="SQL\dsElite_DB.xsc">
-      <DependentUpon>dsElite_DB.xsd</DependentUpon>
-    </None>
-    <None Include="SQL\dsElite_DB.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>dsElite_DB.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="SQL\dsElite_DB.xss">
-      <DependentUpon>dsElite_DB.xsd</DependentUpon>
-    </None>
     <None Include="Enums and Utility Classes\dsCommodities.xsc">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
     </None>
@@ -736,6 +725,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="SQL\Datasets\dsCommandersLog.xsc">
+      <DependentUpon>dsCommandersLog.xsd</DependentUpon>
+    </None>
+    <None Include="SQL\Datasets\dsCommandersLog.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsCommandersLog.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="SQL\Datasets\dsCommandersLog.xss">
+      <DependentUpon>dsCommandersLog.xsd</DependentUpon>
+    </None>
     <None Include="tessdata\big.traineddata">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -878,6 +878,7 @@
       <Name>EdClasses</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Web;
 using RegulatedNoise.SQL;
+using RegulatedNoise.Commander_s_Log;
 
 namespace RegulatedNoise
 {
@@ -126,14 +127,15 @@ namespace RegulatedNoise
 
     #region global objects
 
-        private static Boolean                  m_initDone                  = false;
+        private static Boolean                          m_initDone                  = false;
 
-        public static CompanionInterface        CompanionIO;
-        public static DBConnector               DBCon;
-        public static RegulatedNoiseSettings    Settings;
-        private static DBProcess                EliteDBProcess;
-        public static CommandersLog             CommandersLog;
-        public static DBPorter                  Data;
+        public static CompanionInterface                CompanionIO;
+        public static DBConnector                       DBCon;
+        public static RegulatedNoiseSettings            Settings;
+        private static DBProcess                        EliteDBProcess;
+        public static CommandersLog                     CommandersLog;
+        public static DBPorter                          Data;
+        public static Condition                         actualCondition;
 
 
         /// <summary>
@@ -179,21 +181,25 @@ namespace RegulatedNoise
 
                     // preprare main data object
                     Data                                        = new RegulatedNoise.SQL.DBPorter();
+                    Data.PrepareBaseTables();
 
                     // prepare commanders log 
                     CommandersLog                               = new CommandersLog();
+                    CommandersLog.BaseData                      = Data.BaseData;
 
                     // initializing the Companion-Interface
                     //CompanionIO         = new CompanionInterface();
                     CompanionIO = null;
 
+                    // initializing the object for the actual condition
+                    actualCondition = new Condition();
 
                     m_initDone = true;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while initializing the program object");
+                throw new Exception("Error while initializing the program object", ex);
             }
 
         }

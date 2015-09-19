@@ -194,10 +194,10 @@ namespace RegulatedNoise
             // debug: SystemAtTimeOfScreenshot = "BD+65 1846"
             string[] StationsInSystem = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
 
-            if(_callingForm.tbCurrentStationinfoFromLogs.Text.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
+            if(Program.actualCondition.Station.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
                 StationameAnalysisBase = Stationname_OCR;
             else
-                StationameAnalysisBase = _callingForm.tbCurrentStationinfoFromLogs.Text;
+                StationameAnalysisBase = Program.actualCondition.Station;
 
             string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(StationameAnalysisBase, StringComparison.InvariantCultureIgnoreCase));
 
