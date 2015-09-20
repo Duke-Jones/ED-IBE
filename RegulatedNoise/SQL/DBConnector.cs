@@ -8,7 +8,7 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using System.Data;
-
+using System.Collections;
 
 namespace RegulatedNoise.SQL
 {
@@ -26,8 +26,6 @@ namespace RegulatedNoise.SQL
             public Int32                                ConnectTimeout;
         }
 
-        private double DEFAULT_MAX_TIME                 = 10.0;
-
         private ConnectionParams                        m_ConfigData;
         private DbConnection                            m_Connection;
         private DbCommand                               m_Command;
@@ -40,9 +38,6 @@ namespace RegulatedNoise.SQL
         private Int32                                   m_Transcount;
     
         private bool                                    m_RollBackPending;          // rollback is running
-    
-        private double                                  m_maxTransactionTime;       //  max. time for transactions
-        private DateTime                                m_TransStartTime;
     
         private string                                  m_TransActString;
     
@@ -414,7 +409,7 @@ namespace RegulatedNoise.SQL
                     DbCommandBuilder CommandBuilder     = new MySqlCommandBuilder();
                     DbDataAdapter DataAdapter           = new MySqlDataAdapter();
 
-                    //  prepare command
+                    //  prepare m_Command
                     Command.CommandText     = CommandText;
                     Command.Connection      = m_Connection;
 
@@ -581,7 +576,6 @@ namespace RegulatedNoise.SQL
                     // this is the first level - initiate the transaction
                     TransStringAdd(ProcedureName);
                     m_Transaction = m_Connection.BeginTransaction();
-                    m_TransStartTime = DateTime.Now;
                     m_Transcount = 1;
                 }
                 else {
@@ -626,7 +620,6 @@ namespace RegulatedNoise.SQL
                     m_Transaction.Commit();
                     m_Transcount = 0;
                     m_Transaction = null;
-                    m_maxTransactionTime = 0;
                     //  eine Ebene im Monitor wieder entfernen
                     MonitorExit(this);
                 }
@@ -677,7 +670,6 @@ namespace RegulatedNoise.SQL
                     m_Transcount = 0;
                     m_Transaction = null;
                     m_RollBackPending = false;
-                    m_maxTransactionTime = 0;
                     //  eine Ebene im Monitor wieder
                     MonitorExit(this);
                 }
@@ -921,7 +913,45 @@ namespace RegulatedNoise.SQL
                     }
                 });
         } 
+    
+        /// <summary>
+        /// retrieving the primary key of a table in the current connection
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <returns></returns>
+        public List<String> getPrimaryKey(String Table)
+        {
+            String       sqlString;
+            List<String> retValue;
+            DataTable    Data;
+
+            try
+            {
+                Data        = new DataTable();
+                retValue    = new List<String>();
+
+                sqlString = "SELECT kcu.table_name, kcu.column_name" +
+                            " FROM information_schema.key_column_usage AS kcu, information_schema.table_constraints AS tc" +
+                            " WHERE tc.table_name       = kcu.table_name" +
+                            "   AND tc.constraint_type  = 'PRIMARY KEY'" +
+                            "   AND kcu.constraint_name = 'PRIMARY'" +
+                            "   AND kcu.table_name      = " + DBConnector.SQLAString(Table);                   
+
+                this.Execute(sqlString, Data);
+
+                foreach (DataRow Row in Data.Rows)
+                    retValue.Add(Row["column_name"].ToString());
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retriving the primary key for table <" + Table + ">", ex);
+            }
+        }
+
     }
+
 
 #if false
     public class DBConnector {

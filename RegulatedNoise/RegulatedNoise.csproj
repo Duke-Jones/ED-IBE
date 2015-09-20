@@ -133,7 +133,7 @@
     <Compile Include="DialogBox\Win32API.cs" />
     <Compile Include="DialogBox\WindowsHook.cs" />
     <Compile Include="DialogBox\WndProcRetHook.cs" />
-    <Compile Include="Enums and Utility Classes\DataGridViewCache.cs" />
+    <Compile Include="Enums and Utility Classes\DataRetriever.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExt.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -29,40 +29,37 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.label23 = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbCL_LogEdit = new System.Windows.Forms.GroupBox();
             this.cmdCL_Cancel = new System.Windows.Forms.Button();
             this.cmdCL_EditEntry = new System.Windows.Forms.Button();
             this.label94 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
             this.cmdCL_PrepareNew = new System.Windows.Forms.Button();
+            this.cbLogSystemName = new System.Windows.Forms.ComboBox_ro();
+            this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker_ro();
             this.label21 = new System.Windows.Forms.Label();
+            this.cbLogEventType = new System.Windows.Forms.ComboBox_ro();
             this.tbLogNotes = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
+            this.cbLogCargoAction = new System.Windows.Forms.ComboBox_ro();
             this.cmdCL_Save = new System.Windows.Forms.Button();
+            this.cbLogStationName = new System.Windows.Forms.ComboBox_ro();
+            this.nbLogQuantity = new System.Windows.Forms.NumericUpDown_ro();
             this.label39 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.txtFetchLimit = new System.Windows.Forms.TextBox();
-            this.cmdCL_ShowHide = new System.Windows.Forms.Button();
-            this.cbFetchLimit = new System.Windows.Forms.CheckBox();
-            this.cbLogSystemName = new System.Windows.Forms.ComboBox_ro();
-            this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker_ro();
-            this.cbLogEventType = new System.Windows.Forms.ComboBox_ro();
-            this.cbLogCargoAction = new System.Windows.Forms.ComboBox_ro();
-            this.cbLogStationName = new System.Windows.Forms.ComboBox_ro();
-            this.nbLogQuantity = new System.Windows.Forms.NumericUpDown_ro();
             this.nbTransactionAmount = new System.Windows.Forms.NumericUpDown_ro();
+            this.label38 = new System.Windows.Forms.Label();
             this.cbLogCargoName = new System.Windows.Forms.ComboBox_ro();
+            this.label20 = new System.Windows.Forms.Label();
             this.nbCurrentCredits = new System.Windows.Forms.NumericUpDown_ro();
+            this.cmdCL_ShowHide = new System.Windows.Forms.Button();
             this.dgvCommandersLog = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -80,15 +77,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(137, 11);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(56, 13);
-            this.label23.TabIndex = 50;
-            this.label23.Text = "recordsets";
             // 
             // gbCL_LogEdit
             // 
@@ -175,6 +163,27 @@
             this.cmdCL_PrepareNew.UseVisualStyleBackColor = true;
             this.cmdCL_PrepareNew.Click += new System.EventHandler(this.cmdCL_PrepareNew_Click);
             // 
+            // cbLogSystemName
+            // 
+            this.cbLogSystemName.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogSystemName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cbLogSystemName.FormattingEnabled = true;
+            this.cbLogSystemName.Location = new System.Drawing.Point(69, 44);
+            this.cbLogSystemName.Name = "cbLogSystemName";
+            this.cbLogSystemName.ReadOnly = false;
+            this.cbLogSystemName.Size = new System.Drawing.Size(334, 21);
+            this.cbLogSystemName.TabIndex = 9;
+            // 
+            // dtpLogEventDate
+            // 
+            this.dtpLogEventDate.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.dtpLogEventDate.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.dtpLogEventDate.Location = new System.Drawing.Point(196, 18);
+            this.dtpLogEventDate.Name = "dtpLogEventDate";
+            this.dtpLogEventDate.ReadOnly = false;
+            this.dtpLogEventDate.Size = new System.Drawing.Size(207, 20);
+            this.dtpLogEventDate.TabIndex = 21;
+            // 
             // label21
             // 
             this.label21.AutoSize = true;
@@ -183,6 +192,17 @@
             this.label21.Size = new System.Drawing.Size(35, 13);
             this.label21.TabIndex = 20;
             this.label21.Text = "Notes";
+            // 
+            // cbLogEventType
+            // 
+            this.cbLogEventType.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogEventType.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cbLogEventType.FormattingEnabled = true;
+            this.cbLogEventType.Location = new System.Drawing.Point(69, 17);
+            this.cbLogEventType.Name = "cbLogEventType";
+            this.cbLogEventType.ReadOnly = false;
+            this.cbLogEventType.Size = new System.Drawing.Size(121, 21);
+            this.cbLogEventType.TabIndex = 6;
             // 
             // tbLogNotes
             // 
@@ -204,6 +224,22 @@
             this.label18.TabIndex = 7;
             this.label18.Text = "Event";
             // 
+            // cbLogCargoAction
+            // 
+            this.cbLogCargoAction.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogCargoAction.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cbLogCargoAction.FormattingEnabled = true;
+            this.cbLogCargoAction.Items.AddRange(new object[] {
+            "Bought",
+            "Sold",
+            "Mined",
+            "Stolen"});
+            this.cbLogCargoAction.Location = new System.Drawing.Point(490, 44);
+            this.cbLogCargoAction.Name = "cbLogCargoAction";
+            this.cbLogCargoAction.ReadOnly = false;
+            this.cbLogCargoAction.Size = new System.Drawing.Size(121, 21);
+            this.cbLogCargoAction.TabIndex = 18;
+            // 
             // cmdCL_Save
             // 
             this.cmdCL_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -214,6 +250,32 @@
             this.cmdCL_Save.Text = "Save Changes";
             this.cmdCL_Save.UseVisualStyleBackColor = true;
             this.cmdCL_Save.Click += new System.EventHandler(this.cmdCL_Save_Click);
+            // 
+            // cbLogStationName
+            // 
+            this.cbLogStationName.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogStationName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.cbLogStationName.FormattingEnabled = true;
+            this.cbLogStationName.Location = new System.Drawing.Point(69, 71);
+            this.cbLogStationName.Name = "cbLogStationName";
+            this.cbLogStationName.ReadOnly = false;
+            this.cbLogStationName.Size = new System.Drawing.Size(334, 21);
+            this.cbLogStationName.TabIndex = 8;
+            // 
+            // nbLogQuantity
+            // 
+            this.nbLogQuantity.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.nbLogQuantity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
+            this.nbLogQuantity.Location = new System.Drawing.Point(490, 72);
+            this.nbLogQuantity.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.nbLogQuantity.Name = "nbLogQuantity";
+            this.nbLogQuantity.Size = new System.Drawing.Size(120, 20);
+            this.nbLogQuantity.TabIndex = 17;
+            this.nbLogQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label39
             // 
@@ -242,130 +304,6 @@
             this.label19.TabIndex = 10;
             this.label19.Text = "Station";
             // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(421, 101);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(63, 13);
-            this.label38.TabIndex = 32;
-            this.label38.Text = "Transaction";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(18, 47);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(41, 13);
-            this.label20.TabIndex = 11;
-            this.label20.Text = "System";
-            // 
-            // txtFetchLimit
-            // 
-            this.txtFetchLimit.Enabled = false;
-            this.txtFetchLimit.Location = new System.Drawing.Point(83, 8);
-            this.txtFetchLimit.Name = "txtFetchLimit";
-            this.txtFetchLimit.Size = new System.Drawing.Size(54, 20);
-            this.txtFetchLimit.TabIndex = 48;
-            this.txtFetchLimit.Text = "1000";
-            this.txtFetchLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // cmdCL_ShowHide
-            // 
-            this.cmdCL_ShowHide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCL_ShowHide.Location = new System.Drawing.Point(1065, 6);
-            this.cmdCL_ShowHide.Name = "cmdCL_ShowHide";
-            this.cmdCL_ShowHide.Size = new System.Drawing.Size(134, 23);
-            this.cmdCL_ShowHide.TabIndex = 46;
-            this.cmdCL_ShowHide.Text = "Show/Hide Edit-Panel";
-            this.cmdCL_ShowHide.UseVisualStyleBackColor = true;
-            this.cmdCL_ShowHide.Click += new System.EventHandler(this.cmdCL_ShowHide_Click);
-            // 
-            // cbFetchLimit
-            // 
-            this.cbFetchLimit.AutoSize = true;
-            this.cbFetchLimit.Location = new System.Drawing.Point(10, 10);
-            this.cbFetchLimit.Name = "cbFetchLimit";
-            this.cbFetchLimit.Size = new System.Drawing.Size(76, 17);
-            this.cbFetchLimit.TabIndex = 51;
-            this.cbFetchLimit.Text = "fetch limit :";
-            this.cbFetchLimit.UseVisualStyleBackColor = true;
-            this.cbFetchLimit.CheckedChanged += new System.EventHandler(this.cbFetchLimit_CheckedChanged);
-            // 
-            // cbLogSystemName
-            // 
-            this.cbLogSystemName.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cbLogSystemName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cbLogSystemName.FormattingEnabled = true;
-            this.cbLogSystemName.Location = new System.Drawing.Point(69, 44);
-            this.cbLogSystemName.Name = "cbLogSystemName";
-            this.cbLogSystemName.ReadOnly = false;
-            this.cbLogSystemName.Size = new System.Drawing.Size(334, 21);
-            this.cbLogSystemName.TabIndex = 9;
-            // 
-            // dtpLogEventDate
-            // 
-            this.dtpLogEventDate.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.dtpLogEventDate.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.dtpLogEventDate.Location = new System.Drawing.Point(196, 18);
-            this.dtpLogEventDate.Name = "dtpLogEventDate";
-            this.dtpLogEventDate.ReadOnly = false;
-            this.dtpLogEventDate.Size = new System.Drawing.Size(207, 20);
-            this.dtpLogEventDate.TabIndex = 21;
-            // 
-            // cbLogEventType
-            // 
-            this.cbLogEventType.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cbLogEventType.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cbLogEventType.FormattingEnabled = true;
-            this.cbLogEventType.Location = new System.Drawing.Point(69, 17);
-            this.cbLogEventType.Name = "cbLogEventType";
-            this.cbLogEventType.ReadOnly = false;
-            this.cbLogEventType.Size = new System.Drawing.Size(121, 21);
-            this.cbLogEventType.TabIndex = 6;
-            // 
-            // cbLogCargoAction
-            // 
-            this.cbLogCargoAction.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cbLogCargoAction.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cbLogCargoAction.FormattingEnabled = true;
-            this.cbLogCargoAction.Items.AddRange(new object[] {
-            "Bought",
-            "Sold",
-            "Mined",
-            "Stolen"});
-            this.cbLogCargoAction.Location = new System.Drawing.Point(490, 44);
-            this.cbLogCargoAction.Name = "cbLogCargoAction";
-            this.cbLogCargoAction.ReadOnly = false;
-            this.cbLogCargoAction.Size = new System.Drawing.Size(121, 21);
-            this.cbLogCargoAction.TabIndex = 18;
-            // 
-            // cbLogStationName
-            // 
-            this.cbLogStationName.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.cbLogStationName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.cbLogStationName.FormattingEnabled = true;
-            this.cbLogStationName.Location = new System.Drawing.Point(69, 71);
-            this.cbLogStationName.Name = "cbLogStationName";
-            this.cbLogStationName.ReadOnly = false;
-            this.cbLogStationName.Size = new System.Drawing.Size(334, 21);
-            this.cbLogStationName.TabIndex = 8;
-            // 
-            // nbLogQuantity
-            // 
-            this.nbLogQuantity.BackColor_ro = System.Drawing.SystemColors.Control;
-            this.nbLogQuantity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.nbLogQuantity.Location = new System.Drawing.Point(490, 72);
-            this.nbLogQuantity.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.nbLogQuantity.Name = "nbLogQuantity";
-            this.nbLogQuantity.Size = new System.Drawing.Size(120, 20);
-            this.nbLogQuantity.TabIndex = 17;
-            this.nbLogQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // nbTransactionAmount
             // 
             this.nbTransactionAmount.BackColor_ro = System.Drawing.SystemColors.Control;
@@ -381,6 +319,15 @@
             this.nbTransactionAmount.TabIndex = 30;
             this.nbTransactionAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(421, 101);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(63, 13);
+            this.label38.TabIndex = 32;
+            this.label38.Text = "Transaction";
+            // 
             // cbLogCargoName
             // 
             this.cbLogCargoName.BackColor_ro = System.Drawing.SystemColors.Control;
@@ -391,6 +338,15 @@
             this.cbLogCargoName.ReadOnly = false;
             this.cbLogCargoName.Size = new System.Drawing.Size(121, 21);
             this.cbLogCargoName.TabIndex = 12;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(18, 47);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(41, 13);
+            this.label20.TabIndex = 11;
+            this.label20.Text = "System";
             // 
             // nbCurrentCredits
             // 
@@ -406,6 +362,17 @@
             this.nbCurrentCredits.Size = new System.Drawing.Size(120, 20);
             this.nbCurrentCredits.TabIndex = 31;
             this.nbCurrentCredits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // cmdCL_ShowHide
+            // 
+            this.cmdCL_ShowHide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCL_ShowHide.Location = new System.Drawing.Point(1065, 6);
+            this.cmdCL_ShowHide.Name = "cmdCL_ShowHide";
+            this.cmdCL_ShowHide.Size = new System.Drawing.Size(134, 23);
+            this.cmdCL_ShowHide.TabIndex = 46;
+            this.cmdCL_ShowHide.Text = "Show/Hide Edit-Panel";
+            this.cmdCL_ShowHide.UseVisualStyleBackColor = true;
+            this.cmdCL_ShowHide.Click += new System.EventHandler(this.cmdCL_ShowHide_Click);
             // 
             // dgvCommandersLog
             // 
@@ -427,14 +394,14 @@
             this.credits_transaction,
             this.credits_total,
             this.notes});
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle6;
             this.dgvCommandersLog.DoubleBuffer = true;
             this.dgvCommandersLog.Location = new System.Drawing.Point(3, 170);
             this.dgvCommandersLog.Name = "dgvCommandersLog";
@@ -447,8 +414,8 @@
             // time
             // 
             this.time.DataPropertyName = "time";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.time.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.time.DefaultCellStyle = dataGridViewCellStyle1;
             this.time.HeaderText = "Time";
             this.time.Name = "time";
             this.time.ReadOnly = true;
@@ -492,8 +459,8 @@
             // cargovolume
             // 
             this.cargovolume.DataPropertyName = "cargovolume";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle2;
             this.cargovolume.HeaderText = "Volume";
             this.cargovolume.Name = "cargovolume";
             this.cargovolume.ReadOnly = true;
@@ -502,8 +469,8 @@
             // credits_transaction
             // 
             this.credits_transaction.DataPropertyName = "credits_transaction";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle3;
             this.credits_transaction.HeaderText = "Transaction";
             this.credits_transaction.Name = "credits_transaction";
             this.credits_transaction.ReadOnly = true;
@@ -512,8 +479,8 @@
             // credits_total
             // 
             this.credits_total.DataPropertyName = "credits_total";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.credits_total.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.credits_total.DefaultCellStyle = dataGridViewCellStyle4;
             this.credits_total.HeaderText = "Cr. total";
             this.credits_total.Name = "credits_total";
             this.credits_total.ReadOnly = true;
@@ -523,18 +490,15 @@
             // 
             this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.notes.DataPropertyName = "notes";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.notes.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.notes.DefaultCellStyle = dataGridViewCellStyle5;
             this.notes.HeaderText = "notes";
             this.notes.Name = "notes";
             this.notes.ReadOnly = true;
             // 
             // tabCommandersLog
             // 
-            this.Controls.Add(this.txtFetchLimit);
-            this.Controls.Add(this.cbFetchLimit);
-            this.Controls.Add(this.label23);
             this.Controls.Add(this.gbCL_LogEdit);
             this.Controls.Add(this.dgvCommandersLog);
             this.Controls.Add(this.cmdCL_ShowHide);
@@ -547,13 +511,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label23;
         private System.Windows.Forms.GroupBox gbCL_LogEdit;
         private System.Windows.Forms.Button cmdCL_Cancel;
         private System.Windows.Forms.Button cmdCL_EditEntry;
@@ -583,7 +545,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_transaction;
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn notes;
-        private System.Windows.Forms.TextBox txtFetchLimit;
         private System.Windows.Forms.Button cmdCL_ShowHide;
         internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
         internal System.Windows.Forms.DateTimePicker_ro dtpLogEventDate;
@@ -591,6 +552,5 @@
         internal System.Windows.Forms.ComboBox_ro cbLogCargoAction;
         internal System.Windows.Forms.ComboBox_ro cbLogStationName;
         internal System.Windows.Forms.ComboBox_ro cbLogCargoName;
-        private System.Windows.Forms.CheckBox cbFetchLimit;
     }
 }

@@ -30,6 +30,10 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.14
+   * optimized VirtualMode-structures, fixed some bugs 
+   * code cleanup
+-------------------------------------------------------------------------------------         
 SQL 0.0.13
    * "Commander's Log" uses the virtual mode for quicker loading and caching 
    * restructuring of the access to global objects/data

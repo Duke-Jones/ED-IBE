@@ -9,12 +9,13 @@ using System.Xml.Serialization;
 using RegulatedNoise.Enums_and_Utility_Classes;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
+using RegulatedNoise.SQL;
 
 namespace RegulatedNoise.Commander_s_Log
 {
     public class CommandersLog
     {
-        public enum enGUIElements
+        public enum enGUIEditElements
         {
             cbLogEventType,
             cbLogSystemName,
@@ -25,14 +26,16 @@ namespace RegulatedNoise.Commander_s_Log
 
         private const String table = "tbLog";
 
-
-        private const String _sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action, Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
+        /// <summary>
+        /// main selection string for the data from the database
+        /// </summary>
+        private const String _sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action," + 
+                                          "       Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
                                          " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
                                          "              left join tbCargoAction C on L.cargoaction_id = C.id" +
                                          "              left join tbSystems S     on L.system_id      = S.id" +
                                          "              left join tbStations St   on L.station_id     = St.id" +
-                                         "              left join tbCommodity Co  on L.commodity_id   = Co.id" +
-                                         " order by time desc";
+                                         "              left join tbCommodity Co  on L.commodity_id   = Co.id";
 
         private SQL.Datasets.dsCommandersLog      m_BaseData;
         public tabCommandersLog     m_GUI;
@@ -51,11 +54,15 @@ namespace RegulatedNoise.Commander_s_Log
             m_BindingSource.DataSource  = m_Datatable;
         }
 
+        /// <summary>
+        /// initialization of the dataretriever object (for DGV virtual mode)
+        /// </summary>
+        /// <returns></returns>
         internal int InitRetriever()
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlString);
+                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DataRetriever.SQLSortOrder.desc);
 
                 return retriever.RowCount;
                 
@@ -64,10 +71,11 @@ namespace RegulatedNoise.Commander_s_Log
             {
                 throw new Exception("Error in InitRetriever", ex);
             }
-
-            
         }
 
+        /// <summary>
+        /// access to the dataretriever object (for DGV virtual mode)
+        /// </summary>
         public DataRetriever Retriever
         {
             get
@@ -77,7 +85,7 @@ namespace RegulatedNoise.Commander_s_Log
         }
 
         /// <summary>
-        /// gets or sets the base dataset
+        /// gets or sets the belonging base dataset
         /// </summary>
         public SQL.Datasets.dsCommandersLog BaseData
         {
@@ -91,6 +99,9 @@ namespace RegulatedNoise.Commander_s_Log
             }
         }
 
+        /// <summary>
+        /// access to the belonging gui object
+        /// </summary>
         public tabCommandersLog GUI
         {
             get
@@ -197,154 +208,59 @@ namespace RegulatedNoise.Commander_s_Log
             //    _callingForm.cbLogStationName.Text = _callingForm.Program.actualCondition.Station;
         }
 
-        //public void SaveLog(bool force = false)
-        //{
-        //    string newFile, backupFile, currentFile;
-
-        //    if (force)
-        //        currentFile = "CommandersLogAutoSave.xml";
-        //    else
-        //        currentFile = "Commander's Log Events to " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".xml";
-
-        //    newFile     = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-        //    backupFile  = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-
-        //    Stream stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
-        //    var x =new XmlSerializer(LogEvents.GetType());
-        //    x.Serialize(stream, LogEvents);
-        //    stream.Close();
-
-        //    // we delete the current file not until the new file is written without errors
-
-        //    if (force)
-        //    {
-        //        // delete old backup
-        //        if (File.Exists(backupFile))
-        //            File.Delete(backupFile);
-
-        //        // rename current file to old backup
-        //        if (File.Exists(currentFile))
-        //            File.Move(currentFile, backupFile);
-        //    }
-        //    else
-        //    {
-        //        // delete file if exists
-        //        if (File.Exists(currentFile))
-        //            File.Delete(currentFile);
-
-        //    }
-
-        //    // rename new file to current file
-        //    File.Move(newFile, currentFile);
-
-        //}
-
-        //public void LoadLog(bool force = false)
-        //{
-        //    try
-        //    {
-        //        var openFile = new OpenFileDialog
-        //        {
-        //            DefaultExt = "xml",
-        //            Multiselect = false,
-        //            Filter = "XML (*.xml)|*.xml",
-        //            InitialDirectory = Environment.CurrentDirectory
-        //        };
-
-        //        if (!force)
-        //            openFile.ShowDialog();
-
-        //        if (force || openFile.FileNames.Length > 0)
-        //        {
-        //            var serializer = new XmlSerializer(typeof(SortableBindingList<CommandersLogEvent>));
-
-        //            if (force && !File.Exists("CommandersLogAutoSave.xml"))
-        //                return;
-
-        //            var fs = new FileStream(force ? "CommandersLogAutoSave.xml" : openFile.FileName, FileMode.Open);
-        //            var reader = XmlReader.Create(fs);
-
-        //            var logEvents2 = (SortableBindingList<CommandersLogEvent>)serializer.Deserialize(reader);
-        //            LogEvents = logEvents2;
-        //            fs.Close();
-        //        }
-
-        //        isLoaded = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error loading CommandersLog", ex);
-        //    }
-        //}
-
-        public void UpdateCommandersLogListView()
-        {
-            //_callingForm.lvCommandersLog.SuspendLayout();
-            //_callingForm.lvCommandersLog.BeginUpdate();
-
-            //_callingForm.lvCommandersLog.Items.Clear();
-            //foreach (var x in LogEvents)
-            //{
-            //    var listViewData = new string[_callingForm.LogEventProperties.Count()];
-
-            //    listViewData[0] = x.EventDate.ToString(CultureInfo.CurrentUICulture);
-
-            //    int ctr = 1;
-            //    foreach (var y in _callingForm.LogEventProperties)
-            //    {
-            //        if (y.Name != "EventDate")
-            //        {
-            //            listViewData[ctr] = y.GetValue(x).ToString();
-            //            ctr++;
-            //        }
-            //    }
-
-            //    _callingForm.lvCommandersLog.Items.Add(new ListViewItem(listViewData));
-            //}
-            //_callingForm.lvCommandersLog.EndUpdate();
-            //_callingForm.lvCommandersLog.ResumeLayout();
-        }
-
-        public class RequestParams
-        {
-            public Int32 Limit;
-        }
-
-        //internal void LoadData(DataGridView dataGridView, RequestParams Parameters)
-        //{
-        //    try
-        //    {
-                
-        //        dataGridView.SuspendLayout();
-
-        //        _SqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action, Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" + " from tbLog L left join tbEventType E   on L.event_id       = E.id" + "              left join tbCargoAction C on L.cargoaction_id = C.id" + "              left join tbSystems S     on L.system_id      = S.id" + "              left join tbStations St   on L.station_id     = St.id" + "              left join tbCommodity Co  on L.commodity_id   = Co.id" + " order by time desc";
-
-        //        if(Parameters.Limit > 0)
-        //            _SqlString += " limit 1000";
-
-        //        Program.DBCon.Execute(_SqlString, m_Datatable);
-
-        //        m_BindingSource.DataSource = m_Datatable;
-
-        //        dataGridView.DataSource = null;
-        //        dataGridView.DataSource = m_BindingSource;
-
-        //        dataGridView.ResumeLayout();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error while loading Commanders Log", ex);    
-        //    }
-        //}
-
+        /// <summary>
+        /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
+        /// </summary>
+        /// <param name="dataGridViewExt"></param>
+        /// <param name="RowIndex"></param>
         internal void SaveData(Enums_and_Utility_Classes.DataGridViewExt dataGridViewExt, int RowIndex)
         {
-            String sqlString;
+            String           sqlString;
 
             try
             {
-                sqlString = "insert into tbLog(time, system_id, station_id, event_id, commodity_id, cargoaction_id, cargovolume, credits_transaction, credits_total, notes) values" +
-                            "";
+
+                sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
+                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
+                                            " SELECT d.* FROM (SELECT" +
+                                            "          {0} AS time," +
+                                            "          (select id from tbSystems  where systemname  = {1}" +
+                                            "          ) AS system_id," +
+                                            "          (select id from tbStations where stationname = {2} " + 
+                                            "                                     and   system_id   = (select id from tbSystems" + 
+                                            "                                                           where systemname = {1})" +
+                                            "          ) AS station_id," +
+                                            "          (select id from tbEventType   where event     = {3}) As event_id," +
+                                            "          (select id from tbCommodity   where commodity = {4} or loccommodity = {4} limit 1) As commodity_id," +
+                                            "          (select id from tbCargoAction where action    = {5}) AS cargoaction_id," +
+                                            "          {6} AS cargovolume," +
+                                            "          {7} AS credits_transaction," +
+                                            "          {8} AS credits_total," +
+                                            "          {9} AS notes) AS d" +
+                                            " ON DUPLICATE KEY UPDATE" +
+                                            "  system_id            = d.system_id," +
+                                            "  station_id           = d.station_id," +
+                                            "  event_id             = d.event_id," +
+                                            "  commodity_id         = d.commodity_id," +
+                                            "  cargoaction_id       = d.cargoaction_id," +
+                                            "  cargovolume          = d.cargovolume," +
+                                            "  credits_transaction  = d.credits_transaction," +
+                                            "  credits_total        = d.credits_total," +
+                                            "  notes                = d.notes",
+                                            DBConnector.SQLDateTime(DateTime.Parse((String)dataGridViewExt["time", RowIndex].Value, CultureInfo.CurrentUICulture , DateTimeStyles.None)), 
+                                            DBConnector.SQLAString(DBConnector.SQLEscape((String)dataGridViewExt["systemname", RowIndex].Value)),
+                                            DBConnector.SQLAString(DBConnector.SQLEscape((String)dataGridViewExt["stationname", RowIndex].Value)), 
+                                            DBConnector.SQLAString((String)dataGridViewExt["eevent", RowIndex].Value),
+                                            DBConnector.SQLAString((String)dataGridViewExt["loccommodity", RowIndex].Value),
+                                            DBConnector.SQLAString((String)dataGridViewExt["action", RowIndex].Value),
+                                            dataGridViewExt["cargovolume", RowIndex].Value,
+                                            dataGridViewExt["credits_transaction", RowIndex].Value,
+                                            dataGridViewExt["credits_total", RowIndex].Value,
+                                            dataGridViewExt["notes", RowIndex].Value.ToString().Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(dataGridViewExt["notes", RowIndex].Value.ToString())));
+
+                if(Program.DBCon.Execute(sqlString) != 0)
+                    throw new Exception("Nothing saved to database !!!");
+     
             }
             catch (Exception ex)
             {
@@ -405,6 +321,9 @@ namespace RegulatedNoise.Commander_s_Log
         }
     }
 
+#region DataRetriever
+
+
     [Serializable]
     public class CommandersLogEvent
     {
@@ -416,188 +335,10 @@ namespace RegulatedNoise.Commander_s_Log
         public string   CargoAction { get; set; }
         public decimal  CargoVolume { get; set; }
         public string   Notes       { get; set; }
-// ReSharper disable once InconsistentNaming
         public string   EventID     { get; set; }
         public decimal  TransactionAmount { get; set; }
         public decimal  Credits     { get; set; }
     }
-
-#region DataRetriever
-
-    public class DataRetriever : DataRetrieverBase
-    {
-
-        public DataRetriever(SQL.DBConnector DBCon, string tableName, String DataStatement)
-        {
-            MySqlConnection connection  = (MySqlConnection)DBCon.Connection;
-            command                     = connection.CreateCommand();
-            this.tableName              = tableName;
-            this.DataStatement          = DataStatement;
-
-            memoryCache                 = new DataGridViewCache(this, 50);
-
-        }
-
-        private int rowCountValue = -1;
-
-        public int RowCount
-        {
-            get
-            {
-                // Return the existing value if it has already been determined.
-                if (rowCountValue != -1)
-                {
-                    return rowCountValue;
-                }
-
-                Object result = -1;
-                // Retrieve the row count from the database.
-                command.CommandText = "SELECT COUNT(*) FROM " + tableName;
-                result = command.ExecuteScalar();
-                if (result != null)
-                    rowCountValue = Convert.ToInt32(result);
-
-                return rowCountValue;
-            }
-        }
-
-        private DataColumnCollection columnsValue;
-
-        public DataColumnCollection Columns
-        {
-            get
-            {
-                // Return the existing value if it has already been determined.
-                if (columnsValue != null)
-                {
-                    return columnsValue;
-                }
-
-                // Retrieve the column information from the database.
-                //command.CommandText = "SELECT * FROM " + tableName;
-                command.CommandText         = DataStatement;
-                MySqlDataAdapter adapter    = new MySqlDataAdapter();
-                adapter.SelectCommand       = command;
-                DataTable table             = new DataTable();
-                table.Locale                = System.Globalization.CultureInfo.InvariantCulture;
-
-                adapter.FillSchema(table, SchemaType.Source);
-
-                columnsValue                = table.Columns;
-
-                return columnsValue;
-            }
-        }
-
-        private string commaSeparatedListOfColumnNamesValue = null;
-        private String usedPrefix = null;
-
-        private string CommaSeparatedListOfColumnNames(String Prefix = "")
-        {
-            // Return the existing value if it has already been determined.
-            if ((commaSeparatedListOfColumnNamesValue != null) && (Prefix == usedPrefix))
-            {
-                return commaSeparatedListOfColumnNamesValue;
-            }
-
-            // Store a list of column names for use in the
-            // SupplyPageOfData method.
-            System.Text.StringBuilder commaSeparatedColumnNames =
-                new System.Text.StringBuilder();
-            bool firstColumn = true;
-            foreach (DataColumn column in Columns)
-            {
-                if (!firstColumn)
-                {
-                    commaSeparatedColumnNames.Append(", ");
-                }
-                if (!String.IsNullOrEmpty(Prefix))
-                    commaSeparatedColumnNames.Append(Prefix);
-
-                commaSeparatedColumnNames.Append(column.ColumnName);
-                firstColumn = false;
-            }
-
-            commaSeparatedListOfColumnNamesValue    = commaSeparatedColumnNames.ToString();
-            usedPrefix                              = Prefix;
-
-            return commaSeparatedListOfColumnNamesValue;
-        }
-
-        // Declare variables to be reused by the SupplyPageOfData method.
-        public enum SQLSortOrder
-        {
-            asc,
-            desc
-        }
-
-        private string columnToSortBy;
-        private SQLSortOrder ColumnSortOrder = SQLSortOrder.desc;
-
-        private MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-        public override DataTable SupplyPageOfData(int lowerPageBoundary, int rowsPerPage)
-        {
-            String sqlString;
-
-            // Store the name of the ID column. This column must contain unique 
-            // values so the SQL below will work properly.
-            if (columnToSortBy == null)
-            {
-                columnToSortBy = this.Columns[0].ColumnName;
-            }
-
-            if (!this.Columns[columnToSortBy].Unique)
-            {
-                throw new InvalidOperationException(String.Format(
-                    "Column {0} must contain unique values.", columnToSortBy));
-            }
-
-            // Retrieve the specified number of rows from the database, starting
-            // with the row specified by the lowerPageBoundary parameter.
-            //sqlString = String.Format("select {0}" + 
-            //                          " from {2} L1 left join (" +
-            //                          "                         select time from {2} L3 order by L3.{3} {5} limit {4}" +
-            //                          "                       ) L2 on L1.{3} = L2.{3}" +
-            //                          " where L2.{3} is null order by L1.{3} {5} limit {1}", 
-            //                          CommaSeparatedListOfColumnNames("L1."), 
-            //                          rowsPerPage, 
-            //                          tableName, 
-            //                          columnToSortBy, 
-            //                          lowerPageBoundary, 
-            //                          ColumnSortOrder);
-
-
-            Debug.Print("retrieve Page " + lowerPageBoundary + " (" + rowsPerPage + ")");
-
-            if(lowerPageBoundary == 150)
-                Debug.Print("stop");
-
-            sqlString = String.Format("select * from ({0}) L1 left join (" +
-                                      "                         select time from {2} L3 order by L3.{3} {5} limit {4}" +
-                                      "                       ) L2 on L1.{3} = L2.{3}" +
-                                      " where L2.{3} is null order by L1.{3} {5} limit {1}", 
-                                      DataStatement, 
-                                      rowsPerPage, 
-                                      tableName, 
-                                      columnToSortBy, 
-                                      lowerPageBoundary, 
-                                      ColumnSortOrder);
-
-
-            // Retrieve the specified number of rows from the database, starting
-            // with the row specified by the lowerPageBoundary parameter.
-            command.CommandText = sqlString;
-            adapter.SelectCommand = command;
-
-            DataTable table = new DataTable();
-            table.Locale = System.Globalization.CultureInfo.InvariantCulture;
-            adapter.Fill(table);
-            return table;
-        }
-
-    }
-
 #endregion
 
 }
