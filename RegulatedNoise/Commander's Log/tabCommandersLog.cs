@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RegulatedNoise.SQL;
 using System.Diagnostics;
-
+using RegulatedNoise.SQL.Datasets;
 namespace RegulatedNoise.Commander_s_Log
 {
     public partial class tabCommandersLog : UserControl
@@ -73,9 +73,6 @@ namespace RegulatedNoise.Commander_s_Log
                 m_InitialTopOfEditGroupBox              = gbCL_LogEdit.Top;
                 m_CL_State                              = enCLAction.None;
 
-                dgvCommandersLog.VirtualMode    = true;
-                dgvCommandersLog.RowEnter       += dgvCommandersLog_RowEnter;
-
                 cbLogSystemName.SelectedIndexChanged += cbLogSystemName_SelectedIndexChanged;
 
                 //preparing the combo boxes
@@ -100,8 +97,9 @@ namespace RegulatedNoise.Commander_s_Log
                 dgvCommandersLog.AllowUserToOrderColumns  = false;
                 dgvCommandersLog.SelectionMode            = DataGridViewSelectionMode.FullRowSelect;
 
-                dgvCommandersLog.RowCount = m_DataSource.InitRetriever();
+                dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
 
+                dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
                 dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
 
@@ -148,12 +146,31 @@ namespace RegulatedNoise.Commander_s_Log
                 if(!m_CellValueNeededIsRegistered)
                 { 
                     dgvCommandersLog.CellValueNeeded          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValueNeeded);
+                    dgvCommandersLog.CellValuePushed          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValuePushed);
                     m_CellValueNeededIsRegistered = true;
                 }
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in dgvCommandersLog_Paint");
+                cErr.showError(ex, "Error in dgvCommandersLog_RowPrePaint");
+            }
+        }
+
+        /// <summary>
+        /// puts changed data to the datacache
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dgvCommandersLog_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
+        {
+            try
+            {
+                //Debug.Print(String.Format("Edited : Row {0}, Column {1}, Value: {2}", e.RowIndex, e.ColumnIndex, e.Value.ToString()));
+                m_DataSource.Retriever.MemoryCache.SetElementToPage(e.RowIndex, e.ColumnIndex, e.Value);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in dgvCommandersLog_CellValuePushed");
             }
         }
 
@@ -262,30 +279,31 @@ namespace RegulatedNoise.Commander_s_Log
             {
                 setCLFieldsEditable(false);
 
-                DataGridViewRow newRow = (DataGridViewRow)dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Clone();
+                dgvCommandersLog.ReadOnly = false;
 
+                // put the changed data into the DataGridView (this will fire the "CellValuePushed"-event)
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value              = cbLogEventType.Text;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["time"].Value                = dtpLogEventDate.Value;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["systemname"].Value          = cbLogSystemName.Text;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["stationname"].Value         = cbLogStationName.Text;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_transaction"].Value = nbTransactionAmount.Value;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_total"].Value       = nbCurrentCredits.Value;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["loccommodity"].Value        = cbLogCargoName.Text;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value              = cbLogCargoAction.Text;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value         = nbLogQuantity.Value;
+                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value               = tbLogNotes.Text;
 
-                newRow.Cells["eevent"].Value              = cbLogEventType.Text;
-                newRow.Cells["time"].Value                = dtpLogEventDate.Value;
-                newRow.Cells["systemname"].Value          = cbLogSystemName.Text;
-                newRow.Cells["stationname"].Value         = cbLogStationName.Text;
-                newRow.Cells["credits_transaction"].Value = nbTransactionAmount.Text;
-                newRow.Cells["credits_total"].Value       = nbCurrentCredits.Text; 
-                newRow.Cells["loccommodity"].Value        = cbLogCargoName.Text ;
-                newRow.Cells["action"].Value              = cbLogCargoAction.Text;
-                newRow.Cells["cargovolume"].Value         = nbLogQuantity.Text;
-                newRow.Cells["notes"].Value               = tbLogNotes.Text;
+                dgvCommandersLog.ReadOnly = true;
 
-                m_DataSource.SaveData(this.dgvCommandersLog, dgvCommandersLog.CurrentRow.Index);
-
-                dgvCommandersLog.InvalidateRow(dgvCommandersLog.CurrentRow.Index);
+                // save changed data (from data cache through "CellValuePushed"-event) to database
+                m_DataSource.SaveData((dsCommandersLog.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvCommandersLog.CurrentRow.Index));
 
                 m_CL_State = enCLAction.None;
 
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while save entry");
+                cErr.showError(ex, "Error while saving entry");
             }
 
         }
@@ -294,32 +312,7 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                if(dgvCommandersLog.CurrentRow != null)
-                {
-                    cbLogEventType.Text         = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = DateTime.Parse(dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["time"].Value.ToString());
-                    cbLogSystemName.Text        = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["systemname"].Value.ToString();
-                    cbLogStationName.Text       = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["stationname"].Value.ToString();
-                    nbTransactionAmount.Text    = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Text       = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_total"].Value.ToString();
-                    cbLogCargoName.Text         = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["loccommodity"].Value.ToString();
-                    cbLogCargoAction.Text        = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value.ToString();
-                    nbLogQuantity.Text          = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value.ToString();
-                    tbLogNotes.Text             = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value.ToString();
-                }
-                else
-                {
-                    cbLogEventType.Text         = "";
-                    dtpLogEventDate.Value       = DateTime.Now;
-                    cbLogSystemName.Text        = "";
-                    cbLogStationName.Text       = "";
-                    nbTransactionAmount.Text    = "";
-                    nbCurrentCredits.Text       = "";
-                    cbLogCargoName.Text         = "";
-                    cbLogCargoAction.Text        = "";
-                    nbLogQuantity.Text          = "";
-                    tbLogNotes.Text             = "";
-                }
+                showRowInFields(new DataGridViewCellEventArgs(dgvCommandersLog.CurrentCellAddress.X, dgvCommandersLog.CurrentCellAddress.Y));
 
                 setCLFieldsEditable(false);
 
@@ -352,29 +345,29 @@ namespace RegulatedNoise.Commander_s_Log
             {
                 if((e.RowIndex >= 0) && (dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value != null))
                 {
-                    cbLogEventType.Text         = dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = DateTime.Parse(dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value.ToString());
-                    cbLogSystemName.Text        = dgvCommandersLog.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
-                    cbLogStationName.Text       = dgvCommandersLog.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
-                    nbTransactionAmount.Text    = dgvCommandersLog.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Text       = dgvCommandersLog.Rows[e.RowIndex].Cells["credits_total"].Value.ToString();
-                    cbLogCargoName.Text         = dgvCommandersLog.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
-                    cbLogCargoAction.Text        = dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
-                    nbLogQuantity.Text          = dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value.ToString();
-                    tbLogNotes.Text             = dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString();
+                    cbLogEventType.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
+                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value;
+                    cbLogSystemName.Text        = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
+                    cbLogStationName.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
+                    nbTransactionAmount.Text    = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
+                    nbCurrentCredits.Value      = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["credits_total"].Value;
+                    cbLogCargoName.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
+                    cbLogCargoAction.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
+                    nbLogQuantity.Value         = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value;
+                    tbLogNotes.Text             = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
                 }
                 else
                 {
-                    cbLogEventType.Text         = "";
-                    dtpLogEventDate.Value       = DateTime.Now;
-                    cbLogSystemName.Text        = "";
-                    cbLogStationName.Text       = "";
-                    nbTransactionAmount.Text    = "";
-                    nbCurrentCredits.Text       = "";
-                    cbLogCargoName.Text         = "";
-                    cbLogCargoAction.Text       = "";
-                    nbLogQuantity.Text          = "";
-                    tbLogNotes.Text             = "";
+                    cbLogEventType.Text         = (String)"";
+                    dtpLogEventDate.Value       = (DateTime)DateTime.Now;
+                    cbLogSystemName.Text        = (String)"";
+                    cbLogStationName.Text       = (String)"";
+                    nbTransactionAmount.Text    = (String)"";
+                    nbCurrentCredits.Value      = (Int32)0;
+                    cbLogCargoName.Text         = (String)"";
+                    cbLogCargoAction.Text       = (String)"";
+                    nbLogQuantity.Value         = (Int32)0;
+                    tbLogNotes.Text             = (String)"";
                 }
 
                 setCLFieldsEditable(false);

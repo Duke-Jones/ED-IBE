@@ -620,6 +620,31 @@
             </Mappings>
             <Sources />
           </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vilogTableAdapter" GeneratorDataComponentClassName="vilogTableAdapter" Name="vilog" UserDataComponentName="vilogTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="elite_dbConnectionString1 (Settings)" DbObjectName="elite_db.vilog" DbObjectType="View" GenerateShortCommands="false" Modifier="Public" Name="Fill" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT `time`, `systemname`, `stationname`, `eevent`, `action`, `loccommodity`, `cargovolume`, `credits_transaction`, `credits_total`, `notes` FROM `elite_db`.`vilog`</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="time" DataSetColumn="time" />
+              <Mapping SourceColumn="systemname" DataSetColumn="systemname" />
+              <Mapping SourceColumn="stationname" DataSetColumn="stationname" />
+              <Mapping SourceColumn="eevent" DataSetColumn="eevent" />
+              <Mapping SourceColumn="action" DataSetColumn="action" />
+              <Mapping SourceColumn="loccommodity" DataSetColumn="loccommodity" />
+              <Mapping SourceColumn="cargovolume" DataSetColumn="cargovolume" />
+              <Mapping SourceColumn="credits_transaction" DataSetColumn="credits_transaction" />
+              <Mapping SourceColumn="credits_total" DataSetColumn="credits_total" />
+              <Mapping SourceColumn="notes" DataSetColumn="notes" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
         </Tables>
         <Sources />
       </DataSource>
@@ -628,7 +653,7 @@
   <xs:element name="dsCommandersLog" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsCommandersLog" msprop:Generator_UserDSName="dsCommandersLog">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="tblog" msprop:Generator_TableClassName="tblogDataTable" msprop:Generator_TableVarName="tabletblog" msprop:Generator_TablePropName="tblog" msprop:Generator_RowDeletingName="tblogRowDeleting" msprop:Generator_RowChangingName="tblogRowChanging" msprop:Generator_RowEvHandlerName="tblogRowChangeEventHandler" msprop:Generator_RowDeletedName="tblogRowDeleted" msprop:Generator_UserTableName="tblog" msprop:Generator_RowChangedName="tblogRowChanged" msprop:Generator_RowEvArgName="tblogRowChangeEvent" msprop:Generator_RowClassName="tblogRow">
+        <xs:element name="tblog" msprop:Generator_TableClassName="tblogDataTable" msprop:Generator_TableVarName="tabletblog" msprop:Generator_RowChangedName="tblogRowChanged" msprop:Generator_TablePropName="tblog" msprop:Generator_RowDeletingName="tblogRowDeleting" msprop:Generator_RowChangingName="tblogRowChanging" msprop:Generator_RowEvHandlerName="tblogRowChangeEventHandler" msprop:Generator_RowDeletedName="tblogRowDeleted" msprop:Generator_RowClassName="tblogRow" msprop:Generator_UserTableName="tblog" msprop:Generator_RowEvArgName="tblogRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="time" msprop:Generator_ColumnVarNameInTable="columntime" msprop:Generator_ColumnPropNameInRow="time" msprop:Generator_ColumnPropNameInTable="timeColumn" msprop:Generator_UserColumnName="time" type="xs:dateTime" />
@@ -650,7 +675,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="tbsystems" msprop:Generator_TableClassName="tbsystemsDataTable" msprop:Generator_TableVarName="tabletbsystems" msprop:Generator_TablePropName="tbsystems" msprop:Generator_RowDeletingName="tbsystemsRowDeleting" msprop:Generator_RowChangingName="tbsystemsRowChanging" msprop:Generator_RowEvHandlerName="tbsystemsRowChangeEventHandler" msprop:Generator_RowDeletedName="tbsystemsRowDeleted" msprop:Generator_UserTableName="tbsystems" msprop:Generator_RowChangedName="tbsystemsRowChanged" msprop:Generator_RowEvArgName="tbsystemsRowChangeEvent" msprop:Generator_RowClassName="tbsystemsRow">
+        <xs:element name="tbsystems" msprop:Generator_TableClassName="tbsystemsDataTable" msprop:Generator_TableVarName="tabletbsystems" msprop:Generator_RowChangedName="tbsystemsRowChanged" msprop:Generator_TablePropName="tbsystems" msprop:Generator_RowDeletingName="tbsystemsRowDeleting" msprop:Generator_RowChangingName="tbsystemsRowChanging" msprop:Generator_RowEvHandlerName="tbsystemsRowChangeEventHandler" msprop:Generator_RowDeletedName="tbsystemsRowDeleted" msprop:Generator_RowClassName="tbsystemsRow" msprop:Generator_UserTableName="tbsystems" msprop:Generator_RowEvArgName="tbsystemsRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -690,7 +715,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="tbstations" msprop:Generator_TableClassName="tbstationsDataTable" msprop:Generator_TableVarName="tabletbstations" msprop:Generator_TablePropName="tbstations" msprop:Generator_RowDeletingName="tbstationsRowDeleting" msprop:Generator_RowChangingName="tbstationsRowChanging" msprop:Generator_RowEvHandlerName="tbstationsRowChangeEventHandler" msprop:Generator_RowDeletedName="tbstationsRowDeleted" msprop:Generator_UserTableName="tbstations" msprop:Generator_RowChangedName="tbstationsRowChanged" msprop:Generator_RowEvArgName="tbstationsRowChangeEvent" msprop:Generator_RowClassName="tbstationsRow">
+        <xs:element name="tbstations" msprop:Generator_TableClassName="tbstationsDataTable" msprop:Generator_TableVarName="tabletbstations" msprop:Generator_RowChangedName="tbstationsRowChanged" msprop:Generator_TablePropName="tbstations" msprop:Generator_RowDeletingName="tbstationsRowDeleting" msprop:Generator_RowChangingName="tbstationsRowChanging" msprop:Generator_RowEvHandlerName="tbstationsRowChangeEventHandler" msprop:Generator_RowDeletedName="tbstationsRowDeleted" msprop:Generator_RowClassName="tbstationsRow" msprop:Generator_UserTableName="tbstations" msprop:Generator_RowEvArgName="tbstationsRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -733,7 +758,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="tbeventtype" msprop:Generator_TableClassName="tbeventtypeDataTable" msprop:Generator_TableVarName="tabletbeventtype" msprop:Generator_TablePropName="tbeventtype" msprop:Generator_RowDeletingName="tbeventtypeRowDeleting" msprop:Generator_RowChangingName="tbeventtypeRowChanging" msprop:Generator_RowEvHandlerName="tbeventtypeRowChangeEventHandler" msprop:Generator_RowDeletedName="tbeventtypeRowDeleted" msprop:Generator_UserTableName="tbeventtype" msprop:Generator_RowChangedName="tbeventtypeRowChanged" msprop:Generator_RowEvArgName="tbeventtypeRowChangeEvent" msprop:Generator_RowClassName="tbeventtypeRow">
+        <xs:element name="tbeventtype" msprop:Generator_TableClassName="tbeventtypeDataTable" msprop:Generator_TableVarName="tabletbeventtype" msprop:Generator_RowChangedName="tbeventtypeRowChanged" msprop:Generator_TablePropName="tbeventtype" msprop:Generator_RowDeletingName="tbeventtypeRowDeleting" msprop:Generator_RowChangingName="tbeventtypeRowChanging" msprop:Generator_RowEvHandlerName="tbeventtypeRowChangeEventHandler" msprop:Generator_RowDeletedName="tbeventtypeRowDeleted" msprop:Generator_RowClassName="tbeventtypeRow" msprop:Generator_UserTableName="tbeventtype" msprop:Generator_RowEvArgName="tbeventtypeRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -747,7 +772,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="tbcommodity" msprop:Generator_TableClassName="tbcommodityDataTable" msprop:Generator_TableVarName="tabletbcommodity" msprop:Generator_TablePropName="tbcommodity" msprop:Generator_RowDeletingName="tbcommodityRowDeleting" msprop:Generator_RowChangingName="tbcommodityRowChanging" msprop:Generator_RowEvHandlerName="tbcommodityRowChangeEventHandler" msprop:Generator_RowDeletedName="tbcommodityRowDeleted" msprop:Generator_UserTableName="tbcommodity" msprop:Generator_RowChangedName="tbcommodityRowChanged" msprop:Generator_RowEvArgName="tbcommodityRowChangeEvent" msprop:Generator_RowClassName="tbcommodityRow">
+        <xs:element name="tbcommodity" msprop:Generator_TableClassName="tbcommodityDataTable" msprop:Generator_TableVarName="tabletbcommodity" msprop:Generator_RowChangedName="tbcommodityRowChanged" msprop:Generator_TablePropName="tbcommodity" msprop:Generator_RowDeletingName="tbcommodityRowDeleting" msprop:Generator_RowChangingName="tbcommodityRowChanging" msprop:Generator_RowEvHandlerName="tbcommodityRowChangeEventHandler" msprop:Generator_RowDeletedName="tbcommodityRowDeleted" msprop:Generator_RowClassName="tbcommodityRow" msprop:Generator_UserTableName="tbcommodity" msprop:Generator_RowEvArgName="tbcommodityRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -779,7 +804,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="tbcargoaction" msprop:Generator_TableClassName="tbcargoactionDataTable" msprop:Generator_TableVarName="tabletbcargoaction" msprop:Generator_TablePropName="tbcargoaction" msprop:Generator_RowDeletingName="tbcargoactionRowDeleting" msprop:Generator_RowChangingName="tbcargoactionRowChanging" msprop:Generator_RowEvHandlerName="tbcargoactionRowChangeEventHandler" msprop:Generator_RowDeletedName="tbcargoactionRowDeleted" msprop:Generator_UserTableName="tbcargoaction" msprop:Generator_RowChangedName="tbcargoactionRowChanged" msprop:Generator_RowEvArgName="tbcargoactionRowChangeEvent" msprop:Generator_RowClassName="tbcargoactionRow">
+        <xs:element name="tbcargoaction" msprop:Generator_TableClassName="tbcargoactionDataTable" msprop:Generator_TableVarName="tabletbcargoaction" msprop:Generator_RowChangedName="tbcargoactionRowChanged" msprop:Generator_TablePropName="tbcargoaction" msprop:Generator_RowDeletingName="tbcargoactionRowDeleting" msprop:Generator_RowChangingName="tbcargoactionRowChanging" msprop:Generator_RowEvHandlerName="tbcargoactionRowChangeEventHandler" msprop:Generator_RowDeletedName="tbcargoactionRowDeleted" msprop:Generator_RowClassName="tbcargoactionRow" msprop:Generator_UserTableName="tbcargoaction" msprop:Generator_RowEvArgName="tbcargoactionRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -787,6 +812,58 @@
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="vilog" msprop:Generator_TableClassName="vilogDataTable" msprop:Generator_TableVarName="tablevilog" msprop:Generator_TablePropName="vilog" msprop:Generator_RowDeletingName="vilogRowDeleting" msprop:Generator_RowChangingName="vilogRowChanging" msprop:Generator_RowEvHandlerName="vilogRowChangeEventHandler" msprop:Generator_RowDeletedName="vilogRowDeleted" msprop:Generator_UserTableName="vilog" msprop:Generator_RowChangedName="vilogRowChanged" msprop:Generator_RowEvArgName="vilogRowChangeEvent" msprop:Generator_RowClassName="vilogRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="time" msprop:Generator_ColumnVarNameInTable="columntime" msprop:Generator_ColumnPropNameInRow="time" msprop:Generator_ColumnPropNameInTable="timeColumn" msprop:Generator_UserColumnName="time" type="xs:dateTime" />
+              <xs:element name="systemname" msprop:Generator_ColumnVarNameInTable="columnsystemname" msprop:Generator_ColumnPropNameInRow="systemname" msprop:Generator_ColumnPropNameInTable="systemnameColumn" msprop:Generator_UserColumnName="systemname" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="stationname" msprop:Generator_ColumnVarNameInTable="columnstationname" msprop:Generator_ColumnPropNameInRow="stationname" msprop:Generator_ColumnPropNameInTable="stationnameColumn" msprop:Generator_UserColumnName="stationname" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="eevent" msprop:Generator_ColumnVarNameInTable="columneevent" msprop:Generator_ColumnPropNameInRow="eevent" msprop:Generator_ColumnPropNameInTable="eeventColumn" msprop:Generator_UserColumnName="eevent" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="action" msprop:Generator_ColumnVarNameInTable="columnaction" msprop:Generator_ColumnPropNameInRow="action" msprop:Generator_ColumnPropNameInTable="actionColumn" msprop:Generator_UserColumnName="action" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="loccommodity" msprop:Generator_ColumnVarNameInTable="columnloccommodity" msprop:Generator_ColumnPropNameInRow="loccommodity" msprop:Generator_ColumnPropNameInTable="loccommodityColumn" msprop:Generator_UserColumnName="loccommodity" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cargovolume" msprop:Generator_ColumnVarNameInTable="columncargovolume" msprop:Generator_ColumnPropNameInRow="cargovolume" msprop:Generator_ColumnPropNameInTable="cargovolumeColumn" msprop:Generator_UserColumnName="cargovolume" type="xs:int" minOccurs="0" />
+              <xs:element name="credits_transaction" msprop:Generator_ColumnVarNameInTable="columncredits_transaction" msprop:Generator_ColumnPropNameInRow="credits_transaction" msprop:Generator_ColumnPropNameInTable="credits_transactionColumn" msprop:Generator_UserColumnName="credits_transaction" type="xs:int" minOccurs="0" />
+              <xs:element name="credits_total" msprop:Generator_ColumnVarNameInTable="columncredits_total" msprop:Generator_ColumnPropNameInRow="credits_total" msprop:Generator_ColumnPropNameInTable="credits_totalColumn" msprop:Generator_UserColumnName="credits_total" type="xs:int" minOccurs="0" />
+              <xs:element name="notes" msprop:Generator_ColumnVarNameInTable="columnnotes" msprop:Generator_ColumnPropNameInRow="notes" msprop:Generator_ColumnPropNameInTable="notesColumn" msprop:Generator_UserColumnName="notes" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="1024" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
@@ -819,15 +896,19 @@
       <xs:selector xpath=".//mstns:tbcargoaction" />
       <xs:field xpath="mstns:id" />
     </xs:unique>
+    <xs:unique name="vilog_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:vilog" />
+      <xs:field xpath="mstns:time" />
+    </xs:unique>
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="fk_tbStations_tbSystems" msdata:parent="tbsystems" msdata:child="tbstations" msdata:parentkey="id" msdata:childkey="system_id" msprop:Generator_UserChildTable="tbstations" msprop:Generator_ChildPropName="GettbstationsRows" msprop:Generator_UserRelationName="fk_tbStations_tbSystems" msprop:Generator_ParentPropName="tbsystemsRow" msprop:Generator_RelationVarName="relationfk_tbStations_tbSystems" msprop:Generator_UserParentTable="tbsystems" />
-      <msdata:Relationship name="fk_tbLog_tbCargoAction1" msdata:parent="tbcargoaction" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="cargoaction_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCargoAction1" msprop:Generator_RelationVarName="relationfk_tbLog_tbCargoAction1" msprop:Generator_UserParentTable="tbcargoaction" msprop:Generator_ParentPropName="tbcargoactionRow" />
-      <msdata:Relationship name="fk_tbLog_tbCommodities1" msdata:parent="tbcommodity" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="commodity_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCommodities1" msprop:Generator_RelationVarName="relationfk_tbLog_tbCommodities1" msprop:Generator_UserParentTable="tbcommodity" msprop:Generator_ParentPropName="tbcommodityRow" />
-      <msdata:Relationship name="fk_tbLog_tbEventType1" msdata:parent="tbeventtype" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="event_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbEventType1" msprop:Generator_RelationVarName="relationfk_tbLog_tbEventType1" msprop:Generator_UserParentTable="tbeventtype" msprop:Generator_ParentPropName="tbeventtypeRow" />
-      <msdata:Relationship name="fk_tbLog_tbStations1" msdata:parent="tbstations" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="station_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbStations1" msprop:Generator_RelationVarName="relationfk_tbLog_tbStations1" msprop:Generator_UserParentTable="tbstations" msprop:Generator_ParentPropName="tbstationsRow" />
-      <msdata:Relationship name="fk_tbLog_tbSystems1" msdata:parent="tbsystems" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="system_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbSystems1" msprop:Generator_RelationVarName="relationfk_tbLog_tbSystems1" msprop:Generator_UserParentTable="tbsystems" msprop:Generator_ParentPropName="tbsystemsRow" />
+      <msdata:Relationship name="fk_tbStations_tbSystems" msdata:parent="tbsystems" msdata:child="tbstations" msdata:parentkey="id" msdata:childkey="system_id" msprop:Generator_UserChildTable="tbstations" msprop:Generator_ChildPropName="GettbstationsRows" msprop:Generator_UserRelationName="fk_tbStations_tbSystems" msprop:Generator_RelationVarName="relationfk_tbStations_tbSystems" msprop:Generator_UserParentTable="tbsystems" msprop:Generator_ParentPropName="tbsystemsRow" />
+      <msdata:Relationship name="fk_tbLog_tbCargoAction1" msdata:parent="tbcargoaction" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="cargoaction_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCargoAction1" msprop:Generator_ParentPropName="tbcargoactionRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbCargoAction1" msprop:Generator_UserParentTable="tbcargoaction" />
+      <msdata:Relationship name="fk_tbLog_tbCommodities1" msdata:parent="tbcommodity" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="commodity_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCommodities1" msprop:Generator_ParentPropName="tbcommodityRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbCommodities1" msprop:Generator_UserParentTable="tbcommodity" />
+      <msdata:Relationship name="fk_tbLog_tbEventType1" msdata:parent="tbeventtype" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="event_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbEventType1" msprop:Generator_ParentPropName="tbeventtypeRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbEventType1" msprop:Generator_UserParentTable="tbeventtype" />
+      <msdata:Relationship name="fk_tbLog_tbStations1" msdata:parent="tbstations" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="station_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbStations1" msprop:Generator_ParentPropName="tbstationsRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbStations1" msprop:Generator_UserParentTable="tbstations" />
+      <msdata:Relationship name="fk_tbLog_tbSystems1" msdata:parent="tbsystems" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="system_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbSystems1" msprop:Generator_ParentPropName="tbsystemsRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbSystems1" msprop:Generator_UserParentTable="tbsystems" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

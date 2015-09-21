@@ -38,6 +38,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         private String                m_UsedPrefix = null;
         private int                   m_RowCountValue = -1;
         private DataColumnCollection  m_ColumnsValue;
+        private DataTable             m_TableType = null;
 
         /// <summary>
         /// constructor for the DataRetriever (used for loading and caching data in DGV VirtualMode)
@@ -47,7 +48,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// <param name="m_DataStatement">sql-statement for loading the data</param>
         /// <param name="SortByColumn">column for sorting (must be existing in the base table (m_BaseTableName) and in the 'DataStement')</param>
         /// <param name="SortOrder">sort oder</param>
-        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, String DataStatement, String SortByColumn, SQLSortOrder SortOrder)
+        /// <param name="SortOrder">optional blueprint for typed tables</param>
+        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, String DataStatement, String SortByColumn, SQLSortOrder SortOrder, DataTable TypeTable = null)
         {
             m_Command                = ((MySqlConnection)DBCon.Connection).CreateCommand();
             m_BaseTableName          = BaseTableName;
@@ -55,6 +57,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             m_ColumnToSortBy         = SortByColumn;
             m_ColumnSortOrder        = SortOrder;
             m_PrimaryKey             = DBCon.getPrimaryKey(this.m_BaseTableName);
+            m_TableType              = TypeTable;
 
             if(this.m_PrimaryKey.Count != 1)
                 throw new Exception("Length of primary key is not '1' (table '" + BaseTableName + "')");
@@ -68,6 +71,18 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             {
                 return m_MemoryCache;
             }
+        }
+
+        private DataTable GetDataTable()
+        {
+            DataTable table;
+
+            if (m_TableType == null)
+                table = new DataTable();
+            else
+                table = m_TableType.Clone();
+
+            return table;
         }
 
         public DataColumnCollection Columns
@@ -84,7 +99,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 m_Command.CommandText       = m_DataStatement;
                 MySqlDataAdapter adapter    = new MySqlDataAdapter();
                 adapter.SelectCommand       = m_Command;
-                DataTable table             = new DataTable();
+                DataTable table             = GetDataTable();
                 table.Locale                = System.Globalization.CultureInfo.InvariantCulture;
 
                 adapter.FillSchema(table, SchemaType.Source);
@@ -114,9 +129,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                                                 m_PrimaryKey[0]);
 
             m_Adapter.SelectCommand = m_Command;
-            DataTable table         = new DataTable();
-            table.Locale            = System.Globalization.CultureInfo.InvariantCulture;
-
+            DataTable table         = GetDataTable();
             m_Adapter.Fill(table);
             return table;
         }
@@ -238,28 +251,55 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         }
 
         // Sets the value of the element parameter if the value is in the cache.
-        private bool IfPageCached_ThenSetElement(int rowIndex,
-            int columnIndex, ref string element)
+        private bool IfPageCached_ThenSetElement(int rowIndex, int columnIndex, ref object element)
         {
             if (IsRowCachedInPage(0, rowIndex))
             {
-                element = cachePages[0].table
-                    .Rows[rowIndex % RowsPerPage][columnIndex].ToString();
+                element = cachePages[0].table.Rows[rowIndex % RowsPerPage][columnIndex];
                 return true;
             }
             else if (IsRowCachedInPage(1, rowIndex))
             {
-                element = cachePages[1].table
-                    .Rows[rowIndex % RowsPerPage][columnIndex].ToString();
+                element = cachePages[1].table.Rows[rowIndex % RowsPerPage][columnIndex];
                 return true;
             }
 
             return false;
         }
 
-        public string RetrieveElement(int rowIndex, int columnIndex)
+        // Sets the value of the element parameter if the value is in the cache.
+        private bool IfPageCached_ThenSetElement(int rowIndex, ref DataRow element)
         {
-            string element = null;
+            if (IsRowCachedInPage(0, rowIndex))
+            {
+                element = cachePages[0].table.Rows[rowIndex % RowsPerPage];
+                return true;
+            }
+            else if (IsRowCachedInPage(1, rowIndex))
+            {
+                element = cachePages[1].table.Rows[rowIndex % RowsPerPage];
+                return true;
+            }
+
+            return false;
+        }
+
+        // Sets the value of the element parameter if the value is in the cache.
+        public void SetElementToPage(int rowIndex, int columnIndex, object element)
+        {
+            if (IsRowCachedInPage(0, rowIndex))
+            {
+                cachePages[0].table.Rows[rowIndex % RowsPerPage][columnIndex] = element;
+            }
+            else if (IsRowCachedInPage(1, rowIndex))
+            {
+                cachePages[1].table.Rows[rowIndex % RowsPerPage][columnIndex] = element;
+            }
+        }
+
+        public object RetrieveElement(int rowIndex, int columnIndex)
+        {
+            object element = null;
 
             if (IfPageCached_ThenSetElement(rowIndex, columnIndex, ref element))
             {
@@ -267,9 +307,15 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             }
             else
             {
-                return RetrieveData_CacheIt_ThenReturnElement(
-                    rowIndex, columnIndex);
+                return RetrieveData_CacheIt_ThenReturnElement(rowIndex, columnIndex);
             }
+        }
+
+        public void PushElement(int rowIndex, int columnIndex, object element)
+        {
+
+            SetElementToPage(rowIndex, columnIndex, element);
+
         }
 
         private void LoadFirstTwoPages()
@@ -279,12 +325,10 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 new DataPage(dataSupply.SupplyPageOfData(DataPage.MapToLowerBoundary(RowsPerPage), RowsPerPage), RowsPerPage)};
         }
 
-        private string RetrieveData_CacheIt_ThenReturnElement(
-            int rowIndex, int columnIndex)
+        private object RetrieveData_CacheIt_ThenReturnElement(int rowIndex, int columnIndex)
         {
             // Retrieve a page worth of data containing the requested value.
-            DataTable table = dataSupply.SupplyPageOfData(
-                DataPage.MapToLowerBoundary(rowIndex), RowsPerPage);
+            DataTable table = dataSupply.SupplyPageOfData(DataPage.MapToLowerBoundary(rowIndex), RowsPerPage);
 
             // Replace the cached page furthest from the requested cell
             // with a new page containing the newly retrieved data.
@@ -326,8 +370,17 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         private bool IsRowCachedInPage(int pageNumber, int rowIndex)
         {
             return rowIndex <= cachePages[pageNumber].HighestIndex &&
-                rowIndex >= cachePages[pageNumber].LowestIndex;
+                   rowIndex >= cachePages[pageNumber].LowestIndex;
         }
 
+
+        public DataRow RetrieveDataColumn(int rowIndex)
+        {
+            DataRow element = null;
+
+            IfPageCached_ThenSetElement(rowIndex, ref element);
+
+            return element;
+        }
     }
 }

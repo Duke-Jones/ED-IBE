@@ -154,10 +154,14 @@ namespace CodeProject.Win32API.Hook
 		/// </summary>
 		public void Install()
 		{
+            #pragma warning disable 618
+
 			hHook = SetWindowsHookEx(hookType, filterFunc, IntPtr.Zero,  (int)AppDomain.GetCurrentThreadId());
 
             // doesn't work:
             //hHook = SetWindowsHookEx(hookType, filterFunc, IntPtr.Zero, (int)Thread.CurrentThread.ManagedThreadId);
+
+            #pragma warning restore  618
 		}
 
 		

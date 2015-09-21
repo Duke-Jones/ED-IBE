@@ -30,6 +30,11 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.15
+   * using a view for Commander's Log
+   * generalize the DataRetriever for use with different types
+   * revision of saving data with the DataRetriever
+-------------------------------------------------------------------------------------         
 SQL 0.0.14
    * optimized VirtualMode-structures, fixed some bugs 
    * code cleanup

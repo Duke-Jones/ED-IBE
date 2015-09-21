@@ -10,6 +10,7 @@ using RegulatedNoise.Enums_and_Utility_Classes;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using RegulatedNoise.SQL;
+using RegulatedNoise.SQL.Datasets;
 
 namespace RegulatedNoise.Commander_s_Log
 {
@@ -29,15 +30,18 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// main selection string for the data from the database
         /// </summary>
-        private const String _sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action," + 
-                                          "       Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
-                                         " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
-                                         "              left join tbCargoAction C on L.cargoaction_id = C.id" +
-                                         "              left join tbSystems S     on L.system_id      = S.id" +
-                                         "              left join tbStations St   on L.station_id     = St.id" +
-                                         "              left join tbCommodity Co  on L.commodity_id   = Co.id";
+        // private const String _sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action," + 
+        //                                   "       Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
+        //                                   " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
+        //                                   "              left join tbCargoAction C on L.cargoaction_id = C.id" +
+        //                                   "              left join tbSystems S     on L.system_id      = S.id" +
+        //                                   "              left join tbStations St   on L.station_id     = St.id" +
+        //                                   "              left join tbCommodity Co  on L.commodity_id   = Co.id";
+        //
+        // ^^^^^^^^^^ replaced by view "viLog" vvvvvvvvvvvvvvv
+        private const String _sqlString = "select * from viLog";
 
-        private SQL.Datasets.dsCommandersLog      m_BaseData;
+        private dsCommandersLog     m_BaseData;
         public tabCommandersLog     m_GUI;
         private BindingSource       m_BindingSource;
         private DataTable           m_Datatable;
@@ -62,10 +66,10 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DataRetriever.SQLSortOrder.desc);
+                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DataRetriever.SQLSortOrder.desc, new dsCommandersLog.vilogDataTable());
 
                 return retriever.RowCount;
-                
+
             }
             catch (Exception ex)
             {
@@ -87,7 +91,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// gets or sets the belonging base dataset
         /// </summary>
-        public SQL.Datasets.dsCommandersLog BaseData
+        public dsCommandersLog BaseData
         {
             get
             {
@@ -209,13 +213,13 @@ namespace RegulatedNoise.Commander_s_Log
         }
 
         /// <summary>
+        /// saving the data of the datarow,
         /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
         /// </summary>
-        /// <param name="dataGridViewExt"></param>
-        /// <param name="RowIndex"></param>
-        internal void SaveData(Enums_and_Utility_Classes.DataGridViewExt dataGridViewExt, int RowIndex)
+        /// <param name="ChangedData">row with data to save</param>
+        internal void SaveData(dsCommandersLog.vilogRow ChangedData)
         {
-            String           sqlString;
+            String sqlString;
 
             try
             {
@@ -226,8 +230,8 @@ namespace RegulatedNoise.Commander_s_Log
                                             "          {0} AS time," +
                                             "          (select id from tbSystems  where systemname  = {1}" +
                                             "          ) AS system_id," +
-                                            "          (select id from tbStations where stationname = {2} " + 
-                                            "                                     and   system_id   = (select id from tbSystems" + 
+                                            "          (select id from tbStations where stationname = {2} " +
+                                            "                                     and   system_id   = (select id from tbSystems" +
                                             "                                                           where systemname = {1})" +
                                             "          ) AS station_id," +
                                             "          (select id from tbEventType   where event     = {3}) As event_id," +
@@ -247,24 +251,24 @@ namespace RegulatedNoise.Commander_s_Log
                                             "  credits_transaction  = d.credits_transaction," +
                                             "  credits_total        = d.credits_total," +
                                             "  notes                = d.notes",
-                                            DBConnector.SQLDateTime(DateTime.Parse((String)dataGridViewExt["time", RowIndex].Value, CultureInfo.CurrentUICulture , DateTimeStyles.None)), 
-                                            DBConnector.SQLAString(DBConnector.SQLEscape((String)dataGridViewExt["systemname", RowIndex].Value)),
-                                            DBConnector.SQLAString(DBConnector.SQLEscape((String)dataGridViewExt["stationname", RowIndex].Value)), 
-                                            DBConnector.SQLAString((String)dataGridViewExt["eevent", RowIndex].Value),
-                                            DBConnector.SQLAString((String)dataGridViewExt["loccommodity", RowIndex].Value),
-                                            DBConnector.SQLAString((String)dataGridViewExt["action", RowIndex].Value),
-                                            dataGridViewExt["cargovolume", RowIndex].Value,
-                                            dataGridViewExt["credits_transaction", RowIndex].Value,
-                                            dataGridViewExt["credits_total", RowIndex].Value,
-                                            dataGridViewExt["notes", RowIndex].Value.ToString().Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(dataGridViewExt["notes", RowIndex].Value.ToString())));
+                                            DBConnector.SQLDateTime(ChangedData.time),
+                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
+                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
+                                            DBConnector.SQLAString(ChangedData.eevent),
+                                            DBConnector.SQLAString(ChangedData.loccommodity),
+                                            DBConnector.SQLAString(ChangedData.action),
+                                            ChangedData.cargovolume,
+                                            ChangedData.credits_transaction,
+                                            ChangedData.credits_total,
+                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)));
 
-                if(Program.DBCon.Execute(sqlString) != 0)
+                if (Program.DBCon.Execute(sqlString) != 0)
                     throw new Exception("Nothing saved to database !!!");
-     
+
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while saving Commanders Log to DB", ex);    
+                throw new Exception("Error while saving Commanders Log to DB", ex);
             }
         }
 
