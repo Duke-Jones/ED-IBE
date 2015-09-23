@@ -119,7 +119,6 @@ namespace RegulatedNoise
         private String _AppPath                                         = string.Empty;
         private String _oldSystemName                                   = null;
         private String _oldStationName                                  = null;
-        private string _CmdrsLog_LastAutoEventID                        = string.Empty;
         private DateTime m_lastEDDNAutoImport                           = DateTime.MinValue;
         private System.Timers.Timer _AutoImportDelayTimer;
 
@@ -3348,7 +3347,7 @@ namespace RegulatedNoise
             switch (a)
             {
                 case AppDelegateType.AddEventToLog:
-                    Program.CommandersLog.CreateEvent((CommandersLogEvent)o);
+                    Program.CommandersLog.SaveEvent((CommandersLogEvent)o);
                     break;
                 case AppDelegateType.ChangeGridSort:
                     ChangeGridSort((string)o);
@@ -3716,19 +3715,6 @@ namespace RegulatedNoise
             sws.BackgroundColour = tbBackgroundColour.Text;
             cbColourScheme.SelectedItem = null;
             Program.Settings.WebserverBackgroundColor = tbBackgroundColour.Text;
-        }
-
-        private void button12_Click_1(object sender, EventArgs e)
-        {
-            foreach (var s in StationDirectory)
-            {
-                var eventDates = s.Value.ToList().Select(x => x.SampleDate.AddSeconds(0 - x.SampleDate.Second)).Distinct();
-
-                foreach (var d in eventDates)
-                {
-                    Program.CommandersLog.CreateEvent("Market Data Collected", s.Key, s.Key, null, null, 0, null, d);
-                }
-            }
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -4726,8 +4712,7 @@ namespace RegulatedNoise
             }
             else
             {
-                _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Jumped To", "", Systemname, "", "", 0, "", DateTime.Now);
-                //setActiveItem(_CmdrsLog_LastAutoEventID);
+                Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, "", "", "", 0, 0, 0, "Jumped To", "");
             }
         }
 
@@ -4739,16 +4724,15 @@ namespace RegulatedNoise
             }
             else
             {
-                if(!_LoggedVisited.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
+                if (!_LoggedVisited.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     bool noLogging = _LoggedVisited.Equals(ID_NOT_SET);
 
                     _LoggedVisited = Systemname + "|" + StationName;
 
-                    if(cbAutoAdd_Visited.Checked && !noLogging)
-                    { 
-                        _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Visited", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                        //setActiveItem(_CmdrsLog_LastAutoEventID);
+                    if (cbAutoAdd_Visited.Checked && !noLogging)
+                    {
+                        Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
                     }
                 }
             }
@@ -4784,17 +4768,15 @@ namespace RegulatedNoise
                                 //}
                                 //else
                                 //{
-                                //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+                                //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
                                 //    setActiveItem(_CmdrsLog_LastAutoEventID);
                                 //}
                             }
                             else
                             {
-                                _CmdrsLog_LastAutoEventID = Program.CommandersLog.CreateEvent("Market Data Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                                //setActiveItem(_CmdrsLog_LastAutoEventID);
+                                Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Market Data Collected", "");
                             }
 
-//                            setActiveItem(_CmdrsLog_LastAutoEventID);
                         }
                     }
                 }
@@ -6286,7 +6268,7 @@ namespace RegulatedNoise
                     {
                         InitialRun = true;
                     }
-
+                    
                     //Jumped_To = true;
                     _LoggedSystem = systemName;
                 }

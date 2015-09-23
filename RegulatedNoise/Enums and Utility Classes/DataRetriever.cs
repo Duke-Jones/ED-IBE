@@ -20,25 +20,19 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
     /// </summary>
     public class DataRetriever : IDataPageRetriever
     {
-        public enum SQLSortOrder
-        {
-            asc,
-            desc
-        }
-
-        private string                m_BaseTableName;
-        private string                m_DataStatement;
-        private MySqlCommand          m_Command;
-        private DataRetrieverCache    m_MemoryCache;
-        private List<String>          m_PrimaryKey;
-        private string                m_ColumnToSortBy;
-        private SQLSortOrder          m_ColumnSortOrder;
-        private MySqlDataAdapter      m_Adapter = new MySqlDataAdapter();
-        private string                m_CommaSeparatedListOfColumnNamesValue = null;
-        private String                m_UsedPrefix = null;
-        private int                   m_RowCountValue = -1;
-        private DataColumnCollection  m_ColumnsValue;
-        private DataTable             m_TableType = null;
+        private string                      m_BaseTableName;
+        private string                      m_DataStatement;
+        private MySqlCommand                m_Command;
+        private DataRetrieverCache          m_MemoryCache;
+        private List<String>                m_PrimaryKey;
+        private string                      m_ColumnToSortBy;
+        private DBConnector.SQLSortOrder    m_ColumnSortOrder;
+        private MySqlDataAdapter            m_Adapter = new MySqlDataAdapter();
+        private string                      m_CommaSeparatedListOfColumnNamesValue = null;
+        private String                      m_UsedPrefix = null;
+        private int                         m_RowCountValue = -1;
+        private DataColumnCollection        m_ColumnsValue;
+        private DataTable                   m_TableType = null;
 
         /// <summary>
         /// constructor for the DataRetriever (used for loading and caching data in DGV VirtualMode)
@@ -49,7 +43,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// <param name="SortByColumn">column for sorting (must be existing in the base table (m_BaseTableName) and in the 'DataStement')</param>
         /// <param name="SortOrder">sort oder</param>
         /// <param name="SortOrder">optional blueprint for typed tables</param>
-        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, String DataStatement, String SortByColumn, SQLSortOrder SortOrder, DataTable TypeTable = null)
+        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, String DataStatement, String SortByColumn, DBConnector.SQLSortOrder SortOrder, DataTable TypeTable = null)
         {
             m_Command                = ((MySqlConnection)DBCon.Connection).CreateCommand();
             m_BaseTableName          = BaseTableName;
@@ -209,6 +203,12 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 highestIndexValue = MapToUpperBoundary(rowIndex);
                 System.Diagnostics.Debug.Assert(lowestIndexValue >= 0);
                 System.Diagnostics.Debug.Assert(highestIndexValue >= 0);
+            }
+
+            public void ClearPage()
+            {
+                lowestIndexValue  = -1;
+                highestIndexValue = -1;
             }
 
             public int LowestIndex
@@ -381,6 +381,12 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             IfPageCached_ThenSetElement(rowIndex, ref element);
 
             return element;
+        }
+
+        internal void Clear()
+        {
+            cachePages[0].ClearPage();
+            cachePages[1].ClearPage();
         }
     }
 }

@@ -237,4 +237,22 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             }
         }
     }
+
+    static class Extensions_Event
+    {
+
+        /// <summary>
+        /// adds a null-checking "Raise" mechanism to events
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="eventHandler"></param>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void Raise <T> (this EventHandler <T> eventHandler, Object sender, T e) where T : EventArgs
+        {
+           if (eventHandler != null) {
+              eventHandler (sender, e);
+           }
+        }
+    }
 }

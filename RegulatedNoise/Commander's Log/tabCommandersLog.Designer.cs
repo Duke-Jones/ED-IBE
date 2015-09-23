@@ -59,7 +59,7 @@
             this.cbLogCargoName = new System.Windows.Forms.ComboBox_ro();
             this.label20 = new System.Windows.Forms.Label();
             this.nbCurrentCredits = new System.Windows.Forms.NumericUpDown_ro();
-            this.cmdCL_ShowHide = new System.Windows.Forms.Button();
+            this.cb_ShowEditField = new System.Windows.Forms.CheckBox();
             this.dgvCommandersLog = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -171,14 +171,14 @@
             this.cbLogSystemName.Location = new System.Drawing.Point(69, 44);
             this.cbLogSystemName.Name = "cbLogSystemName";
             this.cbLogSystemName.ReadOnly = false;
-            this.cbLogSystemName.Size = new System.Drawing.Size(334, 21);
+            this.cbLogSystemName.Size = new System.Drawing.Size(367, 21);
             this.cbLogSystemName.TabIndex = 9;
             // 
             // dtpLogEventDate
             // 
             this.dtpLogEventDate.BackColor_ro = System.Drawing.SystemColors.Control;
             this.dtpLogEventDate.ForeColor_ro = System.Drawing.SystemColors.WindowText;
-            this.dtpLogEventDate.Location = new System.Drawing.Point(196, 18);
+            this.dtpLogEventDate.Location = new System.Drawing.Point(229, 18);
             this.dtpLogEventDate.Name = "dtpLogEventDate";
             this.dtpLogEventDate.ReadOnly = false;
             this.dtpLogEventDate.Size = new System.Drawing.Size(207, 20);
@@ -187,7 +187,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(641, 20);
+            this.label21.Location = new System.Drawing.Point(687, 20);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(35, 13);
             this.label21.TabIndex = 20;
@@ -201,18 +201,18 @@
             this.cbLogEventType.Location = new System.Drawing.Point(69, 17);
             this.cbLogEventType.Name = "cbLogEventType";
             this.cbLogEventType.ReadOnly = false;
-            this.cbLogEventType.Size = new System.Drawing.Size(121, 21);
+            this.cbLogEventType.Size = new System.Drawing.Size(154, 21);
             this.cbLogEventType.TabIndex = 6;
             // 
             // tbLogNotes
             // 
             this.tbLogNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbLogNotes.Location = new System.Drawing.Point(682, 20);
+            this.tbLogNotes.Location = new System.Drawing.Point(728, 20);
             this.tbLogNotes.Multiline = true;
             this.tbLogNotes.Name = "tbLogNotes";
             this.tbLogNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLogNotes.Size = new System.Drawing.Size(346, 104);
+            this.tbLogNotes.Size = new System.Drawing.Size(300, 104);
             this.tbLogNotes.TabIndex = 19;
             // 
             // label18
@@ -237,7 +237,7 @@
             this.cbLogCargoAction.Location = new System.Drawing.Point(490, 44);
             this.cbLogCargoAction.Name = "cbLogCargoAction";
             this.cbLogCargoAction.ReadOnly = false;
-            this.cbLogCargoAction.Size = new System.Drawing.Size(121, 21);
+            this.cbLogCargoAction.Size = new System.Drawing.Size(191, 21);
             this.cbLogCargoAction.TabIndex = 18;
             // 
             // cmdCL_Save
@@ -259,7 +259,7 @@
             this.cbLogStationName.Location = new System.Drawing.Point(69, 71);
             this.cbLogStationName.Name = "cbLogStationName";
             this.cbLogStationName.ReadOnly = false;
-            this.cbLogStationName.Size = new System.Drawing.Size(334, 21);
+            this.cbLogStationName.Size = new System.Drawing.Size(367, 21);
             this.cbLogStationName.TabIndex = 8;
             // 
             // nbLogQuantity
@@ -336,7 +336,7 @@
             this.cbLogCargoName.Location = new System.Drawing.Point(490, 17);
             this.cbLogCargoName.Name = "cbLogCargoName";
             this.cbLogCargoName.ReadOnly = false;
-            this.cbLogCargoName.Size = new System.Drawing.Size(121, 21);
+            this.cbLogCargoName.Size = new System.Drawing.Size(191, 21);
             this.cbLogCargoName.TabIndex = 12;
             // 
             // label20
@@ -363,16 +363,18 @@
             this.nbCurrentCredits.TabIndex = 31;
             this.nbCurrentCredits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // cmdCL_ShowHide
+            // cb_ShowEditField
             // 
-            this.cmdCL_ShowHide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCL_ShowHide.Location = new System.Drawing.Point(1065, 6);
-            this.cmdCL_ShowHide.Name = "cmdCL_ShowHide";
-            this.cmdCL_ShowHide.Size = new System.Drawing.Size(134, 23);
-            this.cmdCL_ShowHide.TabIndex = 46;
-            this.cmdCL_ShowHide.Text = "Show/Hide Edit-Panel";
-            this.cmdCL_ShowHide.UseVisualStyleBackColor = true;
-            this.cmdCL_ShowHide.Click += new System.EventHandler(this.cmdCL_ShowHide_Click);
+            this.cb_ShowEditField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cb_ShowEditField.Appearance = System.Windows.Forms.Appearance.Button;
+            this.cb_ShowEditField.Location = new System.Drawing.Point(1065, 6);
+            this.cb_ShowEditField.Name = "cb_ShowEditField";
+            this.cb_ShowEditField.Size = new System.Drawing.Size(134, 23);
+            this.cb_ShowEditField.TabIndex = 46;
+            this.cb_ShowEditField.Text = "Show/Hide Edit-Panel";
+            this.cb_ShowEditField.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.cb_ShowEditField.UseVisualStyleBackColor = true;
+            this.cb_ShowEditField.CheckedChanged += new System.EventHandler(this.cmdCL_ShowHide_CheckedChanged);
             // 
             // dgvCommandersLog
             // 
@@ -501,7 +503,7 @@
             // 
             this.Controls.Add(this.gbCL_LogEdit);
             this.Controls.Add(this.dgvCommandersLog);
-            this.Controls.Add(this.cmdCL_ShowHide);
+            this.Controls.Add(this.cb_ShowEditField);
             this.Name = "tabCommandersLog";
             this.Size = new System.Drawing.Size(1208, 619);
             this.gbCL_LogEdit.ResumeLayout(false);
@@ -545,7 +547,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_transaction;
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn notes;
-        private System.Windows.Forms.Button cmdCL_ShowHide;
+        private System.Windows.Forms.CheckBox cb_ShowEditField;
         internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
         internal System.Windows.Forms.DateTimePicker_ro dtpLogEventDate;
         internal System.Windows.Forms.ComboBox_ro cbLogEventType;

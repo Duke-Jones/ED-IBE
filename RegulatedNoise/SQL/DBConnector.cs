@@ -26,6 +26,12 @@ namespace RegulatedNoise.SQL
             public Int32                                ConnectTimeout;
         }
 
+        public enum SQLSortOrder
+        {
+            asc,
+            desc
+        }
+
         private ConnectionParams                        m_ConfigData;
         private DbConnection                            m_Connection;
         private DbCommand                               m_Command;
@@ -200,6 +206,16 @@ namespace RegulatedNoise.SQL
 
                     tempConnString.Append("Keepalive=600");
                 }
+
+                if (true) 
+                {
+                    if (tempConnString.Length > 0)
+                        tempConnString.Append(";");
+
+                    tempConnString.Append("Allow User Variables=");
+                    tempConnString.Append("True");
+                }
+                
 
                 m_Connection.ConnectionString = tempConnString.ToString();
                 m_Connection.Open();
@@ -950,6 +966,44 @@ namespace RegulatedNoise.SQL
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="TableName"<table</param>
+        /// <param name="OrderBy">name of the column to order by</param>
+        /// <param name="OrderDirection">order direction</param>
+        /// <param name="KeyColumn">name of the column with the searched value</param>
+        /// <param name="KeyValue">searched value (for strings etc. add single quotes)</param>
+        /// <returns>zero-based index of the column, -1 if not found</returns>
+        public Int32 getRowIndex(String TableName, String OrderBy, SQLSortOrder OrderDirection, String KeyColumn, String KeyValue)
+        {
+            String       sqlString;
+            DataTable    Data;
+            Int32        retValue;
+
+            try
+            {
+                retValue = -1;
+
+                sqlString = String.Format("select ROWNUM from ( " +
+                                          "   SELECT @rownum:= @rownum+1 ROWNUM, t.*" +
+                                          "       FROM (SELECT @rownum:=0) r, (SELECT * FROM {0} ORDER BY {1} {2}) t ) t2" +
+                                          " where {3} = {4} limit 1", TableName, OrderBy, OrderDirection.ToString(), KeyColumn, KeyValue );
+
+                Data = new DataTable();
+
+                if (this.Execute(sqlString, Data) == 1)
+                { 
+                    retValue = (Int32)((Double)Data.Rows[0]["ROWNUM"])-1 ;
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retrieving a rowindex", ex);
+            }
+        }
     }
 
 

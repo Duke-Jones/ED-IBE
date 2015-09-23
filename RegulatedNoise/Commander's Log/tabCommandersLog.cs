@@ -22,6 +22,8 @@ namespace RegulatedNoise.Commander_s_Log
             Add
 	    }
 
+        private const String        DB_GROUPNAME                    = "CmdrsLog";
+
         private CommandersLog       m_DataSource;                   // data object
         private enCLAction          m_CL_State;                     // current gui state
 
@@ -54,7 +56,14 @@ namespace RegulatedNoise.Commander_s_Log
                 m_DataSource     = value;
 
                 if((m_DataSource != null) && (m_DataSource.GUI != this))
+                { 
+                    if(m_DataSource.GUI != null)
+                        m_DataSource.DataChanged -= m_DataSource_DataChanged;
+
                     m_DataSource.GUI = this;
+
+                    m_DataSource.DataChanged += m_DataSource_DataChanged;
+                }
             }
         }
 
@@ -102,6 +111,8 @@ namespace RegulatedNoise.Commander_s_Log
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
                 dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
+
+                setEditfieldBoxVisible(Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, "showEditFields", "true", false));
 
                 Cursor = oldCursor;
             }
@@ -209,6 +220,30 @@ namespace RegulatedNoise.Commander_s_Log
         }
 
         /// <summary>
+        /// the data object informs the gui about changed data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void m_DataSource_DataChanged(object sender, CommandersLog.DataChangedEventArgs e)
+        {
+            try
+            {
+                // force refresh
+                m_DataSource.Retriever.MemoryCache.Clear();
+                dgvCommandersLog.Invalidate();
+
+                // jump to the new row
+                dgvCommandersLog.CurrentCell = dgvCommandersLog[1, e.DataRow];
+
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in m_DataSource_DataChanged");
+            }
+        }
+
+
+        /// <summary>
         /// initates editing of the editable fields
         /// </summary>
         /// <param name="sender"></param>
@@ -273,6 +308,10 @@ namespace RegulatedNoise.Commander_s_Log
             }
         }
 
+        /// <summary>
+        /// initiates the save procedure
+        /// (copying data to the datacache (trough DataGridView) and writing changes to DB)
+        /// </summary>
         private void saveLogEntry()
         {
             try
@@ -296,7 +335,7 @@ namespace RegulatedNoise.Commander_s_Log
                 dgvCommandersLog.ReadOnly = true;
 
                 // save changed data (from data cache through "CellValuePushed"-event) to database
-                m_DataSource.SaveData((dsCommandersLog.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvCommandersLog.CurrentRow.Index));
+                m_DataSource.SaveEvent((dsCommandersLog.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvCommandersLog.CurrentRow.Index));
 
                 m_CL_State = enCLAction.None;
 
@@ -390,7 +429,7 @@ namespace RegulatedNoise.Commander_s_Log
                 nbTransactionAmount.ReadOnly      = !Enabled;
                 nbCurrentCredits.ReadOnly         = !Enabled;
                 cbLogCargoName.ReadOnly           = !Enabled;
-                cbLogCargoAction.ReadOnly          = !Enabled;
+                cbLogCargoAction.ReadOnly         = !Enabled;
                 nbLogQuantity.ReadOnly            = !Enabled;
                 tbLogNotes.ReadOnly               = !Enabled;
 
@@ -456,11 +495,27 @@ namespace RegulatedNoise.Commander_s_Log
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmdCL_ShowHide_Click(object sender, EventArgs e)
+        private void cmdCL_ShowHide_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-                if(dgvCommandersLog.Top == gbCL_LogEdit.Top)
+                setEditfieldBoxVisible(cb_ShowEditField.Checked);
+            }
+            catch (Exception ex)
+            {
+               cErr.showError(ex, "Error in cmdCL_ShowHide_Click");    
+            }
+        }
+
+        /// <summary>
+        /// switches the visibilty of the editbutton-panel and saves the setting to db
+        /// </summary>
+        /// <param name="setVisible"></param>
+        private void setEditfieldBoxVisible(Boolean setVisible)
+        {
+            try 
+	        {	        
+                if(setVisible)
                 {
                     gbCL_LogEdit.Visible     = true;
                     dgvCommandersLog.Top     = m_InitialTopOfGrid;
@@ -472,12 +527,15 @@ namespace RegulatedNoise.Commander_s_Log
                     dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
                     gbCL_LogEdit.Visible     = false;
                 }
-            }
-            catch (Exception ex)
-            {
-               cErr.showError(ex, "Error in cmdCL_ShowHide_Click");    
-            }
-        }
 
+                cb_ShowEditField.Checked = setVisible;
+                Program.DBCon.setIniValue(DB_GROUPNAME, "showEditFields", setVisible.ToString());
+	        }
+	        catch (Exception ex)
+	        {
+		        throw new Exception("Error while changing visibility of editfield-groupbox", ex);
+	        }
+
+        }
     }
 }

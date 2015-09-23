@@ -30,6 +30,12 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.16
+   * Commander's Log finished initial 
+     - saving is working
+	 - auto-adding events (Jumpped to etc.) is working
+   * doin' some cleanups
+-------------------------------------------------------------------------------------         
 SQL 0.0.15
    * using a view for Commander's Log
    * generalize the DataRetriever for use with different types

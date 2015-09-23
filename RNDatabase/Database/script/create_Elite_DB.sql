@@ -18,9 +18,9 @@ USE `Elite_DB` ;
 -- Table `Elite_DB`.`tbAllegiance`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbAllegiance` (
-  `id` INT NOT NULL,
-  `allegiance` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `allegiance` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -28,9 +28,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbEconomy`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEconomy` (
-  `id` INT NOT NULL,
-  `economy` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `economy` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -38,9 +38,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbGovernment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbGovernment` (
-  `id` INT NOT NULL,
-  `government` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `government` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -48,9 +48,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbState`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbState` (
-  `id` INT NOT NULL,
-  `state` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `state` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -58,9 +58,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbSecurity`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSecurity` (
-  `id` INT NOT NULL,
-  `security` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `security` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -68,31 +68,31 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbSystems`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
-  `id` INT NOT NULL,
-  `systemname` VARCHAR(80) NOT NULL,
-  `x` DOUBLE NULL,
-  `y` DOUBLE NULL,
-  `z` DOUBLE NULL,
-  `faction` VARCHAR(80) NULL,
-  `population` MEDIUMTEXT NULL,
-  `government_id` INT NULL,
-  `allegiance_id` INT NULL,
-  `state_id` INT NULL,
-  `security_id` INT NULL,
-  `primary_economy_id` INT NULL,
-  `needs_permit` TINYINT(1) NULL,
-  `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC),
-  INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC),
-  INDEX `fk_tbSystems_tbGovernment1_idx` (`government_id` ASC),
-  INDEX `fk_tbSystems_tbState1_idx` (`state_id` ASC),
-  INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC),
-  INDEX `idx_x` USING BTREE (`x` ASC),
-  INDEX `idx_y` USING BTREE (`y` ASC),
-  INDEX `idx_z` USING BTREE (`z` ASC),
+  `id` INT NOT NULL COMMENT '',
+  `systemname` VARCHAR(80) NOT NULL COMMENT '',
+  `x` DOUBLE NULL COMMENT '',
+  `y` DOUBLE NULL COMMENT '',
+  `z` DOUBLE NULL COMMENT '',
+  `faction` VARCHAR(80) NULL COMMENT '',
+  `population` MEDIUMTEXT NULL COMMENT '',
+  `government_id` INT NULL COMMENT '',
+  `allegiance_id` INT NULL COMMENT '',
+  `state_id` INT NULL COMMENT '',
+  `security_id` INT NULL COMMENT '',
+  `primary_economy_id` INT NULL COMMENT '',
+  `needs_permit` TINYINT(1) NULL COMMENT '',
+  `updated_at` DATETIME NOT NULL COMMENT '',
+  `is_changed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  `visited` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbGovernment1_idx` (`government_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbState1_idx` (`state_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC)  COMMENT '',
+  INDEX `idx_x` USING BTREE (`x` ASC)  COMMENT '',
+  INDEX `idx_y` USING BTREE (`y` ASC)  COMMENT '',
+  INDEX `idx_z` USING BTREE (`z` ASC)  COMMENT '',
   CONSTRAINT `fk_tbSystems_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
     REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
@@ -125,9 +125,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbStationType`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStationType` (
-  `id` INT NOT NULL,
-  `stationtype` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `stationtype` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -135,31 +135,31 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbStations`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations` (
-  `id` INT NOT NULL,
-  `stationname` VARCHAR(80) NOT NULL,
-  `system_id` INT NOT NULL,
-  `max_landing_pad_size` CHAR(1) NULL,
-  `distance_to_star` INT NULL,
-  `faction` VARCHAR(80) NULL,
-  `government_id` INT NULL,
-  `allegiance_id` INT NULL,
-  `state_id` INT NULL,
-  `stationtype_id` INT NULL,
-  `has_blackmarket` TINYINT(1) NULL,
-  `has_commodities` TINYINT(1) NULL,
-  `has_refuel` TINYINT(1) NULL,
-  `has_repair` TINYINT(1) NULL,
-  `has_rearm` TINYINT(1) NULL,
-  `has_outfitting` TINYINT(1) NULL,
-  `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC),
-  INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC),
-  INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC),
-  INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC),
-  INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC),
+  `id` INT NOT NULL COMMENT '',
+  `stationname` VARCHAR(80) NOT NULL COMMENT '',
+  `system_id` INT NOT NULL COMMENT '',
+  `max_landing_pad_size` CHAR(1) NULL COMMENT '',
+  `distance_to_star` INT NULL COMMENT '',
+  `faction` VARCHAR(80) NULL COMMENT '',
+  `government_id` INT NULL COMMENT '',
+  `allegiance_id` INT NULL COMMENT '',
+  `state_id` INT NULL COMMENT '',
+  `stationtype_id` INT NULL COMMENT '',
+  `has_blackmarket` TINYINT(1) NULL COMMENT '',
+  `has_commodities` TINYINT(1) NULL COMMENT '',
+  `has_refuel` TINYINT(1) NULL COMMENT '',
+  `has_repair` TINYINT(1) NULL COMMENT '',
+  `has_rearm` TINYINT(1) NULL COMMENT '',
+  `has_outfitting` TINYINT(1) NULL COMMENT '',
+  `updated_at` DATETIME NOT NULL COMMENT '',
+  `is_changed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  `visited` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_tbSystems`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
@@ -192,10 +192,10 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbCategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCategory` (
-  `id` INT NOT NULL,
-  `category` VARCHAR(80) NOT NULL,
-  `loccategory` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `category` VARCHAR(80) NOT NULL COMMENT '',
+  `loccategory` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -203,22 +203,22 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbCommodity`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity` (
-  `id` INT NOT NULL,
-  `commodity` VARCHAR(80) NOT NULL,
-  `loccommodity` VARCHAR(80) NULL,
-  `category_id` INT NULL,
-  `average_price` INT NULL DEFAULT -1,
-  `pwl_demand_buy_low` INT NULL DEFAULT -1,
-  `pwl_demand_buy_high` INT NULL DEFAULT -1,
-  `pwl_supply_buy_low` INT NULL DEFAULT -1,
-  `pwl_supply_buy_high` INT NULL DEFAULT -1,
-  `pwl_demand_sell_low` INT NULL DEFAULT -1,
-  `pwl_demand_sell_high` INT NULL DEFAULT -1,
-  `pwl_supply_sell_low` INT NULL DEFAULT -1,
-  `pwl_supply_sell_high` INT NULL DEFAULT -1,
-  `is_rare` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbCommodities_tbCategoriy1_idx` (`category_id` ASC),
+  `id` INT NOT NULL COMMENT '',
+  `commodity` VARCHAR(80) NOT NULL COMMENT '',
+  `loccommodity` VARCHAR(80) NULL COMMENT '',
+  `category_id` INT NULL COMMENT '',
+  `average_price` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_demand_buy_low` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_demand_buy_high` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_supply_buy_low` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_supply_buy_high` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_demand_sell_low` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_demand_sell_high` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_supply_sell_low` INT NULL DEFAULT -1 COMMENT '',
+  `pwl_supply_sell_high` INT NULL DEFAULT -1 COMMENT '',
+  `is_rare` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbCommodities_tbCategoriy1_idx` (`category_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbCommodities_tbCategoriy1`
     FOREIGN KEY (`category_id`)
     REFERENCES `Elite_DB`.`tbCategory` (`id`)
@@ -231,11 +231,11 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbImportCommodity`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbImportCommodity` (
-  `station_id` INT NOT NULL,
-  `commodity_id` INT NOT NULL,
-  PRIMARY KEY (`station_id`, `commodity_id`),
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC),
-  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC),
+  `station_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -253,11 +253,11 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbExportCommodity`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbExportCommodity` (
-  `station_id` INT NOT NULL,
-  `commodity_id` INT NOT NULL,
-  PRIMARY KEY (`station_id`, `commodity_id`),
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC),
-  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC),
+  `station_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations10`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -275,11 +275,11 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbProhibitedCommodity`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbProhibitedCommodity` (
-  `station_id` INT NOT NULL,
-  `commodity_id` INT NOT NULL,
-  PRIMARY KEY (`station_id`, `commodity_id`),
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC),
-  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC),
+  `station_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations100`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -297,9 +297,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbSources`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSources` (
-  `id` INT NOT NULL,
-  `sourcename` VARCHAR(80) NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `sourcename` VARCHAR(80) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -307,15 +307,15 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbPrice`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPrice` (
-  `station_id` INT NOT NULL,
-  `commodity_id` INT NOT NULL,
-  `price` INT NOT NULL,
-  `timestamp` DATETIME NOT NULL,
-  `source_id` INT NOT NULL,
-  PRIMARY KEY (`station_id`, `commodity_id`),
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities2_idx` (`commodity_id` ASC),
-  INDEX `fk_tbStations_has_tbCommodities_tbStations2_idx` (`station_id` ASC),
-  INDEX `fk_tbPrice_tbSources1_idx` (`source_id` ASC),
+  `station_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NOT NULL COMMENT '',
+  `price` INT NOT NULL COMMENT '',
+  `timestamp` DATETIME NOT NULL COMMENT '',
+  `source_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbCommodities2_idx` (`commodity_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities_tbStations2_idx` (`station_id` ASC)  COMMENT '',
+  INDEX `fk_tbPrice_tbSources1_idx` (`source_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations2`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -338,15 +338,15 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbPriceHistory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPriceHistory` (
-  `tbStations_id` INT NOT NULL,
-  `tbCommodities_id` INT NOT NULL,
-  `price` INT NOT NULL,
-  `timestamp` DATETIME NOT NULL,
-  `source_id` INT NOT NULL,
-  PRIMARY KEY (`tbStations_id`, `tbCommodities_id`),
-  INDEX `fk_tbStations_has_tbCommodities1_tbCommodities1_idx` (`tbCommodities_id` ASC),
-  INDEX `fk_tbStations_has_tbCommodities1_tbStations1_idx` (`tbStations_id` ASC),
-  INDEX `fk_tbPriceHistory_tbSources1_idx` (`source_id` ASC),
+  `tbStations_id` INT NOT NULL COMMENT '',
+  `tbCommodities_id` INT NOT NULL COMMENT '',
+  `price` INT NOT NULL COMMENT '',
+  `timestamp` DATETIME NOT NULL COMMENT '',
+  `source_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`tbStations_id`, `tbCommodities_id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities1_tbCommodities1_idx` (`tbCommodities_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities1_tbStations1_idx` (`tbStations_id` ASC)  COMMENT '',
+  INDEX `fk_tbPriceHistory_tbSources1_idx` (`source_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbStations1`
     FOREIGN KEY (`tbStations_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -369,11 +369,11 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbStationEconomy`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStationEconomy` (
-  `station_id` INT NOT NULL,
-  `economy_id` INT NOT NULL,
-  PRIMARY KEY (`station_id`, `economy_id`),
-  INDEX `fk_tbStations_has_tbEconomy_tbEconomy1_idx` (`economy_id` ASC),
-  INDEX `fk_tbStations_has_tbEconomy_tbStations1_idx` (`station_id` ASC),
+  `station_id` INT NOT NULL COMMENT '',
+  `economy_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`station_id`, `economy_id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbEconomy_tbEconomy1_idx` (`economy_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbEconomy_tbStations1_idx` (`station_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbEconomy_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -391,9 +391,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbLanguage`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLanguage` (
-  `id` INT NOT NULL,
-  `language` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `language` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -401,11 +401,11 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbCommodityLocalization`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityLocalization` (
-  `commodity_id` INT NOT NULL,
-  `language_id` INT NOT NULL,
-  `locname` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`commodity_id`, `language_id`),
-  INDEX `fk_tbLocalization_tbLanguage1_idx` (`language_id` ASC),
+  `commodity_id` INT NOT NULL COMMENT '',
+  `language_id` INT NOT NULL COMMENT '',
+  `locname` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`commodity_id`, `language_id`)  COMMENT '',
+  INDEX `fk_tbLocalization_tbLanguage1_idx` (`language_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbLocalization_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
@@ -423,11 +423,11 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbCategoryLocalization`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCategoryLocalization` (
-  `category_id` INT NOT NULL,
-  `language_id` INT NOT NULL,
-  `locname` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`category_id`, `language_id`),
-  INDEX `fk_tbLocalization_tbLanguage1_idx` (`language_id` ASC),
+  `category_id` INT NOT NULL COMMENT '',
+  `language_id` INT NOT NULL COMMENT '',
+  `locname` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`category_id`, `language_id`)  COMMENT '',
+  INDEX `fk_tbLocalization_tbLanguage1_idx` (`language_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbLocalization_tbLanguage10`
     FOREIGN KEY (`language_id`)
     REFERENCES `Elite_DB`.`tbLanguage` (`id`)
@@ -445,10 +445,10 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbInitValue`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbInitValue` (
-  `InitGroup` VARCHAR(80) NOT NULL,
-  `InitKey` VARCHAR(80) NOT NULL,
-  `InitValue` VARCHAR(255) NULL,
-  PRIMARY KEY (`InitGroup`, `InitKey`))
+  `InitGroup` VARCHAR(80) NOT NULL COMMENT '',
+  `InitKey` VARCHAR(80) NOT NULL COMMENT '',
+  `InitValue` VARCHAR(255) NULL COMMENT '',
+  PRIMARY KEY (`InitGroup`, `InitKey`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -456,9 +456,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbEventType`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEventType` (
-  `id` INT NOT NULL,
-  `event` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `event` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -466,9 +466,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbCargoAction`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCargoAction` (
-  `id` INT NOT NULL,
-  `action` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`))
+  `id` INT NOT NULL COMMENT '',
+  `action` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
 
@@ -476,22 +476,22 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbLog`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLog` (
-  `time` DATETIME NOT NULL,
-  `system_id` INT NULL,
-  `station_id` INT NULL,
-  `event_id` INT NOT NULL,
-  `commodity_id` INT NULL,
-  `cargoaction_id` INT NULL,
-  `cargovolume` INT NULL,
-  `credits_transaction` INT NULL,
-  `credits_total` INT NULL,
-  `notes` VARCHAR(1024) NULL,
-  INDEX `fk_tbLog_tbCommodities1_idx` (`commodity_id` ASC),
-  INDEX `fk_tbLog_tbSystems1_idx` (`system_id` ASC),
-  INDEX `fk_tbLog_tbStations1_idx` (`station_id` ASC),
-  INDEX `fk_tbLog_tbEventType1_idx` (`event_id` ASC),
-  INDEX `fk_tbLog_tbCargoAction1_idx` (`cargoaction_id` ASC),
-  PRIMARY KEY (`time`),
+  `time` DATETIME NOT NULL COMMENT '',
+  `system_id` INT NULL COMMENT '',
+  `station_id` INT NULL COMMENT '',
+  `event_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NULL COMMENT '',
+  `cargoaction_id` INT NULL COMMENT '',
+  `cargovolume` INT NULL COMMENT '',
+  `credits_transaction` INT NULL COMMENT '',
+  `credits_total` INT NULL COMMENT '',
+  `notes` VARCHAR(1024) NULL COMMENT '',
+  INDEX `fk_tbLog_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
+  INDEX `fk_tbLog_tbSystems1_idx` (`system_id` ASC)  COMMENT '',
+  INDEX `fk_tbLog_tbStations1_idx` (`station_id` ASC)  COMMENT '',
+  INDEX `fk_tbLog_tbEventType1_idx` (`event_id` ASC)  COMMENT '',
+  INDEX `fk_tbLog_tbCargoAction1_idx` (`cargoaction_id` ASC)  COMMENT '',
+  PRIMARY KEY (`time`)  COMMENT '',
   CONSTRAINT `fk_tbLog_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
@@ -524,31 +524,31 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbSystems_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems_org` (
-  `id` INT NOT NULL,
-  `systemname` VARCHAR(80) NOT NULL,
-  `x` DOUBLE NULL,
-  `y` DOUBLE NULL,
-  `z` DOUBLE NULL,
-  `faction` VARCHAR(80) NULL,
-  `population` MEDIUMTEXT NULL,
-  `government_id` INT NULL,
-  `allegiance_id` INT NULL,
-  `state_id` INT NULL,
-  `security_id` INT NULL,
-  `primary_economy_id` INT NULL,
-  `needs_permit` TINYINT(1) NULL,
-  `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC),
-  INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC),
-  INDEX `fk_tbSystems_tbGovernment1_idx` (`government_id` ASC),
-  INDEX `fk_tbSystems_tbState1_idx` (`state_id` ASC),
-  INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC),
-  INDEX `idx_x` USING BTREE (`x` ASC),
-  INDEX `idx_y` USING BTREE (`y` ASC),
-  INDEX `idx_z` USING BTREE (`z` ASC),
+  `id` INT NOT NULL COMMENT '',
+  `systemname` VARCHAR(80) NOT NULL COMMENT '',
+  `x` DOUBLE NULL COMMENT '',
+  `y` DOUBLE NULL COMMENT '',
+  `z` DOUBLE NULL COMMENT '',
+  `faction` VARCHAR(80) NULL COMMENT '',
+  `population` MEDIUMTEXT NULL COMMENT '',
+  `government_id` INT NULL COMMENT '',
+  `allegiance_id` INT NULL COMMENT '',
+  `state_id` INT NULL COMMENT '',
+  `security_id` INT NULL COMMENT '',
+  `primary_economy_id` INT NULL COMMENT '',
+  `needs_permit` TINYINT(1) NULL COMMENT '',
+  `updated_at` DATETIME NOT NULL COMMENT '',
+  `is_changed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  `visited` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbGovernment1_idx` (`government_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbState1_idx` (`state_id` ASC)  COMMENT '',
+  INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC)  COMMENT '',
+  INDEX `idx_x` USING BTREE (`x` ASC)  COMMENT '',
+  INDEX `idx_y` USING BTREE (`y` ASC)  COMMENT '',
+  INDEX `idx_z` USING BTREE (`z` ASC)  COMMENT '',
   CONSTRAINT `fk_tbSystems_tbAllegiance10`
     FOREIGN KEY (`allegiance_id`)
     REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
@@ -581,31 +581,31 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbStations_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
-  `id` INT NOT NULL,
-  `stationname` VARCHAR(80) NOT NULL,
-  `system_id` INT NOT NULL,
-  `max_landing_pad_size` CHAR(1) NULL,
-  `distance_to_star` INT NULL,
-  `faction` VARCHAR(80) NULL,
-  `government_id` INT NULL,
-  `allegiance_id` INT NULL,
-  `state_id` INT NULL,
-  `stationtype_id` INT NULL,
-  `has_blackmarket` TINYINT(1) NULL,
-  `has_commodities` TINYINT(1) NULL,
-  `has_refuel` TINYINT(1) NULL,
-  `has_repair` TINYINT(1) NULL,
-  `has_rearm` TINYINT(1) NULL,
-  `has_outfitting` TINYINT(1) NULL,
-  `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC),
-  INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC),
-  INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC),
-  INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC),
-  INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC),
+  `id` INT NOT NULL COMMENT '',
+  `stationname` VARCHAR(80) NOT NULL COMMENT '',
+  `system_id` INT NOT NULL COMMENT '',
+  `max_landing_pad_size` CHAR(1) NULL COMMENT '',
+  `distance_to_star` INT NULL COMMENT '',
+  `faction` VARCHAR(80) NULL COMMENT '',
+  `government_id` INT NULL COMMENT '',
+  `allegiance_id` INT NULL COMMENT '',
+  `state_id` INT NULL COMMENT '',
+  `stationtype_id` INT NULL COMMENT '',
+  `has_blackmarket` TINYINT(1) NULL COMMENT '',
+  `has_commodities` TINYINT(1) NULL COMMENT '',
+  `has_refuel` TINYINT(1) NULL COMMENT '',
+  `has_repair` TINYINT(1) NULL COMMENT '',
+  `has_rearm` TINYINT(1) NULL COMMENT '',
+  `has_outfitting` TINYINT(1) NULL COMMENT '',
+  `updated_at` DATETIME NOT NULL COMMENT '',
+  `is_changed` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  `visited` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_tbSystems0`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
@@ -638,9 +638,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbVisitedSystems`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedSystems` (
-  `system_id` INT NOT NULL,
-  `time` DATETIME NOT NULL,
-  PRIMARY KEY (`system_id`),
+  `system_id` INT NOT NULL COMMENT '',
+  `time` DATETIME NOT NULL COMMENT '',
+  PRIMARY KEY (`system_id`)  COMMENT '',
   CONSTRAINT `fk_tbSystems_tbVisitedSystems`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
@@ -653,9 +653,9 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbVisitedStations`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedStations` (
-  `station_id` INT NOT NULL,
-  `time` DATETIME NOT NULL,
-  PRIMARY KEY (`station_id`),
+  `station_id` INT NOT NULL COMMENT '',
+  `time` DATETIME NOT NULL COMMENT '',
+  PRIMARY KEY (`station_id`)  COMMENT '',
   CONSTRAINT `fk_tbStations_tbVisitedStations`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -663,6 +663,19 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedStations` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+USE `Elite_DB` ;
+
+-- -----------------------------------------------------
+-- Placeholder table for view `Elite_DB`.`vilog`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eevent` INT, `action` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `notes` INT);
+
+-- -----------------------------------------------------
+-- View `Elite_DB`.`vilog`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Elite_DB`.`vilog`;
+USE `Elite_DB`;
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`event` AS `eevent`,`c`.`action` AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` AS `credits_transaction`,`l`.`credits_total` AS `credits_total`,`l`.`notes` AS `notes` from (((((`tblog` `l` left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

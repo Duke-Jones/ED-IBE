@@ -25,6 +25,27 @@ namespace RegulatedNoise.Commander_s_Log
             cbCargoAction
         }
 
+#region event handler
+
+        public event EventHandler<DataChangedEventArgs> DataChanged;
+
+        protected virtual void OnDataChanged(DataChangedEventArgs e)
+        {
+            EventHandler<DataChangedEventArgs> myEvent = DataChanged;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class DataChangedEventArgs : EventArgs
+        {
+            public Int32    DataRow { get; set; }
+            public DateTime DataKey { get; set; }
+        }
+
+#endregion
+
         private const String table = "tbLog";
 
         /// <summary>
@@ -46,16 +67,24 @@ namespace RegulatedNoise.Commander_s_Log
         private BindingSource       m_BindingSource;
         private DataTable           m_Datatable;
         private DataRetriever       retriever;
+        private Boolean             m_NoGuiNotifyAfterSave;
 
         /// <summary>
         /// constructor
         /// </summary>
         public CommandersLog()
         {
-            m_BindingSource             = new BindingSource();
-            m_Datatable                 = new DataTable();
+            try
+            {
+                m_BindingSource             = new BindingSource();
+                m_Datatable                 = new DataTable();
 
-            m_BindingSource.DataSource  = m_Datatable;
+                m_BindingSource.DataSource  = m_Datatable;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while creating the object", ex);
+            }
         }
 
         /// <summary>
@@ -66,10 +95,9 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DataRetriever.SQLSortOrder.desc, new dsCommandersLog.vilogDataTable());
+                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DBConnector.SQLSortOrder.desc, new dsCommandersLog.vilogDataTable());
 
                 return retriever.RowCount;
-
             }
             catch (Exception ex)
             {
@@ -120,155 +148,20 @@ namespace RegulatedNoise.Commander_s_Log
             }
         }
 
-        public string CreateEvent()
-        {
-            String newEventID = Guid.NewGuid().ToString();
-
-            //LogEvents.Add(new CommandersLogEvent 
-            //{
-            //    EventType =_callingForm.cbLogEventType.Text,
-            //    Station =_callingForm.cbLogStationName.Text,
-            //    System =_callingForm.cbLogSystemName.Text,
-            //    Cargo =_callingForm.cbLogCargoName.Text,
-            //    CargoAction =_callingForm.cbLogCargoAction.Text,
-            //    CargoVolume =int.Parse(_callingForm.cbLogQuantity.Text),
-            //    Notes =_callingForm.tbLogNotes.Text,
-            //    EventDate = _callingForm.dtpLogEventDate.Value,
-            //    EventID = newEventID
-            //});
-
-            return newEventID;
-        }
-
-        public String CreateEvent(string eventType, string station, string system, string cargo, string cargoAction, int cargoVolume, string notes, DateTime eventDate)
-        {
-            String newEventID = Guid.NewGuid().ToString();
-
-            //LogEvents.Add(new CommandersLogEvent
-            //{
-            //    EventType =               eventType                  ,
-            //    Station =                 station                    ,
-            //    System =                  system                     ,
-            //    Cargo =                   cargo                      ,
-            //    CargoAction =             cargoAction                ,
-            //    CargoVolume =             cargoVolume                ,
-            //    Notes =                   notes                      ,
-            //    EventDate        =        eventDate                  ,
-            //    EventID = newEventID  
-            //});
-
-            //UpdateCommandersLogListView();
-
-            return newEventID;
-        }
-
-        public void CreateNewEvent() // Clears the fields ready for input
-        {
-            // set it to UTC everywhere or nowhere -> pay attention to the different timezones
-            // if you wan't to concatenate ED-time and local pc time
-            //var now =DateTime.UtcNow;
-            //var now = DateTime.Now;
-            //ClearLogEventFields();
-            //_callingForm.dtpLogEventDate.Value = now;
-            //_callingForm.tbLogEventID.Text ="";
-            //_callingForm.btCreateAddEntry.Text = "Save As New Entry";
-
-        }
-
-        public void CreateEvent(CommandersLogEvent partiallyCompleteCommandersLogEventEvent) // when we create from the webserver
-        {
-            // set it to UTC everywhere or nowhere -> pay attention to the different timezones
-            // if you wan't to concatenate ED-time and local pc time
-            ////var now =DateTime.UtcNow;
-            //var now = DateTime.Now;
-            //var newGuid = Guid.NewGuid().ToString();
-            //ClearLogEventFields();
-            //_callingForm.dtpLogEventDate.Value = now;
-            //_callingForm.tbLogEventID.Text = newGuid;
-            //partiallyCompleteCommandersLogEventEvent.EventID = Guid.NewGuid().ToString();
-            //partiallyCompleteCommandersLogEventEvent.EventDate = now;
-            
-            //LogEvents.Add(partiallyCompleteCommandersLogEventEvent);
-
-        }
-
-        private void ClearLogEventFields()
-        {
-            //_callingForm.cbLogEventType.Text = "";
-            //_callingForm.cbLogStationName.Text = "";
-            //_callingForm.cbLogSystemName.Text = "";
-            //_callingForm.cbLogCargoName.Text = "";
-            //_callingForm.cbLogCargoAction.Text = "";
-            //_callingForm.cbLogQuantity.Text = "0";
-            //_callingForm.tbLogNotes.Text = "";
-            //_callingForm.nbTransactionAmount.Text = "0";
-
-            //_callingForm.UpdateSystemNameFromLogFile();
-
-            //if (_callingForm.Program.actualCondition.System != "")
-            //    _callingForm.cbLogSystemName.Text = _callingForm.Program.actualCondition.System;
-
-            //if (_callingForm.Program.actualCondition.Station != "")
-            //    _callingForm.cbLogStationName.Text = _callingForm.Program.actualCondition.Station;
-        }
-
         /// <summary>
-        /// saving the data of the datarow,
-        /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
+        /// Gets if the GUI must be informed after a data change or sets this value.
+        /// Will automatically resetted after the next call of "SaveEvent".
+        /// Default is "GUI must be informed" (NoGuiNotifyAfterSave = False)
         /// </summary>
-        /// <param name="ChangedData">row with data to save</param>
-        internal void SaveData(dsCommandersLog.vilogRow ChangedData)
+        public Boolean NoGuiNotifyAfterSave
         {
-            String sqlString;
-
-            try
+            get
             {
-
-                sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
-                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
-                                            " SELECT d.* FROM (SELECT" +
-                                            "          {0} AS time," +
-                                            "          (select id from tbSystems  where systemname  = {1}" +
-                                            "          ) AS system_id," +
-                                            "          (select id from tbStations where stationname = {2} " +
-                                            "                                     and   system_id   = (select id from tbSystems" +
-                                            "                                                           where systemname = {1})" +
-                                            "          ) AS station_id," +
-                                            "          (select id from tbEventType   where event     = {3}) As event_id," +
-                                            "          (select id from tbCommodity   where commodity = {4} or loccommodity = {4} limit 1) As commodity_id," +
-                                            "          (select id from tbCargoAction where action    = {5}) AS cargoaction_id," +
-                                            "          {6} AS cargovolume," +
-                                            "          {7} AS credits_transaction," +
-                                            "          {8} AS credits_total," +
-                                            "          {9} AS notes) AS d" +
-                                            " ON DUPLICATE KEY UPDATE" +
-                                            "  system_id            = d.system_id," +
-                                            "  station_id           = d.station_id," +
-                                            "  event_id             = d.event_id," +
-                                            "  commodity_id         = d.commodity_id," +
-                                            "  cargoaction_id       = d.cargoaction_id," +
-                                            "  cargovolume          = d.cargovolume," +
-                                            "  credits_transaction  = d.credits_transaction," +
-                                            "  credits_total        = d.credits_total," +
-                                            "  notes                = d.notes",
-                                            DBConnector.SQLDateTime(ChangedData.time),
-                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
-                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
-                                            DBConnector.SQLAString(ChangedData.eevent),
-                                            DBConnector.SQLAString(ChangedData.loccommodity),
-                                            DBConnector.SQLAString(ChangedData.action),
-                                            ChangedData.cargovolume,
-                                            ChangedData.credits_transaction,
-                                            ChangedData.credits_total,
-                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)));
-
-                if (Program.DBCon.Execute(sqlString) != 0)
-                    throw new Exception("Nothing saved to database !!!");
-
+                return m_NoGuiNotifyAfterSave;
             }
-            catch (Exception ex)
+            set
             {
-                throw new Exception("Error while saving Commanders Log to DB", ex);
+                m_NoGuiNotifyAfterSave = value;
             }
         }
 
@@ -323,10 +216,155 @@ namespace RegulatedNoise.Commander_s_Log
                 throw new Exception("Error in <prepareCmb_EventTypes> while preparing '" + theCombobox.Name + "'", ex);
             }
         }
+
+        /// <summary>
+        /// saving the data of the datarow,
+        /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
+        /// </summary>
+        /// <param name="ChangedData">row with data to save</param>
+        public void SaveEvent(CommandersLogEvent Event)
+        {
+            try
+            {
+                dsCommandersLog.vilogDataTable TempTable;
+                dsCommandersLog.vilogRow TempRow;
+
+                TempTable = new dsCommandersLog.vilogDataTable();
+                TempRow = (dsCommandersLog.vilogRow)TempTable.NewRow();
+
+                TempRow.time                = Event.EventDate;
+                TempRow.systemname          = Event.System;
+                TempRow.stationname         = Event.Station;
+                TempRow.loccommodity        = Event.Cargo;
+                TempRow.action              = Event.CargoAction;
+                TempRow.cargovolume         = (Int32)Event.CargoVolume;
+                TempRow.credits_transaction = (Int32)Event.TransactionAmount;
+                TempRow.credits_total       = (Int32)Event.Credits;
+                TempRow.eevent              = Event.EventType;
+                TempRow.notes               = Event.Notes;
+
+                SaveEvent(TempRow);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while preparing save data (Event class)", ex);
+            }
+        }
+
+        /// <summary>
+        /// saving the data of the datarow,
+        /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
+        /// </summary>
+        /// <param name="ChangedData">row with data to save</param>
+        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes)
+        {
+            try
+            {
+                dsCommandersLog.vilogDataTable TempTable;
+                dsCommandersLog.vilogRow TempRow;
+
+                TempTable = new dsCommandersLog.vilogDataTable();
+                TempRow = (dsCommandersLog.vilogRow)TempTable.NewRow();
+
+                TempRow.time                = EventDate;
+                TempRow.systemname          = System;
+                TempRow.stationname         = Station;
+                TempRow.loccommodity        = Cargo;
+                TempRow.action              = CargoAction;
+                TempRow.cargovolume         = CargoVolume;
+                TempRow.credits_transaction = CreditsTransAction;
+                TempRow.credits_total       = Credits_Total;
+                TempRow.eevent              = EventType;
+                TempRow.notes               = Notes;
+
+                SaveEvent(TempRow);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while preparing save data (single params)", ex);
+            }
+        }
+
+        /// <summary>
+        /// saving the data of the datarow,
+        /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
+        /// </summary>
+        /// <param name="ChangedData">row with data to save</param>
+        internal void SaveEvent(dsCommandersLog.vilogRow ChangedData)
+        {
+            String sqlString;
+
+            try
+            {
+
+                sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
+                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
+                                            " SELECT d.* FROM (SELECT" +
+                                            "          {0} AS time," +
+                                            "          (select id from tbSystems  where systemname  = {1}" +
+                                            "          ) AS system_id," +
+                                            "          (select id from tbStations where stationname = {2} " +
+                                            "                                     and   system_id   = (select id from tbSystems" +
+                                            "                                                           where systemname = {1})" +
+                                            "          ) AS station_id," +
+                                            "          (select id from tbEventType   where event     = {3}) As event_id," +
+                                            "          (select id from tbCommodity   where commodity = {4} or loccommodity = {4} limit 1) As commodity_id," +
+                                            "          (select id from tbCargoAction where action    = {5}) AS cargoaction_id," +
+                                            "          {6} AS cargovolume," +
+                                            "          {7} AS credits_transaction," +
+                                            "          {8} AS credits_total," +
+                                            "          {9} AS notes) AS d" +
+                                            " ON DUPLICATE KEY UPDATE" +
+                                            "  system_id            = d.system_id," +
+                                            "  station_id           = d.station_id," +
+                                            "  event_id             = d.event_id," +
+                                            "  commodity_id         = d.commodity_id," +
+                                            "  cargoaction_id       = d.cargoaction_id," +
+                                            "  cargovolume          = d.cargovolume," +
+                                            "  credits_transaction  = d.credits_transaction," +
+                                            "  credits_total        = d.credits_total," +
+                                            "  notes                = d.notes",
+                                            DBConnector.SQLDateTime(ChangedData.time),
+                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
+                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
+                                            DBConnector.SQLAString(ChangedData.eevent),
+                                            DBConnector.SQLAString(ChangedData.loccommodity),
+                                            DBConnector.SQLAString(ChangedData.action),
+                                            ChangedData.cargovolume,
+                                            ChangedData.credits_transaction,
+                                            ChangedData.credits_total,
+                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)));
+
+                Program.DBCon.Execute(sqlString); 
+
+                if(!m_NoGuiNotifyAfterSave)
+                {
+                    Int32 RowIndex;
+
+                    m_NoGuiNotifyAfterSave  = false;
+                    RowIndex                = Program.DBCon.getRowIndex("viLog", "time", DBConnector.SQLSortOrder.desc, "time", 
+                                                                        DBConnector.SQLDateTime(ChangedData.time));
+
+
+                    DataChanged.Raise(this, new DataChangedEventArgs() { DataRow = RowIndex, DataKey = ChangedData.time});                     
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while saving Commanders Log to DB", ex);
+            }
+        }
+
+
     }
 
-#region DataRetriever
+#region outdated 
 
+    /// <summary>
+    /// class only for compatibilty reasons at the moment,
+    /// will later removed
+    /// </summary>
 
     [Serializable]
     public class CommandersLogEvent
@@ -343,6 +381,9 @@ namespace RegulatedNoise.Commander_s_Log
         public decimal  TransactionAmount { get; set; }
         public decimal  Credits     { get; set; }
     }
+
+
+
 #endregion
 
 }
