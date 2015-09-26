@@ -314,11 +314,14 @@ namespace RegulatedNoise.Commander_s_Log
         /// </summary>
         private void saveLogEntry()
         {
+            dsEliteDB.vilogRow changedDataRow;
+
             try
             {
                 setCLFieldsEditable(false);
 
                 dgvCommandersLog.ReadOnly = false;
+
 
                 // put the changed data into the DataGridView (this will fire the "CellValuePushed"-event)
                 dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value              = cbLogEventType.Text;
@@ -335,7 +338,7 @@ namespace RegulatedNoise.Commander_s_Log
                 dgvCommandersLog.ReadOnly = true;
 
                 // save changed data (from data cache through "CellValuePushed"-event) to database
-                m_DataSource.SaveEvent((dsCommandersLog.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvCommandersLog.CurrentRow.Index));
+                m_DataSource.SaveEvent((dsEliteDB.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvCommandersLog.CurrentRow.Index));
 
                 m_CL_State = enCLAction.None;
 
@@ -382,7 +385,7 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                if((e.RowIndex >= 0) && (dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value != null))
+                if((e.RowIndex >= 0) && (dgvCommandersLog.Rows.Count > 0) && (dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value != null))
                 {
                     cbLogEventType.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
                     dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value;

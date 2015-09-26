@@ -30,6 +30,11 @@ sql_todo
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.17
+   * update DB-create-script to latest version
+   * use of universal dsEliteDB-dataset instead of special datasets like dsCommandersLog-dataset
+   * added new dialog for import old RN data from json and xml files
+-------------------------------------------------------------------------------------         
 SQL 0.0.16
    * Commander's Log finished initial 
      - saving is working

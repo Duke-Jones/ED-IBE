@@ -62,7 +62,7 @@ namespace RegulatedNoise.Commander_s_Log
         // ^^^^^^^^^^ replaced by view "viLog" vvvvvvvvvvvvvvv
         private const String _sqlString = "select * from viLog";
 
-        private dsCommandersLog     m_BaseData;
+        private dsEliteDB           m_BaseData;
         public tabCommandersLog     m_GUI;
         private BindingSource       m_BindingSource;
         private DataTable           m_Datatable;
@@ -95,7 +95,7 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DBConnector.SQLSortOrder.desc, new dsCommandersLog.vilogDataTable());
+                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DBConnector.SQLSortOrder.desc, new dsEliteDB.vilogDataTable());
 
                 return retriever.RowCount;
             }
@@ -119,7 +119,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// gets or sets the belonging base dataset
         /// </summary>
-        public dsCommandersLog BaseData
+        public dsEliteDB BaseData
         {
             get
             {
@@ -173,17 +173,17 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name))
+                if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.Tables["tbEventType"];
+                    theCombobox.DataSource       = m_BaseData.tbeventtype;
                     theCombobox.DisplayMember    = "event";
                 }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name))
+                else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.Tables["tbSystems"];
+                    theCombobox.DataSource       = m_BaseData.tbsystems;
                     theCombobox.DisplayMember    = "systemname";
                 }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogStationName.Name))
+                else if(theCombobox.Name.Equals(m_GUI.cbLogStationName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     if((theReferenceCombobox == null) || (theReferenceCombobox.SelectedItem == null))
                     { 
@@ -197,14 +197,14 @@ namespace RegulatedNoise.Commander_s_Log
                         theCombobox.DisplayMember    = "stationname";
                     }
                 }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogCargoName.Name))
+                else if(theCombobox.Name.Equals(m_GUI.cbLogCargoName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.Tables["tbCommodity"];
+                    theCombobox.DataSource       = m_BaseData.tbcommodity;
                     theCombobox.DisplayMember    = "loccommodity";
                 }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name))
+                else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.Tables["tbCargoAction"];
+                    theCombobox.DataSource       = m_BaseData.tbcargoaction;
                     theCombobox.DisplayMember    = "action";
                 }
 
@@ -226,11 +226,11 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                dsCommandersLog.vilogDataTable TempTable;
-                dsCommandersLog.vilogRow TempRow;
+                dsEliteDB.vilogDataTable TempTable;
+                dsEliteDB.vilogRow TempRow;
 
-                TempTable = new dsCommandersLog.vilogDataTable();
-                TempRow = (dsCommandersLog.vilogRow)TempTable.NewRow();
+                TempTable = new dsEliteDB.vilogDataTable();
+                TempRow = (dsEliteDB.vilogRow)TempTable.NewRow();
 
                 TempRow.time                = Event.EventDate;
                 TempRow.systemname          = Event.System;
@@ -260,11 +260,11 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                dsCommandersLog.vilogDataTable TempTable;
-                dsCommandersLog.vilogRow TempRow;
+                dsEliteDB.vilogDataTable TempTable;
+                dsEliteDB.vilogRow TempRow;
 
-                TempTable = new dsCommandersLog.vilogDataTable();
-                TempRow = (dsCommandersLog.vilogRow)TempTable.NewRow();
+                TempTable = new dsEliteDB.vilogDataTable();
+                TempRow = (dsEliteDB.vilogRow)TempTable.NewRow();
 
                 TempRow.time                = EventDate;
                 TempRow.systemname          = System;
@@ -290,7 +290,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// saves new entrys if the timestamp is not existing, otherwise existing data will be changed
         /// </summary>
         /// <param name="ChangedData">row with data to save</param>
-        internal void SaveEvent(dsCommandersLog.vilogRow ChangedData)
+        internal void SaveEvent(dsEliteDB.vilogRow ChangedData)
         {
             String sqlString;
 

@@ -152,6 +152,7 @@
             this.cmbStationGovernment = new System.Windows.Forms.ComboBox_ro();
             this.cmbStationMaxLandingPadSize = new System.Windows.Forms.ComboBox_ro();
             this.gbSystemSystemData = new System.Windows.Forms.GroupBox();
+            this.cmdTest2 = new System.Windows.Forms.Button();
             this.cmdTest = new System.Windows.Forms.Button();
             this.cmdSystemCancel = new System.Windows.Forms.Button();
             this.lblSystemCountTotal = new System.Windows.Forms.Label();
@@ -372,7 +373,11 @@
             this.txtTraineddataFile = new System.Windows.Forms.TextBox();
             this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.cmdTest2 = new System.Windows.Forms.Button();
+            this.msMainMenu = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
@@ -432,6 +437,7 @@
             this.groupBox6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
+            this.msMainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -1793,6 +1799,17 @@
             this.gbSystemSystemData.TabIndex = 0;
             this.gbSystemSystemData.TabStop = false;
             this.gbSystemSystemData.Text = "System Data";
+            // 
+            // cmdTest2
+            // 
+            this.cmdTest2.Location = new System.Drawing.Point(411, 450);
+            this.cmdTest2.Name = "cmdTest2";
+            this.cmdTest2.Size = new System.Drawing.Size(75, 23);
+            this.cmdTest2.TabIndex = 131;
+            this.cmdTest2.Text = " Test 2";
+            this.cmdTest2.UseVisualStyleBackColor = true;
+            this.cmdTest2.Visible = false;
+            this.cmdTest2.Click += new System.EventHandler(this.cmdTest2_Click);
             // 
             // cmdTest
             // 
@@ -4309,16 +4326,45 @@
             this.label12.TabIndex = 7;
             this.label12.Text = "\"traineddata\"-File for TesseractOCR";
             // 
-            // cmdTest2
+            // msMainMenu
             // 
-            this.cmdTest2.Location = new System.Drawing.Point(411, 450);
-            this.cmdTest2.Name = "cmdTest2";
-            this.cmdTest2.Size = new System.Drawing.Size(75, 23);
-            this.cmdTest2.TabIndex = 131;
-            this.cmdTest2.Text = " Test 2";
-            this.cmdTest2.UseVisualStyleBackColor = true;
-            this.cmdTest2.Visible = false;
-            this.cmdTest2.Click += new System.EventHandler(this.cmdTest2_Click);
+            this.msMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.dataToolStripMenuItem});
+            this.msMainMenu.Location = new System.Drawing.Point(0, 0);
+            this.msMainMenu.Name = "msMainMenu";
+            this.msMainMenu.Size = new System.Drawing.Size(1089, 24);
+            this.msMainMenu.TabIndex = 61;
+            this.msMainMenu.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            // 
+            // dataToolStripMenuItem
+            // 
+            this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem});
+            this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
+            this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.dataToolStripMenuItem.Text = "Data";
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.importToolStripMenuItem.Text = "Import";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -4326,6 +4372,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1089, 686);
+            this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
             this.Controls.Add(this.label53);
             this.Controls.Add(this.txtEDTime);
@@ -4337,6 +4384,7 @@
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.tabCtrlMain);
             this.KeyPreview = true;
+            this.MainMenuStrip = this.msMainMenu;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "RegulatedNoise v";
@@ -4427,6 +4475,8 @@
             this.groupBox9.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
+            this.msMainMenu.ResumeLayout(false);
+            this.msMainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4774,6 +4824,11 @@
         private System.Windows.Forms.CheckBox cbEDDNAutoListen;
         private System.Windows.Forms.Button cmdDatabaseOp;
         private System.Windows.Forms.Button cmdTest2;
+        private System.Windows.Forms.MenuStrip msMainMenu;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
 
         
     }

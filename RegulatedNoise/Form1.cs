@@ -7952,6 +7952,28 @@ namespace RegulatedNoise
             //}
         }
 
+        /// <summary>
+        /// opens the data import dialog
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var DataIO = new frmDataIO();
+
+                DataIO.ShowDialog(this);
+
+                DataIO.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while opening import tool", ex);
+            }
+
+        }
+
     }
 
 

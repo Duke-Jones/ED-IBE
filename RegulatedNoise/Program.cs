@@ -19,10 +19,14 @@ namespace RegulatedNoise
     static class Program
     {
 
+        public const Decimal DB_VERSION_CURRENT     = 1.0M;
+        public const Decimal DB_VERSION_NONE        = 0.0M; 
+
         public const String NULLSTRING              = "?";
         public const String COMMODITY_NOT_SET       = "???";
-
         public const String BASE_LANGUAGE           = "eng";
+
+        
 
 
     #region main object creation and disposing

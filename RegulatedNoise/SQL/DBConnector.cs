@@ -407,6 +407,22 @@ namespace RegulatedNoise.SQL
             return TableRead(commandText, Tablename, Data);
         }
 
+        /// <summary>
+        /// refreshes a with "TableRead" already loaded table out of the database
+        /// </summary>
+        /// <param name="Tablename">name of the table to refresh</param>
+        /// <param name="m_BaseData">used dataset which is holding the table</param>
+        /// <returns></returns>
+        public Int32 TableRefresh(DataTable TypifiedTable)
+        {
+            return TableRefresh(TypifiedTable.TableName, TypifiedTable.DataSet);
+        }
+
+        public Int32 TableRead(string CommandText, System.Data.DataTable Data) 
+        {
+            return TableRead(CommandText, Data.TableName, Data.DataSet);
+        }
+
         public Int32 TableRead(string CommandText, string Tablename, System.Data.DataSet Data) 
         {
             Int32 retValue = 0;
@@ -483,6 +499,16 @@ namespace RegulatedNoise.SQL
             return TableUpdate(Tablename, Data, false, DataAdapter);
         }
 
+        public Int32 TableUpdate(System.Data.DataTable TypifiedTable)
+        {
+            return TableUpdate(TypifiedTable.TableName, TypifiedTable.DataSet, false, null);
+        }
+
+        public Int32 TableUpdate(System.Data.DataTable TypifiedTable, bool removeTableReadObject)
+        {
+            return TableUpdate(TypifiedTable.TableName, TypifiedTable.DataSet, removeTableReadObject, null);
+        }
+
         public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, bool removeTableReadObject, DbDataAdapter DataAdapter){
 
             Int32         retValue = 0;
@@ -520,6 +546,11 @@ namespace RegulatedNoise.SQL
             MonitorExit(this);
 
             return retValue;
+        }
+
+        public void TableReadRemove(DataTable TypifiedTable)
+        {
+            TableReadRemove(TypifiedTable.TableName);
         }
 
         public void TableReadRemove(string Tablename) 
