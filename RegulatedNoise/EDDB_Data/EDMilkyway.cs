@@ -312,7 +312,7 @@ namespace RegulatedNoise.EDDB_Data
                     }
                     else
                     {
-                        // system is existing, but there are differences -> own version has a higher priority
+                        // system is existingClassification, but there are differences -> own version has a higher priority
                         SystemCanBeDeleted = false;
                         existingEDDNSystem.getValues(ownSystem);
 
@@ -388,7 +388,7 @@ namespace RegulatedNoise.EDDB_Data
                 }
                 else
                 {
-                    // station is in EDDB not existing, so we'll hold the station
+                    // station is in EDDB not existingClassification, so we'll hold the station
                     SystemCanBeDeleted = false;
                     int newStationIndex = m_Stations[(int)enDataType.Data_Merged].Max(X => X.Id) + 1;
 
@@ -761,7 +761,7 @@ namespace RegulatedNoise.EDDB_Data
         }
 
         /// <summary>
-        /// adds objects for not yet existing localized commodities
+        /// adds objects for not yet existingClassification localized commodities
         /// </summary>
         internal void addLocalized2RN(dsCommodities.NamesDataTable localizedCommodities)
         {
@@ -799,7 +799,7 @@ namespace RegulatedNoise.EDDB_Data
 
                     if(EDCommodity.Name == Program.COMMODITY_NOT_SET)
                     {
-                        // base(=english) name not available, get the next existing name
+                        // base(=english) name not available, get the next existingClassification name
                         foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
                         {
                             if(localizedItem[availableLanguage.ToString()].ToString() != Program.COMMODITY_NOT_SET)
@@ -872,7 +872,7 @@ namespace RegulatedNoise.EDDB_Data
             System = ownSystems.Find(x => x.Name.Equals(oldSystemName, StringComparison.CurrentCultureIgnoreCase));
             if(System != null)
             { 
-                // copy new values into existing system
+                // copy new values into existingClassification system
                 System.getValues(m_currentSystemdata);
             }
             else
@@ -893,7 +893,7 @@ namespace RegulatedNoise.EDDB_Data
             System = mergedSystems.Find(x => x.Name.Equals(oldSystemName, StringComparison.CurrentCultureIgnoreCase));
             if(System != null)
             { 
-                // copy new values into existing system
+                // copy new values into existingClassification system
                 System.getValues(m_currentSystemdata);
             }
             else
@@ -937,7 +937,7 @@ namespace RegulatedNoise.EDDB_Data
             System = ownSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
             if(System == null)
             {
-                // own system is not existing, look for a EDDNCommunicator system
+                // own system is not existingClassification, look for a EDDNCommunicator system
                 System = mergedSystems.Find(x => x.Name.Equals(Systemname, StringComparison.CurrentCultureIgnoreCase));
 
                 if(System == null)
@@ -962,17 +962,17 @@ namespace RegulatedNoise.EDDB_Data
             }
             else
             { 
-                // the system is existing in the own dictionary 
+                // the system is existingClassification in the own dictionary 
                 Station = ownStations.Find(x => (x.Name.Equals(oldStationName, StringComparison.CurrentCultureIgnoreCase)) && 
                                                 (x.SystemId == System.Id));
                 if(Station != null)
                 { 
-                    // station is already existing, copy new values into existing Station
+                    // station is already existingClassification, copy new values into existingClassification Station
                     Station.getValues(m_currentStationdata);
                 }
                 else
                 { 
-                    // station is not existing, get a new station index
+                    // station is not existingClassification, get a new station index
                     newStationIndex = 0;
                     if(ownStations.Count > 0)
                         newStationIndex = ownStations.Max(X => X.Id) + 1;
@@ -1009,17 +1009,17 @@ namespace RegulatedNoise.EDDB_Data
             }
             else
             { 
-                // the system is existing in the merged dictionary 
+                // the system is existingClassification in the merged dictionary 
                 Station = mergedStations.Find(x => (x.Name.Equals(oldStationName, StringComparison.CurrentCultureIgnoreCase)) && 
                                                 (x.SystemId == System.Id));
                 if(Station != null)
                 { 
-                    // station is already existing, copy new values into existing Station
+                    // station is already existingClassification, copy new values into existingClassification Station
                     Station.getValues(m_currentStationdata);
                 }
                 else
                 { 
-                    // station is not existing, get a new station index
+                    // station is not existingClassification, get a new station index
                     newStationIndex = 0;
                     if(mergedStations.Count > 0)
                         newStationIndex = mergedStations.Max(X => X.Id) + 1;

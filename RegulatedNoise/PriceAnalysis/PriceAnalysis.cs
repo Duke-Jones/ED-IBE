@@ -12,9 +12,9 @@ using System.Diagnostics;
 using RegulatedNoise.SQL;
 using RegulatedNoise.SQL.Datasets;
 
-namespace RegulatedNoise.Commander_s_Log
+namespace RegulatedNoise.PriceAnalysis
 {
-    public class CommandersLog
+    public class PriceAnalysis
     {
         public enum enGUIEditElements
         {
@@ -63,7 +63,7 @@ namespace RegulatedNoise.Commander_s_Log
         private const String _sqlString = "select * from viLog";
 
         private dsEliteDB           m_BaseData;
-        public tabCommandersLog     m_GUI;
+        public tabPriceAnalysis     m_GUI;
         private BindingSource       m_BindingSource;
         private DataTable           m_Datatable;
         private DataRetriever       retriever;
@@ -72,7 +72,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// constructor
         /// </summary>
-        public CommandersLog()
+        public PriceAnalysis()
         {
             try
             {
@@ -134,7 +134,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// access to the belonging gui object
         /// </summary>
-        public tabCommandersLog GUI
+        public tabPriceAnalysis GUI
         {
             get
             {
@@ -222,7 +222,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
         /// </summary>
         /// <param name="ChangedData">row with data to save</param>
-        public void SaveEvent(CommandersLogEvent Event)
+        public void SaveEvent(PriceAnalysisEvent Event)
         {
             try
             {
@@ -367,7 +367,7 @@ namespace RegulatedNoise.Commander_s_Log
     /// </summary>
 
     [Serializable]
-    public class CommandersLogEvent
+    public class PriceAnalysisEvent
     {
         public DateTime EventDate   { get; set; }
         public string   EventType   { get; set; }

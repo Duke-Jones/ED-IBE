@@ -7,6 +7,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema Elite_DB
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `Elite_DB` ;
 
 -- -----------------------------------------------------
 -- Schema Elite_DB
@@ -92,7 +93,8 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
   INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC)  COMMENT '',
   INDEX `idx_x` USING BTREE (`x` ASC)  COMMENT '',
   INDEX `idx_y` USING BTREE (`y` ASC)  COMMENT '',
-  INDEX `idx_z` USING BTREE (`z` ASC)  COMMENT '',
+  INDEX `idx_z` (`z` ASC)  COMMENT '',
+  INDEX `idx_tbSystems_Systemname` (`systemname` ASC)  COMMENT '',
   CONSTRAINT `fk_tbSystems_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
     REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
@@ -160,6 +162,7 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations` (
   INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC)  COMMENT '',
   INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC)  COMMENT '',
   INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC)  COMMENT '',
+  INDEX `idx_tbStations_Stationname` (`stationname` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_tbSystems`
     FOREIGN KEY (`system_id`)
     REFERENCES `Elite_DB`.`tbSystems` (`id`)
@@ -228,14 +231,47 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbImportCommodity`
+-- Table `Elite_DB`.`tbSource`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbImportCommodity` (
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSource` (
+  `id` INT NOT NULL COMMENT '',
+  `source` VARCHAR(80) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbEconomyLevel`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEconomyLevel` (
+  `id` INT NOT NULL COMMENT '',
+  `level` VARCHAR(80) NOT NULL COMMENT '',
+  `loclevel` VARCHAR(80) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbCommodityData`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityData` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '',
   `station_id` INT NOT NULL COMMENT '',
   `commodity_id` INT NOT NULL COMMENT '',
-  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
+  `Sell` INT NULL COMMENT '',
+  `Buy` INT NULL COMMENT '',
+  `Demand` INT NULL COMMENT '',
+  `DemandLevel` INT NULL COMMENT '',
+  `Supply` INT NULL COMMENT '',
+  `SupplyLevel` INT NULL COMMENT '',
+  `Sources_id` INT NOT NULL COMMENT '',
+  `timestamp` DATETIME NOT NULL COMMENT '',
   INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
   INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC)  COMMENT '',
+  PRIMARY KEY (`id`, `Sources_id`)  COMMENT '',
+  INDEX `fk_tbStationCommodity_tbSources1_idx` (`Sources_id` ASC)  COMMENT '',
+  INDEX `fk_tbStationCommodity_tbEconomyLevel1_idx` (`DemandLevel` ASC)  COMMENT '',
+  INDEX `fk_tbStationCommodity_tbEconomyLevel2_idx` (`SupplyLevel` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations1`
     FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
@@ -245,90 +281,20 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbImportCommodity` (
     FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Elite_DB`.`tbExportCommodity`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbExportCommodity` (
-  `station_id` INT NOT NULL COMMENT '',
-  `commodity_id` INT NOT NULL COMMENT '',
-  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC)  COMMENT '',
-  CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations10`
-    FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities10`
-    FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Elite_DB`.`tbProhibitedCommodity`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbProhibitedCommodity` (
-  `station_id` INT NOT NULL COMMENT '',
-  `commodity_id` INT NOT NULL COMMENT '',
-  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC)  COMMENT '',
-  CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations100`
-    FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities100`
-    FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Elite_DB`.`tbSources`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSources` (
-  `id` INT NOT NULL COMMENT '',
-  `sourcename` VARCHAR(80) NULL COMMENT '',
-  PRIMARY KEY (`id`)  COMMENT '')
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Elite_DB`.`tbPrice`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPrice` (
-  `station_id` INT NOT NULL COMMENT '',
-  `commodity_id` INT NOT NULL COMMENT '',
-  `price` INT NOT NULL COMMENT '',
-  `timestamp` DATETIME NOT NULL COMMENT '',
-  `source_id` INT NOT NULL COMMENT '',
-  PRIMARY KEY (`station_id`, `commodity_id`)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities_tbCommodities2_idx` (`commodity_id` ASC)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities_tbStations2_idx` (`station_id` ASC)  COMMENT '',
-  INDEX `fk_tbPrice_tbSources1_idx` (`source_id` ASC)  COMMENT '',
-  CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations2`
-    FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities2`
-    FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_tbPrice_tbSources1`
-    FOREIGN KEY (`source_id`)
-    REFERENCES `Elite_DB`.`tbSources` (`id`)
+  CONSTRAINT `fk_tbStationCommodity_tbSources1`
+    FOREIGN KEY (`Sources_id`)
+    REFERENCES `Elite_DB`.`tbSource` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbStationCommodity_tbEconomyLevel1`
+    FOREIGN KEY (`DemandLevel`)
+    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbStationCommodity_tbEconomyLevel2`
+    FOREIGN KEY (`SupplyLevel`)
+    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -338,28 +304,46 @@ ENGINE = InnoDB;
 -- Table `Elite_DB`.`tbPriceHistory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPriceHistory` (
-  `tbStations_id` INT NOT NULL COMMENT '',
-  `tbCommodities_id` INT NOT NULL COMMENT '',
-  `price` INT NOT NULL COMMENT '',
-  `timestamp` DATETIME NOT NULL COMMENT '',
-  `source_id` INT NOT NULL COMMENT '',
-  PRIMARY KEY (`tbStations_id`, `tbCommodities_id`)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities1_tbCommodities1_idx` (`tbCommodities_id` ASC)  COMMENT '',
-  INDEX `fk_tbStations_has_tbCommodities1_tbStations1_idx` (`tbStations_id` ASC)  COMMENT '',
-  INDEX `fk_tbPriceHistory_tbSources1_idx` (`source_id` ASC)  COMMENT '',
+  `id` INT NOT NULL COMMENT '',
+  `station_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NOT NULL COMMENT '',
+  `Sell` INT NULL COMMENT '',
+  `Buy` INT NULL COMMENT '',
+  `Demand` INT NULL COMMENT '',
+  `DemandLevel` INT NULL COMMENT '',
+  `Supply` INT NULL COMMENT '',
+  `SupplyLevel` INT NULL COMMENT '',
+  `Source_id` INT NOT NULL COMMENT '',
+  `timestamp` INT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities1_tbCommodities1_idx` (`commodity_id` ASC)  COMMENT '',
+  INDEX `fk_tbStations_has_tbCommodities1_tbStations1_idx` (`station_id` ASC)  COMMENT '',
+  INDEX `fk_tbPriceHistory_tbSources1_idx` (`Source_id` ASC)  COMMENT '',
+  INDEX `fk_tbPriceHistory_tbEconomyLevel1_idx` (`DemandLevel` ASC)  COMMENT '',
+  INDEX `fk_tbPriceHistory_tbEconomyLevel2_idx` (`SupplyLevel` ASC)  COMMENT '',
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbStations1`
-    FOREIGN KEY (`tbStations_id`)
+    FOREIGN KEY (`station_id`)
     REFERENCES `Elite_DB`.`tbStations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbCommodities1`
-    FOREIGN KEY (`tbCommodities_id`)
+    FOREIGN KEY (`commodity_id`)
     REFERENCES `Elite_DB`.`tbCommodity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbPriceHistory_tbSources1`
-    FOREIGN KEY (`source_id`)
-    REFERENCES `Elite_DB`.`tbSources` (`id`)
+    FOREIGN KEY (`Source_id`)
+    REFERENCES `Elite_DB`.`tbSource` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbPriceHistory_tbEconomyLevel1`
+    FOREIGN KEY (`DemandLevel`)
+    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbPriceHistory_tbEconomyLevel2`
+    FOREIGN KEY (`SupplyLevel`)
+    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -663,6 +647,84 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedStations` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbAttribute`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbAttribute` (
+  `id` INT NOT NULL COMMENT '',
+  `Attribute` VARCHAR(80) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbCommodityClassification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityClassification` (
+  `id` INT UNSIGNED NOT NULL COMMENT '',
+  `station_id` INT NOT NULL COMMENT '',
+  `commodity_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_tbCommodityClassification_tbStations1_idx` (`station_id` ASC)  COMMENT '',
+  INDEX `fk_tbCommodityClassification_tbCommodity1_idx` (`commodity_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_tbCommodityClassification_tbStations1`
+    FOREIGN KEY (`station_id`)
+    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_tbCommodityClassification_tbCommodity1`
+    FOREIGN KEY (`commodity_id`)
+    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbCommodity_has_Attribute`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity_has_Attribute` (
+  `tbAttribute_id` INT NOT NULL COMMENT '',
+  `tbCommodityClassification_id` INT UNSIGNED NOT NULL COMMENT '',
+  PRIMARY KEY (`tbAttribute_id`, `tbCommodityClassification_id`)  COMMENT '',
+  INDEX `fk_tbCommodityAttribute_has_tbStationCommodity_tbCommodityA_idx` (`tbAttribute_id` ASC)  COMMENT '',
+  INDEX `fk_tbCommodity_has_Attribute_tbCommodityClassification1_idx` (`tbCommodityClassification_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_tbCommodityAttribute_has_tbStationCommodity_tbCommodityAtt1`
+    FOREIGN KEY (`tbAttribute_id`)
+    REFERENCES `Elite_DB`.`tbAttribute` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbCommodity_has_Attribute_tbCommodityClassification1`
+    FOREIGN KEY (`tbCommodityClassification_id`)
+    REFERENCES `Elite_DB`.`tbCommodityClassification` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbLevelLocalization`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLevelLocalization` (
+  `economylevel_id` INT NOT NULL COMMENT '',
+  `language_id` INT NOT NULL COMMENT '',
+  `locname` VARCHAR(80) NOT NULL COMMENT '',
+  PRIMARY KEY (`economylevel_id`, `language_id`)  COMMENT '',
+  INDEX `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1_idx` (`language_id` ASC)  COMMENT '',
+  INDEX `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1_idx` (`economylevel_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`
+    FOREIGN KEY (`economylevel_id`)
+    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`
+    FOREIGN KEY (`language_id`)
+    REFERENCES `Elite_DB`.`tbLanguage` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `Elite_DB` ;
 
 -- -----------------------------------------------------
@@ -671,11 +733,23 @@ USE `Elite_DB` ;
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eevent` INT, `action` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `notes` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `Elite_DB`.`viSystemsAndStations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`viSystemsAndStations` (`SystemID` INT, `SystemName` INT, `StationID` INT, `StationName` INT);
+
+-- -----------------------------------------------------
 -- View `Elite_DB`.`vilog`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Elite_DB`.`vilog`;
 USE `Elite_DB`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`event` AS `eevent`,`c`.`action` AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` AS `credits_transaction`,`l`.`credits_total` AS `credits_total`,`l`.`notes` AS `notes` from (((((`tblog` `l` left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
+
+-- -----------------------------------------------------
+-- View `Elite_DB`.`viSystemsAndStations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Elite_DB`.`viSystemsAndStations`;
+USE `Elite_DB`;
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `visystemsandstations` AS select `sy`.`id` AS `SystemID`,`sy`.`systemname` AS `SystemName`,`s`.`id` AS `StationID`,`s`.`stationname` AS `StationName` from (`tbstations` `s` join `tbsystems` `sy`) where (`s`.`system_id` = `sy`.`id`);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -790,6 +864,30 @@ COMMIT;
 
 
 -- -----------------------------------------------------
+-- Data for table `Elite_DB`.`tbSource`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Elite_DB`;
+INSERT INTO `Elite_DB`.`tbSource` (`id`, `source`) VALUES (0, 'RN');
+INSERT INTO `Elite_DB`.`tbSource` (`id`, `source`) VALUES (1, 'EDDN');
+INSERT INTO `Elite_DB`.`tbSource` (`id`, `source`) VALUES (2, 'File');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Elite_DB`.`tbEconomyLevel`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Elite_DB`;
+INSERT INTO `Elite_DB`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (0, 'low', '');
+INSERT INTO `Elite_DB`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (1, 'med', '');
+INSERT INTO `Elite_DB`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (2, 'high', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `Elite_DB`.`tbLanguage`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -842,6 +940,18 @@ INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (2, 'Sold');
 INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (3, 'Mined');
 INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (4, 'Stolen');
 INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (5, 'Found');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `Elite_DB`.`tbAttribute`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `Elite_DB`;
+INSERT INTO `Elite_DB`.`tbAttribute` (`id`, `Attribute`) VALUES (0, 'import');
+INSERT INTO `Elite_DB`.`tbAttribute` (`id`, `Attribute`) VALUES (1, 'export');
+INSERT INTO `Elite_DB`.`tbAttribute` (`id`, `Attribute`) VALUES (2, 'prohibited');
 
 COMMIT;
 

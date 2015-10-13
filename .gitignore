@@ -32,3 +32,4 @@
 /RNDatabase/Database/script/create_Elite_DB_MyISAM.sql
 /RNDatabase/SQL-Model/Elite_DB  MyISAM.mwb
 /RNDatabase/Database/*.bak
+/RNDatabase/SQL-Model/table_inserts/Test 1.sql

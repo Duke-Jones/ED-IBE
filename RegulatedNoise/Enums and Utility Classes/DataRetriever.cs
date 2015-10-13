@@ -40,7 +40,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// <param name="DBCon">used DBConnector</param>
         /// <param name="m_BaseTableName">name of the table with the base structure</param>
         /// <param name="m_DataStatement">sql-statement for loading the data</param>
-        /// <param name="SortByColumn">column for sorting (must be existing in the base table (m_BaseTableName) and in the 'DataStement')</param>
+        /// <param name="SortByColumn">column for sorting (must be existingClassification in the base table (m_BaseTableName) and in the 'DataStement')</param>
         /// <param name="SortOrder">sort oder</param>
         /// <param name="SortOrder">optional blueprint for typed tables</param>
         public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, String DataStatement, String SortByColumn, DBConnector.SQLSortOrder SortOrder, DataTable TypeTable = null)
@@ -83,7 +83,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         {
             get
             {
-                // Return the existing value if it has already been determined.
+                // Return the existingClassification value if it has already been determined.
                 if (m_ColumnsValue != null)
                 {
                     return m_ColumnsValue;
@@ -132,7 +132,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         {
             get
             {
-                // Return the existing value if it has already been determined.
+                // Return the existingClassification value if it has already been determined.
                 if (m_RowCountValue != -1)
                 {
                     return m_RowCountValue;
@@ -151,7 +151,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
         private string CommaSeparatedListOfColumnNames(String Prefix = "")
         {
-            // Return the existing value if it has already been determined.
+            // Return the existingClassification value if it has already been determined.
             if ((m_CommaSeparatedListOfColumnNamesValue != null) && (Prefix == m_UsedPrefix))
             {
                 return m_CommaSeparatedListOfColumnNamesValue;

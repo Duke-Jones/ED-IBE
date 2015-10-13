@@ -92,7 +92,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                         }
                         else
                         {
-                            // pull the existing item up and set current time
+                            // pull the existingClassification item up and set current time
                             Visit = History[currentIndex];
                             History.Remove(Visit);
                             Visit.Visited = DateTime.Now;

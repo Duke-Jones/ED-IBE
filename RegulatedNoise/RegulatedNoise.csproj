@@ -270,6 +270,13 @@
     <Compile Include="Ocr\Calibration\OcrCalibratorTab.Designer.cs">
       <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="PriceAnalysis\PriceAnalysis.cs" />
+    <Compile Include="PriceAnalysis\tabPriceAnalysis.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PriceAnalysis\tabPriceAnalysis.designer.cs">
+      <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProgressView.cs">
       <SubType>Form</SubType>
@@ -307,7 +314,7 @@
     </Compile>
     <Compile Include="SQL\DBConnector.cs" />
     <Compile Include="SQL\DBConvert.cs" />
-    <Compile Include="SQL\DBPorter.cs" />
+    <Compile Include="SQL\EliteDBIO.cs" />
     <Compile Include="SQL\DBProcess.cs" />
     <Compile Include="Station.cs" />
     <Compile Include="ObjectDirectory.cs" />
@@ -362,6 +369,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Ocr\Calibration\OcrCalibratorTab.resx">
       <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PriceAnalysis\tabPriceAnalysis.resx">
+      <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressView.resx">
       <DependentUpon>ProgressView.cs</DependentUpon>

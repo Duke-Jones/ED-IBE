@@ -340,14 +340,14 @@ namespace RegulatedNoise
                             }
                         }
 
-                        // if commodity is existing at least in one language we remove it
+                        // if commodity is existingClassification at least in one language we remove it
                         if(found)
                             forDeleting.Add(Commodity);
 
                     }
                 }
 
-                // now delete the existing double commodities and save the cleaned data again
+                // now delete the existingClassification double commodities and save the cleaned data again
                 foreach (dsCommodities.NamesRow item in forDeleting)
                     ownCommodities.Tables["Names"].Rows.Remove(item);
 
@@ -1265,7 +1265,7 @@ namespace RegulatedNoise
                 }
                 else
                 {
-                    // delete existing file
+                    // delete existingClassification file
                     if (File.Exists(currentFile))
                         File.Delete(currentFile);
                 }
@@ -3012,7 +3012,7 @@ namespace RegulatedNoise
                 return;
             }
 
-            if (_commodityTexts != null && _correctionColumn < _commodityTexts.GetLength(1)) // there is an existing screenshot being processed...
+            if (_commodityTexts != null && _correctionColumn < _commodityTexts.GetLength(1)) // there is an existingClassification screenshot being processed...
             {
                 _screenshotResultsBuffer.Add(new ScreeenshotResults { originalBitmapConfidences = originalBitmapConfidences, originalBitmaps = originalBitmaps, s = s, rowIds = rowIds, screenshotName = screenshotName });
                 ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");

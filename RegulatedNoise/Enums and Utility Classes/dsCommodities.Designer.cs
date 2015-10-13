@@ -1092,7 +1092,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes {
         }
         
         /// <summary>
-        ///Row event argument class
+        ///CommodityRow event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public class NamesRowChangeEvent : global::System.EventArgs {
@@ -1126,7 +1126,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes {
         }
         
         /// <summary>
-        ///Row event argument class
+        ///CommodityRow event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public class LevelsRowChangeEvent : global::System.EventArgs {

@@ -43,5 +43,16 @@ namespace RegulatedNoise.Properties {
                 return ((string)(this["elite_dbConnectionString1"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("server=127.0.0.1;user id=RN_User;persistsecurityinfo=True;database=elite_db;allow" +
+            "uservariables=True")]
+        public string elite_dbConnectionString2 {
+            get {
+                return ((string)(this["elite_dbConnectionString2"]));
+            }
+        }
     }
 }

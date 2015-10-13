@@ -24,6 +24,8 @@ namespace RegulatedNoise.EDDB_Data
         [JsonProperty("supply")]
         public int Supply { get; set; }
 
+        public String SupplyLevel { get; set; }
+
         [JsonProperty("buy_price")]
         public int BuyPrice { get; set; }
 
@@ -32,6 +34,8 @@ namespace RegulatedNoise.EDDB_Data
 
         [JsonProperty("demand")]
         public int Demand { get; set; }
+
+        public String DemandLevel { get; set; }
 
         [JsonProperty("collected_at")]
         public int CollectedAt { get; set; }

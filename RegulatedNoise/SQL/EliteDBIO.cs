@@ -13,7 +13,7 @@ using System.Globalization;
 using RegulatedNoise.SQL.Datasets;
 namespace RegulatedNoise.SQL
 {
-    class DBPorter
+    class EliteDBIO
     {
         private enum enCommodityTypes
         {
@@ -22,10 +22,16 @@ namespace RegulatedNoise.SQL
             prohibited
         }
 
+        public enum enVisitType 
+        {
+            Stations = 1,
+            Systems  = 2
+        }
+
         /// <summary>
         /// constructor
         /// </summary>
-        public DBPorter()
+        public EliteDBIO()
         {
             try 
 	        {	        
@@ -40,7 +46,7 @@ namespace RegulatedNoise.SQL
 
 #region event handler
 
-        private const Int32 m_TimeSlice_ms    = 100;
+        private const Int32 m_TimeSlice_ms    = 500;
         private const Int32 m_PercentSlice    = 10;
         private PerformanceTimer m_EventTimer = new PerformanceTimer();
         private Int32 m_lastProgress          = 0;
@@ -84,19 +90,21 @@ namespace RegulatedNoise.SQL
         /// <param name="Tablename"></param>
         /// <param name="Index"></param>
         /// <param name="Total"></param>
-        private void sendProgressEvent(String Tablename, Int32 Index, Int32 Total)
+        private void sendProgressEvent(String Tablename, Int32 Index, Int32 Total, Boolean noSuppress = false)
         {
-            Boolean send = false;
-            Int32   rest;
             Int32   ProgressSendLevel;
             try 
 	        {	        
-		        if(m_EventTimer.currentMeasuring() > m_TimeSlice_ms)
+               
+		        if((m_EventTimer.currentMeasuring() > m_TimeSlice_ms) || noSuppress)
                 {
                     // time is reason
                     Progress.Raise(this, new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total});
 
-                    ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
+                    if(Total > 0)
+                        ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
+                    else
+                        ProgressSendLevel =  -1;
 
                     m_EventTimer.startMeasuring();
                     m_lastProgress = ProgressSendLevel;
@@ -109,7 +117,10 @@ namespace RegulatedNoise.SQL
                         Debug.Print("!");
 
                     // progress is reason
-                    ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
+                    if(Total > 0)
+                        ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
+                    else
+                        ProgressSendLevel =  -1;
                     
                     if(((((100 * Index/Total) % m_PercentSlice) == 0) && (ProgressSendLevel != m_lastProgress)) || 
                         (ProgressSendLevel != m_lastProgress))
@@ -131,7 +142,7 @@ namespace RegulatedNoise.SQL
 
 #endregion
 
-#region "import data"
+#region import data
 
         
 
@@ -158,60 +169,59 @@ namespace RegulatedNoise.SQL
             }
         }
 
-        internal void InitializeData()
-        {
-            String FileName;
-            String RNPath;
-            var fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+        //internal void InitializeData()
+        //{
+        //    String RNPath;
+        //    var fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
 
-            try
-            {
-                /// muss auch klappen, wenn der user eine erstinstallation macht
+        //    try
+        //    {
+        //        /// muss auch klappen, wenn der user eine erstinstallation macht
 
-                fbFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
-                fbFolderDialog.Description = "First run. It's neccessary to import the data from your existing (old) installation." + Environment.NewLine +
-                                             "Select your RN-Folder with the old data files ....";
-                fbFolderDialog.SelectedPath = System.IO.Directory.GetCurrentDirectory();
-                fbFolderDialog.ShowDialog();
+        //        fbFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
+        //        fbFolderDialog.Description = "First run. It's neccessary to import the data from your existing (old) installation." + Environment.NewLine +
+        //                                     "Select your RN-Folder with the old data files ....";
+        //        fbFolderDialog.SelectedPath = System.IO.Directory.GetCurrentDirectory();
+        //        fbFolderDialog.ShowDialog();
 
-                RNPath = fbFolderDialog.SelectedPath.Trim();
+        //        RNPath = fbFolderDialog.SelectedPath.Trim();
 
-                if (!String.IsNullOrEmpty(RNPath))
-                {
-                    // import the commodities from EDDB
-                    Program.Data.ImportCommodities(Path.Combine(RNPath, @"Data\commodities.json"));
+        //        if (!String.IsNullOrEmpty(RNPath))
+        //        {
+        //            // import the commodities from EDDB
+        //            Program.Data.ImportCommodities(Path.Combine(RNPath, @"Data\commodities.json"));
 
-                    // import the localizations from the old RN files
-                    Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, @"Data\Commodities.xml"));
+        //            // import the localizations from the old RN files
+        //            Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, @"Data\Commodities.xml"));
 
-                    // import the self added localizations from the old RN files
-                    Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, @"Data\Commodities_Own.xml"));
+        //            // import the self added localizations from the old RN files
+        //            Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, @"Data\Commodities_Own.xml"));
 
-                    // import the pricewarnlevels from the old RN files
-                    Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(RNPath, @"Data\Commodities_RN.json"));
+        //            // import the pricewarnlevels from the old RN files
+        //            Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(RNPath, @"Data\Commodities_RN.json"));
 
-                    // import the systems and stations from EDDB
-                    Program.Data.ImportSystems(Path.Combine(RNPath, @"Data/systems.json"));
-                    Program.Data.ImportStations(Path.Combine(RNPath, @"Data/stations.json"));
+        //            // import the systems and stations from EDDB
+        //            Program.Data.ImportSystems(Path.Combine(RNPath, @"Data/systems.json"));
+        //            Program.Data.ImportStations(Path.Combine(RNPath, @"Data/stations.json"),);
 
-                    // import (once) the self-changed or added systems and stations 
-                    Dictionary<Int32, Int32> changedSystemIDs;
-                    changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(RNPath, @"Data/systems_own.json"));
-                    Program.Data.ImportStations_Own(Path.Combine(RNPath, @"Data/stations_own.json"), changedSystemIDs);
+        //            // import (once) the self-changed or added systems and stations 
+        //            Dictionary<Int32, Int32> changedSystemIDs;
+        //            changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(RNPath, @"Data/systems_own.json"));
+        //            Program.Data.ImportStations_Own(Path.Combine(RNPath, @"Data/stations_own.json"), changedSystemIDs);
 
-                    // import the Commander's Log from the old RN files
-                    Program.Data.ImportCommandersLog(Path.Combine(RNPath, @"CommandersLogAutoSave.xml"));
+        //            // import the Commander's Log from the old RN files
+        //            Program.Data.ImportCommandersLog(Path.Combine(RNPath, @"CommandersLogAutoSave.xml"));
 
-                    //import the history of visited stations
-                    Program.Data.ImportVisitedStations(Path.Combine(RNPath, @"Data/StationHistory.json"));
-                }
+        //            //import the history of visited stations
+        //            Program.Data.ImportVisitedStations(Path.Combine(RNPath, @"Data/StationHistory.json"));
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while importing the whole old data to database", ex);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while importing the whole old data to database", ex);
+        //    }
+        //}
 
 #endregion
 
@@ -226,7 +236,12 @@ namespace RegulatedNoise.SQL
                                                             "tbcommodity", 
                                                             "tbeventType",
                                                             "tbsystems",
-                                                            "tbstations"};
+                                                            "tbstations", 
+                                                            "tbattribute", 
+                                                            "tbsource", 
+                                                            "viSystemsAndStations", 
+                                                            "tbcommoditylocalization", 
+                                                            "tblevellocalization"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -286,7 +301,7 @@ namespace RegulatedNoise.SQL
         /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
         /// <param name="Name"></param>
         /// <returns></returns>
-        private object BaseTableNameToID(String Tablename, String Name)
+        public object BaseTableNameToID(String Tablename, String Name)
         {
             try
             {
@@ -309,7 +324,7 @@ namespace RegulatedNoise.SQL
         /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
         /// <param name="id"></param>
         /// <returns></returns>
-        private object BaseTableIDToName(String Tablename, int? id)
+        public object BaseTableIDToName(String Tablename, int? id)
         {
             try
             {
@@ -541,6 +556,113 @@ namespace RegulatedNoise.SQL
         }
 
         /// <summary>
+        /// loads the localized economy level names and check
+        /// </summary>
+        internal void ImportEconomyLevelLocalizations(String Filename)
+        {
+            dsEliteDB                 Data;
+            DataSet                   DataNames;
+            Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
+            String                    sqlString;
+            //Int32                     currentSelfCreatedIndex;
+            Int32 Counter = 0;
+
+            Data      = new dsEliteDB();
+            DataNames = new DataSet();
+
+            try
+            {
+
+                DataNames.ReadXml(Filename);
+
+                Program.DBCon.TableRead("select * from tbLanguage", Data.tblanguage);
+                Program.DBCon.TableRead("select * from tbLevelLocalization", Data.tblevellocalization);
+                Program.DBCon.TableRead("select * from tbEconomyLevel", Data.tbeconomylevel);
+
+                if(DataNames.Tables["Levels"] != null)
+                { 
+                    sendProgressEvent("import economy level localization", Counter, DataNames.Tables["Levels"].Rows.Count);
+
+                    // first check if there's a new language
+                    foreach (DataColumn LanguageFromFile in DataNames.Tables["Levels"].Columns)
+                    {
+                        if(!LanguageFromFile.ColumnName.Equals("ID", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            DataRow[] LanguageName  = Data.tblanguage.Select("language  = " + DBConnector.SQLAString(LanguageFromFile.ColumnName));
+
+                            if(LanguageName.Count() == 0)
+                            {
+                                // add a non existing language
+                                DataRow newRow  = Data.tblanguage.NewRow();
+                                int?    Wert    = DBConvert.To<int?>(Data.tblanguage.Compute("max(id)", ""));
+
+                                if(Wert == null)
+                                    Wert = 0;
+
+                                newRow["id"]        = Wert;
+                                newRow["language"]  = LanguageFromFile.ColumnName;
+
+                                Data.tblanguage.Rows.Add(newRow);
+
+                                foundLanguagesFromFile.Add(LanguageFromFile.ColumnName, (Int32)Wert);
+                            }
+                            else
+                                foundLanguagesFromFile.Add((String)LanguageName[0]["language"], (Int32)LanguageName[0]["id"]);
+                        }
+                    
+                    }
+                
+                    // submit changes (tbLanguage)
+                    Program.DBCon.TableUpdate(Data.tblanguage);
+
+                    // compare and add the localized names
+                    foreach (DataRow LocalizationFromFile in DataNames.Tables["Levels"].AsEnumerable())
+                    {
+                        String    BaseName              = (String)LocalizationFromFile[Program.BASE_LANGUAGE];
+                        DataRow[] Level                 = Data.tbeconomylevel.Select("level = " + DBConnector.SQLAString(DBConnector.DTEscape(BaseName)));
+
+                        foreach (KeyValuePair<String, Int32> LanguageFormFile in foundLanguagesFromFile)
+	                    {
+                            DataRow[] currentLocalizations  = Data.tblevellocalization.Select("     economylevel_id  = " + Level[0]["id"] + 
+                                                                                                  " and language_id  = " + LanguageFormFile.Value);
+
+                            if(currentLocalizations.Count() == 0)
+                            {
+                                // add a new localization
+                                dsEliteDB.tblevellocalizationRow newRow = (dsEliteDB.tblevellocalizationRow)Data.tblevellocalization.NewRow();
+
+                                newRow.economylevel_id = (Int32)Level[0]["id"];
+                                newRow.language_id     = LanguageFormFile.Value;
+                                newRow.locname         = LocalizationFromFile[LanguageFormFile.Key].ToString();
+
+                                Data.tblevellocalization.Rows.Add(newRow);
+                            }
+	                    }
+
+                        Counter++;
+                        sendProgressEvent("import economy level localization", Counter, DataNames.Tables["Levels"].Rows.Count);
+                    }
+                }
+                // submit changes
+                Program.DBCon.TableUpdate(Data.tblevellocalization);
+
+                Program.DBCon.TableReadRemove(Data.tblanguage);
+                Program.DBCon.TableReadRemove(Data.tblevellocalization);
+                Program.DBCon.TableReadRemove(Data.tbeconomylevel);
+
+            }
+            catch (Exception ex)
+            {
+                Program.DBCon.TableReadRemove(Data.tblanguage);
+                Program.DBCon.TableReadRemove(Data.tblevellocalization);
+                Program.DBCon.TableReadRemove(Data.tbeconomylevel);
+
+                throw new Exception("Error while loading commodity names", ex);
+            }
+
+        }
+
+        /// <summary>
         /// loads the existing price-warnlevel data
         /// </summary>
         internal void ImportCommodityPriceWarnLevels(String Filename)
@@ -595,6 +717,7 @@ namespace RegulatedNoise.SQL
             }
 
         }
+
 
 #endregion
 
@@ -1009,7 +1132,7 @@ namespace RegulatedNoise.SQL
         /// (only newer data will be imported)
         /// </summary>
         /// <param name="Filename"></param>
-        public void ImportStations(String Filename)
+        public void ImportStations(String Filename, Boolean addPrices)
         {
             String sqlString;
             List<EDStation> Stations;
@@ -1019,6 +1142,7 @@ namespace RegulatedNoise.SQL
             Int32 ImportCounter = 0;
             dsEliteDB Data;
             Int32 Counter = 0;
+            UInt32 currentComodityClassificationID=0;
 
             Data = new dsEliteDB();
 
@@ -1041,12 +1165,18 @@ namespace RegulatedNoise.SQL
                 Program.DBCon.TableRead(sqlString, Data.tbstations_org);
                 sqlString = "select * from tbStationEconomy lock in share mode";
                 Program.DBCon.TableRead(sqlString, Data.tbstationeconomy);
-                sqlString = "select * from tbImportCommodity lock in share mode";
-                Program.DBCon.TableRead(sqlString, Data.tbimportcommodity);
-                sqlString = "select * from tbExportCommodity lock in share mode";
-                Program.DBCon.TableRead(sqlString, Data.tbexportcommodity);
-                sqlString = "select * from tbProhibitedCommodity lock in share mode";
-                Program.DBCon.TableRead(sqlString, Data.tbprohibitedcommodity);
+                sqlString = "select * from tbsource";
+                Program.DBCon.Execute(sqlString, Data.tbsource);
+                sqlString = "select * from tbCommodityClassification lock in share mode";
+                Program.DBCon.TableRead(sqlString, Data.tbcommodityclassification);
+                sqlString = "select * from tbcommodity_has_attribute lock in share mode";
+                Program.DBCon.TableRead(sqlString, Data.tbcommodity_has_attribute);
+                sqlString = "select * from tbattribute lock in share mode";
+                Program.DBCon.TableRead(sqlString, Data.tbattribute);
+
+                currentComodityClassificationID = getFreeIndex("tbCommodityClassification");
+
+                Program.DBCon.Execute(sqlString, Data.tbsource);
 
                 foreach (EDStation Station in Stations)
                 {
@@ -1076,9 +1206,7 @@ namespace RegulatedNoise.SQL
                                     CopyEDStationToDataRow(Station, (DataRow)FoundRows_org[0]);
 
                                     CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
-                                    CopyEDStationCommodityToDataRow(Station, Data.tbimportcommodity);
-                                    CopyEDStationCommodityToDataRow(Station, Data.tbexportcommodity);
-                                    CopyEDStationCommodityToDataRow(Station, Data.tbprohibitedcommodity);
+                                    CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
 
                                     ImportCounter += 1;
 
@@ -1098,9 +1226,7 @@ namespace RegulatedNoise.SQL
                                 CopyEDStationToDataRow(Station, (DataRow)FoundRows[0]);
 
                                 CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
-                                CopyEDStationCommodityToDataRow(Station, Data.tbimportcommodity);
-                                CopyEDStationCommodityToDataRow(Station, Data.tbexportcommodity);
-                                CopyEDStationCommodityToDataRow(Station, Data.tbprohibitedcommodity);
+                                CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
 
                                 ImportCounter += 1;
                             }
@@ -1123,14 +1249,14 @@ namespace RegulatedNoise.SQL
                             Program.DBCon.TableUpdate(Data.tbstations);
                             Program.DBCon.TableUpdate(Data.tbstations_org);
                             Program.DBCon.TableUpdate(Data.tbstationeconomy);
-                            Program.DBCon.TableUpdate(Data.tbimportcommodity);
-                            Program.DBCon.TableUpdate(Data.tbexportcommodity);
-                            Program.DBCon.TableUpdate(Data.tbprohibitedcommodity);
+                            Program.DBCon.TableUpdate(Data.tbcommodityclassification);
+                            Program.DBCon.TableUpdate(Data.tbcommodity_has_attribute);
+                            Program.DBCon.TableUpdate(Data.tbattribute);
 
                             Program.DBCon.TableRefresh(Data.tbstationeconomy);
-                            Program.DBCon.TableRefresh(Data.tbimportcommodity);
-                            Program.DBCon.TableRefresh(Data.tbexportcommodity);
-                            Program.DBCon.TableRefresh(Data.tbprohibitedcommodity);
+                            Program.DBCon.TableRefresh(Data.tbcommodityclassification);
+                            Program.DBCon.TableRefresh(Data.tbcommodity_has_attribute);
+                            Program.DBCon.TableRefresh(Data.tbattribute);
                         }
                         else
                         {
@@ -1142,9 +1268,7 @@ namespace RegulatedNoise.SQL
                         }
 
                         CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
-                        CopyEDStationCommodityToDataRow(Station, Data.tbimportcommodity);
-                        CopyEDStationCommodityToDataRow(Station, Data.tbexportcommodity);
-                        CopyEDStationCommodityToDataRow(Station, Data.tbprohibitedcommodity);
+                        CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
 
                         ImportCounter += 1;
                     }
@@ -1157,9 +1281,9 @@ namespace RegulatedNoise.SQL
                         Program.DBCon.TableUpdate(Data.tbstations);
                         Program.DBCon.TableUpdate(Data.tbstations_org);
                         Program.DBCon.TableUpdate(Data.tbstationeconomy);
-                        Program.DBCon.TableUpdate(Data.tbimportcommodity);
-                        Program.DBCon.TableUpdate(Data.tbexportcommodity);
-                        Program.DBCon.TableUpdate(Data.tbprohibitedcommodity);
+                        Program.DBCon.TableUpdate(Data.tbcommodityclassification);
+                        Program.DBCon.TableUpdate(Data.tbcommodity_has_attribute);
+                        Program.DBCon.TableUpdate(Data.tbattribute);
                     }
 
                     Counter++;
@@ -1171,11 +1295,17 @@ namespace RegulatedNoise.SQL
                 Program.DBCon.TableUpdate(Data.tbstations, true);
                 Program.DBCon.TableUpdate(Data.tbstations_org, true);
                 Program.DBCon.TableUpdate(Data.tbstationeconomy, true);
-                Program.DBCon.TableUpdate(Data.tbimportcommodity, true);
-                Program.DBCon.TableUpdate(Data.tbexportcommodity, true);
-                Program.DBCon.TableUpdate(Data.tbprohibitedcommodity, true);
+                Program.DBCon.TableUpdate(Data.tbcommodityclassification, true);
+                Program.DBCon.TableUpdate(Data.tbcommodity_has_attribute, true);
+                Program.DBCon.TableUpdate(Data.tbattribute, true);
 
                 Program.DBCon.TransCommit();
+
+                // now add the prices if wanted
+                if (addPrices)
+                {
+                    ImportPrices(Stations);
+                }
 
                 // reset freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
@@ -1194,9 +1324,9 @@ namespace RegulatedNoise.SQL
                     Program.DBCon.TableReadRemove(Data.tbstations);
                     Program.DBCon.TableReadRemove(Data.tbstations_org);
                     Program.DBCon.TableReadRemove(Data.tbstationeconomy);
-                    Program.DBCon.TableReadRemove(Data.tbimportcommodity);
-                    Program.DBCon.TableReadRemove(Data.tbexportcommodity);
-                    Program.DBCon.TableReadRemove(Data.tbprohibitedcommodity);
+                    Program.DBCon.TableReadRemove(Data.tbcommodityclassification);
+                    Program.DBCon.TableReadRemove(Data.tbcommodity_has_attribute);
+                    Program.DBCon.TableReadRemove(Data.tbattribute);
 
                 }
                 catch (Exception) { }
@@ -1204,7 +1334,6 @@ namespace RegulatedNoise.SQL
                 throw new Exception("Error while importing Station data", ex);
             }
         }
-
 
         /// <summary>
         /// imports the "own" station data from the file into the database (only initially once needed)
@@ -1302,7 +1431,10 @@ namespace RegulatedNoise.SQL
                 {
                     Int32 SystemID;
 
-                    if (!String.IsNullOrEmpty(Station.Name.Trim()) && (Station.SystemId > 0))
+                    if(Station.Name == "Glass City")
+                        Debug.Print("stop");
+
+                    if (!String.IsNullOrEmpty(Station.Name.Trim()) && (Station.SystemId != 0))
                     {
                         // is the system id changed ? --> get the new system id, otherwise the original
                         if (changedSystemIDs.TryGetValue(Station.SystemId, out SystemID))
@@ -1314,10 +1446,11 @@ namespace RegulatedNoise.SQL
 
                         if ((FoundRows != null) && (FoundRows.Count() > 0))
                         {
+                            // Station is existing, get the same Id
+                            Station.Id = (Int32)FoundRows[0]["id"];
+
                             if (!OnlyAddUnknown)
                             {
-                                // Station is existing, get the same Id
-                                Station.Id = (Int32)FoundRows[0]["id"];
 
                                 if ((bool)(FoundRows[0]["is_changed"]))
                                 {
@@ -1380,6 +1513,7 @@ namespace RegulatedNoise.SQL
                             Program.DBCon.TableUpdate(Data.tbstationeconomy);
                         }
                     }
+
 
                     Counter++;
                     sendProgressEvent("import self-added stations", Counter, Stations.Count);
@@ -1506,62 +1640,132 @@ namespace RegulatedNoise.SQL
             }
         }
 
+        
+
         /// <summary>
         /// copies the commodities data from a "EDStation"-object to "tb_______Commodity"-table
         /// </summary>
         /// <param name="StationObject"></param>
         /// <param name="EconomyRow"></param>
-        private void CopyEDStationCommodityToDataRow(EDStation StationObject, DataTable CommodityTable)
+        private void CopyEDStationCommodityToDataRow(EDStation StationObject, dsEliteDB Data, ref UInt32 AutoIndex)
         {
+            Int32 i;
+            String[] currentCommodityCollection = null;
+            String currentCommodityAttribute = null;
+
             try
             {
-                string[] Commodities    = null;
+               
+                var existingClassification  =  ((dsEliteDB.tbcommodityclassificationRow[])Data.tbcommodityclassification.Select("station_id = " + StationObject.Id)).ToList();
+                var Commodities             = new Dictionary<String, List<String>>();
 
-                // get all existing economies from the database (memory list)
-                List<DataRow> Existing      = CommodityTable.Select("station_id = " + StationObject.Id).ToList();
-
-                switch (CommodityTable.TableName)
+                for(i=0 ; i<=2 ; i++)
                 {
-                    case "tbimportcommodity":
-                        Commodities = StationObject.ImportCommodities;
-                    break;
-                    case "tbexportcommodity":
-                        Commodities = StationObject.ExportCommodities;
-                    break;
-                    case "tbprohibitedcommodity":
-                        Commodities = StationObject.ProhibitedCommodities;
-                    break;
+                    switch (i)
+                    {
+                    	case 0:
+                    		currentCommodityCollection  = StationObject.ImportCommodities;
+                            currentCommodityAttribute   = "import";
+                    		break;
+                    	case 1:
+                    		currentCommodityCollection  = StationObject.ExportCommodities;
+                            currentCommodityAttribute   = "export";
+                    		break;
+                    	case 2:
+                    		currentCommodityCollection  = StationObject.ProhibitedCommodities;
+                            currentCommodityAttribute   = "prohibited";
+                    		break;
+                    }
+
+                    foreach (var Commodity in currentCommodityCollection)
+	                {
+                        List<String> Classification;
+		                if(!Commodities.TryGetValue(Commodity, out Classification))
+                        {
+                            var newCL = new List<String>() {currentCommodityAttribute};
+                            Commodities.Add(Commodity, newCL);
+                        }
+                        else
+                        {
+                            if(!Classification.Contains(currentCommodityAttribute))
+                                Classification.Add(currentCommodityAttribute);
+                        }
+	                }
                 }
 
-                foreach (String Commodity in Commodities)
-                {
-                    // get the current new  id
-                    Int32 CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", Commodity));
 
-                    // and check, if it is already existing
-                    var Found = from DataRow relevantCommodity in Existing
-                                where relevantCommodity.Field<Int32>("commodity_id") == CommodityID
+                foreach (var Commodity in Commodities)
+                {
+                    // get the current commodity id
+                    Int32  CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", Commodity.Key));
+                    UInt32 CClassifID;
+
+                    // and check, if the commodity is already added to station
+                    var Found = from dsEliteDB.tbcommodityclassificationRow relevantCommodity in existingClassification
+                                where relevantCommodity.station_id   == StationObject.Id
+                                    && relevantCommodity.commodity_id == CommodityID
                                 select relevantCommodity;
 
-                    // if it's not existing, insert it
+                    // if it's not existing, insert commodity
                     if(Found.Count() == 0)
                     {
-                        DataRow newRow = CommodityTable.NewRow();
+                        var newRow = (dsEliteDB.tbcommodityclassificationRow)Data.tbcommodityclassification.NewRow();
 
-                        newRow["station_id"]    = DBConvert.From(StationObject.Id);
-                        newRow["commodity_id"]  = CommodityID;
+                        newRow.id           = AutoIndex;
+                        newRow.station_id   = StationObject.Id;
+                        newRow.commodity_id = CommodityID;
 
-                        CommodityTable.Rows.Add(newRow);
+                        Data.tbcommodityclassification.Rows.Add(newRow);
+
+                        CClassifID          = newRow.id;
+                        AutoIndex           +=1;
                     }
                     else
                     {
-                        Existing.Remove(Found.First());
+                        // memorize the id and remove commodity from list to mark it as "found"
+                        CClassifID = Found.First().id;
+                        existingClassification.Remove(Found.First());
+                    }
+
+                    var existingAttributes    =  ((dsEliteDB.tbcommodity_has_attributeRow[])Data.tbcommodity_has_attribute.Select("tbcommodityclassification_id   = " + CClassifID)).ToList();
+
+                    // now check the attributes for this commodity
+                    foreach (var Attribute in Commodity.Value)
+                    {
+                        // get the current attribute id
+                        Int32 AttributeID = (Int32)DBConvert.From(BaseTableNameToID("attribute", Attribute));    
+
+                        // and check, if the attribute is already added to classification
+                        var FoundCC = from dsEliteDB.tbcommodity_has_attributeRow relevantCommodity in existingAttributes
+                                    where relevantCommodity.tbAttribute_id  == AttributeID
+                                    select relevantCommodity;
+
+                        // if it's not existing, insert attribute
+                        if(existingAttributes.Count() == 0)
+                        {
+                            var newRow = (dsEliteDB.tbcommodity_has_attributeRow)Data.tbcommodity_has_attribute.NewRow();
+
+                            newRow.tbAttribute_id               = AttributeID;
+                            newRow.tbCommodityClassification_id = CClassifID;
+
+                            Data.tbcommodity_has_attribute.Rows.Add(newRow);
+                        }
+                        else
+                        {
+                            // remove attribute from list to mark it as "ound"
+                            existingAttributes.Remove(FoundCC.First());
+                        }
+
+                        // remove all old, not more existing attributes
+                        foreach (DataRow RemovedRow in existingClassification)
+                            Data.tbcommodityclassification.Rows.Remove(RemovedRow);    
                     }
 
                 }
-                // remove all old, not more existing data
-                foreach (DataRow RemovedRow in Existing)
-                    CommodityTable.Rows.Remove(RemovedRow);    
+
+                // remove all old, not more existing classification
+                foreach (DataRow RemovedRow in existingClassification)
+                    Data.tbcommodityclassification.Rows.Remove(RemovedRow);    
 
             }
             catch (Exception ex)
@@ -1761,7 +1965,502 @@ namespace RegulatedNoise.SQL
 
 #endregion
 
+#region "handling of prices"
 
+
+        private static void getLevels(ref int? DemandLevel, ref int? SupplyLevel, Dictionary<String, int?> Levels, Listing StationListing)
+        {
+            try
+            {
+                DemandLevel = null;
+
+                if (!String.IsNullOrEmpty(StationListing.DemandLevel))
+                    if (!Levels.TryGetValue(StationListing.DemandLevel, out DemandLevel))
+                    {
+                        dsEliteDB.tblevellocalizationRow[] LocRow = (dsEliteDB.tblevellocalizationRow[])Program.Data.BaseData.tblevellocalization.Select(String.Format("locname = '{0}'", StationListing.DemandLevel));
+
+                        if (LocRow.GetUpperBound(0) >= 0)
+                        {
+                            DemandLevel = LocRow[0].economylevel_id;
+                            Levels.Add(StationListing.DemandLevel, LocRow[0].economylevel_id);
+                        }
+                    }
+                
+                    
+                SupplyLevel = null;
+
+                if (!String.IsNullOrEmpty(StationListing.SupplyLevel))
+                    if (!Levels.TryGetValue(StationListing.SupplyLevel, out SupplyLevel))
+                    {
+                        dsEliteDB.tblevellocalizationRow[] LocRow = (dsEliteDB.tblevellocalizationRow[])Program.Data.BaseData.tblevellocalization.Select(String.Format("locname = '{0}'", StationListing.SupplyLevel));
+
+                        if (LocRow.GetUpperBound(0) >= 0)
+                        {
+                            SupplyLevel = LocRow[0].economylevel_id;
+                            Levels.Add(StationListing.SupplyLevel, LocRow[0].economylevel_id);
+                        }
+                    }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while caching levels", ex);
+            }
+        }
+
+        /// <summary>
+        /// Imports the prices from the list of stations. It's clever
+        /// firstly to import the stations from the same file.
+        /// </summary>
+        /// <param name="Stations"></param>
+        private void ImportPrices(List<EDStation> Stations)
+        {
+            try
+            { 
+                StringBuilder sqlStringB = new StringBuilder();
+                Int32 Counter;
+
+                // for the prices is no transaction necessary, because we're changing
+                // only a single table
+
+                Counter = 0;
+                sendProgressEvent("updating prices", Counter, Stations.Count);
+
+                //Int32 SourceID = ((dsEliteDB.tbsourceRow[])Data.tbsource.Select("source = " + DBConnector.SQLAString("EDDN")))[0].id;
+                Int32 SourceID = (Int32)BaseTableNameToID("source", "EDDN");
+
+                Boolean AddComma = false;
+                int?  DemandLevel = null;
+                int?  SupplyLevel = null;
+
+                Dictionary<String, int?> Levels = new Dictionary<String, int?>();
+
+                // now add the commodities and prices
+                foreach (EDStation Station in Stations)
+                {
+                    if (Station.Listings.Count() > 0)
+                    {
+                        sqlStringB.Clear();
+                        sqlStringB.Append("insert into tbCommodityData(id, station_id, commodity_id, Sell, Buy," +
+                                          "Demand, DemandLevel, Supply, SupplyLevel, Sources_id, timestamp) ");
+
+                        foreach (Listing StationListing in Station.Listings)
+                        {
+                            if (AddComma)
+                                sqlStringB.Append(" union all ");
+
+                            // cache level-ids
+                            getLevels(ref DemandLevel, ref SupplyLevel, Levels, StationListing);
+
+                            // add only, if not existing or newer !!
+                            sqlStringB.Append(String.Format("( select if(SC1.cnt = 0, 0, SC1.id),{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}" +
+                                                            "         from (select ID, station_id, commodity_id, Count(*) As cnt, timestamp from tbCommodityData" +
+                                                            "              where station_id   = {0}" +
+                                                            "              and   commodity_id = {1}) SC1" +
+                                                            "  where (SC1.timestamp < {9}) or (SC1.timestamp is null))",
+                                                            Station.Id,
+                                                            StationListing.CommodityId,
+                                                            StationListing.SellPrice,
+                                                            StationListing.BuyPrice,
+                                                            StationListing.Demand,
+                                                            DemandLevel.ToNString("null"),
+                                                            StationListing.Supply,
+                                                            SupplyLevel.ToNString("null"),
+                                                            SourceID,
+                                                            DBConnector.SQLDateTime(UnixTimeStamp.UnixTimeStampToDateTime(StationListing.CollectedAt))
+                                                            ));
+
+                            AddComma = true;
+                        }
+
+                        sqlStringB.Append(" on duplicate key update " +
+                                          "  Sell        = Values(Sell)" +
+                                          ", Buy         = Values(Buy)" +
+                                          ", Demand      = Values(Demand)" +
+                                          ", DemandLevel = Values(DemandLevel)" +
+                                          ", Supply      = Values(Supply)" +
+                                          ", SupplyLevel = Values(SupplyLevel)" +
+                                          ", Sources_id  = Values(Sources_id)" +
+                                          ", timestamp   = Values(timestamp)");
+
+                        Program.DBCon.Execute(sqlStringB.ToString());
+                    }
+
+                    AddComma = false;
+                    Counter++;
+                    sendProgressEvent("updating prices", Counter, Stations.Count);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing prices", ex);
+            }
+        }
+
+        /// <summary>
+        /// Imports the prices from the list of stations. It's clever
+        /// firstly to import the stations from the same file.
+        /// </summary>
+        /// <param name="Stations"></param>
+        public void ImportPricesFromAutoSave(String filename)
+        {
+            try
+            {
+                List<EDStation> StationData;
+                List<EDSystem> SystemData = null;
+                Dictionary<Int32, Int32> SystemChanged;
+                String[] CSV_Strings    = new String[0];
+                var reader              = new StreamReader(File.OpenRead(filename));
+
+
+                string header = reader.ReadLine();
+
+                if(header.StartsWith("System;Station"))
+                {
+                    CSV_Strings = reader.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                }
+
+                reader.Close();
+
+                // first be sure all systems and stations existing
+                StationData = fromCSV(CSV_Strings, ref SystemData);
+                ImportSystems_Own(ref SystemData, true);
+
+                // transfer the found system-ids to the station objects
+                foreach (EDStation Station in StationData)
+                {
+                    if(Station.SystemId == 0)
+                    {
+                        EDSystem System  = SystemData.Find(x => x.Name.Equals(Station.SystemName, StringComparison.InvariantCultureIgnoreCase));                        
+                        Station.SystemId = System.Id;
+                    }
+                }
+
+                ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
+
+                // now import the prices
+                ImportPrices(StationData);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing self collected price data", ex);
+            }
+        }
+
+        /// <summary>
+        /// creates a list of "EDStations" with price listings from csv-array
+        /// </summary>
+        /// <param name="CSV_Strings"></param>
+        /// <returns></returns>
+        public List<EDStation> fromCSV(String[] CSV_Strings, ref List<EDSystem> foundSystems)
+        {
+            List<EDStation> foundValues                     = new List<EDStation>();
+            Dictionary<String, Int32> foundIndex            = new Dictionary<String, Int32>();
+            Dictionary<String, Int32> foundSystemIndex      = new Dictionary<String, Int32>();
+            String LastID                                   = "";
+            EDSystem LastSystem                             = null;
+            String currentID                                = "";
+            EDStation currentStation                        = null;
+            Int32 Index                                     = 0;
+
+            try
+            {
+                if(foundSystems != null)
+                    foundSystems.Clear();
+                else
+                    foundSystems = new List<EDSystem>();
+
+
+                foreach (String CSV_String in CSV_Strings)
+	            {
+
+                    if(!String.IsNullOrEmpty(CSV_String.Trim()))
+                    {
+		                CsvRow currentRow           = new CsvRow(CSV_String);
+
+                        currentID = currentRow.StationID;
+
+                        if(!LastID.Equals(currentID, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            if(currentStation != null)
+                                currentStation.ListingExtendMode = false;
+
+                            if(foundIndex.TryGetValue(currentID, out Index))
+                                currentStation = foundValues[Index];
+                            else
+                            {
+                                currentStation  = new EDStation(currentRow);
+
+                                foundValues.Add(currentStation);
+                                foundIndex.Add(currentID, foundValues.Count-1);
+                            }
+                            LastID = currentRow.StationID;
+
+                            currentStation.ListingExtendMode = true;
+
+
+                            if((LastSystem == null) || (!LastSystem.Name.Equals(currentRow.SystemName, StringComparison.InvariantCultureIgnoreCase)))
+                            {
+                                if(foundSystemIndex.TryGetValue(currentRow.SystemName, out Index))
+                                    LastSystem = foundSystems[Index];
+                                else
+                                {
+                                    LastSystem  = new EDSystem();
+                                    LastSystem.Name = currentRow.SystemName;
+
+                                    foundSystems.Add(LastSystem);
+                                    foundSystemIndex.Add(currentRow.SystemName, foundSystems.Count-1);
+                                }
+                            }
+                        }
+
+                        currentStation.addListing(currentRow);
+                    }
+	            }
+
+                if(currentStation != null)
+                    currentStation.ListingExtendMode = false;
+
+                return foundValues;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting station values from CSV-String", ex);
+            }
+        }
+#endregion
+
+        #region general
+
+        /// <summary>
+        /// Specifies all systems/stations from the Commander's Log as "visited".
+        /// Necessary/recommended after a import of old "Commander's Log" files.
+        /// </summary>
+        /// <param name="Refresh"></param>
+        public void updateVisitedBaseFromLog(enVisitType Refresh)
+        {
+            String sqlString;
+            
+            try
+            {
+                if((Refresh & enVisitType.Systems) > 0)
+                { 
+                    sqlString = "insert into tbVisitedSystems(system_id, time)" +
+                                "   select L1.system_id, L1.time " +
+                                "      from tbLog L1 left join tbVisitedSystems V1 on L1.system_id = V1.system_id " +
+                                "      where L1.system_id is not null " +
+                                "      and   L1.time      > V1.time" +
+                                "      and  not exists (select * from tbLog L2 " +
+                                "                        where L1.system_id = L2.system_id" +
+                                "                        and   L1.time      < L2.time)" +
+                                "on duplicate key update time = L1.time";
+
+                    Program.DBCon.Execute(sqlString);
+                }
+
+                if((Refresh & enVisitType.Stations) > 0)
+                { 
+                    sqlString = "insert into tbVisitedStations(station_id, time)" +
+                                "   select L1.station_id, L1.time " +
+                                "      from tbLog L1 left join tbVisitedStations V1 on L1.station_id = V1.station_id " +
+                                "      where L1.station_id is not null " +
+                                "      and   L1.time      > V1.time" +
+                                "      and  not exists (select * from tbLog L2 " +
+                                "                        where L1.station_id = L2.station_id" +
+                                "                        and   L1.time      < L2.time)" +
+                                " on duplicate key update time = L1.time";
+
+                    Program.DBCon.Execute(sqlString);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating the visited systems from log", ex);
+            }
+        }
+
+        /// <summary>
+        /// Update the visited-flag in the stations- and systems-tables
+        /// from the visited-basetables (tbVisitedStations/tbVistitedSystems).
+        /// </summary>
+        /// <param name="Refresh"></param>
+        public void updateVisitedFlagsFromBase()
+        {
+            String sqlString;
+            
+            try
+            {
+                sqlString = "update tbSystems S left join tbVisitedSystems V on S.id = V.system_id" +
+                            "   set visited = if(V.system_id is null, 0, 1)";
+                Program.DBCon.Execute(sqlString);
+
+
+                sqlString = "update tbStations S left join tbVisitedStations V on S.id = V.station_id" +
+                            "   set visited = if(V.station_id is null, 0, 1)";
+                Program.DBCon.Execute(sqlString);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating the visited systems from log", ex);
+            }
+        }
+
+        /// <summary>
+        /// updates the localization of all commodities for the current language
+        /// </summary>
+        public void updateTranslation()
+        {
+            try
+            {
+
+                String currentLanguage = Program.DBCon.getIniValue("Localization", "currentLanguage", "eng", false, true);
+
+                switchLanguage(currentLanguage);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating the current translation", ex);
+            }
+        }
+
+        /// <summary>
+        /// Switch the language, updating the loccommodity-string in tbCommodities.
+        /// </summary>
+        /// <param name="Language">new language for viewing</param>
+        public void switchLanguage(String Language)
+        {
+            String sqlString;
+            
+            try
+            {
+                // commodities
+                sqlString = String.Format(
+                            "update tbcommodity C, (select C1.ID, if(Loc1.LocName is null, C1.Commodity, Loc1.LocName) As loccommodity" + 
+                            "                          from tbCommodity C1 left join  (" +
+                            "                               select * from tbCommodityLocalization L2, tbLanguage La2" +
+							"				                 where L2.Language_id = La2.id" +
+							"				                 and La2.language     = {0}) Loc1" + 
+							"	                        on C1.id = loc1.Commodity_id) Loc" +
+							" set C.loccommodity = Loc.loccommodity" +
+							" where C.id = Loc.ID", DBConnector.SQLAString(Language)); 
+
+                Program.DBCon.Execute(sqlString);
+
+                // categories
+                sqlString = String.Format(
+                            "update tbCategory C, (select C1.ID, if(Loc1.LocName is null, C1.Category, Loc1.LocName) As locCategory" + 
+                            "                          from tbCategory C1 left join  (" +
+                            "                               select * from tbCategoryLocalization L2, tbLanguage La2" +
+							"				                 where L2.Language_id = La2.id" +
+							"				                 and La2.language     = {0}) Loc1" + 
+							"	                        on C1.id = loc1.Category_id) Loc" +
+							" set C.locCategory = Loc.locCategory" +
+							" where C.id = Loc.ID", DBConnector.SQLAString(Language)); 
+
+                Program.DBCon.Execute(sqlString);
+
+                // economy levels
+                sqlString = String.Format(
+                            "update tbEconomyLevel C, (select C1.ID, if(Loc1.LocName is null, C1.Level, Loc1.LocName) As locEconomyLevel" +
+                            "                              from tbEconomyLevel C1 left join  (" +
+                            "                                   select * from tbLevelLocalization L2, tbLanguage La2" +
+                            "                                    where L2.Language_id = La2.id" +
+                            "                                    and   La2.language   = {0}) Loc1" +
+                            "                               on C1.id = loc1.EconomyLevel_id) Loc " +
+                            " set C.locLevel = Loc.locEconomyLevel " +
+                            " where C.id = Loc.ID", DBConnector.SQLAString(Language)); 
+
+                Program.DBCon.Execute(sqlString);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while switching the language to <" + Language + ">", ex);
+            }
+        }
+
+        /// <summary>
+        /// get the next free index for the table (positive only)
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <param name="TableName"></param>
+        /// <returns></returns>
+        private UInt32 getFreeIndex(String TableName)
+        {
+            String sqlString ;
+            UInt32 retValue = 0;
+            DataTable data  = new DataTable();
+
+            try
+            {
+                // get the highest ID from the table
+                sqlString = "select max(id) As max_id from " + TableName;
+                Program.DBCon.Execute(sqlString, data);
+
+                if (Convert.IsDBNull(data.Rows[0]["max_id"]))
+                    retValue = 0;
+                else
+                {
+                    retValue = ((UInt32)data.Rows[0]["max_id"]) + 1;
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while determine the next free id", ex);
+            }
+        }
+
+        internal void ClearAll()
+        {
+            try
+            {
+                Int32 Counter = 0;
+                List<String> Tables = new List<String>() {"tbVisitedStations", 
+                                                          "tbVisitedSystems", 
+                                                          "tbLog", 
+                                                          "tbCommodityData", 
+                                                          "tbPriceHistory", 
+                                                          "tbCommodityClassification", 
+                                                          "tbCommodityLocalization", 
+                                                          "tbCategoryLocalization", 
+                                                          "tbLevelLocalization", 
+                                                          "tbCommodity", 
+                                                          "tbCategory", 
+                                                          "tbStations_org", 
+                                                          "tbSystems_org", 
+                                                          "tbStations", 
+                                                          "tbSystems"};
+
+           
+                sendProgressEvent("clearing database...", 0, 0);
+
+                foreach (String Table in Tables)       
+	            {
+                    Debug.Print("deleting " + Table + "...");
+                    sendProgressEvent("deleting " + Table + "...", Counter + 1, Tables.Count, true);
+
+		            Program.DBCon.Execute("delete from " + Table);
+
+                    Counter++;
+        	    }
+                
+
+
+                sendProgressEvent("clearing database...<done>", 1, 1);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while clearing the database", ex);
+            }
+        }
+
+#endregion
 
 
     }

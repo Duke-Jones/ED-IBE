@@ -7,12 +7,15 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using System.Diagnostics;
 
 namespace RegulatedNoise.EDDB_Data
 {
 
     public class EDStation
     {
+        private Int32 currentIndex;
+        private Boolean m_ListingExtendMode;
 
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -22,6 +25,9 @@ namespace RegulatedNoise.EDDB_Data
 
         [JsonProperty("system_id")]
         public int SystemId { get; set; }
+
+        // only temporary needed if we don't know the system-id
+        public String SystemName { get; set; }
 
         [JsonProperty("max_landing_pad_size")]
         public string MaxLandingPadSize { get; set; }
@@ -107,6 +113,66 @@ namespace RegulatedNoise.EDDB_Data
             getValues(sourceStation);   
         }
 
+        /// <summary>
+        /// creates a new station with values from the CsvRow object
+        /// </summary>
+        /// <param name="currentRow"></param>
+        public EDStation(CsvRow Csv_Row)
+        {
+            try
+            {
+                var SystemsAndStations =  Program.Data.BaseData.visystemsandstations;
+
+                Id                    = 0;
+                SystemId              = 0;
+
+                var stationID = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])SystemsAndStations.Select(
+                                        String.Format("systemname = '{0}' and stationname = '{1}'",  
+                                        SQL.DBConnector.DTEscape(Csv_Row.SystemName), 
+                                        SQL.DBConnector.DTEscape(Csv_Row.StationName)));
+                             
+                if(stationID.GetUpperBound(0) >= 0)
+                {
+                    Id                    = stationID[0].StationID;
+                    SystemId              = stationID[0].SystemID;
+                }
+                else
+                {
+                    // we'll get the system-id later
+                    SystemName            = Csv_Row.SystemName;
+                }
+
+                Name                  = Csv_Row.StationName;
+                MaxLandingPadSize     = null;
+                DistanceToStar        = null;
+                Faction               = null;
+                Government            = null;
+                Allegiance            = null;
+                State                 = null;
+                Type                  = null;
+                HasBlackmarket        = null;
+                HasCommodities        = null;
+                HasRefuel             = null;
+                HasRepair             = null;
+                HasRearm              = null;
+                HasOutfitting         = null;
+                HasShipyard           = null;
+
+                ImportCommodities     = new String[0];
+                ExportCommodities     = new String[0];
+                ProhibitedCommodities = new String[0];
+                Economies             = new String[0];
+
+                Listings              = new Listing[0];
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while creating new EDStation object with values from CsvRow object", ex);
+            }
+        }
+
         public void clear()
         {
             Id                    = 0;
@@ -131,6 +197,10 @@ namespace RegulatedNoise.EDDB_Data
             ExportCommodities     = new String[0];
             ProhibitedCommodities = new String[0];
             Economies             = new String[0];
+
+            Listings              = new Listing[0];
+
+            ListingExtendMode     = false;
         }
 
         /// <summary>
@@ -207,6 +277,81 @@ namespace RegulatedNoise.EDDB_Data
 
         }
 
-    }
+        /// <summary>
+        /// adds a record to the pricelistings of this station
+        /// </summary>
+        /// <param name="CSV_String"></param>
+        public void addListing(CsvRow Csv_Row)
+        {
+            SQL.Datasets.dsEliteDB.tbcommoditylocalizationRow[] CommodityRow;
 
+            try
+            {
+                CommodityRow = (SQL.Datasets.dsEliteDB.tbcommoditylocalizationRow[])Program.Data.BaseData.tbcommoditylocalization.Select(
+                                    String.Format("locname = '{0}'", SQL.DBConnector.DTEscape(Csv_Row.CommodityName)));
+                
+                if(CommodityRow.GetUpperBound(0) >= 0)
+                { 
+                    ListingExtendMode       = true;
+                    Listing newListing      = new Listing();
+
+                    newListing.StationId    = this.Id;
+                    newListing.CommodityId  = (Int32)CommodityRow[0].commodity_id;
+                    newListing.Supply       = (Int32)Csv_Row.Supply;
+                    newListing.SupplyLevel  = Csv_Row.SupplyLevel.Trim() == "" ? null : Csv_Row.SupplyLevel;
+                    newListing.BuyPrice     = (Int32)Csv_Row.BuyPrice;
+                    newListing.SellPrice    = (Int32)Csv_Row.SellPrice;
+                    newListing.Demand       = (Int32)Csv_Row.Demand;
+                    newListing.DemandLevel  = Csv_Row.DemandLevel.Trim() == "" ? null : Csv_Row.DemandLevel;
+                    newListing.CollectedAt  = UnixTimeStamp.DateTimeToUnixTimestamp(Csv_Row.SampleDate);
+                    newListing.UpdateCount  = -1;
+
+                    Listings[currentIndex+1] = newListing;
+                    currentIndex++;
+                }
+            }            
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding a record to the pricelistings", ex);
+            }
+        }
+
+        public Boolean ListingExtendMode 
+        {
+            get
+            {
+                return m_ListingExtendMode; 
+            }
+            set
+            {
+                if(value != m_ListingExtendMode)
+                {
+                    if(value)
+                    {
+                        // extend first step and activate
+                        currentIndex    = Listings.GetUpperBound(0);
+                        var newListings = Listings;
+                        Array.Resize(ref newListings, currentIndex + 100);
+                        Listings        = newListings;
+                    }
+                    else
+                    {
+                        //deactivate
+                        var newListings = Listings;
+                        Array.Resize(ref newListings, currentIndex + 1);
+                        Listings        = newListings;
+                    }
+
+                    m_ListingExtendMode = value;
+                }
+                else if(value && (currentIndex == Listings.GetUpperBound(0)))
+                {
+                    // extend next step
+                    var newListings = Listings;
+                    Array.Resize(ref newListings, currentIndex + 100);
+                    Listings        = newListings;
+                }
+            }
+        }
+    }
 }

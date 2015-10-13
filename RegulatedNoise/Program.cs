@@ -138,7 +138,7 @@ namespace RegulatedNoise
         public static RegulatedNoiseSettings            Settings;
         private static DBProcess                        EliteDBProcess;
         public static CommandersLog                     CommandersLog;
-        public static DBPorter                          Data;
+        public static EliteDBIO                         Data;
         public static Condition                         actualCondition;
 
 
@@ -184,7 +184,7 @@ namespace RegulatedNoise
                     DBCon.Connect();
 
                     // preprare main data object
-                    Data                                        = new RegulatedNoise.SQL.DBPorter();
+                    Data                                        = new RegulatedNoise.SQL.EliteDBIO();
                     Data.PrepareBaseTables();
 
                     // prepare commanders log 

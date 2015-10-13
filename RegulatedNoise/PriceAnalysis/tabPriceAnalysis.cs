@@ -10,9 +10,10 @@ using System.Windows.Forms;
 using RegulatedNoise.SQL;
 using System.Diagnostics;
 using RegulatedNoise.SQL.Datasets;
-namespace RegulatedNoise.Commander_s_Log
+
+namespace RegulatedNoise.PriceAnalysis
 {
-    public partial class tabCommandersLog : UserControl
+    public partial class tabPriceAnalysis : UserControl
     {
         // current state of Commanders Log
         private enum enCLAction
@@ -24,7 +25,7 @@ namespace RegulatedNoise.Commander_s_Log
 
         private const String        DB_GROUPNAME                    = "CmdrsLog";
 
-        private CommandersLog       m_DataSource;                   // data object
+        private PriceAnalysis       m_DataSource;                   // data object
         private enCLAction          m_CL_State;                     // current gui state
 
         private Int32               m_InitialTopOfGrid;
@@ -36,7 +37,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// Constructor
         /// </summary>
-        public tabCommandersLog()
+        public tabPriceAnalysis()
         {
             InitializeComponent();
             Dock = DockStyle.Fill;
@@ -45,7 +46,7 @@ namespace RegulatedNoise.Commander_s_Log
         /// <summary>
         /// sets or gets the data object
         /// </summary>
-        public CommandersLog DataSource
+        public PriceAnalysis DataSource
         {
             get
             {
@@ -78,7 +79,7 @@ namespace RegulatedNoise.Commander_s_Log
             {
                 Cursor = Cursors.WaitCursor;
 
-                m_InitialTopOfGrid                      = dgvCommandersLog.Top;
+                m_InitialTopOfGrid                      = dgvAllCommodities.Top;
                 m_InitialTopOfEditGroupBox              = gbCL_LogEdit.Top;
                 m_CL_State                              = enCLAction.None;
 
@@ -100,17 +101,17 @@ namespace RegulatedNoise.Commander_s_Log
                 setCLFieldsEditable(false);
 
                 // preparing the datagridview                
-                dgvCommandersLog.VirtualMode              = true;
-                dgvCommandersLog.ReadOnly                 = true;
-                dgvCommandersLog.AllowUserToAddRows       = false;
-                dgvCommandersLog.AllowUserToOrderColumns  = false;
-                dgvCommandersLog.SelectionMode            = DataGridViewSelectionMode.FullRowSelect;
+                dgvAllCommodities.VirtualMode              = true;
+                dgvAllCommodities.ReadOnly                 = true;
+                dgvAllCommodities.AllowUserToAddRows       = false;
+                dgvAllCommodities.AllowUserToOrderColumns  = false;
+                dgvAllCommodities.SelectionMode            = DataGridViewSelectionMode.FullRowSelect;
 
-                dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
+                dgvAllCommodities.RowCount                 = m_DataSource.InitRetriever();
 
-                dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
-                dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
-                dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
+                dgvAllCommodities.RowEnter                += dgvCommandersLog_RowEnter;
+                dgvAllCommodities.RowPrePaint             += dgvCommandersLog_RowPrePaint;
+                dgvAllCommodities.Paint                   += dgvCommandersLog_Paint;
 
                 setEditfieldBoxVisible(Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, "showEditFields", "true", false));
 
@@ -156,8 +157,8 @@ namespace RegulatedNoise.Commander_s_Log
             {
                 if(!m_CellValueNeededIsRegistered)
                 { 
-                    dgvCommandersLog.CellValueNeeded          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValueNeeded);
-                    dgvCommandersLog.CellValuePushed          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValuePushed);
+                    dgvAllCommodities.CellValueNeeded          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValueNeeded);
+                    dgvAllCommodities.CellValuePushed          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValuePushed);
                     m_CellValueNeededIsRegistered = true;
                 }
             }
@@ -224,16 +225,16 @@ namespace RegulatedNoise.Commander_s_Log
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void m_DataSource_DataChanged(object sender, CommandersLog.DataChangedEventArgs e)
+        void m_DataSource_DataChanged(object sender, PriceAnalysis.DataChangedEventArgs e)
         {
             try
             {
                 // force refresh
                 m_DataSource.Retriever.MemoryCache.Clear();
-                dgvCommandersLog.Invalidate();
+                dgvAllCommodities.Invalidate();
 
                 // jump to the new row
-                dgvCommandersLog.CurrentCell = dgvCommandersLog[1, e.DataRow];
+                dgvAllCommodities.CurrentCell = dgvAllCommodities[1, e.DataRow];
 
             }
             catch (Exception ex)
@@ -318,25 +319,25 @@ namespace RegulatedNoise.Commander_s_Log
             {
                 setCLFieldsEditable(false);
 
-                dgvCommandersLog.ReadOnly = false;
+                dgvAllCommodities.ReadOnly = false;
 
 
                 // put the changed data into the DataGridView (this will fire the "CellValuePushed"-event)
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value              = cbLogEventType.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["time"].Value                = dtpLogEventDate.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["systemname"].Value          = cbLogSystemName.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["stationname"].Value         = cbLogStationName.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_transaction"].Value = nbTransactionAmount.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_total"].Value       = nbCurrentCredits.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["loccommodity"].Value        = cbLogCargoName.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value              = cbLogCargoAction.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value         = nbLogQuantity.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value               = tbLogNotes.Text;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["eevent"].Value              = cbLogEventType.Text;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["time"].Value                = dtpLogEventDate.Value;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["systemname"].Value          = cbLogSystemName.Text;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["stationname"].Value         = cbLogStationName.Text;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["credits_transaction"].Value = nbTransactionAmount.Value;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["credits_total"].Value       = nbCurrentCredits.Value;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["loccommodity"].Value        = cbLogCargoName.Text;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["action"].Value              = cbLogCargoAction.Text;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["cargovolume"].Value         = nbLogQuantity.Value;
+                dgvAllCommodities.Rows[dgvAllCommodities.CurrentRow.Index].Cells["notes"].Value               = tbLogNotes.Text;
 
-                dgvCommandersLog.ReadOnly = true;
+                dgvAllCommodities.ReadOnly = true;
 
                 // save changed data (from data cache through "CellValuePushed"-event) to database
-                m_DataSource.SaveEvent((dsEliteDB.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvCommandersLog.CurrentRow.Index));
+                m_DataSource.SaveEvent((dsEliteDB.vilogRow)m_DataSource.Retriever.MemoryCache.RetrieveDataColumn(dgvAllCommodities.CurrentRow.Index));
 
                 m_CL_State = enCLAction.None;
 
@@ -352,7 +353,7 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                showRowInFields(new DataGridViewCellEventArgs(dgvCommandersLog.CurrentCellAddress.X, dgvCommandersLog.CurrentCellAddress.Y));
+                showRowInFields(new DataGridViewCellEventArgs(dgvAllCommodities.CurrentCellAddress.X, dgvAllCommodities.CurrentCellAddress.Y));
 
                 setCLFieldsEditable(false);
 
@@ -383,18 +384,18 @@ namespace RegulatedNoise.Commander_s_Log
         {
             try
             {
-                if((e.RowIndex >= 0) && (dgvCommandersLog.Rows.Count > 0) && (dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value != null))
+                if((e.RowIndex >= 0) && (dgvAllCommodities.Rows.Count > 0) && (dgvAllCommodities.Rows[e.RowIndex].Cells["time"].Value != null))
                 {
-                    cbLogEventType.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value;
-                    cbLogSystemName.Text        = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
-                    cbLogStationName.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
-                    nbTransactionAmount.Text    = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Value      = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["credits_total"].Value;
-                    cbLogCargoName.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
-                    cbLogCargoAction.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
-                    nbLogQuantity.Value         = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value;
-                    tbLogNotes.Text             = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
+                    cbLogEventType.Text         = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
+                    dtpLogEventDate.Value       = (DateTime)dgvAllCommodities.Rows[e.RowIndex].Cells["time"].Value;
+                    cbLogSystemName.Text        = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
+                    cbLogStationName.Text       = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
+                    nbTransactionAmount.Text    = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
+                    nbCurrentCredits.Value      = (Int32)dgvAllCommodities.Rows[e.RowIndex].Cells["credits_total"].Value;
+                    cbLogCargoName.Text         = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
+                    cbLogCargoAction.Text       = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["action"].Value.ToString();
+                    nbLogQuantity.Value         = (Int32)dgvAllCommodities.Rows[e.RowIndex].Cells["cargovolume"].Value;
+                    tbLogNotes.Text             = (String)dgvAllCommodities.Rows[e.RowIndex].Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
                 }
                 else
                 {
@@ -434,7 +435,7 @@ namespace RegulatedNoise.Commander_s_Log
                 nbLogQuantity.ReadOnly            = !Enabled;
                 tbLogNotes.ReadOnly               = !Enabled;
 
-                dgvCommandersLog.Enabled          = !Enabled;
+                dgvAllCommodities.Enabled          = !Enabled;
             }
             catch (Exception ex)
             {
@@ -519,13 +520,13 @@ namespace RegulatedNoise.Commander_s_Log
                 if(setVisible)
                 {
                     gbCL_LogEdit.Visible     = true;
-                    dgvCommandersLog.Top     = m_InitialTopOfGrid;
-                    dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
+                    dgvAllCommodities.Top     = m_InitialTopOfGrid;
+                    dgvAllCommodities.Height  = this.Height - dgvAllCommodities.Top;
                 }
                 else
                 {
-                    dgvCommandersLog.Top     = gbCL_LogEdit.Top;
-                    dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
+                    dgvAllCommodities.Top     = gbCL_LogEdit.Top;
+                    dgvAllCommodities.Height  = this.Height - dgvAllCommodities.Top;
                     gbCL_LogEdit.Visible     = false;
                 }
 

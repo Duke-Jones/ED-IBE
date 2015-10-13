@@ -73,6 +73,23 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
             return retValue;
         }
+
+        public static string ToNString(this int? thisInt, String NullString)
+        {
+            string retValue = null;
+
+            switch (thisInt)
+	        {
+                case null:
+                    retValue = NullString;
+                    break;
+                default:
+                    retValue = thisInt.ToString();
+                    break;
+	        }
+
+            return retValue;
+        }
     }
 
     static class Extensions_LongNullable
@@ -127,12 +144,22 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// </summary>
         /// <param name="thisString">a string or null</param>
         /// <returns></returns>
-        public static string NToString(this string thisString)
+        public static string NToString(this string thisString, String NullString)
         {
             if(thisString == null)
-                return Program.NULLSTRING;
+                return NullString;
             else
                 return thisString;
+        }
+
+        /// <summary>
+        /// converts a string that can be null to a string that represents null as a string ("undefined")
+        /// </summary>
+        /// <param name="thisString">a string or null</param>
+        /// <returns></returns>
+        public static string NToString(this string thisString)
+        {
+            return NToString(thisString, Program.NULLSTRING);
         }
 
         /// <summary>

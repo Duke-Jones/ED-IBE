@@ -18,18 +18,26 @@ todo:
    * add coordinate calculation for new star systems
    * show hint (new star system, changed data, original data)
    * default setting for new systems
--------------------------------------------------------------------------------------         
-sql_todo
-   * import of commodities_own.xml (self added commodities)
-   * import of "Cmdr's Log": unknown systems must be added
-   * think about : remove the visitied flag from stations and systems ? 
-                   -> create a master "visited-table" and copy the info on demand to the systems-"visited-field" 
-				      (good performance (no additionally join) and secure (master-info in another table))
+
+
+
    
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.20
+   * update of visited flag completed 
+   * code for switching language complete (GUI still open but onla a single DropDown needed)
+   * added first version of price analysis tab
+   * changed db structure for price information
+   * added localization of economy levels to db
+   * import of stations and their price data from eddb
+   * import of the self collected price data
+   * added a form for data im- and export and database clearing
+   *
+   * import of data from the old RegulatedNoise and provide all in the database seems to be completed
+-------------------------------------------------------------------------------------         
 SQL 0.0.17
    * update DB-create-script to latest version
    * use of universal dsEliteDB-dataset instead of special datasets like dsCommandersLog-dataset
