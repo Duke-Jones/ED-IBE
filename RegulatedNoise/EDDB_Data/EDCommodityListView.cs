@@ -28,7 +28,8 @@ namespace RegulatedNoise.EDDB_Data
                 InitializeComponent();
                 int selectedRow;
 
-                Commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
+                throw new NotImplementedException();
+                Commodities = null; //Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
 
                 foreach (EDCommoditiesExt Commodity in Commodities)
                 {
@@ -98,7 +99,8 @@ namespace RegulatedNoise.EDDB_Data
                 { 
                     // save and change
                     updateCommodityList();
-                    Form1.InstanceObject.myMilkyway.setCommodities(Commodities.OrderBy(x => x.Id).ToList());
+                    throw new NotImplementedException();
+                    //Form1.InstanceObject.myMilkyway.setCommodities(Commodities.OrderBy(x => x.Id).ToList());
                     this.Close();
                 }
                 else

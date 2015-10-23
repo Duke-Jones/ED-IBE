@@ -26,6 +26,12 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.21
+   * "All Commodities" on "price analysis tab" is working again
+   * realized, the sql-version is fuckin' quick against the old RN :-)))))))))) - tested with the whole EDDN database
+   * added a global interface for quick managing loading/saving of GUI values like e.g. checkboxes, ...
+   * more and more difficult basics are done - feeling "finishing the 1st version" approximates
+-------------------------------------------------------------------------------------         
 SQL 0.0.20
    * update of visited flag completed 
    * code for switching language complete (GUI still open but onla a single DropDown needed)

@@ -13,6 +13,7 @@ using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Web;
 using RegulatedNoise.SQL;
 using RegulatedNoise.Commander_s_Log;
+using RegulatedNoise.Price_Analysis;
 
 namespace RegulatedNoise
 {
@@ -45,6 +46,7 @@ namespace RegulatedNoise
 
             Init();
 
+            
             Application.Run(new Form1());
 
             Cleanup();
@@ -138,6 +140,7 @@ namespace RegulatedNoise
         public static RegulatedNoiseSettings            Settings;
         private static DBProcess                        EliteDBProcess;
         public static CommandersLog                     CommandersLog;
+        public static PriceAnalysis                     PriceAnalysis;
         public static EliteDBIO                         Data;
         public static Condition                         actualCondition;
 
@@ -190,6 +193,10 @@ namespace RegulatedNoise
                     // prepare commanders log 
                     CommandersLog                               = new CommandersLog();
                     CommandersLog.BaseData                      = Data.BaseData;
+
+                    // prepare price analysis 
+                    PriceAnalysis                               = new PriceAnalysis();
+                    PriceAnalysis.BaseData                      = Data.BaseData;
 
                     // initializing the Companion-Interface
                     //CompanionIO         = new CompanionInterface();

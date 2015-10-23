@@ -12,10 +12,12 @@ using System.Diagnostics;
 using RegulatedNoise.SQL;
 using RegulatedNoise.SQL.Datasets;
 
-namespace RegulatedNoise.PriceAnalysis
+namespace RegulatedNoise.Price_Analysis
 {
     public class PriceAnalysis
     {
+        private const string tbn_BestMarketPrices = "tbBestMarketPrices";
+
         public enum enGUIEditElements
         {
             cbLogEventType,
@@ -165,198 +167,226 @@ namespace RegulatedNoise.PriceAnalysis
             }
         }
 
-        /// <summary>
-        /// prepares the values of the comoboboxes
-        /// </summary>
-        /// <param name="theCombobox"></param>
-        internal void prepareCmb_EventTypes(ref ComboBox_ro theCombobox, ComboBox_ro theReferenceCombobox = null)
-        {
-            try
-            {
-                if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    theCombobox.DataSource       = m_BaseData.tbeventtype;
-                    theCombobox.DisplayMember    = "event";
-                }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    theCombobox.DataSource       = m_BaseData.tbsystems;
-                    theCombobox.DisplayMember    = "systemname";
-                }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogStationName.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if((theReferenceCombobox == null) || (theReferenceCombobox.SelectedItem == null))
-                    { 
-                        theCombobox.DataSource       = m_BaseData.tbstations;
-                        theCombobox.DisplayMember    = "stationname";
-                    }
-                    else
-                    {
-                        Int32 SytemID                = (Int32)((System.Data.DataRowView)theReferenceCombobox.SelectedItem).Row["id"];
-                        theCombobox.DataSource       = m_BaseData.tbstations.Select("system_id = " + SytemID);
-                        theCombobox.DisplayMember    = "stationname";
-                    }
-                }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogCargoName.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    theCombobox.DataSource       = m_BaseData.tbcommodity;
-                    theCombobox.DisplayMember    = "loccommodity";
-                }
-                else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    theCombobox.DataSource       = m_BaseData.tbcargoaction;
-                    theCombobox.DisplayMember    = "action";
-                }
 
-                theCombobox.ValueMember      = "id";
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in <prepareCmb_EventTypes> while preparing '" + theCombobox.Name + "'", ex);
-            }
-        }
 
         /// <summary>
-        /// saving the data of the datarow,
-        /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
+        /// creates the filtered basetable of systems and stations
         /// </summary>
-        /// <param name="ChangedData">row with data to save</param>
-        public void SaveEvent(PriceAnalysisEvent Event)
-        {
-            try
-            {
-                dsEliteDB.vilogDataTable TempTable;
-                dsEliteDB.vilogRow TempRow;
-
-                TempTable = new dsEliteDB.vilogDataTable();
-                TempRow = (dsEliteDB.vilogRow)TempTable.NewRow();
-
-                TempRow.time                = Event.EventDate;
-                TempRow.systemname          = Event.System;
-                TempRow.stationname         = Event.Station;
-                TempRow.loccommodity        = Event.Cargo;
-                TempRow.action              = Event.CargoAction;
-                TempRow.cargovolume         = (Int32)Event.CargoVolume;
-                TempRow.credits_transaction = (Int32)Event.TransactionAmount;
-                TempRow.credits_total       = (Int32)Event.Credits;
-                TempRow.eevent              = Event.EventType;
-                TempRow.notes               = Event.Notes;
-
-                SaveEvent(TempRow);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while preparing save data (Event class)", ex);
-            }
-        }
-
-        /// <summary>
-        /// saving the data of the datarow,
-        /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
-        /// </summary>
-        /// <param name="ChangedData">row with data to save</param>
-        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes)
-        {
-            try
-            {
-                dsEliteDB.vilogDataTable TempTable;
-                dsEliteDB.vilogRow TempRow;
-
-                TempTable = new dsEliteDB.vilogDataTable();
-                TempRow = (dsEliteDB.vilogRow)TempTable.NewRow();
-
-                TempRow.time                = EventDate;
-                TempRow.systemname          = System;
-                TempRow.stationname         = Station;
-                TempRow.loccommodity        = Cargo;
-                TempRow.action              = CargoAction;
-                TempRow.cargovolume         = CargoVolume;
-                TempRow.credits_transaction = CreditsTransAction;
-                TempRow.credits_total       = Credits_Total;
-                TempRow.eevent              = EventType;
-                TempRow.notes               = Notes;
-
-                SaveEvent(TempRow);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while preparing save data (single params)", ex);
-            }
-        }
-
-        /// <summary>
-        /// saving the data of the datarow,
-        /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
-        /// </summary>
-        /// <param name="ChangedData">row with data to save</param>
-        internal void SaveEvent(dsEliteDB.vilogRow ChangedData)
+        /// <param name="SystemID"></param>
+        /// <param name="Distance"></param>
+        /// <param name="DistanceToStar"></param>
+        /// <param name="minLandingPadSize"></param>
+        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize)
         {
             String sqlString;
+            DataTable currentSystem = new DataTable();
 
             try
             {
+                // get info of basesystem
+                sqlString = "select * from tbSystems where ID = " + SystemID.ToString();
+                Program.DBCon.Execute(sqlString, currentSystem);
 
-                sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
-                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
-                                            " SELECT d.* FROM (SELECT" +
-                                            "          {0} AS time," +
-                                            "          (select id from tbSystems  where systemname  = {1}" +
-                                            "          ) AS system_id," +
-                                            "          (select id from tbStations where stationname = {2} " +
-                                            "                                     and   system_id   = (select id from tbSystems" +
-                                            "                                                           where systemname = {1})" +
-                                            "          ) AS station_id," +
-                                            "          (select id from tbEventType   where event     = {3}) As event_id," +
-                                            "          (select id from tbCommodity   where commodity = {4} or loccommodity = {4} limit 1) As commodity_id," +
-                                            "          (select id from tbCargoAction where action    = {5}) AS cargoaction_id," +
-                                            "          {6} AS cargovolume," +
-                                            "          {7} AS credits_transaction," +
-                                            "          {8} AS credits_total," +
-                                            "          {9} AS notes) AS d" +
-                                            " ON DUPLICATE KEY UPDATE" +
-                                            "  system_id            = d.system_id," +
-                                            "  station_id           = d.station_id," +
-                                            "  event_id             = d.event_id," +
-                                            "  commodity_id         = d.commodity_id," +
-                                            "  cargoaction_id       = d.cargoaction_id," +
-                                            "  cargovolume          = d.cargovolume," +
-                                            "  credits_transaction  = d.credits_transaction," +
-                                            "  credits_total        = d.credits_total," +
-                                            "  notes                = d.notes",
-                                            DBConnector.SQLDateTime(ChangedData.time),
-                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
-                                            DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
-                                            DBConnector.SQLAString(ChangedData.eevent),
-                                            DBConnector.SQLAString(ChangedData.loccommodity),
-                                            DBConnector.SQLAString(ChangedData.action),
-                                            ChangedData.cargovolume,
-                                            ChangedData.credits_transaction,
-                                            ChangedData.credits_total,
-                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)));
+                //sqlString = String.Format(
+                //            "drop temporary table if exists tmFilteredStations;" +
+                //            "create temporary table tmFilteredStations as" +
+                //            "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance" + 
+                //            "   from tbSystems Sy, tbStations St" +
+                //            "   where Sy.ID = St.System_id",
+                //            currentSystem.Rows[0]["x"].ToString(), 
+                //            currentSystem.Rows[0]["y"].ToString(), 
+                //            currentSystem.Rows[0]["z"].ToString());
 
-                Program.DBCon.Execute(sqlString); 
+                sqlString = String.Format(
+                            "delete from tmFilteredStations;" +
+                            "insert into tmFilteredStations(System_id, Station_id, Distance) " +
+                            "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance" + 
+                            "   from tbSystems Sy, tbStations St" +
+                            "   where Sy.ID = St.System_id",
+                            currentSystem.Rows[0]["x"].ToString(), 
+                            currentSystem.Rows[0]["y"].ToString(), 
+                            currentSystem.Rows[0]["z"].ToString());
 
-                if(!m_NoGuiNotifyAfterSave)
+
+                if(Distance != null)                            
                 {
-                    Int32 RowIndex;
+                    sqlString = sqlString + String.Format(
+                            "   and ((Sy.x <> 0.0 AND Sy.y <> 0.0 AND Sy.Z <> 0.0) Or (Sy.Systemname = 'Sol'))" +
+                            "   and sqrt(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) <=  {3}",
+                            currentSystem.Rows[0]["x"].ToString(), 
+                            currentSystem.Rows[0]["y"].ToString(), 
+                            currentSystem.Rows[0]["z"].ToString(), 
+                            ((Int32)Distance).ToString());
 
-                    m_NoGuiNotifyAfterSave  = false;
-                    RowIndex                = Program.DBCon.getRowIndex("viLog", "time", DBConnector.SQLSortOrder.desc, "time", 
-                                                                        DBConnector.SQLDateTime(ChangedData.time));
-
-
-                    DataChanged.Raise(this, new DataChangedEventArgs() { DataRow = RowIndex, DataKey = ChangedData.time});                     
                 }
+                            
+                if(DistanceToStar != null)                            
+                {
+                    sqlString = sqlString + String.Format(
+                            "   and St.Distance_To_Star <= {0}",
+                            ((Int32)DistanceToStar).ToString());
+
+                }
+
+                if(minLandingPadSize != null)                            
+                {
+                    sqlString = sqlString + String.Format(
+                            "   and St.max_landing_pad_size = '{0}'",
+                            (String)minLandingPadSize);
+                }
+
+                sqlString += ";";
+
+                Program.DBCon.Execute(sqlString);
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while saving Commanders Log to DB", ex);
+                throw new Exception("Error while creating the base view", ex);
             }
         }
 
+        public DataTable getMinMax(Boolean OnlyTradedCommodities)
+        {
+            String sqlString;
+            DataTable Data      = new DataTable();
+            var Result          = new dsEliteDB.tbpa_allcommoditiesDataTable();
+            DataRow BuyMin;
+            DataRow SellMax;
+            DataRow lastCommodity;
 
+            try
+            {
+                if(OnlyTradedCommodities)
+                {
+                    // only inquired/offered commodities
+                    sqlString = "select Sy.ID As SystemID, Sy.Systemname, ST.id As StationID, ST.Stationname," +
+                                "       FS.Distance," +
+                                "       C.ID as CommodityID, C.Commodity, C.LocCommodity," +
+                                "       nullif(CD.Buy, 0) As Buy, nullif(CD.Sell, 0) As Sell, CD.timestamp, " +
+                                "       nullif(xp.min_buy, 0) As min_buy, nullif(xp.max_sell, 0) As max_sell" +
+                                "  from" +
+                                "			tbCommodity C inner join (tbCommodityData CD, tmFilteredStations FS, tbStations St, tbSystems Sy," +
+                                "						(select Commodity_id, max(nullif(Sell, 0)) as max_sell," +
+                                "										      min(nullif(Buy, 0))  as min_buy" +
+                                "						from tbCommodity C, tbCommodityData CD, tmFilteredStations FS" +
+                                "						where FS.station_id = CD.Station_id" +
+                                "						and   CD.Commodity_id = C.ID" +
+                                "						group by Commodity_id) XP) " +
+                                "           on (     C.ID             = CD.commodity_id" +
+                                "                and FS.station_id    = CD.Station_id" +
+                                "                and FS.station_id    = St.ID" +
+                                "                and FS.system_id     = Sy.ID" +
+                                "                and CD.Commodity_id  = XP.Commodity_id " +
+                                "                and (    CD.buy      = XP.min_buy" +
+                                "                      or CD.sell     = XP.max_sell))" +
+                                " order by C.ID, FS.Distance";
+                }
+                else
+                {
+                    // all - also not inquired/offered - commodities
+                    sqlString = "select Sy.ID As SystemID, Sy.Systemname, ST.id As StationID, ST.Stationname," +
+                                "       FS.Distance," +
+                                "       C.ID as CommodityID, C.Commodity, C.LocCommodity," +
+                                "       nullif(CD.Buy, 0) As Buy, nullif(CD.Sell, 0) As Sell, CD.timestamp, " +
+                                "       nullif(xp.min_buy, 0) As min_buy, nullif(xp.max_sell, 0) As max_sell" +
+                                "  from" +
+                                "			tbCommodity C left join (tbCommodityData CD, tmFilteredStations FS, tbStations St, tbSystems Sy," +
+                                "						(select Commodity_id, max(nullif(Sell, 0)) as max_sell," +
+                                "										      min(nullif(Buy, 0))  as min_buy" +
+                                "						from tbCommodity C, tbCommodityData CD, tmFilteredStations FS" +
+                                "						where FS.station_id = CD.Station_id" +
+                                "						and   CD.Commodity_id = C.ID" +
+                                "						group by Commodity_id) XP) " +
+                                "           on (     C.ID             = CD.commodity_id" +
+                                "                and FS.station_id    = CD.Station_id" +
+                                "                and FS.station_id    = St.ID" +
+                                "                and FS.system_id     = Sy.ID" +
+                                "                and CD.Commodity_id  = XP.Commodity_id " +
+                                "                and (    CD.buy      = XP.min_buy" +
+                                "                      or CD.sell     = XP.max_sell))" +
+                                " order by C.ID, FS.Distance";
+                }
+  
+                Program.DBCon.Execute(sqlString, Data);
+
+                lastCommodity   = null;
+                BuyMin          = null;
+                SellMax         = null;
+                Result.Clear();
+
+                foreach (DataRow currentRow in Data.AsEnumerable())
+                {
+                    // Debug.Print((String)lastCommodity["CommodityID"] + " " + (String)currentRow["CommodityID"]);
+                    // Debug.Print((String)currentRow["Stationname"]);
+
+                    if((lastCommodity != null) && ((Int32)lastCommodity["CommodityID"] != (Int32)currentRow["CommodityID"]))
+                    {
+                        // Debug.Print((String)currentRow["LocCommodity"]);
+
+                        // next commodity found, save result 
+                        var newRow = (dsEliteDB.tbpa_allcommoditiesRow)Result.NewRow();
+                        newRow.CommodityID      = (Int32)lastCommodity["CommodityID"];
+                        newRow.Commodity        = (String)lastCommodity["LocCommodity"];
+
+                        if (BuyMin != null)
+                        {
+                            newRow.Buy_SystemID     = (Int32)BuyMin["SystemID"];
+                            newRow.Buy_System       = (String)BuyMin["Systemname"];
+                            newRow.Buy_StationID    = (Int32)BuyMin["StationID"];
+                            newRow.Buy_Station      = (String)BuyMin["Stationname"];
+                            newRow.Buy_Min          = (Int32)(Int64)BuyMin["Buy"];
+                            newRow.Buy_Distance     = (Double)BuyMin["Distance"];
+                            newRow.Buy_Timestamp    = (DateTime)BuyMin["timestamp"];
+                        }
+
+                        if (SellMax != null)
+                        {
+                            newRow.Buy_SystemID     = (Int32)SellMax["SystemID"];
+                            newRow.Sell_System      = (String)SellMax["Systemname"];
+                            newRow.Sell_StationID   = (Int32)SellMax["StationID"];
+                            newRow.Sell_Station     = (String)SellMax["Stationname"];
+                            newRow.Sell_Max         = (Int32)(Int64)SellMax["Sell"];
+                            newRow.Sell_Distance    = (Double)SellMax["Distance"];
+                            newRow.Sell_Timestamp   = (DateTime)SellMax["timestamp"];
+                        }
+
+                        Result.Rows.Add(newRow);
+
+                        BuyMin  = null;
+                        SellMax = null;
+                    }
+
+                    lastCommodity = currentRow;
+
+                    if(!Convert.IsDBNull(currentRow["Buy"])  && ((BuyMin == null)  || ((Int64)currentRow["Buy"]  < (Int64)BuyMin["Buy"])))
+                    { 
+                        //if(BuyMin != null)
+                        //    Debug.Print("Buy " + BuyMin["Buy"] + " -> " + currentRow["Buy"]);
+                        //else
+                        //    Debug.Print("Buy " + "--- -> " + currentRow["Buy"]);
+
+                        BuyMin  = currentRow;
+                    }
+
+                    if(!Convert.IsDBNull(currentRow["Sell"]) && ((SellMax == null) || ((Int64)currentRow["Sell"] > (Int64)SellMax["Sell"])))
+                    {
+                        //if(SellMax != null)
+                        //    Debug.Print("Sell " + SellMax["Sell"] + " -> " + currentRow["Sell"]);
+                        //else
+                        //    Debug.Print("Sell " + "--- -> " + currentRow["Sell"]);
+                        
+                        SellMax  = currentRow;
+                    }
+                }
+
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting the best market prices", ex);
+            }
+        }
     }
 
 #region outdated 

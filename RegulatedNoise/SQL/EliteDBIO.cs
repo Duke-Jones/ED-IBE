@@ -563,8 +563,6 @@ namespace RegulatedNoise.SQL
             dsEliteDB                 Data;
             DataSet                   DataNames;
             Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
-            String                    sqlString;
-            //Int32                     currentSelfCreatedIndex;
             Int32 Counter = 0;
 
             Data      = new dsEliteDB();
@@ -2107,7 +2105,6 @@ namespace RegulatedNoise.SQL
             {
                 List<EDStation> StationData;
                 List<EDSystem> SystemData = null;
-                Dictionary<Int32, Int32> SystemChanged;
                 String[] CSV_Strings    = new String[0];
                 var reader              = new StreamReader(File.OpenRead(filename));
 
@@ -2316,7 +2313,7 @@ namespace RegulatedNoise.SQL
             try
             {
 
-                String currentLanguage = Program.DBCon.getIniValue("Localization", "currentLanguage", "eng", false, true);
+                String currentLanguage = Program.DBCon.getIniValue("Localization", "currentLanguage", "eng", false);
 
                 switchLanguage(currentLanguage);
 

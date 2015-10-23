@@ -314,6 +314,7 @@
     </Compile>
     <Compile Include="SQL\DBConnector.cs" />
     <Compile Include="SQL\DBConvert.cs" />
+    <Compile Include="SQL\DBGuiInterface.cs" />
     <Compile Include="SQL\EliteDBIO.cs" />
     <Compile Include="SQL\DBProcess.cs" />
     <Compile Include="Station.cs" />
@@ -344,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditPriceData.resx">
       <DependentUpon>EditPriceData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Enums and Utility Classes\Controls_ext.resx">
+      <DependentUpon>Controls_ext.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\RNBaseForm.resx">
       <DependentUpon>RNBaseForm.cs</DependentUpon>

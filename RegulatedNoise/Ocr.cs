@@ -192,7 +192,8 @@ namespace RegulatedNoise
             Stationname_OCR = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
 
             // debug: SystemAtTimeOfScreenshot = "BD+65 1846"
-            string[] StationsInSystem = _callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
+            throw new NotImplementedException();
+            string[] StationsInSystem = new String[0]; //_callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
 
             if(Program.actualCondition.Station.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
                 StationameAnalysisBase = Stationname_OCR;

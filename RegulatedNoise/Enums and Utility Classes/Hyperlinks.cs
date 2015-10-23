@@ -53,17 +53,20 @@ namespace RegulatedNoise
 
         private void bShowStationAtStarchartDotInfo_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/system/" + StructureHelper.CombinedNameToSystemName(cmbStation.Text));
+            throw new NotImplementedException();
+            //Process.Start(@"http://starchart.club/map/system/" + StructureHelper.CombinedNameToSystemName(cmbStation.Text));
         }
 
         private void bShowStationToStationRouteAtStarchartDotClub_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://starchart.club/map/route/" + StructureHelper.CombinedNameToSystemName(cmbStationToStationFrom.Text) + @"/" + StructureHelper.CombinedNameToSystemName(cmbStationToStationTo.Text) + @"/@" + StructureHelper.CombinedNameToSystemName(cmbStationToStationFrom.Text));
+            throw new NotImplementedException();
+            //Process.Start(@"http://starchart.club/map/route/" + StructureHelper.CombinedNameToSystemName(cmbStationToStationFrom.Text) + @"/" + StructureHelper.CombinedNameToSystemName(cmbStationToStationTo.Text) + @"/@" + StructureHelper.CombinedNameToSystemName(cmbStationToStationFrom.Text));
         }
 
         private void bShowStationRestrictionAtStarchartDotClub_Click(object sender, EventArgs e)
         {
-            var systemName = cbIncludeWithinRegionOfStation.Text;
+            throw new NotImplementedException();
+            var systemName = "";// cbIncludeWithinRegionOfStation.Text;
             if (systemName == "<Current System>")
             {
                 systemName = Program.actualCondition.System;

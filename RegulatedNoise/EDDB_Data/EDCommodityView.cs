@@ -23,7 +23,8 @@ namespace RegulatedNoise.EDDB_Data
             {
                 cmdCommodity.Sorted = false;
 
-                m_commodities = Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
+                throw new NotImplementedException();
+                m_commodities = null; //Form1.InstanceObject.myMilkyway.cloneCommodities().OrderBy(x => x.Name).ToList();
 
                 cmdCommodity.DataSource = m_commodities;
                 cmdCommodity.ValueMember = "ID";
@@ -151,8 +152,9 @@ namespace RegulatedNoise.EDDB_Data
 				if (MessageBox.Show("Save Changed Data ?", "Commodity Data Changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
 				{
 					// save and change
-					Form1.InstanceObject.myMilkyway.setCommodities(m_commodities.OrderBy(x => x.Id).ToList());
-					Form1.InstanceObject.myMilkyway.saveRNCommodityData(@"./Data/commodities_RN.json", true);
+                    throw new NotImplementedException();
+                    //Form1.InstanceObject.myMilkyway.setCommodities(m_commodities.OrderBy(x => x.Id).ToList());
+                    //Form1.InstanceObject.myMilkyway.saveRNCommodityData(@"./Data/commodities_RN.json", true);
 					this.Close();
 				}
 				else

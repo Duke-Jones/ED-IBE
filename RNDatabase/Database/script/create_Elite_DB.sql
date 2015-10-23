@@ -725,6 +725,41 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLevelLocalization` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmFilteredStations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmFilteredStations` (
+  `System_id` INT NOT NULL COMMENT '',
+  `Station_id` INT NOT NULL COMMENT '',
+  `Distance` DOUBLE NULL COMMENT '',
+  PRIMARY KEY (`System_id`, `Station_id`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbPA_AllCommodities`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPA_AllCommodities` (
+  `CommodityID` INT NOT NULL COMMENT '',
+  `Commodity` VARCHAR(80) NULL COMMENT '',
+  `Buy_SystemID` INT NULL COMMENT '',
+  `Buy_System` VARCHAR(80) NULL COMMENT '',
+  `Buy_StationID` INT NULL COMMENT '',
+  `Buy_Station` VARCHAR(80) NULL COMMENT '',
+  `Buy_Min` INT NULL COMMENT '',
+  `Buy_Distance` DOUBLE NULL COMMENT '',
+  `Buy_Timestamp` DATETIME NULL COMMENT '',
+  `Sell_SystemID` INT NULL COMMENT '',
+  `Sell_System` VARCHAR(80) NULL COMMENT '',
+  `Sell_StationID` INT NULL COMMENT '',
+  `Sell_Station` VARCHAR(80) NULL COMMENT '',
+  `Sell_Max` INT NULL COMMENT '',
+  `Sell_Distance` DOUBLE NULL COMMENT '',
+  `Sell_Timestamp` DATETIME NULL COMMENT '',
+  PRIMARY KEY (`CommodityID`)  COMMENT '')
+ENGINE = InnoDB;
+
 USE `Elite_DB` ;
 
 -- -----------------------------------------------------

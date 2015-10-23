@@ -32,6 +32,7 @@ namespace RegulatedNoise.Commander_s_Log
 
         private Boolean             m_CellValueNeededIsRegistered   = false;        // true if the event is already registred
         private Boolean             m_FirstRowShown                 = false;        // true after first time shown
+        private DBGuiInterface      m_GUIInterface;
 
         /// <summary>
         /// Constructor
@@ -112,7 +113,8 @@ namespace RegulatedNoise.Commander_s_Log
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
                 dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
 
-                setEditfieldBoxVisible(Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, "showEditFields", "true", false));
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
+                m_GUIInterface.loadAllSettings(this);
 
                 Cursor = oldCursor;
             }
@@ -501,6 +503,7 @@ namespace RegulatedNoise.Commander_s_Log
             try
             {
                 setEditfieldBoxVisible(cb_ShowEditField.Checked);
+                m_GUIInterface.saveSetting(sender);
             }
             catch (Exception ex)
             {

@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using CodeProject.Dialog;
 using RegulatedNoise.SQL;
 using RegulatedNoise.Commander_s_Log;
+using RegulatedNoise.Price_Analysis;
 
 
 namespace RegulatedNoise
@@ -62,10 +63,6 @@ namespace RegulatedNoise
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
-        // public static Settings Settings;
-        public ObjectDirectory StationDirectory = new StationDirectory();
-        public ObjectDirectory CommodityDirectory = new CommodityDirectory();
-        private EDMilkyway _Milkyway;
         public static GameSettings GameSettings;
         public static OcrCalibrator OcrCalibrator;
         public List<string> KnownCommodityNames = new List<string>();
@@ -172,11 +169,6 @@ namespace RegulatedNoise
                 _logger.Log("  - loaded game settings");
                 _Splash.InfoChange("load game settings...<OK>");
 
-                _Splash.InfoAdd("prepare listviews...");
-                SetListViewColumnsAndSorters();
-                _logger.Log("  - set list views");
-                _Splash.InfoChange("prepare listviews...<OK>");
-
                 _Splash.InfoAdd("prepare network interfaces...");
                 PopulateNetworkInterfaces();
                 _logger.Log("  - populated network interfaces");
@@ -206,24 +198,7 @@ namespace RegulatedNoise
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
                 
-                ImportSystemLocations();
-                _logger.Log("  - system locations imported");
-
                 doSpecial(enDoSpecial.afterMilkyway);
-
-               
-                _Splash.InfoAdd("load collected market data...");
-                if (File.Exists("AutoSave.csv"))
-                {
-                    _logger.Log("  - found autosaved CSV");
-                    var s = new string[1];
-                    s[0] = "AutoSave.csv";
-                    ImportListOfCsvs(s);
-                    _logger.Log("  - imported CSVs");
-                    SetupGui();
-                    _logger.Log("  - Updated UI");
-                }
-                _Splash.InfoChange("load collected market data...<OK>");
 
                 _Splash.InfoAdd("load station history...");
                 _StationHistory.loadHistory(@".\Data\StationHistory.json", true);
@@ -269,9 +244,6 @@ namespace RegulatedNoise
                 loadCommodityLevels(Program.Settings.Language);
                 _Splash.InfoChange("load and prepare international commodity names...<OK>");
 
-                // check consistency of different commodity dictionaries
-                _Milkyway.addLocalized2RN(_commodities.Names);
-
                 setOCRCalibrationTabVisibility();
 
                 _Splash.InfoAdd("load tool tips...");
@@ -279,7 +251,8 @@ namespace RegulatedNoise
                 _Splash.InfoChange("load tool tips...<OK>");
 
                 _Splash.InfoAdd("prepare system/location view...");
-                prePrepareSystemAndStationFields();
+                //prePrepareSystemAndStationFields();
+                MessageBox.Show("todo");
                 _Splash.InfoChange("prepare system/location view...<OK>");
 
                 _Splash.InfoAdd("prepare GUI elements...");
@@ -420,148 +393,6 @@ namespace RegulatedNoise
         //    //replace UpdateSystemNameFromLogFile
         //}
        
-        /// <summary>
-        /// using the direct EDDB format 
-        /// (see http://eddb.io/api)
-        /// </summary>
-        private void ImportSystemLocations()
-        {
-            // read file into a string and deserialize JSON to a type
-            try
-            {
-
-                _Splash.InfoAdd("create milkyway...");
-                _Milkyway = new EDMilkyway();
-                
-                // 1. load the EDDNCommunicator data
-                { 
-                    bool needPriceCalculation = !myMilkyway.loadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true, true);
-
-                    if(needPriceCalculation || Program.Settings.LoadStationsJSON)
-                    {
-                        _Splash.InfoAdd("...loading stations from <stations.json> (calculation of plausibility limits required)...");
-                        myMilkyway.loadStationData(@"./Data/stations.json", EDMilkyway.enDataType.Data_EDDB, false);
-                        _Splash.InfoChange("...loading stations from <stations.json> (calculation of plausibility limits required)...<OK> (" + myMilkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Count + " stations loaded)");
-                    }
-                    else
-                    { 
-                        // look which stations-file we can get
-                        if (File.Exists(@"./Data/stations_lite.json"))
-                        {
-                            _Splash.InfoAdd("...loading stations from <stations_lite.json>...");
-                            myMilkyway.loadStationData(@"./Data/stations_lite.json", EDMilkyway.enDataType.Data_EDDB, false);
-                            _Splash.InfoChange("...loading stations from <stations_lite.json>...<OK> (" + myMilkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Count + " stations loaded)");
-                        }
-                        else
-                        {
-                            _Splash.InfoAdd("...loading stations from <stations.json>...");
-                            myMilkyway.loadStationData(@"./Data/stations.json", EDMilkyway.enDataType.Data_EDDB, false);
-                            _Splash.InfoChange("...loading stations from <stations.json>...<OK> (" + myMilkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Count + " stations loaded)");
-                        }
-                    }
-
-                    // load the systems
-                    _Splash.InfoAdd("...loading systems from <systems.json>...");
-                    myMilkyway.loadSystemData(@"./Data/systems.json", EDMilkyway.enDataType.Data_EDDB, false);
-                    _Splash.InfoChange("...loading systems from <systems.json>...<OK> (" + myMilkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Count + " systems loaded)");
-                }
-                    
-                // 2. load own local data
-                _Splash.InfoAdd("...loading own stations from <stations_own.json>...");
-                myMilkyway.loadStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
-                _Splash.InfoChange("...loading stations from <stations_own.json>...<OK> (" + myMilkyway.getStations(EDMilkyway.enDataType.Data_Own).Count + " stations loaded)");
-
-                _Splash.InfoAdd("...loading own systems from <systems_own.json>...");
-                myMilkyway.loadSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
-                _Splash.InfoChange("...loading own systems from <systems_own.json>...<OK> (" + myMilkyway.getSystems(EDMilkyway.enDataType.Data_Own).Count + " systems loaded)");
-
-                _Splash.InfoAdd("...merging data...");
-                if (myMilkyway.mergeData())
-                { 
-                    myMilkyway.saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
-                    myMilkyway.saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
-                }    
-                _Splash.InfoChange("...merging data...<OK>");
-
-                _Splash.InfoAdd("...loading commodity data from <commodities.json>...");
-                myMilkyway.loadCommodityData(@"./Data/commodities.json", @"./Data/commodities_RN.json", true);
-                _Splash.InfoChange("...loading commodity data from <commodities.json>...<OK>");
-
-                myMilkyway.calculateAveragePrices();
-
-                _Splash.InfoAdd("create milkyway...<OK>");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while reading system and station data", ex);   
-            }
-        }
-
-
-        private void SetListViewColumnsAndSorters()
-        {
-            lbPrices.Columns.Add("Commodity Name").Width = 150;
-            lbPrices.Columns.Add("Sell Price");
-            lbPrices.Columns.Add("Buy Price");
-            lbPrices.Columns.Add("Demand");
-            lbPrices.Columns.Add("Demand Level");
-            lbPrices.Columns.Add("Supply");
-            lbPrices.Columns.Add("Supply Level");
-            lbPrices.Columns.Add("Best Buy").Width = 200;
-            lbPrices.Columns.Add("Best Sell").Width = 200;
-            lbPrices.Columns.Add("Difference").Width = 70;
-            lbPrices.Columns.Add("Sample Date").Width = 150;
-            lbPrices.Columns.Add("Source (Double-click to launch)").Width = 300;
-
-            lbCommodities.Columns.Add("Station Name").Width = 150;
-            lbCommodities.Columns.Add("Sell Price");
-            lbCommodities.Columns.Add("Buy Price");
-            lbCommodities.Columns.Add("Demand");
-            lbCommodities.Columns.Add("Demand Level");
-            lbCommodities.Columns.Add("Supply");
-            lbCommodities.Columns.Add("Supply Level");
-            lbCommodities.Columns.Add("Sample Date").Width = 150;
-
-            lvAllComms.Columns.Add("Commodity Name").Width = 150;
-            lvAllComms.Columns.Add("Best Buy Price");
-            lvAllComms.Columns.Add("Best Buy Detail").Width = 150;
-            lvAllComms.Columns.Add("Buy Locations");
-            lvAllComms.Columns.Add("Best Sell Price");
-            lvAllComms.Columns.Add("Best Sell Detail").Width = 150;
-            lvAllComms.Columns.Add("Sell Locations");
-            lvAllComms.Columns.Add("Difference").Width = 70;
-
-            AddColumnsToStationToStationListView(lvStationToStation);
-            AddColumnsToStationToStationListView(lvStationToStationReturn);
-
-            // Create an instance of a ListView column sorter and assign it 
-            // to the ListView control.
-            _stationColumnSorter = new ListViewColumnSorter(0);
-            _commodityColumnSorter = new ListViewColumnSorter(1);
-            _allCommodityColumnSorter = new ListViewColumnSorter(2);
-            _stationToStationColumnSorter = new ListViewColumnSorter(3);
-            _stationToStationReturnColumnSorter = new ListViewColumnSorter(3);
-            _commandersLogColumnSorter = new ListViewColumnSorter(4);
-
-            lbPrices.ListViewItemSorter = _stationColumnSorter;
-            lbCommodities.ListViewItemSorter = _commodityColumnSorter;
-            lvAllComms.ListViewItemSorter = _allCommodityColumnSorter;
-            lvStationToStation.ListViewItemSorter = _stationToStationColumnSorter;
-            lvStationToStationReturn.ListViewItemSorter = _stationToStationReturnColumnSorter;
-        }
-
-        private static void AddColumnsToStationToStationListView(ListView listView)
-        {
-            listView.Columns.Add("Commodity Name").Width = 150;
-            listView.Columns.Add("Sell Price");
-            listView.Columns.Add("Supply");
-            listView.Columns.Add("Supply Level");
-            listView.Columns.Add("Buy Price");
-            listView.Columns.Add("Demand");
-            listView.Columns.Add("Demand Level");
-            listView.Columns.Add("Difference").Width = 70;
-        }
-
         private string getProductPathAutomatically()
         {
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
@@ -821,40 +652,12 @@ namespace RegulatedNoise
             txtGUIColorCutoffLevel.Text             = Program.Settings.GUIColorCutoffLevel.ToString();
 
 
-            txtlastStationCount.Text                = Program.Settings.lastStationCount.ToString();
-            cmbLightYears.Text                      = Program.Settings.lastLightYears.ToString();
-            cblastVisitedFirst.Checked              = Program.Settings.lastStationCountActive;
-            cbLimitLightYears.Checked               = Program.Settings.limitLightYears;
-            cbPerLightYearRoundTrip.Checked         = Program.Settings.PerLightYearRoundTrip;
             cbAutoActivateOCRTab.Checked            = Program.Settings.AutoActivateOCRTab;
             cbAutoActivateSystemTab.Checked         = Program.Settings.AutoActivateSystemTab;
 
             cbIncludeUnknownDTS.Checked             = Program.Settings.IncludeUnknownDTS;
             cbLoadStationsJSON.Checked              = Program.Settings.LoadStationsJSON;
 
-            cmbStationToStar.Text                   = Program.Settings.lastStationToStar.ToString();
-            cbStationToStar.Checked                 = Program.Settings.StationToStar;
-
-            cmbMaxRouteDistance.Text                = Program.Settings.lastMaxRouteDistance.ToString();
-            cbMaxRouteDistance.Checked              = Program.Settings.MaxRouteDistance;
-
-            switch (Program.Settings.CBSortingSelection)
-            {
-            	case 1:
-                    rbSortBySystem.Checked = true;
-                    break;
-                case 2:
-                    rbSortByStation.Checked = true;
-                    break;
-                case 3:
-                    rbSortByDistance.Checked = true;
-                    break;
-                default:
-                    rbSortBySystem.Checked = true;
-            		Program.Settings.CBSortingSelection = 1;
-            	    break;
-            }
-            
             // Set the MinDate and MaxDate.
             nudPurgeOldDataDays.Value               = Program.Settings.oldDataPurgeDeadlineDays;
 
@@ -1138,8 +941,6 @@ namespace RegulatedNoise
             if (stateTimer != null) stateTimer.Dispose();
             if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
 
-            SaveCommodityData(true);
-
             SaveSettings();
 
             if (sws.Running)
@@ -1176,11 +977,6 @@ namespace RegulatedNoise
 
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            SaveCommodityData();
-        }
-
         public void setButton(Button myButton, bool enable)
         {
             if (myButton.InvokeRequired)
@@ -1197,85 +993,6 @@ namespace RegulatedNoise
                 myCheckbox.Checked = setChecked;
         }
 
-        private void SaveCommodityData(bool force = false)
-        {
-            SaveFileDialog saveFile = new SaveFileDialog();
-            string newFile, backupFile, currentFile;
-
-            if (force)
-                saveFile.FileName = "AutoSave.csv";
-            else
-                saveFile.FileName = "Unified EliteOCR Data " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".csv";
-
-            saveFile.InitialDirectory = "\\.";
-            saveFile.DefaultExt = "csv";
-            saveFile.Filter = "CSV (*.csv)|*.csv";
-
-
-            if (force || saveFile.ShowDialog() == DialogResult.OK)
-            {
-
-                currentFile = saveFile.FileName;
-                newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-                backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-
-                var writer = new StreamWriter(File.OpenWrite(newFile));
-
-                writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
-
-                foreach (var station in StationDirectory)
-                {
-                    foreach (var commodity in station.Value)
-                    {
-                        var output = string.Join(";", new[]
-                        {
-                            commodity.SystemName,
-                            commodity.StationID.Replace(" [" + commodity.SystemName + "]", ""),
-                            commodity.CommodityName,
-                            commodity.SellPrice != 0 ? commodity.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
-                            commodity.BuyPrice != 0 ? commodity.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
-                            commodity.Demand != 0 ? commodity.Demand.ToString(CultureInfo.InvariantCulture) : "",
-                            commodity.DemandLevel,
-                            commodity.Supply != 0 ? commodity.Supply.ToString(CultureInfo.InvariantCulture) : "",
-                            commodity.SupplyLevel,
-                            commodity.SampleDate.ToString("s", CultureInfo.CurrentCulture).Substring(0, 16),
-                            cbExtendedInfoInCSV.Checked ? commodity.SourceFileName : ""
-                        });
-
-                        // I'm sure that's not wanted vv
-                        //if (cbExtendedInfoInCSV.Checked)
-                        ///    writer.WriteLine(output + ";");
-
-                        writer.WriteLine(output + ";");
-                    }
-                }
-                writer.Close();
-
-                // we delete the current file not until the new file is written without errors
-
-                if (force)
-                {
-                    // delete old backup
-                    if (File.Exists(backupFile))
-                        File.Delete(backupFile);
-
-                    // rename current file to old backup
-                    if (File.Exists(currentFile))
-                        File.Move(currentFile, backupFile);
-                }
-                else
-                {
-                    // delete existingClassification file
-                    if (File.Exists(currentFile))
-                        File.Delete(currentFile);
-                }
-
-                // rename new file to current file
-                File.Move(newFile, currentFile);
-
-            }
-        }
-
         private void bOpen_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
@@ -1288,437 +1005,182 @@ namespace RegulatedNoise
             {
                 var filenames = openFile.FileNames;
 
-                ImportListOfCsvs(filenames);
+                throw new NotImplementedException();
+                //ImportListOfCsvs(filenames);
             }
 
             SetupGui();
 
         }
 
-        private void ImportListOfCsvs(string[] filenames)
-        {
-            foreach (string filename in filenames)
-            {
-                var reader = new StreamReader(File.OpenRead(filename));
-
-                string header = reader.ReadLine();
-
-                if (header != null && !header.StartsWith("System;"))
-                {
-                    MsgBox.Show("Error: " + filename + " is unreadable or in an old format.  Skipping...");
-                    continue;
-                }
-
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    ImportCsvString(line);
-                }
-                reader.Close();
-            }
-        }
-
-        private void ImportCsvString(string line, bool suspendDuplicateChecking = false, bool postToEddn = false, bool updateStationVisitations = false)
-        {
-            var values = line.Split(';');
-            bool ignoreThisRecord = false;
-
-            CsvRow currentRow = new CsvRow();
-
-            currentRow.SystemName = values[0];
-            currentRow.StationName = _textInfo.ToTitleCase(values[1].ToLower());
-            currentRow.StationID = _textInfo.ToTitleCase(values[1].ToLower()) + " [" + currentRow.SystemName + "]";
-            currentRow.CommodityName = _textInfo.ToTitleCase(values[2].ToLower());
-            Decimal.TryParse(values[3], out currentRow.SellPrice);
-            Decimal.TryParse(values[4], out currentRow.BuyPrice);
-            Decimal.TryParse(values[5], out currentRow.Demand);
-            currentRow.DemandLevel = _textInfo.ToTitleCase(values[6].ToLower());
-            Decimal.TryParse(values[7], out currentRow.Supply);
-            currentRow.SupplyLevel = _textInfo.ToTitleCase(values[8].ToLower());
-            DateTime.TryParse(values[9], out currentRow.SampleDate);
-
-            #region Extended CSV Information
-            if (values.GetLength(0) > 10)
-            {
-                currentRow.SourceFileName = values[10];
-            }
-            #endregion
-
-            if (currentRow.CommodityName != "")
-            {
-                if (updateStationVisitations)
-                    _StationHistory.addVisit(currentRow.StationID);
-
-                if (!suspendDuplicateChecking)
-                {
-                    
-                    if (StationDirectory.ContainsKey(currentRow.StationID))
-                    {
-                        var obsoleteData =
-                            StationDirectory[currentRow.StationID].Where(
-                                x =>
-                                    x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName &&
-                                    x.SampleDate <= currentRow.SampleDate).ToList();
-
-                        // is there older data for delete ?
-                        foreach (var x in obsoleteData)
-                        {
-                            StationDirectory[currentRow.StationID].Remove(x);
-                            CommodityDirectory[currentRow.CommodityName].Remove(x);
-                        }
-
-                        // is there already data that is younger than this new record
-                        var selfIsObsolete =
-                            StationDirectory[currentRow.StationID].Where(
-                                x =>
-                                    x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName &&
-                                    x.SampleDate > currentRow.SampleDate).ToList();
-                        if (selfIsObsolete.Count > 0)
-                        { 
-                            ignoreThisRecord = true;  
-                        }
-                    }
-                }
-
-                if (!ignoreThisRecord) 
-                {
-                    if (!StationDirectory.ContainsKey(currentRow.StationID))
-                        StationDirectory.Add(currentRow.StationID, new List<CsvRow>());
-
-
-                    if (suspendDuplicateChecking || StationDirectory[currentRow.StationID].Count(x => x.StationID == currentRow.StationID && x.CommodityName == currentRow.CommodityName && x.SampleDate == currentRow.SampleDate) == 0)
-                    {
-                        StationDirectory[currentRow.StationID].Add(currentRow);
-
-                        if (!CommodityDirectory.ContainsKey(currentRow.CommodityName))
-                            CommodityDirectory.Add(currentRow.CommodityName, new List<CsvRow>());
-
-                        CommodityDirectory[currentRow.CommodityName].Add(currentRow);
-
-                        if (postToEddn && cbPostOnImport.Checked && currentRow.SystemName != "SomeSystem")
-                            EDDNComm.sendToEdDDN(currentRow);
-                    }
-                }
-            }
-        }
-
-        private Point3D _cachedSystemLocation;
-        private string _cachedSystemName;
-        private Dictionary<string, double> _cachedRemoteSystemDistances;
-
-        private bool Distance(string remoteSystemName)
-        {
-            try
-            {
-                double dist;
-
-                if (cmbLightYears.Text == "")
-                    return false;
-
-                dist = DistanceInLightYears(remoteSystemName);
-
-                var limit = float.Parse(cmbLightYears.Text);
-                if (dist < limit)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private bool StationDistance(string SystemName, string StationName)
-        {
-            try
-            {
-                int? dist;
-
-                if (cmbStationToStar.Text == "")
-                    return false;
-
-                dist = _Milkyway.getStationDistance(SystemName, StationName);
-
-                if((!Program.Settings.IncludeUnknownDTS) && (dist == -1))
-                    return false;
-
-                var limit = int.Parse(cmbStationToStar.Text);
-                if ((dist == null) || (dist < limit))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private double DistanceInLightYears(string remoteSystemName)
-        {
-            double dist;
-
-            string localSystem;
-
-
-            localSystem = SystemToMeasureDistancesFrom();
-
-            if (_cachedSystemName != localSystem)
-            {
-                _cachedRemoteSystemDistances = new Dictionary<string, double>();
-                _cachedSystemName = localSystem.ToString();
-
-                _cachedSystemLocation = myMilkyway.getSystemCoordinates(localSystem);
-            }
-
-
-            remoteSystemName = remoteSystemName.ToUpper();
-
-            if (_cachedRemoteSystemDistances.ContainsKey(remoteSystemName))
-            {
-                dist = _cachedRemoteSystemDistances[remoteSystemName];
-            }
-            else
-            {
-                if (!myMilkyway.existSystem(localSystem) || _cachedSystemLocation == null)
-                {
-                    dist = double.MaxValue;
-                }
-                else
-                {
-                    var currentSystemLocation = _cachedSystemLocation;
-                    dist = DistanceInLightYears(remoteSystemName, currentSystemLocation);
-                    _cachedRemoteSystemDistances.Add(remoteSystemName, dist);
-                }
-            }
-
-            return dist;
-        }
-
-        private double DistanceInLightYears(string remoteSystemName, Point3D currentSystemLocation)
-        {
-            double dist;
-
-            Point3D remoteSystemLocation = myMilkyway.getSystemCoordinates(remoteSystemName);
-
-            if (remoteSystemLocation == null)
-                return double.MaxValue;
-
-            double xDelta = currentSystemLocation.X - remoteSystemLocation.X;
-            double yDelta = currentSystemLocation.Y - remoteSystemLocation.Y;
-            double zDelta = currentSystemLocation.Z - remoteSystemLocation.Z;
-
-            dist = Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2) + Math.Pow(zDelta, 2));
-
-            return dist;
-        }
-//        private Dictionary<string, Point3D>_chachedSystemLocations = new Dictionary<string, Point3D>();
-
-        private double DistanceInLightYears(string remoteSystemName, string homeSystemName)
-        {
-            double retValue;
-
-            Point3D HomeCoordinates = myMilkyway.getSystemCoordinates(homeSystemName);
-
-            if (HomeCoordinates == null)
-            { 
-              return double.MaxValue;
-            }
-
-            retValue = DistanceInLightYears(remoteSystemName, HomeCoordinates);
-
-            return retValue;
-        }
-
-        private string SystemToMeasureDistancesFrom()
-        {
-            string localSystem;
-            if (cbIncludeWithinRegionOfStation.SelectedItem != null)
-                localSystem = cbIncludeWithinRegionOfStation.SelectedItem.ToString() == "<Current System>"
-                    ? Program.actualCondition.System
-                    : cbIncludeWithinRegionOfStation.SelectedItem.ToString();
-            else
-                localSystem = Program.actualCondition.System;
-            return localSystem;
-        }
-
         private void SetupGui(bool force= false){
 
-            if(this.InvokeRequired)
-                this.Invoke(new delParamBool(iSetupGui), force);
-            else
-                iSetupGui(force);
+            //if(this.InvokeRequired)
+            //    this.Invoke(new delParamBool(iSetupGui), force);
+            //else
+            //    iSetupGui(force);
         }
 
-        private void iSetupGui(bool force= false)
-        {
-            System.Windows.Forms.Cursor oldCursor = Cursor;
-            Cursor = Cursors.WaitCursor;
+        //private void iSetupGui(bool force= false)
+        //{
+            //System.Windows.Forms.Cursor oldCursor = Cursor;
+            //Cursor = Cursors.WaitCursor;
 
-            //_cbIncludeWithinRegionOfStation_IndexChanged = false;
+            ////_cbIncludeWithinRegionOfStation_IndexChanged = false;
 
-            if (!_InitDone && !force)
-                return;
+            //if (!_InitDone && !force)
+            //    return;
 
-            _pt.startMeasuring();
+            //_pt.startMeasuring();
 
-            cmbStation.BeginUpdate();
-            cmbStationToStationFrom.BeginUpdate();
-            cmbStationToStationTo.BeginUpdate();
-            cbCommodity.BeginUpdate();
+            //cmbStation.BeginUpdate();
+            //cmbStationToStationFrom.BeginUpdate();
+            //cmbStationToStationTo.BeginUpdate();
+            //cbCommodity.BeginUpdate();
 
-            _pt.PrintAndReset("1");
+            //_pt.PrintAndReset("1");
 
-            // notice the current selected items
-            string Key_cmbStation               = getCmbItemKey(cmbStation.SelectedItem);
-            string Key_cmbStationToStationFrom  = getCmbItemKey(cmbStationToStationFrom.SelectedItem);
-            string Key_cmbStationToStationTo    = getCmbItemKey(cmbStationToStationTo.SelectedItem);
+            //// notice the current selected items
+            //string Key_cmbStation               = getCmbItemKey(cmbStation.SelectedItem);
+            //string Key_cmbStationToStationFrom  = getCmbItemKey(cmbStationToStationFrom.SelectedItem);
+            //string Key_cmbStationToStationTo    = getCmbItemKey(cmbStationToStationTo.SelectedItem);
 
-            _pt.PrintAndReset("2");
+            //_pt.PrintAndReset("2");
 
-            BindingList<System.Collections.Generic.KeyValuePair<string,string>> BaseList;
-            IFormatter formatter        = new BinaryFormatter();
-            MemoryStream SerialListCopy = new MemoryStream();
+            //BindingList<System.Collections.Generic.KeyValuePair<string,string>> BaseList;
+            //IFormatter formatter        = new BinaryFormatter();
+            //MemoryStream SerialListCopy = new MemoryStream();
 
-            _pt.PrintAndReset("3");
+            //_pt.PrintAndReset("3");
 
-            BaseList = getDropDownStationsItems(ref _StationIndices);
+            //BaseList = getDropDownStationsItems(ref _StationIndices);
 
-            formatter.Serialize(SerialListCopy, BaseList);
+            //formatter.Serialize(SerialListCopy, BaseList);
 
-            _bs_Stations.DataSource = BaseList;
-            SerialListCopy.Seek(0,0);
-            _bs_StationsFrom.DataSource = (BindingList<System.Collections.Generic.KeyValuePair<string,string>>)formatter.Deserialize(SerialListCopy);
-            SerialListCopy.Seek(0,0);
-            _bs_StationsTo.DataSource = (BindingList<System.Collections.Generic.KeyValuePair<string,string>>)formatter.Deserialize(SerialListCopy);
+            //_bs_Stations.DataSource = BaseList;
+            //SerialListCopy.Seek(0,0);
+            //_bs_StationsFrom.DataSource = (BindingList<System.Collections.Generic.KeyValuePair<string,string>>)formatter.Deserialize(SerialListCopy);
+            //SerialListCopy.Seek(0,0);
+            //_bs_StationsTo.DataSource = (BindingList<System.Collections.Generic.KeyValuePair<string,string>>)formatter.Deserialize(SerialListCopy);
 
-            _pt.PrintAndReset("4");
+            //_pt.PrintAndReset("4");
 
-            SerialListCopy.Dispose();
+            //SerialListCopy.Dispose();
 
-            if (!_InitDone)
-            { 
-                cmbStation.DataSource = _bs_Stations;
-                cmbStation.DisplayMember = "Value";
-                cmbStation.ValueMember = "Key";
+            //if (!_InitDone)
+            //{ 
+            //    cmbStation.DataSource = _bs_Stations;
+            //    cmbStation.DisplayMember = "Value";
+            //    cmbStation.ValueMember = "Key";
 
-                cmbStationToStationFrom.DataSource = _bs_StationsFrom;
-                cmbStationToStationFrom.DisplayMember = "Value";
-                cmbStationToStationFrom.ValueMember = "Key";
+            //    cmbStationToStationFrom.DataSource = _bs_StationsFrom;
+            //    cmbStationToStationFrom.DisplayMember = "Value";
+            //    cmbStationToStationFrom.ValueMember = "Key";
 
-                cmbStationToStationTo.DataSource = _bs_StationsTo;
-                cmbStationToStationTo.DisplayMember = "Value";
-                cmbStationToStationTo.ValueMember = "Key";
-            }
+            //    cmbStationToStationTo.DataSource = _bs_StationsTo;
+            //    cmbStationToStationTo.DisplayMember = "Value";
+            //    cmbStationToStationTo.ValueMember = "Key";
+            //}
 
 
-            _pt.PrintAndReset("5");
-            cbIncludeWithinRegionOfStation.SelectedIndexChanged -= cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
+            //_pt.PrintAndReset("5");
+            //cbIncludeWithinRegionOfStation.SelectedIndexChanged -= cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
 
-            var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
-            cbIncludeWithinRegionOfStation.Items.Clear();
-            var systems = StationDirectory.Keys.Select(x => (object)(StructureHelper.CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
-            cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
-            cbIncludeWithinRegionOfStation.Items.AddRange(systems);
+            //var previouslySelectedValue = cbIncludeWithinRegionOfStation.SelectedItem;
+            //cbIncludeWithinRegionOfStation.Items.Clear();
+            //var systems = StationDirectory.Keys.Select(x => (object)(StructureHelper.CombinedNameToSystemName(x))).OrderBy(x => x).Distinct().ToArray();
+            //cbIncludeWithinRegionOfStation.Items.Add("<Current System>");
+            //cbIncludeWithinRegionOfStation.Items.AddRange(systems);
 
-            //cbIncludeWithinRegionOfStation.SelectedIndex = 0;
-            cbIncludeWithinRegionOfStation.DropDownStyle = ComboBoxStyle.DropDownList;
+            ////cbIncludeWithinRegionOfStation.SelectedIndex = 0;
+            //cbIncludeWithinRegionOfStation.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            _pt.PrintAndReset("6");
+            //_pt.PrintAndReset("6");
 
-            if (previouslySelectedValue != null)
-                cbIncludeWithinRegionOfStation.SelectedItem = previouslySelectedValue;
-            else
-                cbIncludeWithinRegionOfStation.SelectedItem = "<Current System>";
+            //if (previouslySelectedValue != null)
+            //    cbIncludeWithinRegionOfStation.SelectedItem = previouslySelectedValue;
+            //else
+            //    cbIncludeWithinRegionOfStation.SelectedItem = "<Current System>";
 
-            cbIncludeWithinRegionOfStation.SelectedIndexChanged += cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
+            //cbIncludeWithinRegionOfStation.SelectedIndexChanged += cbIncludeWithinRegionOfStation_SelectionChangeCommitted;
 
-            int ListIndex;
-
-            
-            _pt.PrintAndReset("7");
-
-            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStation, out ListIndex))
-                cmbStation.SelectedIndex = ListIndex;
-
-            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationFrom, out ListIndex))
-                cmbStationToStationFrom.SelectedIndex = ListIndex;
-
-            if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationTo, out ListIndex))
-                cmbStationToStationTo.SelectedIndex = ListIndex;
+            //int ListIndex;
 
             
-            cbCommodity.Items.Clear();
+            //_pt.PrintAndReset("7");
 
-            _pt.PrintAndReset("8");
+            //if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStation, out ListIndex))
+            //    cmbStation.SelectedIndex = ListIndex;
 
-            foreach (var commodity in CommodityDirectory.OrderBy(x => x.Key))
-            {
-                cbCommodity.Items.Add(commodity.Key);
-            }
+            //if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationFrom, out ListIndex))
+            //    cmbStationToStationFrom.SelectedIndex = ListIndex;
 
-            cbCommodity.SelectedItem = null;
+            //if ((Key_cmbStation != null) && _StationIndices.TryGetValue(Key_cmbStationToStationTo, out ListIndex))
+            //    cmbStationToStationTo.SelectedIndex = ListIndex;
 
-            if (cbCommodity.Items.Count > 0)
-                cbCommodity.SelectedItem = cbCommodity.Items[0];
+            
+            //cbCommodity.Items.Clear();
 
-            lvAllComms.Items.Clear();
+            //_pt.PrintAndReset("8");
 
-            //_pt.PrintAndReset("9");
+            //foreach (var commodity in CommodityDirectory.OrderBy(x => x.Key))
+            //{
+            //    cbCommodity.Items.Add(commodity.Key);
+            //}
 
-            Debug.Print("Anzahl = " + CommodityDirectory.Count.ToString());
-            // Populate all commodities tab
-            foreach (var commodity in CommodityDirectory)
-            {
-                decimal bestBuyPrice;
-                decimal bestSellPrice;
-                string bestBuy;
-                string bestSell;
-                decimal buyers;
-                decimal sellers;
+            //cbCommodity.SelectedItem = null;
 
-                //_pt.PrintAndReset("9_1");
+            //if (cbCommodity.Items.Count > 0)
+            //    cbCommodity.SelectedItem = cbCommodity.Items[0];
 
-                GetBestBuyAndSell(commodity.Key, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
+            //lvAllComms.Items.Clear();
 
-                //_pt.PrintAndReset("9_2");
+            ////_pt.PrintAndReset("9");
 
-                lvAllComms.Items.Add(new ListViewItem(new[] 
-                {   commodity.Key,
-                    bestBuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? bestBuyPrice.ToString(CultureInfo.InvariantCulture) : "",
-                    bestBuy,
-                    buyers.ToString(CultureInfo.InvariantCulture),
-                    bestSellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? bestSellPrice.ToString(CultureInfo.InvariantCulture) : "",
-                    bestSell,
-                    sellers.ToString(CultureInfo.InvariantCulture),
-                    bestBuyPrice != 0 && bestSellPrice != 0 ? (bestSellPrice - bestBuyPrice).ToString(CultureInfo.InvariantCulture) : ""
-                }));
+            //Debug.Print("Anzahl = " + CommodityDirectory.Count.ToString());
+            //// Populate all commodities tab
+            //foreach (var commodity in CommodityDirectory)
+            //{
+            //    decimal bestBuyPrice;
+            //    decimal bestSellPrice;
+            //    string bestBuy;
+            //    string bestSell;
+            //    decimal buyers;
+            //    decimal sellers;
 
-                //_pt.PrintAndReset("9_3");
-            }
+            //    //_pt.PrintAndReset("9_1");
 
-            //_pt.PrintAndReset("10");
+            //    GetBestBuyAndSell(commodity.Key, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
 
-            cmbStation.EndUpdate();
-            cmbStationToStationFrom.EndUpdate();
-            cmbStationToStationTo.EndUpdate();
-            cbCommodity.EndUpdate();
-            //_pt.PrintAndReset("11");
+            //    //_pt.PrintAndReset("9_2");
 
-            UpdateStationToStation();
-            //_pt.PrintAndReset("12");
+            //    lvAllComms.Items.Add(new ListViewItem(new[] 
+            //    {   commodity.Key,
+            //        bestBuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? bestBuyPrice.ToString(CultureInfo.InvariantCulture) : "",
+            //        bestBuy,
+            //        buyers.ToString(CultureInfo.InvariantCulture),
+            //        bestSellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? bestSellPrice.ToString(CultureInfo.InvariantCulture) : "",
+            //        bestSell,
+            //        sellers.ToString(CultureInfo.InvariantCulture),
+            //        bestBuyPrice != 0 && bestSellPrice != 0 ? (bestSellPrice - bestBuyPrice).ToString(CultureInfo.InvariantCulture) : ""
+            //    }));
 
-            Cursor = oldCursor;
-        }
+            //    //_pt.PrintAndReset("9_3");
+            //}
+
+            ////_pt.PrintAndReset("10");
+
+            //cmbStation.EndUpdate();
+            //cmbStationToStationFrom.EndUpdate();
+            //cmbStationToStationTo.EndUpdate();
+            //cbCommodity.EndUpdate();
+            ////_pt.PrintAndReset("11");
+
+            //UpdateStationToStation();
+            ////_pt.PrintAndReset("12");
+
+            //Cursor = oldCursor;
+        //}
 
 
         private void setupCombobox(ComboBox CBRefreshed, List<KeyValuePair<string, string>> DDItems)
@@ -1740,644 +1202,60 @@ namespace RegulatedNoise
             CBRefreshed.Refresh();
         }
 
-        private int GetTextLengthInPixels(string myText)
-        {
-                return TextRenderer.MeasureText(myText, cmbStation.Font).Width;
-        }
-
-        private BindingList<System.Collections.Generic.KeyValuePair<string,string>> getDropDownStationsItems(ref Dictionary<string, int> StationIndices)
-        {
-            int SpaceWidth = GetTextLengthInPixels("                    ")/20;
-            int maxLength = 0;
-            int Spaces= 0;
-            int last_i = 0;
-            List<int> LengthInfo1 = new List<int>();
-            List<int> LengthInfo2 = new List<int>();
-
-            // clear the old index list
-            StationIndices.Clear();
-
-            BindingList<System.Collections.Generic.KeyValuePair<string,string>> DDItems = new BindingList<System.Collections.Generic.KeyValuePair<string,string>>();
-            List<KeyValuePair<string,List<CsvRow>>> SelectionRaw;
-            List<KeyValuePair<string,List<CsvRow>>> SelectionOrdered         = new List<KeyValuePair<string,List<CsvRow>>>();
-            List<KeyValuePair<string,List<CsvRow>>> SelectionPreordered;
-
-            // get the relevant stations
-            SelectionRaw = StationDirectory.Where(x => getStationSelection(x)).ToList();
-            
-            if (rbSortBySystem.Checked)
-            {
-                // get the list ordered as wanted -> order by system
-                SelectionPreordered = SelectionRaw.OrderBy(x => StructureHelper.CombinedNameToSystemName(x.Key)).ThenBy(x => StructureHelper.CombinedNameToStationName(x.Key)).ToList();
-
-                if (cblastVisitedFirst.Checked)
-                {
-                    getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
-                }
-
-
-                // be aware of the length of each string in the remaining list
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
-                {
-                    int tempLength;
-                    try
-                    {
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("error while getting text length in pixels", ex);    
-                    }
-                    if (maxLength < tempLength)
-                    { 
-                        if(MAX_NAME_LENGTH < tempLength)
-                            tempLength = MAX_NAME_LENGTH;
-                        maxLength = tempLength;
-                    }
-                        
-                    LengthInfo2.Add(tempLength);
-                }
-
-                last_i = 0;
-
-                if (cblastVisitedFirst.Checked)
-                { 
-                    // insert get the visited (lengths are in LengthInfo1)
-                    for (int i = 0; i < SelectionOrdered.Count(); i++)
-                    {
-                        Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key,String.Format("{0}{2}     {1}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                        StationIndices.Add(SelectionOrdered[i].Key, i);
-
-                        last_i = i+1;
-                    }
-                
-                    // insert separator
-                    DDItems.Add(new KeyValuePair<string, string>(ID_DELIMITER,String.Format("-----------------------")));
-                    StationIndices.Add(ID_DELIMITER, last_i);
-                    LengthInfo1.Add(0);
-                    last_i++;
-                }
-
-                // insert get the visited (lengths are in LengthInfo1)
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
-                {
-                    Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key,String.Format("{0}{2}     {1}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                    StationIndices.Add(SelectionPreordered[i].Key, i+last_i);
-                }
-            }
-            else if (rbSortByStation.Checked)
-            {
-                // get the list ordered as wanted -> order by station
-                SelectionPreordered = SelectionRaw.OrderBy(x => StructureHelper.CombinedNameToStationName(x.Key)).ToList();;
-
-                if (cblastVisitedFirst.Checked)
-                {
-                    getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
-                }
-
-                // be aware of the length of each string in the remaining list
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
-                { 
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].StationName);
-                    if (maxLength < tempLength)
-                    { 
-                        if(MAX_NAME_LENGTH < tempLength)
-                            tempLength = MAX_NAME_LENGTH;
-                        maxLength = tempLength;
-                    }
-                    LengthInfo2.Add(tempLength);
-                }
-
-                last_i = 0;
-
-                if (cblastVisitedFirst.Checked)
-                { 
-                    // insert get the visited (lengths are in LengthInfo1)
-                    for (int i = 0; i < SelectionOrdered.Count(); i++)
-                    {
-                        Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key,String.Format("{1}{2}     {0}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                        StationIndices.Add(SelectionOrdered[i].Key, i);
-
-                        last_i = i+1;
-                    }
-                
-                    // insert separator
-                    DDItems.Add(new KeyValuePair<string, string>(ID_DELIMITER,String.Format("-----------------------")));
-                    StationIndices.Add(ID_DELIMITER, last_i);
-                    LengthInfo1.Add(0);
-                    last_i++;
-                }
-
-                // insert get the visited (lengths are in LengthInfo1)
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
-                {
-                    Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key,String.Format("{1}{2}     {0}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                    StationIndices.Add(SelectionPreordered[i].Key, i+last_i);
-                }
-            }
-            else if (rbSortByDistance.Checked)
-            {
-                // get the list ordered as wanted -> order by distance 
-                SelectionPreordered = SelectionRaw.OrderBy(x => DistanceInLightYears(StructureHelper.CombinedNameToSystemName(x.Key))).ToList();
-
-                if (cblastVisitedFirst.Checked)
-                {
-                    getVisitedListPart(ref maxLength, LengthInfo1, SelectionOrdered, SelectionPreordered);
-                }
-
-                // be aware of the length of each string in the remaining list
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
-                { 
-                    int tempLength = GetTextLengthInPixels(SelectionPreordered[i].Value[0].SystemName);
-                    if (maxLength < tempLength)
-                    { 
-                        if(MAX_NAME_LENGTH < tempLength)
-                            tempLength = MAX_NAME_LENGTH;
-                        maxLength = tempLength;
-                    }
-                    LengthInfo2.Add(tempLength);
-                }
-
-                last_i = 0;
-
-                if (cblastVisitedFirst.Checked)
-                { 
-                    // insert get the visited (lengths are in LengthInfo1)
-                    for (int i = 0; i < SelectionOrdered.Count(); i++)
-                    {
-                        Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo1[i]) / (Double)SpaceWidth);
-                        DDItems.Add(new KeyValuePair<string, string>(SelectionOrdered[i].Key,String.Format("{0}{2}     \t{1}", SelectionOrdered[i].Value[0].SystemName, SelectionOrdered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                        StationIndices.Add(SelectionOrdered[i].Key, i);
-
-                        last_i = i+1;
-                    }
-                
-                    // insert separator
-                    DDItems.Add(new KeyValuePair<string, string>(ID_DELIMITER,String.Format("-----------------------")));
-                    StationIndices.Add(ID_DELIMITER, last_i);
-                    LengthInfo1.Add(0);
-                    last_i++;
-                }
-
-                // insert get the visited (lengths are in LengthInfo1)
-                for (int i = 0; i < SelectionPreordered.Count(); i++)
-                {
-                    Spaces = (int)Math.Ceiling((Double)(maxLength - LengthInfo2[i]) / (Double)SpaceWidth);
-                    DDItems.Add(new KeyValuePair<string, string>(SelectionPreordered[i].Key,String.Format("{0}{2}     \t{1}", SelectionPreordered[i].Value[0].SystemName, SelectionPreordered[i].Value[0].StationName, "".PadLeft(Spaces))));
-                    StationIndices.Add(SelectionPreordered[i].Key, i+last_i);
-                }
-            }
-            
-            return DDItems;
-            
-        }
-
-        /// <summary>
-        /// get the Stations which are visited the last time and remove them from the base list
-        /// </summary>
-        /// <param name="maxLength"></param>
-        /// <param name="LengthInfo1"></param>
-        /// <param name="SelectionOrdered"></param>
-        /// <param name="SelectionPreordered"></param>
-        private void getVisitedListPart(ref int maxLength, List<int> LengthInfo1, List<KeyValuePair<string, List<CsvRow>>> SelectionOrdered, List<KeyValuePair<string, List<CsvRow>>> SelectionPreordered)
-        {
-            int lastVisitCount = int.Parse(txtlastStationCount.Text);
-
-            for (int i = 0; (i < _StationHistory.History.Count) && (SelectionOrdered.Count < lastVisitCount); i++)
-            {
-                int foundIndex = SelectionPreordered.FindIndex(x => x.Key.Equals(_StationHistory.History[i].Station, StringComparison.InvariantCultureIgnoreCase));
-
-                if (foundIndex >= 0)
-                {
-                    int tempLength=0;
-
-                    // put the found item in the lastvisited list
-                    SelectionOrdered.Add(SelectionPreordered[foundIndex]);
-
-                    // be aware of the length of each string
-                    if (rbSortBySystem.Checked)
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
-                    else if(rbSortByStation.Checked)
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].StationName);
-                    else if(rbSortByDistance.Checked)
-                        tempLength = GetTextLengthInPixels(SelectionPreordered[foundIndex].Value[0].SystemName);
-                    
-                    if (maxLength < tempLength)
-                    { 
-                        if(MAX_NAME_LENGTH < tempLength)
-                            tempLength = MAX_NAME_LENGTH;
-                        maxLength = tempLength;
-                    }
-                    LengthInfo1.Add(tempLength);
-
-                    // remove item from preordered list
-                    SelectionPreordered.RemoveAt(foundIndex);
-
-                }
-            }
-        }
-        private void PopulateNetworkInterfaces()
-        {
-            // from http://stackoverflow.com/questions/9855230/how-to-get-the-network-interface-and-its-right-ipv4-address
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                {
-                    Console.WriteLine(ni.Name);
-                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
-                    {
-                        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        {
-                            cbInterfaces.Items.Add(ip.Address);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void cbStation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selectedItem = cmbStation.SelectedItem;
-
-            if (selectedItem != null)
-            { 
-                var dist = DistanceInLightYears(StructureHelper.CombinedNameToSystemName(getCmbItemKey(selectedItem)));
-
-                if (dist < double.MaxValue)
-                    lblLightYearsFromCurrentSystem.Text = "(" + String.Format("{0:0.00}", dist) + " light years)";
-                else
-                    lblLightYearsFromCurrentSystem.Text = "(system location unknown)";
-
-                lbPrices.Items.Clear();
-                var stationName =  getCmbItemKey(((ComboBox)sender).SelectedItem); 
-
-                if (stationName != ID_DELIMITER)
-                { 
-                    var start = stationName.IndexOf("[", StringComparison.Ordinal);
-                    var end = stationName.IndexOf("]", StringComparison.Ordinal);
-
-                    tbStationRename.Text = stationName.Substring(0, start - 1);
-                    tbSystemRename.Text = stationName.Substring(start + 1, end - (start + 1));
-
-                    foreach (var row in StationDirectory[stationName])
-                    {
-                        decimal bestBuyPrice;
-                        decimal bestSellPrice;
-                        string bestBuy;
-                        string bestSell;
-                        decimal buyers;
-                        decimal sellers;
-                       
-                        _pt.stopMeasuring();
-
-                        GetBestBuyAndSell(row.CommodityName, out bestBuyPrice, out bestSellPrice, out bestBuy, out bestSell, out buyers, out sellers);
-                        
-                        _pt.PrintAndReset(row.CommodityName);
-
-                        ListViewItem newItem = new ListViewItem(new[] 
-                        {   row.CommodityName, 
-                            row.SellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
-                            row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
-                            row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "", 
-                            row.DemandLevel,
-                            row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
-                            row.SupplyLevel, 
-                            bestBuy, 
-                            bestSell,
-                            bestSell!= "" && bestBuy != "" ? (bestSellPrice-bestBuyPrice).ToString(CultureInfo.InvariantCulture) : "",
-                            row.SampleDate.ToString(CultureInfo.CurrentCulture) ,
-                            row.SourceFileName
-                        });
-                        newItem.UseItemStyleForSubItems = false;
-                        if (bestBuy.Contains(stationName))
-                        {
-                            newItem.SubItems[7].ForeColor = Color.DarkGreen;
-                            newItem.SubItems[7].BackColor = Color.LightYellow;
-                        }
-
-                        if (bestSell.Contains(stationName))
-                        {
-                            newItem.SubItems[8].ForeColor = Color.DarkRed;
-                            newItem.SubItems[8].BackColor = Color.LightYellow;
-                        }
-
-                        lbPrices.Items.Add(newItem);
-                    }
-
-                    cmdApplySystemRename.Enabled = true;
-
-                }
-                else
-                {
-                    tbStationRename.Text = String.Empty;
-                    tbSystemRename.Text  = String.Empty;
-                    cmdApplySystemRename.Enabled = false;
-                    lbPrices.Items.Clear();
-                }
-            }
-            else
-            {
-                tbStationRename.Text = String.Empty;
-                tbSystemRename.Text  = String.Empty;
-                cmdApplySystemRename.Enabled = false;
-                lbPrices.Items.Clear();
-            }
-        }
-
-        private void GetBestBuyAndSell(string commodityName, out decimal bestBuyPrice, out decimal bestSellPrice, out string bestBuy, out string bestSell, out decimal buyers, out decimal sellers)
-        {
-            bestBuyPrice = 0;
-            bestSellPrice = 0;
-
-            bestBuy = "";
-            bestSell = "";
-
-            var l = CommodityDirectory[commodityName].Where(x => x.Supply != 0 && x.BuyPrice != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
-            buyers = l.Count();
-
-            if (l.Count() != 0)
-            {
-                bestBuyPrice = l.Min(y => y.BuyPrice);
-                var bestBuyPriceCopy = bestBuyPrice;
-                bestBuy = string.Join(" ", l.Where(x => x.BuyPrice == bestBuyPriceCopy).Select(x => x.StationID + " (" + x.BuyPrice + ")"));
-            }
-
-            var m = CommodityDirectory[commodityName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x, !_InitDone)).ToList();
-            sellers = m.Count();
-            if (m.Count() != 0)
-            {
-                bestSellPrice = m.Max(y => y.SellPrice);
-                var bestSellPriceCopy = bestSellPrice;
-                bestSell = string.Join(" ", m.Where(x => x.SellPrice == bestSellPriceCopy).Select(x => x.StationID + " (" + x.SellPrice + ")"));
-            }
-        }
-
-        #region Column Click Handlers
-        private void lbPrices_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == _stationColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                if (_stationColumnSorter.Order == SortOrder.Ascending)
-                {
-                    _stationColumnSorter.Order = SortOrder.Descending;
-                }
-                else
-                {
-                    _stationColumnSorter.Order = SortOrder.Ascending;
-                }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                _stationColumnSorter.SortColumn = e.Column;
-                _stationColumnSorter.Order = SortOrder.Ascending;
-            }
-
-            // Perform the sort with these new sort options.
-            lbPrices.Sort();
-
-        }
-
-        private void lvStationToStation_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == _stationToStationColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                if (_stationToStationColumnSorter.Order == SortOrder.Ascending)
-                {
-                    _stationToStationColumnSorter.Order = SortOrder.Descending;
-                }
-                else
-                {
-                    _stationToStationColumnSorter.Order = SortOrder.Ascending;
-                }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                _stationToStationColumnSorter.SortColumn = e.Column;
-                _stationToStationColumnSorter.Order = e.Column == 7 ? SortOrder.Descending : SortOrder.Ascending;
-            }
-
-            // Perform the sort with these new sort options.
-            lvStationToStation.Sort();
-        }
-
-        private void lbCommodities_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == _commodityColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                if (_commodityColumnSorter.Order == SortOrder.Ascending)
-                {
-                    _commodityColumnSorter.Order = SortOrder.Descending;
-                }
-                else
-                {
-                    _commodityColumnSorter.Order = SortOrder.Ascending;
-                }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                _commodityColumnSorter.SortColumn = e.Column;
-                _commodityColumnSorter.Order = SortOrder.Ascending;
-            }
-
-            // Perform the sort with these new sort options.
-            lbCommodities.Sort();
-
-        }
-
-        private void lvAllComms_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == _allCommodityColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                if (_allCommodityColumnSorter.Order == SortOrder.Ascending)
-                {
-                    _allCommodityColumnSorter.Order = SortOrder.Descending;
-                }
-                else
-                {
-                    _allCommodityColumnSorter.Order = SortOrder.Ascending;
-                }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                _allCommodityColumnSorter.SortColumn = e.Column;
-                _allCommodityColumnSorter.Order = SortOrder.Ascending;
-            }
-
-            // Perform the sort with these new sort options.
-            lvAllComms.Sort();
-
-        }
-        #endregion
-
-        private void cbCommodity_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selectedCmbItem = ((ComboBox)sender).SelectedItem;
-            lbCommodities.Items.Clear();
-
-            if (selectedCmbItem != null)
-            { 
-                foreach (var row in CommodityDirectory[(selectedCmbItem.ToString())].Where(x => getStationSelection(x)))
-                {
-                    lbCommodities.Items.Add(new ListViewItem(new[] 
-                    {   row.StationID,
-                        row.SellPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.SellPrice.ToString(CultureInfo.InvariantCulture) : "",
-                        row.BuyPrice.ToString(CultureInfo.InvariantCulture) != "0" ? row.BuyPrice.ToString(CultureInfo.InvariantCulture) : "",
-                        row.Demand.ToString(CultureInfo.InvariantCulture) != "0" ? row.Demand.ToString(CultureInfo.InvariantCulture) : "",
-                        row.DemandLevel,
-                        row.Supply.ToString(CultureInfo.InvariantCulture) != "0" ? row.Supply.ToString(CultureInfo.InvariantCulture) : "",
-                        row.SupplyLevel,
-                        row.SampleDate.ToString(CultureInfo.CurrentCulture) 
-                    }));
-                }
-
-                var l = CommodityDirectory[(selectedCmbItem.ToString())].Where(x => x.BuyPrice != 0 && x.Supply > 0).Where(x => getStationSelection(x)).ToList();
-                if (l.Count() > 0)
-                {
-                    lblMin.Text = l.Min(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
-                    lblMax.Text = l.Max(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
-                    lblAvg.Text = l.Average(x => x.BuyPrice).ToString(CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    lblMin.Text = "N/A";
-                    lblMax.Text = "N/A";
-                    lblAvg.Text = "N/A";
-                }
-
-                l = CommodityDirectory[(selectedCmbItem.ToString())].Where(x => x.SellPrice != 0 && x.Demand > 0).Where(x => getStationSelection(x)).ToList();
-                if (l.Count() > 0)
-                {
-                    lblMinSell.Text = l.Min(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
-                    lblMaxSell.Text = l.Max(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
-                    lblAvgSell.Text = l.Average(x => x.SellPrice).ToString(CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    lblMinSell.Text = "N/A";
-                    lblMaxSell.Text = "N/A";
-                    lblAvgSell.Text = "N/A";
-                }
-            }
-            else
-            {
-                lblMinSell.Text = "N/A";
-                lblMaxSell.Text = "N/A";
-                lblAvgSell.Text = "N/A";
-            }
-
-
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (lblMin.Text != "N/A")
-            {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
-                var m = l.Where(x => x.BuyPrice == l.Min(y => y.BuyPrice));
-                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (lblMinSell.Text != "N/A")
-            {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
-                var m = l.Where(x => x.SellPrice == l.Min(y => y.SellPrice));
-                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (lblMax.Text != "N/A")
-            {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.BuyPrice != 0).Where(x => getStationSelection(x)).ToList();
-                var m = l.Where(x => x.BuyPrice == l.Max(y => y.BuyPrice));
-                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (lblMaxSell.Text != "N/A")
-            {
-                var l = CommodityDirectory[cbCommodity.SelectedItem.ToString()].Where(x => x.SellPrice != 0).Where(x => getStationSelection(x)).ToList();
-                var m = l.Where(x => x.SellPrice == l.Max(y => y.SellPrice));
-                MsgBox.Show(string.Join(", ", m.Select(x => x.StationID)));
-            }
-        }
 
         private void lvAllComms_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (((ListView)sender).SelectedItems.Count != 1)
-                return;
+            //if (((ListView)sender).SelectedItems.Count != 1)
+            //    return;
 
-            if (_tooltip != null) _tooltip.RemoveAll();
-            if (_tooltip2 != null) _tooltip2.RemoveAll();
+            //if (_tooltip != null) _tooltip.RemoveAll();
+            //if (_tooltip2 != null) _tooltip2.RemoveAll();
 
-            var senderName = ((ListView)sender).SelectedItems[0].Text;
+            //var senderName = ((ListView)sender).SelectedItems[0].Text;
 
-            chart1.ResetAutoValues();
+            //chart1.ResetAutoValues();
 
-            chart1.Series.Clear();
-            var series1 = new Series
-            {
-                Name = "Series1",
-                Color = Color.Green,
-                IsVisibleInLegend = false,
-                IsXValueIndexed = true,
-                ChartType = SeriesChartType.Column
+            //chart1.Series.Clear();
+            //var series1 = new Series
+            //{
+            //    Name = "Series1",
+            //    Color = Color.Green,
+            //    IsVisibleInLegend = false,
+            //    IsXValueIndexed = true,
+            //    ChartType = SeriesChartType.Column
 
-            };
+            //};
 
-            chart1.Series.Add(series1);
+            //chart1.Series.Add(series1);
 
-            foreach (var price in CommodityDirectory[senderName].Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
-            {
-                series1.Points.AddXY(price.StationID, price.BuyPrice);
-            }
+            //foreach (var price in CommodityDirectory[senderName].Where(x => x.BuyPrice != 0 && x.Supply != 0).Where(x => getStationSelection(x)).OrderBy(x => x.BuyPrice))
+            //{
+            //    series1.Points.AddXY(price.StationID, price.BuyPrice);
+            //}
 
-            chart1.Invalidate();
+            //chart1.Invalidate();
 
-            chart2.ResetAutoValues();
+            //chart2.ResetAutoValues();
 
-            chart2.Series.Clear();
-            var series2 = new Series
-            {
-                Name = "Series1",
-                Color = Color.Green,
-                IsVisibleInLegend = false,
-                IsXValueIndexed = true,
-                ChartType = SeriesChartType.Column
+            //chart2.Series.Clear();
+            //var series2 = new Series
+            //{
+            //    Name = "Series1",
+            //    Color = Color.Green,
+            //    IsVisibleInLegend = false,
+            //    IsXValueIndexed = true,
+            //    ChartType = SeriesChartType.Column
 
-            };
+            //};
 
-            chart2.Series.Add(series2);
+            //chart2.Series.Add(series2);
 
-            foreach (var price in CommodityDirectory[senderName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
-            {
-                series2.Points.AddXY(price.StationID, price.SellPrice);
-            }
+            //foreach (var price in CommodityDirectory[senderName].Where(x => x.SellPrice != 0 && x.Demand != 0).Where(x => getStationSelection(x)).OrderByDescending(x => x.SellPrice))
+            //{
+            //    series2.Points.AddXY(price.StationID, price.SellPrice);
+            //}
 
-            chart2.Invalidate();
+            //chart2.Invalidate();
         }
 
         #region Tooltip variables
@@ -2426,143 +1304,7 @@ namespace RegulatedNoise
             if (_tooltip2 != null) _tooltip2.RemoveAll();
         }
 
-        private void RenameStation(object sender, EventArgs e)
-        {
-            var existingStationName = getCmbItemKey(cmbStation.SelectedItem);
 
-            tbStationRename.Text    = _textInfo.ToTitleCase(tbStationRename.Text.ToLower());
-
-            var newStationName = tbStationRename.Text + " [" + tbSystemRename.Text + "]";
-
-            List<CsvRow> newRows = new List<CsvRow>();
-
-            foreach (var row in StationDirectory[existingStationName])
-            {
-                CsvRow newRow = new CsvRow
-                {
-                    BuyPrice = row.BuyPrice,
-                    Cargo = row.Cargo,
-                    CommodityName = row.CommodityName,
-                    Demand = row.Demand,
-                    DemandLevel = row.DemandLevel,
-                    SampleDate = row.SampleDate,
-                    SellPrice = row.SellPrice,
-                    StationName = tbStationRename.Text,
-                    StationID = newStationName,
-                    Supply = row.Supply,
-                    SupplyLevel = row.SupplyLevel,
-                    SystemName = tbSystemRename.Text,
-                    SourceFileName = row.SourceFileName
-                };
-
-                newRows.Add(newRow);
-            }
-
-
-            StationDirectory.Remove(existingStationName);
-
-            if (!StationDirectory.ContainsKey(newStationName))
-                StationDirectory.Add(newStationName, newRows);
-            else StationDirectory[newStationName].AddRange(newRows);
-
-            var newCommodityDirectory = new CommodityDirectory();
-
-            foreach (var collectionOfRows in CommodityDirectory)
-            {
-                newRows = new List<CsvRow>();
-
-                foreach (var row in collectionOfRows.Value)
-                {
-
-                    CsvRow newRow = new CsvRow
-                    {
-                        BuyPrice = row.BuyPrice,
-                        Cargo = row.Cargo,
-                        CommodityName = row.CommodityName,
-                        Demand = row.Demand,
-                        DemandLevel = row.DemandLevel,
-                        SampleDate = row.SampleDate,
-                        SellPrice = row.SellPrice,
-                        StationID = row.StationID == existingStationName ? newStationName : row.StationID,
-                        Supply = row.Supply,
-                        SupplyLevel = row.SupplyLevel,
-                        SystemName = row.StationID == existingStationName ? tbSystemRename.Text : row.SystemName
-                    };
-
-                    newRows.Add(newRow);
-                }
-
-                newCommodityDirectory.Add(collectionOfRows.Key, newRows);
-            }
-
-            CommodityDirectory = newCommodityDirectory;
-
-            //Remove duplicates (incl. historical)
-            var newStationDirectory = new List<CsvRow>();
-
-            var distinctCommodityNames = StationDirectory[newStationName].ToList().Select(x => x.CommodityName).Distinct();
-
-            foreach (var c in distinctCommodityNames)
-            {
-                newStationDirectory.Add(StationDirectory[newStationName].ToList().Where(x => x.CommodityName == c).OrderByDescending(x => x.SampleDate).First());
-            }
-
-            StationDirectory[newStationName] = newStationDirectory;
-
-            var newCommodityDirectory2 = new CommodityDirectory();
-
-            for (int i = 0; i < CommodityDirectory.Keys.Count; i++)
-            {
-                var distinctStationNames = CommodityDirectory.ElementAt(i).Value.Select(x => x.StationID).Distinct();
-                foreach (var d in distinctStationNames)
-                {
-                    if (!newCommodityDirectory2.Keys.Contains(CommodityDirectory.ElementAt(i).Key))
-                        newCommodityDirectory2.Add(CommodityDirectory.ElementAt(i).Key, new List<CsvRow> { CommodityDirectory.ElementAt(i).Value.ToList().Where(x => x.StationID == d).OrderByDescending(x => x.SampleDate).First() });
-                    else newCommodityDirectory2[CommodityDirectory.ElementAt(i).Key].Add(CommodityDirectory.ElementAt(i).Value.ToList().Where(x => x.StationID == d).OrderByDescending(x => x.SampleDate).First());
-                }
-            }
-
-            CommodityDirectory = newCommodityDirectory2;
-
-            _StationHistory.RenameStation(existingStationName, newStationName);
-
-            SetupGui();
-        }
-
-        /// Webserver functionality
-        private SimpleWebserver sws = new SimpleWebserver();
-
-        private void bStart_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //if (ws == null)
-                //{
-                //    ws = new WebServer((new[] { "http://" + cbInterfaces.SelectedItem.ToString() + ":8080/" }), SendResponse);
-                //    ws.Start(); //  If the service was already started, the call has no effect
-                //    ws.Run();
-                //}
-
-                //sws = new  SimpleWebserver(  WebServer((new[] { "http://" + cbInterfaces.SelectedItem.ToString() + ":8080/" }), SendResponse);
-
-                IPAddress ip = IPAddress.Parse(cbInterfaces.SelectedItem.ToString());
-
-                sws.Start(ip, Int32.Parse(txtWebserverPort.Text) , 5, "", this);
-                //                    = new WebServer((new[] { "http://" + cbInterfaces.SelectedItem.ToString() + ":8080/" }), SendResponse);
-                UpdateUrl();
-            }
-            catch (Exception ex)
-            {
-                _logger.Log("Error starting webserver", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
-                if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
-                MsgBox.Show(
-                    "Couldn't start webserver.  Maybe something is already using port 8080...?");
-            }
-        }
 
         private void bStop_Click(object sender, EventArgs e)
         {
@@ -2580,103 +1322,7 @@ namespace RegulatedNoise
                 return null;
         }
 
-        public string GetLvAllCommsItems()
-        {
-            if (InvokeRequired)
-            {
-                return (string)(Invoke(new EventArgsDelegate(GetLvAllCommsItems)));
-            }
 
-            if (StationDirectory.Count == 0)
-                return "No data loaded :-(";
-
-            var s = new StringBuilder();
-
-            string links = "<BR><A style=\"font-size: 14pt\" HREF=\"#lvAllComms\">All Commodities - </A>" +
-                "<A style=\"font-size: 14pt\" HREF=\"#lbPrices\">Station - </A>" +
-                "<A style=\"font-size: 14pt\" HREF=\"#lbCommodities\">Commodity - </A>" +
-                    "<A style=\"font-size: 14pt\" HREF=\"#lvStationToStation\">Station-to-Station</A><BR>";
-
-            s.Append(links);
-
-            s.Append("<A name=\"lvAllComms\"><P>All Commodities</P>");
-            s.Append(GetHTMLForListView(lvAllComms));
-
-            s.Append(links);
-
-            s.Append("<A name=\"lbPrices\"><P>Station: " + getCmbItemKey(cmbStation.SelectedItem) + "</P>");
-            s.Append(GetHTMLForListView(lbPrices));
-
-            s.Append(links);
-
-            s.Append("<A name=\"lbCommodities\"><P>Commodity: " + cbCommodity.SelectedItem + "</P>");
-            s.Append(GetHTMLForListView(lbCommodities));
-
-            s.Append(links);
-
-            s.Append("<A name=\"lvStationToStation\"><P>Station-to-Station: " + getCmbItemKey(cmbStationToStationFrom.SelectedItem) + " => " + getCmbItemKey(cmbStationToStationTo.SelectedItem) + "</P>");
-            s.Append(GetHTMLForListView(lvStationToStation));
-
-            s.Append(links);
-
-            return s.ToString();
-        }
-
-        private string GetHTMLForListView(ListView listViewToDump)
-        {
-            var s = new StringBuilder();
-
-            s.Append("<TABLE style=\"border:1px solid black;border-collapse:collapse;\">");
-
-            var header = new StringBuilder();
-
-            header.Append("<TR>");
-
-            for (int i = 0; i < listViewToDump.Columns.Count; i++)
-            {
-                var style = "style=\"border:1px solid black; font-weight: bold;\"";
-                header.Append("<TD " + style + "><A style=\"color: #" + Program.Settings.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
-            }
-
-            header.Append("</TR>");
-
-            int ctr = 0;
-
-            foreach (ListViewItem item in listViewToDump.Items)
-            {
-                if (ctr % 7 == 0)
-                    s.Append(header);
-
-                s.Append("<TR>");
-
-                for (int i = 0; i < item.SubItems.Count; i++)
-                    s.Append("<TD style=\"border:1px solid black;\">" + item.SubItems[i].Text + "</TD>");
-
-                s.Append("</TR>");
-
-                ctr++;
-            }
-
-            s.Append(header);
-
-            s.Append("</TABLE>");
-            return s.ToString();
-        }
-
-        public string SendResponse(HttpListenerRequest request)
-        {
-            //return string.Format("<HTML><BODY>My web page.<br>{0}<BR>The page you requested was "+request.Url+"</BODY></HTML>", DateTime.Now);
-
-            StringBuilder s = new StringBuilder();
-
-            s.Append("<HTML><BODY><FONT SIZE=\"8\"><FONT FACE=\"arial\">");
-
-            WriteTables(s);
-
-            s.Append("</BODY></HTML>");
-
-            return s.ToString();
-        }
 
         private void WriteTables(StringBuilder s)
         {
@@ -2971,23 +1617,25 @@ namespace RegulatedNoise
 
             tbOcrStationName.Text = s; // CLARK HUB
 
-            var systemNames = StationDirectory.Keys.Where(x => x.ToUpper().Contains(s)).ToList();
-            if (systemNames.Count == 1) // let's hope so!
-            {
-                var tempName = systemNames.First();
-                var tempName2 = tempName.Substring(tempName.IndexOf("[", StringComparison.Ordinal)).Replace("[", "").Replace("]", "");
-                tbOcrSystemName.Text = tempName2;
-            }
-            else
-            {
-                UpdateSystemNameFromLogFile();
+            throw new NotImplementedException();
+            //var systemNames = StationDirectory.Keys.Where(x => x.ToUpper().Contains(s)).ToList();
 
-                if (Program.actualCondition.System != "")
-                    tbOcrSystemName.Text = Program.actualCondition.System;
-                else
-                    tbOcrSystemName.Text = "SomeSystem";
+            //if (systemNames.Count == 1) // let's hope so!
+            //{
+            //    var tempName = systemNames.First();
+            //    var tempName2 = tempName.Substring(tempName.IndexOf("[", StringComparison.Ordinal)).Replace("[", "").Replace("]", "");
+            //    tbOcrSystemName.Text = tempName2;
+            //}
+            //else
+            //{
+            //    UpdateSystemNameFromLogFile();
 
-            }
+            //    if (Program.actualCondition.System != "")
+            //        tbOcrSystemName.Text = Program.actualCondition.System;
+            //    else
+            //        tbOcrSystemName.Text = "SomeSystem";
+
+            //}
         }
 
         public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName);
@@ -3349,9 +1997,6 @@ namespace RegulatedNoise
                 case AppDelegateType.AddEventToLog:
                     Program.CommandersLog.SaveEvent((CommandersLogEvent)o);
                     break;
-                case AppDelegateType.ChangeGridSort:
-                    ChangeGridSort((string)o);
-                    break;
                 case AppDelegateType.MaximizeWindow:
                     WindowState = FormWindowState.Minimized;
                     Show();
@@ -3362,28 +2007,6 @@ namespace RegulatedNoise
             }
         }
 
-        private void ChangeGridSort(string s)
-        {
-            var q = s.Substring(26).Replace("&col=", ";").Replace("&rand=", ";").Split(';');
-
-            var x = new ColumnClickEventArgs(int.Parse(q[1]));
-
-            switch (q[0])
-            {
-                case "lvAllComms":
-                    lvAllComms_ColumnClick(null, x);
-                    break;
-                case "lbPrices":
-                    lbPrices_ColumnClick(null, x);
-                    break;
-                case "lbCommodities":
-                    lbCommodities_ColumnClick(null, x);
-                    break;
-                case "lvStationToStation":
-                    lvStationToStation_ColumnClick(null, x);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -3456,7 +2079,9 @@ namespace RegulatedNoise
                 {
                     // yes, it's really new
                     addCommodity(commodity, Program.Settings.Language);
-                    _Milkyway.addLocalized2RN(_commodities.Names);
+                    
+                    throw new NotImplementedException();
+                    //_Milkyway.addLocalized2RN(_commodities.Names);
                     isOK = true;
                 }
             }
@@ -3474,11 +2099,6 @@ namespace RegulatedNoise
                         _commoditiesSoFar = new List<string>();
                         bClearOcrOutput.Enabled = false;
                         bEditResults.Enabled = false;
-
-                        // save the new data immediately
-                        SaveCommodityData(true);
-
-
                     }
                 }
                 else
@@ -3527,7 +2147,8 @@ namespace RegulatedNoise
 
                     DateTime.TryParse(values[9], out currentRow.SampleDate);
 
-                    EDCommoditiesExt CommodityData = myMilkyway.getCommodity(getLocalizedCommodity(enLanguage.eng, currentRow.CommodityName));
+                    throw new NotImplementedException();
+                    EDCommoditiesExt CommodityData = null; //myMilkyway.getCommodity(getLocalizedCommodity(enLanguage.eng, currentRow.CommodityName));
 
                     if (currentRow.CommodityName == "Panik")
                         Debug.Print("STOP");
@@ -3624,7 +2245,7 @@ namespace RegulatedNoise
             {
                 if (s.Contains(";"))
                 {
-                    ImportCsvString(s, false, true, true);
+                    throw new NotImplementedException();
                 }
             }
             
@@ -3834,7 +2455,8 @@ namespace RegulatedNoise
                             if(checkboxImportEDDN.Checked)
                             {
                                 Debug.Print("import :" + DataRow);
-                                ImportCsvString(DataRow);
+                                throw new NotImplementedException();
+                                //ImportCsvString(DataRow);
                             }
 
                         }else{
@@ -4007,7 +2629,8 @@ namespace RegulatedNoise
 
                         if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            cachedSystem = _Milkyway.getSystem(messageDictionary["systemName"]);
+                            throw new NotImplementedException();
+                            //cachedSystem = _Milkyway.getSystem(messageDictionary["systemName"]);
                         }
                         if(cachedSystem == null)
                         {
@@ -4017,7 +2640,8 @@ namespace RegulatedNoise
 
                         if((cachedSystem != null) && ((cachedStation == null) || (!messageDictionary["stationName"].Equals(cachedStation.Name, StringComparison.InvariantCultureIgnoreCase))))
                         {
-                            cachedStation = _Milkyway.getStation(messageDictionary["systemName"], messageDictionary["stationName"]);
+                            throw new NotImplementedException();
+                            //cachedStation = _Milkyway.getStation(messageDictionary["systemName"], messageDictionary["stationName"]);
                         }
                         if(cachedStation == null)
                         {
@@ -4047,7 +2671,8 @@ namespace RegulatedNoise
                                 if(!checkPricePlausibility(new string[] {csvFormatted}, true))
                                 {
                                     if(import)
-                                        ImportCsvString(csvFormatted);
+                                        throw new NotImplementedException();
+                                        //ImportCsvString(csvFormatted);
 
                                 }else{
 
@@ -4166,166 +2791,6 @@ namespace RegulatedNoise
                 _eddnSubscriberThread.Abort();
         }
 
-        #region Station-To-Station
-        private void cbStationToStationFrom_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateStationToStation();
-        }
-
-        private void cbStationToStationTo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateStationToStation();
-        }
-
-        private void UpdateStationToStation()
-        {
-            try
-            {
-                Cursor = Cursors.WaitCursor;
-
-                lvStationToStation.Items.Clear();
-                lvStationToStationReturn.Items.Clear();
-
-                if (cmbStationToStationTo.SelectedItem == null || cmbStationToStationFrom.SelectedItem == null || getCmbItemKey(cmbStationToStationFrom.SelectedItem) == ID_DELIMITER || getCmbItemKey(cmbStationToStationTo.SelectedItem) == ID_DELIMITER)
-                {
-                    Cursor = Cursors.Default;
-                    return;
-                }
-
-                var stationFrom = getCmbItemKey(cmbStationToStationFrom.SelectedItem);
-                var stationTo = getCmbItemKey(cmbStationToStationTo.SelectedItem);
-
-                int bestRoundTrip;
-                var results = GetBestRoundTripForTwoStations(stationFrom, stationTo, out bestRoundTrip);
-
-                lblStationToStationMax.Text = bestRoundTrip.ToString();
-
-                if (results.Item1 != null)
-                    foreach (var lvi in results.Item1)
-                        lvStationToStation.Items.Add(lvi);
-
-                if (results.Item2 != null)
-                    foreach (var lvi in results.Item2)
-                        lvStationToStationReturn.Items.Add(lvi);
-
-                if (_stationToStationColumnSorter.SortColumn != 7)
-                    lvStationToStation_ColumnClick(null, new ColumnClickEventArgs(7));
-
-                if (_stationToStationReturnColumnSorter.SortColumn != 7)
-                    lvStationToStationReturn_ColumnClick(null, new ColumnClickEventArgs(7));
-
-                if (myMilkyway.existSystem(StructureHelper.CombinedNameToSystemName(stationFrom)))
-                {
-                    var dist = DistanceInLightYears(
-                                                         StructureHelper.CombinedNameToSystemName(stationFrom).ToUpper(),
-                                                         myMilkyway.getSystemCoordinates(StructureHelper.CombinedNameToSystemName(stationTo)));
-
-                    if (dist < double.MaxValue)
-                        lblStationToStationLightYears.Text = "(" +
-                                                         String.Format("{0:0.00}", dist
-                                                         ) + " light years each way)";
-                    else lblStationToStationLightYears.Text = "(system(s) not recognised)";
-                }
-                else lblStationToStationLightYears.Text = "(system(s) not recognised)";
-
-                Cursor = Cursors.Default;
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.Message);
-            }
-        }
-
-        private Tuple<List<ListViewItem>, List<ListViewItem>> GetBestRoundTripForTwoStations(string stationFrom, string stationTo, out int bestRoundTrip)
-        {
-            if (stationFrom == null || stationTo == null) { bestRoundTrip = 0; return null; }
-            var resultsOutbound = new List<ListViewItem>();
-            var resultsReturn = new List<ListViewItem>();
-
-            foreach (var commodity in CommodityDirectory)
-            {
-                var from = StationDirectory[stationFrom].Where(x => x.CommodityName == commodity.Key).ToList();
-                var from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).OrderByDescending(x => x.SampleDate).ToList();
-                var to = StationDirectory[stationTo].Where(x => x.CommodityName == commodity.Key).ToList();
-                var to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).OrderByDescending(x => x.SampleDate).ToList();
-
-                if (from2.Count() >= 1 && to2.Count() >= 1)
-                {
-                    var fromRow = from2[0];
-                    var toRow = to2[0];
-
-                    decimal sellPrice = toRow.SellPrice;
-                    decimal supply = fromRow.Supply;
-                    string supplyLevel = fromRow.SupplyLevel;
-                    decimal buyPrice = fromRow.BuyPrice;
-                    decimal demand = toRow.Demand;
-                    string demandLevel = toRow.DemandLevel;
-                    decimal difference = toRow.SellPrice - fromRow.BuyPrice;
-
-                    var newItem = new
-                        ListViewItem(new[]
-                        {
-                            commodity.Key,
-                            buyPrice.ToString(CultureInfo.InvariantCulture),
-                            supply.ToString(CultureInfo.InvariantCulture),
-                            supplyLevel,
-                            sellPrice.ToString(CultureInfo.InvariantCulture),
-                            demand.ToString(CultureInfo.InvariantCulture),
-                            demandLevel,
-                            difference.ToString(CultureInfo.InvariantCulture)
-                        });
-
-                    if (difference > 0)
-                    {
-                        resultsOutbound.Add(newItem);
-                    }
-                }
-
-                // Return trip
-
-
-                @from = StationDirectory[stationTo].Where(x => x.CommodityName == commodity.Key).ToList();
-                from2 = @from.Where(x => x.BuyPrice != 0 && x.Supply != 0).OrderByDescending(x => x.SampleDate).ToList();
-                to = StationDirectory[stationFrom].Where(x => x.CommodityName == commodity.Key).ToList();
-                to2 = to.Where(x => x.SellPrice != 0 && x.Demand != 0).OrderByDescending(x => x.SampleDate).ToList();
-
-                if (from2.Count() >= 1 && to2.Count() >= 1)
-                {
-                    var fromRow = from2[0];
-                    var toRow = to2[0];
-
-                    decimal sellPrice = toRow.SellPrice;
-                    decimal supply = fromRow.Supply;
-                    string supplyLevel = fromRow.SupplyLevel;
-                    decimal buyPrice = fromRow.BuyPrice;
-                    decimal demand = toRow.Demand;
-                    string demandLevel = toRow.DemandLevel;
-                    decimal difference = toRow.SellPrice - fromRow.BuyPrice;
-
-                    if (difference > 0)
-                        resultsReturn.Add(new ListViewItem(new[]
-                        {
-                            commodity.Key,
-                            buyPrice.ToString(CultureInfo.InvariantCulture),
-                            supply.ToString(CultureInfo.InvariantCulture),
-                            supplyLevel,
-                            sellPrice.ToString(CultureInfo.InvariantCulture),
-                            demand.ToString(CultureInfo.InvariantCulture),
-                            demandLevel,
-                            difference.ToString(CultureInfo.InvariantCulture)
-                        }));
-                }
-            }
-
-            var q = resultsOutbound.Count > 0 ? resultsOutbound.Max(x => int.Parse(x.SubItems[7].Text)) : 0;
-            var r = resultsReturn.Count > 0 ? resultsReturn.Max(x => int.Parse(x.SubItems[7].Text)) : 0;
-
-            bestRoundTrip = q + r;
-            return new Tuple<List<ListViewItem>, List<ListViewItem>>(resultsOutbound, resultsReturn);
-        }
-
-        #endregion
-
 
         private void button17_Click(object sender, EventArgs e)
         {
@@ -4353,8 +2818,9 @@ namespace RegulatedNoise
                 _filesFound = new List<string>();
 
                 DirSearch(openFile.SelectedPath);
-
-                ImportListOfCsvs(_filesFound.ToArray());
+                
+                throw new NotImplementedException();
+                //ImportListOfCsvs(_filesFound.ToArray());
 
             }
 
@@ -4616,7 +3082,9 @@ namespace RegulatedNoise
                                                     }
                                                     else
                                                     {
+    #if extScanLog
                                                         Debug.Print(logLump);
+    #endif
                                                         m = RegExTest2.Match(logLump);
                                                         if (m.Success)
                                                         {
@@ -4864,18 +3332,6 @@ namespace RegulatedNoise
         }
         #endregion
 
-        private void lbPrices_Click(object sender, EventArgs e)
-        {
-            Point mousePosition = lbPrices.PointToClient(MousePosition);
-            ListViewHitTestInfo hit = lbPrices.HitTest(mousePosition);
-            int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
-
-            if (columnindex == 11 && lbPrices.SelectedItems.Count == 1 && lbPrices.SelectedItems[0].SubItems[11].Text != "" && File.Exists(Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) + @"\Frontier Developments\Elite Dangerous\" + lbPrices.SelectedItems[0].SubItems[11].Text))
-                Process.Start(Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) +
-                              @"\Frontier Developments\Elite Dangerous\" +
-                              lbPrices.SelectedItems[0].SubItems[11].Text);
-        }
-
         // Recurse controls on form
         public IEnumerable<Control> GetAll(Control control)
         {
@@ -4885,7 +3341,6 @@ namespace RegulatedNoise
                                       .Concat(controls);
         }
 
-        #region Christmas!
         System.Windows.Forms.Timer _timer;
 
         private void Form_Shown(object sender, System.EventArgs e)
@@ -4908,6 +3363,8 @@ namespace RegulatedNoise
         {
             // TODO: Diese Codezeile lädt Daten in die Tabelle "dsElite_DB.tbsystems". Sie können sie bei Bedarf verschieben oder entfernen.
 
+            TabPage     newTab;
+
             Text += Program.Settings.Version.ToString(CultureInfo.InvariantCulture);
 
 #if DukeJones
@@ -4926,14 +3383,6 @@ namespace RegulatedNoise
                 _timer.Start();
             }
 
-            tabCtrlMain.SelectedTab = tabPriceAnalysis;
-            tabControl2.SelectedTab = tabPage3;
-            tabControl2.SelectedTab = tabPage1;
-            tabControl2.SelectedTab = tabPage2;
-            tabControl2.SelectedTab = tabStationToStation;
-            tabControl2.SelectedTab = tabPage3;
-            tabCtrlMain.SelectedTab = tabHelpAndChangeLog;
-            
             Retheme();
 
             Clock = new System.Windows.Forms.Timer();
@@ -4949,15 +3398,24 @@ namespace RegulatedNoise
             _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
 
 
+            // Price Analysis
+            tabPriceAnalysis newPAControl     = new tabPriceAnalysis();
+            newPAControl.DataSource           = Program.PriceAnalysis;
+            newTab                            = new TabPage("Price Analysis");
+            newTab.Controls.Add(newPAControl);
+            tabCtrlMain.TabPages.Insert(2, newTab);
+
+            newPAControl.Init();
+
+            
             // Commander's Log
-            tabCommandersLog newControl     = new tabCommandersLog();
-            newControl.DataSource           = Program.CommandersLog;
- 
-            TabPage     newTab     = new TabPage("Commander's Log");
-            newTab.Controls.Add(newControl);
+            tabCommandersLog newCLControl     = new tabCommandersLog();
+            newCLControl.DataSource           = Program.CommandersLog;
+            newTab                            = new TabPage("Commander's Log");
+            newTab.Controls.Add(newCLControl);
             tabCtrlMain.TabPages.Insert(3, newTab);
 
-            newControl.Init();
+            newCLControl.Init();
 
         }
 
@@ -5098,7 +3556,10 @@ namespace RegulatedNoise
                             String SystemName = line.ToString().Substring(0, semicolon1);
 
                             if(!lastSystemName.Equals(SystemName, StringComparison.InvariantCultureIgnoreCase) || (System == null))
-                               System = _Milkyway.getSystem(SystemName);
+                            { 
+                               throw new NotImplementedException();
+                               //System = _Milkyway.getSystem(SystemName);
+                            }
 
                             if(System != null)
                             {
@@ -5265,255 +3726,6 @@ namespace RegulatedNoise
             }
         }
 
-        #endregion
-
-        private void bSwapStationToStations_Click(object sender, EventArgs e)
-        {
-            int selIndex = cmbStationToStationFrom.SelectedIndex;
-            cmbStationToStationFrom.SelectedIndex = cmbStationToStationTo.SelectedIndex;
-            cmbStationToStationTo.SelectedIndex = selIndex;
-        }
-
-        private void lbPrices_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lbPrices.SelectedItems.Count != 1)
-                bStationEditRow.Enabled = false;
-            else
-                bStationEditRow.Enabled = true;
-
-            if (lbPrices.SelectedItems.Count == 0)
-                bStationDeleteRow.Enabled = false;
-            else
-                bStationDeleteRow.Enabled = true;
-        }
-
-        private void bStationEditRow_Click(object sender, EventArgs e)
-        {
-            string ComboboxKey = getCmbItemKey(cmbStation.SelectedItem);
-
-            var csvrow  = StationDirectory[ComboboxKey].First(x => x.CommodityName == lbPrices.SelectedItems[0].Text);
-            var csvrow2 = CommodityDirectory[lbPrices.SelectedItems[0].Text].First(x => x.StationID == ComboboxKey);
-            
-            var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
-            var q = f.ShowDialog();
-
-            if (q == DialogResult.OK)
-            {
-                StationDirectory[ComboboxKey].Remove(csvrow);
-                CommodityDirectory[lbPrices.SelectedItems[0].Text].Remove(csvrow2);
-                ImportCsvString(f.RowToEdit.ToString());
-
-                SetupGui();
-                cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
-            }
-        }
-
-        private void bCommodityEditRow_Click(object sender, EventArgs e)
-        {
-            var csvrow =
-                StationDirectory[lbCommodities.SelectedItems[0].Text].First(
-                        x => x.CommodityName == cbCommodity.SelectedItem.ToString());
-
-            var csvrow2 =
-                CommodityDirectory[cbCommodity.SelectedItem.ToString()].First(
-                    x => x.StationID == lbCommodities.SelectedItems[0].Text);
-
-            var f = new EditPriceData(csvrow, CommodityDirectory.Keys.ToList());
-            var q = f.ShowDialog();
-
-            if (q == DialogResult.OK)
-            {
-                StationDirectory[lbCommodities.SelectedItems[0].Text].Remove(csvrow);
-                CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
-                ImportCsvString(f.RowToEdit.ToString());
-                SetupGui();
-                cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
-            }
-        }
-
-        private void lbCommodities_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lbCommodities.SelectedItems.Count != 1)
-                bEditCommodity.Enabled = false;
-            else
-                bEditCommodity.Enabled = true;
-
-            if (lbCommodities.SelectedItems.Count == 0)
-                bCommodityDeleteRow.Enabled = false;
-            else
-                bCommodityDeleteRow.Enabled = true;
-        }
-
-        private void bStationDeleteRow_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                foreach (ListViewItem item in lbPrices.SelectedItems)
-                {
-                    var csvrow =
-                        StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].First(
-                            x => x.CommodityName == item.Text);
-
-                    var csvrow2 =
-                        CommodityDirectory[item.Text].First(
-                            x => x.StationID == getCmbItemKey(cmbStation.SelectedItem));
-
-                    StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Remove(csvrow);
-                    CommodityDirectory[item.Text].Remove(csvrow2);
-
-                    if (StationDirectory[getCmbItemKey(cmbStation.SelectedItem)].Count == 0)
-                    {
-                        // if theres no commodity price anymore we can (must) delete the history data
-                        StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == getCmbItemKey(cmbStation.SelectedItem));
-                        if (StationInHistory != null)
-                            _StationHistory.History.Remove(StationInHistory);
-
-                        // and also the station itself
-                        StationDirectory.Remove(getCmbItemKey(cmbStation.SelectedItem));
-                    }
-                }
-
-                SetupGui();
-                cbStation_SelectedIndexChanged(cmbStation, new EventArgs());
-            }
-            catch (Exception ex)
-            {
-                throw ex  ;  
-            }
-        }
-
-        private void bCommodityDeleteRow_Click(object sender, EventArgs e)
-        {
-           foreach (ListViewItem item in lbCommodities.SelectedItems)
-            {
-                var csvrow =
-                    StationDirectory[item.Text].First(
-                        x => x.CommodityName == cbCommodity.SelectedItem.ToString());
-
-                var csvrow2 =
-                    CommodityDirectory[cbCommodity.SelectedItem.ToString()].First(
-                        x => x.StationID == item.Text);
-
-                StationDirectory[item.Text].Remove(csvrow);
-                CommodityDirectory[cbCommodity.SelectedItem.ToString()].Remove(csvrow2);
-
-                if (StationDirectory[item.Text].Count == 0)
-                {
-                    // if theres no commodity price anymore we can (must) delete the history data
-                    StationVisit StationInHistory = _StationHistory.History.Find(x => x.Station == item.Text);
-                    if (StationInHistory != null)
-                        _StationHistory.History.Remove(StationInHistory);
-
-                    // and also the station itself
-                    StationDirectory.Remove(item.Text);
-                }
-            }
-
-            SetupGui();
-            cbCommodity_SelectedIndexChanged(cbCommodity, new EventArgs());
-        }
-
-        private void btnBestRoundTrip_Click(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.WaitCursor;
-
-            lbAllRoundTrips.Items.Clear();
-            int bestRoundTrip = -1;
-            string stationA = "", stationB = "";
-            ProgressView progress   = new ProgressView();
-            List<Tuple<string, double>> allRoundTrips = new List<Tuple<string, double>>();
-            
-            var selectedStations = StationDirectory.Where(x => getStationSelection(x));
-
-            Int32 Total             = getCalculations(selectedStations.Count());
-            Int32 Current           = 0;
-
-            progress.progressStart(string.Format(string.Format("calculating best routes: {0} abilities from {1} stations", Total, selectedStations.Count())));
-
-            for (int i = 0; i < selectedStations.Count()-1; i++)
-            {
-                for (int j = i+1; j < selectedStations.Count(); j++)
-                {
-                    var a = selectedStations.ElementAt(i);        
-                    var b = selectedStations.ElementAt(j);
-
-                    Current+=1;
-                    progress.progressUpdate(Current, Total);
-
-                    Debug.Print(Current +"/"+ Total);
-
-                    int bestThisTrip;
-                    GetBestRoundTripForTwoStations(a.Key, b.Key, out bestThisTrip);
-                    if (bestThisTrip > 0)
-                    {
-                        string key1, key2;
-                        if (string.Compare(a.Key, b.Key) < 0)
-                        {
-                            key1 = a.Key;
-                            key2 = b.Key;
-                        }
-                        else
-                        {
-                            key1 = b.Key;
-                            key2 = a.Key;                            
-                        }
-
-                        string credits;
-                        double creditsDouble;
-                        double distance = 1d;
-
-                        distance = DistanceInLightYears(StructureHelper.CombinedNameToSystemName(a.Key).ToUpper(), StructureHelper.CombinedNameToSystemName(b.Key).ToUpper());
-
-                        if (cbPerLightYearRoundTrip.Checked)
-                        {
-                            creditsDouble = bestThisTrip / (2.0 * distance);
-                            credits = String.Format("{0:0.000}", creditsDouble / (2.0 * distance)) + " Cr/Ly";
-                        }
-                        else
-                        {
-                            creditsDouble = bestThisTrip;
-                            credits = (bestThisTrip + " Cr");
-                        }
-
-                        if ((!cbMaxRouteDistance.Checked) || (double.Parse(cmbMaxRouteDistance.Text) >= distance))
-                        {
-                            allRoundTrips.Add(
-                                new Tuple<string, double>(
-                                    credits.PadRight(13) + " :" + 
-                                    key1
-                                    + "..." + 
-                                    key2
-                                    , creditsDouble));
-
-                            if (bestThisTrip > bestRoundTrip)
-                            {
-                                bestRoundTrip = bestThisTrip;
-                                stationA = a.Key;
-                                stationB = b.Key;
-                            }
-                        }
-
-                    }
-
-                    if (progress.Cancelled)
-                        break;
-                }
-
-                if (progress.Cancelled)
-                    break;
-            }
-
-            progress.progressStop();
-
-            var ordered = allRoundTrips.OrderByDescending(x => x.Item2).Select(x => x.Item1).Distinct().ToList().Cast<object>().ToArray();
-
-            lbAllRoundTrips.Items.AddRange(ordered);
-            if(lbAllRoundTrips.Items.Count > 0)
-                lbAllRoundTrips.SelectedIndex = 0;
-
-            this.Cursor = Cursors.Default;
-        }
-
         private int getCalculations(int Total)
         {
             Int32 retValue = 0;
@@ -5526,34 +3738,9 @@ namespace RegulatedNoise
 
         }
 
-        private void checkboxLightYears_CheckedChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            Program.Settings.limitLightYears = cbLimitLightYears.Checked;
-            SetupGui();
-            Cursor = Cursors.Default;
-        }
-
-        private void cbStationToStar_CheckedChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            Program.Settings.StationToStar = cbStationToStar.Checked;
-            SetupGui();
-            Cursor = Cursors.Default;
-        }
-
-        private void cbIncludeWithinRegionOfStation_SelectionChangeCommitted(object sender, System.EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            SetupGui();
-            Cursor = Cursors.Default;
-        }
-
         private void cmdPurgeEDDNData(object sender, EventArgs e)
         {
-            StationDirectory = PurgeEddnFromDirectory(StationDirectory);
-            CommodityDirectory = PurgeEddnFromDirectory(CommodityDirectory);
-            SetupGui();
+            throw new NotImplementedException();
         }
 
         private static ObjectDirectory PurgeEddnFromDirectory(ObjectDirectory directory)
@@ -5587,65 +3774,6 @@ namespace RegulatedNoise
             {
                 tbFinalOcrOutput.Text = f.ReturnValue;
             }
-        }
-
-        private void lbAllRoundTrips_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var t = lbAllRoundTrips.Text;
-            var fromStation = t.Substring(t.IndexOf(':') + 1);
-            fromStation = fromStation.Substring(0, fromStation.IndexOf("..."));
-            var toStation = t.Substring(t.IndexOf("...") + 3);
-
-//            Debug.Print("v : " + fromStation + " / c:" + cmbStationToStationFrom.SelectedValue+ " / c:" + cmbStationToStationFrom.SelectedItem, cmbStationToStationFrom.SelectedIndex);
-            int fromIndex = -1;
-            int toIndex = -1;
-
-            if (!_StationIndices.TryGetValue(fromStation, out fromIndex))
-                fromIndex = -1;
-
-            if (!_StationIndices.TryGetValue(toStation, out toIndex))
-                toIndex = -1;
-
-            try
-            {
-                cmbStationToStationFrom.SelectedIndex = fromIndex;
-                cmbStationToStationTo.SelectedIndex = toIndex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            
-            Debug.Print("n : " + fromStation + " / c:" + cmbStationToStationFrom.SelectedValue+ " / c:" + cmbStationToStationFrom.SelectedItem, cmbStationToStationFrom.SelectedIndex);
-            Debug.Print("");
-
-            UpdateStationToStation();
-        }
-
-        private void lvStationToStationReturn_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == _stationToStationReturnColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                if (_stationToStationReturnColumnSorter.Order == SortOrder.Ascending)
-                {
-                    _stationToStationReturnColumnSorter.Order = SortOrder.Descending;
-                }
-                else
-                {
-                    _stationToStationReturnColumnSorter.Order = SortOrder.Ascending;
-                }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                _stationToStationReturnColumnSorter.SortColumn = e.Column;
-                _stationToStationReturnColumnSorter.Order = e.Column == 7 ? SortOrder.Descending : SortOrder.Ascending;
-            }
-
-            // Perform the sort with these new sort options.
-            lvStationToStationReturn.Sort();
         }
 
         private void bClearOcrOutput_Click(object sender, EventArgs e)
@@ -5880,211 +4008,6 @@ namespace RegulatedNoise
         }
 
         /// <summary>
-        /// get the Milkyway
-        /// </summary>
-        public EDMilkyway myMilkyway
-        {
-            get
-            {
-                return _Milkyway;
-            }
-        }
-
-        private void rbSortBy_CheckedChanged(object sender, EventArgs e)
-        {
-            if (((RadioButton)sender).Checked)
-            {
-                switch (((RadioButton)sender).Name)
-                {
-                    case "rbSortBySystem":
-                        Program.Settings.CBSortingSelection = 1;
-                        break;
-                    case "rbSortByStation":
-                        Program.Settings.CBSortingSelection = 2;
-                        break;
-                    case "rbSortByDistance":
-                        Program.Settings.CBSortingSelection = 3;
-                        break;
-                }
-
-                SetupGui();
-            }
-        }
-
-        private void cblastVisitedFirst_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.lastStationCountActive = cblastVisitedFirst.Checked;
-            SetupGui();
-        }
-
-        private void txtlastStationCount_LostFocus(object sender, EventArgs e)
-        {
-            checkLastStationCountInput();
-        }
-
-        private void txtlastStationCount_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Return)
-            { 
-                checkLastStationCountInput();   
-            }
-        }
-
-        private void checkLastStationCountInput()
-        {
-            int value;
-            bool valueOK = false;
-
-            if (int.TryParse(txtlastStationCount.Text, out value))
-            {
-                if (value >= 1 && value <= 99)
-                {
-                    Program.Settings.lastStationCount = value;
-                    valueOK = true;
-                }
-                else
-                    txtlastStationCount.Text = Program.Settings.lastStationCount.ToString();
-            }
-            else
-            {
-                txtlastStationCount.Text = Program.Settings.lastStationCount.ToString();
-            }
-
-            if (valueOK && cblastVisitedFirst.Checked)
-                SetupGui();
-        }
-
-        private void cmbLightYearsInput_LostFocus(object sender, EventArgs e)
-        {
-            checkcbLightYearsInput();
-        }
-
-        private void cmbLightYearsInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Return)
-            { 
-                checkcbLightYearsInput();   
-            }
-        }
-
-        private void cmbLightYears_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            checkcbLightYearsInput();   
-        }
-
-        private void cmbStationToStarInput_LostFocus(object sender, System.EventArgs e)
-        {
-            checkcmbStationToStarInput();
-        }
-
-        private void cmbStationToStar_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            checkcmbStationToStarInput();
-        }
-        private void cmbStationToStarInput_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Return)
-            { 
-                checkcmbStationToStarInput();   
-            }
-        }
-
-        private void cmbMaxRouteDistance_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            cmbMaxRouteDistanceInput();   
-        }
-
-        private void cmbMaxRouteDistance_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Return)
-            { 
-                cmbMaxRouteDistanceInput();   
-            }
-        }
-
-        private void cmbMaxRouteDistance_LostFocus(object sender, System.EventArgs e)
-        {
-            cmbMaxRouteDistanceInput();   
-        }
-
-        private void checkcbLightYearsInput()
-        {
-            int value;
-            bool valueOK = false;
-
-            Debug.Print("1");
-
-            if (int.TryParse(cmbLightYears.Text, out value))
-            {
-                if (value >= 0)
-                {
-                    Program.Settings.lastLightYears = value;
-                    valueOK = true;
-                }
-                else
-                    cmbLightYears.Text = Program.Settings.lastLightYears.ToString();
-            }
-            else
-            {
-                cmbLightYears.Text = Program.Settings.lastLightYears.ToString();
-            }
-
-            if (valueOK && cbLimitLightYears.Checked)
-                SetupGui();
-        }
-
-        private void checkcmbStationToStarInput()
-        {
-            int value;
-            bool valueOK = false;
-
-            Debug.Print("1");
-
-            if (int.TryParse(cmbStationToStar.Text, out value))
-            {
-                if (value >= 0)
-                {
-                    Program.Settings.lastStationToStar = value;
-                    valueOK = true;
-                }
-                else
-                    cmbStationToStar.Text = Program.Settings.lastStationToStar.ToString();
-            }
-            else
-            {
-                cmbStationToStar.Text = Program.Settings.lastStationToStar.ToString();
-            }
-
-            if (valueOK && cbStationToStar.Checked)
-                SetupGui();
-        }
-
-        private void cmbMaxRouteDistanceInput()
-        {
-            int value;
-
-            if (int.TryParse(cmbMaxRouteDistance.Text, out value))
-            {
-                if (value >= 0)
-                {
-                    Program.Settings.lastMaxRouteDistance = value;
-                }
-                else
-                    cmbMaxRouteDistance.Text = Program.Settings.lastMaxRouteDistance.ToString();
-            }
-            else
-            {
-                cmbMaxRouteDistance.Text = Program.Settings.lastMaxRouteDistance.ToString();
-            }
-
-        }
-
-        private void cbPerLightYearRoundTrip_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.PerLightYearRoundTrip = cbPerLightYearRoundTrip.Checked;
-        }
-
-        /// <summary>
         /// starts the filter test
         /// </summary>
         /// <param name="sender"></param>
@@ -6284,7 +4207,8 @@ namespace RegulatedNoise
                     Program.actualCondition.Station = stationName;
                     newLocation = true;
 
-                    List<EDStation> SystemStations = _Milkyway.getStations(systemName);
+                    throw new NotImplementedException();
+                    List<EDStation> SystemStations = null; // _Milkyway.getStations(systemName);
 
                     if((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase)) != null))
                         if (cbAutoAdd_Visited.Checked)
@@ -6317,45 +4241,6 @@ namespace RegulatedNoise
 
         }
 
-        /// <summary>
-        /// copies the systemname of the CmdrLog entry to the clipboard
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void copySystenmameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if(m_RightMouseSelectedLogEvent != null)
-            {
-                 Clipboard.SetText(m_RightMouseSelectedLogEvent.System);
-            }
-        }
-
-        /// <summary>
-        /// gets the reduced selection of station due to lightyear limit and distance to star limit
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        private bool getStationSelection(KeyValuePair<string, List<CsvRow>> x)
-        {
-            return (!cbLimitLightYears.Checked || Distance(StructureHelper.CombinedNameToSystemName(x.Key))) &&
-                   (!cbStationToStar.Checked   || StationDistance(StructureHelper.CombinedNameToSystemName(x.Key), StructureHelper.CombinedNameToStationName(x.Key)));
-
-        }
-
-        private bool getStationSelection(CsvRow x, bool noRestriction=false)
-        {
-            if(noRestriction)
-                return true;
-            else
-                return (!cbLimitLightYears.Checked || Distance(x.SystemName)) &&
-                       (!cbStationToStar.Checked   || StationDistance(x.SystemName, x.StationName));
-        }
-
-        private void label63_Click(object sender, EventArgs e)
-        {
-
-                    }
-
 #region System / Station Tab
 
         /*/////////////////////////////////////////////////////////////////////////////////////////
@@ -6374,8 +4259,9 @@ namespace RegulatedNoise
                 return;
             }
 
-            lblSystemCountTotal.Text    = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Count.ToString();
-            lblStationCountTotal.Text   = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Count.ToString();
+            //throw new NotImplementedException();
+            //lblSystemCountTotal.Text    = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Count.ToString();
+            //lblStationCountTotal.Text   = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Count.ToString();
         }
 
 
@@ -6404,7 +4290,11 @@ namespace RegulatedNoise
             else
             {
                 cmbSystemsAllSystems.SelectedValue = Systemname;
-                m_loadedSystemdata = _Milkyway.getSystem(Systemname);
+
+                MessageBox.Show("TODO");
+                // throw new NotImplementedException();
+                //m_loadedSystemdata = _Milkyway.getSystem(Systemname);
+                m_loadedSystemdata = null;
                 m_SystemIsNew = false;
             }
 
@@ -6449,7 +4339,8 @@ namespace RegulatedNoise
                     cmbStationStations.ReadOnly     = false;
                 }
 
-                List<EDStation> StationsInSystem = _Milkyway.getStations(Systemname);
+                throw new NotImplementedException();
+                List<EDStation> StationsInSystem = null; // _Milkyway.getStations(Systemname);
                 foreach (var Station in StationsInSystem)
                 {
                     cmbStationStations.Items.Add(Station.Name);
@@ -6518,7 +4409,9 @@ namespace RegulatedNoise
             else
             {
                 cmbStationStations.SelectedItem    = Stationname;
-                m_loadedStationdata                 = _Milkyway.getStation(Systemname, Stationname);
+
+                MessageBox.Show("TODO");
+                //m_loadedStationdata                 = _Milkyway.getStation(Systemname, Stationname);
                 m_StationIsNew                      = false;
             }
 
@@ -6564,8 +4457,10 @@ namespace RegulatedNoise
 
                 }
 
-                if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
-                                                                                      (x.SystemId == m_loadedStationdata.SystemId)))
+//                if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
+//                                                                                      (x.SystemId == m_loadedStationdata.SystemId)))
+                MessageBox.Show("TODO");
+                if(false)
                 {
                     txtStationName.ReadOnly = true;
                     lblStationRenameHint.Visible = true;
@@ -6820,7 +4715,9 @@ namespace RegulatedNoise
 
             m_SystemLoadingValues = true;
             this.cmbSystemsAllSystems.BeginUpdate();
-            this.cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
+
+            throw new NotImplementedException();
+            this.cmbSystemsAllSystems.DataSource      = null; //_Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
             this.cmbSystemsAllSystems.ValueMember     = "Name";
             this.cmbSystemsAllSystems.DisplayMember   = "Name";
             this.cmbSystemsAllSystems.EndUpdate();
@@ -6918,7 +4815,8 @@ namespace RegulatedNoise
                 case "txtSystemName":
                     if (m_SystemIsNew)
                     {
-                        EDSystem existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(txtSystemName.Text, StringComparison.InvariantCultureIgnoreCase));
+                        throw new NotImplementedException();
+                        EDSystem existing = null; //_Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(txtSystemName.Text, StringComparison.InvariantCultureIgnoreCase));
                         if (existing != null)
                             if (DateTime.Now.Subtract(m_SystemWarningTime).TotalSeconds > 5)
                             {
@@ -6988,8 +4886,9 @@ namespace RegulatedNoise
                 case "txtStationName":
                     if (m_StationIsNew)
                     {
-                        EDStation existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(txtStationName.Text, StringComparison.InvariantCultureIgnoreCase)) &&
-                                                                                                                (x.SystemId == m_currentStationdata.SystemId));
+                        throw new NotImplementedException();
+                        EDStation existing = null; //_Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(txtStationName.Text, StringComparison.InvariantCultureIgnoreCase)) &&
+                                                   //                                                             (x.SystemId == m_currentStationdata.SystemId));
                         if (existing != null)
                         {
                             if (DateTime.Now.Subtract(m_StationWarningTime).TotalSeconds > 5)
@@ -7117,7 +5016,8 @@ namespace RegulatedNoise
             if (m_SystemIsNew)
             {
                 // adding a new system
-                existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
+                throw new NotImplementedException();
+                existing = null; //_Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (existing != null)
                 {
                     MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -7131,14 +5031,16 @@ namespace RegulatedNoise
             else if(!_oldSystemName.Equals(m_currentSystemdata.Name))
             {
                 // changing system name
-                existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Find(x => x.Name.Equals(_oldSystemName, StringComparison.InvariantCultureIgnoreCase));
+                throw new NotImplementedException();
+                existing = null; //_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Find(x => x.Name.Equals(_oldSystemName, StringComparison.InvariantCultureIgnoreCase));
                 if (existing != null)
                 {
                     MsgBox.Show("It's not allowed to rename a EDDB system", "renaming system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
-                existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
+                throw new NotImplementedException();
+                existing = null; //_Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(m_currentSystemdata.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (existing != null)
                 {
                     MsgBox.Show("A system with the new name's already existing", "renaming system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -7153,8 +5055,9 @@ namespace RegulatedNoise
                 Cursor = Cursors.WaitCursor;
                 if (m_SystemIsNew)
                     _oldSystemName = "";
-                
-                _Milkyway.ChangeAddSystem(m_currentSystemdata, _oldSystemName);
+
+                throw new NotImplementedException();
+                //_Milkyway.ChangeAddSystem(m_currentSystemdata, _oldSystemName);
                 setSystemEditable(false);
 
                 if(newComboBoxRefresh)
@@ -7163,7 +5066,8 @@ namespace RegulatedNoise
                     cmbSystemsAllSystems.BeginUpdate();
 
                     cmbSystemsAllSystems.DataSource      = null;
-                    cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
+                    throw new NotImplementedException();
+                    //cmbSystemsAllSystems.DataSource      = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).OrderBy(x => x.Name).ToList();
                     cmbSystemsAllSystems.ValueMember     = "Name";
                     cmbSystemsAllSystems.DisplayMember   = "Name";
                     cmbSystemsAllSystems.Refresh();
@@ -7188,8 +5092,9 @@ namespace RegulatedNoise
             if (m_StationIsNew)
             {
                 // adding a new Station
-                existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                                                                                              (x.SystemId.Equals(m_currentSystemdata.Id)));
+                throw new NotImplementedException();
+                existing = null; // _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
+                                 //                                                              (x.SystemId.Equals(m_currentSystemdata.Id)));
                 if (existing != null)
                 {
                     MsgBox.Show("A station with this name already exists", "Adding a new station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -7199,16 +5104,18 @@ namespace RegulatedNoise
             else if(!_oldStationName.Equals(m_currentStationdata.Name))
             {
                 // changing Station name
-                existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Find(x => (x.Name.Equals(_oldStationName, StringComparison.InvariantCultureIgnoreCase)) && 
-                                                                                            (x.SystemId.Equals(m_currentSystemdata.Id)));
+                throw new NotImplementedException();
+                existing = null; //_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Find(x => (x.Name.Equals(_oldStationName, StringComparison.InvariantCultureIgnoreCase)) && 
+                                 //                                                           (x.SystemId.Equals(m_currentSystemdata.Id)));
                 if (existing != null)
                 {
                     MsgBox.Show("It's not allowed to rename a EDDB station", "renaming station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
-                existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                                                                                              (x.SystemId.Equals(m_currentSystemdata.Id)));
+                throw new NotImplementedException();
+                existing = null; // _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
+                                 //                                                              (x.SystemId.Equals(m_currentSystemdata.Id)));
                 if (existing != null)
                 {
                     MsgBox.Show("A station with the new name's already existing", "renaming station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -7222,7 +5129,8 @@ namespace RegulatedNoise
                     _oldStationName = "";
 
                 Cursor = Cursors.WaitCursor;
-                _Milkyway.ChangeAddStation(m_currentSystemdata.Name, m_currentStationdata, _oldStationName);
+                throw new NotImplementedException();
+                //_Milkyway.ChangeAddStation(m_currentSystemdata.Name, m_currentStationdata, _oldStationName);
 
                 cmbSystemsAllSystems.ReadOnly   = false;
                 cmbStationStations.ReadOnly     = false;
@@ -7249,7 +5157,9 @@ namespace RegulatedNoise
             if(InpBox.Show("create a new system", "insert the name of the new system", ref newSystemname) == System.Windows.Forms.DialogResult.OK)
             { 
                 
-                EDSystem existing = _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newSystemname, StringComparison.InvariantCultureIgnoreCase)));
+                throw new NotImplementedException();
+                EDSystem existing = null; // _Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newSystemname, StringComparison.InvariantCultureIgnoreCase)));
+
                 if (existing != null)
                 {
                     MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -7294,15 +5204,17 @@ namespace RegulatedNoise
 
             string newStationname = Program.actualCondition.Station;
 
-            EDStation existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
-                                                                                                    (x.SystemId.Equals(m_currentSystemdata.Id)));
+            throw new NotImplementedException();
+            EDStation existing = null; //_Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
+                                   //                                                                 (x.SystemId.Equals(m_currentSystemdata.Id)));
             if (existing != null)
                 newStationname = String.Empty;
 
             if(InpBox.Show("create a new station", "insert the name of the new station", ref newStationname) == System.Windows.Forms.DialogResult.OK)
             { 
-                existing = _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
-                                                                                              (x.SystemId.Equals(m_currentSystemdata.Id)));
+                throw new NotImplementedException();
+                existing = null ; //_Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
+                                  //                                                           (x.SystemId.Equals(m_currentSystemdata.Id)));
 
                 if (existing != null)
                 {
@@ -7384,8 +5296,13 @@ namespace RegulatedNoise
                 txtSystemUpdatedAt.ReadOnly         = true;
 
                 if(enabled)
-                    //EDSystem System = 
-                    if (_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    EDSystem System = null;
+                    //if (_Milkyway.getSystems(EDMilkyway.enDataType.Data_EDDB).Exists(x => x.Name.Equals(m_loadedSystemdata.Name, StringComparison.InvariantCultureIgnoreCase)))
+
+                    throw new NotImplementedException();
+
+                    if(false)
                     {
                         txtSystemName.ReadOnly      = true;
                         lblSystemRenameHint.Visible = true;
@@ -7395,6 +5312,7 @@ namespace RegulatedNoise
                         txtSystemName.ReadOnly      = false;
                         lblSystemRenameHint.Visible = false;
                     }
+                }
                 else
                 {
                     txtSystemName.ReadOnly          = true;
@@ -7444,8 +5362,11 @@ namespace RegulatedNoise
                     lbStationEconomies.Tag = "ReadOnly";
 
                 if(enabled)
-                    if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
-                                                                                           (x.SystemId.Equals(m_currentSystemdata.Id))))
+                {
+                    throw new NotImplementedException();
+                    //if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
+                    //                                                                       (x.SystemId.Equals(m_currentSystemdata.Id))))
+                    if(false)
                     {
                         txtStationName.ReadOnly      = true;
                         lblStationRenameHint.Visible = true;
@@ -7455,6 +5376,7 @@ namespace RegulatedNoise
                         txtStationName.ReadOnly      = false;
                         lblStationRenameHint.Visible = false;
                     }
+                }
                 else
                 {
                     txtStationName.ReadOnly          = true;
@@ -7538,14 +5460,6 @@ namespace RegulatedNoise
             Program.Settings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
             SaveSettings();
             SetupGui();
-        }
-
-        private void cbMaxRouteDistance_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.MaxRouteDistance = cbMaxRouteDistance.Checked;
-            SaveSettings();
-
-            
         }
 
         private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
@@ -7672,10 +5586,9 @@ namespace RegulatedNoise
 
             if(MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
             {
+                throw new NotImplementedException();
+
                 DateTime deadline = DateTime.Now.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
-                StationDirectory = PurgeOldDataFromDirectory(StationDirectory, deadline);
-                CommodityDirectory = PurgeOldDataFromDirectory(CommodityDirectory, deadline);
-                SetupGui();
             }
 
         }
@@ -7974,7 +5887,161 @@ namespace RegulatedNoise
 
         }
 
-    }
+    #region HTML
 
+        private void PopulateNetworkInterfaces()
+        {
+            // from http://stackoverflow.com/questions/9855230/how-to-get-the-network-interface-and-its-right-ipv4-address
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                {
+                    Console.WriteLine(ni.Name);
+                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        {
+                            cbInterfaces.Items.Add(ip.Address);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// Webserver functionality
+        private SimpleWebserver sws = new SimpleWebserver();
+
+        private void bStart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //if (ws == null)
+                //{
+                //    ws = new WebServer((new[] { "http://" + cbInterfaces.SelectedItem.ToString() + ":8080/" }), SendResponse);
+                //    ws.Start(); //  If the service was already started, the call has no effect
+                //    ws.Run();
+                //}
+
+                //sws = new  SimpleWebserver(  WebServer((new[] { "http://" + cbInterfaces.SelectedItem.ToString() + ":8080/" }), SendResponse);
+
+                IPAddress ip = IPAddress.Parse(cbInterfaces.SelectedItem.ToString());
+
+                sws.Start(ip, Int32.Parse(txtWebserverPort.Text) , 5, "", this);
+                //                    = new WebServer((new[] { "http://" + cbInterfaces.SelectedItem.ToString() + ":8080/" }), SendResponse);
+                UpdateUrl();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Error starting webserver", true);
+                _logger.Log(ex.ToString(), true);
+                _logger.Log(ex.Message, true);
+                _logger.Log(ex.StackTrace, true);
+                if (ex.InnerException != null)
+                    _logger.Log(ex.InnerException.ToString(), true);
+                MsgBox.Show(
+                    "Couldn't start webserver.  Maybe something is already using port 8080...?");
+            }
+        }
+        
+        public string GetLvAllCommsItems()
+        {
+            //if (InvokeRequired)
+            //{
+            //    return (string)(Invoke(new EventArgsDelegate(GetLvAllCommsItems)));
+            //}
+
+            //if (StationDirectory.Count == 0)
+            //    return "No data loaded :-(";
+
+            var s = new StringBuilder();
+
+            //string links = "<BR><A style=\"font-size: 14pt\" HREF=\"#lvAllComms\">All Commodities - </A>" +
+            //    "<A style=\"font-size: 14pt\" HREF=\"#lbPrices\">Station - </A>" +
+            //    "<A style=\"font-size: 14pt\" HREF=\"#lbCommodities\">Commodity - </A>" +
+            //        "<A style=\"font-size: 14pt\" HREF=\"#lvStationToStation\">Station-to-Station</A><BR>";
+
+            //s.Append(links);
+
+            //s.Append("<A name=\"lvAllComms\"><P>All Commodities</P>");
+            //s.Append(GetHTMLForListView(lvAllComms));
+
+            //s.Append(links);
+
+            //s.Append("<A name=\"lbPrices\"><P>Station: " + getCmbItemKey(cmbStation.SelectedItem) + "</P>");
+            //s.Append(GetHTMLForListView(lbPrices));
+
+            //s.Append(links);
+
+            //s.Append("<A name=\"lbCommodities\"><P>Commodity: " + cbCommodity.SelectedItem + "</P>");
+            //s.Append(GetHTMLForListView(lbCommodities));
+
+            //s.Append(links);
+
+            //s.Append("<A name=\"lvStationToStation\"><P>Station-to-Station: " + getCmbItemKey(cmbStationToStationFrom.SelectedItem) + " => " + getCmbItemKey(cmbStationToStationTo.SelectedItem) + "</P>");
+            //s.Append(GetHTMLForListView(lvStationToStation));
+
+            //s.Append(links);
+
+            return s.ToString();
+        }
+
+        private string GetHTMLForListView(ListView listViewToDump)
+        {
+            var s = new StringBuilder();
+
+            s.Append("<TABLE style=\"border:1px solid black;border-collapse:collapse;\">");
+
+            var header = new StringBuilder();
+
+            header.Append("<TR>");
+
+            for (int i = 0; i < listViewToDump.Columns.Count; i++)
+            {
+                var style = "style=\"border:1px solid black; font-weight: bold;\"";
+                header.Append("<TD " + style + "><A style=\"color: #" + Program.Settings.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
+            }
+
+            header.Append("</TR>");
+
+            int ctr = 0;
+
+            foreach (ListViewItem item in listViewToDump.Items)
+            {
+                if (ctr % 7 == 0)
+                    s.Append(header);
+
+                s.Append("<TR>");
+
+                for (int i = 0; i < item.SubItems.Count; i++)
+                    s.Append("<TD style=\"border:1px solid black;\">" + item.SubItems[i].Text + "</TD>");
+
+                s.Append("</TR>");
+
+                ctr++;
+            }
+
+            s.Append(header);
+
+            s.Append("</TABLE>");
+            return s.ToString();
+        }
+
+        public string SendResponse(HttpListenerRequest request)
+        {
+            //return string.Format("<HTML><BODY>My web page.<br>{0}<BR>The page you requested was "+request.Url+"</BODY></HTML>", DateTime.Now);
+
+            StringBuilder s = new StringBuilder();
+
+            s.Append("<HTML><BODY><FONT SIZE=\"8\"><FONT FACE=\"arial\">");
+
+            WriteTables(s);
+
+            s.Append("</BODY></HTML>");
+
+            return s.ToString();
+        }
+
+    #endregion
+    }
 
 }

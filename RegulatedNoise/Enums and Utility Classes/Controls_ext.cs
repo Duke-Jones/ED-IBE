@@ -78,6 +78,13 @@ namespace System.Windows.Forms
             get { return TextBox_ro.ForeColor;}
             set { TextBox_ro.ForeColor = value; }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            this.ResumeLayout(false);
+
+        }
     }
 
     public class CheckBox_ro : CheckBox
@@ -245,6 +252,70 @@ namespace System.Windows.Forms
                  ((NumericUpDown)this).TextAlign    = value;
                 this.TextBox_ro.TextAlign           = value;
             }
+        }
+    }
+
+    public class TextBoxInt32 : TextBox
+    {
+        [System.ComponentModel.Browsable(true)]
+        public int? MinValue { get; set; }
+
+        [System.ComponentModel.Browsable(true)]
+        public int? MaxValue { get; set; }
+
+        /// <summary>
+        ///  checks if the value is within its borders
+        /// </summary>
+        /// <returns></returns>
+        public Boolean checkValue()
+        {
+            Boolean isOk = true;
+            Int32 IntValue = 0;
+
+            if(Int32.TryParse(this.Text, out IntValue))
+            {
+                if(MinValue.HasValue && (IntValue < MinValue))
+                    isOk = false;
+
+                if(MaxValue.HasValue && (IntValue > MaxValue))
+                    isOk = false;
+            }
+            else
+                isOk = false;
+            
+            return isOk;
+        }
+    }
+
+    public class ComboBoxInt32 : ComboBox
+    {
+        [System.ComponentModel.Browsable(true)]
+        public int? MinValue { get; set; }
+
+        [System.ComponentModel.Browsable(true)]
+        public int? MaxValue { get; set; }
+
+        /// <summary>
+        ///  checks if the value is within its borders
+        /// </summary>
+        /// <returns></returns>
+        public Boolean checkValue()
+        {
+            Boolean isOk = true;
+            Int32 IntValue = 0;
+
+            if(Int32.TryParse(this.Text, out IntValue))
+            {
+                if(MinValue.HasValue && (IntValue < MinValue))
+                    isOk = false;
+
+                if(MaxValue.HasValue && (IntValue > MaxValue))
+                    isOk = false;
+            }
+            else
+                isOk = false;
+            
+            return isOk;
         }
     }
 }

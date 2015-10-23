@@ -215,7 +215,15 @@ namespace RegulatedNoise.SQL
                     tempConnString.Append("Allow User Variables=");
                     tempConnString.Append("True");
                 }
-                
+
+                if (true) 
+                {
+                    if (tempConnString.Length > 0)
+                        tempConnString.Append(";");
+
+                    tempConnString.Append("UseAffectedRows=");
+                    tempConnString.Append("True");
+                }
 
                 m_Connection.ConnectionString = tempConnString.ToString();
                 m_Connection.Open();
@@ -303,6 +311,7 @@ namespace RegulatedNoise.SQL
 
                 retValue = Command.ExecuteNonQuery();
 
+                System.Diagnostics.Debug.Print("SQL:<" + CommandText + ">");
             }
             catch (Exception ex) {
                 MonitorExit(this);
@@ -812,7 +821,7 @@ namespace RegulatedNoise.SQL
         /// <param name="AllowEmptyValue">True: Leerstring ist erlaubt, False: Leerstring wird durch DefaultValue ersetzt</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public string getIniValue(string Group, string Key, string DefaultValue = "", bool AllowEmptyValue = true, bool WriteEmptyValue = false)
+        public string getIniValue(string Group, string Key, string DefaultValue = "", bool AllowEmptyValue = true)
         {
 	        string functionReturnValue = null;
 
@@ -839,7 +848,7 @@ namespace RegulatedNoise.SQL
 			        // Leerwert nicht erlaubt aber kein Wert vorhanden
 			        throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (1): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")>");
 		        }
-                else if(WriteEmptyValue)
+                else if(!AllowEmptyValue)
                 {
 		            // Defaultwert eintragen
 		            sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(DefaultValue) + ")";
@@ -872,12 +881,13 @@ namespace RegulatedNoise.SQL
         /// <param name="Group">Gruppe des zu schreibenden Datums</param>
         /// <param name="Key">Key des zu schreibenden Datums</param>
         /// <param name="Value">zu setzender Wert</param>
-        /// <remarks></remarks>
-        public void setIniValue(string Group, string Key, string Value)
+        /// <returns>"false" if value was not changed (same value as before); true if the value was changed</returns>
+        public Boolean setIniValue(string Group, string Key, string Value)
         {
 
 	        DataTable Data = new DataTable();
 	        string sqlString = null;
+            Boolean retValue  = false;
 
 	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 
@@ -888,13 +898,15 @@ namespace RegulatedNoise.SQL
 
 		        // Wert eintragen
 		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(Value) + ")";
-		        Execute(sqlString);
+		        retValue = (Execute(sqlString) != 0);
+
 	        } else {
 		        // Wert bereits vorhanden
 		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAString(Value) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
-		        Execute(sqlString);
+		        retValue = (Execute(sqlString) != 0);
 	        }
 
+            return retValue;
         }
 
         /// <summary>
