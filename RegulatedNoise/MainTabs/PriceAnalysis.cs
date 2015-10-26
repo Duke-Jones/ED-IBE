@@ -11,8 +11,9 @@ using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using RegulatedNoise.SQL;
 using RegulatedNoise.SQL.Datasets;
+using System.Collections.Generic;
 
-namespace RegulatedNoise.Price_Analysis
+namespace RegulatedNoise.MTPriceAnalysis
 {
     public class PriceAnalysis
     {
@@ -49,6 +50,13 @@ namespace RegulatedNoise.Price_Analysis
 #endregion
 
         private const String table = "tbLog";
+
+        public enum enVisitedFilter
+        {
+            showAll                 = 0,
+            showOnlyVistedSystems   = 1,
+            showOnlyVistedStations  = 2
+        }
 
         /// <summary>
         /// main selection string for the data from the database
@@ -176,7 +184,7 @@ namespace RegulatedNoise.Price_Analysis
         /// <param name="Distance"></param>
         /// <param name="DistanceToStar"></param>
         /// <param name="minLandingPadSize"></param>
-        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize)
+        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize, enVisitedFilter VisitedFilter)
         {
             String sqlString;
             DataTable currentSystem = new DataTable();
@@ -197,16 +205,37 @@ namespace RegulatedNoise.Price_Analysis
                 //            currentSystem.Rows[0]["y"].ToString(), 
                 //            currentSystem.Rows[0]["z"].ToString());
 
+                sqlString = "delete from tmFilteredStations;";
+                Program.DBCon.Execute(sqlString);
+
                 sqlString = String.Format(
-                            "delete from tmFilteredStations;" +
-                            "insert into tmFilteredStations(System_id, Station_id, Distance) " +
-                            "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance" + 
+                            "insert into tmFilteredStations(System_id, Station_id, Distance, x, y, z) " +
+                            "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance, Sy.x, Sy.x, Sy.z" + 
                             "   from tbSystems Sy, tbStations St" +
                             "   where Sy.ID = St.System_id",
                             currentSystem.Rows[0]["x"].ToString(), 
                             currentSystem.Rows[0]["y"].ToString(), 
                             currentSystem.Rows[0]["z"].ToString());
 
+                if(true)                            
+                {
+                    // filter only stations with commodities
+                    sqlString = sqlString + 
+                            "   and exists (select CD.Station_ID from tbCommodityData CD" +
+			                "                 where St.ID = CD.Station_ID" +
+			                "                 group by STation_ID)";
+                }
+
+                if(VisitedFilter == enVisitedFilter.showOnlyVistedStations)                            
+                {
+                    // filter only visited stations
+                    sqlString = sqlString + "   and St.visited <> 0";
+                }
+                else if(VisitedFilter == enVisitedFilter.showOnlyVistedSystems)
+                { 
+                    // filter only visited systems
+                    sqlString = sqlString + "   and Sy.visited <> 0";
+                }
 
                 if(Distance != null)                            
                 {
@@ -217,7 +246,6 @@ namespace RegulatedNoise.Price_Analysis
                             currentSystem.Rows[0]["y"].ToString(), 
                             currentSystem.Rows[0]["z"].ToString(), 
                             ((Int32)Distance).ToString());
-
                 }
                             
                 if(DistanceToStar != null)                            
@@ -257,6 +285,9 @@ namespace RegulatedNoise.Price_Analysis
 
             try
             {
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
                 if(OnlyTradedCommodities)
                 {
                     // only inquired/offered commodities
@@ -380,13 +411,221 @@ namespace RegulatedNoise.Price_Analysis
                     }
                 }
 
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
                 return Result;
             }
             catch (Exception ex)
             {
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
                 throw new Exception("Error while getting the best market prices", ex);
             }
         }
+
+        public void calculateTradingRoutes(Int32 maxTradingDistance)
+        {
+            String sqlBaseString;
+            String sqlString;
+            DataTable Data           = new DataTable();
+            var tmNeighbourstations  = new dsEliteDB.tmneighbourstationsDataTable();
+            var tmFilteredStations  = new dsEliteDB.tmfilteredstationsDataTable();
+            DataRow BuyMin;
+            DataRow SellMax;
+            DataRow lastCommodity;
+            HashSet<String> Calculated = new HashSet<String>();
+            Dictionary<Int32, List<DataRow>> CollectedData;
+            Int32 StationCount;
+            Int32 SystemCount;
+            Int32 Current = 0;
+            ProgressView PV;
+            Boolean Cancelled = false;
+
+            try
+            {
+
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
+                getFilteredSystemAndStationCount(out StationCount, out SystemCount);
+
+                // get the results for a cancellable loop
+                sqlString = "select * from tmfilteredstations" +
+                            " order by Station_ID";
+                Program.DBCon.Execute(sqlString, tmFilteredStations);
+
+                // delete old content
+                sqlString = "delete from tmNeighbourstations;";
+                Program.DBCon.Execute(sqlString);
+                    
+                sqlBaseString = "insert into tmNeighbourstations(System_ID_From, Station_ID_From, Distance_From," +
+                                "                                System_ID_To, Station_ID_To, Distance_To, " +
+                                "                                Distance_Between) " +
+                                " select BS.System_ID As System_ID_From, BS.Station_ID As Station_ID_From, BS.Distance As Distance_From," +
+                                "        FS.System_ID As System_ID_To, FS.Station_ID As Station_ID_To, FS.Distance As Distance_To," + 
+                                "        sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) as Distance_Between" +
+                                " from (select * from tmFilteredStations  where Station_ID = {0} order by System_ID, Station_ID) BS" + 
+                                "                                                                join tmfilteredstations FS on (sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) <=  {1})" +
+                                "                                                                join tbStations St on FS.Station_ID = St.ID" +
+                                "                                                                join tbSystems Sy on St.System_ID  = Sy.ID" +
+                                " having  BS.Station_ID <> FS.Station_ID;";
+
+                PV = new ProgressView();
+                Current = 0;
+
+                PV.progressStart("determine neigbour-systems in range of "+ maxTradingDistance + " ly of " + SystemCount + " selected systems...");
+
+                foreach (dsEliteDB.tmfilteredstationsRow CurrentStation in tmFilteredStations)
+                {
+                    // preparing a table with the stations from "tmFilteredStations" and all 
+                    // their neighbour stations who are not further away than the max trading distance
+
+                    sqlString = String.Format(sqlBaseString, CurrentStation.Station_id, maxTradingDistance);
+                    Program.DBCon.Execute(sqlString);
+                        
+                    Current += 1;
+                    PV.progressUpdate(Current, tmFilteredStations.Rows.Count);
+
+                    if(PV.Cancelled)
+                    {
+                        Cancelled = true;
+                        break;
+                    }
+                }
+
+                PV.progressStop();
+
+                
+                if(!Cancelled)
+                {
+                    // get the results for a cancellable loop
+                    sqlString = "select * from tmNeighbourstations" +
+                                " order by Station_ID_From";
+                    Program.DBCon.Execute(sqlString, tmNeighbourstations);
+
+                    sqlBaseString = "select CD1.station_ID As Station1, CD2.station_ID As Station2, CD1.commodity_id," +
+                                    " 	   if((nullif(CD2.Sell,0) - nullif(CD1.Buy,0)) > 0, (nullif(CD2.Sell,0) - nullif(CD1.Buy,0)), null) As Forward," + 
+                                    "        if((nullif(CD1.Sell,0) - nullif(CD2.Buy,0)) > 0, (nullif(CD1.Sell,0) - nullif(CD2.Buy,0)), null) As Back" + 
+                                    " 	from tbCommodityData CD1 join (" +
+                                    "                                    select * from tmNeighbourstations N, tbCommodityData CD3" + 
+                                    "                                       where N.Station_ID_To   = CD3.station_id" +
+                                    "                                       and   N.Station_ID_From = {0}" +
+                                    " 								  ) CD2" +
+                                    "             on  (CD1.commodity_id = CD2.commodity_id)" +
+                                    "             and (CD1.station_id   = {0})" +
+                                    "             join" + 
+                                    "        		(select CD1.commodity_id, max((nullif(CD2.Sell,0) - nullif(CD1.Buy,0))) As Forward, max((nullif(CD1.Sell,0) - nullif(CD2.Buy,0))) As Back" +
+                                    " 			      from tbCommodityData CD1 join (" +
+                                    " 										   select * from tmNeighbourstations N, tbCommodityData CD3" + 
+                                    " 											  where N.Station_ID_To   = CD3.station_id" +
+                                    " 											  and   N.Station_ID_From = 16544" +
+                                    " 										  ) CD2" +
+                                    " 					on  (CD1.commodity_id = CD2.commodity_id)" +
+                                    " 					and (CD1.station_id   = {0})" +
+                                    "          		group by CD1.commodity_id) XP on CD1.Commodity_id  = XP.Commodity_id" +
+                                    "                                                  and (   (nullif(CD2.Sell,0) - nullif(CD1.Buy,0))      = XP.Forward" +
+                                    "                                                       or (nullif(CD1.Sell,0) - nullif(CD2.Buy,0))      = XP.Back)" +
+                                    " having ((Forward Is Not null) or (Back Is Not null))";
+ 
+
+
+                    //sqlString = "select count(*) As Count from tmFilteredStations";
+                    //Program.DBCon.Execute(sqlString, Data);
+
+                
+                    Int32 DataFound = 0;
+                    Current = 0;
+                    Calculated.Clear();
+
+                    PV = new ProgressView();
+
+                    PV.progressStart("Processing data of " + StationCount + " stations from " + SystemCount + " systems (" + tmNeighbourstations.Count + " routes)...");
+
+                    foreach(dsEliteDB.tmneighbourstationsRow StartStation in tmNeighbourstations)
+                    {
+                        Boolean isNew = false;
+
+                        // first check if we've already calculated all data between these station
+                        if(StartStation.System_ID_From < StartStation.System_ID_To)
+                            isNew = Calculated.Add(StartStation.System_ID_From.ToString() + "|" + StartStation.System_ID_To.ToString());
+                        else
+                            isNew = Calculated.Add(StartStation.System_ID_To.ToString() + "|" + StartStation.System_ID_From.ToString());
+
+                        if(isNew)
+                        {
+                            // get the trading data 
+                            sqlString = String.Format(sqlBaseString, StartStation.System_ID_From);
+
+                            if(Program.DBCon.Execute(sqlString, Data) > 0)
+                            {
+                                //Debug.Print("got something");
+                                DataFound += 1;
+                            }
+
+                            //foreach (DataRow Profit in Data.AsEnumerable)
+                            //{
+                            
+                            //}
+                        }
+
+                        Current += 1;
+
+                        PV.progressUpdate(Current,  tmNeighbourstations.Rows.Count);
+
+                        if(PV.Cancelled)
+                        {
+                            Cancelled = true;
+                            break;
+                        }
+                    }
+
+                    PV.progressStop();
+
+                }
+
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+	        }
+	        catch (Exception ex)
+	        {
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+		        throw new Exception("Error while calculating possible trading routes", ex);
+	        }
+        }
+
+        /// <summary>
+        /// gets the number of filtered systems and stations from the table "tmFilteredStations"
+        /// </summary>
+        /// <param name="StationCount"></param>
+        /// <param name="SystemCount"></param>
+        public void getFilteredSystemAndStationCount(out Int32 StationCount, out Int32 SystemCount)
+        {
+            DataTable Data = new DataTable();
+            String sqlString;
+
+            try
+            {
+                // get amount of data for viewing
+                sqlString = "select count(distinct(System_id)) As Systems, count(*) As Stations" +
+                            " from tmFilteredStations";
+                Program.DBCon.Execute(sqlString, Data);
+
+                SystemCount  = (Int32)(Int64)Data.Rows[0]["Systems"];
+                StationCount = (Int32)(Int64)Data.Rows[0]["Stations"];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting the number of filtered systems and stations", ex);
+            }
+        }
+
+
+
+
+
+
+
     }
 
 #region outdated 

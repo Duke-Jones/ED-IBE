@@ -733,6 +733,9 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmFilteredStations` (
   `System_id` INT NOT NULL COMMENT '',
   `Station_id` INT NOT NULL COMMENT '',
   `Distance` DOUBLE NULL COMMENT '',
+  `x` DOUBLE NULL COMMENT '',
+  `y` DOUBLE NULL COMMENT '',
+  `z` DOUBLE NULL COMMENT '',
   PRIMARY KEY (`System_id`, `Station_id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -758,6 +761,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPA_AllCommodities` (
   `Sell_Distance` DOUBLE NULL COMMENT '',
   `Sell_Timestamp` DATETIME NULL COMMENT '',
   PRIMARY KEY (`CommodityID`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmNeighbourStations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmNeighbourStations` (
+  `System_ID_From` INT NULL COMMENT '',
+  `Station_ID_From` INT NOT NULL COMMENT '',
+  `Distance_From` DOUBLE NULL COMMENT '',
+  `System_ID_To` INT NULL COMMENT '',
+  `Station_ID_To` INT NOT NULL COMMENT '',
+  `Distance_To` DOUBLE NULL COMMENT '',
+  `Distance_Between` DOUBLE NULL COMMENT '',
+  PRIMARY KEY (`Station_ID_From`, `Station_ID_To`)  COMMENT '')
 ENGINE = InnoDB;
 
 USE `Elite_DB` ;

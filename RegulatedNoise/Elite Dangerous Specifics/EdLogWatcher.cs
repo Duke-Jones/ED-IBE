@@ -25,7 +25,7 @@ namespace RegulatedNoise
             //Im mostly pointing at "scanLogfileForLastVisitedSystem)
 
             _edLogWatcherBackgroundWorker.DoWork += _edLogWatcherBackgroundWorker_DoWork;
-            var path = Path.Combine(Program.Settings.GamePath, "Logs"); //new file might be created after this is set!
+            var path = Path.Combine(Program.Settings_old.GamePath, "Logs"); //new file might be created after this is set!
 
             //Set logPath so its not empty on start
             var newestLog = getNewestLogfile(path);

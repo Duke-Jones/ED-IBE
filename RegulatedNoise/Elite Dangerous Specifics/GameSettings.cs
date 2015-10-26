@@ -46,7 +46,7 @@ namespace RegulatedNoise
 
                 if (setLog == DialogResult.Yes)
                 {
-                    var appconfig = Path.Combine(Program.Settings.GamePath, "AppConfig.xml");
+                    var appconfig = Path.Combine(Program.Settings_old.GamePath, "AppConfig.xml");
 
                     //Make backup
                     File.Copy(appconfig, appconfig+".bak", true);
@@ -87,7 +87,7 @@ namespace RegulatedNoise
             AppConfig locAppConfig;
 
             DialogResult MBResult = DialogResult.Ignore;
-            string configFile = Path.Combine(Program.Settings.GamePath, "AppConfig.xml");
+            string configFile = Path.Combine(Program.Settings_old.GamePath, "AppConfig.xml");
             XmlSerializer serializer; 
 
             do{
@@ -134,7 +134,7 @@ namespace RegulatedNoise
             DialogResult MBResult = DialogResult.Ignore;
             EdDisplayConfig locDisplay;
 
-            var configFile = Path.Combine(Program.Settings.ProductAppData, "Graphics" ,"DisplaySettings.xml");
+            var configFile = Path.Combine(Program.Settings_old.ProductAppData, "Graphics" ,"DisplaySettings.xml");
             if (!File.Exists(configFile))
             {
                 return;
@@ -186,7 +186,7 @@ namespace RegulatedNoise
         private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();
         void WatcherDisplaySettings()
         {
-            var path = Path.Combine(Program.Settings.ProductAppData, "Graphics");
+            var path = Path.Combine(Program.Settings_old.ProductAppData, "Graphics");
             if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "DisplaySettings.xml")))
                 return;
 
@@ -200,7 +200,7 @@ namespace RegulatedNoise
         private readonly FileSystemWatcher _appdataWatcher = new FileSystemWatcher();
         void WatcherAppDataSettings()
         {
-            _appdataWatcher.Path = Program.Settings.GamePath;
+            _appdataWatcher.Path = Program.Settings_old.GamePath;
             _appdataWatcher.Filter = "AppConfig.xml";
             _appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
             _appdataWatcher.Changed += AppData_Changed;

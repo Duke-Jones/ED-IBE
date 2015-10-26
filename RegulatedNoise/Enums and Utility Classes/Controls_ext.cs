@@ -287,6 +287,49 @@ namespace System.Windows.Forms
         }
     }
 
+    public class TextBoxDouble : TextBox
+    {
+        [System.ComponentModel.Browsable(true)]
+        public Double? MinValue { get; set; }
+
+        [System.ComponentModel.Browsable(true)]
+        public Double? MaxValue { get; set; }
+
+        [System.ComponentModel.Browsable(true)]
+        public int? Digits { get; set; }
+
+        /// <summary>
+        ///  checks if the value is within its borders
+        /// </summary>
+        /// <returns></returns>
+        public Boolean checkValue()
+        {
+            Boolean isOk = true;
+            Double DoubleValue = 0;
+
+            if(Double.TryParse(this.Text, out DoubleValue))
+            {
+                if(Digits != null)
+                { 
+                    DoubleValue = Math.Truncate(DoubleValue * (Double)Digits) / (Double)Digits;
+                    this.Text = DoubleValue.ToString(String.Format("F{0}", Digits));
+                }
+
+                if(MinValue.HasValue && (DoubleValue < MinValue))
+                    isOk = false;
+
+                if(MaxValue.HasValue && (DoubleValue > MaxValue))
+                    isOk = false;
+            }
+            else
+                isOk = false;
+            
+            return isOk;
+        }
+
+
+    }
+
     public class ComboBoxInt32 : ComboBox
     {
         [System.ComponentModel.Browsable(true)]

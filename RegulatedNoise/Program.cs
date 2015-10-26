@@ -12,8 +12,9 @@ using System.Xml.Serialization;
 using RegulatedNoise.EDDB_Data;
 using RegulatedNoise.Web;
 using RegulatedNoise.SQL;
-using RegulatedNoise.Commander_s_Log;
-using RegulatedNoise.Price_Analysis;
+using RegulatedNoise.MTCommandersLog;
+using RegulatedNoise.MTPriceAnalysis;
+using RegulatedNoise.MTSettings;
 
 namespace RegulatedNoise
 {
@@ -137,8 +138,9 @@ namespace RegulatedNoise
 
         public static CompanionInterface                CompanionIO;
         public static DBConnector                       DBCon;
-        public static RegulatedNoiseSettings            Settings;
+        public static RegulatedNoiseSettings            Settings_old;
         private static DBProcess                        EliteDBProcess;
+        public static Settings                          Settings;
         public static CommandersLog                     CommandersLog;
         public static PriceAnalysis                     PriceAnalysis;
         public static EliteDBIO                         Data;
@@ -156,16 +158,16 @@ namespace RegulatedNoise
                 if(!m_initDone)
                 { 
                     // loading settings from file
-                    Settings = RegulatedNoiseSettings.LoadSettings();
+                    Settings_old = RegulatedNoiseSettings.LoadSettings();
 
 
                     // starting database process (if not running)
                     DBProcess.DBProcessParams newProcessParams = new DBProcess.DBProcessParams() { };
-                    newProcessParams.Commandline                = Settings.SQL_Commandline;    
-                    newProcessParams.Commandargs                = Settings.SQL_CommandArgs;
-                    newProcessParams.Workingdirectory           = Settings.SQL_Workingdirectory;
-                    newProcessParams.Port                       = Settings.SQL_Port;
-                    newProcessParams.DBStartTimeout             = Settings.DBStartTimeout;
+                    newProcessParams.Commandline                = Settings_old.SQL_Commandline;    
+                    newProcessParams.Commandargs                = Settings_old.SQL_CommandArgs;
+                    newProcessParams.Workingdirectory           = Settings_old.SQL_Workingdirectory;
+                    newProcessParams.Port                       = Settings_old.SQL_Port;
+                    newProcessParams.DBStartTimeout             = Settings_old.DBStartTimeout;
                 
                     EliteDBProcess                              = new DBProcess(newProcessParams);
 
@@ -173,14 +175,14 @@ namespace RegulatedNoise
                     // connecting to the database
                     DBConnector.ConnectionParams newConnectionParams = new DBConnector.ConnectionParams() { };
 
-                    newConnectionParams.Name                    = Settings.SQL_Name;    
-                    newConnectionParams.Server                  = Settings.SQL_Server;
-                    newConnectionParams.Database                = Settings.SQL_Database;
-                    newConnectionParams.User                    = Settings.SQL_User;
-                    newConnectionParams.Pass                    = Settings.SQL_Pass;
-                    newConnectionParams.ConnectTimeout          = Settings.SQL_TimeOut;
-                    newConnectionParams.StayAlive               = Settings.SQL_StayAlive;
-                    newConnectionParams.TimeOut                 = Settings.SQL_ConnectTimeout;
+                    newConnectionParams.Name                    = Settings_old.SQL_Name;    
+                    newConnectionParams.Server                  = Settings_old.SQL_Server;
+                    newConnectionParams.Database                = Settings_old.SQL_Database;
+                    newConnectionParams.User                    = Settings_old.SQL_User;
+                    newConnectionParams.Pass                    = Settings_old.SQL_Pass;
+                    newConnectionParams.ConnectTimeout          = Settings_old.SQL_TimeOut;
+                    newConnectionParams.StayAlive               = Settings_old.SQL_StayAlive;
+                    newConnectionParams.TimeOut                 = Settings_old.SQL_ConnectTimeout;
 
                     DBCon                                       = new DBConnector(newConnectionParams);
 
@@ -189,6 +191,10 @@ namespace RegulatedNoise
                     // preprare main data object
                     Data                                        = new RegulatedNoise.SQL.EliteDBIO();
                     Data.PrepareBaseTables();
+
+                    // prepare settings
+                    Settings                                    = new Settings();
+                    Settings.BaseData                           = Data.BaseData;
 
                     // prepare commanders log 
                     CommandersLog                               = new CommandersLog();

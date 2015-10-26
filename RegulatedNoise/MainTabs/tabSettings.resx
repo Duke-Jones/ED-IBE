@@ -117,4 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label50.Text" xml:space="preserve">
+    <value>The level to which (from black=0) colors are still interpreted as background ( black). Anything beyond that is interpreted as text. When gaps in the letters and numbers *) you should put down the level a bit. If numbers or letters are connected by bridges pixels *) , the level should be set slightly higher.
+
+*) see the graphics in "Filter-Test"</value>
+  </data>
+  <data name="label52.Text" xml:space="preserve">
+    <value>In order to reduce the recognition time you can set a threshold quantity. The areas on which less dark pixels (= text) to see are as specified in the threshold will be completely ignored in the recognition. The threshold value should be greater than the number of pixels of a "-" be but also smaller than number of pixel number of a "1" (because this is the digit with the fewest number of pixels in it).
+So all "-" and less are ignored , all "1" and other digits are detected.</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>68</value>
+  </metadata>
 </root>

@@ -101,7 +101,7 @@ namespace RegulatedNoise
             _bTrimmed_4_View = (Bitmap)(_bTrimmed_4_OCR.Clone());
 
             // set all dark colors to black - this removes all crap
-            _bTrimmed_4_OCR = RNGraphics.changeColour(_bTrimmed_4_OCR, Color.Black, Color.Black, Program.Settings.GUIColorCutoffLevel , RNGraphics.enPixelCompare.pc_RGB_all);
+            _bTrimmed_4_OCR = RNGraphics.changeColour(_bTrimmed_4_OCR, Color.Black, Color.Black, Program.Settings_old.GUIColorCutoffLevel , RNGraphics.enPixelCompare.pc_RGB_all);
 
             // find automatically the textlines in the commodity area 
             var textRowLocations = new List<Tuple<int, int>>();
@@ -137,10 +137,10 @@ namespace RegulatedNoise
                                               _calibrationPoints[1].Y  - _calibrationPoints[0].Y);
 
             // RNGraphics.Crop image to the header area and preprocess for OCR
-            _bTrimmedHeader = RNGraphics.PreprocessScreenshot(RNGraphics.Crop(_bOriginalClone, trim_4_Header),1, Program.Settings.GUIColorCutoffLevel);
+            _bTrimmedHeader = RNGraphics.PreprocessScreenshot(RNGraphics.Crop(_bOriginalClone, trim_4_Header),1, Program.Settings_old.GUIColorCutoffLevel);
 
             // now process screenshot for OCR and Elitebrainerous 
-            _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Program.Settings.GUIColorCutoffLevel);
+            _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Program.Settings_old.GUIColorCutoffLevel);
 
             // show preprocessed parts on the GUI
             _callingForm.UpdateTrimmedImage(_bTrimmed_4_OCR, _bTrimmedHeader);
@@ -174,7 +174,7 @@ namespace RegulatedNoise
         public void PerformOcr(List<Tuple<int, int>> textRowLocations)
         {
             int DarkPixels;
-            var engine = new TesseractEngine(@"./tessdata", Program.Settings.TraineddataFile, EngineMode.Default);
+            var engine = new TesseractEngine(@"./tessdata", Program.Settings_old.TraineddataFile, EngineMode.Default);
             engine.DefaultPageSegMode = PageSegMode.SingleLine;
 
             string Stationname_OCR;
@@ -300,8 +300,9 @@ namespace RegulatedNoise
                     width = width - fudgeFactor;
 
                     DarkPixels = 0;
-
-                    if (_callingForm.cbCheckAOne.Checked)
+                    
+                    
+                    if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
                     {
                         if (PixelTest == null)
                             PixelTest = new EBPixeltest();
@@ -313,7 +314,7 @@ namespace RegulatedNoise
                             // check how much dark pixels are on the bitmap
                             for (int i = 0; i < brainerousOut.Height; i++)
                                 for (int j = 0; j < brainerousOut.Width; j++)
-                                    if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.Settings.EBPixelThreshold)
+                                    if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.Settings_old.EBPixelThreshold)
                                         DarkPixels++;
 
                             PixelTest.addPicture(brainerousOut, DarkPixels);
@@ -330,17 +331,17 @@ namespace RegulatedNoise
                         {   //If it's a numeric column write it out for Brainerous to process later
                             var brainerousOut = RNGraphics.Crop(_bTrimmed_4_OCR, new Rectangle(left, startRow, width, heightRow));
 
-                            if (Program.Settings.EBPixelAmount > 0)
+                            if (Program.Settings_old.EBPixelAmount > 0)
                             {
                                 // check how much dark pixels are on the bitmap -> we process only bitmaps 
                                 // with something on it (minimum one digit supposed, a "1" hat about 25 pixels in default 1920x1200)
                                 for (int i = 0; i < brainerousOut.Height; i++)
                                     for (int j = 0; j < brainerousOut.Width; j++)
-                                        if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.Settings.EBPixelThreshold)
+                                        if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.Settings_old.EBPixelThreshold)
                                             DarkPixels++;
                             }
 
-                            if (DarkPixels >= Program.Settings.EBPixelAmount)
+                            if (DarkPixels >= Program.Settings_old.EBPixelAmount)
                                 brainerousOut.Save("./Brainerous/images/" + bitmapCtr + ".png");
 
                             bitmapCtr++;
@@ -412,7 +413,7 @@ namespace RegulatedNoise
                 rowCtr++;
             }
 
-            if (_callingForm.cbCheckAOne.Checked)
+            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
             {
                 PixelTest.StartModal(_callingForm);
 
@@ -493,9 +494,9 @@ namespace RegulatedNoise
             _bOriginalClone.Dispose();
             engine.Dispose();
 
-            if (_callingForm.cbCheckAOne.Checked)
+            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
             {
-                _callingForm.setCheckbox(_callingForm.cbCheckAOne, false);
+                Program.DBCon.setIniValue(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString());
                 Form1.InstanceObject.clearOcrOutput();
             }
             else

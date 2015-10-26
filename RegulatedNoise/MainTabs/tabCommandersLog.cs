@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using RegulatedNoise.SQL;
 using System.Diagnostics;
 using RegulatedNoise.SQL.Datasets;
-namespace RegulatedNoise.Commander_s_Log
+namespace RegulatedNoise.MTCommandersLog
 {
     public partial class tabCommandersLog : UserControl
     {
@@ -446,7 +446,7 @@ namespace RegulatedNoise.Commander_s_Log
 
         private void setColumns(ListView currentListView)
         {
-            List<ColumnData> currentData = Program.Settings.ListViewColumnData[currentListView.Name];
+            List<ColumnData> currentData = Program.Settings_old.ListViewColumnData[currentListView.Name];
 
             switch (currentListView.Name)
             {
@@ -482,7 +482,7 @@ namespace RegulatedNoise.Commander_s_Log
 
         private void saveColumns(ListView currentListView)
         {
-            List<ColumnData> currentData = Program.Settings.ListViewColumnData[currentListView.Name];
+            List<ColumnData> currentData = Program.Settings_old.ListViewColumnData[currentListView.Name];
 
             foreach (ColumnHeader currentHeader in currentListView.Columns)
             {

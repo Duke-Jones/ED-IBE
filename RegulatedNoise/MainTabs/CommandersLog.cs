@@ -12,7 +12,7 @@ using System.Diagnostics;
 using RegulatedNoise.SQL;
 using RegulatedNoise.SQL.Datasets;
 
-namespace RegulatedNoise.Commander_s_Log
+namespace RegulatedNoise.MTCommandersLog
 {
     public class CommandersLog
     {

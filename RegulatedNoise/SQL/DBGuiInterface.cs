@@ -68,9 +68,17 @@ namespace RegulatedNoise.SQL
                         if(Parts != null)
                             retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
                     }
-                    else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)))
+                    else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)) || (sender.GetType() == typeof(TextBoxDouble)))
                     {
                         var cbSender = (TextBox)sender;
+                        var Parts    = splitTag(cbSender.Tag);    
+
+                        if(Parts != null)
+                            retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                    }
+                    else if(sender.GetType() == typeof(NumericUpDown))
+                    {
+                        var cbSender = (NumericUpDown)sender;
                         var Parts    = splitTag(cbSender.Tag);    
 
                         if(Parts != null)
@@ -180,9 +188,21 @@ namespace RegulatedNoise.SQL
                         m_currentLoadingObject = null;
                     }
                 }
-                else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)))
+                else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)) || (sender.GetType() == typeof(TextBoxDouble)))
                 {
                     var cbSender = (TextBox)sender;
+                    var Parts    = splitTag(cbSender.Tag);    
+
+                    if(Parts != null)
+                    {
+                        m_currentLoadingObject = cbSender;
+                        cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        m_currentLoadingObject = null;
+                    }
+                }
+                else if(sender.GetType() == typeof(NumericUpDown))
+                {
+                    var cbSender = (NumericUpDown)sender;
                     var Parts    = splitTag(cbSender.Tag);    
 
                     if(Parts != null)

@@ -26,9 +26,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using CodeProject.Dialog;
 using RegulatedNoise.SQL;
-using RegulatedNoise.Commander_s_Log;
-using RegulatedNoise.Price_Analysis;
-
+using RegulatedNoise.MTCommandersLog;
+using RegulatedNoise.MTPriceAnalysis;
+using RegulatedNoise.MTSettings;
 
 namespace RegulatedNoise
 {
@@ -119,8 +119,6 @@ namespace RegulatedNoise
         private DateTime m_lastEDDNAutoImport                           = DateTime.MinValue;
         private System.Timers.Timer _AutoImportDelayTimer;
 
-        private DatabaseOp WND_DatabaseOp;
-
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -143,8 +141,8 @@ namespace RegulatedNoise
                 _logger.Log("Initialising...\n");
                 
                 string FormName = this.GetType().Name;
-                if(Program.Settings.WindowBaseData.ContainsKey(FormName))
-                    _Splash.setPosition(Program.Settings.WindowBaseData[FormName]);
+                if(Program.Settings_old.WindowBaseData.ContainsKey(FormName))
+                    _Splash.setPosition(Program.Settings_old.WindowBaseData[FormName]);
 
                 _Splash.InfoAdd("initialize components...");
                 InitializeComponent();
@@ -236,19 +234,12 @@ namespace RegulatedNoise
                 _EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
                 _EDDNTabPage = tabCtrlMain.TabPages[_EDDNTabPageIndex];
 
-                // set language
-                setLanguageCombobox();
-
                 // load commodities in the correct language
-                loadCommodities(Program.Settings.Language);
-                loadCommodityLevels(Program.Settings.Language);
+                loadCommodities(Program.Settings_old.Language);
+                loadCommodityLevels(Program.Settings_old.Language);
                 _Splash.InfoChange("load and prepare international commodity names...<OK>");
 
                 setOCRCalibrationTabVisibility();
-
-                _Splash.InfoAdd("load tool tips...");
-                loadToolTips();
-                _Splash.InfoChange("load tool tips...<OK>");
 
                 _Splash.InfoAdd("prepare system/location view...");
                 //prePrepareSystemAndStationFields();
@@ -363,17 +354,6 @@ namespace RegulatedNoise
             }
             return sb.ToString();
         }
-        private void loadToolTips()
-        {
-            toolTip1.SetToolTip(txtPixelAmount, "if the bitmap has less dark pixels it will not processed by EliteBrainerous, is set to 0 all bitmaps will be processed");
-            toolTip1.SetToolTip(lblPixelAmount, "if the bitmap has less dark pixels it will not processed by EliteBrainerous, is set to 0 all bitmaps will be processed");
-
-            toolTip1.SetToolTip(txtPixelThreshold, "defines what a dark pixel is 0.0 is black, 1.0 is white");
-            toolTip1.SetToolTip(lblPixelThreshold, "defines what a dark pixel is 0.0 is black, 1.0 is white");
-
-            toolTip1.SetToolTip(cbCheckAOne, "Activate the pixel check with a click on this button. Then buy -one- ton of a commodity and take a screenshot of the market with the \"1\" on it.\nSee how much dark pixels the 1 has and take approximately the half of this value as \"dark pixel amount\"");
-            
-        }
 
         //private void OnClientArrivedtoNewSystem(object sender, EdLogLineSystemArgs args)
         //{
@@ -475,7 +455,7 @@ namespace RegulatedNoise
         private void SetProductPath()
         {
             //Already set, no reason to set it again :)
-            if (Program.Settings.ProductsPath != "" && Program.Settings.GamePath != "") return;
+            if (Program.Settings_old.ProductsPath != "" && Program.Settings_old.GamePath != "") return;
             
             //Automatic
             var path = getProductPathAutomatically();
@@ -509,7 +489,7 @@ namespace RegulatedNoise
                     if (gamedirs.Count > 0)
                     {
                         //Get highest Forc-fdev dir.
-                        Program.Settings.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
+                        Program.Settings_old.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
                         b = true;
                         continue;
                     }
@@ -523,7 +503,7 @@ namespace RegulatedNoise
                     dirs = Directory.GetDirectories(path);
                 }
 
-                Program.Settings.ProductsPath = path;
+                Program.Settings_old.ProductsPath = path;
             }
         }
 
@@ -563,7 +543,7 @@ namespace RegulatedNoise
         private void SetProductAppDataPath()
         {
             //Already set, no reason to set it again :)
-            if (Program.Settings.ProductAppData != "") return;
+            if (Program.Settings_old.ProductAppData != "") return;
 
             //Automatic
             var path = getProductAppDataPathAutomatically();
@@ -579,50 +559,50 @@ namespace RegulatedNoise
                 path = getProductAppDataPathManually();
             }
 
-            Program.Settings.ProductAppData = path;
+            Program.Settings_old.ProductAppData = path;
         }
 
         private void ApplySettings()
         {
-            if (Program.Settings.WebserverForegroundColor != "") tbForegroundColour.Text = Program.Settings.WebserverForegroundColor;
-            if (Program.Settings.WebserverBackgroundColor != "") tbBackgroundColour.Text = Program.Settings.WebserverBackgroundColor;
-            txtWebserverPort.Text = Program.Settings.WebserverPort;
-            if (Program.Settings.WebserverIpAddress != "") cbInterfaces.Text = Program.Settings.WebserverIpAddress;
+            if (Program.Settings_old.WebserverForegroundColor != "") tbForegroundColour.Text = Program.Settings_old.WebserverForegroundColor;
+            if (Program.Settings_old.WebserverBackgroundColor != "") tbBackgroundColour.Text = Program.Settings_old.WebserverBackgroundColor;
+            txtWebserverPort.Text = Program.Settings_old.WebserverPort;
+            if (Program.Settings_old.WebserverIpAddress != "") cbInterfaces.Text = Program.Settings_old.WebserverIpAddress;
 
             
-            cbAutoImport.Checked = Program.Settings.AutoImport;
+            cbAutoImport.Checked = Program.Settings_old.AutoImport;
 
             ShowSelectedUiColours();
-            cbExtendedInfoInCSV.Checked = Program.Settings.IncludeExtendedCSVInfo;
-            cbDeleteScreenshotOnImport.Checked = Program.Settings.DeleteScreenshotOnImport;
-            cbUseEddnTestSchema.Checked = Program.Settings.UseEddnTestSchema;
-            cbPostOnImport.Checked = Program.Settings.PostToEddnOnImport;
+            cbExtendedInfoInCSV.Checked = Program.Settings_old.IncludeExtendedCSVInfo;
+            cbDeleteScreenshotOnImport.Checked = Program.Settings_old.DeleteScreenshotOnImport;
+            cbUseEddnTestSchema.Checked = Program.Settings_old.UseEddnTestSchema;
+            cbPostOnImport.Checked = Program.Settings_old.PostToEddnOnImport;
 
-            if (Program.Settings.UserName != "")
-                tbUsername.Text = Program.Settings.UserName;
+            if (Program.Settings_old.UserName != "")
+                tbUsername.Text = Program.Settings_old.UserName;
             else
                 tbUsername.Text = Guid.NewGuid().ToString();
 
-            txtCmdrsName.Text = Program.Settings.PilotsName;
+            txtCmdrsName.Text = Program.Settings_old.PilotsName;
             
             selectEDDN_ID();
 
 
 
-            if (Program.Settings.StartWebserverOnLoad)
+            if (Program.Settings_old.StartWebserverOnLoad)
             {
                 cbStartWebserverOnLoad.Checked = true;
                 bStart_Click(null, null);
             }
-            if (Program.Settings.StartOCROnLoad && Program.Settings.MostRecentOCRFolder != "")
+            if (Program.Settings_old.StartOCROnLoad && Program.Settings_old.MostRecentOCRFolder != "")
             {
                 cbStartOCROnLoad.Checked = true;
-                //ocr.StartMonitoring(Program.Settings.MostRecentOCRFolder);
+                //ocr.StartMonitoring(Program.Settings_old.MostRecentOCRFolder);
 
                 if (_fileSystemWatcher == null)
                     _fileSystemWatcher = new FileSystemWatcher();
 
-                _fileSystemWatcher.Path = Program.Settings.MostRecentOCRFolder;
+                _fileSystemWatcher.Path = Program.Settings_old.MostRecentOCRFolder;
 
                 _fileSystemWatcher.Filter = "*.bmp";
 
@@ -640,31 +620,10 @@ namespace RegulatedNoise
                 ocr.IsMonitoring = true;
             }
 
-            txtTraineddataFile.Text                 = Program.Settings.TraineddataFile;
-            
-            cbAutoAdd_JumpedTo.Checked              = Program.Settings.AutoEvent_JumpedTo;
-            cbAutoAdd_Visited.Checked               = Program.Settings.AutoEvent_Visited;
-            cbAutoAdd_Marketdata.Checked            = Program.Settings.AutoEvent_MarketDataCollected;
-            cbAutoAdd_ReplaceVisited.Checked        = Program.Settings.AutoEvent_ReplaceVisited;
-
-            txtPixelThreshold.Text                  = Program.Settings.EBPixelThreshold.ToString("F1");
-            txtPixelAmount.Text                     = Program.Settings.EBPixelAmount.ToString();
-            txtGUIColorCutoffLevel.Text             = Program.Settings.GUIColorCutoffLevel.ToString();
-
-
-            cbAutoActivateOCRTab.Checked            = Program.Settings.AutoActivateOCRTab;
-            cbAutoActivateSystemTab.Checked         = Program.Settings.AutoActivateSystemTab;
-
-            cbIncludeUnknownDTS.Checked             = Program.Settings.IncludeUnknownDTS;
-            cbLoadStationsJSON.Checked              = Program.Settings.LoadStationsJSON;
-
-            // Set the MinDate and MaxDate.
-            nudPurgeOldDataDays.Value               = Program.Settings.oldDataPurgeDeadlineDays;
-
-            cbSpoolEddnToFile.Checked               = Program.Settings.SpoolEddnToFile;
-            cbSpoolImplausibleToFile.Checked        = Program.Settings.SpoolImplausibleToFile;
-            cbEDDNAutoListen.Checked                = Program.Settings.EDDNAutoListen;
-            checkboxImportEDDN.Checked              = Program.Settings.EDDNAutoImport;
+            cbSpoolEddnToFile.Checked               = Program.Settings_old.SpoolEddnToFile;
+            cbSpoolImplausibleToFile.Checked        = Program.Settings_old.SpoolImplausibleToFile;
+            cbEDDNAutoListen.Checked                = Program.Settings_old.EDDNAutoListen;
+            checkboxImportEDDN.Checked              = Program.Settings_old.EDDNAutoImport;
         }
 
         /// <summary>
@@ -672,23 +631,23 @@ namespace RegulatedNoise
         /// </summary>
         private void selectEDDN_ID()
         {
-            if(Program.Settings.usePilotsName)
+            if(Program.Settings_old.usePilotsName)
             {
-                if(!String.IsNullOrEmpty(Program.Settings.PilotsName))
+                if(!String.IsNullOrEmpty(Program.Settings_old.PilotsName))
                 {
                     rbCmdrsName.Checked = true;
                 }
                 else
                 { 
                     rbUserID.Checked = true;
-                    Program.Settings.usePilotsName = false;
+                    Program.Settings_old.usePilotsName = false;
                     rbCmdrsName.Enabled = false;
                 }
             }
             else
                 rbUserID.Checked = true; 
 
-            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.Settings.PilotsName);
+            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.Settings_old.PilotsName);
         }
 
 
@@ -710,7 +669,7 @@ namespace RegulatedNoise
         /// </summary>
         public string getCommodityBasename(string CommodityName)
         {
-            enLanguage language = Program.Settings.Language;
+            enLanguage language = Program.Settings_old.Language;
             return getCommodityBasename(language, CommodityName);
         }
 
@@ -889,7 +848,7 @@ namespace RegulatedNoise
                 return;
             }
 
-            if (cbAutoActivateOCRTab.Checked && !cbCheckAOne.Checked)
+            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoActivateOCRTab", true.ToString(), false, true) && !Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
                 try
                 {
                     tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabOCRGroup"];
@@ -957,9 +916,9 @@ namespace RegulatedNoise
             backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
 
             var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
-            var x = new XmlSerializer(Program.Settings.GetType());
-            Program.Settings.prepareVersion();
-            x.Serialize(stream, Program.Settings);
+            var x = new XmlSerializer(Program.Settings_old.GetType());
+            Program.Settings_old.prepareVersion();
+            x.Serialize(stream, Program.Settings_old);
             stream.Close();
 
             // we delete the current file not until the new file is written without errors
@@ -1356,10 +1315,10 @@ namespace RegulatedNoise
 
             if (cbInterfaces.SelectedItem != null) 
             {
-                Program.Settings.WebserverIpAddress = cbInterfaces.SelectedItem.ToString();
+                Program.Settings_old.WebserverIpAddress = cbInterfaces.SelectedItem.ToString();
             }
 
-            Program.Settings.WebserverPort = txtWebserverPort.Text;
+            Program.Settings_old.WebserverPort = txtWebserverPort.Text;
 
         }
 
@@ -1386,7 +1345,7 @@ namespace RegulatedNoise
             dialog.SelectedPath = Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) + @"\Frontier Developments\Elite Dangerous";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings.MostRecentOCRFolder = dialog.SelectedPath;
+                Program.Settings_old.MostRecentOCRFolder = dialog.SelectedPath;
 
                 if (_fileSystemWatcher == null)
                     _fileSystemWatcher = new FileSystemWatcher();
@@ -1870,7 +1829,7 @@ namespace RegulatedNoise
                     UpdateOriginalImage(null);
                     UpdateTrimmedImage(null, null);
 
-                    if (Program.Settings.DeleteScreenshotOnImport)
+                    if (Program.Settings_old.DeleteScreenshotOnImport)
                         File.Delete(_screenshotName);
 
                     Acquisition();
@@ -1911,7 +1870,7 @@ namespace RegulatedNoise
                     {
                         tbFinalOcrOutput.Enabled = true;
 
-                        if ((!noAutoImport) && Program.Settings.AutoImport)
+                        if ((!noAutoImport) && Program.Settings_old.AutoImport)
                         {
                             tbCommoditiesOcrOutput.Text = "Imported!";
                             ImportFinalOcrOutput();
@@ -2078,7 +2037,7 @@ namespace RegulatedNoise
                 if (Answer == System.Windows.Forms.DialogResult.OK)
                 {
                     // yes, it's really new
-                    addCommodity(commodity, Program.Settings.Language);
+                    addCommodity(commodity, Program.Settings_old.Language);
                     
                     throw new NotImplementedException();
                     //_Milkyway.addLocalized2RN(_commodities.Names);
@@ -2328,14 +2287,14 @@ namespace RegulatedNoise
         {
             sws.ForegroundColour = tbForegroundColour.Text;
             cbColourScheme.SelectedItem = null;
-            Program.Settings.WebserverForegroundColor = tbForegroundColour.Text;
+            Program.Settings_old.WebserverForegroundColor = tbForegroundColour.Text;
         }
 
         private void tbBackgroundColour_TextChanged(object sender, EventArgs e)
         {
             sws.BackgroundColour = tbBackgroundColour.Text;
             cbColourScheme.SelectedItem = null;
-            Program.Settings.WebserverBackgroundColor = tbBackgroundColour.Text;
+            Program.Settings_old.WebserverBackgroundColor = tbBackgroundColour.Text;
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -2379,13 +2338,13 @@ namespace RegulatedNoise
                 	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v1_Recieved:
                         
                         // process only if it's the correct schema
-                        if(!(Program.Settings.UseEddnTestSchema ^ ((EDDN.Schema_v1)e.Data).isTest()))
+                        if(!(Program.Settings_old.UseEddnTestSchema ^ ((EDDN.Schema_v1)e.Data).isTest()))
                         {
                             Debug.Print("handle v1 message");
                             EDDN.Schema_v1 DataObject   = (EDDN.Schema_v1)e.Data;
 
                             // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.Settings.GetUserID()) 
+                            if(DataObject.Header.UploaderID != Program.Settings_old.GetUserID()) 
                             { 
                                 DataRows                    = new String[1] {DataObject.getEDDNCSVImportString()};
                                 nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
@@ -2404,7 +2363,7 @@ namespace RegulatedNoise
                 	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v2_Recieved:
 
                         // process only if it's the correct schema
-                        if(!(Program.Settings.UseEddnTestSchema ^ ((EDDN.Schema_v2)e.Data).isTest()))
+                        if(!(Program.Settings_old.UseEddnTestSchema ^ ((EDDN.Schema_v2)e.Data).isTest()))
                         {
                             Debug.Print("handle v2 message");
 
@@ -2412,7 +2371,7 @@ namespace RegulatedNoise
                             EDDN.Schema_v2 DataObject   = (EDDN.Schema_v2)e.Data;
 
                             // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.Settings.GetUserID()) 
+                            if(DataObject.Header.UploaderID != Program.Settings_old.GetUserID()) 
                             { 
                                 DataRows                    = DataObject.getEDDNCSVImportStrings();
                                 nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
@@ -2444,7 +2403,7 @@ namespace RegulatedNoise
                 {
                     updatePublisherStats(nameAndVersion, DataRows.GetUpperBound(0)+1);
 
-                    bool isTrusty = Program.Settings.trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    bool isTrusty = Program.Settings_old.trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                     foreach (String DataRow in DataRows){
 
@@ -2589,8 +2548,8 @@ namespace RegulatedNoise
                     var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
 
 
-                    if((Program.Settings.UseEddnTestSchema  && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
-                       (!Program.Settings.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase)  < 0)))
+                    if((Program.Settings_old.UseEddnTestSchema  && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
+                       (!Program.Settings_old.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase)  < 0)))
                     {
                         foreach (var rawHeaderPair in headerRawPairs)
                         {
@@ -2625,7 +2584,7 @@ namespace RegulatedNoise
                         }
                         tbEddnStats.Text = output;
 
-                        string commodity = getLocalizedCommodity(Program.Settings.Language, messageDictionary["itemName"]);
+                        string commodity = getLocalizedCommodity(Program.Settings_old.Language, messageDictionary["itemName"]);
 
                         if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -2901,10 +2860,10 @@ namespace RegulatedNoise
 #if extScanLog
                     logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.RegulatedNoiseSettings.PilotsName)) + ">");
 #endif
-                    RegExTest  = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.Settings.PilotsName)), RegexOptions.IgnoreCase);
+                    RegExTest  = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.Settings_old.PilotsName)), RegexOptions.IgnoreCase);
                     RegExTest2 = new Regex(String.Format("vvv------------ ISLAND .+ CLAIMED ------------vvv"), RegexOptions.IgnoreCase);
 
-                    var appConfigPath = Program.Settings.ProductsPath;
+                    var appConfigPath = Program.Settings_old.ProductsPath;
 
                     if (Directory.Exists(appConfigPath))
                     {
@@ -3198,7 +3157,7 @@ namespace RegulatedNoise
 
                     _LoggedVisited = Systemname + "|" + StationName;
 
-                    if (cbAutoAdd_Visited.Checked && !noLogging)
+                    if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
                     {
                         Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
                     }
@@ -3220,9 +3179,9 @@ namespace RegulatedNoise
                     {
                         _LoggedMarketData = Systemname + "|" + StationName;
 
-                        if (cbAutoAdd_Marketdata.Checked)
+                        if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
                         {
-                            if (cbAutoAdd_ReplaceVisited.Checked)
+                            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
                             {
                                 //object logEvent = Program.CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
 
@@ -3264,21 +3223,21 @@ namespace RegulatedNoise
 
                 if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (String.IsNullOrEmpty(Program.Settings.PilotsName))
+                    if (String.IsNullOrEmpty(Program.Settings_old.PilotsName))
                     { 
-                        Program.Settings.PilotsName       = parts[1];
-                        txtCmdrsName.Text                       = Program.Settings.PilotsName;
-                        Program.Settings.usePilotsName    = true;
+                        Program.Settings_old.PilotsName       = parts[1];
+                        txtCmdrsName.Text                       = Program.Settings_old.PilotsName;
+                        Program.Settings_old.usePilotsName    = true;
                         selectEDDN_ID();
                     }
                 }
                 else
                 {
-                    if (String.IsNullOrEmpty(Program.Settings.PilotsName))
+                    if (String.IsNullOrEmpty(Program.Settings_old.PilotsName))
                     { 
-                        Program.Settings.PilotsName       = parts[0];
-                        txtCmdrsName.Text                       = Program.Settings.PilotsName;
-                        Program.Settings.usePilotsName    = true;
+                        Program.Settings_old.PilotsName       = parts[0];
+                        txtCmdrsName.Text                       = Program.Settings_old.PilotsName;
+                        Program.Settings_old.usePilotsName    = true;
                         selectEDDN_ID();
                     }
                 }
@@ -3365,11 +3324,11 @@ namespace RegulatedNoise
 
             TabPage     newTab;
 
-            Text += Program.Settings.Version.ToString(CultureInfo.InvariantCulture);
+            Text += Program.Settings_old.Version.ToString(CultureInfo.InvariantCulture);
 
 #if DukeJones
-            Program.Settings.CheckVersion2();
-            Text += "_" + Program.Settings.VersionDJ.ToString(CultureInfo.InvariantCulture);
+            Program.Settings_old.CheckVersion2();
+            Text += "_" + Program.Settings_old.VersionDJ.ToString(CultureInfo.InvariantCulture);
 #endif
 
 
@@ -3390,13 +3349,19 @@ namespace RegulatedNoise
             Clock.Start();
             Clock.Tick += Clock_Tick;
 
-            cmdTest.Visible = System.Diagnostics.Debugger.IsAttached;
-            cmdTest2.Visible = System.Diagnostics.Debugger.IsAttached;
-            
             _AutoImportDelayTimer            = new System.Timers.Timer(10000);
             _AutoImportDelayTimer.AutoReset  = false;
             _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
 
+
+            // Settings
+            tabSettings newSControl           = new tabSettings();
+            newSControl.DataSource            = Program.Settings;
+            newTab                            = new TabPage("Settings");
+            newTab.Controls.Add(newSControl);
+            tabCtrlMain.TabPages.Insert(5, newTab);
+
+            newSControl.Init();
 
             // Price Analysis
             tabPriceAnalysis newPAControl     = new tabPriceAnalysis();
@@ -3437,28 +3402,28 @@ namespace RegulatedNoise
 
         private void doSpecial(enDoSpecial when)
         {
-            decimal lastVersion   = Program.Settings.lastVersion;
-            decimal lastVersionDJ = Program.Settings.lastVersionDJ;
+            decimal lastVersion   = Program.Settings_old.lastVersion;
+            decimal lastVersionDJ = Program.Settings_old.lastVersionDJ;
 
-            if (Program.Settings.isFirstVersionRun())
+            if (Program.Settings_old.isFirstVersionRun())
             {
 
                 // do all the things that must be done for the new versions
-                if((when == enDoSpecial.onStart) && (Program.Settings.lastVersionIsBefore(1.84m, 0.09m)))
+                if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.09m)))
                 { 
                     // this value works much better
-                    Program.Settings.EBPixelThreshold = 0.6f;
-                    Program.Settings.EBPixelAmount    = 22;
+                    Program.Settings_old.EBPixelThreshold = 0.6f;
+                    Program.Settings_old.EBPixelAmount    = 22;
                 }
 
                 // do all the things that must be done for the new versions
-                if((when == enDoSpecial.onStart) && (Program.Settings.lastVersionIsBefore(1.84m, 0.17m)))
+                if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.17m)))
                 { 
-                    if(Program.Settings.UseEddnTestSchema)
+                    if(Program.Settings_old.UseEddnTestSchema)
                     { 
-                        Program.Settings.UseEddnTestSchema = false;
+                        Program.Settings_old.UseEddnTestSchema = false;
                         SaveSettings();
-                        if(Program.Settings.PostToEddnOnImport)
+                        if(Program.Settings_old.PostToEddnOnImport)
                         { 
                             MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
                                             "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", 
@@ -3468,7 +3433,7 @@ namespace RegulatedNoise
                 }
 
                 // do all the things that must be done for the new versions
-                if((when == enDoSpecial.onStart) && (Program.Settings.lastVersionIsBefore(1.84m, 0.22m)))
+                if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.22m)))
                 { 
                     String currentFile = "AutoSave.csv";
                     String newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
@@ -3515,7 +3480,7 @@ namespace RegulatedNoise
                 }
 
                 // do all the things that must be done for the new versions
-                if((when == enDoSpecial.afterMilkyway) && (Program.Settings.lastVersionIsBefore(1.84m, 0.24m)))
+                if((when == enDoSpecial.afterMilkyway) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.24m)))
                 { 
                     _Splash.InfoAdd("one time action: correcting capitalisation of systemnames...");
                     String Info             = "  >> ********** records checked ";
@@ -3613,17 +3578,17 @@ namespace RegulatedNoise
         {
             bool noBackColor = false;
 
-            if (Program.Settings.ForegroundColour == null || Program.Settings.BackgroundColour == null) return;
+            if (Program.Settings_old.ForegroundColour == null || Program.Settings_old.BackgroundColour == null) return;
 
             var x = GetAll(this);
 
-            int redF = int.Parse(Program.Settings.ForegroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenF = int.Parse(Program.Settings.ForegroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueF = int.Parse(Program.Settings.ForegroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+            int redF = int.Parse(Program.Settings_old.ForegroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+            int greenF = int.Parse(Program.Settings_old.ForegroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            int blueF = int.Parse(Program.Settings_old.ForegroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
             var f = Color.FromArgb(redF, greenF, blueF);
-            int redB = int.Parse(Program.Settings.BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenB = int.Parse(Program.Settings.BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueB = int.Parse(Program.Settings.BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+            int redB = int.Parse(Program.Settings_old.BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+            int greenB = int.Parse(Program.Settings_old.BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            int blueB = int.Parse(Program.Settings_old.BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
             var b = Color.FromArgb(redB, greenB, blueB);
             foreach (Control c in x)
             {
@@ -3822,32 +3787,6 @@ namespace RegulatedNoise
 
         }
 
-        /// <summary>
-        /// selects another "traineddata" file for TesseractOCR
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cmdSelectTraineddataFile_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog OCRFile = new OpenFileDialog();
-
-            OCRFile.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
-            OCRFile.FileName = Program.Settings.TraineddataFile;
-            OCRFile.InitialDirectory = System.IO.Path.GetFullPath("./tessdata");  
-            OCRFile.Title = "select Tesseract Traineddata-File...";
-
-            if (OCRFile.ShowDialog(this) == DialogResult.OK)
-            {
-                Program.Settings.TraineddataFile = System.IO.Path.GetFileNameWithoutExtension(OCRFile.FileName);
-                txtTraineddataFile.Text = Program.Settings.TraineddataFile;
-
-                SaveSettings();
-            }
-
-                
-
-        }
-         
    
         /// <summary>
         /// direct submitting of the commodities with "Enter" if changed 
@@ -3865,53 +3804,7 @@ namespace RegulatedNoise
             }
         }
 
-        /// <summary>
-        /// prepares the "Language" combobox
-        /// </summary>
-        private void setLanguageCombobox()
-        {
-            List<enumBindTo> lstEnum = new List<enumBindTo>();
-            Array Names;
 
-            // Speicherstruktur
-            lstEnum.Clear();
-            Names = Enum.GetValues(Type.GetType("RegulatedNoise.enLanguage", true));
-
-            for (int i = 0; i <= Names.GetUpperBound(0); i++)
-            {
-                enumBindTo cls = new enumBindTo();
-
-                cls.EnumValue = (Int32)Names.GetValue(i);
-                cls.EnumString = Names.GetValue(i).ToString();
-
-                lstEnum.Add(cls);
-            }
-
-            cmbLanguage.ValueMember = "EnumValue";
-            cmbLanguage.DisplayMember = "EnumString";
-            cmbLanguage.DataSource = lstEnum;
-
-            cmbLanguage.SelectedValue = (Int32)Program.Settings.Language;
-
-            // now we activate the EventHandler
-            this.cmbLanguage.SelectedIndexChanged += new System.EventHandler(this.cmbLanguage_SelectedIndexChanged);
-
-        }
-
-        private void cmbLanguage_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_InitDone)
-            {
-                Program.Settings.Language = (enLanguage)cmbLanguage.SelectedValue;
-
-                // prepare language depending list
-                loadCommodities(Program.Settings.Language);
-                loadCommodityLevels(Program.Settings.Language);
-
-                SaveSettings();
-
-            }
-        }
 
         /// <summary>
         /// adds a new commodity the the dictionary
@@ -3945,7 +3838,7 @@ namespace RegulatedNoise
             FileSaver.rotateSaveFiles(@".\Data\Commodities_own.xml");
 
             // reload in working array
-            loadCommodities(Program.Settings.Language);
+            loadCommodities(Program.Settings_old.Language);
         }
 
         public void setOCRCalibrationTabVisibility()
@@ -3964,122 +3857,7 @@ namespace RegulatedNoise
 
         private void cbAutoAdd_JumpedTo_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.AutoEvent_JumpedTo = cbAutoAdd_JumpedTo.Checked;
-            SaveSettings();
-        }
-
-        private void txtPixelThreshold_LostFocus(object sender, EventArgs e)
-        {
-            float newValue;
-
-            if (float.TryParse(txtPixelThreshold.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
-                if (newValue >= 0.0f && newValue <= 1.0)
-                    Program.Settings.EBPixelThreshold = newValue;
-                else
-                    txtPixelThreshold.Text = Program.Settings.EBPixelThreshold.ToString("F1");
-            else
-                txtPixelThreshold.Text = Program.Settings.EBPixelThreshold.ToString("F1");
-        }
-
-        private void txtPixelAmount_LostFocus(object sender, EventArgs e)
-        {
-            int newValue;
-
-            if (int.TryParse(txtPixelAmount.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
-                if (newValue >= 0 && newValue <= 99)
-                    Program.Settings.EBPixelAmount = newValue;
-                else
-                    txtPixelAmount.Text = Program.Settings.EBPixelAmount.ToString();
-            else
-                txtPixelAmount.Text = Program.Settings.EBPixelAmount.ToString();
-        }
-
-        private void txtGUIColorCutoffLevel_LostFocus(object sender, EventArgs e)
-        {
-            int newValue;
-
-            if (int.TryParse(txtGUIColorCutoffLevel.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
-                if (newValue >= 0 && newValue <= 255)
-                    Program.Settings.GUIColorCutoffLevel = newValue;
-                else
-                    txtGUIColorCutoffLevel.Text = Program.Settings.GUIColorCutoffLevel.ToString();
-            else
-                txtGUIColorCutoffLevel.Text = Program.Settings.GUIColorCutoffLevel.ToString();
-        }
-
-        /// <summary>
-        /// starts the filter test
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cmdFilter_Click(object sender, EventArgs e)
-        {
-
-            Bitmap _refbmp = getReferenceScreenshot();
-
-            if (_refbmp == null)
-            {
-                return;
-            }
-
-            FilterTest FTest = new FilterTest();
-
-            FTest.CutoffLevel = Program.Settings.GUIColorCutoffLevel;
-            FTest.TestBitmap = _refbmp;
-
-            FTest.ShowDialog(this);
-
-            if (FTest.DialogResult == System.Windows.Forms.DialogResult.OK)
-            { 
-                txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
-                Program.Settings.GUIColorCutoffLevel = FTest.CutoffLevel;
-                SaveSettings();            
-            }
-        }
-
-        private Bitmap getReferenceScreenshot()
-        {
-            var openFile = new OpenFileDialog
-            {
-                DefaultExt = "bmp",
-                Multiselect = true,
-                Filter = "BMP (*.bmp)|*.bmp",
-                InitialDirectory =
-                    Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) +
-                    @"\Frontier Developments\Elite Dangerous",
-                Title = "Open a screenshot for calibration"
-            };
-
-            if (openFile.ShowDialog() == DialogResult.OK)
-            {
-                var bmp = new Bitmap(openFile.FileName);
-
-                if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
-                    bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
-                var wrongres = MsgBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
-                if (wrongres == DialogResult.Yes)
-                {
-                    return getReferenceScreenshot();
-                }
-                
-                return bmp;
-            }
-            return null;
-        }
-
-        private void cmdWarnLevels_Click(object sender, EventArgs e)
-        {
-            string Commodity = String.Empty;
-
-            EDCommodityListView CView = new EDCommodityListView();
-
-            CView.ShowDialog(this);
-
-        }
-
-        private void cbActivateOCRTab_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.AutoActivateOCRTab = cbAutoActivateOCRTab.Checked;
+            Program.Settings_old.AutoEvent_JumpedTo = Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true);
             SaveSettings();
         }
 
@@ -4110,7 +3888,7 @@ namespace RegulatedNoise
         //            Program.actualCondition.Station = m_lastestStationInfo;
         //            _LoggedLocation = m_lastestStationInfo;
     
-        //            if(cbAutoActivateSystemTab.Checked)
+        //            if(Program.DBCon.getIniValue<Boolean>(Settings_old.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true)
         //            { 
         //                tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
         //                loadSystemData(_LoggedSystem);
@@ -4181,7 +3959,7 @@ namespace RegulatedNoise
                     if(_LoggedSystem != ID_NOT_SET)
                     { 
                         // it's not the first run, create a event if wanted
-                        if (cbAutoAdd_JumpedTo.Checked)
+                        if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true))
                         {
                             // create event is enabled
                             CommandersLog_CreateJumpedToEvent(systemName);
@@ -4211,7 +3989,7 @@ namespace RegulatedNoise
                     List<EDStation> SystemStations = null; // _Milkyway.getStations(systemName);
 
                     if((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase)) != null))
-                        if (cbAutoAdd_Visited.Checked)
+                        if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true))
                         {
                             // create event is enabled
                             CommandersLog_StationVisitedEvent(systemName, stationName);
@@ -4232,7 +4010,7 @@ namespace RegulatedNoise
                 loadSystemData(_LoggedSystem);
                 loadStationData(_LoggedSystem, _LoggedLocation);
 
-                if(cbAutoActivateSystemTab.Checked)
+                if(Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true))
                     tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
             }
 
@@ -5454,64 +5232,15 @@ namespace RegulatedNoise
 
 #endregion
 
-        
-        private void cbIncludeUnknownDTS_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.IncludeUnknownDTS = cbIncludeUnknownDTS.Checked;
-            SaveSettings();
-            SetupGui();
-        }
-
         private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.AutoActivateSystemTab = cbAutoActivateSystemTab.Checked;
+            Program.Settings_old.AutoActivateSystemTab = Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true);
             SaveSettings();
-        }
-
-        private void cbLoadStationsJSON_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.LoadStationsJSON = cbLoadStationsJSON.Checked;
         }
 
         public string getAppPath()
         {
             return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-
-        }
-
-        private void cmdTest_Click(object sender, EventArgs e)
-        {
-
-            
-
-            //// import the localizations from the old RN files
-            //Import.ImportCommodityLocalizations(@".\mm_BaseData\Commodities.xml");
-
-            // import the self added localizations from the old RN files
-            //Import.ImportCommodityLocalizations(@".\mm_BaseData\Commodities_own.xml");
-
-            //// import the Commander's Log from the old RN files
-            //Import.ImportCommanders//Log(@".\CommandersLogAutoSave.xml");
-            
-            //// import the pricewarnlevels from the old RN files
-            //Import.ImportCommodityPriceWarnLevels(@".\mm_BaseData\Commodities_RN.json");
-
-            //// import the commodities from EDDB
-            //Import.ImportCommodities(@"./m_BaseData/commodities.json");
-
-            //// import the systems and stations from EDDB
-            //Import.ImportSystems(@"./m_BaseData/systems.json");
-            //Import.ImportStations(@"./m_BaseData/stations.json");
-
-            //// import (once) the self-changed or added systems and stations 
-            //Dictionary<Int32, Int32> changedSystemIDs;
-            //changedSystemIDs = Import.ImportSystems_Own(@"./m_BaseData/systems_own.json");
-            //Import.ImportStations_Own(@"./m_BaseData/stations_own.json", changedSystemIDs);
-
-            //import the history of visited stations
-            //Import.ImportVisitedStations(@"./m_BaseData/StationHistory.json");
-
-            Debug.Print("swds");
 
         }
 
@@ -5581,64 +5310,6 @@ namespace RegulatedNoise
             paEconomies.Visible = false;
         }
 
-        private void cmdPurgeOldData_Click(object sender, EventArgs e)
-        {
-
-            if(MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
-            {
-                throw new NotImplementedException();
-
-                DateTime deadline = DateTime.Now.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
-            }
-
-        }
-
-        private static ObjectDirectory PurgeOldDataFromDirectory(ObjectDirectory directory, DateTime deadline)
-        {
-            ObjectDirectory newDirectory;
-            
-            if(directory.GetType() == typeof(StationDirectory))
-                newDirectory = new StationDirectory();
-            else
-                newDirectory = new CommodityDirectory();
-
-            foreach (var x in directory)
-            {
-                var newList = new List<CsvRow>();
-                foreach (var y in x.Value)
-                    if (y.SampleDate >= deadline)
-                        newList.Add(y);
-
-                if(newList.Count > 0)
-                    newDirectory.Add(x.Key, newList);
-            }
-            return newDirectory;
-        }
-
-        private void nudPurgeOldDataDays_ValueChanged(object sender, EventArgs e)
-        {
-            if(_InitDone)
-            {
-                Program.Settings.oldDataPurgeDeadlineDays = (Int32)(nudPurgeOldDataDays.Value);
-            }
-
-        }
-
-        private void cbAutoAdd_Visited_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.AutoEvent_Visited              = cbAutoAdd_Visited.Checked;
-        }
-
-        private void cbAutoAdd_Marketdata_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.AutoEvent_MarketDataCollected  = cbAutoAdd_Marketdata.Checked;      
-        }
-
-        private void cbAutoAdd_ReplaceVisited_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.AutoEvent_ReplaceVisited       = cbAutoAdd_ReplaceVisited.Checked;  
-        }
-
         private void cmdUpdate_Click(object sender, EventArgs e)
         {
             Process.Start(@"https://github.com/Duke-Jones/RegulatedNoise/releases");
@@ -5661,81 +5332,81 @@ namespace RegulatedNoise
             tbUsername.Enabled   = rbUserID.Checked;
             txtCmdrsName.Enabled = rbCmdrsName.Checked;
 
-            Program.Settings.usePilotsName = rbCmdrsName.Checked;
+            Program.Settings_old.usePilotsName = rbCmdrsName.Checked;
         }
 
         private void cbSpoolEddnToFile_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.SpoolEddnToFile = cbSpoolEddnToFile.Checked;
+            Program.Settings_old.SpoolEddnToFile = cbSpoolEddnToFile.Checked;
             SaveSettings();
         }
 
         private void cbSpoolImplausibleToFile_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.SpoolImplausibleToFile = cbSpoolImplausibleToFile.Checked;
+            Program.Settings_old.SpoolImplausibleToFile = cbSpoolImplausibleToFile.Checked;
             SaveSettings();
         }
 
         private void cbEDDNAutoListen_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.EDDNAutoListen = cbEDDNAutoListen.Checked;
+            Program.Settings_old.EDDNAutoListen = cbEDDNAutoListen.Checked;
             SaveSettings();
         }
 
         private void checkboxImportEDDN_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.EDDNAutoImport = checkboxImportEDDN.Checked;
+            Program.Settings_old.EDDNAutoImport = checkboxImportEDDN.Checked;
             SaveSettings();
         }
 
         private void cbAutoImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.AutoImport = cbAutoImport.Checked;
+            Program.Settings_old.AutoImport = cbAutoImport.Checked;
         }
 
         private void cbStartWebserverOnLoad_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.StartWebserverOnLoad = cbStartWebserverOnLoad.Checked;
+            Program.Settings_old.StartWebserverOnLoad = cbStartWebserverOnLoad.Checked;
         }
 
         private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbStartOCROnLoad.Checked && Program.Settings.MostRecentOCRFolder == "")
+            if (cbStartOCROnLoad.Checked && Program.Settings_old.MostRecentOCRFolder == "")
             {
                 MessageBox.Show("You need to pick a directory first, using the Monitor Directory button.  Once you've done that, you can enable Start OCR On Load.");
-                Program.Settings.StartOCROnLoad = false;
+                Program.Settings_old.StartOCROnLoad = false;
                 cbStartOCROnLoad.Checked = false;
             }
             else
             {
-                Program.Settings.StartOCROnLoad = cbStartOCROnLoad.Checked;
+                Program.Settings_old.StartOCROnLoad = cbStartOCROnLoad.Checked;
             }
         }
 
         private void tbUsername_TextChanged(object sender, EventArgs e)
         {
-            Program.Settings.UserName = tbUsername.Text;
+            Program.Settings_old.UserName = tbUsername.Text;
         }
 
         private void cbExtendedInfoInCSV_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.IncludeExtendedCSVInfo = cbExtendedInfoInCSV.Checked;
+            Program.Settings_old.IncludeExtendedCSVInfo = cbExtendedInfoInCSV.Checked;
         }
 
         private void cbPostOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.PostToEddnOnImport = cbPostOnImport.Checked;
+            Program.Settings_old.PostToEddnOnImport = cbPostOnImport.Checked;
         }
 
 
         private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.DeleteScreenshotOnImport = cbDeleteScreenshotOnImport.Checked;
+            Program.Settings_old.DeleteScreenshotOnImport = cbDeleteScreenshotOnImport.Checked;
         }
 
         private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
+            Program.Settings_old.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
         }
 
         #region Theming
@@ -5744,7 +5415,7 @@ namespace RegulatedNoise
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                Program.Settings_old.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
                                                           c.Color.B.ToString("X2");
 
                 ShowSelectedUiColours();
@@ -5758,7 +5429,7 @@ namespace RegulatedNoise
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                Program.Settings_old.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
                                           c.Color.B.ToString("X2");
                 ShowSelectedUiColours();
                 Retheme();
@@ -5768,15 +5439,15 @@ namespace RegulatedNoise
         private void ShowSelectedUiColours()
         {
             if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
-            if (Program.Settings.ForegroundColour != null)
+            if (Program.Settings_old.ForegroundColour != null)
             {
                 ForegroundSet.Visible = false;
                 Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(Program.Settings.ForegroundColour.Substring(1, 2),
+                int red = int.Parse(Program.Settings_old.ForegroundColour.Substring(1, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(Program.Settings.ForegroundColour.Substring(3, 2),
+                int green = int.Parse(Program.Settings_old.ForegroundColour.Substring(3, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(Program.Settings.ForegroundColour.Substring(5, 2),
+                int blue = int.Parse(Program.Settings_old.ForegroundColour.Substring(5, 2),
                     System.Globalization.NumberStyles.HexNumber);
 
                 using (var g = Graphics.FromImage(b))
@@ -5787,16 +5458,16 @@ namespace RegulatedNoise
             }
             else ForegroundSet.Visible = true;
 
-            if (Program.Settings.BackgroundColour != null)
+            if (Program.Settings_old.BackgroundColour != null)
             {
                 BackgroundSet.Visible = false;
                 if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
                 Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(Program.Settings.BackgroundColour.Substring(1, 2),
+                int red = int.Parse(Program.Settings_old.BackgroundColour.Substring(1, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(Program.Settings.BackgroundColour.Substring(3, 2),
+                int green = int.Parse(Program.Settings_old.BackgroundColour.Substring(3, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(Program.Settings.BackgroundColour.Substring(5, 2),
+                int blue = int.Parse(Program.Settings_old.BackgroundColour.Substring(5, 2),
                     System.Globalization.NumberStyles.HexNumber);
                 using (var g = Graphics.FromImage(b))
                 {
@@ -5809,8 +5480,8 @@ namespace RegulatedNoise
 
         private void button20_Click(object sender, EventArgs e)
         {
-            Program.Settings.ForegroundColour = null;
-            Program.Settings.BackgroundColour = null;
+            Program.Settings_old.ForegroundColour = null;
+            Program.Settings_old.BackgroundColour = null;
         }
 
         private void ForegroundSet_Click(object sender, EventArgs e)
@@ -5818,7 +5489,7 @@ namespace RegulatedNoise
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                Program.Settings_old.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
                                                           c.Color.B.ToString("X2");
 
                 ShowSelectedUiColours();
@@ -5831,7 +5502,7 @@ namespace RegulatedNoise
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                Program.Settings_old.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
                                           c.Color.B.ToString("X2");
                 ShowSelectedUiColours();
                 Retheme();
@@ -5839,31 +5510,6 @@ namespace RegulatedNoise
         }
 
         #endregion
-
-        private void cmdDatabaseOp_Click(object sender, EventArgs e)
-        {
-            if(WND_DatabaseOp == null || WND_DatabaseOp.IsDisposed)
-            {
-                WND_DatabaseOp = new DatabaseOp();
-            }
-                
-            WND_DatabaseOp.ShowEx();
-        }
-
-        private void cmdTest2_Click(object sender, EventArgs e)
-        {
-            
-            //try
-            //{
-            //    VirtualJustInTimeDemo Demo = new VirtualJustInTimeDemo(Program.DBCon);
-
-            //    Demo.Show();
-            //}
-            //catch (Exception ex)
-            //{
-            //    cErr.showError(ex, "Error in cmdTest2_Click");
-            //}
-        }
 
         /// <summary>
         /// opens the data import dialog
@@ -5998,7 +5644,7 @@ namespace RegulatedNoise
             for (int i = 0; i < listViewToDump.Columns.Count; i++)
             {
                 var style = "style=\"border:1px solid black; font-weight: bold;\"";
-                header.Append("<TD " + style + "><A style=\"color: #" + Program.Settings.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
+                header.Append("<TD " + style + "><A style=\"color: #" + Program.Settings_old.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
             }
 
             header.Append("</TR>");
@@ -6042,6 +5688,7 @@ namespace RegulatedNoise
         }
 
     #endregion
+
     }
 
 }

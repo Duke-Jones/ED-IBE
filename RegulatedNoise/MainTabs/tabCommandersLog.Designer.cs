@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.Commander_s_Log
+﻿namespace RegulatedNoise.MTCommandersLog
 {
     partial class tabCommandersLog
     {

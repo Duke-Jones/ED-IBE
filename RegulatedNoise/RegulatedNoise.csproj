@@ -121,10 +121,11 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
-    <Compile Include="Commander%27s Log\tabCommandersLog.cs">
+    <Compile Include="MainTabs\Settings.cs" />
+    <Compile Include="MainTabs\tabCommandersLog.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Commander%27s Log\tabCommandersLog.Designer.cs">
+    <Compile Include="MainTabs\tabCommandersLog.Designer.cs">
       <DependentUpon>tabCommandersLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Condition.cs" />
@@ -211,11 +212,17 @@
     <Compile Include="frmDataIO.Designer.cs">
       <DependentUpon>frmDataIO.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainTabs\tabSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainTabs\tabSettings.designer.cs">
+      <DependentUpon>tabSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
     <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN\EDDNCommunicator.cs" />
-    <Compile Include="Commander%27s Log\CommandersLog.cs" />
+    <Compile Include="MainTabs\CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -270,11 +277,11 @@
     <Compile Include="Ocr\Calibration\OcrCalibratorTab.Designer.cs">
       <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
     </Compile>
-    <Compile Include="PriceAnalysis\PriceAnalysis.cs" />
-    <Compile Include="PriceAnalysis\tabPriceAnalysis.cs">
+    <Compile Include="MainTabs\PriceAnalysis.cs" />
+    <Compile Include="MainTabs\tabPriceAnalysis.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PriceAnalysis\tabPriceAnalysis.designer.cs">
+    <Compile Include="MainTabs\tabPriceAnalysis.designer.cs">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -296,12 +303,6 @@
     </Compile>
     <Compile Include="SplashScreenForm.Designer.cs">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SQL\DatabaseOp.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SQL\DatabaseOp.Designer.cs">
-      <DependentUpon>DatabaseOp.cs</DependentUpon>
     </Compile>
     <Compile Include="SQL\Datasets\dsEliteDB.cs">
       <DependentUpon>dsEliteDB.xsd</DependentUpon>
@@ -328,7 +329,7 @@
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Commander%27s Log\tabCommandersLog.resx">
+    <EmbeddedResource Include="MainTabs\tabCommandersLog.resx">
       <DependentUpon>tabCommandersLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EDDB_Data\EDCommodityListView.resx">
@@ -368,13 +369,16 @@
     <EmbeddedResource Include="Brainerous Pixeltest\Picturedata.resx">
       <DependentUpon>Picturedata.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainTabs\tabSettings.resx">
+      <DependentUpon>tabSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Ocr\Calibration\FilterTest.resx">
       <DependentUpon>FilterTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Ocr\Calibration\OcrCalibratorTab.resx">
       <DependentUpon>OcrCalibratorTab.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PriceAnalysis\tabPriceAnalysis.resx">
+    <EmbeddedResource Include="MainTabs\tabPriceAnalysis.resx">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressView.resx">
@@ -386,9 +390,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Enums and Utility Classes\Enums.cs" />
-    <EmbeddedResource Include="SQL\DatabaseOp.resx">
-      <DependentUpon>DatabaseOp.cs</DependentUpon>
-    </EmbeddedResource>
     <Content Include="Brainerous\bz2.pyd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

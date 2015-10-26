@@ -169,17 +169,17 @@ namespace RegulatedNoise.EDDN
 
                 TimeStamp = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
 
-                UserID = Program.Settings.GetUserID();
+                UserID = Program.Settings_old.GetUserID();
 
                 // test or real ?
-                if (Program.Settings.UseEddnTestSchema)
+                if (Program.Settings_old.UseEddnTestSchema)
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
                 else
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
 
                 // fill the header
                 Data.Header = new Schema_v2.Header_Class() {SoftwareName        = "RegulatedNoise__DJ", 
-                                                            SoftwareVersion     = Program.Settings.getVersionString(),
+                                                            SoftwareVersion     = Program.Settings_old.getVersionString(),
                                                             GatewayTimestamp    = TimeStamp, 
                                                             UploaderID          = UserID};
 

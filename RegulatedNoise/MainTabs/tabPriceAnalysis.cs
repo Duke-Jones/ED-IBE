@@ -11,7 +11,7 @@ using RegulatedNoise.SQL;
 using System.Diagnostics;
 using RegulatedNoise.SQL.Datasets;
 
-namespace RegulatedNoise.Price_Analysis
+namespace RegulatedNoise.MTPriceAnalysis
 {
     public partial class tabPriceAnalysis : UserControl
     {
@@ -207,7 +207,17 @@ namespace RegulatedNoise.Price_Analysis
                     minLandingPadSize = cmbMinLandingPadSize.Text;
                 
                 //m_DataSource.createFilteredTable((Int32)cmbSystemBase.SelectedValue, Distance, DistanceToStar, minLandingPadSize);
-                m_DataSource.createFilteredTable(17072, Distance, DistanceToStar, minLandingPadSize);
+
+                PriceAnalysis.enVisitedFilter VFilter = (PriceAnalysis.enVisitedFilter)Program.DBCon.getIniValue<Int32>("Global", "VisitedFilter", ((Int32)PriceAnalysis.enVisitedFilter.showOnlyVistedSystems).ToString(), false);
+
+                m_DataSource.createFilteredTable(17072, Distance, DistanceToStar, minLandingPadSize, VFilter);
+
+                Int32 StationCount;
+                Int32 SystemCount;
+                m_DataSource.getFilteredSystemAndStationCount(out StationCount, out SystemCount);
+
+                lblSystemsFound.Text  = SystemCount.ToString();
+                lblStationsFound.Text = StationCount.ToString();
 
                 BindingSource bs = new BindingSource(); 
 
@@ -217,6 +227,13 @@ namespace RegulatedNoise.Price_Analysis
                 dgvAllCommodities.AutoGenerateColumns = false;
                 dgvAllCommodities.DataSource = bs;
                 sortAllCommodities();
+
+
+                m_DataSource.calculateTradingRoutes(20);
+
+
+
+
 
                 this.Cursor = oldCursor;
             }
@@ -577,6 +594,11 @@ namespace RegulatedNoise.Price_Analysis
         private void dgvAllCommodities_Sorted(object sender, EventArgs e)
         {
 
+        }
+
+        private void comboBoxInt321_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Debug.Print(comboBoxInt321.SelectedValue.ToString());
         }
 
     }
