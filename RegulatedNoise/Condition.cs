@@ -10,7 +10,7 @@ namespace RegulatedNoise
     /// <summary>
     /// class for holding the current state/location of the commander/ship
     /// </summary>
-    class Condition
+    public class Condition
     {
         public const string STR_Scanning = "scanning...";
 

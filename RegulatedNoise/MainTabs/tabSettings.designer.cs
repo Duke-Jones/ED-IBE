@@ -35,14 +35,11 @@
             this.cmdFilter = new System.Windows.Forms.Button();
             this.label50 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
-            this.txtGUIColorCutoffLevel = new System.Windows.Forms.TextBoxInt32();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.label52 = new System.Windows.Forms.Label();
             this.cbCheckNextScreenshotForOne = new System.Windows.Forms.CheckBox();
             this.lblPixelAmount = new System.Windows.Forms.Label();
-            this.txtOCRPixelAmount = new System.Windows.Forms.TextBoxInt32();
             this.lblPixelThreshold = new System.Windows.Forms.Label();
-            this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
             this.txtOCRTraineddataFile = new System.Windows.Forms.TextBox();
             this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -63,6 +60,11 @@
             this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
             this.button6 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label25 = new System.Windows.Forms.Label();
+            this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
+            this.txtGUIColorCutoffLevel = new System.Windows.Forms.TextBoxInt32();
+            this.txtOCRPixelAmount = new System.Windows.Forms.TextBoxInt32();
+            this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
             this.groupBox6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -107,6 +109,7 @@
             this.cmdFilter.TabIndex = 18;
             this.cmdFilter.Text = "Filter-Test";
             this.cmdFilter.UseVisualStyleBackColor = true;
+            this.cmdFilter.Click += new System.EventHandler(this.cmdFilter_Click);
             // 
             // label50
             // 
@@ -125,18 +128,6 @@
             this.label51.Size = new System.Drawing.Size(215, 13);
             this.label51.TabIndex = 14;
             this.label51.Text = "UI Color Cutoff Level (0 to 255, default=150)";
-            // 
-            // txtGUIColorCutoffLevel
-            // 
-            this.txtGUIColorCutoffLevel.Location = new System.Drawing.Point(239, 107);
-            this.txtGUIColorCutoffLevel.MaxValue = 255;
-            this.txtGUIColorCutoffLevel.MinValue = 0;
-            this.txtGUIColorCutoffLevel.Name = "txtGUIColorCutoffLevel";
-            this.txtGUIColorCutoffLevel.Size = new System.Drawing.Size(37, 20);
-            this.txtGUIColorCutoffLevel.TabIndex = 13;
-            this.txtGUIColorCutoffLevel.Tag = "GUIColorCutoffLevelValue;150";
-            this.txtGUIColorCutoffLevel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtGUIColorCutoffLevel_KeyDown);
-            this.txtGUIColorCutoffLevel.Leave += new System.EventHandler(this.txtGUIColorCutoffLevel_Leave);
             // 
             // groupBox11
             // 
@@ -184,18 +175,6 @@
             this.lblPixelAmount.TabIndex = 16;
             this.lblPixelAmount.Text = "dark pixel amount (default=22, 0=off)";
             // 
-            // txtOCRPixelAmount
-            // 
-            this.txtOCRPixelAmount.Location = new System.Drawing.Point(212, 115);
-            this.txtOCRPixelAmount.MaxValue = null;
-            this.txtOCRPixelAmount.MinValue = null;
-            this.txtOCRPixelAmount.Name = "txtOCRPixelAmount";
-            this.txtOCRPixelAmount.Size = new System.Drawing.Size(37, 20);
-            this.txtOCRPixelAmount.TabIndex = 15;
-            this.txtOCRPixelAmount.Tag = "OCRPixelAmountValue;22";
-            this.txtOCRPixelAmount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelAmount_KeyDown);
-            this.txtOCRPixelAmount.Leave += new System.EventHandler(this.txtOCRPixelAmount_Leave);
-            // 
             // lblPixelThreshold
             // 
             this.lblPixelThreshold.AutoSize = true;
@@ -204,19 +183,6 @@
             this.lblPixelThreshold.Size = new System.Drawing.Size(160, 13);
             this.lblPixelThreshold.TabIndex = 14;
             this.lblPixelThreshold.Text = "dark pixel threshold (default=0.6)";
-            // 
-            // txtOCRPixelThreshold
-            // 
-            this.txtOCRPixelThreshold.Digits = 2;
-            this.txtOCRPixelThreshold.Location = new System.Drawing.Point(212, 88);
-            this.txtOCRPixelThreshold.MaxValue = 1D;
-            this.txtOCRPixelThreshold.MinValue = 0.01D;
-            this.txtOCRPixelThreshold.Name = "txtOCRPixelThreshold";
-            this.txtOCRPixelThreshold.Size = new System.Drawing.Size(37, 20);
-            this.txtOCRPixelThreshold.TabIndex = 13;
-            this.txtOCRPixelThreshold.Tag = "OCRPixelThresholdValue;0.6";
-            this.txtOCRPixelThreshold.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelThreshold_KeyDown);
-            this.txtOCRPixelThreshold.Leave += new System.EventHandler(this.txtOCRPixelThreshold_Leave);
             // 
             // txtOCRTraineddataFile
             // 
@@ -235,6 +201,7 @@
             this.cmdSelectTraineddataFile.TabIndex = 8;
             this.cmdSelectTraineddataFile.Text = "Select";
             this.cmdSelectTraineddataFile.UseVisualStyleBackColor = true;
+            this.cmdSelectTraineddataFile.Click += new System.EventHandler(this.cmdSelectTraineddataFile_Click);
             // 
             // label12
             // 
@@ -349,7 +316,7 @@
             this.cmbLanguage.Size = new System.Drawing.Size(75, 21);
             this.cmbLanguage.TabIndex = 0;
             this.cmbLanguage.Tag = "Language;eng";
-            this.cmbLanguage.SelectedIndexChanged += new System.EventHandler(this.cmbLanguage_SelectedIndexChanged);
+            this.cmbLanguage.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
             // groupBox12
             // 
@@ -410,6 +377,7 @@
             this.cmdPurgeOldData.TabIndex = 8;
             this.cmdPurgeOldData.Text = "purge data older than";
             this.cmdPurgeOldData.UseVisualStyleBackColor = true;
+            this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
             // 
             // cbAutoActivateSystemTab
             // 
@@ -444,10 +412,77 @@
             this.button6.TabIndex = 2;
             this.button6.Text = "Edit Commodity Price Warn levels";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.cmdWarnLevels_Click);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(11, 480);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(60, 13);
+            this.label25.TabIndex = 64;
+            this.label25.Text = "Visited filter";
+            this.toolTip1.SetToolTip(this.label25, "Here you can select, if you want to see in all analysis");
+            // 
+            // cmbVisitedFilter
+            // 
+            this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
+            this.cmbVisitedFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbVisitedFilter.FormattingEnabled = true;
+            this.cmbVisitedFilter.Location = new System.Drawing.Point(14, 498);
+            this.cmbVisitedFilter.MaxValue = null;
+            this.cmbVisitedFilter.MinValue = null;
+            this.cmbVisitedFilter.Name = "cmbVisitedFilter";
+            this.cmbVisitedFilter.Size = new System.Drawing.Size(149, 21);
+            this.cmbVisitedFilter.TabIndex = 63;
+            this.cmbVisitedFilter.Tag = "VisitedFilter;only visited systems";
+            this.toolTip1.SetToolTip(this.cmbVisitedFilter, "Here you can select, if you want to see in all analysis\r\n- all stations (independ" +
+        "ent if you\'ve visted them or not)\r\n- only stations in systems you\'ve visited \r\n-" +
+        " only stations you\'ve directly visted");
+            this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
+            // 
+            // txtGUIColorCutoffLevel
+            // 
+            this.txtGUIColorCutoffLevel.Location = new System.Drawing.Point(239, 107);
+            this.txtGUIColorCutoffLevel.MaxValue = 255;
+            this.txtGUIColorCutoffLevel.MinValue = 0;
+            this.txtGUIColorCutoffLevel.Name = "txtGUIColorCutoffLevel";
+            this.txtGUIColorCutoffLevel.Size = new System.Drawing.Size(37, 20);
+            this.txtGUIColorCutoffLevel.TabIndex = 13;
+            this.txtGUIColorCutoffLevel.Tag = "GUIColorCutoffLevelValue;150";
+            this.txtGUIColorCutoffLevel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtGUIColorCutoffLevel_KeyDown);
+            this.txtGUIColorCutoffLevel.Leave += new System.EventHandler(this.txtGUIColorCutoffLevel_Leave);
+            // 
+            // txtOCRPixelAmount
+            // 
+            this.txtOCRPixelAmount.Location = new System.Drawing.Point(212, 115);
+            this.txtOCRPixelAmount.MaxValue = null;
+            this.txtOCRPixelAmount.MinValue = null;
+            this.txtOCRPixelAmount.Name = "txtOCRPixelAmount";
+            this.txtOCRPixelAmount.Size = new System.Drawing.Size(37, 20);
+            this.txtOCRPixelAmount.TabIndex = 15;
+            this.txtOCRPixelAmount.Tag = "OCRPixelAmountValue;22";
+            this.txtOCRPixelAmount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelAmount_KeyDown);
+            this.txtOCRPixelAmount.Leave += new System.EventHandler(this.txtOCRPixelAmount_Leave);
+            // 
+            // txtOCRPixelThreshold
+            // 
+            this.txtOCRPixelThreshold.Digits = 2;
+            this.txtOCRPixelThreshold.Location = new System.Drawing.Point(212, 88);
+            this.txtOCRPixelThreshold.MaxValue = 1D;
+            this.txtOCRPixelThreshold.MinValue = 0.01D;
+            this.txtOCRPixelThreshold.Name = "txtOCRPixelThreshold";
+            this.txtOCRPixelThreshold.Size = new System.Drawing.Size(37, 20);
+            this.txtOCRPixelThreshold.TabIndex = 13;
+            this.txtOCRPixelThreshold.Tag = "OCRPixelThresholdValue;0.6";
+            this.txtOCRPixelThreshold.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelThreshold_KeyDown);
+            this.txtOCRPixelThreshold.Leave += new System.EventHandler(this.txtOCRPixelThreshold_Leave);
             // 
             // tabSettings
             // 
+            this.Controls.Add(this.label25);
             this.Controls.Add(this.groupBox12);
+            this.Controls.Add(this.cmbVisitedFilter);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
             this.Controls.Add(this.groupBox6);
@@ -467,6 +502,7 @@
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -505,6 +541,8 @@
         private System.Windows.Forms.CheckBox cbAutoActivateOCRTab;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.ComboBoxInt32 cmbVisitedFilter;
 
 
     }

@@ -194,7 +194,7 @@ namespace RegulatedNoise.EDDN
                 {
                     CsvRow Row      = (CsvRow)_SendItems.Dequeue();                	
 
-                    commodity = _caller.getCommodityBasename(Row.CommodityName);
+                    commodity = Row.CommodityName;
 
                     // if it's a user added commodity send it anyhow to see that there's a unknown commodity
                     if(commodity.Equals(Program.COMMODITY_NOT_SET))

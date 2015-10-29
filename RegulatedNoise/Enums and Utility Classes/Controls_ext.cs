@@ -311,7 +311,7 @@ namespace System.Windows.Forms
             {
                 if(Digits != null)
                 { 
-                    DoubleValue = Math.Truncate(DoubleValue * (Double)Digits) / (Double)Digits;
+                    DoubleValue = Math.Round(DoubleValue, (Int32)Digits);
                     this.Text = DoubleValue.ToString(String.Format("F{0}", Digits));
                 }
 

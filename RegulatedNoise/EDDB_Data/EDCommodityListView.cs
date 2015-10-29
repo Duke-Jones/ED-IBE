@@ -52,7 +52,8 @@ namespace RegulatedNoise.EDDB_Data
 
                 if (!string.IsNullOrEmpty(presetCommodity))
                 {
-                    string BaseName = Form1.InstanceObject.getCommodityBasename(presetCommodity);
+                    MessageBox.Show("TODO");
+                    string BaseName = ""; //Form1.InstanceObject.getCommodityBasename(presetCommodity);
                     if (BaseName == Program.COMMODITY_NOT_SET)
                         BaseName = presetCommodity;
 

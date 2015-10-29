@@ -283,7 +283,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(277, 334);
+            this.ClientSize = new System.Drawing.Size(277, 335);
             this.Controls.Add(this.cbEditCommodityName);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.tbEditFilename);

@@ -90,7 +90,6 @@ namespace RegulatedNoise
         public bool AutoImport = false;
         public bool TestMode = false;
         public string TraineddataFile                                   = "big";
-        public enLanguage Language                                      = enLanguage.eng;
         public int CmdrsLogSortColumn                                   = 0;
         public SortOrder CmdrsLogSortOrder                              = SortOrder.Descending;
         public bool AutoEvent_JumpedTo                                  = true;

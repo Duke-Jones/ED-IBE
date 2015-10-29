@@ -226,19 +226,6 @@ namespace RegulatedNoise
                 //edl.Initialize();
                 //edl.StartWatcher();
 
-                _Splash.InfoAdd("load and prepare international commodity names...");
-                // read the commodities and prepare language depending list
-                prepareCommodityNames();
-
-                // depending of the language this will be removed
-                _EDDNTabPageIndex = tabCtrlMain.TabPages.IndexOfKey("tabEDDN");
-                _EDDNTabPage = tabCtrlMain.TabPages[_EDDNTabPageIndex];
-
-                // load commodities in the correct language
-                loadCommodities(Program.Settings_old.Language);
-                loadCommodityLevels(Program.Settings_old.Language);
-                _Splash.InfoChange("load and prepare international commodity names...<OK>");
-
                 setOCRCalibrationTabVisibility();
 
                 _Splash.InfoAdd("prepare system/location view...");
@@ -266,68 +253,6 @@ namespace RegulatedNoise
 
             Cursor = Cursors.Default;
             _InitDone = true;
-        }
-
-        /// <summary>
-        /// loads the localized commodity names and check if 
-        /// the self added names now included in the official dictionary
-        /// </summary>
-        private void prepareCommodityNames()
-        {
-            dsCommodities                ownCommodities = new dsCommodities();
-            List<dsCommodities.NamesRow> forDeleting    = new List<dsCommodities.NamesRow>();
-            bool found;
-
-            try
-            {
-                _commodities.ReadXml(@".\Data\Commodities.xml");
-
-                if(File.Exists(@".\Data\Commodities_own.xml"))
-                { 
-                    ownCommodities.ReadXml(@".\Data\Commodities_own.xml");
-
-                    foreach (dsCommodities.NamesRow Commodity in ownCommodities.Tables["Names"].Rows)
-                    {
-                        found = false;
-
-                        foreach (enLanguage language in Enum.GetValues(typeof(enLanguage)))
-                        {
-                            dsCommodities.NamesRow[] existing = (dsCommodities.NamesRow[])(_commodities.Tables["Names"].Select(String.Format("{0} = '{1}'" , language.ToString(), EscapeLikeValue(Commodity[language.ToString()].ToString()))));
-
-                            Debug.Print(String.Format("{0} = '{1}'" , language.ToString(), Commodity[language.ToString()]));
-
-                            if(existing.GetUpperBound(0) == 0)
-                            {
-                                // commodity exists in the official directory
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        // if commodity is existingClassification at least in one language we remove it
-                        if(found)
-                            forDeleting.Add(Commodity);
-
-                    }
-                }
-
-                // now delete the existingClassification double commodities and save the cleaned data again
-                foreach (dsCommodities.NamesRow item in forDeleting)
-                    ownCommodities.Tables["Names"].Rows.Remove(item);
-
-                // save the reviewed "own" commodity list
-                ownCommodities.WriteXml(@".\Data\Commodities_own_new.xml");
-                FileSaver.rotateSaveFiles(@".\Data\Commodities_own.xml");
-
-                // merge both tables
-                _commodities.Tables["Names"].Merge(ownCommodities.Tables["Names"]);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while loading commodity names", ex);
-            }
-
         }
 
         private string EscapeLikeValue(string value)
@@ -648,125 +573,6 @@ namespace RegulatedNoise
                 rbUserID.Checked = true; 
 
             rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.Settings_old.PilotsName);
-        }
-
-
-        /// <summary>
-        /// prepares the commodities in the correct language
-        /// </summary>
-        /// <param name="Language"></param>
-        private void loadCommodities(enLanguage Language)
-        {
-            KnownCommodityNames.Clear();
-
-            foreach (dsCommodities.NamesRow currentCommodity in _commodities.Names)
-                KnownCommodityNames.Add(currentCommodity[Enum.GetName(typeof(enLanguage), Language)].ToString());
-
-        }
-
-        /// <summary>
-        /// prepares the commodities in the correct language
-        /// </summary>
-        public string getCommodityBasename(string CommodityName)
-        {
-            enLanguage language = Program.Settings_old.Language;
-            return getCommodityBasename(language, CommodityName);
-        }
-
-        /// <summary>
-        /// prepares the commodities in the correct language
-        /// </summary>
-        /// <param name="Language"></param>
-        public string getCommodityBasename(enLanguage Language, string CommodityName)
-        {
-            string BaseName                             = String.Empty;
-            dsCommodities.NamesRow[] currentCommodity   = null;
-
-            switch (Language)
-            {
-                case enLanguage.eng:
-                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("eng='" + EscapeLikeValue(CommodityName) + "'"));
-                    break;
-                case enLanguage.ger:
-                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("ger='" + EscapeLikeValue(CommodityName) + "'"));
-                    break;
-                case enLanguage.fra:
-                    currentCommodity = (dsCommodities.NamesRow[])(_commodities.Names.Select("fra='" + EscapeLikeValue(CommodityName) + "'"));
-                    break;
-            }
-            
-            if (currentCommodity.Count() > 0)
-                BaseName = currentCommodity[0].eng;
-
-            return BaseName;
-
-        }
-
-        /// <summary>
-        /// prepares the commodities in the correct language
-        /// </summary>
-        /// <param name="Language"></param>
-        public string getLocalizedCommodity(enLanguage Language, string CommodityName)
-        {
-            string BaseName = String.Empty;
-
-            List<dsCommodities.NamesRow> currentCommodity = _commodities.Names.Where(x => ((x.eng.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)) ||
-                                                                                           (x.ger.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)) ||
-                                                                                           (x.fra.Equals(CommodityName, StringComparison.InvariantCultureIgnoreCase)))).ToList();
-
-            if (currentCommodity.Count() > 0)
-            {
-                switch (Language)
-                {
-                    case enLanguage.eng:
-                        BaseName = currentCommodity[0].eng;
-                        break;
-                    case enLanguage.ger:
-                        BaseName = currentCommodity[0].ger;
-                        break;
-                    case enLanguage.fra:
-                        BaseName = currentCommodity[0].fra;
-                        break;
-                }
-
-            }
-
-            return BaseName;
-
-        }
-
-        /// <summary>
-        /// prepares the commoditylevels in the correct language
-        /// </summary>
-        /// <param name="Language"></param>
-        private void loadCommodityLevels(enLanguage Language)
-        {
-            dsCommodities.LevelsRow[] Level;
-
-            CommodityLevel.Clear();
-
-            for (int i = 0; i <= 2; i++)
-            {
-                if (i == 0)
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.LOW);
-
-                else if (i == 1)
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.MED);
-
-                else
-                    Level = (dsCommodities.LevelsRow[])_commodities.Levels.Select("ID=" + (byte)enCommodityLevel.HIGH);
-
-                if (Language == enLanguage.eng)
-                    CommodityLevel.Add(Level[0].ID, Level[0].eng);
-
-                else if (Language == enLanguage.ger)
-                    CommodityLevel.Add(Level[0].ID, Level[0].ger);
-
-                else
-                    CommodityLevel.Add(Level[0].ID, Level[0].fra);
-
-            }
-
         }
 
         private Thread _ocrThread;
@@ -2037,7 +1843,8 @@ namespace RegulatedNoise
                 if (Answer == System.Windows.Forms.DialogResult.OK)
                 {
                     // yes, it's really new
-                    addCommodity(commodity, Program.Settings_old.Language);
+                    MessageBox.Show("TODO");
+                    //addCommodity(commodity);
                     
                     throw new NotImplementedException();
                     //_Milkyway.addLocalized2RN(_commodities.Names);
@@ -2584,7 +2391,8 @@ namespace RegulatedNoise
                         }
                         tbEddnStats.Text = output;
 
-                        string commodity = getLocalizedCommodity(Program.Settings_old.Language, messageDictionary["itemName"]);
+                        MessageBox.Show("TODO");
+                        string commodity = ""; //' getLocalizedCommodity(Program.Settings_old.Language, messageDictionary["itemName"]);
 
                         if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -3804,43 +3612,6 @@ namespace RegulatedNoise
             }
         }
 
-
-
-        /// <summary>
-        /// adds a new commodity the the dictionary
-        /// </summary>
-        /// <param name="commodity"></param>
-        /// <param name="language"></param>
-        private void addCommodity(string commodity, enLanguage language)
-        {
-            dsCommodities                ownCommodities = new dsCommodities();
-
-            if(File.Exists(@".\Data\Commodities_own.xml"))
-                ownCommodities.ReadXml(@".\Data\Commodities_own.xml");
-
-            dsCommodities.NamesRow newCommodity     = (dsCommodities.NamesRow)_commodities.Names.NewRow();
-            dsCommodities.NamesRow newOwnCommodity  = (dsCommodities.NamesRow)ownCommodities.Names.NewRow();
-
-            foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
-                newOwnCommodity[availableLanguage.ToString()] = Program.COMMODITY_NOT_SET;
-
-            newOwnCommodity[language.ToString()] = commodity;
-
-            foreach (enLanguage availableLanguage in Enum.GetValues(typeof(enLanguage)))
-                newCommodity[availableLanguage.ToString()] = newOwnCommodity[availableLanguage.ToString()];
-
-            // add to both dictionaries
-            ownCommodities.Names.AddNamesRow(newOwnCommodity);
-            _commodities.Names.AddNamesRow(newCommodity);
-
-            // save to "own" file
-            ownCommodities.WriteXml(@".\Data\Commodities_own_new.xml");
-            FileSaver.rotateSaveFiles(@".\Data\Commodities_own.xml");
-
-            // reload in working array
-            loadCommodities(Program.Settings_old.Language);
-        }
-
         public void setOCRCalibrationTabVisibility()
         {
             TabPage OCRTabPage;
@@ -3853,12 +3624,6 @@ namespace RegulatedNoise
                 TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
                 TabControl.lblWarning.Visible = (GameSettings.Display == null); 
             }
-        }
-
-        private void cbAutoAdd_JumpedTo_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings_old.AutoEvent_JumpedTo = Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true);
-            SaveSettings();
         }
 
         private void cmdDonate_Click(object sender, EventArgs e)

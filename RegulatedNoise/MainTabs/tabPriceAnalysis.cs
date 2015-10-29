@@ -166,26 +166,6 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
-        /// <summary>
-        /// "Stations Within" enabled/disabled
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void cbOnlyStationsWithin_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if(m_GUIInterface.saveSetting(sender))
-                {
-                    createNewBaseView();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error in CheckBox_CheckedChanged");
-            }
-        }
-
         private void createNewBaseView()
         {
             Object Distance = null;
@@ -208,7 +188,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 
                 //m_DataSource.createFilteredTable((Int32)cmbSystemBase.SelectedValue, Distance, DistanceToStar, minLandingPadSize);
 
-                PriceAnalysis.enVisitedFilter VFilter = (PriceAnalysis.enVisitedFilter)Program.DBCon.getIniValue<Int32>("Global", "VisitedFilter", ((Int32)PriceAnalysis.enVisitedFilter.showOnlyVistedSystems).ToString(), false);
+                Program.enVisitedFilter VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>("Global", "VisitedFilter", ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(), false);
 
                 m_DataSource.createFilteredTable(17072, Distance, DistanceToStar, minLandingPadSize, VFilter);
 
@@ -249,7 +229,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cbMaxDistanceToStar_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
@@ -264,22 +244,7 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
-        private void rbOrderBySystem_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if(m_GUIInterface.saveSetting(sender))
-                {
-                    createNewBaseView();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error in rbOrderBySystem_CheckedChanged");
-            }
-        }
-
-        private void rbOrderByStation_CheckedChanged(object sender, EventArgs e)
+        private void rbOrderBy_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
@@ -291,36 +256,6 @@ namespace RegulatedNoise.MTPriceAnalysis
             catch (Exception ex)
             {
                 cErr.showError(ex, "Error in rbOrderByStation_CheckedChanged");
-            }
-        }
-
-        private void rbOrderByDistance_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if(m_GUIInterface.saveSetting(sender))
-                {
-                    createNewBaseView();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error in rbOrderByDistance_CheckedChanged");
-            }
-        }
-
-        private void cbOrderByAmount_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if(m_GUIInterface.saveSetting(sender))
-                {
-                    createNewBaseView();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error in cbOrderByAmount_CheckedChanged");
             }
         }
 
@@ -471,21 +406,6 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
-        private void cbMinLandingPadSize_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if(m_GUIInterface.saveSetting(sender))
-                {
-                    createNewBaseView();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error in cbMinLandingPadSize_CheckedChanged");
-            }
-        }
-
         private void cmbMinLandingPadSize_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -591,17 +511,5 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
-        private void dgvAllCommodities_Sorted(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBoxInt321_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Debug.Print(comboBoxInt321.SelectedValue.ToString());
-        }
-
     }
-
-
 }

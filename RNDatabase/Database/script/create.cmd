@@ -29,8 +29,8 @@ REM SET MYSQL_DATADIR=%2
 REM SET LOGFILE=.log\Install.log
 
 REM goto current working dir
-%SCRIPT_DRIVE%
-cd %SCRIPT_LOCATION%..
+%SOURCE_DRIVE%
+cd %SOURCE_DIR%..
 
 if not exist data goto no_delete_required
 rmdir /S /Q data 

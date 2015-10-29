@@ -18,7 +18,7 @@ using RegulatedNoise.MTSettings;
 
 namespace RegulatedNoise
 {
-    static class Program
+    public static class Program
     {
 
         public const Decimal DB_VERSION_CURRENT     = 1.0M;
@@ -28,10 +28,21 @@ namespace RegulatedNoise
         public const String COMMODITY_NOT_SET       = "???";
         public const String BASE_LANGUAGE           = "eng";
 
-        
 
 
-    #region main object creation and disposing
+#region enums
+
+        public enum enVisitedFilter
+        {
+            showAll                 = 0,
+            showOnlyVistedSystems   = 1,
+            showOnlyVistedStations  = 2
+        }
+
+#endregion
+
+
+        #region main object creation and disposing
 
         /// <summary>
         /// The main entry point for the application.

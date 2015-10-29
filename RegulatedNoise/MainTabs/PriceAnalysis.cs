@@ -51,13 +51,6 @@ namespace RegulatedNoise.MTPriceAnalysis
 
         private const String table = "tbLog";
 
-        public enum enVisitedFilter
-        {
-            showAll                 = 0,
-            showOnlyVistedSystems   = 1,
-            showOnlyVistedStations  = 2
-        }
-
         /// <summary>
         /// main selection string for the data from the database
         /// </summary>
@@ -184,7 +177,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// <param name="Distance"></param>
         /// <param name="DistanceToStar"></param>
         /// <param name="minLandingPadSize"></param>
-        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize, enVisitedFilter VisitedFilter)
+        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize, Program.enVisitedFilter VisitedFilter)
         {
             String sqlString;
             DataTable currentSystem = new DataTable();
@@ -226,12 +219,12 @@ namespace RegulatedNoise.MTPriceAnalysis
 			                "                 group by STation_ID)";
                 }
 
-                if(VisitedFilter == enVisitedFilter.showOnlyVistedStations)                            
+                if(VisitedFilter == Program.enVisitedFilter.showOnlyVistedStations)                            
                 {
                     // filter only visited stations
                     sqlString = sqlString + "   and St.visited <> 0";
                 }
-                else if(VisitedFilter == enVisitedFilter.showOnlyVistedSystems)
+                else if(VisitedFilter == Program.enVisitedFilter.showOnlyVistedSystems)
                 { 
                     // filter only visited systems
                     sqlString = sqlString + "   and Sy.visited <> 0";
@@ -434,7 +427,8 @@ namespace RegulatedNoise.MTPriceAnalysis
             DataRow SellMax;
             DataRow lastCommodity;
             HashSet<String> Calculated = new HashSet<String>();
-            Dictionary<Int32, List<DataRow>> CollectedData;
+            //Dictionary<Int32, List<DataRow>> CollectedData;
+            SortedList<Int32, DataRow> CollectedData;
             Int32 StationCount;
             Int32 SystemCount;
             Int32 Current = 0;
@@ -518,7 +512,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                     " 			      from tbCommodityData CD1 join (" +
                                     " 										   select * from tmNeighbourstations N, tbCommodityData CD3" + 
                                     " 											  where N.Station_ID_To   = CD3.station_id" +
-                                    " 											  and   N.Station_ID_From = 16544" +
+                                    " 											  and   N.Station_ID_From = {0}" +
                                     " 										  ) CD2" +
                                     " 					on  (CD1.commodity_id = CD2.commodity_id)" +
                                     " 					and (CD1.station_id   = {0})" +
@@ -527,15 +521,10 @@ namespace RegulatedNoise.MTPriceAnalysis
                                     "                                                       or (nullif(CD1.Sell,0) - nullif(CD2.Buy,0))      = XP.Back)" +
                                     " having ((Forward Is Not null) or (Back Is Not null))";
  
-
-
-                    //sqlString = "select count(*) As Count from tmFilteredStations";
-                    //Program.DBCon.Execute(sqlString, Data);
-
-                
                     Int32 DataFound = 0;
                     Current = 0;
                     Calculated.Clear();
+                    //CollectedData = new Dictionary<Int32, List<DataRow>>();
 
                     PV = new ProgressView();
 
@@ -546,15 +535,15 @@ namespace RegulatedNoise.MTPriceAnalysis
                         Boolean isNew = false;
 
                         // first check if we've already calculated all data between these station
-                        if(StartStation.System_ID_From < StartStation.System_ID_To)
-                            isNew = Calculated.Add(StartStation.System_ID_From.ToString() + "|" + StartStation.System_ID_To.ToString());
+                        if(StartStation.Station_ID_From < StartStation.Station_ID_To)
+                            isNew = Calculated.Add(StartStation.Station_ID_From.ToString() + "|" + StartStation.Station_ID_To.ToString());
                         else
-                            isNew = Calculated.Add(StartStation.System_ID_To.ToString() + "|" + StartStation.System_ID_From.ToString());
+                            isNew = Calculated.Add(StartStation.Station_ID_To.ToString() + "|" + StartStation.Station_ID_From.ToString());
 
                         if(isNew)
                         {
                             // get the trading data 
-                            sqlString = String.Format(sqlBaseString, StartStation.System_ID_From);
+                            sqlString = String.Format(sqlBaseString, StartStation.Station_ID_From);
 
                             if(Program.DBCon.Execute(sqlString, Data) > 0)
                             {
@@ -562,10 +551,29 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 DataFound += 1;
                             }
 
-                            //foreach (DataRow Profit in Data.AsEnumerable)
-                            //{
-                            
-                            //}
+                            foreach(DataRow Profit in Data.AsEnumerable())
+                            {
+
+                                //if(CollectedData)
+                                //CollectedData.Last();
+                                //List<DataRow> CommodityData;
+
+
+                                //if(!CollectedData.TryGetValue((Int32)(Profit["commodity_id"]), out CommodityData))
+                                //{
+                                //    // first data
+                                //    CommodityData = new List<DataRow>() {Profit};
+                                //}
+                                //else
+                                //{
+                                //    // following data, 
+                                    
+
+                                //}
+
+                                //var x = CollectedData.Last();
+
+                            }
                         }
 
                         Current += 1;

@@ -38,12 +38,12 @@ namespace RegulatedNoise
         Large
     }
 
-    public enum enLanguage
-    {
-        eng,
-        ger,
-        fra
-    }
+    //public enum enLanguage
+    //{
+    //    eng,
+    //    ger,
+    //    fra
+    //}
 
     public enum enCommodityLevel
     {

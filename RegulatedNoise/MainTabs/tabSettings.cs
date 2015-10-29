@@ -70,25 +70,34 @@ namespace RegulatedNoise.MTSettings
         public void Init()
         {
             Cursor oldCursor = Cursor;
-            String ComboboxValues;
             DataTable Data;
 
             try
             {
                 Cursor = Cursors.WaitCursor;
 
+                // loading languages to combobox
                 Data = new DataTable();
                 Program.DBCon.Execute("select * from tbLanguage", Data);
                 cmbLanguage.DataSource      = Data;
                 cmbLanguage.DisplayMember   = "language";
                 cmbLanguage.ValueMember     = "language";
 
+                //prepare visited filter
+                Tuple<Int32, String> newEntry;
+                newEntry = new Tuple<Int32, String>(0,"show all");
+                cmbVisitedFilter.Items.Add(newEntry);
+                newEntry = new Tuple<Int32, String>(1,"only visited systems");
+                cmbVisitedFilter.Items.Add(newEntry);
+                newEntry = new Tuple<Int32, String>(2,"only visited stations");
+                cmbVisitedFilter.Items.Add(newEntry);
+                cmbVisitedFilter.DisplayMember   = "Item2";
+                cmbVisitedFilter.ValueMember     = "Item1";
+
+
+                // loading all settings
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
                 m_GUIInterface.loadAllSettings(this);
-                
-                
-
-
 
                 Cursor = oldCursor;
             }
@@ -98,10 +107,6 @@ namespace RegulatedNoise.MTSettings
                 throw new Exception("Error during initialization the commanders log tab", ex);
             }
         }
-
-        private void SaveSettings()
-        { }
-
 
         /// <summary>
         /// the data object informs the gui about changed data
@@ -146,8 +151,6 @@ namespace RegulatedNoise.MTSettings
             cmbLanguage.DisplayMember = "EnumString";
             cmbLanguage.DataSource = lstEnum;
 
-            cmbLanguage.SelectedValue = (Int32)Program.Settings_old.Language;
-
         }
 
         /// <summary>
@@ -166,10 +169,8 @@ namespace RegulatedNoise.MTSettings
 
             if (OCRFile.ShowDialog(this) == DialogResult.OK)
             {
-                Program.Settings_old.TraineddataFile = System.IO.Path.GetFileNameWithoutExtension(OCRFile.FileName);
-                txtOCRTraineddataFile.Text = Program.Settings_old.TraineddataFile;
-
-                SaveSettings();
+                txtOCRTraineddataFile.Text = System.IO.Path.GetFileNameWithoutExtension(OCRFile.FileName);
+                m_GUIInterface.saveSetting(txtOCRTraineddataFile);
             }
 
         }
@@ -238,7 +239,6 @@ namespace RegulatedNoise.MTSettings
             { 
                 txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
                 Program.Settings_old.GUIColorCutoffLevel = FTest.CutoffLevel;
-                SaveSettings();            
             }
         }
 
@@ -456,13 +456,14 @@ namespace RegulatedNoise.MTSettings
             }
         }
 
-        private void cmbLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        private void Combobox_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 if((m_GUIInterface != null) && m_GUIInterface.saveSetting(sender))
                 {
-                    Program.Data.switchLanguage((String)cmbLanguage.SelectedValue);
+                    if(sender == cmbLanguage)
+                        Program.Data.switchLanguage((String)cmbLanguage.SelectedValue);
                 }
             }
             catch (Exception ex)

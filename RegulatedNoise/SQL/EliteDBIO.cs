@@ -13,7 +13,7 @@ using System.Globalization;
 using RegulatedNoise.SQL.Datasets;
 namespace RegulatedNoise.SQL
 {
-    class EliteDBIO
+    public class EliteDBIO
     {
         private enum enCommodityTypes
         {
