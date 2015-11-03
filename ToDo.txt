@@ -26,6 +26,9 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.23
+   * first version which is showing "best routes" data
+-------------------------------------------------------------------------------------         
 SQL 0.0.22
    * added more base sql for analysing prices
    * added different sql filters for selecting only systems which are known (visited) by the pilot himself

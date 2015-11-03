@@ -16,7 +16,7 @@ set EliteDBName=Elite_DB
 set ROOT_PW=EliteAdmin
 set RN_USER=RN_User
 set RN_USER_PW=Elite
-set RN_USER_PRIV=Insert, Select, Update, Delete
+set RN_USER_PRIV=Insert, Select, Update, Delete, Create Temporary Tables, Create View, Drop
 
 rem "super" permission is needed for performance reasons while inserting big data plenties
 set RN_USER_PRIV_GLOB=Super	

@@ -25,18 +25,29 @@ namespace RegulatedNoise.MTPriceAnalysis
             Add
 	    }
 
-        private const String        DB_GROUPNAME                    = "PriceAnalysis";
 
-        private PriceAnalysis       m_DataSource;                   // data object
-        private enCLAction          m_PA_State;                     // current gui state
+        public const String                DB_GROUPNAME                    = "PriceAnalysis";
+        public const String                CURRENT_SYSTEM                  = "<current system>";
 
-        private Int32               m_InitialTopOfGrid;
-        private Int32               m_InitialTopOfEditGroupBox;
+        private PriceAnalysis               m_DataSource;                   // data object
+        private enCLAction                  m_PA_State;                     // current gui state
 
-        private Boolean             m_CellValueNeededIsRegistered   = false;        // true if the event is already registred
-        private Boolean             m_FirstRowShown                 = false;        // true after first time shown
-        private DBGuiInterface      m_GUIInterface;
+        private Int32                       m_InitialTopOfGrid;
+        private Int32                       m_InitialTopOfEditGroupBox;
 
+        private Boolean                     m_CellValueNeededIsRegistered   = false;        // true if the event is already registred
+        private Boolean                     m_FirstRowShown                 = false;        // true after first time shown
+        private DBGuiInterface              m_GUIInterface;
+        private Boolean                     m_RefreshStarted                = true;         // true, if the user started a new filtering
+
+                                                                                            // shows, which tabs already refreshed after a new filtering
+        private Dictionary<String, Boolean> m_RefreshState                  = new Dictionary<string,bool>() { {"BaseData",           false},
+                                                                                                              {"tpAllCommodities",   false},
+                                                                                                              {"tpByStation",        false},
+                                                                                                              {"tpByCommodity",      false},
+                                                                                                              {"tpStationToStation", false}};
+
+                                                                                            
         /// <summary>
         /// Constructor
         /// </summary>
@@ -92,42 +103,20 @@ namespace RegulatedNoise.MTPriceAnalysis
                 ComboboxValues = Program.DBCon.getIniValue(DB_GROUPNAME, "SystemLightYearCmbValues", "10;25;50;100;200;1000", false);
                 cmbSystemLightYears.Items.Clear();
                 foreach (String Value in ComboboxValues.Split(';'))
-                    cmbSystemLightYears.Items.Add(Int32.Parse(Value));
+                cmbSystemLightYears.Items.Add(Int32.Parse(Value));
 
                 ComboboxValues = Program.DBCon.getIniValue(DB_GROUPNAME, "StationToStarCmbValues", "50;100;500;1000;2000;5000", false);
-                cmdStationLightSeconds.Items.Clear();
+                cmbStationLightSeconds.Items.Clear();
                 foreach (String Value in ComboboxValues.Split(';'))
-                    cmdStationLightSeconds.Items.Add(Int32.Parse(Value));
+                cmbStationLightSeconds.Items.Add(Int32.Parse(Value));
 
-                ////preparing the combo boxes
-                //m_DataSource.prepareCmb_EventTypes(ref cbLogEventType);
-                //m_DataSource.prepareCmb_EventTypes(ref cbLogSystemName);
-                //m_DataSource.prepareCmb_EventTypes(ref cbLogStationName, cbLogSystemName);
-                //m_DataSource.prepareCmb_EventTypes(ref cbLogCargoName);
-                //m_DataSource.prepareCmb_EventTypes(ref cbLogCargoAction);
+                ComboboxValues = Program.DBCon.getIniValue(DB_GROUPNAME, "MaxTripDistances", "1;5;10;12;15;17;20;25;30;40;50;100;150", false);
+                cmbMaxTripDistance.Items.Clear();
+                foreach (String Value in ComboboxValues.Split(';'))
+                cmbMaxTripDistance.Items.Add(Int32.Parse(Value));
 
-
-                //dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern + " " + 
-                //                               System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
-
-                //dtpLogEventDate.Format       = System.Windows.Forms.DateTimePickerFormat.Custom;
-    
-                //setCLFieldsEditable(false);
-
-                //// preparing the datagridview                
-                //dgvAllCommodities.VirtualMode              = true;
-                //dgvAllCommodities.ReadOnly                 = true;
-                //dgvAllCommodities.AllowUserToAddRows       = false;
-                //dgvAllCommodities.AllowUserToOrderColumns  = false;
-                //dgvAllCommodities.SelectionMode            = DataGridViewSelectionMode.FullRowSelect;
-
-                //dgvAllCommodities.RowCount                 = m_DataSource.InitRetriever();
-
-                //dgvAllCommodities.RowEnter                += dgvCommandersLog_RowEnter;
-                //dgvAllCommodities.RowPrePaint             += dgvCommandersLog_RowPrePaint;
-                //dgvAllCommodities.Paint                   += dgvCommandersLog_Paint;
-
-                //setEditfieldBoxVisible(Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, "showEditFields", "true", false));
+                cmbSystemBase.Items.Add(CURRENT_SYSTEM);
+                cmbSystemBase.SelectedIndex = 0;
 
                 createNewBaseView();
 
@@ -172,6 +161,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             Object DistanceToStar = null;
             Object minLandingPadSize = null;
             Cursor oldCursor =  this.Cursor;
+            String sqlString;
+            DataTable Data;
+            Int32 SystemID;
+            Program.enVisitedFilter VFilter;
 
             try
             {
@@ -181,16 +174,26 @@ namespace RegulatedNoise.MTPriceAnalysis
                     Distance = Int32.Parse(cmbSystemLightYears.Text);
 
                 if(cbMaxDistanceToStar.Checked)                 
-                    DistanceToStar = Int32.Parse(cmdStationLightSeconds.Text);
+                    DistanceToStar = Int32.Parse(cmbStationLightSeconds.Text);
 
                 if(cbMinLandingPadSize.Checked)                 
                     minLandingPadSize = cmbMinLandingPadSize.Text;
                 
-                //m_DataSource.createFilteredTable((Int32)cmbSystemBase.SelectedValue, Distance, DistanceToStar, minLandingPadSize);
+                // get the id of the selected "base system"
+                if(cmbSystemBase.SelectedIndex == 0)
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(Program.actualCondition.System);
+                else
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(cmbSystemBase.Text);
+                Data = new DataTable();
+                Program.DBCon.Execute(sqlString, Data);
+                SystemID = (Int32)Data.Rows[0]["ID"];
 
-                Program.enVisitedFilter VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>("Global", "VisitedFilter", ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(), false);
+                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
+                                                                                    "VisitedFilter", 
+                                                                                    ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
+                                                                                    false);
 
-                m_DataSource.createFilteredTable(17072, Distance, DistanceToStar, minLandingPadSize, VFilter);
+                m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter);
 
                 Int32 StationCount;
                 Int32 SystemCount;
@@ -198,22 +201,6 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 lblSystemsFound.Text  = SystemCount.ToString();
                 lblStationsFound.Text = StationCount.ToString();
-
-                BindingSource bs = new BindingSource(); 
-
-                bs.DataSource = m_DataSource.getMinMax(cbOnlyTradedCommodities.Checked);
-
-
-                dgvAllCommodities.AutoGenerateColumns = false;
-                dgvAllCommodities.DataSource = bs;
-                sortAllCommodities();
-
-
-                m_DataSource.calculateTradingRoutes(20);
-
-
-
-
 
                 this.Cursor = oldCursor;
             }
@@ -235,7 +222,8 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if(m_GUIInterface.saveSetting(sender))
                 {
-                    createNewBaseView();
+                    cmdFilter.Enabled               = true;
+                    cmdRoundTripCaclulation.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -250,7 +238,8 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if(m_GUIInterface.saveSetting(sender))
                 {
-                    createNewBaseView();
+                    cmdFilter.Enabled               = true;
+                    cmdRoundTripCaclulation.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -266,7 +255,8 @@ namespace RegulatedNoise.MTPriceAnalysis
                 if(((TextBoxInt32)sender).checkValue())
                     if(m_GUIInterface.saveSetting(sender))
                     {
-                        createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                     }
                 else
                     m_GUIInterface.loadSetting(sender);
@@ -285,7 +275,8 @@ namespace RegulatedNoise.MTPriceAnalysis
                     if(((TextBoxInt32)sender).checkValue())
                         if(m_GUIInterface.saveSetting(sender))
                         {
-                            createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                         }
                     else
                         m_GUIInterface.loadSetting(sender);
@@ -302,9 +293,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
               if(e.KeyCode == Keys.Enter)
                     if(((ComboBoxInt32)sender).checkValue())
-                        if(m_GUIInterface.saveSetting(sender))
+                        if(m_GUIInterface.saveSetting(sender) && cbOnlyStationsWithin.Checked)
                         {
-                            createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                         }
                     else
                         m_GUIInterface.loadSetting(sender);
@@ -320,9 +312,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
-                    if(m_GUIInterface.saveSetting(sender))
+                    if(m_GUIInterface.saveSetting(sender) && cbOnlyStationsWithin.Checked)
                     {
-                        createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                     }
                 else
                     m_GUIInterface.loadSetting(sender);
@@ -338,9 +331,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
-                    if(m_GUIInterface.saveSetting(sender))
+                    if(m_GUIInterface.saveSetting(sender) && cbOnlyStationsWithin.Checked)
                     {
-                        createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                     }
                 else
                     m_GUIInterface.loadSetting(sender);
@@ -356,9 +350,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
-                    if(m_GUIInterface.saveSetting(sender))
+                    if(m_GUIInterface.saveSetting(sender) && cbMaxDistanceToStar.Checked)
                     {
-                        createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                     }
                 else
                     m_GUIInterface.loadSetting(sender);
@@ -374,9 +369,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
-                    if(m_GUIInterface.saveSetting(sender))
+                    if(m_GUIInterface.saveSetting(sender) && cbMaxDistanceToStar.Checked)
                     {
-                        createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                     }
                 else
                     m_GUIInterface.loadSetting(sender);
@@ -393,9 +389,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if(e.KeyCode == Keys.Enter)
                     if(((ComboBoxInt32)sender).checkValue())
-                        if(m_GUIInterface.saveSetting(sender))
+                        if(m_GUIInterface.saveSetting(sender) && cbMaxDistanceToStar.Checked)
                         {
-                            createNewBaseView();
+                            cmdFilter.Enabled               = true;
+                            cmdRoundTripCaclulation.Enabled = true;
                         }
                     else
                         m_GUIInterface.loadSetting(sender);
@@ -411,9 +408,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             try
             {
                 if(e.KeyCode == Keys.Enter)
-                    if(m_GUIInterface.saveSetting(sender))
+                    if(m_GUIInterface.saveSetting(sender) && cbMinLandingPadSize.Checked)
                     {
-                        createNewBaseView();
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
                     }
             }
             catch (Exception ex)
@@ -426,9 +424,10 @@ namespace RegulatedNoise.MTPriceAnalysis
         {
             try
             {
-                if(m_GUIInterface.saveSetting(sender))
+                if(m_GUIInterface.saveSetting(sender) && cbMinLandingPadSize.Checked)
                 {
-                    createNewBaseView();
+                    cmdFilter.Enabled               = true;
+                    cmdRoundTripCaclulation.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -441,14 +440,73 @@ namespace RegulatedNoise.MTPriceAnalysis
         {
             try
             {
-                if(m_GUIInterface.saveSetting(sender))
+                if(m_GUIInterface.saveSetting(sender) && cbMinLandingPadSize.Checked)
                 {
-                    createNewBaseView();
+                    cmdFilter.Enabled               = true;
+                    cmdRoundTripCaclulation.Enabled = true;
                 }
             }
             catch (Exception ex)
             {
                 cErr.showError(ex, "Error in cmbMinLandingPadSize_SelectedIndexChanged");
+            }
+        }
+
+        private void cmbMaxTripDistance_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+              if(e.KeyCode == Keys.Enter)
+                    if(((ComboBoxInt32)sender).checkValue())
+                        if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
+                        {
+                            cmdFilter.Enabled               = true;
+                            cmdRoundTripCaclulation.Enabled = true;
+                        }
+                    else
+                        m_GUIInterface.loadSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in cmbMaxTripDistance_KeyDown");
+            }
+        }
+
+        private void cmbMaxTripDistance_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(((ComboBoxInt32)sender).checkValue())
+                    if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
+                    {
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
+                    }
+                else
+                    m_GUIInterface.loadSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in cmbMaxTripDistance_SelectedIndexChanged");
+            }
+        }
+
+        private void cmbMaxTripDistance_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                if(((ComboBoxInt32)sender).checkValue())
+                    if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
+                    {
+                        cmdFilter.Enabled               = true;
+                        cmdRoundTripCaclulation.Enabled = true;
+                    }
+                else
+                    m_GUIInterface.loadSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in cmbMaxTripDistance_Leave");
             }
         }
 
@@ -471,7 +529,8 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if(m_GUIInterface.saveSetting(sender))
                 {
-                    createNewBaseView();
+                    cmdFilter.Enabled               = true;
+                    cmdRoundTripCaclulation.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -508,6 +567,151 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 this.Cursor = oldCursor;
                 throw new Exception("Error while sorting grid (all commodities)", ex);
+            }
+        }
+
+        private void cmdFilter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                m_RefreshState["BaseData"]              = false;
+                m_RefreshState["tpAllCommodities"]      = false;
+                m_RefreshState["tpByStation"]           = false;
+                m_RefreshState["tpByCommodity"]         = false;
+                m_RefreshState["tpStationToStation"]    = false;
+
+                refreshPriceView();
+
+                cmdFilter.Enabled               = false;
+                cmdRoundTripCaclulation.Enabled = false;
+                m_RefreshStarted                = true;
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while filtering stations");
+            }
+        }
+
+        private void refreshPriceView(Boolean TabWasChanged = false)
+        {
+            BindingSource bs;
+
+            try
+            {
+
+                if (!m_RefreshState["BaseData"])
+                { 
+                    createNewBaseView();
+                    m_RefreshState["BaseData"] = true;
+                }
+
+                switch (tabPriceSubTabs.SelectedTab.Name)
+                {
+                    case "tpAllCommodities":
+
+                        if (!m_RefreshState["tpAllCommodities"])
+                        { 
+                            bs              = new BindingSource(); 
+                            bs.DataSource   = m_DataSource.getPriceExtremum(cbOnlyTradedCommodities.Checked);
+
+                            dgvAllCommodities.AutoGenerateColumns = false;
+                            dgvAllCommodities.DataSource          = bs;
+                            sortAllCommodities();
+
+                            m_RefreshState["tpAllCommodities"] = true;
+                        }
+                        
+                        break;
+
+                    case "tpByStation":
+                        
+                        if (!m_RefreshState["tpByStation"])
+                        { 
+                        
+
+                            m_RefreshState["tpByStation"] = true;
+                        }
+                        break;
+
+                    case "tpByCommodity":
+
+                        if (!m_RefreshState["tpByCommodity"])
+                        { 
+                        
+
+                            m_RefreshState["tpByCommodity"] = true;
+                        }
+                        break;
+
+                    case "tpStationToStation":
+                        if (!m_RefreshState["tpStationToStation"])
+                        { 
+                            Boolean startRecalculation = true;
+
+                            if(TabWasChanged)
+                                startRecalculation = (MessageBox.Show("Start recalculation of best profit route ?", 
+                                                                      "Base data is changed", 
+                                                                      MessageBoxButtons.YesNo, 
+                                                                      MessageBoxIcon.Question, 
+                                                                      MessageBoxDefaultButton.Button1) == DialogResult.Yes);
+
+                            if(startRecalculation)
+                            { 
+                                
+                                bs              = new BindingSource(); 
+                                bs.DataSource   = m_DataSource.calculateTradingRoutes();        
+
+                                dgvStationToStationRoutes.AutoGenerateColumns = false;
+                                dgvStationToStationRoutes.DataSource          = bs;
+
+                            }
+
+                            m_RefreshState["tpStationToStation"] = true;
+                        }
+
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing current data view", ex);
+            }
+        }
+
+        private void tabPriceSubTabs_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            try
+            {
+                //refreshPriceView(true);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error after changing active tabindex");
+            }
+        }
+
+        private void cmdRoundTripCaclulation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                refreshPriceView();
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while starting recalculation of the best profit route");
+            }
+        }
+
+        private void tabPriceSubTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                refreshPriceView(true);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error after changing active tabindex");
             }
         }
 

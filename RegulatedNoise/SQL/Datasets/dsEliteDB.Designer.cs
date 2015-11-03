@@ -24,9 +24,13 @@ namespace RegulatedNoise.SQL.Datasets {
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
     public partial class dsEliteDB : global::System.Data.DataSet {
         
+        private vilogDataTable tablevilog;
+        
+        private visystemsandstationsDataTable tablevisystemsandstations;
+        
         private tballegianceDataTable tabletballegiance;
         
-        private tmneighbourstationsDataTable tabletmneighbourstations;
+        private tmpa_s2s_stationdataDataTable tabletmpa_s2s_stationdata;
         
         private tbattributeDataTable tabletbattribute;
         
@@ -62,8 +66,6 @@ namespace RegulatedNoise.SQL.Datasets {
         
         private tblogDataTable tabletblog;
         
-        private tbpa_allcommoditiesDataTable tabletbpa_allcommodities;
-        
         private tbpricehistoryDataTable tabletbpricehistory;
         
         private tbsecurityDataTable tabletbsecurity;
@@ -88,15 +90,15 @@ namespace RegulatedNoise.SQL.Datasets {
         
         private tbvisitedsystemsDataTable tabletbvisitedsystems;
         
+        private tmbestprofitsDataTable tabletmbestprofits;
+        
         private tmfilteredstationsDataTable tabletmfilteredstations;
         
-        private vilogDataTable tablevilog;
+        private tmneighbourstationsDataTable tabletmneighbourstations;
         
-        private visystemsandstationsDataTable tablevisystemsandstations;
+        private tmpa_allcommoditiesDataTable tabletmpa_allcommodities;
         
-        private tmppa_s2s_besttripsDataTable tabletmppa_s2s_besttrips;
-        
-        private tmppa_s2s_stationdataDataTable tabletmppa_s2s_stationdata;
+        private tmpa_s2s_besttripsDataTable tabletmpa_s2s_besttrips;
         
         private global::System.Data.DataRelation relationfk_tbCategoryLocalization_tbCategory1;
         
@@ -226,11 +228,17 @@ namespace RegulatedNoise.SQL.Datasets {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
+                if ((ds.Tables["vilog"] != null)) {
+                    base.Tables.Add(new vilogDataTable(ds.Tables["vilog"]));
+                }
+                if ((ds.Tables["visystemsandstations"] != null)) {
+                    base.Tables.Add(new visystemsandstationsDataTable(ds.Tables["visystemsandstations"]));
+                }
                 if ((ds.Tables["tballegiance"] != null)) {
                     base.Tables.Add(new tballegianceDataTable(ds.Tables["tballegiance"]));
                 }
-                if ((ds.Tables["tmneighbourstations"] != null)) {
-                    base.Tables.Add(new tmneighbourstationsDataTable(ds.Tables["tmneighbourstations"]));
+                if ((ds.Tables["tmpa_s2s_stationdata"] != null)) {
+                    base.Tables.Add(new tmpa_s2s_stationdataDataTable(ds.Tables["tmpa_s2s_stationdata"]));
                 }
                 if ((ds.Tables["tbattribute"] != null)) {
                     base.Tables.Add(new tbattributeDataTable(ds.Tables["tbattribute"]));
@@ -283,9 +291,6 @@ namespace RegulatedNoise.SQL.Datasets {
                 if ((ds.Tables["tblog"] != null)) {
                     base.Tables.Add(new tblogDataTable(ds.Tables["tblog"]));
                 }
-                if ((ds.Tables["tbpa_allcommodities"] != null)) {
-                    base.Tables.Add(new tbpa_allcommoditiesDataTable(ds.Tables["tbpa_allcommodities"]));
-                }
                 if ((ds.Tables["tbpricehistory"] != null)) {
                     base.Tables.Add(new tbpricehistoryDataTable(ds.Tables["tbpricehistory"]));
                 }
@@ -322,20 +327,20 @@ namespace RegulatedNoise.SQL.Datasets {
                 if ((ds.Tables["tbvisitedsystems"] != null)) {
                     base.Tables.Add(new tbvisitedsystemsDataTable(ds.Tables["tbvisitedsystems"]));
                 }
+                if ((ds.Tables["tmbestprofits"] != null)) {
+                    base.Tables.Add(new tmbestprofitsDataTable(ds.Tables["tmbestprofits"]));
+                }
                 if ((ds.Tables["tmfilteredstations"] != null)) {
                     base.Tables.Add(new tmfilteredstationsDataTable(ds.Tables["tmfilteredstations"]));
                 }
-                if ((ds.Tables["vilog"] != null)) {
-                    base.Tables.Add(new vilogDataTable(ds.Tables["vilog"]));
+                if ((ds.Tables["tmneighbourstations"] != null)) {
+                    base.Tables.Add(new tmneighbourstationsDataTable(ds.Tables["tmneighbourstations"]));
                 }
-                if ((ds.Tables["visystemsandstations"] != null)) {
-                    base.Tables.Add(new visystemsandstationsDataTable(ds.Tables["visystemsandstations"]));
+                if ((ds.Tables["tmpa_allcommodities"] != null)) {
+                    base.Tables.Add(new tmpa_allcommoditiesDataTable(ds.Tables["tmpa_allcommodities"]));
                 }
-                if ((ds.Tables["tmppa_s2s_besttrips"] != null)) {
-                    base.Tables.Add(new tmppa_s2s_besttripsDataTable(ds.Tables["tmppa_s2s_besttrips"]));
-                }
-                if ((ds.Tables["tmppa_s2s_stationdata"] != null)) {
-                    base.Tables.Add(new tmppa_s2s_stationdataDataTable(ds.Tables["tmppa_s2s_stationdata"]));
+                if ((ds.Tables["tmpa_s2s_besttrips"] != null)) {
+                    base.Tables.Add(new tmpa_s2s_besttripsDataTable(ds.Tables["tmpa_s2s_besttrips"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -359,6 +364,26 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public vilogDataTable vilog {
+            get {
+                return this.tablevilog;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public visystemsandstationsDataTable visystemsandstations {
+            get {
+                return this.tablevisystemsandstations;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public tballegianceDataTable tballegiance {
             get {
                 return this.tabletballegiance;
@@ -369,9 +394,9 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tmneighbourstationsDataTable tmneighbourstations {
+        public tmpa_s2s_stationdataDataTable tmpa_s2s_stationdata {
             get {
-                return this.tabletmneighbourstations;
+                return this.tabletmpa_s2s_stationdata;
             }
         }
         
@@ -549,16 +574,6 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tbpa_allcommoditiesDataTable tbpa_allcommodities {
-            get {
-                return this.tabletbpa_allcommodities;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public tbpricehistoryDataTable tbpricehistory {
             get {
                 return this.tabletbpricehistory;
@@ -679,6 +694,16 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public tmbestprofitsDataTable tmbestprofits {
+            get {
+                return this.tabletmbestprofits;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public tmfilteredstationsDataTable tmfilteredstations {
             get {
                 return this.tabletmfilteredstations;
@@ -689,9 +714,9 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public vilogDataTable vilog {
+        public tmneighbourstationsDataTable tmneighbourstations {
             get {
-                return this.tablevilog;
+                return this.tabletmneighbourstations;
             }
         }
         
@@ -699,9 +724,9 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public visystemsandstationsDataTable visystemsandstations {
+        public tmpa_allcommoditiesDataTable tmpa_allcommodities {
             get {
-                return this.tablevisystemsandstations;
+                return this.tabletmpa_allcommodities;
             }
         }
         
@@ -709,19 +734,9 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tmppa_s2s_besttripsDataTable tmppa_s2s_besttrips {
+        public tmpa_s2s_besttripsDataTable tmpa_s2s_besttrips {
             get {
-                return this.tabletmppa_s2s_besttrips;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tmppa_s2s_stationdataDataTable tmppa_s2s_stationdata {
-            get {
-                return this.tabletmppa_s2s_stationdata;
+                return this.tabletmpa_s2s_besttrips;
             }
         }
         
@@ -792,11 +807,17 @@ namespace RegulatedNoise.SQL.Datasets {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
+                if ((ds.Tables["vilog"] != null)) {
+                    base.Tables.Add(new vilogDataTable(ds.Tables["vilog"]));
+                }
+                if ((ds.Tables["visystemsandstations"] != null)) {
+                    base.Tables.Add(new visystemsandstationsDataTable(ds.Tables["visystemsandstations"]));
+                }
                 if ((ds.Tables["tballegiance"] != null)) {
                     base.Tables.Add(new tballegianceDataTable(ds.Tables["tballegiance"]));
                 }
-                if ((ds.Tables["tmneighbourstations"] != null)) {
-                    base.Tables.Add(new tmneighbourstationsDataTable(ds.Tables["tmneighbourstations"]));
+                if ((ds.Tables["tmpa_s2s_stationdata"] != null)) {
+                    base.Tables.Add(new tmpa_s2s_stationdataDataTable(ds.Tables["tmpa_s2s_stationdata"]));
                 }
                 if ((ds.Tables["tbattribute"] != null)) {
                     base.Tables.Add(new tbattributeDataTable(ds.Tables["tbattribute"]));
@@ -849,9 +870,6 @@ namespace RegulatedNoise.SQL.Datasets {
                 if ((ds.Tables["tblog"] != null)) {
                     base.Tables.Add(new tblogDataTable(ds.Tables["tblog"]));
                 }
-                if ((ds.Tables["tbpa_allcommodities"] != null)) {
-                    base.Tables.Add(new tbpa_allcommoditiesDataTable(ds.Tables["tbpa_allcommodities"]));
-                }
                 if ((ds.Tables["tbpricehistory"] != null)) {
                     base.Tables.Add(new tbpricehistoryDataTable(ds.Tables["tbpricehistory"]));
                 }
@@ -888,20 +906,20 @@ namespace RegulatedNoise.SQL.Datasets {
                 if ((ds.Tables["tbvisitedsystems"] != null)) {
                     base.Tables.Add(new tbvisitedsystemsDataTable(ds.Tables["tbvisitedsystems"]));
                 }
+                if ((ds.Tables["tmbestprofits"] != null)) {
+                    base.Tables.Add(new tmbestprofitsDataTable(ds.Tables["tmbestprofits"]));
+                }
                 if ((ds.Tables["tmfilteredstations"] != null)) {
                     base.Tables.Add(new tmfilteredstationsDataTable(ds.Tables["tmfilteredstations"]));
                 }
-                if ((ds.Tables["vilog"] != null)) {
-                    base.Tables.Add(new vilogDataTable(ds.Tables["vilog"]));
+                if ((ds.Tables["tmneighbourstations"] != null)) {
+                    base.Tables.Add(new tmneighbourstationsDataTable(ds.Tables["tmneighbourstations"]));
                 }
-                if ((ds.Tables["visystemsandstations"] != null)) {
-                    base.Tables.Add(new visystemsandstationsDataTable(ds.Tables["visystemsandstations"]));
+                if ((ds.Tables["tmpa_allcommodities"] != null)) {
+                    base.Tables.Add(new tmpa_allcommoditiesDataTable(ds.Tables["tmpa_allcommodities"]));
                 }
-                if ((ds.Tables["tmppa_s2s_besttrips"] != null)) {
-                    base.Tables.Add(new tmppa_s2s_besttripsDataTable(ds.Tables["tmppa_s2s_besttrips"]));
-                }
-                if ((ds.Tables["tmppa_s2s_stationdata"] != null)) {
-                    base.Tables.Add(new tmppa_s2s_stationdataDataTable(ds.Tables["tmppa_s2s_stationdata"]));
+                if ((ds.Tables["tmpa_s2s_besttrips"] != null)) {
+                    base.Tables.Add(new tmpa_s2s_besttripsDataTable(ds.Tables["tmpa_s2s_besttrips"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -936,16 +954,28 @@ namespace RegulatedNoise.SQL.Datasets {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         internal void InitVars(bool initTable) {
+            this.tablevilog = ((vilogDataTable)(base.Tables["vilog"]));
+            if ((initTable == true)) {
+                if ((this.tablevilog != null)) {
+                    this.tablevilog.InitVars();
+                }
+            }
+            this.tablevisystemsandstations = ((visystemsandstationsDataTable)(base.Tables["visystemsandstations"]));
+            if ((initTable == true)) {
+                if ((this.tablevisystemsandstations != null)) {
+                    this.tablevisystemsandstations.InitVars();
+                }
+            }
             this.tabletballegiance = ((tballegianceDataTable)(base.Tables["tballegiance"]));
             if ((initTable == true)) {
                 if ((this.tabletballegiance != null)) {
                     this.tabletballegiance.InitVars();
                 }
             }
-            this.tabletmneighbourstations = ((tmneighbourstationsDataTable)(base.Tables["tmneighbourstations"]));
+            this.tabletmpa_s2s_stationdata = ((tmpa_s2s_stationdataDataTable)(base.Tables["tmpa_s2s_stationdata"]));
             if ((initTable == true)) {
-                if ((this.tabletmneighbourstations != null)) {
-                    this.tabletmneighbourstations.InitVars();
+                if ((this.tabletmpa_s2s_stationdata != null)) {
+                    this.tabletmpa_s2s_stationdata.InitVars();
                 }
             }
             this.tabletbattribute = ((tbattributeDataTable)(base.Tables["tbattribute"]));
@@ -1050,12 +1080,6 @@ namespace RegulatedNoise.SQL.Datasets {
                     this.tabletblog.InitVars();
                 }
             }
-            this.tabletbpa_allcommodities = ((tbpa_allcommoditiesDataTable)(base.Tables["tbpa_allcommodities"]));
-            if ((initTable == true)) {
-                if ((this.tabletbpa_allcommodities != null)) {
-                    this.tabletbpa_allcommodities.InitVars();
-                }
-            }
             this.tabletbpricehistory = ((tbpricehistoryDataTable)(base.Tables["tbpricehistory"]));
             if ((initTable == true)) {
                 if ((this.tabletbpricehistory != null)) {
@@ -1128,34 +1152,34 @@ namespace RegulatedNoise.SQL.Datasets {
                     this.tabletbvisitedsystems.InitVars();
                 }
             }
+            this.tabletmbestprofits = ((tmbestprofitsDataTable)(base.Tables["tmbestprofits"]));
+            if ((initTable == true)) {
+                if ((this.tabletmbestprofits != null)) {
+                    this.tabletmbestprofits.InitVars();
+                }
+            }
             this.tabletmfilteredstations = ((tmfilteredstationsDataTable)(base.Tables["tmfilteredstations"]));
             if ((initTable == true)) {
                 if ((this.tabletmfilteredstations != null)) {
                     this.tabletmfilteredstations.InitVars();
                 }
             }
-            this.tablevilog = ((vilogDataTable)(base.Tables["vilog"]));
+            this.tabletmneighbourstations = ((tmneighbourstationsDataTable)(base.Tables["tmneighbourstations"]));
             if ((initTable == true)) {
-                if ((this.tablevilog != null)) {
-                    this.tablevilog.InitVars();
+                if ((this.tabletmneighbourstations != null)) {
+                    this.tabletmneighbourstations.InitVars();
                 }
             }
-            this.tablevisystemsandstations = ((visystemsandstationsDataTable)(base.Tables["visystemsandstations"]));
+            this.tabletmpa_allcommodities = ((tmpa_allcommoditiesDataTable)(base.Tables["tmpa_allcommodities"]));
             if ((initTable == true)) {
-                if ((this.tablevisystemsandstations != null)) {
-                    this.tablevisystemsandstations.InitVars();
+                if ((this.tabletmpa_allcommodities != null)) {
+                    this.tabletmpa_allcommodities.InitVars();
                 }
             }
-            this.tabletmppa_s2s_besttrips = ((tmppa_s2s_besttripsDataTable)(base.Tables["tmppa_s2s_besttrips"]));
+            this.tabletmpa_s2s_besttrips = ((tmpa_s2s_besttripsDataTable)(base.Tables["tmpa_s2s_besttrips"]));
             if ((initTable == true)) {
-                if ((this.tabletmppa_s2s_besttrips != null)) {
-                    this.tabletmppa_s2s_besttrips.InitVars();
-                }
-            }
-            this.tabletmppa_s2s_stationdata = ((tmppa_s2s_stationdataDataTable)(base.Tables["tmppa_s2s_stationdata"]));
-            if ((initTable == true)) {
-                if ((this.tabletmppa_s2s_stationdata != null)) {
-                    this.tabletmppa_s2s_stationdata.InitVars();
+                if ((this.tabletmpa_s2s_besttrips != null)) {
+                    this.tabletmpa_s2s_besttrips.InitVars();
                 }
             }
             this.relationfk_tbCategoryLocalization_tbCategory1 = this.Relations["fk_tbCategoryLocalization_tbCategory1"];
@@ -1218,10 +1242,14 @@ namespace RegulatedNoise.SQL.Datasets {
             this.Namespace = "http://tempuri.org/dsEliteDB.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
+            this.tablevilog = new vilogDataTable();
+            base.Tables.Add(this.tablevilog);
+            this.tablevisystemsandstations = new visystemsandstationsDataTable();
+            base.Tables.Add(this.tablevisystemsandstations);
             this.tabletballegiance = new tballegianceDataTable();
             base.Tables.Add(this.tabletballegiance);
-            this.tabletmneighbourstations = new tmneighbourstationsDataTable();
-            base.Tables.Add(this.tabletmneighbourstations);
+            this.tabletmpa_s2s_stationdata = new tmpa_s2s_stationdataDataTable();
+            base.Tables.Add(this.tabletmpa_s2s_stationdata);
             this.tabletbattribute = new tbattributeDataTable();
             base.Tables.Add(this.tabletbattribute);
             this.tabletbcargoaction = new tbcargoactionDataTable();
@@ -1256,8 +1284,6 @@ namespace RegulatedNoise.SQL.Datasets {
             base.Tables.Add(this.tabletblevellocalization);
             this.tabletblog = new tblogDataTable();
             base.Tables.Add(this.tabletblog);
-            this.tabletbpa_allcommodities = new tbpa_allcommoditiesDataTable();
-            base.Tables.Add(this.tabletbpa_allcommodities);
             this.tabletbpricehistory = new tbpricehistoryDataTable();
             base.Tables.Add(this.tabletbpricehistory);
             this.tabletbsecurity = new tbsecurityDataTable();
@@ -1282,16 +1308,16 @@ namespace RegulatedNoise.SQL.Datasets {
             base.Tables.Add(this.tabletbvisitedstations);
             this.tabletbvisitedsystems = new tbvisitedsystemsDataTable();
             base.Tables.Add(this.tabletbvisitedsystems);
+            this.tabletmbestprofits = new tmbestprofitsDataTable();
+            base.Tables.Add(this.tabletmbestprofits);
             this.tabletmfilteredstations = new tmfilteredstationsDataTable();
             base.Tables.Add(this.tabletmfilteredstations);
-            this.tablevilog = new vilogDataTable();
-            base.Tables.Add(this.tablevilog);
-            this.tablevisystemsandstations = new visystemsandstationsDataTable();
-            base.Tables.Add(this.tablevisystemsandstations);
-            this.tabletmppa_s2s_besttrips = new tmppa_s2s_besttripsDataTable();
-            base.Tables.Add(this.tabletmppa_s2s_besttrips);
-            this.tabletmppa_s2s_stationdata = new tmppa_s2s_stationdataDataTable();
-            base.Tables.Add(this.tabletmppa_s2s_stationdata);
+            this.tabletmneighbourstations = new tmneighbourstationsDataTable();
+            base.Tables.Add(this.tabletmneighbourstations);
+            this.tabletmpa_allcommodities = new tmpa_allcommoditiesDataTable();
+            base.Tables.Add(this.tabletmpa_allcommodities);
+            this.tabletmpa_s2s_besttrips = new tmpa_s2s_besttripsDataTable();
+            base.Tables.Add(this.tabletmpa_s2s_besttrips);
             this.relationfk_tbCategoryLocalization_tbCategory1 = new global::System.Data.DataRelation("fk_tbCategoryLocalization_tbCategory1", new global::System.Data.DataColumn[] {
                         this.tabletbcategory.idColumn}, new global::System.Data.DataColumn[] {
                         this.tabletbcategorylocalization.category_idColumn}, false);
@@ -1496,13 +1522,25 @@ namespace RegulatedNoise.SQL.Datasets {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private bool ShouldSerializevilog() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private bool ShouldSerializevisystemsandstations() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private bool ShouldSerializetballegiance() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializetmneighbourstations() {
+        private bool ShouldSerializetmpa_s2s_stationdata() {
             return false;
         }
         
@@ -1610,12 +1648,6 @@ namespace RegulatedNoise.SQL.Datasets {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializetbpa_allcommodities() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private bool ShouldSerializetbpricehistory() {
             return false;
         }
@@ -1688,31 +1720,31 @@ namespace RegulatedNoise.SQL.Datasets {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private bool ShouldSerializetmbestprofits() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private bool ShouldSerializetmfilteredstations() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializevilog() {
+        private bool ShouldSerializetmneighbourstations() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializevisystemsandstations() {
+        private bool ShouldSerializetmpa_allcommodities() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializetmppa_s2s_besttrips() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializetmppa_s2s_stationdata() {
+        private bool ShouldSerializetmpa_s2s_besttrips() {
             return false;
         }
         
@@ -1772,10 +1804,16 @@ namespace RegulatedNoise.SQL.Datasets {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public delegate void vilogRowChangeEventHandler(object sender, vilogRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public delegate void visystemsandstationsRowChangeEventHandler(object sender, visystemsandstationsRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void tballegianceRowChangeEventHandler(object sender, tballegianceRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void tmneighbourstationsRowChangeEventHandler(object sender, tmneighbourstationsRowChangeEvent e);
+        public delegate void tmpa_s2s_stationdataRowChangeEventHandler(object sender, tmpa_s2s_stationdataRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void tbattributeRowChangeEventHandler(object sender, tbattributeRowChangeEvent e);
@@ -1829,9 +1867,6 @@ namespace RegulatedNoise.SQL.Datasets {
         public delegate void tblogRowChangeEventHandler(object sender, tblogRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void tbpa_allcommoditiesRowChangeEventHandler(object sender, tbpa_allcommoditiesRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void tbpricehistoryRowChangeEventHandler(object sender, tbpricehistoryRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -1868,19 +1903,715 @@ namespace RegulatedNoise.SQL.Datasets {
         public delegate void tbvisitedsystemsRowChangeEventHandler(object sender, tbvisitedsystemsRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public delegate void tmbestprofitsRowChangeEventHandler(object sender, tmbestprofitsRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void tmfilteredstationsRowChangeEventHandler(object sender, tmfilteredstationsRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void vilogRowChangeEventHandler(object sender, vilogRowChangeEvent e);
+        public delegate void tmneighbourstationsRowChangeEventHandler(object sender, tmneighbourstationsRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void visystemsandstationsRowChangeEventHandler(object sender, visystemsandstationsRowChangeEvent e);
+        public delegate void tmpa_allcommoditiesRowChangeEventHandler(object sender, tmpa_allcommoditiesRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void tmppa_s2s_besttripsRowChangeEventHandler(object sender, tmppa_s2s_besttripsRowChangeEvent e);
+        public delegate void tmpa_s2s_besttripsRowChangeEventHandler(object sender, tmpa_s2s_besttripsRowChangeEvent e);
         
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void tmppa_s2s_stationdataRowChangeEventHandler(object sender, tmppa_s2s_stationdataRowChangeEvent e);
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class vilogDataTable : global::System.Data.TypedTableBase<vilogRow> {
+            
+            private global::System.Data.DataColumn columntime;
+            
+            private global::System.Data.DataColumn columnsystemname;
+            
+            private global::System.Data.DataColumn columnstationname;
+            
+            private global::System.Data.DataColumn columneevent;
+            
+            private global::System.Data.DataColumn columnaction;
+            
+            private global::System.Data.DataColumn columnloccommodity;
+            
+            private global::System.Data.DataColumn columncargovolume;
+            
+            private global::System.Data.DataColumn columncredits_transaction;
+            
+            private global::System.Data.DataColumn columncredits_total;
+            
+            private global::System.Data.DataColumn columnnotes;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogDataTable() {
+                this.TableName = "vilog";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal vilogDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected vilogDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn timeColumn {
+                get {
+                    return this.columntime;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn systemnameColumn {
+                get {
+                    return this.columnsystemname;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn stationnameColumn {
+                get {
+                    return this.columnstationname;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn eeventColumn {
+                get {
+                    return this.columneevent;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn actionColumn {
+                get {
+                    return this.columnaction;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn loccommodityColumn {
+                get {
+                    return this.columnloccommodity;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn cargovolumeColumn {
+                get {
+                    return this.columncargovolume;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn credits_transactionColumn {
+                get {
+                    return this.columncredits_transaction;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn credits_totalColumn {
+                get {
+                    return this.columncredits_total;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn notesColumn {
+                get {
+                    return this.columnnotes;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogRow this[int index] {
+                get {
+                    return ((vilogRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event vilogRowChangeEventHandler vilogRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event vilogRowChangeEventHandler vilogRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event vilogRowChangeEventHandler vilogRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event vilogRowChangeEventHandler vilogRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void AddvilogRow(vilogRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogRow AddvilogRow(System.DateTime time, string systemname, string stationname, string eevent, string action, string loccommodity, int cargovolume, int credits_transaction, int credits_total, string notes) {
+                vilogRow rowvilogRow = ((vilogRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        time,
+                        systemname,
+                        stationname,
+                        eevent,
+                        action,
+                        loccommodity,
+                        cargovolume,
+                        credits_transaction,
+                        credits_total,
+                        notes};
+                rowvilogRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowvilogRow);
+                return rowvilogRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogRow FindBytime(System.DateTime time) {
+                return ((vilogRow)(this.Rows.Find(new object[] {
+                            time})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                vilogDataTable cln = ((vilogDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new vilogDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal void InitVars() {
+                this.columntime = base.Columns["time"];
+                this.columnsystemname = base.Columns["systemname"];
+                this.columnstationname = base.Columns["stationname"];
+                this.columneevent = base.Columns["eevent"];
+                this.columnaction = base.Columns["action"];
+                this.columnloccommodity = base.Columns["loccommodity"];
+                this.columncargovolume = base.Columns["cargovolume"];
+                this.columncredits_transaction = base.Columns["credits_transaction"];
+                this.columncredits_total = base.Columns["credits_total"];
+                this.columnnotes = base.Columns["notes"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitClass() {
+                this.columntime = new global::System.Data.DataColumn("time", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columntime);
+                this.columnsystemname = new global::System.Data.DataColumn("systemname", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnsystemname);
+                this.columnstationname = new global::System.Data.DataColumn("stationname", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnstationname);
+                this.columneevent = new global::System.Data.DataColumn("eevent", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columneevent);
+                this.columnaction = new global::System.Data.DataColumn("action", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnaction);
+                this.columnloccommodity = new global::System.Data.DataColumn("loccommodity", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnloccommodity);
+                this.columncargovolume = new global::System.Data.DataColumn("cargovolume", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columncargovolume);
+                this.columncredits_transaction = new global::System.Data.DataColumn("credits_transaction", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columncredits_transaction);
+                this.columncredits_total = new global::System.Data.DataColumn("credits_total", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columncredits_total);
+                this.columnnotes = new global::System.Data.DataColumn("notes", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnnotes);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columntime}, true));
+                this.columntime.AllowDBNull = false;
+                this.columntime.Unique = true;
+                this.columnsystemname.MaxLength = 80;
+                this.columnstationname.MaxLength = 80;
+                this.columneevent.MaxLength = 80;
+                this.columnaction.MaxLength = 80;
+                this.columnloccommodity.MaxLength = 80;
+                this.columnnotes.MaxLength = 1024;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogRow NewvilogRow() {
+                return ((vilogRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new vilogRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(vilogRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.vilogRowChanged != null)) {
+                    this.vilogRowChanged(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.vilogRowChanging != null)) {
+                    this.vilogRowChanging(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.vilogRowDeleted != null)) {
+                    this.vilogRowDeleted(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.vilogRowDeleting != null)) {
+                    this.vilogRowDeleting(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void RemovevilogRow(vilogRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                dsEliteDB ds = new dsEliteDB();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "vilogDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class visystemsandstationsDataTable : global::System.Data.TypedTableBase<visystemsandstationsRow> {
+            
+            private global::System.Data.DataColumn columnSystemID;
+            
+            private global::System.Data.DataColumn columnSystemName;
+            
+            private global::System.Data.DataColumn columnStationID;
+            
+            private global::System.Data.DataColumn columnStationName;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsDataTable() {
+                this.TableName = "visystemsandstations";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal visystemsandstationsDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected visystemsandstationsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn SystemIDColumn {
+                get {
+                    return this.columnSystemID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn SystemNameColumn {
+                get {
+                    return this.columnSystemName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn StationIDColumn {
+                get {
+                    return this.columnStationID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn StationNameColumn {
+                get {
+                    return this.columnStationName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsRow this[int index] {
+                get {
+                    return ((visystemsandstationsRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void AddvisystemsandstationsRow(visystemsandstationsRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsRow AddvisystemsandstationsRow(int SystemID, string SystemName, int StationID, string StationName) {
+                visystemsandstationsRow rowvisystemsandstationsRow = ((visystemsandstationsRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        SystemID,
+                        SystemName,
+                        StationID,
+                        StationName};
+                rowvisystemsandstationsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowvisystemsandstationsRow);
+                return rowvisystemsandstationsRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsRow FindBySystemIDStationID(int SystemID, int StationID) {
+                return ((visystemsandstationsRow)(this.Rows.Find(new object[] {
+                            SystemID,
+                            StationID})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                visystemsandstationsDataTable cln = ((visystemsandstationsDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new visystemsandstationsDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal void InitVars() {
+                this.columnSystemID = base.Columns["SystemID"];
+                this.columnSystemName = base.Columns["SystemName"];
+                this.columnStationID = base.Columns["StationID"];
+                this.columnStationName = base.Columns["StationName"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitClass() {
+                this.columnSystemID = new global::System.Data.DataColumn("SystemID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSystemID);
+                this.columnSystemName = new global::System.Data.DataColumn("SystemName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSystemName);
+                this.columnStationID = new global::System.Data.DataColumn("StationID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStationID);
+                this.columnStationName = new global::System.Data.DataColumn("StationName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStationName);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnSystemID,
+                                this.columnStationID}, true));
+                this.columnSystemID.AllowDBNull = false;
+                this.columnSystemName.AllowDBNull = false;
+                this.columnSystemName.MaxLength = 80;
+                this.columnStationID.AllowDBNull = false;
+                this.columnStationName.AllowDBNull = false;
+                this.columnStationName.MaxLength = 80;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsRow NewvisystemsandstationsRow() {
+                return ((visystemsandstationsRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new visystemsandstationsRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(visystemsandstationsRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.visystemsandstationsRowChanged != null)) {
+                    this.visystemsandstationsRowChanged(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.visystemsandstationsRowChanging != null)) {
+                    this.visystemsandstationsRowChanging(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.visystemsandstationsRowDeleted != null)) {
+                    this.visystemsandstationsRowDeleted(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.visystemsandstationsRowDeleting != null)) {
+                    this.visystemsandstationsRowDeleting(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void RemovevisystemsandstationsRow(visystemsandstationsRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                dsEliteDB ds = new dsEliteDB();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "visystemsandstationsDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -2161,26 +2892,32 @@ namespace RegulatedNoise.SQL.Datasets {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tmneighbourstationsDataTable : global::System.Data.TypedTableBase<tmneighbourstationsRow> {
+        public partial class tmpa_s2s_stationdataDataTable : global::System.Data.TypedTableBase<tmpa_s2s_stationdataRow> {
             
-            private global::System.Data.DataColumn columnSystem_ID_From;
+            private global::System.Data.DataColumn columnCommodityID;
             
-            private global::System.Data.DataColumn columnStation_ID_From;
+            private global::System.Data.DataColumn columnCommodity;
             
-            private global::System.Data.DataColumn columnDistance_From;
+            private global::System.Data.DataColumn columnBuy;
             
-            private global::System.Data.DataColumn columnSystem_ID_To;
+            private global::System.Data.DataColumn columnSupply;
             
-            private global::System.Data.DataColumn columnStation_ID_To;
+            private global::System.Data.DataColumn columnSupplyLevel;
             
-            private global::System.Data.DataColumn columnDistance_To;
+            private global::System.Data.DataColumn columnSell;
             
-            private global::System.Data.DataColumn columnDistance_Between;
+            private global::System.Data.DataColumn columnDemand;
+            
+            private global::System.Data.DataColumn columnDemandlevel;
+            
+            private global::System.Data.DataColumn columnTimestamp;
+            
+            private global::System.Data.DataColumn columnProfit;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsDataTable() {
-                this.TableName = "tmneighbourstations";
+            public tmpa_s2s_stationdataDataTable() {
+                this.TableName = "tmpa_s2s_stationdata";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -2188,7 +2925,7 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tmneighbourstationsDataTable(global::System.Data.DataTable table) {
+            internal tmpa_s2s_stationdataDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -2205,64 +2942,88 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected tmneighbourstationsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected tmpa_s2s_stationdataDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn System_ID_FromColumn {
+            public global::System.Data.DataColumn CommodityIDColumn {
                 get {
-                    return this.columnSystem_ID_From;
+                    return this.columnCommodityID;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Station_ID_FromColumn {
+            public global::System.Data.DataColumn CommodityColumn {
                 get {
-                    return this.columnStation_ID_From;
+                    return this.columnCommodity;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Distance_FromColumn {
+            public global::System.Data.DataColumn BuyColumn {
                 get {
-                    return this.columnDistance_From;
+                    return this.columnBuy;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn System_ID_ToColumn {
+            public global::System.Data.DataColumn SupplyColumn {
                 get {
-                    return this.columnSystem_ID_To;
+                    return this.columnSupply;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Station_ID_ToColumn {
+            public global::System.Data.DataColumn SupplyLevelColumn {
                 get {
-                    return this.columnStation_ID_To;
+                    return this.columnSupplyLevel;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Distance_ToColumn {
+            public global::System.Data.DataColumn SellColumn {
                 get {
-                    return this.columnDistance_To;
+                    return this.columnSell;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Distance_BetweenColumn {
+            public global::System.Data.DataColumn DemandColumn {
                 get {
-                    return this.columnDistance_Between;
+                    return this.columnDemand;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DemandlevelColumn {
+                get {
+                    return this.columnDemandlevel;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TimestampColumn {
+                get {
+                    return this.columnTimestamp;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ProfitColumn {
+                get {
+                    return this.columnProfit;
                 }
             }
             
@@ -2277,59 +3038,61 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsRow this[int index] {
+            public tmpa_s2s_stationdataRow this[int index] {
                 get {
-                    return ((tmneighbourstationsRow)(this.Rows[index]));
+                    return ((tmpa_s2s_stationdataRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowChanging;
+            public event tmpa_s2s_stationdataRowChangeEventHandler tmpa_s2s_stationdataRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowChanged;
+            public event tmpa_s2s_stationdataRowChangeEventHandler tmpa_s2s_stationdataRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowDeleting;
+            public event tmpa_s2s_stationdataRowChangeEventHandler tmpa_s2s_stationdataRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowDeleted;
+            public event tmpa_s2s_stationdataRowChangeEventHandler tmpa_s2s_stationdataRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddtmneighbourstationsRow(tmneighbourstationsRow row) {
+            public void Addtmpa_s2s_stationdataRow(tmpa_s2s_stationdataRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsRow AddtmneighbourstationsRow(int System_ID_From, int Station_ID_From, double Distance_From, int System_ID_To, int Station_ID_To, double Distance_To, double Distance_Between) {
-                tmneighbourstationsRow rowtmneighbourstationsRow = ((tmneighbourstationsRow)(this.NewRow()));
+            public tmpa_s2s_stationdataRow Addtmpa_s2s_stationdataRow(int CommodityID, string Commodity, int Buy, int Supply, string SupplyLevel, int Sell, int Demand, string Demandlevel, System.DateTime Timestamp, int Profit) {
+                tmpa_s2s_stationdataRow rowtmpa_s2s_stationdataRow = ((tmpa_s2s_stationdataRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        System_ID_From,
-                        Station_ID_From,
-                        Distance_From,
-                        System_ID_To,
-                        Station_ID_To,
-                        Distance_To,
-                        Distance_Between};
-                rowtmneighbourstationsRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtmneighbourstationsRow);
-                return rowtmneighbourstationsRow;
+                        CommodityID,
+                        Commodity,
+                        Buy,
+                        Supply,
+                        SupplyLevel,
+                        Sell,
+                        Demand,
+                        Demandlevel,
+                        Timestamp,
+                        Profit};
+                rowtmpa_s2s_stationdataRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowtmpa_s2s_stationdataRow);
+                return rowtmpa_s2s_stationdataRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsRow FindByStation_ID_FromStation_ID_To(int Station_ID_From, int Station_ID_To) {
-                return ((tmneighbourstationsRow)(this.Rows.Find(new object[] {
-                            Station_ID_From,
-                            Station_ID_To})));
+            public tmpa_s2s_stationdataRow FindByCommodityID(int CommodityID) {
+                return ((tmpa_s2s_stationdataRow)(this.Rows.Find(new object[] {
+                            CommodityID})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                tmneighbourstationsDataTable cln = ((tmneighbourstationsDataTable)(base.Clone()));
+                tmpa_s2s_stationdataDataTable cln = ((tmpa_s2s_stationdataDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -2337,69 +3100,80 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new tmneighbourstationsDataTable();
+                return new tmpa_s2s_stationdataDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnSystem_ID_From = base.Columns["System_ID_From"];
-                this.columnStation_ID_From = base.Columns["Station_ID_From"];
-                this.columnDistance_From = base.Columns["Distance_From"];
-                this.columnSystem_ID_To = base.Columns["System_ID_To"];
-                this.columnStation_ID_To = base.Columns["Station_ID_To"];
-                this.columnDistance_To = base.Columns["Distance_To"];
-                this.columnDistance_Between = base.Columns["Distance_Between"];
+                this.columnCommodityID = base.Columns["CommodityID"];
+                this.columnCommodity = base.Columns["Commodity"];
+                this.columnBuy = base.Columns["Buy"];
+                this.columnSupply = base.Columns["Supply"];
+                this.columnSupplyLevel = base.Columns["SupplyLevel"];
+                this.columnSell = base.Columns["Sell"];
+                this.columnDemand = base.Columns["Demand"];
+                this.columnDemandlevel = base.Columns["Demandlevel"];
+                this.columnTimestamp = base.Columns["Timestamp"];
+                this.columnProfit = base.Columns["Profit"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnSystem_ID_From = new global::System.Data.DataColumn("System_ID_From", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSystem_ID_From);
-                this.columnStation_ID_From = new global::System.Data.DataColumn("Station_ID_From", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnStation_ID_From);
-                this.columnDistance_From = new global::System.Data.DataColumn("Distance_From", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDistance_From);
-                this.columnSystem_ID_To = new global::System.Data.DataColumn("System_ID_To", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSystem_ID_To);
-                this.columnStation_ID_To = new global::System.Data.DataColumn("Station_ID_To", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnStation_ID_To);
-                this.columnDistance_To = new global::System.Data.DataColumn("Distance_To", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDistance_To);
-                this.columnDistance_Between = new global::System.Data.DataColumn("Distance_Between", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDistance_Between);
+                this.columnCommodityID = new global::System.Data.DataColumn("CommodityID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCommodityID);
+                this.columnCommodity = new global::System.Data.DataColumn("Commodity", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCommodity);
+                this.columnBuy = new global::System.Data.DataColumn("Buy", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy);
+                this.columnSupply = new global::System.Data.DataColumn("Supply", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSupply);
+                this.columnSupplyLevel = new global::System.Data.DataColumn("SupplyLevel", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSupplyLevel);
+                this.columnSell = new global::System.Data.DataColumn("Sell", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell);
+                this.columnDemand = new global::System.Data.DataColumn("Demand", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDemand);
+                this.columnDemandlevel = new global::System.Data.DataColumn("Demandlevel", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDemandlevel);
+                this.columnTimestamp = new global::System.Data.DataColumn("Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTimestamp);
+                this.columnProfit = new global::System.Data.DataColumn("Profit", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnProfit);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnStation_ID_From,
-                                this.columnStation_ID_To}, true));
-                this.columnStation_ID_From.AllowDBNull = false;
-                this.columnStation_ID_To.AllowDBNull = false;
+                                this.columnCommodityID}, true));
+                this.columnCommodityID.AllowDBNull = false;
+                this.columnCommodityID.Unique = true;
+                this.columnCommodity.MaxLength = 80;
+                this.columnSupplyLevel.MaxLength = 10;
+                this.columnDemandlevel.MaxLength = 10;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsRow NewtmneighbourstationsRow() {
-                return ((tmneighbourstationsRow)(this.NewRow()));
+            public tmpa_s2s_stationdataRow Newtmpa_s2s_stationdataRow() {
+                return ((tmpa_s2s_stationdataRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tmneighbourstationsRow(builder);
+                return new tmpa_s2s_stationdataRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(tmneighbourstationsRow);
+                return typeof(tmpa_s2s_stationdataRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.tmneighbourstationsRowChanged != null)) {
-                    this.tmneighbourstationsRowChanged(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_stationdataRowChanged != null)) {
+                    this.tmpa_s2s_stationdataRowChanged(this, new tmpa_s2s_stationdataRowChangeEvent(((tmpa_s2s_stationdataRow)(e.Row)), e.Action));
                 }
             }
             
@@ -2407,8 +3181,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.tmneighbourstationsRowChanging != null)) {
-                    this.tmneighbourstationsRowChanging(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_stationdataRowChanging != null)) {
+                    this.tmpa_s2s_stationdataRowChanging(this, new tmpa_s2s_stationdataRowChangeEvent(((tmpa_s2s_stationdataRow)(e.Row)), e.Action));
                 }
             }
             
@@ -2416,8 +3190,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.tmneighbourstationsRowDeleted != null)) {
-                    this.tmneighbourstationsRowDeleted(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_stationdataRowDeleted != null)) {
+                    this.tmpa_s2s_stationdataRowDeleted(this, new tmpa_s2s_stationdataRowChangeEvent(((tmpa_s2s_stationdataRow)(e.Row)), e.Action));
                 }
             }
             
@@ -2425,14 +3199,14 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.tmneighbourstationsRowDeleting != null)) {
-                    this.tmneighbourstationsRowDeleting(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_stationdataRowDeleting != null)) {
+                    this.tmpa_s2s_stationdataRowDeleting(this, new tmpa_s2s_stationdataRowChangeEvent(((tmpa_s2s_stationdataRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemovetmneighbourstationsRow(tmneighbourstationsRow row) {
+            public void Removetmpa_s2s_stationdataRow(tmpa_s2s_stationdataRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -2459,7 +3233,7 @@ namespace RegulatedNoise.SQL.Datasets {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tmneighbourstationsDataTable";
+                attribute2.FixedValue = "tmpa_s2s_stationdataDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -7749,495 +8523,6 @@ namespace RegulatedNoise.SQL.Datasets {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tbpa_allcommoditiesDataTable : global::System.Data.TypedTableBase<tbpa_allcommoditiesRow> {
-            
-            private global::System.Data.DataColumn columnCommodityID;
-            
-            private global::System.Data.DataColumn columnCommodity;
-            
-            private global::System.Data.DataColumn columnBuy_SystemID;
-            
-            private global::System.Data.DataColumn columnBuy_System;
-            
-            private global::System.Data.DataColumn columnBuy_StationID;
-            
-            private global::System.Data.DataColumn columnBuy_Station;
-            
-            private global::System.Data.DataColumn columnBuy_Min;
-            
-            private global::System.Data.DataColumn columnBuy_Distance;
-            
-            private global::System.Data.DataColumn columnBuy_Timestamp;
-            
-            private global::System.Data.DataColumn columnSell_SystemID;
-            
-            private global::System.Data.DataColumn columnSell_System;
-            
-            private global::System.Data.DataColumn columnSell_StationID;
-            
-            private global::System.Data.DataColumn columnSell_Station;
-            
-            private global::System.Data.DataColumn columnSell_Max;
-            
-            private global::System.Data.DataColumn columnSell_Distance;
-            
-            private global::System.Data.DataColumn columnSell_Timestamp;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesDataTable() {
-                this.TableName = "tbpa_allcommodities";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tbpa_allcommoditiesDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected tbpa_allcommoditiesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CommodityIDColumn {
-                get {
-                    return this.columnCommodityID;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CommodityColumn {
-                get {
-                    return this.columnCommodity;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_SystemIDColumn {
-                get {
-                    return this.columnBuy_SystemID;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_SystemColumn {
-                get {
-                    return this.columnBuy_System;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_StationIDColumn {
-                get {
-                    return this.columnBuy_StationID;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_StationColumn {
-                get {
-                    return this.columnBuy_Station;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_MinColumn {
-                get {
-                    return this.columnBuy_Min;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_DistanceColumn {
-                get {
-                    return this.columnBuy_Distance;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Buy_TimestampColumn {
-                get {
-                    return this.columnBuy_Timestamp;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_SystemIDColumn {
-                get {
-                    return this.columnSell_SystemID;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_SystemColumn {
-                get {
-                    return this.columnSell_System;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_StationIDColumn {
-                get {
-                    return this.columnSell_StationID;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_StationColumn {
-                get {
-                    return this.columnSell_Station;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_MaxColumn {
-                get {
-                    return this.columnSell_Max;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_DistanceColumn {
-                get {
-                    return this.columnSell_Distance;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Sell_TimestampColumn {
-                get {
-                    return this.columnSell_Timestamp;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesRow this[int index] {
-                get {
-                    return ((tbpa_allcommoditiesRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tbpa_allcommoditiesRowChangeEventHandler tbpa_allcommoditiesRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tbpa_allcommoditiesRowChangeEventHandler tbpa_allcommoditiesRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tbpa_allcommoditiesRowChangeEventHandler tbpa_allcommoditiesRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tbpa_allcommoditiesRowChangeEventHandler tbpa_allcommoditiesRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Addtbpa_allcommoditiesRow(tbpa_allcommoditiesRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesRow Addtbpa_allcommoditiesRow(
-                        int CommodityID, 
-                        string Commodity, 
-                        int Buy_SystemID, 
-                        string Buy_System, 
-                        int Buy_StationID, 
-                        string Buy_Station, 
-                        int Buy_Min, 
-                        double Buy_Distance, 
-                        System.DateTime Buy_Timestamp, 
-                        int Sell_SystemID, 
-                        string Sell_System, 
-                        int Sell_StationID, 
-                        string Sell_Station, 
-                        int Sell_Max, 
-                        double Sell_Distance, 
-                        System.DateTime Sell_Timestamp) {
-                tbpa_allcommoditiesRow rowtbpa_allcommoditiesRow = ((tbpa_allcommoditiesRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        CommodityID,
-                        Commodity,
-                        Buy_SystemID,
-                        Buy_System,
-                        Buy_StationID,
-                        Buy_Station,
-                        Buy_Min,
-                        Buy_Distance,
-                        Buy_Timestamp,
-                        Sell_SystemID,
-                        Sell_System,
-                        Sell_StationID,
-                        Sell_Station,
-                        Sell_Max,
-                        Sell_Distance,
-                        Sell_Timestamp};
-                rowtbpa_allcommoditiesRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtbpa_allcommoditiesRow);
-                return rowtbpa_allcommoditiesRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesRow FindByCommodityID(int CommodityID) {
-                return ((tbpa_allcommoditiesRow)(this.Rows.Find(new object[] {
-                            CommodityID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                tbpa_allcommoditiesDataTable cln = ((tbpa_allcommoditiesDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new tbpa_allcommoditiesDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal void InitVars() {
-                this.columnCommodityID = base.Columns["CommodityID"];
-                this.columnCommodity = base.Columns["Commodity"];
-                this.columnBuy_SystemID = base.Columns["Buy_SystemID"];
-                this.columnBuy_System = base.Columns["Buy_System"];
-                this.columnBuy_StationID = base.Columns["Buy_StationID"];
-                this.columnBuy_Station = base.Columns["Buy_Station"];
-                this.columnBuy_Min = base.Columns["Buy_Min"];
-                this.columnBuy_Distance = base.Columns["Buy_Distance"];
-                this.columnBuy_Timestamp = base.Columns["Buy_Timestamp"];
-                this.columnSell_SystemID = base.Columns["Sell_SystemID"];
-                this.columnSell_System = base.Columns["Sell_System"];
-                this.columnSell_StationID = base.Columns["Sell_StationID"];
-                this.columnSell_Station = base.Columns["Sell_Station"];
-                this.columnSell_Max = base.Columns["Sell_Max"];
-                this.columnSell_Distance = base.Columns["Sell_Distance"];
-                this.columnSell_Timestamp = base.Columns["Sell_Timestamp"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            private void InitClass() {
-                this.columnCommodityID = new global::System.Data.DataColumn("CommodityID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCommodityID);
-                this.columnCommodity = new global::System.Data.DataColumn("Commodity", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCommodity);
-                this.columnBuy_SystemID = new global::System.Data.DataColumn("Buy_SystemID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_SystemID);
-                this.columnBuy_System = new global::System.Data.DataColumn("Buy_System", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_System);
-                this.columnBuy_StationID = new global::System.Data.DataColumn("Buy_StationID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_StationID);
-                this.columnBuy_Station = new global::System.Data.DataColumn("Buy_Station", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_Station);
-                this.columnBuy_Min = new global::System.Data.DataColumn("Buy_Min", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_Min);
-                this.columnBuy_Distance = new global::System.Data.DataColumn("Buy_Distance", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_Distance);
-                this.columnBuy_Timestamp = new global::System.Data.DataColumn("Buy_Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy_Timestamp);
-                this.columnSell_SystemID = new global::System.Data.DataColumn("Sell_SystemID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_SystemID);
-                this.columnSell_System = new global::System.Data.DataColumn("Sell_System", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_System);
-                this.columnSell_StationID = new global::System.Data.DataColumn("Sell_StationID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_StationID);
-                this.columnSell_Station = new global::System.Data.DataColumn("Sell_Station", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_Station);
-                this.columnSell_Max = new global::System.Data.DataColumn("Sell_Max", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_Max);
-                this.columnSell_Distance = new global::System.Data.DataColumn("Sell_Distance", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_Distance);
-                this.columnSell_Timestamp = new global::System.Data.DataColumn("Sell_Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell_Timestamp);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnCommodityID}, true));
-                this.columnCommodityID.AllowDBNull = false;
-                this.columnCommodityID.Unique = true;
-                this.columnCommodity.MaxLength = 80;
-                this.columnBuy_System.MaxLength = 80;
-                this.columnBuy_Station.MaxLength = 80;
-                this.columnSell_System.MaxLength = 80;
-                this.columnSell_Station.MaxLength = 80;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesRow Newtbpa_allcommoditiesRow() {
-                return ((tbpa_allcommoditiesRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tbpa_allcommoditiesRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(tbpa_allcommoditiesRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.tbpa_allcommoditiesRowChanged != null)) {
-                    this.tbpa_allcommoditiesRowChanged(this, new tbpa_allcommoditiesRowChangeEvent(((tbpa_allcommoditiesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.tbpa_allcommoditiesRowChanging != null)) {
-                    this.tbpa_allcommoditiesRowChanging(this, new tbpa_allcommoditiesRowChangeEvent(((tbpa_allcommoditiesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.tbpa_allcommoditiesRowDeleted != null)) {
-                    this.tbpa_allcommoditiesRowDeleted(this, new tbpa_allcommoditiesRowChangeEvent(((tbpa_allcommoditiesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.tbpa_allcommoditiesRowDeleting != null)) {
-                    this.tbpa_allcommoditiesRowDeleting(this, new tbpa_allcommoditiesRowChangeEvent(((tbpa_allcommoditiesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Removetbpa_allcommoditiesRow(tbpa_allcommoditiesRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dsEliteDB ds = new dsEliteDB();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tbpa_allcommoditiesDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class tbpricehistoryDataTable : global::System.Data.TypedTableBase<tbpricehistoryRow> {
             
             private global::System.Data.DataColumn columnid;
@@ -12697,6 +12982,294 @@ namespace RegulatedNoise.SQL.Datasets {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class tmbestprofitsDataTable : global::System.Data.TypedTableBase<tmbestprofitsRow> {
+            
+            private global::System.Data.DataColumn columnStation_Id_From;
+            
+            private global::System.Data.DataColumn columnStation_Id_To;
+            
+            private global::System.Data.DataColumn columnMax_Profit;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsDataTable() {
+                this.TableName = "tmbestprofits";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal tmbestprofitsDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected tmbestprofitsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Station_Id_FromColumn {
+                get {
+                    return this.columnStation_Id_From;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Station_Id_ToColumn {
+                get {
+                    return this.columnStation_Id_To;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Max_ProfitColumn {
+                get {
+                    return this.columnMax_Profit;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsRow this[int index] {
+                get {
+                    return ((tmbestprofitsRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event tmbestprofitsRowChangeEventHandler tmbestprofitsRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event tmbestprofitsRowChangeEventHandler tmbestprofitsRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event tmbestprofitsRowChangeEventHandler tmbestprofitsRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event tmbestprofitsRowChangeEventHandler tmbestprofitsRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void AddtmbestprofitsRow(tmbestprofitsRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsRow AddtmbestprofitsRow(int Station_Id_From, int Station_Id_To, int Max_Profit) {
+                tmbestprofitsRow rowtmbestprofitsRow = ((tmbestprofitsRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        Station_Id_From,
+                        Station_Id_To,
+                        Max_Profit};
+                rowtmbestprofitsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowtmbestprofitsRow);
+                return rowtmbestprofitsRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsRow FindByStation_Id_FromStation_Id_To(int Station_Id_From, int Station_Id_To) {
+                return ((tmbestprofitsRow)(this.Rows.Find(new object[] {
+                            Station_Id_From,
+                            Station_Id_To})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                tmbestprofitsDataTable cln = ((tmbestprofitsDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new tmbestprofitsDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal void InitVars() {
+                this.columnStation_Id_From = base.Columns["Station_Id_From"];
+                this.columnStation_Id_To = base.Columns["Station_Id_To"];
+                this.columnMax_Profit = base.Columns["Max_Profit"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitClass() {
+                this.columnStation_Id_From = new global::System.Data.DataColumn("Station_Id_From", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStation_Id_From);
+                this.columnStation_Id_To = new global::System.Data.DataColumn("Station_Id_To", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStation_Id_To);
+                this.columnMax_Profit = new global::System.Data.DataColumn("Max_Profit", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMax_Profit);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnStation_Id_From,
+                                this.columnStation_Id_To}, true));
+                this.columnStation_Id_From.AllowDBNull = false;
+                this.columnStation_Id_To.AllowDBNull = false;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsRow NewtmbestprofitsRow() {
+                return ((tmbestprofitsRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new tmbestprofitsRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(tmbestprofitsRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.tmbestprofitsRowChanged != null)) {
+                    this.tmbestprofitsRowChanged(this, new tmbestprofitsRowChangeEvent(((tmbestprofitsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.tmbestprofitsRowChanging != null)) {
+                    this.tmbestprofitsRowChanging(this, new tmbestprofitsRowChangeEvent(((tmbestprofitsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.tmbestprofitsRowDeleted != null)) {
+                    this.tmbestprofitsRowDeleted(this, new tmbestprofitsRowChangeEvent(((tmbestprofitsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.tmbestprofitsRowDeleting != null)) {
+                    this.tmbestprofitsRowDeleting(this, new tmbestprofitsRowChangeEvent(((tmbestprofitsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void RemovetmbestprofitsRow(tmbestprofitsRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                dsEliteDB ds = new dsEliteDB();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "tmbestprofitsDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class tmfilteredstationsDataTable : global::System.Data.TypedTableBase<tmfilteredstationsRow> {
             
             private global::System.Data.DataColumn columnSystem_id;
@@ -13027,32 +13600,26 @@ namespace RegulatedNoise.SQL.Datasets {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class vilogDataTable : global::System.Data.TypedTableBase<vilogRow> {
+        public partial class tmneighbourstationsDataTable : global::System.Data.TypedTableBase<tmneighbourstationsRow> {
             
-            private global::System.Data.DataColumn columntime;
+            private global::System.Data.DataColumn columnSystem_ID_From;
             
-            private global::System.Data.DataColumn columnsystemname;
+            private global::System.Data.DataColumn columnStation_ID_From;
             
-            private global::System.Data.DataColumn columnstationname;
+            private global::System.Data.DataColumn columnDistance_From;
             
-            private global::System.Data.DataColumn columneevent;
+            private global::System.Data.DataColumn columnSystem_ID_To;
             
-            private global::System.Data.DataColumn columnaction;
+            private global::System.Data.DataColumn columnStation_ID_To;
             
-            private global::System.Data.DataColumn columnloccommodity;
+            private global::System.Data.DataColumn columnDistance_To;
             
-            private global::System.Data.DataColumn columncargovolume;
-            
-            private global::System.Data.DataColumn columncredits_transaction;
-            
-            private global::System.Data.DataColumn columncredits_total;
-            
-            private global::System.Data.DataColumn columnnotes;
+            private global::System.Data.DataColumn columnDistance_Between;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogDataTable() {
-                this.TableName = "vilog";
+            public tmneighbourstationsDataTable() {
+                this.TableName = "tmneighbourstations";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -13060,7 +13627,7 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal vilogDataTable(global::System.Data.DataTable table) {
+            internal tmneighbourstationsDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -13077,88 +13644,64 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected vilogDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected tmneighbourstationsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn timeColumn {
+            public global::System.Data.DataColumn System_ID_FromColumn {
                 get {
-                    return this.columntime;
+                    return this.columnSystem_ID_From;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn systemnameColumn {
+            public global::System.Data.DataColumn Station_ID_FromColumn {
                 get {
-                    return this.columnsystemname;
+                    return this.columnStation_ID_From;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn stationnameColumn {
+            public global::System.Data.DataColumn Distance_FromColumn {
                 get {
-                    return this.columnstationname;
+                    return this.columnDistance_From;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn eeventColumn {
+            public global::System.Data.DataColumn System_ID_ToColumn {
                 get {
-                    return this.columneevent;
+                    return this.columnSystem_ID_To;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn actionColumn {
+            public global::System.Data.DataColumn Station_ID_ToColumn {
                 get {
-                    return this.columnaction;
+                    return this.columnStation_ID_To;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn loccommodityColumn {
+            public global::System.Data.DataColumn Distance_ToColumn {
                 get {
-                    return this.columnloccommodity;
+                    return this.columnDistance_To;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn cargovolumeColumn {
+            public global::System.Data.DataColumn Distance_BetweenColumn {
                 get {
-                    return this.columncargovolume;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn credits_transactionColumn {
-                get {
-                    return this.columncredits_transaction;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn credits_totalColumn {
-                get {
-                    return this.columncredits_total;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn notesColumn {
-                get {
-                    return this.columnnotes;
+                    return this.columnDistance_Between;
                 }
             }
             
@@ -13173,61 +13716,59 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogRow this[int index] {
+            public tmneighbourstationsRow this[int index] {
                 get {
-                    return ((vilogRow)(this.Rows[index]));
+                    return ((tmneighbourstationsRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event vilogRowChangeEventHandler vilogRowChanging;
+            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event vilogRowChangeEventHandler vilogRowChanged;
+            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event vilogRowChangeEventHandler vilogRowDeleting;
+            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event vilogRowChangeEventHandler vilogRowDeleted;
+            public event tmneighbourstationsRowChangeEventHandler tmneighbourstationsRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddvilogRow(vilogRow row) {
+            public void AddtmneighbourstationsRow(tmneighbourstationsRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogRow AddvilogRow(System.DateTime time, string systemname, string stationname, string eevent, string action, string loccommodity, int cargovolume, int credits_transaction, int credits_total, string notes) {
-                vilogRow rowvilogRow = ((vilogRow)(this.NewRow()));
+            public tmneighbourstationsRow AddtmneighbourstationsRow(int System_ID_From, int Station_ID_From, double Distance_From, int System_ID_To, int Station_ID_To, double Distance_To, double Distance_Between) {
+                tmneighbourstationsRow rowtmneighbourstationsRow = ((tmneighbourstationsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        time,
-                        systemname,
-                        stationname,
-                        eevent,
-                        action,
-                        loccommodity,
-                        cargovolume,
-                        credits_transaction,
-                        credits_total,
-                        notes};
-                rowvilogRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowvilogRow);
-                return rowvilogRow;
+                        System_ID_From,
+                        Station_ID_From,
+                        Distance_From,
+                        System_ID_To,
+                        Station_ID_To,
+                        Distance_To,
+                        Distance_Between};
+                rowtmneighbourstationsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowtmneighbourstationsRow);
+                return rowtmneighbourstationsRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogRow FindBytime(System.DateTime time) {
-                return ((vilogRow)(this.Rows.Find(new object[] {
-                            time})));
+            public tmneighbourstationsRow FindByStation_ID_FromStation_ID_To(int Station_ID_From, int Station_ID_To) {
+                return ((tmneighbourstationsRow)(this.Rows.Find(new object[] {
+                            Station_ID_From,
+                            Station_ID_To})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                vilogDataTable cln = ((vilogDataTable)(base.Clone()));
+                tmneighbourstationsDataTable cln = ((tmneighbourstationsDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -13235,83 +13776,69 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new vilogDataTable();
+                return new tmneighbourstationsDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columntime = base.Columns["time"];
-                this.columnsystemname = base.Columns["systemname"];
-                this.columnstationname = base.Columns["stationname"];
-                this.columneevent = base.Columns["eevent"];
-                this.columnaction = base.Columns["action"];
-                this.columnloccommodity = base.Columns["loccommodity"];
-                this.columncargovolume = base.Columns["cargovolume"];
-                this.columncredits_transaction = base.Columns["credits_transaction"];
-                this.columncredits_total = base.Columns["credits_total"];
-                this.columnnotes = base.Columns["notes"];
+                this.columnSystem_ID_From = base.Columns["System_ID_From"];
+                this.columnStation_ID_From = base.Columns["Station_ID_From"];
+                this.columnDistance_From = base.Columns["Distance_From"];
+                this.columnSystem_ID_To = base.Columns["System_ID_To"];
+                this.columnStation_ID_To = base.Columns["Station_ID_To"];
+                this.columnDistance_To = base.Columns["Distance_To"];
+                this.columnDistance_Between = base.Columns["Distance_Between"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columntime = new global::System.Data.DataColumn("time", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columntime);
-                this.columnsystemname = new global::System.Data.DataColumn("systemname", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnsystemname);
-                this.columnstationname = new global::System.Data.DataColumn("stationname", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnstationname);
-                this.columneevent = new global::System.Data.DataColumn("eevent", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columneevent);
-                this.columnaction = new global::System.Data.DataColumn("action", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnaction);
-                this.columnloccommodity = new global::System.Data.DataColumn("loccommodity", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnloccommodity);
-                this.columncargovolume = new global::System.Data.DataColumn("cargovolume", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columncargovolume);
-                this.columncredits_transaction = new global::System.Data.DataColumn("credits_transaction", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columncredits_transaction);
-                this.columncredits_total = new global::System.Data.DataColumn("credits_total", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columncredits_total);
-                this.columnnotes = new global::System.Data.DataColumn("notes", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnnotes);
+                this.columnSystem_ID_From = new global::System.Data.DataColumn("System_ID_From", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSystem_ID_From);
+                this.columnStation_ID_From = new global::System.Data.DataColumn("Station_ID_From", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStation_ID_From);
+                this.columnDistance_From = new global::System.Data.DataColumn("Distance_From", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDistance_From);
+                this.columnSystem_ID_To = new global::System.Data.DataColumn("System_ID_To", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSystem_ID_To);
+                this.columnStation_ID_To = new global::System.Data.DataColumn("Station_ID_To", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStation_ID_To);
+                this.columnDistance_To = new global::System.Data.DataColumn("Distance_To", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDistance_To);
+                this.columnDistance_Between = new global::System.Data.DataColumn("Distance_Between", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDistance_Between);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columntime}, true));
-                this.columntime.AllowDBNull = false;
-                this.columntime.Unique = true;
-                this.columnsystemname.MaxLength = 80;
-                this.columnstationname.MaxLength = 80;
-                this.columneevent.MaxLength = 80;
-                this.columnaction.MaxLength = 80;
-                this.columnloccommodity.MaxLength = 80;
-                this.columnnotes.MaxLength = 1024;
+                                this.columnStation_ID_From,
+                                this.columnStation_ID_To}, true));
+                this.columnStation_ID_From.AllowDBNull = false;
+                this.columnStation_ID_To.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogRow NewvilogRow() {
-                return ((vilogRow)(this.NewRow()));
+            public tmneighbourstationsRow NewtmneighbourstationsRow() {
+                return ((tmneighbourstationsRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new vilogRow(builder);
+                return new tmneighbourstationsRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(vilogRow);
+                return typeof(tmneighbourstationsRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.vilogRowChanged != null)) {
-                    this.vilogRowChanged(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                if ((this.tmneighbourstationsRowChanged != null)) {
+                    this.tmneighbourstationsRowChanged(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
                 }
             }
             
@@ -13319,8 +13846,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.vilogRowChanging != null)) {
-                    this.vilogRowChanging(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                if ((this.tmneighbourstationsRowChanging != null)) {
+                    this.tmneighbourstationsRowChanging(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
                 }
             }
             
@@ -13328,8 +13855,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.vilogRowDeleted != null)) {
-                    this.vilogRowDeleted(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                if ((this.tmneighbourstationsRowDeleted != null)) {
+                    this.tmneighbourstationsRowDeleted(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
                 }
             }
             
@@ -13337,14 +13864,14 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.vilogRowDeleting != null)) {
-                    this.vilogRowDeleting(this, new vilogRowChangeEvent(((vilogRow)(e.Row)), e.Action));
+                if ((this.tmneighbourstationsRowDeleting != null)) {
+                    this.tmneighbourstationsRowDeleting(this, new tmneighbourstationsRowChangeEvent(((tmneighbourstationsRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemovevilogRow(vilogRow row) {
+            public void RemovetmneighbourstationsRow(tmneighbourstationsRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -13371,7 +13898,7 @@ namespace RegulatedNoise.SQL.Datasets {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "vilogDataTable";
+                attribute2.FixedValue = "tmneighbourstationsDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -13417,20 +13944,46 @@ namespace RegulatedNoise.SQL.Datasets {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class visystemsandstationsDataTable : global::System.Data.TypedTableBase<visystemsandstationsRow> {
+        public partial class tmpa_allcommoditiesDataTable : global::System.Data.TypedTableBase<tmpa_allcommoditiesRow> {
             
-            private global::System.Data.DataColumn columnSystemID;
+            private global::System.Data.DataColumn columnCommodityID;
             
-            private global::System.Data.DataColumn columnSystemName;
+            private global::System.Data.DataColumn columnCommodity;
             
-            private global::System.Data.DataColumn columnStationID;
+            private global::System.Data.DataColumn columnBuy_SystemID;
             
-            private global::System.Data.DataColumn columnStationName;
+            private global::System.Data.DataColumn columnBuy_System;
+            
+            private global::System.Data.DataColumn columnBuy_StationID;
+            
+            private global::System.Data.DataColumn columnBuy_Station;
+            
+            private global::System.Data.DataColumn columnBuy_Min;
+            
+            private global::System.Data.DataColumn columnBuy_Distance;
+            
+            private global::System.Data.DataColumn columnBuy_Timestamp;
+            
+            private global::System.Data.DataColumn columnSell_SystemID;
+            
+            private global::System.Data.DataColumn columnSell_System;
+            
+            private global::System.Data.DataColumn columnSell_StationID;
+            
+            private global::System.Data.DataColumn columnSell_Station;
+            
+            private global::System.Data.DataColumn columnSell_Max;
+            
+            private global::System.Data.DataColumn columnSell_Distance;
+            
+            private global::System.Data.DataColumn columnSell_Timestamp;
+            
+            private global::System.Data.DataColumn columnMax_Profit;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsDataTable() {
-                this.TableName = "visystemsandstations";
+            public tmpa_allcommoditiesDataTable() {
+                this.TableName = "tmpa_allcommodities";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -13438,7 +13991,7 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal visystemsandstationsDataTable(global::System.Data.DataTable table) {
+            internal tmpa_allcommoditiesDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -13455,40 +14008,144 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected visystemsandstationsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected tmpa_allcommoditiesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SystemIDColumn {
+            public global::System.Data.DataColumn CommodityIDColumn {
                 get {
-                    return this.columnSystemID;
+                    return this.columnCommodityID;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SystemNameColumn {
+            public global::System.Data.DataColumn CommodityColumn {
                 get {
-                    return this.columnSystemName;
+                    return this.columnCommodity;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn StationIDColumn {
+            public global::System.Data.DataColumn Buy_SystemIDColumn {
                 get {
-                    return this.columnStationID;
+                    return this.columnBuy_SystemID;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn StationNameColumn {
+            public global::System.Data.DataColumn Buy_SystemColumn {
                 get {
-                    return this.columnStationName;
+                    return this.columnBuy_System;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Buy_StationIDColumn {
+                get {
+                    return this.columnBuy_StationID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Buy_StationColumn {
+                get {
+                    return this.columnBuy_Station;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Buy_MinColumn {
+                get {
+                    return this.columnBuy_Min;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Buy_DistanceColumn {
+                get {
+                    return this.columnBuy_Distance;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Buy_TimestampColumn {
+                get {
+                    return this.columnBuy_Timestamp;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_SystemIDColumn {
+                get {
+                    return this.columnSell_SystemID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_SystemColumn {
+                get {
+                    return this.columnSell_System;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_StationIDColumn {
+                get {
+                    return this.columnSell_StationID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_StationColumn {
+                get {
+                    return this.columnSell_Station;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_MaxColumn {
+                get {
+                    return this.columnSell_Max;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_DistanceColumn {
+                get {
+                    return this.columnSell_Distance;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Sell_TimestampColumn {
+                get {
+                    return this.columnSell_Timestamp;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Max_ProfitColumn {
+                get {
+                    return this.columnMax_Profit;
                 }
             }
             
@@ -13503,56 +14160,85 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsRow this[int index] {
+            public tmpa_allcommoditiesRow this[int index] {
                 get {
-                    return ((visystemsandstationsRow)(this.Rows[index]));
+                    return ((tmpa_allcommoditiesRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowChanging;
+            public event tmpa_allcommoditiesRowChangeEventHandler tmpa_allcommoditiesRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowChanged;
+            public event tmpa_allcommoditiesRowChangeEventHandler tmpa_allcommoditiesRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowDeleting;
+            public event tmpa_allcommoditiesRowChangeEventHandler tmpa_allcommoditiesRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event visystemsandstationsRowChangeEventHandler visystemsandstationsRowDeleted;
+            public event tmpa_allcommoditiesRowChangeEventHandler tmpa_allcommoditiesRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddvisystemsandstationsRow(visystemsandstationsRow row) {
+            public void Addtmpa_allcommoditiesRow(tmpa_allcommoditiesRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsRow AddvisystemsandstationsRow(int SystemID, string SystemName, int StationID, string StationName) {
-                visystemsandstationsRow rowvisystemsandstationsRow = ((visystemsandstationsRow)(this.NewRow()));
+            public tmpa_allcommoditiesRow Addtmpa_allcommoditiesRow(
+                        int CommodityID, 
+                        string Commodity, 
+                        int Buy_SystemID, 
+                        string Buy_System, 
+                        int Buy_StationID, 
+                        string Buy_Station, 
+                        int Buy_Min, 
+                        double Buy_Distance, 
+                        System.DateTime Buy_Timestamp, 
+                        int Sell_SystemID, 
+                        string Sell_System, 
+                        int Sell_StationID, 
+                        string Sell_Station, 
+                        int Sell_Max, 
+                        double Sell_Distance, 
+                        System.DateTime Sell_Timestamp, 
+                        int Max_Profit) {
+                tmpa_allcommoditiesRow rowtmpa_allcommoditiesRow = ((tmpa_allcommoditiesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        SystemID,
-                        SystemName,
-                        StationID,
-                        StationName};
-                rowvisystemsandstationsRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowvisystemsandstationsRow);
-                return rowvisystemsandstationsRow;
+                        CommodityID,
+                        Commodity,
+                        Buy_SystemID,
+                        Buy_System,
+                        Buy_StationID,
+                        Buy_Station,
+                        Buy_Min,
+                        Buy_Distance,
+                        Buy_Timestamp,
+                        Sell_SystemID,
+                        Sell_System,
+                        Sell_StationID,
+                        Sell_Station,
+                        Sell_Max,
+                        Sell_Distance,
+                        Sell_Timestamp,
+                        Max_Profit};
+                rowtmpa_allcommoditiesRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowtmpa_allcommoditiesRow);
+                return rowtmpa_allcommoditiesRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsRow FindBySystemIDStationID(int SystemID, int StationID) {
-                return ((visystemsandstationsRow)(this.Rows.Find(new object[] {
-                            SystemID,
-                            StationID})));
+            public tmpa_allcommoditiesRow FindByCommodityID(int CommodityID) {
+                return ((tmpa_allcommoditiesRow)(this.Rows.Find(new object[] {
+                            CommodityID})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                visystemsandstationsDataTable cln = ((visystemsandstationsDataTable)(base.Clone()));
+                tmpa_allcommoditiesDataTable cln = ((tmpa_allcommoditiesDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -13560,64 +14246,103 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new visystemsandstationsDataTable();
+                return new tmpa_allcommoditiesDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnSystemID = base.Columns["SystemID"];
-                this.columnSystemName = base.Columns["SystemName"];
-                this.columnStationID = base.Columns["StationID"];
-                this.columnStationName = base.Columns["StationName"];
+                this.columnCommodityID = base.Columns["CommodityID"];
+                this.columnCommodity = base.Columns["Commodity"];
+                this.columnBuy_SystemID = base.Columns["Buy_SystemID"];
+                this.columnBuy_System = base.Columns["Buy_System"];
+                this.columnBuy_StationID = base.Columns["Buy_StationID"];
+                this.columnBuy_Station = base.Columns["Buy_Station"];
+                this.columnBuy_Min = base.Columns["Buy_Min"];
+                this.columnBuy_Distance = base.Columns["Buy_Distance"];
+                this.columnBuy_Timestamp = base.Columns["Buy_Timestamp"];
+                this.columnSell_SystemID = base.Columns["Sell_SystemID"];
+                this.columnSell_System = base.Columns["Sell_System"];
+                this.columnSell_StationID = base.Columns["Sell_StationID"];
+                this.columnSell_Station = base.Columns["Sell_Station"];
+                this.columnSell_Max = base.Columns["Sell_Max"];
+                this.columnSell_Distance = base.Columns["Sell_Distance"];
+                this.columnSell_Timestamp = base.Columns["Sell_Timestamp"];
+                this.columnMax_Profit = base.Columns["Max_Profit"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnSystemID = new global::System.Data.DataColumn("SystemID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSystemID);
-                this.columnSystemName = new global::System.Data.DataColumn("SystemName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSystemName);
-                this.columnStationID = new global::System.Data.DataColumn("StationID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnStationID);
-                this.columnStationName = new global::System.Data.DataColumn("StationName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnStationName);
+                this.columnCommodityID = new global::System.Data.DataColumn("CommodityID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCommodityID);
+                this.columnCommodity = new global::System.Data.DataColumn("Commodity", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCommodity);
+                this.columnBuy_SystemID = new global::System.Data.DataColumn("Buy_SystemID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_SystemID);
+                this.columnBuy_System = new global::System.Data.DataColumn("Buy_System", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_System);
+                this.columnBuy_StationID = new global::System.Data.DataColumn("Buy_StationID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_StationID);
+                this.columnBuy_Station = new global::System.Data.DataColumn("Buy_Station", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_Station);
+                this.columnBuy_Min = new global::System.Data.DataColumn("Buy_Min", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_Min);
+                this.columnBuy_Distance = new global::System.Data.DataColumn("Buy_Distance", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_Distance);
+                this.columnBuy_Timestamp = new global::System.Data.DataColumn("Buy_Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuy_Timestamp);
+                this.columnSell_SystemID = new global::System.Data.DataColumn("Sell_SystemID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_SystemID);
+                this.columnSell_System = new global::System.Data.DataColumn("Sell_System", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_System);
+                this.columnSell_StationID = new global::System.Data.DataColumn("Sell_StationID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_StationID);
+                this.columnSell_Station = new global::System.Data.DataColumn("Sell_Station", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_Station);
+                this.columnSell_Max = new global::System.Data.DataColumn("Sell_Max", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_Max);
+                this.columnSell_Distance = new global::System.Data.DataColumn("Sell_Distance", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_Distance);
+                this.columnSell_Timestamp = new global::System.Data.DataColumn("Sell_Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSell_Timestamp);
+                this.columnMax_Profit = new global::System.Data.DataColumn("Max_Profit", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMax_Profit);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnSystemID,
-                                this.columnStationID}, true));
-                this.columnSystemID.AllowDBNull = false;
-                this.columnSystemName.AllowDBNull = false;
-                this.columnSystemName.MaxLength = 80;
-                this.columnStationID.AllowDBNull = false;
-                this.columnStationName.AllowDBNull = false;
-                this.columnStationName.MaxLength = 80;
+                                this.columnCommodityID}, true));
+                this.columnCommodityID.AllowDBNull = false;
+                this.columnCommodityID.Unique = true;
+                this.columnCommodity.MaxLength = 80;
+                this.columnBuy_System.MaxLength = 80;
+                this.columnBuy_Station.MaxLength = 80;
+                this.columnSell_System.MaxLength = 80;
+                this.columnSell_Station.MaxLength = 80;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsRow NewvisystemsandstationsRow() {
-                return ((visystemsandstationsRow)(this.NewRow()));
+            public tmpa_allcommoditiesRow Newtmpa_allcommoditiesRow() {
+                return ((tmpa_allcommoditiesRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new visystemsandstationsRow(builder);
+                return new tmpa_allcommoditiesRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(visystemsandstationsRow);
+                return typeof(tmpa_allcommoditiesRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.visystemsandstationsRowChanged != null)) {
-                    this.visystemsandstationsRowChanged(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_allcommoditiesRowChanged != null)) {
+                    this.tmpa_allcommoditiesRowChanged(this, new tmpa_allcommoditiesRowChangeEvent(((tmpa_allcommoditiesRow)(e.Row)), e.Action));
                 }
             }
             
@@ -13625,8 +14350,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.visystemsandstationsRowChanging != null)) {
-                    this.visystemsandstationsRowChanging(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_allcommoditiesRowChanging != null)) {
+                    this.tmpa_allcommoditiesRowChanging(this, new tmpa_allcommoditiesRowChangeEvent(((tmpa_allcommoditiesRow)(e.Row)), e.Action));
                 }
             }
             
@@ -13634,8 +14359,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.visystemsandstationsRowDeleted != null)) {
-                    this.visystemsandstationsRowDeleted(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_allcommoditiesRowDeleted != null)) {
+                    this.tmpa_allcommoditiesRowDeleted(this, new tmpa_allcommoditiesRowChangeEvent(((tmpa_allcommoditiesRow)(e.Row)), e.Action));
                 }
             }
             
@@ -13643,14 +14368,14 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.visystemsandstationsRowDeleting != null)) {
-                    this.visystemsandstationsRowDeleting(this, new visystemsandstationsRowChangeEvent(((visystemsandstationsRow)(e.Row)), e.Action));
+                if ((this.tmpa_allcommoditiesRowDeleting != null)) {
+                    this.tmpa_allcommoditiesRowDeleting(this, new tmpa_allcommoditiesRowChangeEvent(((tmpa_allcommoditiesRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemovevisystemsandstationsRow(visystemsandstationsRow row) {
+            public void Removetmpa_allcommoditiesRow(tmpa_allcommoditiesRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -13677,7 +14402,7 @@ namespace RegulatedNoise.SQL.Datasets {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "visystemsandstationsDataTable";
+                attribute2.FixedValue = "tmpa_allcommoditiesDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -13723,7 +14448,7 @@ namespace RegulatedNoise.SQL.Datasets {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tmppa_s2s_besttripsDataTable : global::System.Data.TypedTableBase<tmppa_s2s_besttripsRow> {
+        public partial class tmpa_s2s_besttripsDataTable : global::System.Data.TypedTableBase<tmpa_s2s_besttripsRow> {
             
             private global::System.Data.DataColumn columnSystem_ID_1;
             
@@ -13755,8 +14480,8 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsDataTable() {
-                this.TableName = "tmppa_s2s_besttrips";
+            public tmpa_s2s_besttripsDataTable() {
+                this.TableName = "tmpa_s2s_besttrips";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -13764,7 +14489,7 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tmppa_s2s_besttripsDataTable(global::System.Data.DataTable table) {
+            internal tmpa_s2s_besttripsDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -13781,7 +14506,7 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected tmppa_s2s_besttripsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected tmpa_s2s_besttripsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -13909,34 +14634,34 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsRow this[int index] {
+            public tmpa_s2s_besttripsRow this[int index] {
                 get {
-                    return ((tmppa_s2s_besttripsRow)(this.Rows[index]));
+                    return ((tmpa_s2s_besttripsRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_besttripsRowChangeEventHandler tmppa_s2s_besttripsRowChanging;
+            public event tmpa_s2s_besttripsRowChangeEventHandler tmpa_s2s_besttripsRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_besttripsRowChangeEventHandler tmppa_s2s_besttripsRowChanged;
+            public event tmpa_s2s_besttripsRowChangeEventHandler tmpa_s2s_besttripsRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_besttripsRowChangeEventHandler tmppa_s2s_besttripsRowDeleting;
+            public event tmpa_s2s_besttripsRowChangeEventHandler tmpa_s2s_besttripsRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_besttripsRowChangeEventHandler tmppa_s2s_besttripsRowDeleted;
+            public event tmpa_s2s_besttripsRowChangeEventHandler tmpa_s2s_besttripsRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Addtmppa_s2s_besttripsRow(tmppa_s2s_besttripsRow row) {
+            public void Addtmpa_s2s_besttripsRow(tmpa_s2s_besttripsRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsRow Addtmppa_s2s_besttripsRow(int System_ID_1, string SystemName_1, int Station_ID_1, string StationName_1, string TimeStamp_1, int System_ID_2, string SystemName_2, int Station_ID_2, string StationName_2, string TimeStamp_2, string Profit, double Distance, double DistanceToStar_1, double DistanceToStar_2) {
-                tmppa_s2s_besttripsRow rowtmppa_s2s_besttripsRow = ((tmppa_s2s_besttripsRow)(this.NewRow()));
+            public tmpa_s2s_besttripsRow Addtmpa_s2s_besttripsRow(int System_ID_1, string SystemName_1, int Station_ID_1, string StationName_1, string TimeStamp_1, int System_ID_2, string SystemName_2, int Station_ID_2, string StationName_2, string TimeStamp_2, string Profit, double Distance, double DistanceToStar_1, double DistanceToStar_2) {
+                tmpa_s2s_besttripsRow rowtmpa_s2s_besttripsRow = ((tmpa_s2s_besttripsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         System_ID_1,
                         SystemName_1,
@@ -13952,15 +14677,15 @@ namespace RegulatedNoise.SQL.Datasets {
                         Distance,
                         DistanceToStar_1,
                         DistanceToStar_2};
-                rowtmppa_s2s_besttripsRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtmppa_s2s_besttripsRow);
-                return rowtmppa_s2s_besttripsRow;
+                rowtmpa_s2s_besttripsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowtmpa_s2s_besttripsRow);
+                return rowtmpa_s2s_besttripsRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsRow FindByStation_ID_1Station_ID_2(int Station_ID_1, int Station_ID_2) {
-                return ((tmppa_s2s_besttripsRow)(this.Rows.Find(new object[] {
+            public tmpa_s2s_besttripsRow FindByStation_ID_1Station_ID_2(int Station_ID_1, int Station_ID_2) {
+                return ((tmpa_s2s_besttripsRow)(this.Rows.Find(new object[] {
                             Station_ID_1,
                             Station_ID_2})));
             }
@@ -13968,7 +14693,7 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                tmppa_s2s_besttripsDataTable cln = ((tmppa_s2s_besttripsDataTable)(base.Clone()));
+                tmpa_s2s_besttripsDataTable cln = ((tmpa_s2s_besttripsDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -13976,7 +14701,7 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new tmppa_s2s_besttripsDataTable();
+                return new tmpa_s2s_besttripsDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -14045,28 +14770,28 @@ namespace RegulatedNoise.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsRow Newtmppa_s2s_besttripsRow() {
-                return ((tmppa_s2s_besttripsRow)(this.NewRow()));
+            public tmpa_s2s_besttripsRow Newtmpa_s2s_besttripsRow() {
+                return ((tmpa_s2s_besttripsRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tmppa_s2s_besttripsRow(builder);
+                return new tmpa_s2s_besttripsRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(tmppa_s2s_besttripsRow);
+                return typeof(tmpa_s2s_besttripsRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.tmppa_s2s_besttripsRowChanged != null)) {
-                    this.tmppa_s2s_besttripsRowChanged(this, new tmppa_s2s_besttripsRowChangeEvent(((tmppa_s2s_besttripsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_besttripsRowChanged != null)) {
+                    this.tmpa_s2s_besttripsRowChanged(this, new tmpa_s2s_besttripsRowChangeEvent(((tmpa_s2s_besttripsRow)(e.Row)), e.Action));
                 }
             }
             
@@ -14074,8 +14799,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.tmppa_s2s_besttripsRowChanging != null)) {
-                    this.tmppa_s2s_besttripsRowChanging(this, new tmppa_s2s_besttripsRowChangeEvent(((tmppa_s2s_besttripsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_besttripsRowChanging != null)) {
+                    this.tmpa_s2s_besttripsRowChanging(this, new tmpa_s2s_besttripsRowChangeEvent(((tmpa_s2s_besttripsRow)(e.Row)), e.Action));
                 }
             }
             
@@ -14083,8 +14808,8 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.tmppa_s2s_besttripsRowDeleted != null)) {
-                    this.tmppa_s2s_besttripsRowDeleted(this, new tmppa_s2s_besttripsRowChangeEvent(((tmppa_s2s_besttripsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_besttripsRowDeleted != null)) {
+                    this.tmpa_s2s_besttripsRowDeleted(this, new tmpa_s2s_besttripsRowChangeEvent(((tmpa_s2s_besttripsRow)(e.Row)), e.Action));
                 }
             }
             
@@ -14092,14 +14817,14 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.tmppa_s2s_besttripsRowDeleting != null)) {
-                    this.tmppa_s2s_besttripsRowDeleting(this, new tmppa_s2s_besttripsRowChangeEvent(((tmppa_s2s_besttripsRow)(e.Row)), e.Action));
+                if ((this.tmpa_s2s_besttripsRowDeleting != null)) {
+                    this.tmpa_s2s_besttripsRowDeleting(this, new tmpa_s2s_besttripsRowChangeEvent(((tmpa_s2s_besttripsRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Removetmppa_s2s_besttripsRow(tmppa_s2s_besttripsRow row) {
+            public void Removetmpa_s2s_besttripsRow(tmpa_s2s_besttripsRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -14126,7 +14851,7 @@ namespace RegulatedNoise.SQL.Datasets {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tmppa_s2s_besttripsDataTable";
+                attribute2.FixedValue = "tmpa_s2s_besttripsDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -14168,389 +14893,339 @@ namespace RegulatedNoise.SQL.Datasets {
         }
         
         /// <summary>
-        ///Represents the strongly named DataTable class.
+        ///Represents strongly named DataRow class.
         ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tmppa_s2s_stationdataDataTable : global::System.Data.TypedTableBase<tmppa_s2s_stationdataRow> {
+        public partial class vilogRow : global::System.Data.DataRow {
             
-            private global::System.Data.DataColumn columnCommodityID;
-            
-            private global::System.Data.DataColumn columnCommodity;
-            
-            private global::System.Data.DataColumn columnBuy;
-            
-            private global::System.Data.DataColumn columnSupply;
-            
-            private global::System.Data.DataColumn columnSupplyLevel;
-            
-            private global::System.Data.DataColumn columnSell;
-            
-            private global::System.Data.DataColumn columnDemand;
-            
-            private global::System.Data.DataColumn columnDemandlevel;
-            
-            private global::System.Data.DataColumn columnTimestamp;
-            
-            private global::System.Data.DataColumn columnProfit;
+            private vilogDataTable tablevilog;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataDataTable() {
-                this.TableName = "tmppa_s2s_stationdata";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
+            internal vilogRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tablevilog = ((vilogDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tmppa_s2s_stationdataDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected tmppa_s2s_stationdataDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CommodityIDColumn {
+            public System.DateTime time {
                 get {
-                    return this.columnCommodityID;
+                    return ((global::System.DateTime)(this[this.tablevilog.timeColumn]));
+                }
+                set {
+                    this[this.tablevilog.timeColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CommodityColumn {
+            public string systemname {
                 get {
-                    return this.columnCommodity;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn BuyColumn {
-                get {
-                    return this.columnBuy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SupplyColumn {
-                get {
-                    return this.columnSupply;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SupplyLevelColumn {
-                get {
-                    return this.columnSupplyLevel;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SellColumn {
-                get {
-                    return this.columnSell;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DemandColumn {
-                get {
-                    return this.columnDemand;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DemandlevelColumn {
-                get {
-                    return this.columnDemandlevel;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn TimestampColumn {
-                get {
-                    return this.columnTimestamp;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ProfitColumn {
-                get {
-                    return this.columnProfit;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataRow this[int index] {
-                get {
-                    return ((tmppa_s2s_stationdataRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_stationdataRowChangeEventHandler tmppa_s2s_stationdataRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_stationdataRowChangeEventHandler tmppa_s2s_stationdataRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_stationdataRowChangeEventHandler tmppa_s2s_stationdataRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event tmppa_s2s_stationdataRowChangeEventHandler tmppa_s2s_stationdataRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Addtmppa_s2s_stationdataRow(tmppa_s2s_stationdataRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataRow Addtmppa_s2s_stationdataRow(int CommodityID, string Commodity, int Buy, int Supply, string SupplyLevel, int Sell, int Demand, string Demandlevel, System.DateTime Timestamp, int Profit) {
-                tmppa_s2s_stationdataRow rowtmppa_s2s_stationdataRow = ((tmppa_s2s_stationdataRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        CommodityID,
-                        Commodity,
-                        Buy,
-                        Supply,
-                        SupplyLevel,
-                        Sell,
-                        Demand,
-                        Demandlevel,
-                        Timestamp,
-                        Profit};
-                rowtmppa_s2s_stationdataRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtmppa_s2s_stationdataRow);
-                return rowtmppa_s2s_stationdataRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataRow FindByCommodityID(int CommodityID) {
-                return ((tmppa_s2s_stationdataRow)(this.Rows.Find(new object[] {
-                            CommodityID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                tmppa_s2s_stationdataDataTable cln = ((tmppa_s2s_stationdataDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new tmppa_s2s_stationdataDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal void InitVars() {
-                this.columnCommodityID = base.Columns["CommodityID"];
-                this.columnCommodity = base.Columns["Commodity"];
-                this.columnBuy = base.Columns["Buy"];
-                this.columnSupply = base.Columns["Supply"];
-                this.columnSupplyLevel = base.Columns["SupplyLevel"];
-                this.columnSell = base.Columns["Sell"];
-                this.columnDemand = base.Columns["Demand"];
-                this.columnDemandlevel = base.Columns["Demandlevel"];
-                this.columnTimestamp = base.Columns["Timestamp"];
-                this.columnProfit = base.Columns["Profit"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            private void InitClass() {
-                this.columnCommodityID = new global::System.Data.DataColumn("CommodityID", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCommodityID);
-                this.columnCommodity = new global::System.Data.DataColumn("Commodity", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCommodity);
-                this.columnBuy = new global::System.Data.DataColumn("Buy", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBuy);
-                this.columnSupply = new global::System.Data.DataColumn("Supply", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSupply);
-                this.columnSupplyLevel = new global::System.Data.DataColumn("SupplyLevel", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSupplyLevel);
-                this.columnSell = new global::System.Data.DataColumn("Sell", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSell);
-                this.columnDemand = new global::System.Data.DataColumn("Demand", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDemand);
-                this.columnDemandlevel = new global::System.Data.DataColumn("Demandlevel", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDemandlevel);
-                this.columnTimestamp = new global::System.Data.DataColumn("Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTimestamp);
-                this.columnProfit = new global::System.Data.DataColumn("Profit", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnProfit);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnCommodityID}, true));
-                this.columnCommodityID.AllowDBNull = false;
-                this.columnCommodityID.Unique = true;
-                this.columnCommodity.MaxLength = 80;
-                this.columnSupplyLevel.MaxLength = 10;
-                this.columnDemandlevel.MaxLength = 10;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataRow Newtmppa_s2s_stationdataRow() {
-                return ((tmppa_s2s_stationdataRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tmppa_s2s_stationdataRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(tmppa_s2s_stationdataRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.tmppa_s2s_stationdataRowChanged != null)) {
-                    this.tmppa_s2s_stationdataRowChanged(this, new tmppa_s2s_stationdataRowChangeEvent(((tmppa_s2s_stationdataRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.tmppa_s2s_stationdataRowChanging != null)) {
-                    this.tmppa_s2s_stationdataRowChanging(this, new tmppa_s2s_stationdataRowChangeEvent(((tmppa_s2s_stationdataRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.tmppa_s2s_stationdataRowDeleted != null)) {
-                    this.tmppa_s2s_stationdataRowDeleted(this, new tmppa_s2s_stationdataRowChangeEvent(((tmppa_s2s_stationdataRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.tmppa_s2s_stationdataRowDeleting != null)) {
-                    this.tmppa_s2s_stationdataRowDeleting(this, new tmppa_s2s_stationdataRowChangeEvent(((tmppa_s2s_stationdataRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Removetmppa_s2s_stationdataRow(tmppa_s2s_stationdataRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dsEliteDB ds = new dsEliteDB();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tmppa_s2s_stationdataDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
                     try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
+                        return ((string)(this[this.tablevilog.systemnameColumn]));
                     }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte systemname in Tabelle vilog ist DBNull.", e);
                     }
                 }
-                xs.Add(dsSchema);
-                return type;
+                set {
+                    this[this.tablevilog.systemnameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string stationname {
+                get {
+                    try {
+                        return ((string)(this[this.tablevilog.stationnameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte stationname in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.stationnameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string eevent {
+                get {
+                    try {
+                        return ((string)(this[this.tablevilog.eeventColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte eevent in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.eeventColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string action {
+                get {
+                    try {
+                        return ((string)(this[this.tablevilog.actionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte action in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.actionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string loccommodity {
+                get {
+                    try {
+                        return ((string)(this[this.tablevilog.loccommodityColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte loccommodity in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.loccommodityColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int cargovolume {
+                get {
+                    try {
+                        return ((int)(this[this.tablevilog.cargovolumeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte cargovolume in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.cargovolumeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int credits_transaction {
+                get {
+                    try {
+                        return ((int)(this[this.tablevilog.credits_transactionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_transaction in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.credits_transactionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int credits_total {
+                get {
+                    try {
+                        return ((int)(this[this.tablevilog.credits_totalColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_total in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.credits_totalColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string notes {
+                get {
+                    try {
+                        return ((string)(this[this.tablevilog.notesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte notes in Tabelle vilog ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablevilog.notesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IssystemnameNull() {
+                return this.IsNull(this.tablevilog.systemnameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetsystemnameNull() {
+                this[this.tablevilog.systemnameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsstationnameNull() {
+                return this.IsNull(this.tablevilog.stationnameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetstationnameNull() {
+                this[this.tablevilog.stationnameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IseeventNull() {
+                return this.IsNull(this.tablevilog.eeventColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SeteeventNull() {
+                this[this.tablevilog.eeventColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsactionNull() {
+                return this.IsNull(this.tablevilog.actionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetactionNull() {
+                this[this.tablevilog.actionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsloccommodityNull() {
+                return this.IsNull(this.tablevilog.loccommodityColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetloccommodityNull() {
+                this[this.tablevilog.loccommodityColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IscargovolumeNull() {
+                return this.IsNull(this.tablevilog.cargovolumeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetcargovolumeNull() {
+                this[this.tablevilog.cargovolumeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool Iscredits_transactionNull() {
+                return this.IsNull(this.tablevilog.credits_transactionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void Setcredits_transactionNull() {
+                this[this.tablevilog.credits_transactionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool Iscredits_totalNull() {
+                return this.IsNull(this.tablevilog.credits_totalColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void Setcredits_totalNull() {
+                this[this.tablevilog.credits_totalColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsnotesNull() {
+                return this.IsNull(this.tablevilog.notesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetnotesNull() {
+                this[this.tablevilog.notesColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class visystemsandstationsRow : global::System.Data.DataRow {
+            
+            private visystemsandstationsDataTable tablevisystemsandstations;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal visystemsandstationsRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tablevisystemsandstations = ((visystemsandstationsDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int SystemID {
+                get {
+                    return ((int)(this[this.tablevisystemsandstations.SystemIDColumn]));
+                }
+                set {
+                    this[this.tablevisystemsandstations.SystemIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string SystemName {
+                get {
+                    return ((string)(this[this.tablevisystemsandstations.SystemNameColumn]));
+                }
+                set {
+                    this[this.tablevisystemsandstations.SystemNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int StationID {
+                get {
+                    return ((int)(this[this.tablevisystemsandstations.StationIDColumn]));
+                }
+                set {
+                    this[this.tablevisystemsandstations.StationIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string StationName {
+                get {
+                    return ((string)(this[this.tablevisystemsandstations.StationNameColumn]));
+                }
+                set {
+                    this[this.tablevisystemsandstations.StationNameColumn] = value;
+                }
             }
         }
         
@@ -14638,177 +15313,278 @@ namespace RegulatedNoise.SQL.Datasets {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class tmneighbourstationsRow : global::System.Data.DataRow {
+        public partial class tmpa_s2s_stationdataRow : global::System.Data.DataRow {
             
-            private tmneighbourstationsDataTable tabletmneighbourstations;
+            private tmpa_s2s_stationdataDataTable tabletmpa_s2s_stationdata;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tmneighbourstationsRow(global::System.Data.DataRowBuilder rb) : 
+            internal tmpa_s2s_stationdataRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tabletmneighbourstations = ((tmneighbourstationsDataTable)(this.Table));
+                this.tabletmpa_s2s_stationdata = ((tmpa_s2s_stationdataDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int System_ID_From {
+            public int CommodityID {
+                get {
+                    return ((int)(this[this.tabletmpa_s2s_stationdata.CommodityIDColumn]));
+                }
+                set {
+                    this[this.tabletmpa_s2s_stationdata.CommodityIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Commodity {
                 get {
                     try {
-                        return ((int)(this[this.tabletmneighbourstations.System_ID_FromColumn]));
+                        return ((string)(this[this.tabletmpa_s2s_stationdata.CommodityColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_From in Tabelle tmneighbourstations ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Commodity in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmneighbourstations.System_ID_FromColumn] = value;
+                    this[this.tabletmpa_s2s_stationdata.CommodityColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Station_ID_From {
-                get {
-                    return ((int)(this[this.tabletmneighbourstations.Station_ID_FromColumn]));
-                }
-                set {
-                    this[this.tabletmneighbourstations.Station_ID_FromColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double Distance_From {
+            public int Buy {
                 get {
                     try {
-                        return ((double)(this[this.tabletmneighbourstations.Distance_FromColumn]));
+                        return ((int)(this[this.tabletmpa_s2s_stationdata.BuyColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance_From in Tabelle tmneighbourstations ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmneighbourstations.Distance_FromColumn] = value;
+                    this[this.tabletmpa_s2s_stationdata.BuyColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int System_ID_To {
+            public int Supply {
                 get {
                     try {
-                        return ((int)(this[this.tabletmneighbourstations.System_ID_ToColumn]));
+                        return ((int)(this[this.tabletmpa_s2s_stationdata.SupplyColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_To in Tabelle tmneighbourstations ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Supply in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmneighbourstations.System_ID_ToColumn] = value;
+                    this[this.tabletmpa_s2s_stationdata.SupplyColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Station_ID_To {
-                get {
-                    return ((int)(this[this.tabletmneighbourstations.Station_ID_ToColumn]));
-                }
-                set {
-                    this[this.tabletmneighbourstations.Station_ID_ToColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double Distance_To {
+            public string SupplyLevel {
                 get {
                     try {
-                        return ((double)(this[this.tabletmneighbourstations.Distance_ToColumn]));
+                        return ((string)(this[this.tabletmpa_s2s_stationdata.SupplyLevelColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance_To in Tabelle tmneighbourstations ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte SupplyLevel in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmneighbourstations.Distance_ToColumn] = value;
+                    this[this.tabletmpa_s2s_stationdata.SupplyLevelColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double Distance_Between {
+            public int Sell {
                 get {
                     try {
-                        return ((double)(this[this.tabletmneighbourstations.Distance_BetweenColumn]));
+                        return ((int)(this[this.tabletmpa_s2s_stationdata.SellColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance_Between in Tabelle tmneighbourstations ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmneighbourstations.Distance_BetweenColumn] = value;
+                    this[this.tabletmpa_s2s_stationdata.SellColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSystem_ID_FromNull() {
-                return this.IsNull(this.tabletmneighbourstations.System_ID_FromColumn);
+            public int Demand {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_s2s_stationdata.DemandColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Demand in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_stationdata.DemandColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSystem_ID_FromNull() {
-                this[this.tabletmneighbourstations.System_ID_FromColumn] = global::System.Convert.DBNull;
+            public string Demandlevel {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_stationdata.DemandlevelColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Demandlevel in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_stationdata.DemandlevelColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDistance_FromNull() {
-                return this.IsNull(this.tabletmneighbourstations.Distance_FromColumn);
+            public System.DateTime Timestamp {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tabletmpa_s2s_stationdata.TimestampColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Timestamp in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_stationdata.TimestampColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDistance_FromNull() {
-                this[this.tabletmneighbourstations.Distance_FromColumn] = global::System.Convert.DBNull;
+            public int Profit {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_s2s_stationdata.ProfitColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Profit in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_stationdata.ProfitColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSystem_ID_ToNull() {
-                return this.IsNull(this.tabletmneighbourstations.System_ID_ToColumn);
+            public bool IsCommodityNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.CommodityColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSystem_ID_ToNull() {
-                this[this.tabletmneighbourstations.System_ID_ToColumn] = global::System.Convert.DBNull;
+            public void SetCommodityNull() {
+                this[this.tabletmpa_s2s_stationdata.CommodityColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDistance_ToNull() {
-                return this.IsNull(this.tabletmneighbourstations.Distance_ToColumn);
+            public bool IsBuyNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.BuyColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDistance_ToNull() {
-                this[this.tabletmneighbourstations.Distance_ToColumn] = global::System.Convert.DBNull;
+            public void SetBuyNull() {
+                this[this.tabletmpa_s2s_stationdata.BuyColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDistance_BetweenNull() {
-                return this.IsNull(this.tabletmneighbourstations.Distance_BetweenColumn);
+            public bool IsSupplyNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.SupplyColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDistance_BetweenNull() {
-                this[this.tabletmneighbourstations.Distance_BetweenColumn] = global::System.Convert.DBNull;
+            public void SetSupplyNull() {
+                this[this.tabletmpa_s2s_stationdata.SupplyColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSupplyLevelNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.SupplyLevelColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSupplyLevelNull() {
+                this[this.tabletmpa_s2s_stationdata.SupplyLevelColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSellNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.SellColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSellNull() {
+                this[this.tabletmpa_s2s_stationdata.SellColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDemandNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.DemandColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDemandNull() {
+                this[this.tabletmpa_s2s_stationdata.DemandColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDemandlevelNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.DemandlevelColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDemandlevelNull() {
+                this[this.tabletmpa_s2s_stationdata.DemandlevelColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTimestampNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.TimestampColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTimestampNull() {
+                this[this.tabletmpa_s2s_stationdata.TimestampColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsProfitNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.ProfitColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetProfitNull() {
+                this[this.tabletmpa_s2s_stationdata.ProfitColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -16827,452 +17603,6 @@ namespace RegulatedNoise.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetnotesNull() {
                 this[this.tabletblog.notesColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class tbpa_allcommoditiesRow : global::System.Data.DataRow {
-            
-            private tbpa_allcommoditiesDataTable tabletbpa_allcommodities;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tbpa_allcommoditiesRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tabletbpa_allcommodities = ((tbpa_allcommoditiesDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int CommodityID {
-                get {
-                    return ((int)(this[this.tabletbpa_allcommodities.CommodityIDColumn]));
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.CommodityIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Commodity {
-                get {
-                    try {
-                        return ((string)(this[this.tabletbpa_allcommodities.CommodityColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Commodity in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.CommodityColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Buy_SystemID {
-                get {
-                    try {
-                        return ((int)(this[this.tabletbpa_allcommodities.Buy_SystemIDColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_SystemID in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_SystemIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Buy_System {
-                get {
-                    try {
-                        return ((string)(this[this.tabletbpa_allcommodities.Buy_SystemColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_System in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_SystemColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Buy_StationID {
-                get {
-                    try {
-                        return ((int)(this[this.tabletbpa_allcommodities.Buy_StationIDColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_StationID in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_StationIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Buy_Station {
-                get {
-                    try {
-                        return ((string)(this[this.tabletbpa_allcommodities.Buy_StationColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Station in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_StationColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Buy_Min {
-                get {
-                    try {
-                        return ((int)(this[this.tabletbpa_allcommodities.Buy_MinColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Min in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_MinColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double Buy_Distance {
-                get {
-                    try {
-                        return ((double)(this[this.tabletbpa_allcommodities.Buy_DistanceColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Distance in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_DistanceColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime Buy_Timestamp {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tabletbpa_allcommodities.Buy_TimestampColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Timestamp in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Buy_TimestampColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Sell_SystemID {
-                get {
-                    try {
-                        return ((int)(this[this.tabletbpa_allcommodities.Sell_SystemIDColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_SystemID in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_SystemIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Sell_System {
-                get {
-                    try {
-                        return ((string)(this[this.tabletbpa_allcommodities.Sell_SystemColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_System in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_SystemColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Sell_StationID {
-                get {
-                    try {
-                        return ((int)(this[this.tabletbpa_allcommodities.Sell_StationIDColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_StationID in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_StationIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Sell_Station {
-                get {
-                    try {
-                        return ((string)(this[this.tabletbpa_allcommodities.Sell_StationColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Station in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_StationColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Sell_Max {
-                get {
-                    try {
-                        return ((int)(this[this.tabletbpa_allcommodities.Sell_MaxColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Max in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_MaxColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double Sell_Distance {
-                get {
-                    try {
-                        return ((double)(this[this.tabletbpa_allcommodities.Sell_DistanceColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Distance in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_DistanceColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime Sell_Timestamp {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tabletbpa_allcommodities.Sell_TimestampColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Timestamp in Tabelle tbpa_allcommodities ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletbpa_allcommodities.Sell_TimestampColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsCommodityNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.CommodityColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetCommodityNull() {
-                this[this.tabletbpa_allcommodities.CommodityColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_SystemIDNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_SystemIDColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_SystemIDNull() {
-                this[this.tabletbpa_allcommodities.Buy_SystemIDColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_SystemNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_SystemColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_SystemNull() {
-                this[this.tabletbpa_allcommodities.Buy_SystemColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_StationIDNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_StationIDColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_StationIDNull() {
-                this[this.tabletbpa_allcommodities.Buy_StationIDColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_StationNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_StationColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_StationNull() {
-                this[this.tabletbpa_allcommodities.Buy_StationColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_MinNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_MinColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_MinNull() {
-                this[this.tabletbpa_allcommodities.Buy_MinColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_DistanceNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_DistanceColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_DistanceNull() {
-                this[this.tabletbpa_allcommodities.Buy_DistanceColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuy_TimestampNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Buy_TimestampColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuy_TimestampNull() {
-                this[this.tabletbpa_allcommodities.Buy_TimestampColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_SystemIDNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_SystemIDColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_SystemIDNull() {
-                this[this.tabletbpa_allcommodities.Sell_SystemIDColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_SystemNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_SystemColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_SystemNull() {
-                this[this.tabletbpa_allcommodities.Sell_SystemColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_StationIDNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_StationIDColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_StationIDNull() {
-                this[this.tabletbpa_allcommodities.Sell_StationIDColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_StationNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_StationColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_StationNull() {
-                this[this.tabletbpa_allcommodities.Sell_StationColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_MaxNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_MaxColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_MaxNull() {
-                this[this.tabletbpa_allcommodities.Sell_MaxColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_DistanceNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_DistanceColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_DistanceNull() {
-                this[this.tabletbpa_allcommodities.Sell_DistanceColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSell_TimestampNull() {
-                return this.IsNull(this.tabletbpa_allcommodities.Sell_TimestampColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSell_TimestampNull() {
-                this[this.tabletbpa_allcommodities.Sell_TimestampColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -19995,6 +20325,71 @@ namespace RegulatedNoise.SQL.Datasets {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
+        public partial class tmbestprofitsRow : global::System.Data.DataRow {
+            
+            private tmbestprofitsDataTable tabletmbestprofits;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal tmbestprofitsRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tabletmbestprofits = ((tmbestprofitsDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Station_Id_From {
+                get {
+                    return ((int)(this[this.tabletmbestprofits.Station_Id_FromColumn]));
+                }
+                set {
+                    this[this.tabletmbestprofits.Station_Id_FromColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Station_Id_To {
+                get {
+                    return ((int)(this[this.tabletmbestprofits.Station_Id_ToColumn]));
+                }
+                set {
+                    this[this.tabletmbestprofits.Station_Id_ToColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Max_Profit {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmbestprofits.Max_ProfitColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Max_Profit in Tabelle tmbestprofits ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmbestprofits.Max_ProfitColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsMax_ProfitNull() {
+                return this.IsNull(this.tabletmbestprofits.Max_ProfitColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetMax_ProfitNull() {
+                this[this.tabletmbestprofits.Max_ProfitColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
         public partial class tmfilteredstationsRow : global::System.Data.DataRow {
             
             private tmfilteredstationsDataTable tabletmfilteredstations;
@@ -20144,735 +20539,202 @@ namespace RegulatedNoise.SQL.Datasets {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class vilogRow : global::System.Data.DataRow {
+        public partial class tmneighbourstationsRow : global::System.Data.DataRow {
             
-            private vilogDataTable tablevilog;
+            private tmneighbourstationsDataTable tabletmneighbourstations;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal vilogRow(global::System.Data.DataRowBuilder rb) : 
+            internal tmneighbourstationsRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tablevilog = ((vilogDataTable)(this.Table));
+                this.tabletmneighbourstations = ((tmneighbourstationsDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime time {
-                get {
-                    return ((global::System.DateTime)(this[this.tablevilog.timeColumn]));
-                }
-                set {
-                    this[this.tablevilog.timeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string systemname {
+            public int System_ID_From {
                 get {
                     try {
-                        return ((string)(this[this.tablevilog.systemnameColumn]));
+                        return ((int)(this[this.tabletmneighbourstations.System_ID_FromColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte systemname in Tabelle vilog ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_From in Tabelle tmneighbourstations ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablevilog.systemnameColumn] = value;
+                    this[this.tabletmneighbourstations.System_ID_FromColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string stationname {
+            public int Station_ID_From {
+                get {
+                    return ((int)(this[this.tabletmneighbourstations.Station_ID_FromColumn]));
+                }
+                set {
+                    this[this.tabletmneighbourstations.Station_ID_FromColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public double Distance_From {
                 get {
                     try {
-                        return ((string)(this[this.tablevilog.stationnameColumn]));
+                        return ((double)(this[this.tabletmneighbourstations.Distance_FromColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte stationname in Tabelle vilog ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance_From in Tabelle tmneighbourstations ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablevilog.stationnameColumn] = value;
+                    this[this.tabletmneighbourstations.Distance_FromColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string eevent {
+            public int System_ID_To {
                 get {
                     try {
-                        return ((string)(this[this.tablevilog.eeventColumn]));
+                        return ((int)(this[this.tabletmneighbourstations.System_ID_ToColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte eevent in Tabelle vilog ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_To in Tabelle tmneighbourstations ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablevilog.eeventColumn] = value;
+                    this[this.tabletmneighbourstations.System_ID_ToColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string action {
+            public int Station_ID_To {
+                get {
+                    return ((int)(this[this.tabletmneighbourstations.Station_ID_ToColumn]));
+                }
+                set {
+                    this[this.tabletmneighbourstations.Station_ID_ToColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public double Distance_To {
                 get {
                     try {
-                        return ((string)(this[this.tablevilog.actionColumn]));
+                        return ((double)(this[this.tabletmneighbourstations.Distance_ToColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte action in Tabelle vilog ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance_To in Tabelle tmneighbourstations ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablevilog.actionColumn] = value;
+                    this[this.tabletmneighbourstations.Distance_ToColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string loccommodity {
+            public double Distance_Between {
                 get {
                     try {
-                        return ((string)(this[this.tablevilog.loccommodityColumn]));
+                        return ((double)(this[this.tabletmneighbourstations.Distance_BetweenColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte loccommodity in Tabelle vilog ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance_Between in Tabelle tmneighbourstations ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablevilog.loccommodityColumn] = value;
+                    this[this.tabletmneighbourstations.Distance_BetweenColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int cargovolume {
-                get {
-                    try {
-                        return ((int)(this[this.tablevilog.cargovolumeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte cargovolume in Tabelle vilog ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablevilog.cargovolumeColumn] = value;
-                }
+            public bool IsSystem_ID_FromNull() {
+                return this.IsNull(this.tabletmneighbourstations.System_ID_FromColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int credits_transaction {
-                get {
-                    try {
-                        return ((int)(this[this.tablevilog.credits_transactionColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_transaction in Tabelle vilog ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablevilog.credits_transactionColumn] = value;
-                }
+            public void SetSystem_ID_FromNull() {
+                this[this.tabletmneighbourstations.System_ID_FromColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int credits_total {
-                get {
-                    try {
-                        return ((int)(this[this.tablevilog.credits_totalColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_total in Tabelle vilog ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablevilog.credits_totalColumn] = value;
-                }
+            public bool IsDistance_FromNull() {
+                return this.IsNull(this.tabletmneighbourstations.Distance_FromColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string notes {
-                get {
-                    try {
-                        return ((string)(this[this.tablevilog.notesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte notes in Tabelle vilog ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablevilog.notesColumn] = value;
-                }
+            public void SetDistance_FromNull() {
+                this[this.tabletmneighbourstations.Distance_FromColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IssystemnameNull() {
-                return this.IsNull(this.tablevilog.systemnameColumn);
+            public bool IsSystem_ID_ToNull() {
+                return this.IsNull(this.tabletmneighbourstations.System_ID_ToColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetsystemnameNull() {
-                this[this.tablevilog.systemnameColumn] = global::System.Convert.DBNull;
+            public void SetSystem_ID_ToNull() {
+                this[this.tabletmneighbourstations.System_ID_ToColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsstationnameNull() {
-                return this.IsNull(this.tablevilog.stationnameColumn);
+            public bool IsDistance_ToNull() {
+                return this.IsNull(this.tabletmneighbourstations.Distance_ToColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetstationnameNull() {
-                this[this.tablevilog.stationnameColumn] = global::System.Convert.DBNull;
+            public void SetDistance_ToNull() {
+                this[this.tabletmneighbourstations.Distance_ToColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IseeventNull() {
-                return this.IsNull(this.tablevilog.eeventColumn);
+            public bool IsDistance_BetweenNull() {
+                return this.IsNull(this.tabletmneighbourstations.Distance_BetweenColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SeteeventNull() {
-                this[this.tablevilog.eeventColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsactionNull() {
-                return this.IsNull(this.tablevilog.actionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetactionNull() {
-                this[this.tablevilog.actionColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsloccommodityNull() {
-                return this.IsNull(this.tablevilog.loccommodityColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetloccommodityNull() {
-                this[this.tablevilog.loccommodityColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IscargovolumeNull() {
-                return this.IsNull(this.tablevilog.cargovolumeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetcargovolumeNull() {
-                this[this.tablevilog.cargovolumeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Iscredits_transactionNull() {
-                return this.IsNull(this.tablevilog.credits_transactionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setcredits_transactionNull() {
-                this[this.tablevilog.credits_transactionColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Iscredits_totalNull() {
-                return this.IsNull(this.tablevilog.credits_totalColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setcredits_totalNull() {
-                this[this.tablevilog.credits_totalColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsnotesNull() {
-                return this.IsNull(this.tablevilog.notesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetnotesNull() {
-                this[this.tablevilog.notesColumn] = global::System.Convert.DBNull;
+            public void SetDistance_BetweenNull() {
+                this[this.tabletmneighbourstations.Distance_BetweenColumn] = global::System.Convert.DBNull;
             }
         }
         
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class visystemsandstationsRow : global::System.Data.DataRow {
+        public partial class tmpa_allcommoditiesRow : global::System.Data.DataRow {
             
-            private visystemsandstationsDataTable tablevisystemsandstations;
+            private tmpa_allcommoditiesDataTable tabletmpa_allcommodities;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal visystemsandstationsRow(global::System.Data.DataRowBuilder rb) : 
+            internal tmpa_allcommoditiesRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tablevisystemsandstations = ((visystemsandstationsDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int SystemID {
-                get {
-                    return ((int)(this[this.tablevisystemsandstations.SystemIDColumn]));
-                }
-                set {
-                    this[this.tablevisystemsandstations.SystemIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string SystemName {
-                get {
-                    return ((string)(this[this.tablevisystemsandstations.SystemNameColumn]));
-                }
-                set {
-                    this[this.tablevisystemsandstations.SystemNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int StationID {
-                get {
-                    return ((int)(this[this.tablevisystemsandstations.StationIDColumn]));
-                }
-                set {
-                    this[this.tablevisystemsandstations.StationIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string StationName {
-                get {
-                    return ((string)(this[this.tablevisystemsandstations.StationNameColumn]));
-                }
-                set {
-                    this[this.tablevisystemsandstations.StationNameColumn] = value;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class tmppa_s2s_besttripsRow : global::System.Data.DataRow {
-            
-            private tmppa_s2s_besttripsDataTable tabletmppa_s2s_besttrips;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tmppa_s2s_besttripsRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tabletmppa_s2s_besttrips = ((tmppa_s2s_besttripsDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int System_ID_1 {
-                get {
-                    try {
-                        return ((int)(this[this.tabletmppa_s2s_besttrips.System_ID_1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_1 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.System_ID_1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string SystemName_1 {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.SystemName_1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte SystemName_1 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.SystemName_1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Station_ID_1 {
-                get {
-                    return ((int)(this[this.tabletmppa_s2s_besttrips.Station_ID_1Column]));
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.Station_ID_1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string StationName_1 {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.StationName_1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte StationName_1 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.StationName_1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string TimeStamp_1 {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.TimeStamp_1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte TimeStamp_1 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.TimeStamp_1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int System_ID_2 {
-                get {
-                    try {
-                        return ((int)(this[this.tabletmppa_s2s_besttrips.System_ID_2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_2 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.System_ID_2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string SystemName_2 {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.SystemName_2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte SystemName_2 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.SystemName_2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Station_ID_2 {
-                get {
-                    return ((int)(this[this.tabletmppa_s2s_besttrips.Station_ID_2Column]));
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.Station_ID_2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string StationName_2 {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.StationName_2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte StationName_2 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.StationName_2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string TimeStamp_2 {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.TimeStamp_2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte TimeStamp_2 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.TimeStamp_2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Profit {
-                get {
-                    try {
-                        return ((string)(this[this.tabletmppa_s2s_besttrips.ProfitColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Profit in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.ProfitColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double Distance {
-                get {
-                    try {
-                        return ((double)(this[this.tabletmppa_s2s_besttrips.DistanceColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.DistanceColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double DistanceToStar_1 {
-                get {
-                    try {
-                        return ((double)(this[this.tabletmppa_s2s_besttrips.DistanceToStar_1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte DistanceToStar_1 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.DistanceToStar_1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double DistanceToStar_2 {
-                get {
-                    try {
-                        return ((double)(this[this.tabletmppa_s2s_besttrips.DistanceToStar_2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte DistanceToStar_2 in Tabelle tmppa_s2s_besttrips ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletmppa_s2s_besttrips.DistanceToStar_2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSystem_ID_1Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.System_ID_1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSystem_ID_1Null() {
-                this[this.tabletmppa_s2s_besttrips.System_ID_1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSystemName_1Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.SystemName_1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSystemName_1Null() {
-                this[this.tabletmppa_s2s_besttrips.SystemName_1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsStationName_1Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.StationName_1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetStationName_1Null() {
-                this[this.tabletmppa_s2s_besttrips.StationName_1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsTimeStamp_1Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.TimeStamp_1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetTimeStamp_1Null() {
-                this[this.tabletmppa_s2s_besttrips.TimeStamp_1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSystem_ID_2Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.System_ID_2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSystem_ID_2Null() {
-                this[this.tabletmppa_s2s_besttrips.System_ID_2Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSystemName_2Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.SystemName_2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSystemName_2Null() {
-                this[this.tabletmppa_s2s_besttrips.SystemName_2Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsStationName_2Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.StationName_2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetStationName_2Null() {
-                this[this.tabletmppa_s2s_besttrips.StationName_2Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsTimeStamp_2Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.TimeStamp_2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetTimeStamp_2Null() {
-                this[this.tabletmppa_s2s_besttrips.TimeStamp_2Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsProfitNull() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.ProfitColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetProfitNull() {
-                this[this.tabletmppa_s2s_besttrips.ProfitColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDistanceNull() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.DistanceColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDistanceNull() {
-                this[this.tabletmppa_s2s_besttrips.DistanceColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDistanceToStar_1Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.DistanceToStar_1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDistanceToStar_1Null() {
-                this[this.tabletmppa_s2s_besttrips.DistanceToStar_1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDistanceToStar_2Null() {
-                return this.IsNull(this.tabletmppa_s2s_besttrips.DistanceToStar_2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDistanceToStar_2Null() {
-                this[this.tabletmppa_s2s_besttrips.DistanceToStar_2Column] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class tmppa_s2s_stationdataRow : global::System.Data.DataRow {
-            
-            private tmppa_s2s_stationdataDataTable tabletmppa_s2s_stationdata;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal tmppa_s2s_stationdataRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tabletmppa_s2s_stationdata = ((tmppa_s2s_stationdataDataTable)(this.Table));
+                this.tabletmpa_allcommodities = ((tmpa_allcommoditiesDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int CommodityID {
                 get {
-                    return ((int)(this[this.tabletmppa_s2s_stationdata.CommodityIDColumn]));
+                    return ((int)(this[this.tabletmpa_allcommodities.CommodityIDColumn]));
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.CommodityIDColumn] = value;
+                    this[this.tabletmpa_allcommodities.CommodityIDColumn] = value;
                 }
             }
             
@@ -20881,251 +20743,888 @@ namespace RegulatedNoise.SQL.Datasets {
             public string Commodity {
                 get {
                     try {
-                        return ((string)(this[this.tabletmppa_s2s_stationdata.CommodityColumn]));
+                        return ((string)(this[this.tabletmpa_allcommodities.CommodityColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Commodity in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Commodity in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.CommodityColumn] = value;
+                    this[this.tabletmpa_allcommodities.CommodityColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Buy {
+            public int Buy_SystemID {
                 get {
                     try {
-                        return ((int)(this[this.tabletmppa_s2s_stationdata.BuyColumn]));
+                        return ((int)(this[this.tabletmpa_allcommodities.Buy_SystemIDColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_SystemID in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.BuyColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_SystemIDColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Supply {
+            public string Buy_System {
                 get {
                     try {
-                        return ((int)(this[this.tabletmppa_s2s_stationdata.SupplyColumn]));
+                        return ((string)(this[this.tabletmpa_allcommodities.Buy_SystemColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Supply in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_System in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.SupplyColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_SystemColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string SupplyLevel {
+            public int Buy_StationID {
                 get {
                     try {
-                        return ((string)(this[this.tabletmppa_s2s_stationdata.SupplyLevelColumn]));
+                        return ((int)(this[this.tabletmpa_allcommodities.Buy_StationIDColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte SupplyLevel in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_StationID in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.SupplyLevelColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_StationIDColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Sell {
+            public string Buy_Station {
                 get {
                     try {
-                        return ((int)(this[this.tabletmppa_s2s_stationdata.SellColumn]));
+                        return ((string)(this[this.tabletmpa_allcommodities.Buy_StationColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Station in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.SellColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_StationColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Demand {
+            public int Buy_Min {
                 get {
                     try {
-                        return ((int)(this[this.tabletmppa_s2s_stationdata.DemandColumn]));
+                        return ((int)(this[this.tabletmpa_allcommodities.Buy_MinColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Demand in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Min in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.DemandColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_MinColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Demandlevel {
+            public double Buy_Distance {
                 get {
                     try {
-                        return ((string)(this[this.tabletmppa_s2s_stationdata.DemandlevelColumn]));
+                        return ((double)(this[this.tabletmpa_allcommodities.Buy_DistanceColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Demandlevel in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Distance in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.DemandlevelColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_DistanceColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime Timestamp {
+            public System.DateTime Buy_Timestamp {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tabletmppa_s2s_stationdata.TimestampColumn]));
+                        return ((global::System.DateTime)(this[this.tabletmpa_allcommodities.Buy_TimestampColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Timestamp in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Buy_Timestamp in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.TimestampColumn] = value;
+                    this[this.tabletmpa_allcommodities.Buy_TimestampColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Profit {
+            public int Sell_SystemID {
                 get {
                     try {
-                        return ((int)(this[this.tabletmppa_s2s_stationdata.ProfitColumn]));
+                        return ((int)(this[this.tabletmpa_allcommodities.Sell_SystemIDColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Profit in Tabelle tmppa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_SystemID in Tabelle tmpa_allcommodities ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmppa_s2s_stationdata.ProfitColumn] = value;
+                    this[this.tabletmpa_allcommodities.Sell_SystemIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Sell_System {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_allcommodities.Sell_SystemColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_System in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Sell_SystemColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Sell_StationID {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_allcommodities.Sell_StationIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_StationID in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Sell_StationIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Sell_Station {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_allcommodities.Sell_StationColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Station in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Sell_StationColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Sell_Max {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_allcommodities.Sell_MaxColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Max in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Sell_MaxColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public double Sell_Distance {
+                get {
+                    try {
+                        return ((double)(this[this.tabletmpa_allcommodities.Sell_DistanceColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Distance in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Sell_DistanceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime Sell_Timestamp {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tabletmpa_allcommodities.Sell_TimestampColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sell_Timestamp in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Sell_TimestampColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Max_Profit {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_allcommodities.Max_ProfitColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Max_Profit in Tabelle tmpa_allcommodities ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_allcommodities.Max_ProfitColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsCommodityNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.CommodityColumn);
+                return this.IsNull(this.tabletmpa_allcommodities.CommodityColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetCommodityNull() {
-                this[this.tabletmppa_s2s_stationdata.CommodityColumn] = global::System.Convert.DBNull;
+                this[this.tabletmpa_allcommodities.CommodityColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBuyNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.BuyColumn);
+            public bool IsBuy_SystemIDNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_SystemIDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBuyNull() {
-                this[this.tabletmppa_s2s_stationdata.BuyColumn] = global::System.Convert.DBNull;
+            public void SetBuy_SystemIDNull() {
+                this[this.tabletmpa_allcommodities.Buy_SystemIDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSupplyNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.SupplyColumn);
+            public bool IsBuy_SystemNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_SystemColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSupplyNull() {
-                this[this.tabletmppa_s2s_stationdata.SupplyColumn] = global::System.Convert.DBNull;
+            public void SetBuy_SystemNull() {
+                this[this.tabletmpa_allcommodities.Buy_SystemColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSupplyLevelNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.SupplyLevelColumn);
+            public bool IsBuy_StationIDNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_StationIDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSupplyLevelNull() {
-                this[this.tabletmppa_s2s_stationdata.SupplyLevelColumn] = global::System.Convert.DBNull;
+            public void SetBuy_StationIDNull() {
+                this[this.tabletmpa_allcommodities.Buy_StationIDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSellNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.SellColumn);
+            public bool IsBuy_StationNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_StationColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSellNull() {
-                this[this.tabletmppa_s2s_stationdata.SellColumn] = global::System.Convert.DBNull;
+            public void SetBuy_StationNull() {
+                this[this.tabletmpa_allcommodities.Buy_StationColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDemandNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.DemandColumn);
+            public bool IsBuy_MinNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_MinColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDemandNull() {
-                this[this.tabletmppa_s2s_stationdata.DemandColumn] = global::System.Convert.DBNull;
+            public void SetBuy_MinNull() {
+                this[this.tabletmpa_allcommodities.Buy_MinColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDemandlevelNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.DemandlevelColumn);
+            public bool IsBuy_DistanceNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_DistanceColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDemandlevelNull() {
-                this[this.tabletmppa_s2s_stationdata.DemandlevelColumn] = global::System.Convert.DBNull;
+            public void SetBuy_DistanceNull() {
+                this[this.tabletmpa_allcommodities.Buy_DistanceColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsTimestampNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.TimestampColumn);
+            public bool IsBuy_TimestampNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Buy_TimestampColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetTimestampNull() {
-                this[this.tabletmppa_s2s_stationdata.TimestampColumn] = global::System.Convert.DBNull;
+            public void SetBuy_TimestampNull() {
+                this[this.tabletmpa_allcommodities.Buy_TimestampColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_SystemIDNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_SystemIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_SystemIDNull() {
+                this[this.tabletmpa_allcommodities.Sell_SystemIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_SystemNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_SystemColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_SystemNull() {
+                this[this.tabletmpa_allcommodities.Sell_SystemColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_StationIDNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_StationIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_StationIDNull() {
+                this[this.tabletmpa_allcommodities.Sell_StationIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_StationNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_StationColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_StationNull() {
+                this[this.tabletmpa_allcommodities.Sell_StationColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_MaxNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_MaxColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_MaxNull() {
+                this[this.tabletmpa_allcommodities.Sell_MaxColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_DistanceNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_DistanceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_DistanceNull() {
+                this[this.tabletmpa_allcommodities.Sell_DistanceColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSell_TimestampNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Sell_TimestampColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSell_TimestampNull() {
+                this[this.tabletmpa_allcommodities.Sell_TimestampColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsMax_ProfitNull() {
+                return this.IsNull(this.tabletmpa_allcommodities.Max_ProfitColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetMax_ProfitNull() {
+                this[this.tabletmpa_allcommodities.Max_ProfitColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class tmpa_s2s_besttripsRow : global::System.Data.DataRow {
+            
+            private tmpa_s2s_besttripsDataTable tabletmpa_s2s_besttrips;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal tmpa_s2s_besttripsRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tabletmpa_s2s_besttrips = ((tmpa_s2s_besttripsDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int System_ID_1 {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_s2s_besttrips.System_ID_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_1 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.System_ID_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string SystemName_1 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.SystemName_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte SystemName_1 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.SystemName_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Station_ID_1 {
+                get {
+                    return ((int)(this[this.tabletmpa_s2s_besttrips.Station_ID_1Column]));
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.Station_ID_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string StationName_1 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.StationName_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte StationName_1 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.StationName_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string TimeStamp_1 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.TimeStamp_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte TimeStamp_1 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.TimeStamp_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int System_ID_2 {
+                get {
+                    try {
+                        return ((int)(this[this.tabletmpa_s2s_besttrips.System_ID_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte System_ID_2 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.System_ID_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string SystemName_2 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.SystemName_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte SystemName_2 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.SystemName_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Station_ID_2 {
+                get {
+                    return ((int)(this[this.tabletmpa_s2s_besttrips.Station_ID_2Column]));
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.Station_ID_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string StationName_2 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.StationName_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte StationName_2 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.StationName_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string TimeStamp_2 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.TimeStamp_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte TimeStamp_2 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.TimeStamp_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Profit {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.ProfitColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Profit in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.ProfitColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public double Distance {
+                get {
+                    try {
+                        return ((double)(this[this.tabletmpa_s2s_besttrips.DistanceColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Distance in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.DistanceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public double DistanceToStar_1 {
+                get {
+                    try {
+                        return ((double)(this[this.tabletmpa_s2s_besttrips.DistanceToStar_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte DistanceToStar_1 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.DistanceToStar_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public double DistanceToStar_2 {
+                get {
+                    try {
+                        return ((double)(this[this.tabletmpa_s2s_besttrips.DistanceToStar_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte DistanceToStar_2 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.DistanceToStar_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSystem_ID_1Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.System_ID_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSystem_ID_1Null() {
+                this[this.tabletmpa_s2s_besttrips.System_ID_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSystemName_1Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.SystemName_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSystemName_1Null() {
+                this[this.tabletmpa_s2s_besttrips.SystemName_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsStationName_1Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.StationName_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetStationName_1Null() {
+                this[this.tabletmpa_s2s_besttrips.StationName_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTimeStamp_1Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.TimeStamp_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTimeStamp_1Null() {
+                this[this.tabletmpa_s2s_besttrips.TimeStamp_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSystem_ID_2Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.System_ID_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSystem_ID_2Null() {
+                this[this.tabletmpa_s2s_besttrips.System_ID_2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSystemName_2Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.SystemName_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSystemName_2Null() {
+                this[this.tabletmpa_s2s_besttrips.SystemName_2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsStationName_2Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.StationName_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetStationName_2Null() {
+                this[this.tabletmpa_s2s_besttrips.StationName_2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTimeStamp_2Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.TimeStamp_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTimeStamp_2Null() {
+                this[this.tabletmpa_s2s_besttrips.TimeStamp_2Column] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsProfitNull() {
-                return this.IsNull(this.tabletmppa_s2s_stationdata.ProfitColumn);
+                return this.IsNull(this.tabletmpa_s2s_besttrips.ProfitColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetProfitNull() {
-                this[this.tabletmppa_s2s_stationdata.ProfitColumn] = global::System.Convert.DBNull;
+                this[this.tabletmpa_s2s_besttrips.ProfitColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDistanceNull() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.DistanceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDistanceNull() {
+                this[this.tabletmpa_s2s_besttrips.DistanceColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDistanceToStar_1Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.DistanceToStar_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDistanceToStar_1Null() {
+                this[this.tabletmpa_s2s_besttrips.DistanceToStar_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDistanceToStar_2Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.DistanceToStar_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDistanceToStar_2Null() {
+                this[this.tabletmpa_s2s_besttrips.DistanceToStar_2Column] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public class vilogRowChangeEvent : global::System.EventArgs {
+            
+            private vilogRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogRowChangeEvent(vilogRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public vilogRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public class visystemsandstationsRowChangeEvent : global::System.EventArgs {
+            
+            private visystemsandstationsRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsRowChangeEvent(visystemsandstationsRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public visystemsandstationsRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
             }
         }
         
@@ -21167,22 +21666,22 @@ namespace RegulatedNoise.SQL.Datasets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class tmneighbourstationsRowChangeEvent : global::System.EventArgs {
+        public class tmpa_s2s_stationdataRowChangeEvent : global::System.EventArgs {
             
-            private tmneighbourstationsRow eventRow;
+            private tmpa_s2s_stationdataRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsRowChangeEvent(tmneighbourstationsRow row, global::System.Data.DataRowAction action) {
+            public tmpa_s2s_stationdataRowChangeEvent(tmpa_s2s_stationdataRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmneighbourstationsRow Row {
+            public tmpa_s2s_stationdataRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -21779,40 +22278,6 @@ namespace RegulatedNoise.SQL.Datasets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class tbpa_allcommoditiesRowChangeEvent : global::System.EventArgs {
-            
-            private tbpa_allcommoditiesRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesRowChangeEvent(tbpa_allcommoditiesRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbpa_allcommoditiesRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public class tbpricehistoryRowChangeEvent : global::System.EventArgs {
             
             private tbpricehistoryRow eventRow;
@@ -22221,6 +22686,40 @@ namespace RegulatedNoise.SQL.Datasets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public class tmbestprofitsRowChangeEvent : global::System.EventArgs {
+            
+            private tmbestprofitsRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsRowChangeEvent(tmbestprofitsRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public tmbestprofitsRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public class tmfilteredstationsRowChangeEvent : global::System.EventArgs {
             
             private tmfilteredstationsRow eventRow;
@@ -22255,22 +22754,22 @@ namespace RegulatedNoise.SQL.Datasets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class vilogRowChangeEvent : global::System.EventArgs {
+        public class tmneighbourstationsRowChangeEvent : global::System.EventArgs {
             
-            private vilogRow eventRow;
+            private tmneighbourstationsRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogRowChangeEvent(vilogRow row, global::System.Data.DataRowAction action) {
+            public tmneighbourstationsRowChangeEvent(tmneighbourstationsRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public vilogRow Row {
+            public tmneighbourstationsRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -22289,22 +22788,22 @@ namespace RegulatedNoise.SQL.Datasets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class visystemsandstationsRowChangeEvent : global::System.EventArgs {
+        public class tmpa_allcommoditiesRowChangeEvent : global::System.EventArgs {
             
-            private visystemsandstationsRow eventRow;
+            private tmpa_allcommoditiesRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsRowChangeEvent(visystemsandstationsRow row, global::System.Data.DataRowAction action) {
+            public tmpa_allcommoditiesRowChangeEvent(tmpa_allcommoditiesRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public visystemsandstationsRow Row {
+            public tmpa_allcommoditiesRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -22323,56 +22822,22 @@ namespace RegulatedNoise.SQL.Datasets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class tmppa_s2s_besttripsRowChangeEvent : global::System.EventArgs {
+        public class tmpa_s2s_besttripsRowChangeEvent : global::System.EventArgs {
             
-            private tmppa_s2s_besttripsRow eventRow;
+            private tmpa_s2s_besttripsRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsRowChangeEvent(tmppa_s2s_besttripsRow row, global::System.Data.DataRowAction action) {
+            public tmpa_s2s_besttripsRowChangeEvent(tmpa_s2s_besttripsRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_besttripsRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class tmppa_s2s_stationdataRowChangeEvent : global::System.EventArgs {
-            
-            private tmppa_s2s_stationdataRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataRowChangeEvent(tmppa_s2s_stationdataRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmppa_s2s_stationdataRow Row {
+            public tmpa_s2s_besttripsRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -22390,6 +22855,355 @@ namespace RegulatedNoise.SQL.Datasets {
 }
 namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     
+    
+    /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class vilogTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
+        
+        private global::MySql.Data.MySqlClient.MySqlConnection _connection;
+        
+        private global::MySql.Data.MySqlClient.MySqlTransaction _transaction;
+        
+        private global::MySql.Data.MySqlClient.MySqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public vilogTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected internal global::MySql.Data.MySqlClient.MySqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::MySql.Data.MySqlClient.MySqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::MySql.Data.MySqlClient.MySqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::MySql.Data.MySqlClient.MySqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected global::MySql.Data.MySqlClient.MySqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitAdapter() {
+            this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "vilog";
+            tableMapping.ColumnMappings.Add("time", "time");
+            tableMapping.ColumnMappings.Add("systemname", "systemname");
+            tableMapping.ColumnMappings.Add("stationname", "stationname");
+            tableMapping.ColumnMappings.Add("eevent", "eevent");
+            tableMapping.ColumnMappings.Add("action", "action");
+            tableMapping.ColumnMappings.Add("loccommodity", "loccommodity");
+            tableMapping.ColumnMappings.Add("cargovolume", "cargovolume");
+            tableMapping.ColumnMappings.Add("credits_transaction", "credits_transaction");
+            tableMapping.ColumnMappings.Add("credits_total", "credits_total");
+            tableMapping.ColumnMappings.Add("notes", "notes");
+            this._adapter.TableMappings.Add(tableMapping);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitConnection() {
+            this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
+            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
+            this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = "SELECT `time`, `systemname`, `stationname`, `eevent`, `action`, `loccommodity`, `" +
+                "cargovolume`, `credits_transaction`, `credits_total`, `notes` FROM `elite_db`.`v" +
+                "ilog`";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
+        public virtual int Fill(dsEliteDB.vilogDataTable dataTable) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual dsEliteDB.vilogDataTable GetData() {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            dsEliteDB.vilogDataTable dataTable = new dsEliteDB.vilogDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+    }
+    
+    /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class visystemsandstationsTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
+        
+        private global::MySql.Data.MySqlClient.MySqlConnection _connection;
+        
+        private global::MySql.Data.MySqlClient.MySqlTransaction _transaction;
+        
+        private global::MySql.Data.MySqlClient.MySqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public visystemsandstationsTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected internal global::MySql.Data.MySqlClient.MySqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::MySql.Data.MySqlClient.MySqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::MySql.Data.MySqlClient.MySqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::MySql.Data.MySqlClient.MySqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected global::MySql.Data.MySqlClient.MySqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitAdapter() {
+            this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "visystemsandstations";
+            tableMapping.ColumnMappings.Add("SystemID", "SystemID");
+            tableMapping.ColumnMappings.Add("SystemName", "SystemName");
+            tableMapping.ColumnMappings.Add("StationID", "StationID");
+            tableMapping.ColumnMappings.Add("StationName", "StationName");
+            this._adapter.TableMappings.Add(tableMapping);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitConnection() {
+            this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
+            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
+            this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = "SELECT `SystemID`, `SystemName`, `StationID`, `StationName` FROM `elite_db`.`visy" +
+                "stemsandstations`";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
+        public virtual int Fill(dsEliteDB.visystemsandstationsDataTable dataTable) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual dsEliteDB.visystemsandstationsDataTable GetData() {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            dsEliteDB.visystemsandstationsDataTable dataTable = new dsEliteDB.visystemsandstationsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+    }
     
     /// <summary>
     ///Represents the connection and commands used to retrieve and save data.
@@ -22769,7 +23583,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class tmneighbourstationsTableAdapter : global::System.ComponentModel.Component {
+    public partial class tmpa_s2s_stationdataTableAdapter : global::System.ComponentModel.Component {
         
         private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
         
@@ -22783,7 +23597,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public tmneighbourstationsTableAdapter() {
+        public tmpa_s2s_stationdataTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -22880,42 +23694,45 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "tmneighbourstations";
-            tableMapping.ColumnMappings.Add("System_ID_From", "System_ID_From");
-            tableMapping.ColumnMappings.Add("Station_ID_From", "Station_ID_From");
-            tableMapping.ColumnMappings.Add("Distance_From", "Distance_From");
-            tableMapping.ColumnMappings.Add("System_ID_To", "System_ID_To");
-            tableMapping.ColumnMappings.Add("Station_ID_To", "Station_ID_To");
-            tableMapping.ColumnMappings.Add("Distance_To", "Distance_To");
-            tableMapping.ColumnMappings.Add("Distance_Between", "Distance_Between");
+            tableMapping.DataSetTable = "tmpa_s2s_stationdata";
+            tableMapping.ColumnMappings.Add("CommodityID", "CommodityID");
+            tableMapping.ColumnMappings.Add("Commodity", "Commodity");
+            tableMapping.ColumnMappings.Add("Buy", "Buy");
+            tableMapping.ColumnMappings.Add("Supply", "Supply");
+            tableMapping.ColumnMappings.Add("SupplyLevel", "SupplyLevel");
+            tableMapping.ColumnMappings.Add("Sell", "Sell");
+            tableMapping.ColumnMappings.Add("Demand", "Demand");
+            tableMapping.ColumnMappings.Add("Demandlevel", "Demandlevel");
+            tableMapping.ColumnMappings.Add("Timestamp", "Timestamp");
+            tableMapping.ColumnMappings.Add("Profit", "Profit");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmneighbourstations` WHERE (((@p1 = 1 AND `System_ID_From` IS NULL) OR (`System_ID_From` = @p2)) AND (`Station_ID_From` = @p3) AND ((@p4 = 1 AND `Distance_From` IS NULL) OR (`Distance_From` = @p5)) AND ((@p6 = 1 AND `System_ID_To` IS NULL) OR (`System_ID_To` = @p7)) AND (`Station_ID_To` = @p8) AND ((@p9 = 1 AND `Distance_To` IS NULL) OR (`Distance_To` = @p10)) AND ((@p11 = 1 AND `Distance_Between` IS NULL) OR (`Distance_Between` = @p12)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_s2s_stationdata` WHERE ((`CommodityID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy` IS NULL) OR (`Buy` = @p5)) AND ((@p6 = 1 AND `Supply` IS NULL) OR (`Supply` = @p7)) AND ((@p8 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p9)) AND ((@p10 = 1 AND `Sell` IS NULL) OR (`Sell` = @p11)) AND ((@p12 = 1 AND `Demand` IS NULL) OR (`Demand` = @p13)) AND ((@p14 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p15)) AND ((@p16 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p17)) AND ((@p18 = 1 AND `Profit` IS NULL) OR (`Profit` = @p19)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_From";
+            param.SourceColumn = "CommodityID";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p2";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_From";
+            param.SourceColumn = "Commodity";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_From";
+            param.SourceColumn = "Commodity";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -22923,16 +23740,16 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_From";
+            param.SourceColumn = "Buy";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_From";
+            param.SourceColumn = "Buy";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -22940,7 +23757,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_To";
+            param.SourceColumn = "Supply";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
@@ -22949,7 +23766,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_To";
+            param.SourceColumn = "Supply";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -22957,216 +23774,293 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_To";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Distance_To";
+            param.SourceColumn = "SupplyLevel";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_To";
+            param.SourceColumn = "SupplyLevel";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p11";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_Between";
+            param.SourceColumn = "Sell";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p12";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Demand";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.ParameterName = "@p13";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_Between";
+            param.SourceColumn = "Demand";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p14";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Demandlevel";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p15";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Demandlevel";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p16";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p17";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p18";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p19";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Profit";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO `tmneighbourstations` (`System_ID_From`, `Station_ID_From`, `Distance" +
-                "_From`, `System_ID_To`, `Station_ID_To`, `Distance_To`, `Distance_Between`) VALU" +
-                "ES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO `tmpa_s2s_stationdata` (`CommodityID`, `Commodity`, `Buy`, `Supply`, " +
+                "`SupplyLevel`, `Sell`, `Demand`, `Demandlevel`, `Timestamp`, `Profit`) VALUES (@" +
+                "p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_From";
+            param.SourceColumn = "CommodityID";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_From";
+            param.SourceColumn = "Commodity";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_From";
+            param.SourceColumn = "Buy";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p4";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_To";
+            param.SourceColumn = "Supply";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_To";
+            param.SourceColumn = "SupplyLevel";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_To";
+            param.SourceColumn = "Sell";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_Between";
+            param.SourceColumn = "Demand";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p8";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Demandlevel";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Timestamp";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Profit";
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmneighbourstations` SET `System_ID_From` = @p1, `Station_ID_From` = @p2, `Distance_From` = @p3, `System_ID_To` = @p4, `Station_ID_To` = @p5, `Distance_To` = @p6, `Distance_Between` = @p7 WHERE (((@p8 = 1 AND `System_ID_From` IS NULL) OR (`System_ID_From` = @p9)) AND (`Station_ID_From` = @p10) AND ((@p11 = 1 AND `Distance_From` IS NULL) OR (`Distance_From` = @p12)) AND ((@p13 = 1 AND `System_ID_To` IS NULL) OR (`System_ID_To` = @p14)) AND (`Station_ID_To` = @p15) AND ((@p16 = 1 AND `Distance_To` IS NULL) OR (`Distance_To` = @p17)) AND ((@p18 = 1 AND `Distance_Between` IS NULL) OR (`Distance_Between` = @p19)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_s2s_stationdata` SET `CommodityID` = @p1, `Commodity` = @p2, `Buy` = @p3, `Supply` = @p4, `SupplyLevel` = @p5, `Sell` = @p6, `Demand` = @p7, `Demandlevel` = @p8, `Timestamp` = @p9, `Profit` = @p10 WHERE ((`CommodityID` = @p11) AND ((@p12 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p13)) AND ((@p14 = 1 AND `Buy` IS NULL) OR (`Buy` = @p15)) AND ((@p16 = 1 AND `Supply` IS NULL) OR (`Supply` = @p17)) AND ((@p18 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p19)) AND ((@p20 = 1 AND `Sell` IS NULL) OR (`Sell` = @p21)) AND ((@p22 = 1 AND `Demand` IS NULL) OR (`Demand` = @p23)) AND ((@p24 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p25)) AND ((@p26 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p27)) AND ((@p28 = 1 AND `Profit` IS NULL) OR (`Profit` = @p29)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_From";
+            param.SourceColumn = "CommodityID";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_From";
+            param.SourceColumn = "Commodity";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_From";
+            param.SourceColumn = "Buy";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p4";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_To";
+            param.SourceColumn = "Supply";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_To";
+            param.SourceColumn = "SupplyLevel";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_To";
+            param.SourceColumn = "Sell";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_Between";
+            param.SourceColumn = "Demand";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_From";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
+            param.SourceColumn = "Demandlevel";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_From";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumn = "Timestamp";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p10";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_From";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumn = "Profit";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p11";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_From";
+            param.SourceColumn = "CommodityID";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Distance_From";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p13";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_To";
+            param.SourceColumn = "Commodity";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p13";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p14";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_To";
+            param.SourceColumn = "Buy";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p15";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_To";
+            param.SourceColumn = "Buy";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -23174,16 +24068,16 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_To";
+            param.SourceColumn = "Supply";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p17";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_To";
+            param.SourceColumn = "Supply";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -23191,16 +24085,101 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_Between";
+            param.SourceColumn = "SupplyLevel";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p19";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Distance_Between";
+            param.SourceColumn = "SupplyLevel";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p20";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p21";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p22";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Demand";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p23";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Demand";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p24";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Demandlevel";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p25";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Demandlevel";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p26";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p27";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p28";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p29";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Profit";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -23218,8 +24197,8 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT `System_ID_From`, `Station_ID_From`, `Distance_From`, `System_ID_To`, `Sta" +
-                "tion_ID_To`, `Distance_To`, `Distance_Between` FROM `tmneighbourstations`";
+            this._commandCollection[0].CommandText = "SELECT `CommodityID`, `Commodity`, `Buy`, `Supply`, `SupplyLevel`, `Sell`, `Deman" +
+                "d`, `Demandlevel`, `Timestamp`, `Profit` FROM `tmpa_s2s_stationdata`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -23227,7 +24206,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(dsEliteDB.tmneighbourstationsDataTable dataTable) {
+        public virtual int Fill(dsEliteDB.tmpa_s2s_stationdataDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -23240,9 +24219,9 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual dsEliteDB.tmneighbourstationsDataTable GetData() {
+        public virtual dsEliteDB.tmpa_s2s_stationdataDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            dsEliteDB.tmneighbourstationsDataTable dataTable = new dsEliteDB.tmneighbourstationsDataTable();
+            dsEliteDB.tmpa_s2s_stationdataDataTable dataTable = new dsEliteDB.tmpa_s2s_stationdataDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -23250,7 +24229,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(dsEliteDB.tmneighbourstationsDataTable dataTable) {
+        public virtual int Update(dsEliteDB.tmpa_s2s_stationdataDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
         
@@ -23258,7 +24237,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         public virtual int Update(dsEliteDB dataSet) {
-            return this.Adapter.Update(dataSet, "tmneighbourstations");
+            return this.Adapter.Update(dataSet, "tmpa_s2s_stationdata");
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -23280,19 +24259,19 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(global::System.Nullable<int> p2, int p3, global::System.Nullable<double> p5, global::System.Nullable<int> p7, int p8, global::System.Nullable<double> p10, global::System.Nullable<double> p12) {
-            if ((p2.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[0].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(p2.Value));
+        public virtual int Delete(int p1, string p3, global::System.Nullable<int> p5, global::System.Nullable<int> p7, string p9, global::System.Nullable<int> p11, global::System.Nullable<int> p13, string p15, global::System.Nullable<global::System.DateTime> p17, global::System.Nullable<int> p19) {
+            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(p1));
+            if ((p3 == null)) {
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[0].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[1].Value = global::System.DBNull.Value;
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(p3));
             }
-            this.Adapter.DeleteCommand.Parameters[2].Value = ((int)(p3));
             if ((p5.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[4].Value = ((double)(p5.Value));
+                this.Adapter.DeleteCommand.Parameters[4].Value = ((int)(p5.Value));
             }
             else {
                 this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
@@ -23306,22 +24285,53 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
                 this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
             }
-            this.Adapter.DeleteCommand.Parameters[7].Value = ((int)(p8));
-            if ((p10.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[9].Value = ((double)(p10.Value));
+            if ((p9 == null)) {
+                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[8].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[9].Value = global::System.DBNull.Value;
+                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((string)(p9));
             }
-            if ((p12.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[11].Value = ((double)(p12.Value));
+            if ((p11.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((int)(p11.Value));
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[11].Value = global::System.DBNull.Value;
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            if ((p13.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[12].Value = ((int)(p13.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[12].Value = global::System.DBNull.Value;
+            }
+            if ((p15 == null)) {
+                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[14].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[14].Value = ((string)(p15));
+            }
+            if ((p17.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[16].Value = ((System.DateTime)(p17.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            if ((p19.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[18].Value = ((int)(p19.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[18].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -23343,16 +24353,16 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(global::System.Nullable<int> p1, int p2, global::System.Nullable<double> p3, global::System.Nullable<int> p4, int p5, global::System.Nullable<double> p6, global::System.Nullable<double> p7) {
-            if ((p1.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1.Value));
+        public virtual int Insert(int p1, string p2, global::System.Nullable<int> p3, global::System.Nullable<int> p4, string p5, global::System.Nullable<int> p6, global::System.Nullable<int> p7, string p8, global::System.Nullable<global::System.DateTime> p9, global::System.Nullable<int> p10) {
+            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1));
+            if ((p2 == null)) {
+                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
+                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(p2));
             }
-            this.Adapter.InsertCommand.Parameters[1].Value = ((int)(p2));
             if ((p3.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((double)(p3.Value));
+                this.Adapter.InsertCommand.Parameters[2].Value = ((int)(p3.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
@@ -23363,18 +24373,41 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             else {
                 this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
-            this.Adapter.InsertCommand.Parameters[4].Value = ((int)(p5));
+            if ((p5 == null)) {
+                this.Adapter.InsertCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[4].Value = ((string)(p5));
+            }
             if ((p6.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[5].Value = ((double)(p6.Value));
+                this.Adapter.InsertCommand.Parameters[5].Value = ((int)(p6.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
             }
             if ((p7.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[6].Value = ((double)(p7.Value));
+                this.Adapter.InsertCommand.Parameters[6].Value = ((int)(p7.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            if ((p8 == null)) {
+                this.Adapter.InsertCommand.Parameters[7].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[7].Value = ((string)(p8));
+            }
+            if ((p9.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            if ((p10.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[9].Value = ((int)(p10.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[9].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -23396,16 +24429,36 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(global::System.Nullable<int> p1, int p2, global::System.Nullable<double> p3, global::System.Nullable<int> p4, int p5, global::System.Nullable<double> p6, global::System.Nullable<double> p7, global::System.Nullable<int> p9, int p10, global::System.Nullable<double> p12, global::System.Nullable<int> p14, int p15, global::System.Nullable<double> p17, global::System.Nullable<double> p19) {
-            if ((p1.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1.Value));
+        public virtual int Update(
+                    int p1, 
+                    string p2, 
+                    global::System.Nullable<int> p3, 
+                    global::System.Nullable<int> p4, 
+                    string p5, 
+                    global::System.Nullable<int> p6, 
+                    global::System.Nullable<int> p7, 
+                    string p8, 
+                    global::System.Nullable<global::System.DateTime> p9, 
+                    global::System.Nullable<int> p10, 
+                    int p11, 
+                    string p13, 
+                    global::System.Nullable<int> p15, 
+                    global::System.Nullable<int> p17, 
+                    string p19, 
+                    global::System.Nullable<int> p21, 
+                    global::System.Nullable<int> p23, 
+                    string p25, 
+                    global::System.Nullable<global::System.DateTime> p27, 
+                    global::System.Nullable<int> p29) {
+            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1));
+            if ((p2 == null)) {
+                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[0].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(p2));
             }
-            this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(p2));
             if ((p3.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((double)(p3.Value));
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(p3.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
@@ -23416,60 +24469,114 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             else {
                 this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
-            this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(p5));
+            if ((p5 == null)) {
+                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(p5));
+            }
             if ((p6.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((double)(p6.Value));
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(p6.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
             }
             if ((p7.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((double)(p7.Value));
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(p7.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
             }
-            if ((p9.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((int)(p9.Value));
+            if ((p8 == null)) {
+                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(p8));
+            }
+            if ((p9.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
+            }
+            else {
                 this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
             }
-            this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(p10));
-            if ((p12.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((double)(p12.Value));
+            if ((p10.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(p10.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
             }
-            if ((p14.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((int)(p14.Value));
+            this.Adapter.UpdateCommand.Parameters[10].Value = ((int)(p11));
+            if ((p13 == null)) {
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(p13));
             }
-            this.Adapter.UpdateCommand.Parameters[14].Value = ((int)(p15));
+            if ((p15.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((int)(p15.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
+            }
             if ((p17.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[16].Value = ((double)(p17.Value));
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(p17.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
             }
-            if ((p19.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[18].Value = ((double)(p19.Value));
-            }
-            else {
+            if ((p19 == null)) {
                 this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[18].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((string)(p19));
+            }
+            if ((p21.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((int)(p21.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[20].Value = global::System.DBNull.Value;
+            }
+            if ((p23.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((int)(p23.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[22].Value = global::System.DBNull.Value;
+            }
+            if ((p25 == null)) {
+                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[24].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((string)(p25));
+            }
+            if ((p27.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[26].Value = ((System.DateTime)(p27.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[26].Value = global::System.DBNull.Value;
+            }
+            if ((p29.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((int)(p29.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[28].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -23491,8 +24598,27 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(global::System.Nullable<int> p1, global::System.Nullable<double> p3, global::System.Nullable<int> p4, global::System.Nullable<double> p6, global::System.Nullable<double> p7, global::System.Nullable<int> p9, int p10, global::System.Nullable<double> p12, global::System.Nullable<int> p14, int p15, global::System.Nullable<double> p17, global::System.Nullable<double> p19) {
-            return this.Update(p1, p10, p3, p4, p15, p6, p7, p9, p10, p12, p14, p15, p17, p19);
+        public virtual int Update(
+                    string p2, 
+                    global::System.Nullable<int> p3, 
+                    global::System.Nullable<int> p4, 
+                    string p5, 
+                    global::System.Nullable<int> p6, 
+                    global::System.Nullable<int> p7, 
+                    string p8, 
+                    global::System.Nullable<global::System.DateTime> p9, 
+                    global::System.Nullable<int> p10, 
+                    int p11, 
+                    string p13, 
+                    global::System.Nullable<int> p15, 
+                    global::System.Nullable<int> p17, 
+                    string p19, 
+                    global::System.Nullable<int> p21, 
+                    global::System.Nullable<int> p23, 
+                    string p25, 
+                    global::System.Nullable<global::System.DateTime> p27, 
+                    global::System.Nullable<int> p29) {
+            return this.Update(p11, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29);
         }
     }
     
@@ -32289,1569 +33415,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     global::System.Nullable<int> p26, 
                     string p28) {
             return this.Update(p11, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p13, p15, p16, p18, p20, p22, p24, p26, p28);
-        }
-    }
-    
-    /// <summary>
-    ///Represents the connection and commands used to retrieve and save data.
-    ///</summary>
-    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
-    [global::System.ComponentModel.ToolboxItem(true)]
-    [global::System.ComponentModel.DataObjectAttribute(true)]
-    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
-        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
-    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class tbpa_allcommoditiesTableAdapter : global::System.ComponentModel.Component {
-        
-        private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
-        
-        private global::MySql.Data.MySqlClient.MySqlConnection _connection;
-        
-        private global::MySql.Data.MySqlClient.MySqlTransaction _transaction;
-        
-        private global::MySql.Data.MySqlClient.MySqlCommand[] _commandCollection;
-        
-        private bool _clearBeforeFill;
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public tbpa_allcommoditiesTableAdapter() {
-            this.ClearBeforeFill = true;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected internal global::MySql.Data.MySqlClient.MySqlDataAdapter Adapter {
-            get {
-                if ((this._adapter == null)) {
-                    this.InitAdapter();
-                }
-                return this._adapter;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        internal global::MySql.Data.MySqlClient.MySqlConnection Connection {
-            get {
-                if ((this._connection == null)) {
-                    this.InitConnection();
-                }
-                return this._connection;
-            }
-            set {
-                this._connection = value;
-                if ((this.Adapter.InsertCommand != null)) {
-                    this.Adapter.InsertCommand.Connection = value;
-                }
-                if ((this.Adapter.DeleteCommand != null)) {
-                    this.Adapter.DeleteCommand.Connection = value;
-                }
-                if ((this.Adapter.UpdateCommand != null)) {
-                    this.Adapter.UpdateCommand.Connection = value;
-                }
-                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
-                    if ((this.CommandCollection[i] != null)) {
-                        ((global::MySql.Data.MySqlClient.MySqlCommand)(this.CommandCollection[i])).Connection = value;
-                    }
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        internal global::MySql.Data.MySqlClient.MySqlTransaction Transaction {
-            get {
-                return this._transaction;
-            }
-            set {
-                this._transaction = value;
-                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
-                    this.CommandCollection[i].Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.DeleteCommand != null))) {
-                    this.Adapter.DeleteCommand.Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.InsertCommand != null))) {
-                    this.Adapter.InsertCommand.Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.UpdateCommand != null))) {
-                    this.Adapter.UpdateCommand.Transaction = this._transaction;
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected global::MySql.Data.MySqlClient.MySqlCommand[] CommandCollection {
-            get {
-                if ((this._commandCollection == null)) {
-                    this.InitCommandCollection();
-                }
-                return this._commandCollection;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public bool ClearBeforeFill {
-            get {
-                return this._clearBeforeFill;
-            }
-            set {
-                this._clearBeforeFill = value;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private void InitAdapter() {
-            this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
-            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
-            tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "tbpa_allcommodities";
-            tableMapping.ColumnMappings.Add("CommodityID", "CommodityID");
-            tableMapping.ColumnMappings.Add("Commodity", "Commodity");
-            tableMapping.ColumnMappings.Add("Buy_SystemID", "Buy_SystemID");
-            tableMapping.ColumnMappings.Add("Buy_System", "Buy_System");
-            tableMapping.ColumnMappings.Add("Buy_StationID", "Buy_StationID");
-            tableMapping.ColumnMappings.Add("Buy_Station", "Buy_Station");
-            tableMapping.ColumnMappings.Add("Buy_Min", "Buy_Min");
-            tableMapping.ColumnMappings.Add("Buy_Distance", "Buy_Distance");
-            tableMapping.ColumnMappings.Add("Buy_Timestamp", "Buy_Timestamp");
-            tableMapping.ColumnMappings.Add("Sell_SystemID", "Sell_SystemID");
-            tableMapping.ColumnMappings.Add("Sell_System", "Sell_System");
-            tableMapping.ColumnMappings.Add("Sell_StationID", "Sell_StationID");
-            tableMapping.ColumnMappings.Add("Sell_Station", "Sell_Station");
-            tableMapping.ColumnMappings.Add("Sell_Max", "Sell_Max");
-            tableMapping.ColumnMappings.Add("Sell_Distance", "Sell_Distance");
-            tableMapping.ColumnMappings.Add("Sell_Timestamp", "Sell_Timestamp");
-            this._adapter.TableMappings.Add(tableMapping);
-            this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tbpa_allcommodities` WHERE ((`CommodityID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy_SystemID` IS NULL) OR (`Buy_SystemID` = @p5)) AND ((@p6 = 1 AND `Buy_System` IS NULL) OR (`Buy_System` = @p7)) AND ((@p8 = 1 AND `Buy_StationID` IS NULL) OR (`Buy_StationID` = @p9)) AND ((@p10 = 1 AND `Buy_Station` IS NULL) OR (`Buy_Station` = @p11)) AND ((@p12 = 1 AND `Buy_Min` IS NULL) OR (`Buy_Min` = @p13)) AND ((@p14 = 1 AND `Buy_Distance` IS NULL) OR (`Buy_Distance` = @p15)) AND ((@p16 = 1 AND `Buy_Timestamp` IS NULL) OR (`Buy_Timestamp` = @p17)) AND ((@p18 = 1 AND `Sell_SystemID` IS NULL) OR (`Sell_SystemID` = @p19)) AND ((@p20 = 1 AND `Sell_System` IS NULL) OR (`Sell_System` = @p21)) AND ((@p22 = 1 AND `Sell_StationID` IS NULL) OR (`Sell_StationID` = @p23)) AND ((@p24 = 1 AND `Sell_Station` IS NULL) OR (`Sell_Station` = @p25)) AND ((@p26 = 1 AND `Sell_Max` IS NULL) OR (`Sell_Max` = @p27)) AND ((@p28 = 1 AND `Sell_Distance` IS NULL) OR (`Sell_Distance` = @p29)) AND ((@p30 = 1 AND `Sell_Timestamp` IS NULL) OR (`Sell_Timestamp` = @p31)))";
-            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
-            global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p1";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p4";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p11";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Min";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p13";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Min";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p14";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p15";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p16";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p17";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p18";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p19";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p20";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p21";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p22";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p23";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p24";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p25";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p26";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Max";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p27";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Max";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p28";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p29";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p30";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p31";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tbpa_allcommodities` (`CommodityID`, `Commodity`, `Buy_SystemID`, `Buy_System`, `Buy_StationID`, `Buy_Station`, `Buy_Min`, `Buy_Distance`, `Buy_Timestamp`, `Sell_SystemID`, `Sell_System`, `Sell_StationID`, `Sell_Station`, `Sell_Max`, `Sell_Distance`, `Sell_Timestamp`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16)";
-            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p1";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_SystemID";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p4";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_System";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_StationID";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Station";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Min";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Distance";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Timestamp";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_SystemID";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p11";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_System";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_StationID";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p13";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Station";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p14";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Max";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p15";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Distance";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p16";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Timestamp";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tbpa_allcommodities` SET `CommodityID` = @p1, `Commodity` = @p2, `Buy_SystemID` = @p3, `Buy_System` = @p4, `Buy_StationID` = @p5, `Buy_Station` = @p6, `Buy_Min` = @p7, `Buy_Distance` = @p8, `Buy_Timestamp` = @p9, `Sell_SystemID` = @p10, `Sell_System` = @p11, `Sell_StationID` = @p12, `Sell_Station` = @p13, `Sell_Max` = @p14, `Sell_Distance` = @p15, `Sell_Timestamp` = @p16 WHERE ((`CommodityID` = @p17) AND ((@p18 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p19)) AND ((@p20 = 1 AND `Buy_SystemID` IS NULL) OR (`Buy_SystemID` = @p21)) AND ((@p22 = 1 AND `Buy_System` IS NULL) OR (`Buy_System` = @p23)) AND ((@p24 = 1 AND `Buy_StationID` IS NULL) OR (`Buy_StationID` = @p25)) AND ((@p26 = 1 AND `Buy_Station` IS NULL) OR (`Buy_Station` = @p27)) AND ((@p28 = 1 AND `Buy_Min` IS NULL) OR (`Buy_Min` = @p29)) AND ((@p30 = 1 AND `Buy_Distance` IS NULL) OR (`Buy_Distance` = @p31)) AND ((@p32 = 1 AND `Buy_Timestamp` IS NULL) OR (`Buy_Timestamp` = @p33)) AND ((@p34 = 1 AND `Sell_SystemID` IS NULL) OR (`Sell_SystemID` = @p35)) AND ((@p36 = 1 AND `Sell_System` IS NULL) OR (`Sell_System` = @p37)) AND ((@p38 = 1 AND `Sell_StationID` IS NULL) OR (`Sell_StationID` = @p39)) AND ((@p40 = 1 AND `Sell_Station` IS NULL) OR (`Sell_Station` = @p41)) AND ((@p42 = 1 AND `Sell_Max` IS NULL) OR (`Sell_Max` = @p43)) AND ((@p44 = 1 AND `Sell_Distance` IS NULL) OR (`Sell_Distance` = @p45)) AND ((@p46 = 1 AND `Sell_Timestamp` IS NULL) OR (`Sell_Timestamp` = @p47)))";
-            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p1";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_SystemID";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p4";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_System";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_StationID";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Station";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Min";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Distance";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Timestamp";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_SystemID";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p11";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_System";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_StationID";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p13";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Station";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p14";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Max";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p15";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Distance";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p16";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Timestamp";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p17";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p18";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p19";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p20";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p21";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p22";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p23";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p24";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p25";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p26";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p27";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p28";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Min";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p29";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Min";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p30";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p31";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p32";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p33";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p34";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p35";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_SystemID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p36";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p37";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_System";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p38";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p39";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_StationID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p40";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p41";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Station";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p42";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Max";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p43";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Max";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p44";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p45";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Distance";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p46";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p47";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell_Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private void InitConnection() {
-            this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private void InitCommandCollection() {
-            this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
-            this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT `CommodityID`, `Commodity`, `Buy_SystemID`, `Buy_System`, `Buy_StationID`, `Buy_Station`, `Buy_Min`, `Buy_Distance`, `Buy_Timestamp`, `Sell_SystemID`, `Sell_System`, `Sell_StationID`, `Sell_Station`, `Sell_Max`, `Sell_Distance`, `Sell_Timestamp` FROM `tbpa_allcommodities`";
-            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(dsEliteDB.tbpa_allcommoditiesDataTable dataTable) {
-            this.Adapter.SelectCommand = this.CommandCollection[0];
-            if ((this.ClearBeforeFill == true)) {
-                dataTable.Clear();
-            }
-            int returnValue = this.Adapter.Fill(dataTable);
-            return returnValue;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual dsEliteDB.tbpa_allcommoditiesDataTable GetData() {
-            this.Adapter.SelectCommand = this.CommandCollection[0];
-            dsEliteDB.tbpa_allcommoditiesDataTable dataTable = new dsEliteDB.tbpa_allcommoditiesDataTable();
-            this.Adapter.Fill(dataTable);
-            return dataTable;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(dsEliteDB.tbpa_allcommoditiesDataTable dataTable) {
-            return this.Adapter.Update(dataTable);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(dsEliteDB dataSet) {
-            return this.Adapter.Update(dataSet, "tbpa_allcommodities");
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(global::System.Data.DataRow dataRow) {
-            return this.Adapter.Update(new global::System.Data.DataRow[] {
-                        dataRow});
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(global::System.Data.DataRow[] dataRows) {
-            return this.Adapter.Update(dataRows);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(
-                    int p1, 
-                    string p3, 
-                    global::System.Nullable<int> p5, 
-                    string p7, 
-                    global::System.Nullable<int> p9, 
-                    string p11, 
-                    global::System.Nullable<int> p13, 
-                    global::System.Nullable<double> p15, 
-                    global::System.Nullable<global::System.DateTime> p17, 
-                    global::System.Nullable<int> p19, 
-                    string p21, 
-                    global::System.Nullable<int> p23, 
-                    string p25, 
-                    global::System.Nullable<int> p27, 
-                    global::System.Nullable<double> p29, 
-                    global::System.Nullable<global::System.DateTime> p31) {
-            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(p1));
-            if ((p3 == null)) {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(p3));
-            }
-            if ((p5.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[4].Value = ((int)(p5.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            if ((p7 == null)) {
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[6].Value = ((string)(p7));
-            }
-            if ((p9.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[8].Value = ((int)(p9.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            if ((p11 == null)) {
-                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[10].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((string)(p11));
-            }
-            if ((p13.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[12].Value = ((int)(p13.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[12].Value = global::System.DBNull.Value;
-            }
-            if ((p15.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[14].Value = ((double)(p15.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[14].Value = global::System.DBNull.Value;
-            }
-            if ((p17.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[16].Value = ((System.DateTime)(p17.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[16].Value = global::System.DBNull.Value;
-            }
-            if ((p19.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[18].Value = ((int)(p19.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[18].Value = global::System.DBNull.Value;
-            }
-            if ((p21 == null)) {
-                this.Adapter.DeleteCommand.Parameters[19].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[20].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[19].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[20].Value = ((string)(p21));
-            }
-            if ((p23.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[21].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[22].Value = ((int)(p23.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[21].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[22].Value = global::System.DBNull.Value;
-            }
-            if ((p25 == null)) {
-                this.Adapter.DeleteCommand.Parameters[23].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[24].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[23].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[24].Value = ((string)(p25));
-            }
-            if ((p27.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[25].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[26].Value = ((int)(p27.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[25].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[26].Value = global::System.DBNull.Value;
-            }
-            if ((p29.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[27].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[28].Value = ((double)(p29.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[27].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[28].Value = global::System.DBNull.Value;
-            }
-            if ((p31.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[29].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[30].Value = ((System.DateTime)(p31.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[29].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[30].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
-            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.DeleteCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.DeleteCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(
-                    int p1, 
-                    string p2, 
-                    global::System.Nullable<int> p3, 
-                    string p4, 
-                    global::System.Nullable<int> p5, 
-                    string p6, 
-                    global::System.Nullable<int> p7, 
-                    global::System.Nullable<double> p8, 
-                    global::System.Nullable<global::System.DateTime> p9, 
-                    global::System.Nullable<int> p10, 
-                    string p11, 
-                    global::System.Nullable<int> p12, 
-                    string p13, 
-                    global::System.Nullable<int> p14, 
-                    global::System.Nullable<double> p15, 
-                    global::System.Nullable<global::System.DateTime> p16) {
-            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1));
-            if ((p2 == null)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(p2));
-            }
-            if ((p3.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((int)(p3.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            if ((p4 == null)) {
-                this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[3].Value = ((string)(p4));
-            }
-            if ((p5.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[4].Value = ((int)(p5.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            if ((p6 == null)) {
-                this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(p6));
-            }
-            if ((p7.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[6].Value = ((int)(p7.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((p8.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[7].Value = ((double)(p8.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
-            if ((p9.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            if ((p10.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[9].Value = ((int)(p10.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[9].Value = global::System.DBNull.Value;
-            }
-            if ((p11 == null)) {
-                this.Adapter.InsertCommand.Parameters[10].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[10].Value = ((string)(p11));
-            }
-            if ((p12.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[11].Value = ((int)(p12.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[11].Value = global::System.DBNull.Value;
-            }
-            if ((p13 == null)) {
-                this.Adapter.InsertCommand.Parameters[12].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[12].Value = ((string)(p13));
-            }
-            if ((p14.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[13].Value = ((int)(p14.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[13].Value = global::System.DBNull.Value;
-            }
-            if ((p15.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[14].Value = ((double)(p15.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[14].Value = global::System.DBNull.Value;
-            }
-            if ((p16.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[15].Value = ((System.DateTime)(p16.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[15].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
-            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.InsertCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.InsertCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    int p1, 
-                    string p2, 
-                    global::System.Nullable<int> p3, 
-                    string p4, 
-                    global::System.Nullable<int> p5, 
-                    string p6, 
-                    global::System.Nullable<int> p7, 
-                    global::System.Nullable<double> p8, 
-                    global::System.Nullable<global::System.DateTime> p9, 
-                    global::System.Nullable<int> p10, 
-                    string p11, 
-                    global::System.Nullable<int> p12, 
-                    string p13, 
-                    global::System.Nullable<int> p14, 
-                    global::System.Nullable<double> p15, 
-                    global::System.Nullable<global::System.DateTime> p16, 
-                    int p17, 
-                    string p19, 
-                    global::System.Nullable<int> p21, 
-                    string p23, 
-                    global::System.Nullable<int> p25, 
-                    string p27, 
-                    global::System.Nullable<int> p29, 
-                    global::System.Nullable<double> p31, 
-                    global::System.Nullable<global::System.DateTime> p33, 
-                    global::System.Nullable<int> p35, 
-                    string p37, 
-                    global::System.Nullable<int> p39, 
-                    string p41, 
-                    global::System.Nullable<int> p43, 
-                    global::System.Nullable<double> p45, 
-                    global::System.Nullable<global::System.DateTime> p47) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1));
-            if ((p2 == null)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(p2));
-            }
-            if ((p3.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(p3.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            if ((p4 == null)) {
-                this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(p4));
-            }
-            if ((p5.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(p5.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            if ((p6 == null)) {
-                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(p6));
-            }
-            if ((p7.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(p7.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((p8.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((double)(p8.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
-            if ((p9.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            if ((p10.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(p10.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
-            }
-            if ((p11 == null)) {
-                this.Adapter.UpdateCommand.Parameters[10].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((string)(p11));
-            }
-            if ((p12.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((int)(p12.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
-            }
-            if ((p13 == null)) {
-                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(p13));
-            }
-            if ((p14.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((int)(p14.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
-            }
-            if ((p15.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[14].Value = ((double)(p15.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
-            }
-            if ((p16.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((System.DateTime)(p16.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
-            }
-            this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(p17));
-            if ((p19 == null)) {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[18].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[18].Value = ((string)(p19));
-            }
-            if ((p21.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[20].Value = ((int)(p21.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[20].Value = global::System.DBNull.Value;
-            }
-            if ((p23 == null)) {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[22].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[22].Value = ((string)(p23));
-            }
-            if ((p25.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[24].Value = ((int)(p25.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[24].Value = global::System.DBNull.Value;
-            }
-            if ((p27 == null)) {
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[26].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[26].Value = ((string)(p27));
-            }
-            if ((p29.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[28].Value = ((int)(p29.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[28].Value = global::System.DBNull.Value;
-            }
-            if ((p31.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[30].Value = ((double)(p31.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[30].Value = global::System.DBNull.Value;
-            }
-            if ((p33.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[32].Value = ((System.DateTime)(p33.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[32].Value = global::System.DBNull.Value;
-            }
-            if ((p35.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[34].Value = ((int)(p35.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[34].Value = global::System.DBNull.Value;
-            }
-            if ((p37 == null)) {
-                this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[36].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[36].Value = ((string)(p37));
-            }
-            if ((p39.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[37].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[38].Value = ((int)(p39.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[37].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[38].Value = global::System.DBNull.Value;
-            }
-            if ((p41 == null)) {
-                this.Adapter.UpdateCommand.Parameters[39].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[40].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[39].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[40].Value = ((string)(p41));
-            }
-            if ((p43.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[41].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[42].Value = ((int)(p43.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[41].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[42].Value = global::System.DBNull.Value;
-            }
-            if ((p45.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[43].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[44].Value = ((double)(p45.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[43].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[44].Value = global::System.DBNull.Value;
-            }
-            if ((p47.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[45].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[46].Value = ((System.DateTime)(p47.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[45].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[46].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
-            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.UpdateCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.UpdateCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    string p2, 
-                    global::System.Nullable<int> p3, 
-                    string p4, 
-                    global::System.Nullable<int> p5, 
-                    string p6, 
-                    global::System.Nullable<int> p7, 
-                    global::System.Nullable<double> p8, 
-                    global::System.Nullable<global::System.DateTime> p9, 
-                    global::System.Nullable<int> p10, 
-                    string p11, 
-                    global::System.Nullable<int> p12, 
-                    string p13, 
-                    global::System.Nullable<int> p14, 
-                    global::System.Nullable<double> p15, 
-                    global::System.Nullable<global::System.DateTime> p16, 
-                    int p17, 
-                    string p19, 
-                    global::System.Nullable<int> p21, 
-                    string p23, 
-                    global::System.Nullable<int> p25, 
-                    string p27, 
-                    global::System.Nullable<int> p29, 
-                    global::System.Nullable<double> p31, 
-                    global::System.Nullable<global::System.DateTime> p33, 
-                    global::System.Nullable<int> p35, 
-                    string p37, 
-                    global::System.Nullable<int> p39, 
-                    string p41, 
-                    global::System.Nullable<int> p43, 
-                    global::System.Nullable<double> p45, 
-                    global::System.Nullable<global::System.DateTime> p47) {
-            return this.Update(p17, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47);
         }
     }
     
@@ -43390,6 +42953,435 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class tmbestprofitsTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
+        
+        private global::MySql.Data.MySqlClient.MySqlConnection _connection;
+        
+        private global::MySql.Data.MySqlClient.MySqlTransaction _transaction;
+        
+        private global::MySql.Data.MySqlClient.MySqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public tmbestprofitsTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected internal global::MySql.Data.MySqlClient.MySqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::MySql.Data.MySqlClient.MySqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::MySql.Data.MySqlClient.MySqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::MySql.Data.MySqlClient.MySqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected global::MySql.Data.MySqlClient.MySqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitAdapter() {
+            this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "tmbestprofits";
+            tableMapping.ColumnMappings.Add("Station_Id_From", "Station_Id_From");
+            tableMapping.ColumnMappings.Add("Station_Id_To", "Station_Id_To");
+            tableMapping.ColumnMappings.Add("Max_Profit", "Max_Profit");
+            this._adapter.TableMappings.Add(tableMapping);
+            this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.DeleteCommand.Connection = this.Connection;
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM `tmbestprofits` WHERE ((`Station_Id_From` = @p1) AND (`Station_Id_To`" +
+                " = @p2) AND ((@p3 = 1 AND `Max_Profit` IS NULL) OR (`Max_Profit` = @p4)))";
+            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
+            global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.InsertCommand.Connection = this.Connection;
+            this._adapter.InsertCommand.CommandText = "INSERT INTO `tmbestprofits` (`Station_Id_From`, `Station_Id_To`, `Max_Profit`) VA" +
+                "LUES (@p1, @p2, @p3)";
+            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_From";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_To";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.UpdateCommand.Connection = this.Connection;
+            this._adapter.UpdateCommand.CommandText = "UPDATE `tmbestprofits` SET `Station_Id_From` = @p1, `Station_Id_To` = @p2, `Max_P" +
+                "rofit` = @p3 WHERE ((`Station_Id_From` = @p4) AND (`Station_Id_To` = @p5) AND ((" +
+                "@p6 = 1 AND `Max_Profit` IS NULL) OR (`Max_Profit` = @p7)))";
+            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_From";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_To";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Id_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitConnection() {
+            this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
+            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
+            this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = "SELECT `Station_Id_From`, `Station_Id_To`, `Max_Profit` FROM `tmbestprofits`";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
+        public virtual int Fill(dsEliteDB.tmbestprofitsDataTable dataTable) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual dsEliteDB.tmbestprofitsDataTable GetData() {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            dsEliteDB.tmbestprofitsDataTable dataTable = new dsEliteDB.tmbestprofitsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(dsEliteDB.tmbestprofitsDataTable dataTable) {
+            return this.Adapter.Update(dataTable);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(dsEliteDB dataSet) {
+            return this.Adapter.Update(dataSet, "tmbestprofits");
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow dataRow) {
+            return this.Adapter.Update(new global::System.Data.DataRow[] {
+                        dataRow});
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow[] dataRows) {
+            return this.Adapter.Update(dataRows);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
+        public virtual int Delete(int p1, int p2, global::System.Nullable<int> p4) {
+            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(p1));
+            this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(p2));
+            if ((p4.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[2].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[3].Value = ((int)(p4.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[2].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
+            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.DeleteCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.DeleteCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
+        public virtual int Insert(int p1, int p2, global::System.Nullable<int> p3) {
+            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1));
+            this.Adapter.InsertCommand.Parameters[1].Value = ((int)(p2));
+            if ((p3.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((int)(p3.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
+            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.InsertCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.InsertCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(int p1, int p2, global::System.Nullable<int> p3, int p4, int p5, global::System.Nullable<int> p7) {
+            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1));
+            this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(p2));
+            if ((p3.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(p3.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(p4));
+            this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(p5));
+            if ((p7.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(p7.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
+            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.UpdateCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.UpdateCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(global::System.Nullable<int> p3, int p4, int p5, global::System.Nullable<int> p7) {
+            return this.Update(p4, p5, p3, p4, p5, p7);
+        }
+    }
+    
+    /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
     public partial class tmfilteredstationsTableAdapter : global::System.ComponentModel.Component {
         
         private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
@@ -44048,7 +44040,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class vilogTableAdapter : global::System.ComponentModel.Component {
+    public partial class tmneighbourstationsTableAdapter : global::System.ComponentModel.Component {
         
         private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
         
@@ -44062,7 +44054,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public vilogTableAdapter() {
+        public tmneighbourstationsTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -44159,18 +44151,329 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "vilog";
-            tableMapping.ColumnMappings.Add("time", "time");
-            tableMapping.ColumnMappings.Add("systemname", "systemname");
-            tableMapping.ColumnMappings.Add("stationname", "stationname");
-            tableMapping.ColumnMappings.Add("eevent", "eevent");
-            tableMapping.ColumnMappings.Add("action", "action");
-            tableMapping.ColumnMappings.Add("loccommodity", "loccommodity");
-            tableMapping.ColumnMappings.Add("cargovolume", "cargovolume");
-            tableMapping.ColumnMappings.Add("credits_transaction", "credits_transaction");
-            tableMapping.ColumnMappings.Add("credits_total", "credits_total");
-            tableMapping.ColumnMappings.Add("notes", "notes");
+            tableMapping.DataSetTable = "tmneighbourstations";
+            tableMapping.ColumnMappings.Add("System_ID_From", "System_ID_From");
+            tableMapping.ColumnMappings.Add("Station_ID_From", "Station_ID_From");
+            tableMapping.ColumnMappings.Add("Distance_From", "Distance_From");
+            tableMapping.ColumnMappings.Add("System_ID_To", "System_ID_To");
+            tableMapping.ColumnMappings.Add("Station_ID_To", "Station_ID_To");
+            tableMapping.ColumnMappings.Add("Distance_To", "Distance_To");
+            tableMapping.ColumnMappings.Add("Distance_Between", "Distance_Between");
             this._adapter.TableMappings.Add(tableMapping);
+            this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.DeleteCommand.Connection = this.Connection;
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmneighbourstations` WHERE (((@p1 = 1 AND `System_ID_From` IS NULL) OR (`System_ID_From` = @p2)) AND (`Station_ID_From` = @p3) AND ((@p4 = 1 AND `Distance_From` IS NULL) OR (`Distance_From` = @p5)) AND ((@p6 = 1 AND `System_ID_To` IS NULL) OR (`System_ID_To` = @p7)) AND (`Station_ID_To` = @p8) AND ((@p9 = 1 AND `Distance_To` IS NULL) OR (`Distance_To` = @p10)) AND ((@p11 = 1 AND `Distance_Between` IS NULL) OR (`Distance_Between` = @p12)))";
+            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
+            global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p8";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p11";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_Between";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p12";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_Between";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.InsertCommand.Connection = this.Connection;
+            this._adapter.InsertCommand.CommandText = "INSERT INTO `tmneighbourstations` (`System_ID_From`, `Station_ID_From`, `Distance" +
+                "_From`, `System_ID_To`, `Station_ID_To`, `Distance_To`, `Distance_Between`) VALU" +
+                "ES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)";
+            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_From";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_From";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_From";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_To";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_To";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_To";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_Between";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.UpdateCommand.Connection = this.Connection;
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmneighbourstations` SET `System_ID_From` = @p1, `Station_ID_From` = @p2, `Distance_From` = @p3, `System_ID_To` = @p4, `Station_ID_To` = @p5, `Distance_To` = @p6, `Distance_Between` = @p7 WHERE (((@p8 = 1 AND `System_ID_From` IS NULL) OR (`System_ID_From` = @p9)) AND (`Station_ID_From` = @p10) AND ((@p11 = 1 AND `Distance_From` IS NULL) OR (`Distance_From` = @p12)) AND ((@p13 = 1 AND `System_ID_To` IS NULL) OR (`System_ID_To` = @p14)) AND (`Station_ID_To` = @p15) AND ((@p16 = 1 AND `Distance_To` IS NULL) OR (`Distance_To` = @p17)) AND ((@p18 = 1 AND `Distance_Between` IS NULL) OR (`Distance_Between` = @p19)))";
+            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_From";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_From";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_From";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_To";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_To";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_To";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_Between";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p8";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p11";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p12";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_From";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p13";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p14";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "System_ID_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p15";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p16";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p17";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_To";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p18";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_Between";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p19";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Distance_Between";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -44186,9 +44489,8 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT `time`, `systemname`, `stationname`, `eevent`, `action`, `loccommodity`, `" +
-                "cargovolume`, `credits_transaction`, `credits_total`, `notes` FROM `elite_db`.`v" +
-                "ilog`";
+            this._commandCollection[0].CommandText = "SELECT `System_ID_From`, `Station_ID_From`, `Distance_From`, `System_ID_To`, `Sta" +
+                "tion_ID_To`, `Distance_To`, `Distance_Between` FROM `tmneighbourstations`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -44196,7 +44498,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(dsEliteDB.vilogDataTable dataTable) {
+        public virtual int Fill(dsEliteDB.tmneighbourstationsDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -44209,11 +44511,259 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual dsEliteDB.vilogDataTable GetData() {
+        public virtual dsEliteDB.tmneighbourstationsDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            dsEliteDB.vilogDataTable dataTable = new dsEliteDB.vilogDataTable();
+            dsEliteDB.tmneighbourstationsDataTable dataTable = new dsEliteDB.tmneighbourstationsDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(dsEliteDB.tmneighbourstationsDataTable dataTable) {
+            return this.Adapter.Update(dataTable);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(dsEliteDB dataSet) {
+            return this.Adapter.Update(dataSet, "tmneighbourstations");
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow dataRow) {
+            return this.Adapter.Update(new global::System.Data.DataRow[] {
+                        dataRow});
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow[] dataRows) {
+            return this.Adapter.Update(dataRows);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
+        public virtual int Delete(global::System.Nullable<int> p2, int p3, global::System.Nullable<double> p5, global::System.Nullable<int> p7, int p8, global::System.Nullable<double> p10, global::System.Nullable<double> p12) {
+            if ((p2.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[0].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(p2.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[0].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.DeleteCommand.Parameters[2].Value = ((int)(p3));
+            if ((p5.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[4].Value = ((double)(p5.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            if ((p7.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[6].Value = ((int)(p7.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.DeleteCommand.Parameters[7].Value = ((int)(p8));
+            if ((p10.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((double)(p10.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            if ((p12.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[11].Value = ((double)(p12.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[11].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
+            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.DeleteCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.DeleteCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
+        public virtual int Insert(global::System.Nullable<int> p1, int p2, global::System.Nullable<double> p3, global::System.Nullable<int> p4, int p5, global::System.Nullable<double> p6, global::System.Nullable<double> p7) {
+            if ((p1.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.InsertCommand.Parameters[1].Value = ((int)(p2));
+            if ((p3.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((double)(p3.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            if ((p4.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[3].Value = ((int)(p4.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.InsertCommand.Parameters[4].Value = ((int)(p5));
+            if ((p6.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[5].Value = ((double)(p6.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            if ((p7.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[6].Value = ((double)(p7.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
+            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.InsertCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.InsertCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(global::System.Nullable<int> p1, int p2, global::System.Nullable<double> p3, global::System.Nullable<int> p4, int p5, global::System.Nullable<double> p6, global::System.Nullable<double> p7, global::System.Nullable<int> p9, int p10, global::System.Nullable<double> p12, global::System.Nullable<int> p14, int p15, global::System.Nullable<double> p17, global::System.Nullable<double> p19) {
+            if ((p1.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(p2));
+            if ((p3.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((double)(p3.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            if ((p4.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(p4.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(p5));
+            if ((p6.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((double)(p6.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            if ((p7.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((double)(p7.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            if ((p9.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[7].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((int)(p9.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[7].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(p10));
+            if ((p12.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((double)(p12.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
+            }
+            if ((p14.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((int)(p14.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[14].Value = ((int)(p15));
+            if ((p17.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((double)(p17.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            if ((p19.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((double)(p19.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[18].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
+            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.UpdateCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.UpdateCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(global::System.Nullable<int> p1, global::System.Nullable<double> p3, global::System.Nullable<int> p4, global::System.Nullable<double> p6, global::System.Nullable<double> p7, global::System.Nullable<int> p9, int p10, global::System.Nullable<double> p12, global::System.Nullable<int> p14, int p15, global::System.Nullable<double> p17, global::System.Nullable<double> p19) {
+            return this.Update(p1, p10, p3, p4, p15, p6, p7, p9, p10, p12, p14, p15, p17, p19);
         }
     }
     
@@ -44226,7 +44776,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class visystemsandstationsTableAdapter : global::System.ComponentModel.Component {
+    public partial class tmpa_allcommoditiesTableAdapter : global::System.ComponentModel.Component {
         
         private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
         
@@ -44240,7 +44790,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public visystemsandstationsTableAdapter() {
+        public tmpa_allcommoditiesTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -44337,12 +44887,854 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "visystemsandstations";
-            tableMapping.ColumnMappings.Add("SystemID", "SystemID");
-            tableMapping.ColumnMappings.Add("SystemName", "SystemName");
-            tableMapping.ColumnMappings.Add("StationID", "StationID");
-            tableMapping.ColumnMappings.Add("StationName", "StationName");
+            tableMapping.DataSetTable = "tmpa_allcommodities";
+            tableMapping.ColumnMappings.Add("CommodityID", "CommodityID");
+            tableMapping.ColumnMappings.Add("Commodity", "Commodity");
+            tableMapping.ColumnMappings.Add("Buy_SystemID", "Buy_SystemID");
+            tableMapping.ColumnMappings.Add("Buy_System", "Buy_System");
+            tableMapping.ColumnMappings.Add("Buy_StationID", "Buy_StationID");
+            tableMapping.ColumnMappings.Add("Buy_Station", "Buy_Station");
+            tableMapping.ColumnMappings.Add("Buy_Min", "Buy_Min");
+            tableMapping.ColumnMappings.Add("Buy_Distance", "Buy_Distance");
+            tableMapping.ColumnMappings.Add("Buy_Timestamp", "Buy_Timestamp");
+            tableMapping.ColumnMappings.Add("Sell_SystemID", "Sell_SystemID");
+            tableMapping.ColumnMappings.Add("Sell_System", "Sell_System");
+            tableMapping.ColumnMappings.Add("Sell_StationID", "Sell_StationID");
+            tableMapping.ColumnMappings.Add("Sell_Station", "Sell_Station");
+            tableMapping.ColumnMappings.Add("Sell_Max", "Sell_Max");
+            tableMapping.ColumnMappings.Add("Sell_Distance", "Sell_Distance");
+            tableMapping.ColumnMappings.Add("Sell_Timestamp", "Sell_Timestamp");
+            tableMapping.ColumnMappings.Add("Max_Profit", "Max_Profit");
             this._adapter.TableMappings.Add(tableMapping);
+            this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.DeleteCommand.Connection = this.Connection;
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_allcommodities` WHERE ((`CommodityID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy_SystemID` IS NULL) OR (`Buy_SystemID` = @p5)) AND ((@p6 = 1 AND `Buy_System` IS NULL) OR (`Buy_System` = @p7)) AND ((@p8 = 1 AND `Buy_StationID` IS NULL) OR (`Buy_StationID` = @p9)) AND ((@p10 = 1 AND `Buy_Station` IS NULL) OR (`Buy_Station` = @p11)) AND ((@p12 = 1 AND `Buy_Min` IS NULL) OR (`Buy_Min` = @p13)) AND ((@p14 = 1 AND `Buy_Distance` IS NULL) OR (`Buy_Distance` = @p15)) AND ((@p16 = 1 AND `Buy_Timestamp` IS NULL) OR (`Buy_Timestamp` = @p17)) AND ((@p18 = 1 AND `Sell_SystemID` IS NULL) OR (`Sell_SystemID` = @p19)) AND ((@p20 = 1 AND `Sell_System` IS NULL) OR (`Sell_System` = @p21)) AND ((@p22 = 1 AND `Sell_StationID` IS NULL) OR (`Sell_StationID` = @p23)) AND ((@p24 = 1 AND `Sell_Station` IS NULL) OR (`Sell_Station` = @p25)) AND ((@p26 = 1 AND `Sell_Max` IS NULL) OR (`Sell_Max` = @p27)) AND ((@p28 = 1 AND `Sell_Distance` IS NULL) OR (`Sell_Distance` = @p29)) AND ((@p30 = 1 AND `Sell_Timestamp` IS NULL) OR (`Sell_Timestamp` = @p31)) AND ((@p32 = 1 AND `Max_Profit` IS NULL) OR (`Max_Profit` = @p33)))";
+            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
+            global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "CommodityID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p8";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p11";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p12";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Min";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p13";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Min";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p14";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p15";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p16";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p17";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p18";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p19";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p20";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p21";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p22";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p23";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p24";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p25";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p26";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Max";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p27";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Max";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p28";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p29";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p30";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p31";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p32";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p33";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.InsertCommand.Connection = this.Connection;
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_allcommodities` (`CommodityID`, `Commodity`, `Buy_SystemID`, `Buy_System`, `Buy_StationID`, `Buy_Station`, `Buy_Min`, `Buy_Distance`, `Buy_Timestamp`, `Sell_SystemID`, `Sell_System`, `Sell_StationID`, `Sell_Station`, `Sell_Max`, `Sell_Distance`, `Sell_Timestamp`, `Max_Profit`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17)";
+            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "CommodityID";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_SystemID";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_System";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_StationID";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Station";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Min";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p8";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Distance";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Timestamp";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_SystemID";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p11";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_System";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p12";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_StationID";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p13";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Station";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p14";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Max";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p15";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Distance";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p16";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Timestamp";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p17";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
+            this._adapter.UpdateCommand.Connection = this.Connection;
+            this._adapter.UpdateCommand.CommandText = "UPDATE `tmpa_allcommodities` SET `CommodityID` = @p1, `Commodity` = @p2, `Buy_Sys" +
+                "temID` = @p3, `Buy_System` = @p4, `Buy_StationID` = @p5, `Buy_Station` = @p6, `B" +
+                "uy_Min` = @p7, `Buy_Distance` = @p8, `Buy_Timestamp` = @p9, `Sell_SystemID` = @p" +
+                "10, `Sell_System` = @p11, `Sell_StationID` = @p12, `Sell_Station` = @p13, `Sell_" +
+                "Max` = @p14, `Sell_Distance` = @p15, `Sell_Timestamp` = @p16, `Max_Profit` = @p1" +
+                "7 WHERE ((`CommodityID` = @p18) AND ((@p19 = 1 AND `Commodity` IS NULL) OR (`Com" +
+                "modity` = @p20)) AND ((@p21 = 1 AND `Buy_SystemID` IS NULL) OR (`Buy_SystemID` =" +
+                " @p22)) AND ((@p23 = 1 AND `Buy_System` IS NULL) OR (`Buy_System` = @p24)) AND (" +
+                "(@p25 = 1 AND `Buy_StationID` IS NULL) OR (`Buy_StationID` = @p26)) AND ((@p27 =" +
+                " 1 AND `Buy_Station` IS NULL) OR (`Buy_Station` = @p28)) AND ((@p29 = 1 AND `Buy" +
+                "_Min` IS NULL) OR (`Buy_Min` = @p30)) AND ((@p31 = 1 AND `Buy_Distance` IS NULL)" +
+                " OR (`Buy_Distance` = @p32)) AND ((@p33 = 1 AND `Buy_Timestamp` IS NULL) OR (`Bu" +
+                "y_Timestamp` = @p34)) AND ((@p35 = 1 AND `Sell_SystemID` IS NULL) OR (`Sell_Syst" +
+                "emID` = @p36)) AND ((@p37 = 1 AND `Sell_System` IS NULL) OR (`Sell_System` = @p3" +
+                "8)) AND ((@p39 = 1 AND `Sell_StationID` IS NULL) OR (`Sell_StationID` = @p40)) A" +
+                "ND ((@p41 = 1 AND `Sell_Station` IS NULL) OR (`Sell_Station` = @p42)) AND ((@p43" +
+                " = 1 AND `Sell_Max` IS NULL) OR (`Sell_Max` = @p44)) AND ((@p45 = 1 AND `Sell_Di" +
+                "stance` IS NULL) OR (`Sell_Distance` = @p46)) AND ((@p47 = 1 AND `Sell_Timestamp" +
+                "` IS NULL) OR (`Sell_Timestamp` = @p48)) AND ((@p49 = 1 AND `Max_Profit` IS NULL" +
+                ") OR (`Max_Profit` = @p50)))";
+            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p1";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "CommodityID";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p2";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_SystemID";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p4";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_System";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p5";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_StationID";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p6";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Station";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p7";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Min";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p8";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Distance";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p9";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Timestamp";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p10";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_SystemID";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p11";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_System";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p12";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_StationID";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p13";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Station";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p14";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Max";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p15";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Distance";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p16";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Timestamp";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p17";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p18";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "CommodityID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p19";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p20";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Commodity";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p21";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p22";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p23";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p24";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p25";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p26";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p27";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p28";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p29";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Min";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p30";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Min";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p31";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p32";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p33";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p34";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Buy_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p35";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p36";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_SystemID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p37";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p38";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_System";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p39";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p40";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_StationID";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p41";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p42";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Station";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p43";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Max";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p44";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Max";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p45";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p46";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Distance";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p47";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p48";
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.IsNullable = true;
+            param.SourceColumn = "Sell_Timestamp";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p49";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p50";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Max_Profit";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -44358,8 +45750,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT `SystemID`, `SystemName`, `StationID`, `StationName` FROM `elite_db`.`visy" +
-                "stemsandstations`";
+            this._commandCollection[0].CommandText = @"SELECT `CommodityID`, `Commodity`, `Buy_SystemID`, `Buy_System`, `Buy_StationID`, `Buy_Station`, `Buy_Min`, `Buy_Distance`, `Buy_Timestamp`, `Sell_SystemID`, `Sell_System`, `Sell_StationID`, `Sell_Station`, `Sell_Max`, `Sell_Distance`, `Sell_Timestamp`, `Max_Profit` FROM `tmpa_allcommodities`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -44367,7 +45758,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(dsEliteDB.visystemsandstationsDataTable dataTable) {
+        public virtual int Fill(dsEliteDB.tmpa_allcommoditiesDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -44380,11 +45771,664 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual dsEliteDB.visystemsandstationsDataTable GetData() {
+        public virtual dsEliteDB.tmpa_allcommoditiesDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            dsEliteDB.visystemsandstationsDataTable dataTable = new dsEliteDB.visystemsandstationsDataTable();
+            dsEliteDB.tmpa_allcommoditiesDataTable dataTable = new dsEliteDB.tmpa_allcommoditiesDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(dsEliteDB.tmpa_allcommoditiesDataTable dataTable) {
+            return this.Adapter.Update(dataTable);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(dsEliteDB dataSet) {
+            return this.Adapter.Update(dataSet, "tmpa_allcommodities");
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow dataRow) {
+            return this.Adapter.Update(new global::System.Data.DataRow[] {
+                        dataRow});
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow[] dataRows) {
+            return this.Adapter.Update(dataRows);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
+        public virtual int Delete(
+                    int p1, 
+                    string p3, 
+                    global::System.Nullable<int> p5, 
+                    string p7, 
+                    global::System.Nullable<int> p9, 
+                    string p11, 
+                    global::System.Nullable<int> p13, 
+                    global::System.Nullable<double> p15, 
+                    global::System.Nullable<global::System.DateTime> p17, 
+                    global::System.Nullable<int> p19, 
+                    string p21, 
+                    global::System.Nullable<int> p23, 
+                    string p25, 
+                    global::System.Nullable<int> p27, 
+                    global::System.Nullable<double> p29, 
+                    global::System.Nullable<global::System.DateTime> p31, 
+                    global::System.Nullable<int> p33) {
+            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(p1));
+            if ((p3 == null)) {
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(p3));
+            }
+            if ((p5.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[4].Value = ((int)(p5.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            if ((p7 == null)) {
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[6].Value = ((string)(p7));
+            }
+            if ((p9.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((int)(p9.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            if ((p11 == null)) {
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((string)(p11));
+            }
+            if ((p13.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[12].Value = ((int)(p13.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[12].Value = global::System.DBNull.Value;
+            }
+            if ((p15.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[14].Value = ((double)(p15.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[14].Value = global::System.DBNull.Value;
+            }
+            if ((p17.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[16].Value = ((System.DateTime)(p17.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            if ((p19.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[18].Value = ((int)(p19.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[18].Value = global::System.DBNull.Value;
+            }
+            if ((p21 == null)) {
+                this.Adapter.DeleteCommand.Parameters[19].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[20].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[19].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[20].Value = ((string)(p21));
+            }
+            if ((p23.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[21].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[22].Value = ((int)(p23.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[21].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[22].Value = global::System.DBNull.Value;
+            }
+            if ((p25 == null)) {
+                this.Adapter.DeleteCommand.Parameters[23].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[24].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[23].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[24].Value = ((string)(p25));
+            }
+            if ((p27.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[25].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[26].Value = ((int)(p27.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[25].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[26].Value = global::System.DBNull.Value;
+            }
+            if ((p29.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[27].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[28].Value = ((double)(p29.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[27].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[28].Value = global::System.DBNull.Value;
+            }
+            if ((p31.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[29].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[30].Value = ((System.DateTime)(p31.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[29].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[30].Value = global::System.DBNull.Value;
+            }
+            if ((p33.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[31].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[32].Value = ((int)(p33.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[31].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[32].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
+            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.DeleteCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.DeleteCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
+        public virtual int Insert(
+                    int p1, 
+                    string p2, 
+                    global::System.Nullable<int> p3, 
+                    string p4, 
+                    global::System.Nullable<int> p5, 
+                    string p6, 
+                    global::System.Nullable<int> p7, 
+                    global::System.Nullable<double> p8, 
+                    global::System.Nullable<global::System.DateTime> p9, 
+                    global::System.Nullable<int> p10, 
+                    string p11, 
+                    global::System.Nullable<int> p12, 
+                    string p13, 
+                    global::System.Nullable<int> p14, 
+                    global::System.Nullable<double> p15, 
+                    global::System.Nullable<global::System.DateTime> p16, 
+                    global::System.Nullable<int> p17) {
+            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1));
+            if ((p2 == null)) {
+                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(p2));
+            }
+            if ((p3.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((int)(p3.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            if ((p4 == null)) {
+                this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[3].Value = ((string)(p4));
+            }
+            if ((p5.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[4].Value = ((int)(p5.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            if ((p6 == null)) {
+                this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(p6));
+            }
+            if ((p7.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[6].Value = ((int)(p7.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            if ((p8.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[7].Value = ((double)(p8.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[7].Value = global::System.DBNull.Value;
+            }
+            if ((p9.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            if ((p10.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[9].Value = ((int)(p10.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            if ((p11 == null)) {
+                this.Adapter.InsertCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[10].Value = ((string)(p11));
+            }
+            if ((p12.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[11].Value = ((int)(p12.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[11].Value = global::System.DBNull.Value;
+            }
+            if ((p13 == null)) {
+                this.Adapter.InsertCommand.Parameters[12].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[12].Value = ((string)(p13));
+            }
+            if ((p14.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[13].Value = ((int)(p14.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[13].Value = global::System.DBNull.Value;
+            }
+            if ((p15.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[14].Value = ((double)(p15.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[14].Value = global::System.DBNull.Value;
+            }
+            if ((p16.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[15].Value = ((System.DateTime)(p16.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[15].Value = global::System.DBNull.Value;
+            }
+            if ((p17.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[16].Value = ((int)(p17.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
+            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.InsertCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.InsertCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(
+                    int p1, 
+                    string p2, 
+                    global::System.Nullable<int> p3, 
+                    string p4, 
+                    global::System.Nullable<int> p5, 
+                    string p6, 
+                    global::System.Nullable<int> p7, 
+                    global::System.Nullable<double> p8, 
+                    global::System.Nullable<global::System.DateTime> p9, 
+                    global::System.Nullable<int> p10, 
+                    string p11, 
+                    global::System.Nullable<int> p12, 
+                    string p13, 
+                    global::System.Nullable<int> p14, 
+                    global::System.Nullable<double> p15, 
+                    global::System.Nullable<global::System.DateTime> p16, 
+                    global::System.Nullable<int> p17, 
+                    int p18, 
+                    string p20, 
+                    global::System.Nullable<int> p22, 
+                    string p24, 
+                    global::System.Nullable<int> p26, 
+                    string p28, 
+                    global::System.Nullable<int> p30, 
+                    global::System.Nullable<double> p32, 
+                    global::System.Nullable<global::System.DateTime> p34, 
+                    global::System.Nullable<int> p36, 
+                    string p38, 
+                    global::System.Nullable<int> p40, 
+                    string p42, 
+                    global::System.Nullable<int> p44, 
+                    global::System.Nullable<double> p46, 
+                    global::System.Nullable<global::System.DateTime> p48, 
+                    global::System.Nullable<int> p50) {
+            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1));
+            if ((p2 == null)) {
+                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(p2));
+            }
+            if ((p3.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(p3.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            if ((p4 == null)) {
+                this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(p4));
+            }
+            if ((p5.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(p5.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            if ((p6 == null)) {
+                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(p6));
+            }
+            if ((p7.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(p7.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            if ((p8.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[7].Value = ((double)(p8.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
+            }
+            if ((p9.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            if ((p10.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(p10.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            if ((p11 == null)) {
+                this.Adapter.UpdateCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((string)(p11));
+            }
+            if ((p12.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((int)(p12.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
+            }
+            if ((p13 == null)) {
+                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(p13));
+            }
+            if ((p14.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((int)(p14.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
+            }
+            if ((p15.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((double)(p15.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
+            }
+            if ((p16.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((System.DateTime)(p16.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
+            }
+            if ((p17.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(p17.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[17].Value = ((int)(p18));
+            if ((p20 == null)) {
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[19].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((string)(p20));
+            }
+            if ((p22.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[21].Value = ((int)(p22.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[21].Value = global::System.DBNull.Value;
+            }
+            if ((p24 == null)) {
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[23].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[23].Value = ((string)(p24));
+            }
+            if ((p26.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[25].Value = ((int)(p26.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[25].Value = global::System.DBNull.Value;
+            }
+            if ((p28 == null)) {
+                this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[27].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[27].Value = ((string)(p28));
+            }
+            if ((p30.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[29].Value = ((int)(p30.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[29].Value = global::System.DBNull.Value;
+            }
+            if ((p32.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[30].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[31].Value = ((double)(p32.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[30].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[31].Value = global::System.DBNull.Value;
+            }
+            if ((p34.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[32].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[33].Value = ((System.DateTime)(p34.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[32].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[33].Value = global::System.DBNull.Value;
+            }
+            if ((p36.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[34].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[35].Value = ((int)(p36.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[34].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[35].Value = global::System.DBNull.Value;
+            }
+            if ((p38 == null)) {
+                this.Adapter.UpdateCommand.Parameters[36].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[37].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[36].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[37].Value = ((string)(p38));
+            }
+            if ((p40.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[38].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[39].Value = ((int)(p40.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[38].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[39].Value = global::System.DBNull.Value;
+            }
+            if ((p42 == null)) {
+                this.Adapter.UpdateCommand.Parameters[40].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[41].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[40].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[41].Value = ((string)(p42));
+            }
+            if ((p44.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[42].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[43].Value = ((int)(p44.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[42].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[43].Value = global::System.DBNull.Value;
+            }
+            if ((p46.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[44].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[45].Value = ((double)(p46.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[44].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[45].Value = global::System.DBNull.Value;
+            }
+            if ((p48.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[46].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[47].Value = ((System.DateTime)(p48.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[46].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[47].Value = global::System.DBNull.Value;
+            }
+            if ((p50.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[48].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[49].Value = ((int)(p50.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[48].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[49].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
+            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.UpdateCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.UpdateCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(
+                    string p2, 
+                    global::System.Nullable<int> p3, 
+                    string p4, 
+                    global::System.Nullable<int> p5, 
+                    string p6, 
+                    global::System.Nullable<int> p7, 
+                    global::System.Nullable<double> p8, 
+                    global::System.Nullable<global::System.DateTime> p9, 
+                    global::System.Nullable<int> p10, 
+                    string p11, 
+                    global::System.Nullable<int> p12, 
+                    string p13, 
+                    global::System.Nullable<int> p14, 
+                    global::System.Nullable<double> p15, 
+                    global::System.Nullable<global::System.DateTime> p16, 
+                    global::System.Nullable<int> p17, 
+                    int p18, 
+                    string p20, 
+                    global::System.Nullable<int> p22, 
+                    string p24, 
+                    global::System.Nullable<int> p26, 
+                    string p28, 
+                    global::System.Nullable<int> p30, 
+                    global::System.Nullable<double> p32, 
+                    global::System.Nullable<global::System.DateTime> p34, 
+                    global::System.Nullable<int> p36, 
+                    string p38, 
+                    global::System.Nullable<int> p40, 
+                    string p42, 
+                    global::System.Nullable<int> p44, 
+                    global::System.Nullable<double> p46, 
+                    global::System.Nullable<global::System.DateTime> p48, 
+                    global::System.Nullable<int> p50) {
+            return this.Update(p18, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p20, p22, p24, p26, p28, p30, p32, p34, p36, p38, p40, p42, p44, p46, p48, p50);
         }
     }
     
@@ -44397,7 +46441,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class tmppa_s2s_besttripsTableAdapter : global::System.ComponentModel.Component {
+    public partial class tmpa_s2s_besttripsTableAdapter : global::System.ComponentModel.Component {
         
         private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
         
@@ -44411,7 +46455,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public tmppa_s2s_besttripsTableAdapter() {
+        public tmpa_s2s_besttripsTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -44508,7 +46552,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "tmppa_s2s_besttrips";
+            tableMapping.DataSetTable = "tmpa_s2s_besttrips";
             tableMapping.ColumnMappings.Add("System_ID_1", "System_ID_1");
             tableMapping.ColumnMappings.Add("SystemName_1", "SystemName_1");
             tableMapping.ColumnMappings.Add("Station_ID_1", "Station_ID_1");
@@ -44526,7 +46570,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmppa_s2s_besttrips` WHERE (((@p1 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p2)) AND ((@p3 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p4)) AND (`Station_ID_1` = @p5) AND ((@p6 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p7)) AND ((@p8 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p9)) AND ((@p10 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p11)) AND ((@p12 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p13)) AND (`Station_ID_2` = @p14) AND ((@p15 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p16)) AND ((@p17 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p18)) AND ((@p19 = 1 AND `Profit` IS NULL) OR (`Profit` = @p20)) AND ((@p21 = 1 AND `Distance` IS NULL) OR (`Distance` = @p22)) AND ((@p23 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p24)) AND ((@p25 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p26)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_s2s_besttrips` WHERE (((@p1 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p2)) AND ((@p3 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p4)) AND (`Station_ID_1` = @p5) AND ((@p6 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p7)) AND ((@p8 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p9)) AND ((@p10 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p11)) AND ((@p12 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p13)) AND (`Station_ID_2` = @p14) AND ((@p15 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p16)) AND ((@p17 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p18)) AND ((@p19 = 1 AND `Profit` IS NULL) OR (`Profit` = @p20)) AND ((@p21 = 1 AND `Distance` IS NULL) OR (`Distance` = @p22)) AND ((@p23 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p24)) AND ((@p25 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p26)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -44750,7 +46794,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmppa_s2s_besttrips` (`System_ID_1`, `SystemName_1`, `Station_ID_1`, `StationName_1`, `TimeStamp_1`, `System_ID_2`, `SystemName_2`, `Station_ID_2`, `StationName_2`, `TimeStamp_2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_s2s_besttrips` (`System_ID_1`, `SystemName_1`, `Station_ID_1`, `StationName_1`, `TimeStamp_1`, `System_ID_2`, `SystemName_2`, `Station_ID_2`, `StationName_2`, `TimeStamp_2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -44852,7 +46896,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmppa_s2s_besttrips` SET `System_ID_1` = @p1, `SystemName_1` = @p2, `Station_ID_1` = @p3, `StationName_1` = @p4, `TimeStamp_1` = @p5, `System_ID_2` = @p6, `SystemName_2` = @p7, `Station_ID_2` = @p8, `StationName_2` = @p9, `TimeStamp_2` = @p10, `Profit` = @p11, `Distance` = @p12, `DistanceToStar_1` = @p13, `DistanceToStar_2` = @p14 WHERE (((@p15 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p16)) AND ((@p17 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p18)) AND (`Station_ID_1` = @p19) AND ((@p20 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p21)) AND ((@p22 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p23)) AND ((@p24 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p25)) AND ((@p26 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p27)) AND (`Station_ID_2` = @p28) AND ((@p29 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p30)) AND ((@p31 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p32)) AND ((@p33 = 1 AND `Profit` IS NULL) OR (`Profit` = @p34)) AND ((@p35 = 1 AND `Distance` IS NULL) OR (`Distance` = @p36)) AND ((@p37 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p38)) AND ((@p39 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p40)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_s2s_besttrips` SET `System_ID_1` = @p1, `SystemName_1` = @p2, `Station_ID_1` = @p3, `StationName_1` = @p4, `TimeStamp_1` = @p5, `System_ID_2` = @p6, `SystemName_2` = @p7, `Station_ID_2` = @p8, `StationName_2` = @p9, `TimeStamp_2` = @p10, `Profit` = @p11, `Distance` = @p12, `DistanceToStar_1` = @p13, `DistanceToStar_2` = @p14 WHERE (((@p15 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p16)) AND ((@p17 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p18)) AND (`Station_ID_1` = @p19) AND ((@p20 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p21)) AND ((@p22 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p23)) AND ((@p24 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p25)) AND ((@p26 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p27)) AND (`Station_ID_2` = @p28) AND ((@p29 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p30)) AND ((@p31 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p32)) AND ((@p33 = 1 AND `Profit` IS NULL) OR (`Profit` = @p34)) AND ((@p35 = 1 AND `Distance` IS NULL) OR (`Distance` = @p36)) AND ((@p37 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p38)) AND ((@p39 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p40)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -45189,8 +47233,8 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT `System_ID_1`, `SystemName_1`, `Station_ID_1`, `StationName_1`, `TimeStamp" +
                 "_1`, `System_ID_2`, `SystemName_2`, `Station_ID_2`, `StationName_2`, `TimeStamp_" +
-                "2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2` FROM `tmppa_s2s" +
-                "_besttrips`";
+                "2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2` FROM `tmpa_s2s_" +
+                "besttrips`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -45198,7 +47242,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(dsEliteDB.tmppa_s2s_besttripsDataTable dataTable) {
+        public virtual int Fill(dsEliteDB.tmpa_s2s_besttripsDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -45211,9 +47255,9 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual dsEliteDB.tmppa_s2s_besttripsDataTable GetData() {
+        public virtual dsEliteDB.tmpa_s2s_besttripsDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            dsEliteDB.tmppa_s2s_besttripsDataTable dataTable = new dsEliteDB.tmppa_s2s_besttripsDataTable();
+            dsEliteDB.tmpa_s2s_besttripsDataTable dataTable = new dsEliteDB.tmpa_s2s_besttripsDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -45221,7 +47265,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(dsEliteDB.tmppa_s2s_besttripsDataTable dataTable) {
+        public virtual int Update(dsEliteDB.tmpa_s2s_besttripsDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
         
@@ -45229,7 +47273,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         public virtual int Update(dsEliteDB dataSet) {
-            return this.Adapter.Update(dataSet, "tmppa_s2s_besttrips");
+            return this.Adapter.Update(dataSet, "tmpa_s2s_besttrips");
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -45718,1054 +47762,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
     }
     
     /// <summary>
-    ///Represents the connection and commands used to retrieve and save data.
-    ///</summary>
-    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
-    [global::System.ComponentModel.ToolboxItem(true)]
-    [global::System.ComponentModel.DataObjectAttribute(true)]
-    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
-        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
-    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class tmppa_s2s_stationdataTableAdapter : global::System.ComponentModel.Component {
-        
-        private global::MySql.Data.MySqlClient.MySqlDataAdapter _adapter;
-        
-        private global::MySql.Data.MySqlClient.MySqlConnection _connection;
-        
-        private global::MySql.Data.MySqlClient.MySqlTransaction _transaction;
-        
-        private global::MySql.Data.MySqlClient.MySqlCommand[] _commandCollection;
-        
-        private bool _clearBeforeFill;
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public tmppa_s2s_stationdataTableAdapter() {
-            this.ClearBeforeFill = true;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected internal global::MySql.Data.MySqlClient.MySqlDataAdapter Adapter {
-            get {
-                if ((this._adapter == null)) {
-                    this.InitAdapter();
-                }
-                return this._adapter;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        internal global::MySql.Data.MySqlClient.MySqlConnection Connection {
-            get {
-                if ((this._connection == null)) {
-                    this.InitConnection();
-                }
-                return this._connection;
-            }
-            set {
-                this._connection = value;
-                if ((this.Adapter.InsertCommand != null)) {
-                    this.Adapter.InsertCommand.Connection = value;
-                }
-                if ((this.Adapter.DeleteCommand != null)) {
-                    this.Adapter.DeleteCommand.Connection = value;
-                }
-                if ((this.Adapter.UpdateCommand != null)) {
-                    this.Adapter.UpdateCommand.Connection = value;
-                }
-                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
-                    if ((this.CommandCollection[i] != null)) {
-                        ((global::MySql.Data.MySqlClient.MySqlCommand)(this.CommandCollection[i])).Connection = value;
-                    }
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        internal global::MySql.Data.MySqlClient.MySqlTransaction Transaction {
-            get {
-                return this._transaction;
-            }
-            set {
-                this._transaction = value;
-                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
-                    this.CommandCollection[i].Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.DeleteCommand != null))) {
-                    this.Adapter.DeleteCommand.Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.InsertCommand != null))) {
-                    this.Adapter.InsertCommand.Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.UpdateCommand != null))) {
-                    this.Adapter.UpdateCommand.Transaction = this._transaction;
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected global::MySql.Data.MySqlClient.MySqlCommand[] CommandCollection {
-            get {
-                if ((this._commandCollection == null)) {
-                    this.InitCommandCollection();
-                }
-                return this._commandCollection;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public bool ClearBeforeFill {
-            get {
-                return this._clearBeforeFill;
-            }
-            set {
-                this._clearBeforeFill = value;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private void InitAdapter() {
-            this._adapter = new global::MySql.Data.MySqlClient.MySqlDataAdapter();
-            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
-            tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "tmppa_s2s_stationdata";
-            tableMapping.ColumnMappings.Add("CommodityID", "CommodityID");
-            tableMapping.ColumnMappings.Add("Commodity", "Commodity");
-            tableMapping.ColumnMappings.Add("Buy", "Buy");
-            tableMapping.ColumnMappings.Add("Supply", "Supply");
-            tableMapping.ColumnMappings.Add("SupplyLevel", "SupplyLevel");
-            tableMapping.ColumnMappings.Add("Sell", "Sell");
-            tableMapping.ColumnMappings.Add("Demand", "Demand");
-            tableMapping.ColumnMappings.Add("Demandlevel", "Demandlevel");
-            tableMapping.ColumnMappings.Add("Timestamp", "Timestamp");
-            tableMapping.ColumnMappings.Add("Profit", "Profit");
-            this._adapter.TableMappings.Add(tableMapping);
-            this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmppa_s2s_stationdata` WHERE ((`CommodityID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy` IS NULL) OR (`Buy` = @p5)) AND ((@p6 = 1 AND `Supply` IS NULL) OR (`Supply` = @p7)) AND ((@p8 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p9)) AND ((@p10 = 1 AND `Sell` IS NULL) OR (`Sell` = @p11)) AND ((@p12 = 1 AND `Demand` IS NULL) OR (`Demand` = @p13)) AND ((@p14 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p15)) AND ((@p16 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p17)) AND ((@p18 = 1 AND `Profit` IS NULL) OR (`Profit` = @p19)))";
-            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
-            global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p1";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p4";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Supply";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Supply";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "SupplyLevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "SupplyLevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p11";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demand";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p13";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demand";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p14";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demandlevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p15";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Demandlevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p16";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p17";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p18";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Profit";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p19";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Profit";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO `tmppa_s2s_stationdata` (`CommodityID`, `Commodity`, `Buy`, `Supply`," +
-                " `SupplyLevel`, `Sell`, `Demand`, `Demandlevel`, `Timestamp`, `Profit`) VALUES (" +
-                "@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10)";
-            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p1";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p4";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Supply";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "SupplyLevel";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demand";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Demandlevel";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Timestamp";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Profit";
-            this._adapter.InsertCommand.Parameters.Add(param);
-            this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmppa_s2s_stationdata` SET `CommodityID` = @p1, `Commodity` = @p2, `Buy` = @p3, `Supply` = @p4, `SupplyLevel` = @p5, `Sell` = @p6, `Demand` = @p7, `Demandlevel` = @p8, `Timestamp` = @p9, `Profit` = @p10 WHERE ((`CommodityID` = @p11) AND ((@p12 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p13)) AND ((@p14 = 1 AND `Buy` IS NULL) OR (`Buy` = @p15)) AND ((@p16 = 1 AND `Supply` IS NULL) OR (`Supply` = @p17)) AND ((@p18 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p19)) AND ((@p20 = 1 AND `Sell` IS NULL) OR (`Sell` = @p21)) AND ((@p22 = 1 AND `Demand` IS NULL) OR (`Demand` = @p23)) AND ((@p24 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p25)) AND ((@p26 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p27)) AND ((@p28 = 1 AND `Profit` IS NULL) OR (`Profit` = @p29)))";
-            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p1";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p2";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p3";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p4";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Supply";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p5";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "SupplyLevel";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p6";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p7";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demand";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p8";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Demandlevel";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p9";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Timestamp";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p10";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Profit";
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p11";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "CommodityID";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p12";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p13";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Commodity";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p14";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p15";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Buy";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p16";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Supply";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p17";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Supply";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p18";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "SupplyLevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p19";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "SupplyLevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p20";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p21";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Sell";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p22";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demand";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p23";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demand";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p24";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Demandlevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p25";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
-            param.IsNullable = true;
-            param.SourceColumn = "Demandlevel";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p26";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p27";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
-            param.IsNullable = true;
-            param.SourceColumn = "Timestamp";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p28";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Profit";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p29";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "Profit";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private void InitConnection() {
-            this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private void InitCommandCollection() {
-            this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
-            this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
-            this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT        CommodityID, Commodity, Buy, Supply, SupplyLevel, Sell, Demand, Dem" +
-                "andlevel, `Timestamp`, Profit\r\nFROM            tmppa_s2s_stationdata";
-            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(dsEliteDB.tmppa_s2s_stationdataDataTable dataTable) {
-            this.Adapter.SelectCommand = this.CommandCollection[0];
-            if ((this.ClearBeforeFill == true)) {
-                dataTable.Clear();
-            }
-            int returnValue = this.Adapter.Fill(dataTable);
-            return returnValue;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual dsEliteDB.tmppa_s2s_stationdataDataTable GetData() {
-            this.Adapter.SelectCommand = this.CommandCollection[0];
-            dsEliteDB.tmppa_s2s_stationdataDataTable dataTable = new dsEliteDB.tmppa_s2s_stationdataDataTable();
-            this.Adapter.Fill(dataTable);
-            return dataTable;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(dsEliteDB.tmppa_s2s_stationdataDataTable dataTable) {
-            return this.Adapter.Update(dataTable);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(dsEliteDB dataSet) {
-            return this.Adapter.Update(dataSet, "tmppa_s2s_stationdata");
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(global::System.Data.DataRow dataRow) {
-            return this.Adapter.Update(new global::System.Data.DataRow[] {
-                        dataRow});
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(global::System.Data.DataRow[] dataRows) {
-            return this.Adapter.Update(dataRows);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int p1, string p3, global::System.Nullable<int> p5, global::System.Nullable<int> p7, string p9, global::System.Nullable<int> p11, global::System.Nullable<int> p13, string p15, global::System.Nullable<global::System.DateTime> p17, global::System.Nullable<int> p19) {
-            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(p1));
-            if ((p3 == null)) {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(p3));
-            }
-            if ((p5.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[4].Value = ((int)(p5.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            if ((p7.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[6].Value = ((int)(p7.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((p9 == null)) {
-                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[8].Value = ((string)(p9));
-            }
-            if ((p11.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((int)(p11.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[10].Value = global::System.DBNull.Value;
-            }
-            if ((p13.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[12].Value = ((int)(p13.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[12].Value = global::System.DBNull.Value;
-            }
-            if ((p15 == null)) {
-                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[14].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[14].Value = ((string)(p15));
-            }
-            if ((p17.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[16].Value = ((System.DateTime)(p17.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[16].Value = global::System.DBNull.Value;
-            }
-            if ((p19.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[18].Value = ((int)(p19.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[18].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
-            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.DeleteCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.DeleteCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(int p1, string p2, global::System.Nullable<int> p3, global::System.Nullable<int> p4, string p5, global::System.Nullable<int> p6, global::System.Nullable<int> p7, string p8, global::System.Nullable<global::System.DateTime> p9, global::System.Nullable<int> p10) {
-            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1));
-            if ((p2 == null)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(p2));
-            }
-            if ((p3.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((int)(p3.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            if ((p4.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[3].Value = ((int)(p4.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
-            }
-            if ((p5 == null)) {
-                this.Adapter.InsertCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[4].Value = ((string)(p5));
-            }
-            if ((p6.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[5].Value = ((int)(p6.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            if ((p7.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[6].Value = ((int)(p7.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((p8 == null)) {
-                this.Adapter.InsertCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[7].Value = ((string)(p8));
-            }
-            if ((p9.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            if ((p10.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[9].Value = ((int)(p10.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[9].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
-            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.InsertCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.InsertCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    int p1, 
-                    string p2, 
-                    global::System.Nullable<int> p3, 
-                    global::System.Nullable<int> p4, 
-                    string p5, 
-                    global::System.Nullable<int> p6, 
-                    global::System.Nullable<int> p7, 
-                    string p8, 
-                    global::System.Nullable<global::System.DateTime> p9, 
-                    global::System.Nullable<int> p10, 
-                    int p11, 
-                    string p13, 
-                    global::System.Nullable<int> p15, 
-                    global::System.Nullable<int> p17, 
-                    string p19, 
-                    global::System.Nullable<int> p21, 
-                    global::System.Nullable<int> p23, 
-                    string p25, 
-                    global::System.Nullable<global::System.DateTime> p27, 
-                    global::System.Nullable<int> p29) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1));
-            if ((p2 == null)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(p2));
-            }
-            if ((p3.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(p3.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            if ((p4.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(p4.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
-            }
-            if ((p5 == null)) {
-                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(p5));
-            }
-            if ((p6.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(p6.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            if ((p7.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(p7.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((p8 == null)) {
-                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(p8));
-            }
-            if ((p9.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((System.DateTime)(p9.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            if ((p10.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(p10.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
-            }
-            this.Adapter.UpdateCommand.Parameters[10].Value = ((int)(p11));
-            if ((p13 == null)) {
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(p13));
-            }
-            if ((p15.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[14].Value = ((int)(p15.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
-            }
-            if ((p17.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(p17.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
-            }
-            if ((p19 == null)) {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[18].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[18].Value = ((string)(p19));
-            }
-            if ((p21.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[20].Value = ((int)(p21.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[20].Value = global::System.DBNull.Value;
-            }
-            if ((p23.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[22].Value = ((int)(p23.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[22].Value = global::System.DBNull.Value;
-            }
-            if ((p25 == null)) {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[24].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[24].Value = ((string)(p25));
-            }
-            if ((p27.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[26].Value = ((System.DateTime)(p27.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[26].Value = global::System.DBNull.Value;
-            }
-            if ((p29.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[28].Value = ((int)(p29.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[28].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
-            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.UpdateCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.UpdateCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    string p2, 
-                    global::System.Nullable<int> p3, 
-                    global::System.Nullable<int> p4, 
-                    string p5, 
-                    global::System.Nullable<int> p6, 
-                    global::System.Nullable<int> p7, 
-                    string p8, 
-                    global::System.Nullable<global::System.DateTime> p9, 
-                    global::System.Nullable<int> p10, 
-                    int p11, 
-                    string p13, 
-                    global::System.Nullable<int> p15, 
-                    global::System.Nullable<int> p17, 
-                    string p19, 
-                    global::System.Nullable<int> p21, 
-                    global::System.Nullable<int> p23, 
-                    string p25, 
-                    global::System.Nullable<global::System.DateTime> p27, 
-                    global::System.Nullable<int> p29) {
-            return this.Update(p11, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29);
-        }
-    }
-    
-    /// <summary>
     ///TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
     ///</summary>
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -46779,7 +47775,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         private tballegianceTableAdapter _tballegianceTableAdapter;
         
-        private tmneighbourstationsTableAdapter _tmneighbourstationsTableAdapter;
+        private tmpa_s2s_stationdataTableAdapter _tmpa_s2s_stationdataTableAdapter;
         
         private tbattributeTableAdapter _tbattributeTableAdapter;
         
@@ -46815,8 +47811,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         private tblogTableAdapter _tblogTableAdapter;
         
-        private tbpa_allcommoditiesTableAdapter _tbpa_allcommoditiesTableAdapter;
-        
         private tbpricehistoryTableAdapter _tbpricehistoryTableAdapter;
         
         private tbsecurityTableAdapter _tbsecurityTableAdapter;
@@ -46841,11 +47835,15 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         
         private tbvisitedsystemsTableAdapter _tbvisitedsystemsTableAdapter;
         
+        private tmbestprofitsTableAdapter _tmbestprofitsTableAdapter;
+        
         private tmfilteredstationsTableAdapter _tmfilteredstationsTableAdapter;
         
-        private tmppa_s2s_besttripsTableAdapter _tmppa_s2s_besttripsTableAdapter;
+        private tmneighbourstationsTableAdapter _tmneighbourstationsTableAdapter;
         
-        private tmppa_s2s_stationdataTableAdapter _tmppa_s2s_stationdataTableAdapter;
+        private tmpa_allcommoditiesTableAdapter _tmpa_allcommoditiesTableAdapter;
+        
+        private tmpa_s2s_besttripsTableAdapter _tmpa_s2s_besttripsTableAdapter;
         
         private bool _backupDataSetBeforeUpdate;
         
@@ -46881,12 +47879,12 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
-        public tmneighbourstationsTableAdapter tmneighbourstationsTableAdapter {
+        public tmpa_s2s_stationdataTableAdapter tmpa_s2s_stationdataTableAdapter {
             get {
-                return this._tmneighbourstationsTableAdapter;
+                return this._tmpa_s2s_stationdataTableAdapter;
             }
             set {
-                this._tmneighbourstationsTableAdapter = value;
+                this._tmpa_s2s_stationdataTableAdapter = value;
             }
         }
         
@@ -47133,20 +48131,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
-        public tbpa_allcommoditiesTableAdapter tbpa_allcommoditiesTableAdapter {
-            get {
-                return this._tbpa_allcommoditiesTableAdapter;
-            }
-            set {
-                this._tbpa_allcommoditiesTableAdapter = value;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
-            "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
-            "a", "System.Drawing.Design.UITypeEditor")]
         public tbpricehistoryTableAdapter tbpricehistoryTableAdapter {
             get {
                 return this._tbpricehistoryTableAdapter;
@@ -47315,6 +48299,20 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
+        public tmbestprofitsTableAdapter tmbestprofitsTableAdapter {
+            get {
+                return this._tmbestprofitsTableAdapter;
+            }
+            set {
+                this._tmbestprofitsTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
+            "a", "System.Drawing.Design.UITypeEditor")]
         public tmfilteredstationsTableAdapter tmfilteredstationsTableAdapter {
             get {
                 return this._tmfilteredstationsTableAdapter;
@@ -47329,12 +48327,12 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
-        public tmppa_s2s_besttripsTableAdapter tmppa_s2s_besttripsTableAdapter {
+        public tmneighbourstationsTableAdapter tmneighbourstationsTableAdapter {
             get {
-                return this._tmppa_s2s_besttripsTableAdapter;
+                return this._tmneighbourstationsTableAdapter;
             }
             set {
-                this._tmppa_s2s_besttripsTableAdapter = value;
+                this._tmneighbourstationsTableAdapter = value;
             }
         }
         
@@ -47343,12 +48341,26 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
-        public tmppa_s2s_stationdataTableAdapter tmppa_s2s_stationdataTableAdapter {
+        public tmpa_allcommoditiesTableAdapter tmpa_allcommoditiesTableAdapter {
             get {
-                return this._tmppa_s2s_stationdataTableAdapter;
+                return this._tmpa_allcommoditiesTableAdapter;
             }
             set {
-                this._tmppa_s2s_stationdataTableAdapter = value;
+                this._tmpa_allcommoditiesTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
+            "a", "System.Drawing.Design.UITypeEditor")]
+        public tmpa_s2s_besttripsTableAdapter tmpa_s2s_besttripsTableAdapter {
+            get {
+                return this._tmpa_s2s_besttripsTableAdapter;
+            }
+            set {
+                this._tmpa_s2s_besttripsTableAdapter = value;
             }
         }
         
@@ -47375,9 +48387,9 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                             && (this._tballegianceTableAdapter.Connection != null))) {
                     return this._tballegianceTableAdapter.Connection;
                 }
-                if (((this._tmneighbourstationsTableAdapter != null) 
-                            && (this._tmneighbourstationsTableAdapter.Connection != null))) {
-                    return this._tmneighbourstationsTableAdapter.Connection;
+                if (((this._tmpa_s2s_stationdataTableAdapter != null) 
+                            && (this._tmpa_s2s_stationdataTableAdapter.Connection != null))) {
+                    return this._tmpa_s2s_stationdataTableAdapter.Connection;
                 }
                 if (((this._tbattributeTableAdapter != null) 
                             && (this._tbattributeTableAdapter.Connection != null))) {
@@ -47447,10 +48459,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                             && (this._tblogTableAdapter.Connection != null))) {
                     return this._tblogTableAdapter.Connection;
                 }
-                if (((this._tbpa_allcommoditiesTableAdapter != null) 
-                            && (this._tbpa_allcommoditiesTableAdapter.Connection != null))) {
-                    return this._tbpa_allcommoditiesTableAdapter.Connection;
-                }
                 if (((this._tbpricehistoryTableAdapter != null) 
                             && (this._tbpricehistoryTableAdapter.Connection != null))) {
                     return this._tbpricehistoryTableAdapter.Connection;
@@ -47499,17 +48507,25 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                             && (this._tbvisitedsystemsTableAdapter.Connection != null))) {
                     return this._tbvisitedsystemsTableAdapter.Connection;
                 }
+                if (((this._tmbestprofitsTableAdapter != null) 
+                            && (this._tmbestprofitsTableAdapter.Connection != null))) {
+                    return this._tmbestprofitsTableAdapter.Connection;
+                }
                 if (((this._tmfilteredstationsTableAdapter != null) 
                             && (this._tmfilteredstationsTableAdapter.Connection != null))) {
                     return this._tmfilteredstationsTableAdapter.Connection;
                 }
-                if (((this._tmppa_s2s_besttripsTableAdapter != null) 
-                            && (this._tmppa_s2s_besttripsTableAdapter.Connection != null))) {
-                    return this._tmppa_s2s_besttripsTableAdapter.Connection;
+                if (((this._tmneighbourstationsTableAdapter != null) 
+                            && (this._tmneighbourstationsTableAdapter.Connection != null))) {
+                    return this._tmneighbourstationsTableAdapter.Connection;
                 }
-                if (((this._tmppa_s2s_stationdataTableAdapter != null) 
-                            && (this._tmppa_s2s_stationdataTableAdapter.Connection != null))) {
-                    return this._tmppa_s2s_stationdataTableAdapter.Connection;
+                if (((this._tmpa_allcommoditiesTableAdapter != null) 
+                            && (this._tmpa_allcommoditiesTableAdapter.Connection != null))) {
+                    return this._tmpa_allcommoditiesTableAdapter.Connection;
+                }
+                if (((this._tmpa_s2s_besttripsTableAdapter != null) 
+                            && (this._tmpa_s2s_besttripsTableAdapter.Connection != null))) {
+                    return this._tmpa_s2s_besttripsTableAdapter.Connection;
                 }
                 return null;
             }
@@ -47527,7 +48543,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if ((this._tballegianceTableAdapter != null)) {
                     count = (count + 1);
                 }
-                if ((this._tmneighbourstationsTableAdapter != null)) {
+                if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
                     count = (count + 1);
                 }
                 if ((this._tbattributeTableAdapter != null)) {
@@ -47581,9 +48597,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if ((this._tblogTableAdapter != null)) {
                     count = (count + 1);
                 }
-                if ((this._tbpa_allcommoditiesTableAdapter != null)) {
-                    count = (count + 1);
-                }
                 if ((this._tbpricehistoryTableAdapter != null)) {
                     count = (count + 1);
                 }
@@ -47620,13 +48633,19 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if ((this._tbvisitedsystemsTableAdapter != null)) {
                     count = (count + 1);
                 }
+                if ((this._tmbestprofitsTableAdapter != null)) {
+                    count = (count + 1);
+                }
                 if ((this._tmfilteredstationsTableAdapter != null)) {
                     count = (count + 1);
                 }
-                if ((this._tmppa_s2s_besttripsTableAdapter != null)) {
+                if ((this._tmneighbourstationsTableAdapter != null)) {
                     count = (count + 1);
                 }
-                if ((this._tmppa_s2s_stationdataTableAdapter != null)) {
+                if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
                     count = (count + 1);
                 }
                 return count;
@@ -47640,12 +48659,12 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private int UpdateUpdatedRows(dsEliteDB dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._tballegianceTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tballegiance.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbstateTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tballegianceTableAdapter.Update(updatedRows));
+                    result = (result + this._tbstateTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47655,6 +48674,15 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbsecurityTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tballegianceTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tballegiance.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tballegianceTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47673,15 +48701,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbeconomyTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbstateTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbstateTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47712,15 +48731,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbcommodityTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodity.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbcommodityTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
             if ((this._tbstationsTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tbstations.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
@@ -47730,21 +48740,21 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbcommodityclassificationTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbcommodityTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodity.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbcommodityclassificationTableAdapter.Update(updatedRows));
+                    result = (result + this._tbcommodityTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbsourceTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbeventtypeTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbsourceTableAdapter.Update(updatedRows));
+                    result = (result + this._tbeventtypeTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47754,6 +48764,24 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbeconomylevelTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tblanguageTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tblanguageTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbcommodityclassificationTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbcommodityclassificationTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47775,30 +48803,12 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tblanguageTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbsourceTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tblanguageTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbeventtypeTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbeventtypeTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbvisitedsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbvisitedsystemsTableAdapter.Update(updatedRows));
+                    result = (result + this._tbsourceTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47811,12 +48821,21 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbsystems_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbvisitedsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbsystems_orgTableAdapter.Update(updatedRows));
+                    result = (result + this._tbvisitedsystemsTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tmbestprofitsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tmbestprofitsTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47838,6 +48857,33 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._tbstationeconomyTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbstationeconomyTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tmneighbourstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tmneighbourstationsTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbsystems_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbsystems_orgTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._tblogTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
@@ -47847,39 +48893,21 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbpricehistoryTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbpricehistoryTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbpa_allcommoditiesTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbpa_allcommoditiesTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tmppa_s2s_besttripsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmppa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tmppa_s2s_besttripsTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
             if ((this._tblevellocalizationTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tblevellocalization.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tblevellocalizationTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tmpa_allcommoditiesTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47928,30 +48956,30 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tmneighbourstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tmneighbourstationsTableAdapter.Update(updatedRows));
+                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbstationeconomyTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbpricehistoryTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbstationeconomyTableAdapter.Update(updatedRows));
+                    result = (result + this._tbpricehistoryTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tmppa_s2s_stationdataTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmppa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tmppa_s2s_stationdataTableAdapter.Update(updatedRows));
+                    result = (result + this._tmpa_s2s_besttripsTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -47965,11 +48993,11 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private int UpdateInsertedRows(dsEliteDB dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._tballegianceTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tballegiance.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbstateTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tballegianceTableAdapter.Update(addedRows));
+                    result = (result + this._tbstateTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -47978,6 +49006,14 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbsecurityTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tballegianceTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tballegiance.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tballegianceTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -47994,14 +49030,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbeconomyTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbstateTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbstateTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48029,14 +49057,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbcommodityTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbcommodity.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbcommodityTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
             if ((this._tbstationsTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tbstations.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
@@ -48045,19 +49065,19 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbcommodityclassificationTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbcommodityTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbcommodity.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbcommodityclassificationTableAdapter.Update(addedRows));
+                    result = (result + this._tbcommodityTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbsourceTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbeventtypeTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbsourceTableAdapter.Update(addedRows));
+                    result = (result + this._tbeventtypeTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48066,6 +49086,22 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbeconomylevelTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tblanguageTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tblanguageTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbcommodityclassificationTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbcommodityclassificationTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48085,27 +49121,11 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tblanguageTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbsourceTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tblanguageTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbeventtypeTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbeventtypeTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbvisitedsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbvisitedsystemsTableAdapter.Update(addedRows));
+                    result = (result + this._tbsourceTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48117,11 +49137,19 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbsystems_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbvisitedsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbsystems_orgTableAdapter.Update(addedRows));
+                    result = (result + this._tbvisitedsystemsTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tmbestprofitsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tmbestprofitsTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48141,6 +49169,30 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._tbstationeconomyTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbstationeconomyTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tmneighbourstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tmneighbourstationsTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbsystems_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbsystems_orgTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._tblogTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
@@ -48149,35 +49201,19 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbpricehistoryTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbpricehistoryTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbpa_allcommoditiesTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbpa_allcommoditiesTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tmppa_s2s_besttripsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmppa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tmppa_s2s_besttripsTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
             if ((this._tblevellocalizationTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tblevellocalization.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tblevellocalizationTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tmpa_allcommoditiesTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48221,27 +49257,27 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tmneighbourstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tmneighbourstationsTableAdapter.Update(addedRows));
+                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbstationeconomyTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbpricehistoryTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbstationeconomyTableAdapter.Update(addedRows));
+                    result = (result + this._tbpricehistoryTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tmppa_s2s_stationdataTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmppa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmpa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tmppa_s2s_stationdataTableAdapter.Update(addedRows));
+                    result = (result + this._tmpa_s2s_besttripsTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -48255,27 +49291,27 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private int UpdateDeletedRows(dsEliteDB dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
-            if ((this._tmppa_s2s_stationdataTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmppa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmppa_s2s_stationdataTableAdapter.Update(deletedRows));
+                    result = (result + this._tmpa_s2s_besttripsTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbstationeconomyTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbpricehistoryTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbstationeconomyTableAdapter.Update(deletedRows));
+                    result = (result + this._tbpricehistoryTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmneighbourstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmneighbourstationsTableAdapter.Update(deletedRows));
+                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48319,6 +49355,14 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
+            if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmpa_allcommoditiesTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
             if ((this._tblevellocalizationTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tblevellocalization.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -48327,35 +49371,35 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmppa_s2s_besttripsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmppa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tmppa_s2s_besttripsTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbpa_allcommoditiesTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbpa_allcommoditiesTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbpricehistoryTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbpricehistoryTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tblogTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._tblogTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbsystems_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbsystems_orgTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tmneighbourstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmneighbourstationsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbstationeconomyTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbstationeconomyTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48375,19 +49419,11 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbsystems_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tmbestprofitsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbsystems_orgTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbvisitedstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbvisitedstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbvisitedstationsTableAdapter.Update(deletedRows));
+                    result = (result + this._tmbestprofitsTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48399,19 +49435,19 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbeventtypeTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbvisitedstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbvisitedstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbeventtypeTableAdapter.Update(deletedRows));
+                    result = (result + this._tbvisitedstationsTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tblanguageTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbsourceTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tblanguageTableAdapter.Update(deletedRows));
+                    result = (result + this._tbsourceTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48431,22 +49467,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbeconomylevelTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbeconomylevelTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbsourceTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbsourceTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tbcommodityclassificationTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -48455,11 +49475,27 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tblanguageTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbstationsTableAdapter.Update(deletedRows));
+                    result = (result + this._tblanguageTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbeconomylevelTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbeconomylevelTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbeventtypeTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbeventtypeTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48468,6 +49504,14 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._tbcommodityTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbstationsTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48495,14 +49539,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbstateTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbstateTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tbeconomyTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbeconomy.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -48519,6 +49555,14 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
+            if ((this._tballegianceTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tballegiance.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tballegianceTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
             if ((this._tbsecurityTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -48527,11 +49571,11 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tballegianceTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tballegiance.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbstateTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tballegianceTableAdapter.Update(deletedRows));
+                    result = (result + this._tbstateTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -48579,8 +49623,8 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
-            if (((this._tmneighbourstationsTableAdapter != null) 
-                        && (this.MatchTableAdapterConnection(this._tmneighbourstationsTableAdapter.Connection) == false))) {
+            if (((this._tmpa_s2s_stationdataTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._tmpa_s2s_stationdataTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
@@ -48669,11 +49713,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
-            if (((this._tbpa_allcommoditiesTableAdapter != null) 
-                        && (this.MatchTableAdapterConnection(this._tbpa_allcommoditiesTableAdapter.Connection) == false))) {
-                throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
-                        "s die gleiche Verbindungszeichenfolge verwendet werden.");
-            }
             if (((this._tbpricehistoryTableAdapter != null) 
                         && (this.MatchTableAdapterConnection(this._tbpricehistoryTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
@@ -48734,18 +49773,28 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
+            if (((this._tmbestprofitsTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._tmbestprofitsTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
+                        "s die gleiche Verbindungszeichenfolge verwendet werden.");
+            }
             if (((this._tmfilteredstationsTableAdapter != null) 
                         && (this.MatchTableAdapterConnection(this._tmfilteredstationsTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
-            if (((this._tmppa_s2s_besttripsTableAdapter != null) 
-                        && (this.MatchTableAdapterConnection(this._tmppa_s2s_besttripsTableAdapter.Connection) == false))) {
+            if (((this._tmneighbourstationsTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._tmneighbourstationsTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
-            if (((this._tmppa_s2s_stationdataTableAdapter != null) 
-                        && (this.MatchTableAdapterConnection(this._tmppa_s2s_stationdataTableAdapter.Connection) == false))) {
+            if (((this._tmpa_allcommoditiesTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._tmpa_allcommoditiesTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
+                        "s die gleiche Verbindungszeichenfolge verwendet werden.");
+            }
+            if (((this._tmpa_s2s_besttripsTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._tmpa_s2s_besttripsTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("Für alle von einem TableAdapterManager verwalteten Instanzen von TableAdapter mus" +
                         "s die gleiche Verbindungszeichenfolge verwendet werden.");
             }
@@ -48792,13 +49841,13 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                         adaptersWithAcceptChangesDuringUpdate.Add(this._tballegianceTableAdapter.Adapter);
                     }
                 }
-                if ((this._tmneighbourstationsTableAdapter != null)) {
-                    revertConnections.Add(this._tmneighbourstationsTableAdapter, this._tmneighbourstationsTableAdapter.Connection);
-                    this._tmneighbourstationsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
-                    this._tmneighbourstationsTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
-                    if (this._tmneighbourstationsTableAdapter.Adapter.AcceptChangesDuringUpdate) {
-                        this._tmneighbourstationsTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
-                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmneighbourstationsTableAdapter.Adapter);
+                if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                    revertConnections.Add(this._tmpa_s2s_stationdataTableAdapter, this._tmpa_s2s_stationdataTableAdapter.Connection);
+                    this._tmpa_s2s_stationdataTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
+                    this._tmpa_s2s_stationdataTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
+                    if (this._tmpa_s2s_stationdataTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._tmpa_s2s_stationdataTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmpa_s2s_stationdataTableAdapter.Adapter);
                     }
                 }
                 if ((this._tbattributeTableAdapter != null)) {
@@ -48954,15 +50003,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                         adaptersWithAcceptChangesDuringUpdate.Add(this._tblogTableAdapter.Adapter);
                     }
                 }
-                if ((this._tbpa_allcommoditiesTableAdapter != null)) {
-                    revertConnections.Add(this._tbpa_allcommoditiesTableAdapter, this._tbpa_allcommoditiesTableAdapter.Connection);
-                    this._tbpa_allcommoditiesTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
-                    this._tbpa_allcommoditiesTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
-                    if (this._tbpa_allcommoditiesTableAdapter.Adapter.AcceptChangesDuringUpdate) {
-                        this._tbpa_allcommoditiesTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
-                        adaptersWithAcceptChangesDuringUpdate.Add(this._tbpa_allcommoditiesTableAdapter.Adapter);
-                    }
-                }
                 if ((this._tbpricehistoryTableAdapter != null)) {
                     revertConnections.Add(this._tbpricehistoryTableAdapter, this._tbpricehistoryTableAdapter.Connection);
                     this._tbpricehistoryTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
@@ -49071,6 +50111,15 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                         adaptersWithAcceptChangesDuringUpdate.Add(this._tbvisitedsystemsTableAdapter.Adapter);
                     }
                 }
+                if ((this._tmbestprofitsTableAdapter != null)) {
+                    revertConnections.Add(this._tmbestprofitsTableAdapter, this._tmbestprofitsTableAdapter.Connection);
+                    this._tmbestprofitsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
+                    this._tmbestprofitsTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
+                    if (this._tmbestprofitsTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._tmbestprofitsTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmbestprofitsTableAdapter.Adapter);
+                    }
+                }
                 if ((this._tmfilteredstationsTableAdapter != null)) {
                     revertConnections.Add(this._tmfilteredstationsTableAdapter, this._tmfilteredstationsTableAdapter.Connection);
                     this._tmfilteredstationsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
@@ -49080,22 +50129,31 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                         adaptersWithAcceptChangesDuringUpdate.Add(this._tmfilteredstationsTableAdapter.Adapter);
                     }
                 }
-                if ((this._tmppa_s2s_besttripsTableAdapter != null)) {
-                    revertConnections.Add(this._tmppa_s2s_besttripsTableAdapter, this._tmppa_s2s_besttripsTableAdapter.Connection);
-                    this._tmppa_s2s_besttripsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
-                    this._tmppa_s2s_besttripsTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
-                    if (this._tmppa_s2s_besttripsTableAdapter.Adapter.AcceptChangesDuringUpdate) {
-                        this._tmppa_s2s_besttripsTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
-                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmppa_s2s_besttripsTableAdapter.Adapter);
+                if ((this._tmneighbourstationsTableAdapter != null)) {
+                    revertConnections.Add(this._tmneighbourstationsTableAdapter, this._tmneighbourstationsTableAdapter.Connection);
+                    this._tmneighbourstationsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
+                    this._tmneighbourstationsTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
+                    if (this._tmneighbourstationsTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._tmneighbourstationsTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmneighbourstationsTableAdapter.Adapter);
                     }
                 }
-                if ((this._tmppa_s2s_stationdataTableAdapter != null)) {
-                    revertConnections.Add(this._tmppa_s2s_stationdataTableAdapter, this._tmppa_s2s_stationdataTableAdapter.Connection);
-                    this._tmppa_s2s_stationdataTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
-                    this._tmppa_s2s_stationdataTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
-                    if (this._tmppa_s2s_stationdataTableAdapter.Adapter.AcceptChangesDuringUpdate) {
-                        this._tmppa_s2s_stationdataTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
-                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmppa_s2s_stationdataTableAdapter.Adapter);
+                if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                    revertConnections.Add(this._tmpa_allcommoditiesTableAdapter, this._tmpa_allcommoditiesTableAdapter.Connection);
+                    this._tmpa_allcommoditiesTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
+                    this._tmpa_allcommoditiesTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
+                    if (this._tmpa_allcommoditiesTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._tmpa_allcommoditiesTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmpa_allcommoditiesTableAdapter.Adapter);
+                    }
+                }
+                if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
+                    revertConnections.Add(this._tmpa_s2s_besttripsTableAdapter, this._tmpa_s2s_besttripsTableAdapter.Connection);
+                    this._tmpa_s2s_besttripsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(workConnection));
+                    this._tmpa_s2s_besttripsTableAdapter.Transaction = ((global::MySql.Data.MySqlClient.MySqlTransaction)(workTransaction));
+                    if (this._tmpa_s2s_besttripsTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._tmpa_s2s_besttripsTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._tmpa_s2s_besttripsTableAdapter.Adapter);
                     }
                 }
                 // 
@@ -49160,9 +50218,9 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     this._tballegianceTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tballegianceTableAdapter]));
                     this._tballegianceTableAdapter.Transaction = null;
                 }
-                if ((this._tmneighbourstationsTableAdapter != null)) {
-                    this._tmneighbourstationsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmneighbourstationsTableAdapter]));
-                    this._tmneighbourstationsTableAdapter.Transaction = null;
+                if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                    this._tmpa_s2s_stationdataTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmpa_s2s_stationdataTableAdapter]));
+                    this._tmpa_s2s_stationdataTableAdapter.Transaction = null;
                 }
                 if ((this._tbattributeTableAdapter != null)) {
                     this._tbattributeTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tbattributeTableAdapter]));
@@ -49232,10 +50290,6 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     this._tblogTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tblogTableAdapter]));
                     this._tblogTableAdapter.Transaction = null;
                 }
-                if ((this._tbpa_allcommoditiesTableAdapter != null)) {
-                    this._tbpa_allcommoditiesTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tbpa_allcommoditiesTableAdapter]));
-                    this._tbpa_allcommoditiesTableAdapter.Transaction = null;
-                }
                 if ((this._tbpricehistoryTableAdapter != null)) {
                     this._tbpricehistoryTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tbpricehistoryTableAdapter]));
                     this._tbpricehistoryTableAdapter.Transaction = null;
@@ -49284,17 +50338,25 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
                     this._tbvisitedsystemsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tbvisitedsystemsTableAdapter]));
                     this._tbvisitedsystemsTableAdapter.Transaction = null;
                 }
+                if ((this._tmbestprofitsTableAdapter != null)) {
+                    this._tmbestprofitsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmbestprofitsTableAdapter]));
+                    this._tmbestprofitsTableAdapter.Transaction = null;
+                }
                 if ((this._tmfilteredstationsTableAdapter != null)) {
                     this._tmfilteredstationsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmfilteredstationsTableAdapter]));
                     this._tmfilteredstationsTableAdapter.Transaction = null;
                 }
-                if ((this._tmppa_s2s_besttripsTableAdapter != null)) {
-                    this._tmppa_s2s_besttripsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmppa_s2s_besttripsTableAdapter]));
-                    this._tmppa_s2s_besttripsTableAdapter.Transaction = null;
+                if ((this._tmneighbourstationsTableAdapter != null)) {
+                    this._tmneighbourstationsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmneighbourstationsTableAdapter]));
+                    this._tmneighbourstationsTableAdapter.Transaction = null;
                 }
-                if ((this._tmppa_s2s_stationdataTableAdapter != null)) {
-                    this._tmppa_s2s_stationdataTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmppa_s2s_stationdataTableAdapter]));
-                    this._tmppa_s2s_stationdataTableAdapter.Transaction = null;
+                if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                    this._tmpa_allcommoditiesTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmpa_allcommoditiesTableAdapter]));
+                    this._tmpa_allcommoditiesTableAdapter.Transaction = null;
+                }
+                if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
+                    this._tmpa_s2s_besttripsTableAdapter.Connection = ((global::MySql.Data.MySqlClient.MySqlConnection)(revertConnections[this._tmpa_s2s_besttripsTableAdapter]));
+                    this._tmpa_s2s_besttripsTableAdapter.Transaction = null;
                 }
                 if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
                     global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];
