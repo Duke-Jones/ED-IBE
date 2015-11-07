@@ -147,6 +147,7 @@ namespace RegulatedNoise
 
         private static Boolean                          m_initDone                  = false;
 
+        public static GUIColors                         Colors;
         public static CompanionInterface                CompanionIO;
         public static DBConnector                       DBCon;
         public static RegulatedNoiseSettings            Settings_old;
@@ -198,6 +199,11 @@ namespace RegulatedNoise
                     DBCon                                       = new DBConnector(newConnectionParams);
 
                     DBCon.Connect();
+
+                    /* **************** database is running ********************** */
+                    
+                    // prepare colors-object
+                    Colors                                      = new GUIColors();
 
                     // preprare main data object
                     Data                                        = new RegulatedNoise.SQL.EliteDBIO();

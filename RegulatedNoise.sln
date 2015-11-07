@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "script", "script", "{698016C8-55A8-4052-9AD7-F68661EC5E63}"
 	ProjectSection(SolutionItems) = preProject
 		RNDatabase\Database\script\create.cmd = RNDatabase\Database\script\create.cmd
+		RNDatabase\Database\script\create_Elite_DB.sql = RNDatabase\Database\script\create_Elite_DB.sql
 		RNDatabase\Database\script\start_server.cmd = RNDatabase\Database\script\start_server.cmd
 	EndProjectSection
 EndProject

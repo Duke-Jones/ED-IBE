@@ -34,7 +34,7 @@ namespace RegulatedNoise.SQL
 	    /// Handles reading DBNull values from database in a generic fashion, simplifies frontend databinding
 	    /// </summary>
 	    /// <typeparam name="T">The type of the value to read</typeparam>
-	    /// <param name="ri">The Container item in a databinding operation</param>
+	    /// <param name="ri">The Container currentComboxItem in a databinding operation</param>
 	    /// <param name="column">The dataitem to read</param>
 	    /// <returns>A strongly typed result, null if the input value is DBNull</returns>
         //public static T To<T>(RepeaterItem ri, string column)

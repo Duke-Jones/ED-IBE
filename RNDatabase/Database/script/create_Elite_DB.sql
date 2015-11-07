@@ -741,9 +741,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbPA_AllCommodities`
+-- Table `Elite_DB`.`tmPA_AllCommodities`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPA_AllCommodities` (
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_AllCommodities` (
   `CommodityID` INT NOT NULL COMMENT '',
   `Commodity` VARCHAR(80) NULL COMMENT '',
   `Buy_SystemID` INT NULL COMMENT '',
@@ -760,6 +760,7 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPA_AllCommodities` (
   `Sell_Max` INT NULL COMMENT '',
   `Sell_Distance` DOUBLE NULL COMMENT '',
   `Sell_Timestamp` DATETIME NULL COMMENT '',
+  `Max_Profit` INT NULL COMMENT '',
   PRIMARY KEY (`CommodityID`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -776,6 +777,58 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmNeighbourStations` (
   `Distance_To` DOUBLE NULL COMMENT '',
   `Distance_Between` DOUBLE NULL COMMENT '',
   PRIMARY KEY (`Station_ID_From`, `Station_ID_To`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmPA_S2S_StationData`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_S2S_StationData` (
+  `Commodity_ID` INT NOT NULL COMMENT '',
+  `Commodity` VARCHAR(80) NULL COMMENT '',
+  `Buy` INT NULL COMMENT '',
+  `Supply` INT NULL COMMENT '',
+  `SupplyLevel` VARCHAR(10) NULL COMMENT '',
+  `Timestamp1` DATETIME NULL COMMENT '',
+  `Sell` INT NULL COMMENT '',
+  `Demand` INT NULL COMMENT '',
+  `Demandlevel` VARCHAR(10) NULL COMMENT '',
+  `Timestamp2` DATETIME NULL COMMENT '',
+  `Profit` INT NULL COMMENT '',
+  PRIMARY KEY (`Commodity_ID`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmPA_S2S_BestTrips`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_S2S_BestTrips` (
+  `System_ID_1` INT NULL COMMENT '',
+  `SystemName_1` VARCHAR(80) NULL COMMENT '',
+  `Station_ID_1` INT NOT NULL COMMENT '',
+  `StationName_1` VARCHAR(80) NULL COMMENT '',
+  `TimeStamp_1` DATETIME NULL COMMENT '',
+  `System_ID_2` INT NULL COMMENT '',
+  `SystemName_2` VARCHAR(80) NULL COMMENT '',
+  `Station_ID_2` INT NOT NULL COMMENT '',
+  `StationName_2` VARCHAR(80) NULL COMMENT '',
+  `TimeStamp_2` DATETIME NULL COMMENT '',
+  `Profit` VARCHAR(80) NULL COMMENT '',
+  `Distance` DOUBLE NULL COMMENT '',
+  `DistanceToStar_1` DOUBLE NULL COMMENT '',
+  `DistanceToStar_2` DOUBLE NULL COMMENT '',
+  PRIMARY KEY (`Station_ID_1`, `Station_ID_2`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmBestProfits`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmBestProfits` (
+  `Station_Id_From` INT NOT NULL COMMENT '',
+  `Station_Id_To` INT NOT NULL COMMENT '',
+  `Max_Profit` INT NULL COMMENT '',
+  PRIMARY KEY (`Station_Id_From`, `Station_Id_To`)  COMMENT '')
 ENGINE = InnoDB;
 
 USE `Elite_DB` ;

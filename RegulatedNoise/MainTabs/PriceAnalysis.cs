@@ -49,22 +49,6 @@ namespace RegulatedNoise.MTPriceAnalysis
 
 #endregion
 
-        private const String table = "tbLog";
-
-        /// <summary>
-        /// main selection string for the data from the database
-        /// </summary>
-        // private const String _sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action," + 
-        //                                   "       Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
-        //                                   " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
-        //                                   "              left join tbCargoAction C on L.cargoaction_id = C.id" +
-        //                                   "              left join tbSystems S     on L.system_id      = S.id" +
-        //                                   "              left join tbStations St   on L.station_id     = St.id" +
-        //                                   "              left join tbCommodity Co  on L.commodity_id   = Co.id";
-        //
-        // ^^^^^^^^^^ replaced by view "viLog" vvvvvvvvvvvvvvv
-        private const String _sqlString = "select * from viLog";
-
         private dsEliteDB           m_BaseData;
         public tabPriceAnalysis     m_GUI;
         private BindingSource       m_BindingSource;
@@ -98,9 +82,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DBConnector.SQLSortOrder.desc, new dsEliteDB.vilogDataTable());
-
-                return retriever.RowCount;
+                return 0;
             }
             catch (Exception ex)
             {
@@ -168,8 +150,6 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
-
-
         /// <summary>
         /// creates the filtered basetable of systems and stations
         /// </summary>
@@ -188,7 +168,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 sqlString = "select * from tbSystems where ID = " + SystemID.ToString();
                 Program.DBCon.Execute(sqlString, currentSystem);
 
-                sqlString = "delete from tmFilteredStations;";
+                sqlString = "truncate table tmFilteredStations;";
                 Program.DBCon.Execute(sqlString);
 
                 sqlString = String.Format(
@@ -257,6 +237,11 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
+        /// <summary>
+        /// calculating the best prices of all station for each commoditiy
+        /// </summary>
+        /// <param name="OnlyTradedCommodities"></param>
+        /// <returns></returns>
         public DataTable getPriceExtremum(Boolean OnlyTradedCommodities)
         {
             String sqlString;
@@ -410,30 +395,30 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
+        /// <summary>
+        /// calculating the best trading routes
+        /// </summary>
+        /// <returns></returns>
         public DataTable calculateTradingRoutes()
         {
             String sqlBaseString;
             String sqlString;
-            DataSet Data           = new DataSet();
+            DataSet Data            = new DataSet();
             var tmNeighbourstations  = new dsEliteDB.tmneighbourstationsDataTable();
             var tmFilteredStations  = new dsEliteDB.tmfilteredstationsDataTable();
-            DataRow BuyMin;
-            DataRow SellMax;
-            DataRow lastCommodity;
             HashSet<String> Calculated = new HashSet<String>();
-            //Dictionary<Int32, List<DataRow>> CollectedData;
-            SortedList<Int32, DataRow> CollectedData;
             Int32 StationCount;
             Int32 SystemCount;
             Int32 Current = 0;
             ProgressView PV;
             Boolean Cancelled = false;
-            Int32 DataFound = 0;
             Int32 maxTradingDistance;
             dsEliteDB.tmpa_s2s_besttripsDataTable Result;
 
             try
             {
+
+                Debug.Print("start :" + DateTime.Now.ToShortTimeString());
 
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -450,9 +435,8 @@ namespace RegulatedNoise.MTPriceAnalysis
                     maxTradingDistance = Program.DBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistanceValue");
 
                 // delete old content
-                sqlString = "delete from tmNeighbourstations;";
+                sqlString = "truncate table tmNeighbourstations;";
                 Program.DBCon.Execute(sqlString);
-                    
 
                 sqlBaseString =  "insert into tmNeighbourstations(System_ID_From, Station_ID_From, Distance_From," +
                                  "                                System_ID_To, Station_ID_To, Distance_To, " +
@@ -506,7 +490,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 // get for one station and all of it's neighbours the tradings for all commodity combinations
                 // result gives per "station to station" route only the one best profit for all combinations of commodities
-                sqlBaseString = "insert into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
+                sqlBaseString = "insert ignore into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
                                 " select Station_ID_From, Station_ID_To, max(Profit) As Max_Profit from " +
                                 " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit  from  " +
                                 " 	(select L1.*, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward,  " +
@@ -518,6 +502,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 " 	 join " +
                                 " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
+                                " 																		  and N.Station_ID_From = {0} " +
                                 " 				   ) L2 " +
                                 " 	on  L1.Station_ID_From = L2.Station_ID_From " +
                                 " 	and L1.Station_ID_To   = L2.Station_ID_To " +
@@ -534,6 +519,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 " 	 join " +
                                 " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
+                                " 																		  and N.Station_ID_From = {0} " +
                                 " 				   ) L2 " +
                                 " 	on  L1.Station_ID_From = L2.Station_ID_From " +
                                 " 	and L1.Station_ID_To   = L2.Station_ID_To " +
@@ -541,15 +527,26 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 "      " +
                                 " on  Pr1.Station_ID_From = Pr2.Station_ID_From " +
                                 " and Pr1.Station_ID_To   = Pr2.Station_ID_To) ALL_RESULTS " +
-                                " group by Station_ID_From, Station_ID_To";
+                                " where Profit > {1}" +
+                                " group by Station_ID_From, Station_ID_To;" + 
+                                " " +
+                                "delete BP1 from tmBestProfits BP1, (select Max_Profit from tmBestProfits" +
+                                "                                     order by Max_Profit desc" +
+                                "                                     limit 100,1) BP2" +
+                                " where BP1.Max_Profit < BP2.Max_Profit;" +  
+                                " " +
+                                "select Max_Profit As Min_Profit from tmBestProfits" +
+                                " order by Max_Profit desc" +
+                                " limit 100,1;";
+
+
 
                 if(!Cancelled)
                 {
-                    DataFound = 0;
-                    Current = 0;
+                    Current     = 0;
                     Calculated.Clear();
 
-                    Program.DBCon.Execute("delete from tmBestProfits");
+                    Program.DBCon.Execute("truncate table tmBestProfits");
 
                     // get the start stations for a cancellable loop
                     sqlString = "select Station_ID_From, count(*) As Neighbours from tmNeighbourstations" +
@@ -566,16 +563,23 @@ namespace RegulatedNoise.MTPriceAnalysis
                         PV.progressStart("Processing market data of " + StationCount + " stations from " + SystemCount + " systems\n" +
                                             "(no trading distance limit)...");
 
+                    Int32 currentMinValue = 0;
+
                     foreach(DataRow StartStation in Data.Tables["StartStations"].Rows)
                     {
                         // get the trading data 
-                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"]);
+                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue);
 
-                        Program.DBCon.Execute(sqlString);
+                        Program.DBCon.Execute(sqlString, "MinProfit", Data);
+
+                        if((Data.Tables["minProfit"].Rows.Count > 0) && (!Convert.IsDBNull(Data.Tables["MinProfit"])))
+                            currentMinValue = (Int32)Data.Tables["MinProfit"].Rows[0]["Min_Profit"];
 
                         Current += 1;
 
                         PV.progressUpdate(Current,  Data.Tables["StartStations"].Rows.Count);
+
+                        Data.Tables["MinProfit"].Clear();
 
                         if(PV.Cancelled)
                         {
@@ -585,7 +589,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                     }
 
 
-                    Program.DBCon.Execute("delete from tmPA_S2S_BestTrips");
+                    Program.DBCon.Execute("truncate table tmPA_S2S_BestTrips");
 
                     sqlString = "create temporary table tmpForDelete As" +
                                 " (select BP1.Station_Id_From, BP1.Station_Id_To from tmBestProfits BP1" +
@@ -614,7 +618,8 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
-                sqlString = "select distinct St1.*, St2.*, Bp.Max_Profit As Profit, NS.Distance_Between As Distance from tmBestProfits Bp" +
+                sqlString = "select distinct St1.*, St2.*, Bp.Max_Profit As Profit, NS.Distance_Between As Distance," +
+                            "                null As TimeStamp_1, null As TimeStamp_2 from tmBestProfits Bp" +
                             " " +
                             " join    " +
                             " " +
@@ -642,6 +647,67 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 Result = new dsEliteDB.tmpa_s2s_besttripsDataTable();
                 Program.DBCon.Execute(sqlString, Result);
+
+                sqlBaseString = "select PR1.Commodity_ID As FWCommodityID, Pr1.LocCommodity As FWCommodity," +
+                                "	   PR1.timestamp    As FWTimeStamp," +
+                                "       PR2.Commodity_ID As BkCommodityID, Pr2.LocCommodity As BkCommodity,  " +
+                                "	   PR2.timestamp    As BkTimeStamp," +
+                                "       Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit  from " +
+                                " (select L1.Commodity_ID, T.LocCommodity, " +
+                                "		if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                "		if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                "        if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.timestamp, if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, L2.timestamp, null)) As timestamp" +
+                                "	from (select Commodity_ID, Buy, Sell, timestamp " +
+                                "				 from tbCommodityData " +
+                                "                 where Station_ID      = {0}" +
+                                "		  ) L1 " +
+                                "	 join" +
+                                "		 (select Commodity_ID, Buy, Sell, timestamp" +
+                                "				 from tbCommodityData " +
+                                "                 where Station_ID      = {1}" +
+                                "		  ) L2" +
+                                "	on  L1.Commodity_ID    = L2.Commodity_ID" +
+                                "    join tbCommodity T" +
+                                "    on  L1.Commodity_ID    = T.ID" +
+                                "    ) Pr1" +
+                                " join " +
+                                " (select L1.Commodity_ID, T.LocCommodity," +
+                                "		if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                "		if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                "        if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.timestamp, if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, L2.timestamp, null)) As timestamp" +
+                                "	from (select Commodity_ID, Buy, Sell, timestamp " +
+                                "				 from tbCommodityData " +
+                                "                 where Station_ID      = {0}" +
+                                "		  ) L1 " +
+                                "	 join" +
+                                "		 (select Commodity_ID, Buy, Sell, timestamp  " +
+                                "				 from tbCommodityData " +
+                                "                 where Station_ID      = {1}" +
+                                "		  ) L2" +
+                                "	on  L1.Commodity_ID    = L2.Commodity_ID" +
+                                "    join tbCommodity T" +
+                                "    on  L1.Commodity_ID    = T.ID" +
+                                "    " +
+                                "    ) Pr2" +
+                                "    order by Profit desc {2}";
+
+                // now get the timestamps of the best-profit commodities
+                foreach (dsEliteDB.tmpa_s2s_besttripsRow CurrentRow in Result)
+                {
+                    sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1");
+                    Program.DBCon.Execute(sqlString, "Timestamps", Data);
+
+                    if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"]))
+                        CurrentRow.TimeStamp_1 = (DateTime)Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"];
+
+                    if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["BkTimeStamp"]))
+                        CurrentRow.TimeStamp_2 = (DateTime)Data.Tables["Timestamps"].Rows[0]["BkTimeStamp"];
+
+                    Data.Tables["Timestamps"].Clear();
+                }
+                
+                Debug.Print("Ende :" + DateTime.Now.ToShortTimeString());
+
 
                 return Result;
 
@@ -680,12 +746,43 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
+        /// <summary>
+        /// loads all possible trading data from one to another station (one direction)
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <param name="Station_From"></param>
+        /// <param name="Station_To"></param>
+        public void loadStationCommodities(DataTable Data, int? Station_From, int? Station_To)
+        {
+            String sqlString;
+            try
+            {
+                sqlString = String.Format(
+                            "select Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
+                            "       Sd1.Buy, Sd1.Supply, Sd1.SupplyLevel, Sd1.timestamp As Timestamp1, " +
+                            "       Sd2.Sell, Sd2.Demand, Sd2.DemandLevel, Sd2.timestamp As Timestamp2, " +
+                            "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit from " +
+                            " (select * from tbCommodityData " +
+                            "   where Station_ID   = {0}) Sd1 " +
+                            " join" +
+                            " (select * from tbCommodityData " +
+                            "   where Station_ID   = {1}) Sd2" +
+                            "   on Sd1.Commodity_ID = Sd2.Commodity_ID" +
+                            " join" +
+                            " tbCommodity Cm" +
+                            "   on Sd1.Commodity_ID = Cm.ID" +
+                            "   having Profit is not null" +
+                            "   order by Profit Desc;", Station_From.ToString(), Station_To.ToString());
+            
+                Program.DBCon.Execute(sqlString, Data);
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading trading data", ex);
+            }
 
-
-
-
-
+        }
     }
 
 #region outdated 

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using System.Reflection;
+using System.Data;
+using System.Diagnostics;
 
 namespace RegulatedNoise.SQL
 {
@@ -64,9 +67,52 @@ namespace RegulatedNoise.SQL
                     {
                         var cbSender = (ComboBox)sender;
                         var Parts    = splitTag(cbSender.Tag);    
+                        Object SelectComboBoxValue = null;
 
                         if(Parts != null)
-                            retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                        {
+
+                            if ((cbSender.ValueMember != null) && (!String.IsNullOrEmpty(cbSender.ValueMember)))
+                            {
+                                // it's working with a ValueMember -> translate "Value" to "Item" and set ".SelectedItem"
+                                var Props = cbSender.Items[0].GetType().GetProperties();
+                                System.Reflection.PropertyInfo FoundPropertyItem = null;
+                                Type FoundColumnType = null;
+
+                                if((cbSender.DataSource == null) || (!cbSender.DataSource.GetType().Equals(typeof(System.Data.DataTable))))
+                                { 
+                                    foreach (var PropertyItem in Props)
+                                    {
+                                        if(PropertyItem.Name == cbSender.ValueMember)
+                                        { 
+                                            FoundPropertyItem = PropertyItem;
+                                            FoundColumnType = FoundPropertyItem.GetMethod.ReturnType;
+                                            break;
+                                        }
+                                    }
+
+                                    SelectComboBoxValue = cbSender.SelectedItem.GetType().GetProperty(FoundPropertyItem.Name).GetValue(cbSender.SelectedItem, null);
+
+                                }
+                                else
+                                {
+                                    FoundColumnType = ((DataTable)cbSender.DataSource).Columns[cbSender.ValueMember].DataType;
+
+                                    SelectComboBoxValue = ((DataRowView)cbSender.SelectedItem)[cbSender.ValueMember];
+                                }
+
+                                
+
+                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, Convert.ChangeType(SelectComboBoxValue, FoundColumnType).ToString());
+                            }
+                            else
+                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+
+                        }
+                            //if (cbSender.ValueMember != null)
+                            //    retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.SelectedValue.ToString());
+                            //else
+                            //    retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
                     }
                     else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)) || (sender.GetType() == typeof(TextBoxDouble)))
                     {
@@ -178,13 +224,90 @@ namespace RegulatedNoise.SQL
                 }
                 else if((sender.GetType() == typeof(ComboBox)) || (sender.GetType() == typeof(ComboBoxInt32)))
                 {
-                    var cbSender = (ComboBox)sender;
-                    var Parts    = splitTag(cbSender.Tag);    
+                    var cbSender            = (ComboBox)sender;
+                    var TagParts            = splitTag(cbSender.Tag);    
+                    MethodInfo GenericMethodInfo;
+                    Object ItemToSet        = null;
+                    Object ValueToSet       = null;
 
-                    if(Parts != null)
+                    if(TagParts != null)
                     {
+                        // this is one of ours
+
                         m_currentLoadingObject = cbSender;
-                        cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+
+                        if ((cbSender.ValueMember != null) && (!String.IsNullOrEmpty(cbSender.ValueMember)))
+                        {
+                            // it's working with a ValueMember -> translate "Value" to "Item" and set ".SelectedItem"
+                            var Props = cbSender.Items[0].GetType().GetProperties();
+                            System.Reflection.PropertyInfo FoundPropertyItem = null;
+                            Type FoundColumnType = null;
+
+                            if((cbSender.DataSource == null) || (!cbSender.DataSource.GetType().Equals(typeof(System.Data.DataTable))))
+                            { 
+                                foreach (var PropertyItem in Props)
+                                {
+                                    if(PropertyItem.Name == cbSender.ValueMember)
+                                    { 
+                                        FoundPropertyItem = PropertyItem;
+                                        FoundColumnType = FoundPropertyItem.GetMethod.ReturnType;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                FoundColumnType = ((DataTable)cbSender.DataSource).Columns[cbSender.ValueMember].DataType;
+                            }
+
+                            if (FoundColumnType != null)
+                            { 
+                                GenericMethodInfo       = typeof(DBConnector).GetMethod("getIniValue", new Type[] {typeof(String), typeof(String), typeof(String) , typeof(Boolean) , typeof(Boolean)} );
+                                GenericMethodInfo       = GenericMethodInfo.MakeGenericMethod(FoundColumnType);
+                                ValueToSet              = GenericMethodInfo.Invoke(Program.DBCon, new object[] { m_InitGroup, TagParts.IDString, TagParts.DefaultValue, false, true });
+                            }
+
+                            if (FoundPropertyItem != null)
+                            { 
+                                foreach (var currentComboxItem in cbSender.Items)
+	                            {
+		                            if(Convert.ChangeType(currentComboxItem.GetType().GetProperty(FoundPropertyItem.Name).GetValue(currentComboxItem, null), FoundColumnType).Equals(Convert.ChangeType(ValueToSet, FoundColumnType)))
+                                    { 
+                                        ItemToSet = currentComboxItem;
+                                        break;
+                                    }
+	                            }
+                            
+                                if(ItemToSet != null)
+                                    cbSender.SelectedItem = ItemToSet;
+                            }
+                            else
+                            {
+                                foreach (DataRowView currentDataRow in cbSender.Items)
+	                            {
+		                            if(Convert.ChangeType(currentDataRow[cbSender.ValueMember], FoundColumnType).Equals(Convert.ChangeType(ValueToSet,FoundColumnType)))
+                                    { 
+                                        ItemToSet = currentDataRow;
+                                        break;
+                                    }
+                                }
+
+                                //foreach (DataRow currentDataRow in ((DataTable)cbSender.DataSource).Rows)
+                                //{
+                                //    if(Convert.ChangeType(currentDataRow[cbSender.ValueMember], FoundColumnType).Equals(Convert.ChangeType(ValueToSet,FoundColumnType)))
+                                //    { 
+                                //        ItemToSet = currentDataRow;
+                                //        break;
+                                //    }
+                                //}
+                            
+                                if(ItemToSet != null)
+                                    cbSender.SelectedItem = ItemToSet;
+                            }
+                        }
+                        else
+                            cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, TagParts.IDString, TagParts.DefaultValue, false, true);
+
                         m_currentLoadingObject = null;
                     }
                 }
@@ -358,5 +481,17 @@ namespace RegulatedNoise.SQL
                 throw new Exception("Error while splitting tag", ex);
             }
         }
+
+        public static class Foo
+        {
+            public static void Bar<T>(string test)
+            {
+                MessageBox.Show(typeof(T).Name);
+            }
+        }
+
+//...
+
+
     }
 }

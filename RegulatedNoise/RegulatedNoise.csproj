@@ -51,7 +51,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug DJ\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DukeJones </DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DukeJones ep_Debug</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -121,6 +121,7 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUIColors.cs" />
     <Compile Include="MainTabs\Settings.cs" />
     <Compile Include="MainTabs\tabCommandersLog.cs">
       <SubType>UserControl</SubType>
