@@ -121,6 +121,12 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewSettings.Designer.cs">
+      <DependentUpon>DataGridViewSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUIColors.cs" />
     <Compile Include="MainTabs\Settings.cs" />
     <Compile Include="MainTabs\tabCommandersLog.cs">
@@ -329,6 +335,9 @@
     </Compile>
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Enums and Utility Classes\DataGridViewSettings.resx">
+      <DependentUpon>DataGridViewSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainTabs\tabCommandersLog.resx">
       <DependentUpon>tabCommandersLog.cs</DependentUpon>

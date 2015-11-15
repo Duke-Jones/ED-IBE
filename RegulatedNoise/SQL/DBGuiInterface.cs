@@ -14,7 +14,9 @@ namespace RegulatedNoise.SQL
     class DBGuiInterface
     {
         String m_InitGroup;
-        Object m_currentLoadingObject = null;
+        Object m_currentLoadingObject   = null;        
+        Int32  m_inloadAllSettings      = 0;
+        Int32  m_inloadSetting          = 0;
 
 #region  TagParts
 
@@ -53,7 +55,7 @@ namespace RegulatedNoise.SQL
 
             try
             {
-                if(m_currentLoadingObject != sender)
+                if((m_inloadAllSettings == 0) && (m_currentLoadingObject != sender))
                 { 
                     if(sender.GetType() == typeof(CheckBox))
                     {
@@ -179,16 +181,45 @@ namespace RegulatedNoise.SQL
                         var cbSender = (DataGridViewExt)sender;
                         var Parts    = splitTag(cbSender.Tag);    
 
-                        if(Param1 != null)
+                        if(Parts != null)
                         {
-                            if(Param1.GetType() == typeof(DataGridViewExt.SortedEventArgs))
+                            if((Param1 != null) && (Param1.GetType() == typeof(DataGridViewExt.SortedEventArgs)))
                             {
                                 var SortEA = (DataGridViewExt.SortedEventArgs)Param1;
 
                                 // sortorder changed
-                                retValue  = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortColumn", SortEA.SortColumn.Name);
+                                retValue  = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortColumn", SortEA.SortColumn.Index.ToString());
                                 retValue |= Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortOrder", SortEA.SortOrder.ToString());
                             }
+
+                            StringBuilder SaveString = new StringBuilder();
+                            foreach (DataGridViewColumn currentColumn in cbSender.Columns)
+                            {
+                                SaveString.Append(String.Format("{0}/{1}/{2}/{3}/{4}/{5};", currentColumn.DisplayIndex.ToString(), 
+                                                                                            currentColumn.Visible.ToString(), 
+                                                                                            currentColumn.AutoSizeMode.ToString(), 
+                                                                                            currentColumn.Width.ToString(), 
+                                                                                            currentColumn.FillWeight.ToString().Replace(",","."), 
+                                                                                            currentColumn.MinimumWidth.ToString()));
+                            }
+                            Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
+                        }
+                    }
+                    else if(sender.GetType() == typeof(SplitContainer))
+                    {
+                        var cbSender         = (SplitContainer)sender;
+                        var Parts            = splitTag(cbSender.Tag);    
+                        Int32 SplitterRatio;
+
+                        if(Parts != null)
+                        { 
+                            if(cbSender.Orientation == Orientation.Vertical)
+                                SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance) * 100  / ((Single)cbSender.Width)), 0);
+                            else
+                                SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance) * 100  / ((Single)cbSender.Height)), 0);
+                            
+                            if(SplitterRatio > 0)
+                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, SplitterRatio.ToString());
                         }
                     }
                 }
@@ -209,6 +240,8 @@ namespace RegulatedNoise.SQL
         {
             try
             {
+                m_inloadSetting++;
+
                 /// set the value of the baseobject if necessary
                 if(sender.GetType() == typeof(CheckBox))
                 {
@@ -417,13 +450,87 @@ namespace RegulatedNoise.SQL
                             cbSender.Sort(Column,Order);
                             m_currentLoadingObject = null;
                         }
+
+                            //    SaveString.Append(String.Format("{0}/{1}/{2}/{3}/{4};", currentColumn.DisplayIndex, currentColumn.Width, currentColumn.Visible, currentColumn.FillWeight, currentColumn.AutoSizeMode));
+                            //}
+                            //Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
+
+                        String[] VisibilityStrings = null;
+                        VisibilityStrings = Program.DBCon.getIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                        Int32 ColumnIndex = 0;
+
+                        cbSender.SuspendLayout();
+
+                        foreach (DataGridViewColumn currentColumn in cbSender.Columns)
+                        {
+                            if(VisibilityStrings.GetUpperBound(0) >= ColumnIndex)
+                            { 
+                                String[] ViParts = VisibilityStrings[ColumnIndex].Split(new char[] {'/'});     
+
+                                if(ViParts.GetUpperBound(0) == 5)
+                                {
+                                    try
+                                    {
+                                        currentColumn.DisplayIndex   = Int32.Parse(ViParts[0]);
+                                        currentColumn.Visible        = Boolean.Parse(ViParts[1]);
+                                        currentColumn.AutoSizeMode   = (DataGridViewAutoSizeColumnMode)Enum.Parse(typeof(DataGridViewAutoSizeColumnMode), (String)ViParts[2]);
+                                        switch (currentColumn.AutoSizeMode)
+                                        {
+                                            case DataGridViewAutoSizeColumnMode.Fill:
+                                                currentColumn.FillWeight     = Single.Parse(ViParts[4],System.Globalization.NumberStyles.AllowDecimalPoint,System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                                                break;
+                                            default:
+                                                currentColumn.Width          = Int32.Parse(ViParts[3]);
+                                                break;
+                                        }
+                                        
+                                        currentColumn.MinimumWidth   = Int32.Parse(ViParts[5]);
+                                    }
+                                    catch (Exception)
+                                    {
+                                    }
+                                }
+                            }
+
+                            ColumnIndex++;
+
+                        }
+
+                        cbSender.ResumeLayout();
+
+                    }
+                }
+                else if(sender.GetType() == typeof(SplitContainer))
+                {
+                    // got some problems with this setting so 
+                    // i deactivate it for the moment
+                    var cbSender = (SplitContainer)sender;
+                    var Parts    = splitTag(cbSender.Tag);    
+                    Int32 SplitterRatio;
+
+                    if(Parts != null)
+                    {
+                        SplitterRatio = Program.DBCon.getIniValue<Int32>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        if(cbSender.Orientation == Orientation.Vertical)
+                            SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Width)) / 100, 0);
+                        else
+                            SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Height)) / 100, 0);
+
+                        if(SplitterRatio > 0)
+                        { 
+                            m_currentLoadingObject  = cbSender;
+                            cbSender.SplitterDistance = SplitterRatio;
+                            m_currentLoadingObject  = null;
+                        }
                     }
                 }
 
+                m_inloadSetting--;
 
             }
             catch (Exception ex)
             {
+                m_inloadSetting--;
                 m_currentLoadingObject = null;
                 cErr.showError(ex, "Error in loadSetting");
             }
@@ -437,15 +544,19 @@ namespace RegulatedNoise.SQL
         {
             try
             {
+                m_inloadAllSettings++;
+
                 loadSetting(BaseObject, BaseBaseObject);
 
                 // check if there are sub-objects who need values
                 foreach (Control SubObject in BaseObject.Controls)
                     loadAllSettings(SubObject, BaseObject);
 
+                m_inloadAllSettings--;
             }
             catch (Exception ex)
             {
+                m_inloadAllSettings--;
                 throw new Exception("Error while loading all setting from DB", ex);
             }
         }

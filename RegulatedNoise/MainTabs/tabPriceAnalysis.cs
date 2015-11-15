@@ -30,26 +30,16 @@ namespace RegulatedNoise.MTPriceAnalysis
 
         public const String                             DB_GROUPNAME                    = "PriceAnalysis";
         public const String                             CURRENT_SYSTEM                  = "<current system>";
+        private const string                            BASE_DATA                       = "BaseData";
 
         private PriceAnalysis                           m_DataSource;                   // data object
-        private enCLAction                              m_PA_State;                     // current gui state
         private Dictionary<String, DataTable>           m_DGVTables;                 
         private Dictionary<String, BindingSource>       m_BindingSources;
 
-        private Int32                                   m_InitialTopOfGrid;
-        private Int32                                   m_InitialTopOfEditGroupBox;
-
-        private Boolean                                 m_CellValueNeededIsRegistered   = false;        // true if the event is already registred
-        private Boolean                                 m_FirstRowShown                 = false;        // true after first time shown
         private DBGuiInterface                          m_GUIInterface;
-        private Boolean                                 m_RefreshStarted                = true;         // true, if the user started a new filtering
 
-                                                                                            // shows, which tabs already refreshed after a new filtering
-        private Dictionary<String, Boolean> m_RefreshState                  = new Dictionary<string,bool>() { {"BaseData",           false},
-                                                                                                              {"tpAllCommodities",   false},
-                                                                                                              {"tpByStation",        false},
-                                                                                                              {"tpByCommodity",      false},
-                                                                                                              {"tpStationToStation", false}};
+                                                                                            
+        private Dictionary<String, Boolean>             m_IsRefreshed;                  // shows, which tabs already refreshed after a new filtering
 
         /// <summary>
         /// Constructor
@@ -57,7 +47,8 @@ namespace RegulatedNoise.MTPriceAnalysis
         public tabPriceAnalysis()
         {
             InitializeComponent();
-            Dock = DockStyle.Fill;
+            Dock        = DockStyle.Fill;
+            this.Name   = "tabPriceAnalysis";
         }
 
         /// <summary>
@@ -98,27 +89,44 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 Cursor = Cursors.WaitCursor;
 
-                m_PA_State                              = enCLAction.None;
+                // fill dictionary with "RefreshDone"-flags
+                m_IsRefreshed      = new Dictionary<string,bool>();
+                m_IsRefreshed.Add(BASE_DATA, false);
+                foreach (TabPage SubTabPage in tabPriceSubTabs.TabPages)
+                    m_IsRefreshed.Add(SubTabPage.Name, false);
 
                 // preparing datatables 
                 m_DGVTables     = new Dictionary<string,DataTable>();
                 m_DGVTables.Add(dgvStation1.Name,               new dsEliteDB.tmpa_s2s_stationdataDataTable());
                 m_DGVTables.Add(dgvStation2.Name,               new dsEliteDB.tmpa_s2s_stationdataDataTable());
                 m_DGVTables.Add(dgvStationToStationRoutes.Name, new dsEliteDB.tmpa_s2s_besttripsDataTable());
+                m_DGVTables.Add(dgvByStation.Name,              new dsEliteDB.tmpa_bystationDataTable());
+                m_DGVTables.Add(dgvByCommodity.Name,            new dsEliteDB.tmpa_bycommodityDataTable());
+                m_DGVTables.Add(dgvAllCommodities.Name,         new dsEliteDB.tmpa_allcommoditiesDataTable());
+                
 
                 Data = new DataTable();
-                m_DGVTables.Add(cmbStation1.Name,   Data);
-                m_DGVTables.Add(cmbStation2.Name,   Data);
-                m_DGVTables.Add(cmbByStation.Name,  Data);
+                m_DGVTables.Add(cmbStation1.Name,               Data);
+                m_DGVTables.Add(cmbStation2.Name,               Data);
+                m_DGVTables.Add(cmbByStation.Name,              Data);
+                m_DGVTables.Add(cmbByCommodity.Name,            new DataTable());
+                m_DGVTables.Add(cmbSystemBase.Name,             new DataTable());
+
 
                 // preparing bindingsources
                 m_BindingSources    = new Dictionary<String, BindingSource>();
                 m_BindingSources.Add(dgvStation1.Name,                  new BindingSource());
                 m_BindingSources.Add(dgvStation2.Name,                  new BindingSource());
                 m_BindingSources.Add(dgvStationToStationRoutes.Name,    new BindingSource());
+                m_BindingSources.Add(dgvByStation.Name,                 new BindingSource());
+                m_BindingSources.Add(dgvByCommodity.Name,               new BindingSource());
+                m_BindingSources.Add(dgvAllCommodities.Name,            new BindingSource());
+
                 m_BindingSources.Add(cmbStation1.Name,                  new BindingSource());
                 m_BindingSources.Add(cmbStation2.Name,                  new BindingSource());
                 m_BindingSources.Add(cmbByStation.Name,                 new BindingSource());
+                m_BindingSources.Add(cmbByCommodity.Name,               new BindingSource());
+                m_BindingSources.Add(cmbSystemBase.Name,                new BindingSource());
 
                 // connect datatables to bindingsources and bindsources to datagrids
                 foreach(KeyValuePair<String, BindingSource> currentKVP in m_BindingSources)
@@ -130,16 +138,16 @@ namespace RegulatedNoise.MTPriceAnalysis
                     FieldInfo       DGGV_FieldInfo  = this.GetType().GetField(currentKVP.Key, BindingFlags.NonPublic | BindingFlags.Instance);
                     var DGV_Object                  =DGGV_FieldInfo.GetValue(this);
                     if(DGV_Object.GetType().Equals(typeof(DataGridViewExt)))
-                        ((DataGridViewExt)DGV_Object).DataSource    = currentKVP.Value;
+                    {
+                        ((DataGridViewExt)DGV_Object).AutoGenerateColumns   = false;
+                        ((DataGridViewExt)DGV_Object).DataSource            = currentKVP.Value;
+                    }
                     else if(DGV_Object.GetType().Equals(typeof(ComboBox)))
                         ((ComboBox)DGV_Object).DataSource           = currentKVP.Value;
                     else
                         Debug.Print("unknown");
                 }
 
-                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
-                m_GUIInterface.loadAllSettings(this);
-                
                 ComboboxValues = Program.DBCon.getIniValue(DB_GROUPNAME, "SystemLightYearCmbValues", "10;25;50;100;200;1000", false);
                 cmbSystemLightYears.Items.Clear();
                 foreach (String Value in ComboboxValues.Split(';'))
@@ -155,8 +163,11 @@ namespace RegulatedNoise.MTPriceAnalysis
                 foreach (String Value in ComboboxValues.Split(';'))
                 cmbMaxTripDistance.Items.Add(Int32.Parse(Value));
 
-                cmbSystemBase.Items.Add(CURRENT_SYSTEM);
-                cmbSystemBase.SelectedIndex = 0;
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
+                m_GUIInterface.loadAllSettings(this);
+
+                loadCommoditiesForByCommodity();
+                loadSystemsForBaseSystem();
 
                 createNewBaseView();
 
@@ -193,6 +204,366 @@ namespace RegulatedNoise.MTPriceAnalysis
         }
 
 #region global handling of the price tab
+
+        /// <summary>
+        /// sets the buttons as marked or not
+        /// </summary>
+        /// <param name="setMarked"></param>
+        private void setFilterHasChanged(Boolean setMarked)
+        {
+            try
+            {
+                if(setMarked)
+                {
+                    cmdFilter.ForeColor                     = Program.Colors.Marked_ForeColor;
+                    cmdFilter.BackColor                     = Program.Colors.Marked_BackColor;
+                                                                                             
+                    cmdRoundTripCaclulation.ForeColor       = Program.Colors.Marked_ForeColor;
+                    cmdRoundTripCaclulation.BackColor       = Program.Colors.Marked_BackColor;
+
+                    m_IsRefreshed[BASE_DATA]                = false;
+                    m_IsRefreshed["tpAllCommodities"]       = false;
+                    m_IsRefreshed["tpByStation"]            = false;
+                    m_IsRefreshed["tpByCommodity"]          = false;
+                    m_IsRefreshed["tpStationToStation"]     = false;
+
+                }                                                                        
+                else                                                                     
+                {                                                                        
+                    cmdFilter.ForeColor                 = Program.Colors.Default_ForeColor;
+                    cmdFilter.BackColor                 = Program.Colors.Default_BackColor;
+                      
+                    // commented out: this is doing the button itself 
+                    // cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
+                    // cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while setting buttons", ex);
+            }
+            
+        }
+
+        /// <summary>
+        /// filter-button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdFilter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ActivateFilterSettings();
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while starting the filter");
+            }
+        }
+
+        /// <summary>
+        /// activates the current filter settings
+        /// </summary>
+        private void ActivateFilterSettings()
+        {
+            try
+            {
+                refreshPriceView();
+
+                setFilterHasChanged(false);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while filtering stations");
+            }
+        }
+
+        /// <summary>
+        /// check if there some data to be refreshed
+        /// </summary>
+        /// <param name="TabWasChanged"></param>
+        private void refreshPriceView(Boolean TabWasChanged = false)
+        {
+            try
+            {
+
+                if (!m_IsRefreshed[BASE_DATA])
+                { 
+                    SetComboBoxEventsActive(false);
+                    createNewBaseView();
+                    m_IsRefreshed[BASE_DATA] = true;
+                    SetComboBoxEventsActive(true);
+                }
+
+                switch (tabPriceSubTabs.SelectedTab.Name)
+                {
+                    case "tpAllCommodities":
+
+                        if (!m_IsRefreshed["tpAllCommodities"])
+                        {
+                            Refresh_AllCommodities();
+
+                            m_GUIInterface.loadSetting(scAllCommodities_1);
+                            m_GUIInterface.loadSetting(scAllCommodities_2);
+
+                            m_IsRefreshed["tpAllCommodities"] = true;
+                        }
+                        
+                        break;
+
+                    case "tpByStation":
+                        
+                        if (!m_IsRefreshed["tpByStation"])
+                        { 
+                            Refresh_ByStation();
+
+                            m_IsRefreshed["tpByStation"] = true;
+                        }
+                        break;
+
+                    case "tpByCommodity":
+
+                        if (!m_IsRefreshed["tpByCommodity"])
+                        { 
+                            Refresh_ByCommodity();                        
+
+                            m_IsRefreshed["tpByCommodity"] = true;
+                        }
+                        break;
+
+                    case "tpStationToStation":
+                        if (!m_IsRefreshed["tpStationToStation"])
+                        { 
+                            loadStationCommoditiesFromComboBoxes();
+
+                            m_GUIInterface.loadSetting(scStationToStation_1);
+                            m_GUIInterface.loadSetting(scStationToStation_2);
+
+                            m_IsRefreshed["tpStationToStation"] = true;
+                        }
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing current data view", ex);
+            }
+        }
+
+        /// <summary>
+        /// if the active tab ist switched we have to check if on the new tab
+        /// are still old data to be refresh
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabPriceSubTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                refreshPriceView(true);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error after changing active tabindex");
+            }
+        }
+
+        /// <summary>
+        /// external call for refreshing this tab
+        /// </summary>
+        public void RefreshData()
+        {
+            try
+            {
+                setFilterHasChanged(true);                
+                ActivateFilterSettings();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing data", ex);
+            }
+        }
+
+        /// <summary>
+        /// reorder the entrys of the comboboxes
+        /// </summary>
+        private void orderComboBoxes()
+        {
+            String Sorting;
+            try
+            {
+                Sorting = Program.DBCon.getIniValue(DB_GROUPNAME, "OrderOfEntrys", "systemname", false);
+
+                switch (Sorting)
+                {
+                    case "systemname":
+                        cmbStation1.DisplayMember   = "StationSystem";
+                        cmbStation2.DisplayMember   = "StationSystem";
+                        cmbByStation.DisplayMember  = "StationSystem";
+
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "SystemName";
+                        break;
+                    case "stationname":
+                        cmbStation1.DisplayMember   = "SystemStation";
+                        cmbStation2.DisplayMember   = "SystemStation";
+                        cmbByStation.DisplayMember  = "SystemStation";
+
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
+                        break;
+                    case "distance":
+                        cmbStation1.DisplayMember   = "SystemDistance";
+                        cmbStation2.DisplayMember   = "SystemDistance";
+                        cmbByStation.DisplayMember  = "SystemDistance";
+
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while sorting comboboxes", ex);
+            }
+        }
+
+        /// <summary>
+        /// starts a recalculation of the base data
+        /// (filtering out the station which defined by the filter settings)
+        /// </summary>
+        private void createNewBaseView()
+        {
+            Object Distance = null;
+            Object DistanceToStar = null;
+            Object minLandingPadSize = null;
+            Cursor oldCursor =  this.Cursor;
+            String sqlString;
+            DataTable Data;
+            Int32 SystemID;
+            Program.enVisitedFilter VFilter;
+            BindingSource bs;
+
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+
+                if(cbOnlyStationsWithin.Checked)                 
+                    Distance = Int32.Parse(cmbSystemLightYears.Text);
+
+                if(cbMaxDistanceToStar.Checked)                 
+                    DistanceToStar = Int32.Parse(cmbStationLightSeconds.Text);
+
+                if(cbMinLandingPadSize.Checked)                 
+                    minLandingPadSize = cmbMinLandingPadSize.Text;
+                
+                // get the id of the selected "base system"
+                if(cmbSystemBase.SelectedIndex <= 0)
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(Program.actualCondition.System);
+                else
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(cmbSystemBase.Text);
+                Data = new DataTable();
+                Program.DBCon.Execute(sqlString, Data);
+                SystemID = (Int32)Data.Rows[0]["ID"];
+
+                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
+                                                                                    "VisitedFilter", 
+                                                                                    ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
+                                                                                    false);
+
+                m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter);
+
+                Int32 StationCount;
+                Int32 SystemCount;
+                m_DataSource.getFilteredSystemAndStationCount(out StationCount, out SystemCount);
+
+                lblSystemsFound.Text  = SystemCount.ToString();
+                lblStationsFound.Text = StationCount.ToString();
+
+                sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," + 
+                            "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
+                            "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
+                            "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
+                            "       Fs.Distance" +
+                            " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
+                            " where FS.Station_ID = St.ID" +
+                            " and   St.System_ID  = Sy.ID;" ;
+                
+
+                Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
+
+                
+                if(cmbStation1.ValueMember == "")
+                { 
+                    // prepare functional settings of the comboboxes
+                    // (earlyier not possible because the columns are not existing at the beginning)
+                    cmbStation1.DisplayMember       = "StationSystem";
+                    cmbStation1.ValueMember         = "StationID";
+                    cmbStation2.DisplayMember       = "StationSystem";
+                    cmbStation2.ValueMember         = "StationID";
+                    cmbByStation.DisplayMember      = "StationSystem";
+                    cmbByStation.ValueMember        = "StationID";
+                }
+
+                orderComboBoxes();
+                
+                this.Cursor = oldCursor;
+            }
+            catch (Exception ex)
+            {
+                this.Cursor = oldCursor;
+                throw new Exception("Error while starting to create a new baseview", ex);
+            }
+        }
+
+        /// <summary>
+        /// saves new splitter position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Splittercontainer_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface != null)
+                    m_GUIInterface.saveSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while saving new splitter position");
+            }
+        }
+
+        /// <summary>
+        /// loads the systems in the BaseSystem combobox
+        /// </summary>
+        private void loadSystemsForBaseSystem()
+        {
+            Program.enVisitedFilter VFilter;
+
+            try
+            {
+                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
+                                                                                    "VisitedFilter", 
+                                                                                    ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
+                                                                                    false);
+
+                m_DataSource.loadSystems(m_DGVTables[cmbSystemBase.Name], VFilter);
+
+                if(cmbSystemBase.ValueMember == "")
+                {
+                    cmbSystemBase.DisplayMember     = "SystemName";
+                    cmbSystemBase.ValueMember       = "SystemID";
+                }
+
+                //m_BindingSources[cmbSystemBase.Name].Sort = "SystemName";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting the list of all commodities for the combobox", ex);
+            }
+        }
+
 
         /// <summary>
         /// "Station to Star Distance" enabled/disabled
@@ -493,6 +864,11 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 scAllCommodities_1.Panel2Collapsed = !cbShowDiagramAllCommodities.Checked;
                 m_GUIInterface.saveSetting(sender);
+
+                if(!scAllCommodities_1.Panel2Collapsed)
+                { 
+                    m_GUIInterface.loadSetting(scAllCommodities_1);
+                }
             }
             catch (Exception ex)
             {
@@ -515,298 +891,6 @@ namespace RegulatedNoise.MTPriceAnalysis
             }
         }
 
-        /// <summary>
-        /// sets the buttons as marked or not
-        /// </summary>
-        /// <param name="setMarked"></param>
-        private void setFilterHasChanged(Boolean setMarked)
-        {
-            try
-            {
-                if(setMarked)
-                {
-                    cmdFilter.ForeColor                     = Program.Colors.Marked_ForeColor;
-                    cmdFilter.BackColor                     = Program.Colors.Marked_BackColor;
-                                                                                             
-                    cmdRoundTripCaclulation.ForeColor       = Program.Colors.Marked_ForeColor;
-                    cmdRoundTripCaclulation.BackColor       = Program.Colors.Marked_BackColor;
-
-                    m_RefreshState["BaseData"]              = false;
-                    m_RefreshState["tpAllCommodities"]      = false;
-                    m_RefreshState["tpByStation"]           = false;
-                    m_RefreshState["tpByCommodity"]         = false;
-                    m_RefreshState["tpStationToStation"]    = false;
-
-                }                                                                        
-                else                                                                     
-                {                                                                        
-                    cmdFilter.ForeColor                 = Program.Colors.Default_ForeColor;
-                    cmdFilter.BackColor                 = Program.Colors.Default_BackColor;
-                      
-                    // commented out: this is doing the button itself 
-                    // cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
-                    // cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while setting buttons", ex);
-            }
-            
-        }
-
-        /// <summary>
-        /// filter-button is clicked
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cmdFilter_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ActivateFilterSettings();
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while starting the filter");
-            }
-        }
-
-        /// <summary>
-        /// activates the current filter settings
-        /// </summary>
-        private void ActivateFilterSettings()
-        {
-            try
-            {
-                refreshPriceView();
-
-                setFilterHasChanged(false);
-
-                m_RefreshStarted                = true;
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error while filtering stations");
-            }
-        }
-
-        /// <summary>
-        /// check if there some data to be refreshed
-        /// </summary>
-        /// <param name="TabWasChanged"></param>
-        private void refreshPriceView(Boolean TabWasChanged = false)
-        {
-            BindingSource bs;
-
-            try
-            {
-
-                if (!m_RefreshState["BaseData"])
-                { 
-                    SetComboBoxEventsActive(false);
-                    createNewBaseView();
-                    m_RefreshState["BaseData"] = true;
-                    SetComboBoxEventsActive(true);
-                }
-
-                switch (tabPriceSubTabs.SelectedTab.Name)
-                {
-                    case "tpAllCommodities":
-
-                        if (!m_RefreshState["tpAllCommodities"])
-                        { 
-                            bs              = new BindingSource(); 
-                            bs.DataSource   = m_DataSource.getPriceExtremum(cbOnlyTradedCommodities.Checked);
-
-                            dgvAllCommodities.AutoGenerateColumns = false;
-                            dgvAllCommodities.DataSource          = bs;
-                            sortAllCommodities();
-
-                            m_RefreshState["tpAllCommodities"] = true;
-                        }
-                        
-                        break;
-
-                    case "tpByStation":
-                        
-                        if (!m_RefreshState["tpByStation"])
-                        { 
-                        
-
-                            m_RefreshState["tpByStation"] = true;
-                        }
-                        break;
-
-                    case "tpByCommodity":
-
-                        if (!m_RefreshState["tpByCommodity"])
-                        { 
-                        
-
-                            m_RefreshState["tpByCommodity"] = true;
-                        }
-                        break;
-
-                    case "tpStationToStation":
-                        // here we do nothing because
-                        // recalculation is only by explicit request
-
-                        break;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while refreshing current data view", ex);
-            }
-        }
-
-        /// <summary>
-        /// if the active tab ist switched we have to check if on the new tab
-        /// are still old data to be refresh
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tabPriceSubTabs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                refreshPriceView(true);
-            }
-            catch (Exception ex)
-            {
-                cErr.showError(ex, "Error after changing active tabindex");
-            }
-        }
-
-        // reorder the entrys of the comboboxes
-        private void orderComboBoxes()
-        {
-            String Sorting;
-            try
-            {
-                Sorting = Program.DBCon.getIniValue(DB_GROUPNAME, "OrderOfEntrys", "systemname", false);
-
-                switch (Sorting)
-                {
-                    case "systemname":
-                        cmbStation1.DisplayMember   = "StationSystem";
-                        cmbStation2.DisplayMember   = "StationSystem";
-                        cmbByStation.DisplayMember  = "StationSystem";
-
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "SystemName";
-                        break;
-                    case "stationname":
-                        cmbStation1.DisplayMember   = "SystemStation";
-                        cmbStation2.DisplayMember   = "SystemStation";
-                        cmbByStation.DisplayMember  = "SystemStation";
-
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
-                        break;
-                    case "distance":
-                        cmbStation1.DisplayMember   = "SystemDistance";
-                        cmbStation2.DisplayMember   = "SystemDistance";
-                        cmbByStation.DisplayMember  = "SystemDistance";
-
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while sorting comboboxes", ex);
-            }
-        }
-
-                /// <summary>
-        /// starts a recalculation of the base data
-        /// (filtering out the station which defined by the filter settings)
-        /// </summary>
-        private void createNewBaseView()
-        {
-            Object Distance = null;
-            Object DistanceToStar = null;
-            Object minLandingPadSize = null;
-            Cursor oldCursor =  this.Cursor;
-            String sqlString;
-            DataTable Data;
-            Int32 SystemID;
-            Program.enVisitedFilter VFilter;
-            BindingSource bs;
-
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-
-                if(cbOnlyStationsWithin.Checked)                 
-                    Distance = Int32.Parse(cmbSystemLightYears.Text);
-
-                if(cbMaxDistanceToStar.Checked)                 
-                    DistanceToStar = Int32.Parse(cmbStationLightSeconds.Text);
-
-                if(cbMinLandingPadSize.Checked)                 
-                    minLandingPadSize = cmbMinLandingPadSize.Text;
-                
-                // get the id of the selected "base system"
-                if(cmbSystemBase.SelectedIndex == 0)
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(Program.actualCondition.System);
-                else
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(cmbSystemBase.Text);
-                Data = new DataTable();
-                Program.DBCon.Execute(sqlString, Data);
-                SystemID = (Int32)Data.Rows[0]["ID"];
-
-                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
-                                                                                    "VisitedFilter", 
-                                                                                    ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
-                                                                                    false);
-
-                m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter);
-
-                Int32 StationCount;
-                Int32 SystemCount;
-                m_DataSource.getFilteredSystemAndStationCount(out StationCount, out SystemCount);
-
-                lblSystemsFound.Text  = SystemCount.ToString();
-                lblStationsFound.Text = StationCount.ToString();
-
-                sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," + 
-                            "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
-                            "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
-                            "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
-                            "       Fs.Distance" +
-                            " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
-                            " where FS.Station_ID = St.ID" +
-                            " and   St.System_ID  = Sy.ID;" ;
-                
-
-                Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
-
-                if(cmbStation1.ValueMember == "")
-                { 
-                    // prepare functional settings of the comboboxes
-                    // (earlyier not possible because the columns are not existing at the beginning)
-                    cmbStation1.DisplayMember       = "StationSystem";
-                    cmbStation1.ValueMember         = "StationID";
-                    cmbStation2.DisplayMember       = "StationSystem";
-                    cmbStation2.ValueMember         = "StationID";
-                    cmbByStation.DisplayMember      = "StationSystem";
-                    cmbByStation.ValueMember        = "StationID";
-                }
-
-                orderComboBoxes();
-                
-                this.Cursor = oldCursor;
-            }
-            catch (Exception ex)
-            {
-                this.Cursor = oldCursor;
-                throw new Exception("Error while starting to create a new baseview", ex);
-            }
-        }
-
 #endregion
 
 #region special : all commodities tab
@@ -816,13 +900,13 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dgvAllCommodities_ColumnSorted(object sender, Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs e)
+        private void DataGridView_ColumnSorted(object sender, Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs e)
         {
             try
             {
                 if(m_GUIInterface.saveSetting(sender, e))
                 {
-                    sortAllCommodities();
+                    sortDataGridView((DataGridView)sender);
                 }
             }
             catch (Exception ex)
@@ -834,21 +918,42 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// <summary>
         /// starts sorting of the all commodities-tab by the setting from the database
         /// </summary>
-        private void sortAllCommodities()
+        private void sortDataGridView(DataGridView SortedDataGridView)
         {
             Cursor oldCursor =  this.Cursor;
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                m_GUIInterface.loadSetting(dgvAllCommodities);  
+                m_GUIInterface.loadSetting(SortedDataGridView);  
                 this.Cursor = oldCursor;
             }
             catch (Exception ex)
             {
                 this.Cursor = oldCursor;
-                throw new Exception("Error while sorting grid (all commodities)", ex);
+                throw new Exception("Error while sorting grid", ex);
             }
         }
+
+        /// <summary>
+        /// refreshes the AllCommodities grid
+        /// </summary>
+        private void Refresh_AllCommodities()
+        {
+            try
+            {
+                if (cmbByStation.SelectedValue != null)
+                    m_DataSource.getPriceExtremum(m_DGVTables[dgvAllCommodities.Name], cbOnlyTradedCommodities.Checked);
+                else
+                    m_DGVTables[dgvAllCommodities.Name].Clear();
+
+                sortDataGridView(dgvAllCommodities);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing 'AllCommodities'", ex);
+            }
+        }
+
 
 #endregion
 
@@ -875,7 +980,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 dgvStationToStationRoutes.AutoGenerateColumns = false;
                 dgvStationToStationRoutes.DataSource          = bs;
 
-                m_RefreshState["tpStationToStation"] = true;
+                m_IsRefreshed["tpStationToStation"] = true;
 
                 cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
                 cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
@@ -892,6 +997,8 @@ namespace RegulatedNoise.MTPriceAnalysis
                 loadStationCommoditiesFromComboBoxes();
 
                 SetComboBoxEventsActive(true);
+
+                sortDataGridView(dgvStationToStationRoutes);
 
             }
             catch (Exception ex)
@@ -972,9 +1079,12 @@ namespace RegulatedNoise.MTPriceAnalysis
                             break;
                     }             
                     
-                    m_DataSource.loadStationCommodities(Data, Station1, Station2);
+                    m_DataSource.loadBestProfitStationCommodities(Data, Station1, Station2);
 
                 }
+
+                sortDataGridView(dgvStation1);
+                sortDataGridView(dgvStation2);
             }
             catch (Exception ex)
             {
@@ -1009,13 +1119,17 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if(Activate)
                 {
-                    cmbStation1.SelectedValueChanged += cmbStation_SelectedValueChanged;
-                    cmbStation2.SelectedValueChanged += cmbStation_SelectedValueChanged;
+                    cmbStation1.SelectedValueChanged    += cmbStation_SelectedValueChanged;
+                    cmbStation2.SelectedValueChanged    += cmbStation_SelectedValueChanged;
+                    cmbByStation.SelectedValueChanged   += cmbByStation_SelectedValueChanged;
+                    cmbByCommodity.SelectedValueChanged += cmbByCommodity_SelectedValueChanged;
                 }
                 else
                 {
-                    cmbStation1.SelectedValueChanged -= cmbStation_SelectedValueChanged;
-                    cmbStation2.SelectedValueChanged -= cmbStation_SelectedValueChanged;
+                    cmbStation1.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
+                    cmbStation2.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
+                    cmbByStation.SelectedValueChanged   -= cmbByStation_SelectedValueChanged;
+                    cmbByCommodity.SelectedValueChanged -= cmbByCommodity_SelectedValueChanged;
                 }
             }
             catch (Exception ex)
@@ -1052,6 +1166,159 @@ namespace RegulatedNoise.MTPriceAnalysis
         }
 
 #endregion
+
+#region special: ByStation tab
+
+        /// <summary>
+        /// cmbByStation_SelectedValueChanged event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmbByStation_SelectedValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Refresh_ByStation();
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in cmbByStation_SelectedValueChanged");
+            }                
+        }
+
+        /// <summary>
+        /// refreshes the ByStation grid
+        /// </summary>
+        private void Refresh_ByStation()
+        {
+            try
+            {
+                if(cmbByStation.SelectedValue != null)
+                    m_DataSource.loadCommoditiesByStation(m_DGVTables[dgvByStation.Name], (int?)cmbByStation.SelectedValue);
+                else
+                    m_DGVTables[cmbByStation.Name].Clear();
+
+                sortDataGridView(dgvByStation);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing 'ByStation'", ex);
+            }
+        }
+
+
+#endregion
+
+#region special: ByCommodity tab
+
+        /// <summary>
+        /// cmbByCommodity_SelectedValueChanged event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmbByCommodity_SelectedValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Refresh_ByCommodity();            
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while changing selected index");
+            }
+        }
+
+        /// <summary>
+        /// refreshes the ByCommodity grid
+        /// </summary>
+        private void Refresh_ByCommodity()
+        {
+            try
+            {
+                if (cmbByCommodity.SelectedValue != null)
+                    m_DataSource.loadStationsByCommodity(m_DGVTables[dgvByCommodity.Name], (int?)cmbByCommodity.SelectedValue);
+                else
+                    m_DGVTables[dgvByCommodity.Name].Clear();
+
+                sortDataGridView(dgvByCommodity);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing 'ByCommodity'", ex);
+            }
+        }
+
+        /// <summary>
+        /// refreshes the comboxbox with the current list of all known commodities
+        /// </summary>
+        private void loadCommoditiesForByCommodity()
+        {
+            try
+            {
+                m_DataSource.loadCommodities(m_DGVTables[cmbByCommodity.Name]);
+
+                if(cmbByCommodity.ValueMember == "")
+                {
+                    cmbByCommodity.ValueMember      = "id";
+                    cmbByCommodity.DisplayMember    = "Commodity";
+                }
+
+                m_BindingSources[cmbByCommodity.Name].Sort = "Commodity";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting the list of all commodities for the combobox", ex);
+            }
+        }
+
+#endregion
+
+        private void DataGridView_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs args;
+            DataGridView dgv;
+            DataGridView.HitTestInfo hit;
+
+            try
+            {
+                args   = (MouseEventArgs)e;
+
+                if(args.Button == System.Windows.Forms.MouseButtons.Right)
+                { 
+                    dgv   = (DataGridView)sender;
+                    hit   = dgv.HitTest(args.X, args.Y);
+
+                    if (hit.Type == DataGridViewHitTestType.TopLeftHeader)
+                    {
+                        DataGridViewSettings Tool = new DataGridViewSettings();
+
+                        if(Tool.setVisibility(dgv) == DialogResult.OK)
+                        {
+                            m_GUIInterface.saveSetting(dgv);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in DataGridView_Click", ex);
+            }
+        }
+
+        private void SplitContainer_Resize(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface != null)
+                    m_GUIInterface.loadSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in SplitContainer_Resize");
+            }
+        }
 
     }
 }

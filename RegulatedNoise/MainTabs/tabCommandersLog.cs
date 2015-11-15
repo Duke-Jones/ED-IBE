@@ -40,7 +40,8 @@ namespace RegulatedNoise.MTCommandersLog
         public tabCommandersLog()
         {
             InitializeComponent();
-            Dock = DockStyle.Fill;
+            Dock        = DockStyle.Fill;
+            this.Name   = "tabCommandersLog";
         }
 
         /// <summary>
@@ -230,17 +231,31 @@ namespace RegulatedNoise.MTCommandersLog
         {
             try
             {
+                RefreshTab(e.DataRow);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in m_DataSource_DataChanged");
+            }
+        }
+
+        /// <summary>
+        /// forces refreshing this tab
+        /// </summary>
+        private void RefreshTab(Int32 currentRow)
+        {
+            try
+            {
                 // force refresh
                 m_DataSource.Retriever.MemoryCache.Clear();
                 dgvCommandersLog.Invalidate();
 
                 // jump to the new row
-                dgvCommandersLog.CurrentCell = dgvCommandersLog[1, e.DataRow];
-
+                dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow];
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in m_DataSource_DataChanged");
+                throw new Exception("Error while refreshing the tab (RefreshTab)", ex);
             }
         }
 
@@ -541,5 +556,21 @@ namespace RegulatedNoise.MTCommandersLog
 	        }
 
         }
+
+        /// <summary>
+        /// external call for refreshing this tab
+        /// </summary>
+        public void RefreshData()
+        {
+            try
+            {
+                RefreshTab(dgvCommandersLog.CurrentCell.RowIndex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing data", ex);
+            }
+        }
+
     }
 }

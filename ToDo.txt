@@ -26,6 +26,11 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.25
+   * functionality of "PriceAnalysis"-tab completed
+   * changed column settings can be saved (width, order, visibility)
+   * base-system combobox is filled
+-------------------------------------------------------------------------------------         
 SQL 0.0.24
    * speed improvements to "PriceAnalysis"
    * "Station To Station" subtab is fully working

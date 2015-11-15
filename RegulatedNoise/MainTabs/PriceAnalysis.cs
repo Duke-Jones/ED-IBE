@@ -50,7 +50,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 #endregion
 
         private dsEliteDB           m_BaseData;
-        public tabPriceAnalysis     m_GUI;
+        private tabPriceAnalysis    m_GUI;
         private BindingSource       m_BindingSource;
         private DataTable           m_Datatable;
         private DataRetriever       retriever;
@@ -221,9 +221,27 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 if(minLandingPadSize != null)                            
                 {
+                    String LandingPadString = "";
+
+                    switch (((String)minLandingPadSize).ToUpper())
+                    {
+                        case "S":
+                            LandingPadString = "(St.max_landing_pad_size = 'S')";
+                            break;
+                        case "M":
+                            LandingPadString = "(St.max_landing_pad_size = 'S') or " +
+                                               "(St.max_landing_pad_size = 'M')";
+                            break;
+                        case "L":
+                            LandingPadString = "(St.max_landing_pad_size = 'S') or " +
+                                               "(St.max_landing_pad_size = 'M') or " +
+                                               "(St.max_landing_pad_size = 'L')";
+                        break;
+                    }
+
                     sqlString = sqlString + String.Format(
-                            "   and St.max_landing_pad_size = '{0}'",
-                            (String)minLandingPadSize);
+                            "   and ({0})",
+                            LandingPadString);
                 }
 
                 sqlString += ";";
@@ -242,11 +260,10 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// </summary>
         /// <param name="OnlyTradedCommodities"></param>
         /// <returns></returns>
-        public DataTable getPriceExtremum(Boolean OnlyTradedCommodities)
+        public DataTable getPriceExtremum(DataTable Result, Boolean OnlyTradedCommodities)
         {
             String sqlString;
             DataTable Data      = new DataTable();
-            var Result          = new dsEliteDB.tmpa_allcommoditiesDataTable();
             DataRow BuyMin;
             DataRow SellMax;
             DataRow lastCommodity;
@@ -752,7 +769,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// <param name="Data"></param>
         /// <param name="Station_From"></param>
         /// <param name="Station_To"></param>
-        public void loadStationCommodities(DataTable Data, int? Station_From, int? Station_To)
+        public void loadBestProfitStationCommodities(DataTable Data, int? Station_From, int? Station_To)
         {
             String sqlString;
             try
@@ -782,6 +799,137 @@ namespace RegulatedNoise.MTPriceAnalysis
                 throw new Exception("Error while loading trading data", ex);
             }
 
+        }
+
+        /// <summary>
+        /// loads all possible trading data from one to another station (one direction)
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <param name="Station_From"></param>
+        /// <param name="Station_To"></param>
+        public void loadCommoditiesByStation(DataTable Data, int? Station)
+        {
+            String sqlString;
+            try
+            {
+                sqlString = String.Format("select Cd.Commodity_ID, Co.LocCommodity As Commodity, " +
+                                          "        Cd.Buy, Cd.Supply, Cd.SupplyLevel, " +
+                                          "        Cd.Sell, Cd.Demand, Cd.DemandLevel, " +
+                                          "        Cd.Timestamp, BB.Best_Buy, BS.Best_Sell, " +
+                                          "        (BS.Best_Sell - BB.Best_Buy) As MaxProfit " +
+                                          " from tbStations St, tbCommodity Co, tbCommodityData Cd  " +
+                                          "   join  " +
+                                          " 	   (select Cd.Commodity_ID, Min(nullif(Cd.Buy, 0)) As Best_Buy  " +
+                                          "           from tbCommodityData Cd, tmfilteredstations Fi  " +
+                                          " 	      where Fi.Station_ID = Cd.station_id " +
+                                          " 	     group by Cd.Commodity_ID) BB " +
+                                          "   on Cd.Commodity_ID = BB.Commodity_ID " +
+                                          "   join  " +
+                                          " 	   (select Cd.Commodity_ID, Max(nullif(Cd.Sell, 0)) As Best_Sell " +
+                                          "           from tbCommodityData Cd, tmfilteredstations Fi  " +
+                                          " 	      where Fi.Station_ID = Cd.station_id " +
+                                          " 	     group by Cd.Commodity_ID) BS " +
+                                          "   on Cd.Commodity_ID = BS.Commodity_ID " +
+                                          " where St.ID 		   = Cd.Station_ID " +
+                                          " and   Cd.Commodity_ID 	= Co.ID " +
+                                          " and St.ID = {0}", Station);
+  
+                Program.DBCon.Execute(sqlString, Data);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading station data", ex);
+            }
+        }
+
+        /// <summary>
+        /// load all stationdata for a specific commodity
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <param name="Commodity_ID"></param>
+        internal void loadStationsByCommodity(DataTable Data, int? Commodity_ID)
+        {
+            String sqlString;
+            try
+            {
+                sqlString = String.Format("select Sy.ID As System_ID, Sy.Systemname As System, St.ID As Station_ID, St.Stationname As Station, Fi.Distance," +
+                                          "        nullif(Cd.Buy,0) As Buy, nullif(Cd.Supply,0) As Supply, Cd.SupplyLevel, " +
+                                          "        nullif(Cd.Sell,0) As Sell, nullif(Cd.Demand,0) As Demand, CD.DemandLevel, CD.Timestamp" +
+                                          " from tbCommodityData Cd, tbSystems Sy, tbStations St, tmfilteredstations Fi" +
+                                          " where Cd.Station_ID   = St.ID" +
+                                          " and   St.System_ID    = Sy.ID" +
+                                          " and   St.ID           = Fi.station_id" +
+                                          " and   Cd.Commodity_ID = {0}", Commodity_ID);
+  
+                Program.DBCon.Execute(sqlString, Data);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading commodity data", ex);
+            }
+        }
+        
+        /// <summary>
+        /// loadds the list of all known commodities into the table
+        /// </summary>
+        /// <param name="Data"></param>
+        internal void loadCommodities(DataTable Data)
+        {
+            String sqlString;
+            try
+            {
+                sqlString = String.Format("select Id, LocCommodity As Commodity" + 
+                                          " from tbCommodity");
+  
+                Program.DBCon.Execute(sqlString, Data);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading list of all commodities", ex);
+            }
+        }
+
+        /// <summary>
+        /// loads as list of all systems
+        /// </summary>
+        /// <param name="Data"></param>
+        internal void loadSystems(DataTable Data, Program.enVisitedFilter VisitedFilter)
+        {
+            String sqlString;
+
+            try
+            {
+
+                if(VisitedFilter != Program.enVisitedFilter.showAll)
+                {
+                    // only visited systems
+                    sqlString = " select 0 As SystemID, '" + tabPriceAnalysis.CURRENT_SYSTEM + "' As SystemName" +
+                                " union " +
+                                " (select Sy.ID As SystemID, Sy.SystemName" +
+                                " from tbSystems Sy" +
+                                " where Sy.Visited   = 1" +
+                                " order by SystemName)" ;
+                }
+                else
+                {
+                    // all systems
+                    sqlString = " select 0 As SystemID, '" + tabPriceAnalysis.CURRENT_SYSTEM + "' As SystemName" +
+                                " union " +
+                                " (select Sy.ID As SystemID, Sy.SystemName" +
+                                " from tbSystems Sy" +
+                                " order by SystemName)" ;
+                }
+
+                Program.DBCon.Execute(sqlString, Data);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading systems", ex);
+            }
         }
     }
 

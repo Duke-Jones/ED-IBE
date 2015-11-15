@@ -2764,8 +2764,6 @@
             this.tabCtrlMain.SelectedIndex = 0;
             this.tabCtrlMain.Size = new System.Drawing.Size(1084, 613);
             this.tabCtrlMain.TabIndex = 4;
-            this.tabCtrlMain.SelectedIndexChanged += new System.EventHandler(this.tabCtrlMain_SelectedIndexChanged);
-            this.tabCtrlMain.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabCtrlMain_Selecting);
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // Form1

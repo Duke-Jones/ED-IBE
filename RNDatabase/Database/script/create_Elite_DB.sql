@@ -431,7 +431,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbInitValue` (
   `InitGroup` VARCHAR(80) NOT NULL COMMENT '',
   `InitKey` VARCHAR(80) NOT NULL COMMENT '',
-  `InitValue` VARCHAR(255) NULL COMMENT '',
+  `InitValue` VARCHAR(1000) NULL COMMENT '',
   PRIMARY KEY (`InitGroup`, `InitKey`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -829,6 +829,47 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmBestProfits` (
   `Station_Id_To` INT NOT NULL COMMENT '',
   `Max_Profit` INT NULL COMMENT '',
   PRIMARY KEY (`Station_Id_From`, `Station_Id_To`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmPA_ByStation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_ByStation` (
+  `Commodity_ID` INT NOT NULL COMMENT '',
+  `Commodity` VARCHAR(80) NULL COMMENT '',
+  `Buy` INT NULL COMMENT '',
+  `Supply` INT NULL COMMENT '',
+  `SupplyLevel` VARCHAR(80) NULL COMMENT '',
+  `Sell` INT NULL COMMENT '',
+  `Demand` INT NULL COMMENT '',
+  `DemandLevel` VARCHAR(80) NULL COMMENT '',
+  `Timestamp` DATETIME NULL COMMENT '',
+  `Best_Buy` INT NULL COMMENT '',
+  `Best_Sell` INT NULL COMMENT '',
+  `MaxProfit` INT NULL COMMENT '',
+  `Source` VARCHAR(80) NULL COMMENT '',
+  PRIMARY KEY (`Commodity_ID`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tmPA_ByCommodity`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_ByCommodity` (
+  `System_ID` INT NULL COMMENT '',
+  `System` VARCHAR(80) NULL COMMENT '',
+  `Station_ID` INT NOT NULL COMMENT '',
+  `Station` VARCHAR(80) NULL COMMENT '',
+  `Distance` DOUBLE NULL COMMENT '',
+  `Buy` INT NULL COMMENT '',
+  `Supply` INT NULL COMMENT '',
+  `SupplyLevel` VARCHAR(80) NULL COMMENT '',
+  `Sell` INT NULL COMMENT '',
+  `Demand` INT NULL COMMENT '',
+  `DemandLevel` VARCHAR(80) NULL COMMENT '',
+  `Timestamp` DATETIME NULL COMMENT '',
+  PRIMARY KEY (`Station_ID`)  COMMENT '')
 ENGINE = InnoDB;
 
 USE `Elite_DB` ;

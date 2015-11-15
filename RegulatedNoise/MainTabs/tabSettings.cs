@@ -37,6 +37,7 @@ namespace RegulatedNoise.MTSettings
         {
             InitializeComponent();
             Dock = DockStyle.Fill;
+            this.Name = "tabSettings";
         }
 
         /// <summary>

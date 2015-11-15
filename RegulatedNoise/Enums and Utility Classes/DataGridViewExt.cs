@@ -33,8 +33,8 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 SortOrder  = System.Windows.Forms.SortOrder.None;
             }
 
-            public DataGridViewColumn SortColumn { get; set; }
-            public SortOrder          SortOrder  { get; set; }
+            public DataGridViewColumn   SortColumn { get; set; }
+            public SortOrder            SortOrder  { get; set; }
         }
 
 #endregion

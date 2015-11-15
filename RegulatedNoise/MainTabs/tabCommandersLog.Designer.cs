@@ -490,7 +490,6 @@
             // 
             // notes
             // 
-            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.notes.DataPropertyName = "notes";
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
@@ -498,6 +497,7 @@
             this.notes.HeaderText = "notes";
             this.notes.Name = "notes";
             this.notes.ReadOnly = true;
+            this.notes.Width = 379;
             // 
             // tabCommandersLog
             // 
@@ -537,6 +537,13 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.NumericUpDown_ro nbCurrentCredits;
         private Enums_and_Utility_Classes.DataGridViewExt dgvCommandersLog;
+        private System.Windows.Forms.CheckBox cb_ShowEditField;
+        internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
+        internal System.Windows.Forms.DateTimePicker_ro dtpLogEventDate;
+        internal System.Windows.Forms.ComboBox_ro cbLogEventType;
+        internal System.Windows.Forms.ComboBox_ro cbLogCargoAction;
+        internal System.Windows.Forms.ComboBox_ro cbLogStationName;
+        internal System.Windows.Forms.ComboBox_ro cbLogCargoName;
         private System.Windows.Forms.DataGridViewTextBoxColumn time;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemname;
         private System.Windows.Forms.DataGridViewTextBoxColumn stationname;
@@ -547,12 +554,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_transaction;
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn notes;
-        private System.Windows.Forms.CheckBox cb_ShowEditField;
-        internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
-        internal System.Windows.Forms.DateTimePicker_ro dtpLogEventDate;
-        internal System.Windows.Forms.ComboBox_ro cbLogEventType;
-        internal System.Windows.Forms.ComboBox_ro cbLogCargoAction;
-        internal System.Windows.Forms.ComboBox_ro cbLogStationName;
-        internal System.Windows.Forms.ComboBox_ro cbLogCargoName;
     }
 }

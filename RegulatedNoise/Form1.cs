@@ -34,6 +34,14 @@ namespace RegulatedNoise
 {
     public partial class Form1 : RNBaseForm
     {
+
+/* ************************************************ */
+ // new stuff
+
+        private Dictionary<String, Boolean> m_IsRefreshed;
+
+/* ************************************************ */
+
         private enum enDoSpecial
         {
             onStart,
@@ -1063,10 +1071,57 @@ namespace RegulatedNoise
             }
         }
 
+        /// <summary>
+        /// new tab on main TabControl selected 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
-            if (_tooltip != null) _tooltip.RemoveAll();
-            if (_tooltip2 != null) _tooltip2.RemoveAll();
+            try
+            {
+                if (_tooltip != null) _tooltip.RemoveAll();
+                if (_tooltip2 != null) _tooltip2.RemoveAll();
+
+                RefreshCurrentTab();
+
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error when selecting a new tab on main tabcontrol");
+            }
+        }
+
+        /// <summary>
+        /// initiates a refresh of the current tab if necessary
+        /// </summary>
+        private void RefreshCurrentTab()
+        {
+            try
+            {
+                if(!m_IsRefreshed[tabCtrlMain.SelectedTab.Name])
+                {
+                    switch (tabCtrlMain.SelectedTab.Name)
+                    {
+                        case "tabPriceAnalysis":
+                            Program.PriceAnalysis.GUI.RefreshData();
+                            break;
+                        case "tabCommandersLog":
+                            Program.PriceAnalysis.GUI.RefreshData();
+                            break;
+                    }
+                    MethodInfo RefreshMethod = tabCtrlMain.SelectedTab.GetType().GetMethod("RefreshData");
+
+                    if(RefreshMethod != null)
+                        RefreshMethod.Invoke(tabCtrlMain.SelectedTab, null);
+
+                    m_IsRefreshed[tabCtrlMain.SelectedTab.Name] = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing the current tab", ex);
+            }
         }
 
 
@@ -3112,18 +3167,28 @@ namespace RegulatedNoise
 
         private void Form_Shown(object sender, System.EventArgs e)
         {
-            _Splash.CloseDelayed();
+            try
+            {
+                _Splash.CloseDelayed();
 
-            loadSystemData(Program.actualCondition.System);
-            loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
+                loadSystemData(Program.actualCondition.System);
+                loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
 
-            showSystemNumbers();
+                Program.Settings.GUI.Init();
+                Program.PriceAnalysis.GUI.Init();
+                Program.CommandersLog.GUI.Init();
 
-            SetupGui();
+                showSystemNumbers();
 
-            if(cbEDDNAutoListen.Checked)
-                startEDDNListening();
+                SetupGui();
 
+                if(cbEDDNAutoListen.Checked)
+                    startEDDNListening();
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in Form_Shown");
+            }
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -3166,29 +3231,30 @@ namespace RegulatedNoise
             tabSettings newSControl           = new tabSettings();
             newSControl.DataSource            = Program.Settings;
             newTab                            = new TabPage("Settings");
+            newTab.Name                       = newSControl.Name;
             newTab.Controls.Add(newSControl);
             tabCtrlMain.TabPages.Insert(5, newTab);
-
-            newSControl.Init();
 
             // Price Analysis
             tabPriceAnalysis newPAControl     = new tabPriceAnalysis();
             newPAControl.DataSource           = Program.PriceAnalysis;
             newTab                            = new TabPage("Price Analysis");
+            newTab.Name                       = newPAControl.Name;
             newTab.Controls.Add(newPAControl);
             tabCtrlMain.TabPages.Insert(2, newTab);
 
-            newPAControl.Init();
-
-            
             // Commander's Log
             tabCommandersLog newCLControl     = new tabCommandersLog();
             newCLControl.DataSource           = Program.CommandersLog;
             newTab                            = new TabPage("Commander's Log");
+            newTab.Name                       = newCLControl.Name;
             newTab.Controls.Add(newCLControl);
             tabCtrlMain.TabPages.Insert(3, newTab);
 
-            newCLControl.Init();
+            // fill dictionary with "RefreshDone"-flags
+            m_IsRefreshed      = new Dictionary<string,bool>();
+            foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
+                m_IsRefreshed.Add(MainTabPage.Name, false);
 
         }
 
@@ -5041,16 +5107,6 @@ namespace RegulatedNoise
                 loadStationData(_oldSystemName, _oldStationName);
             }
 
-        }
-
-        void tabCtrlMain_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-
-        void tabCtrlMain_Selecting(object sender, System.Windows.Forms.TabControlCancelEventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
         }
 
         private void cmdStationEco_OK_Click(object sender, EventArgs e)
