@@ -566,7 +566,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
 
         /// <summary>
-        /// "Station to Star Distance" enabled/disabled
+        /// "Location to Star Distance" enabled/disabled
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -957,7 +957,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
 #endregion
 
-#region special : Station to Station tab
+#region special : Location to Location tab
 
         /// <summary>
         /// calculation of the roundtrip is wanted

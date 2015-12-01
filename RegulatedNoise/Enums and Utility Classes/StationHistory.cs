@@ -71,7 +71,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         /// <summary>
         /// adds a new visit with the current time
         /// </summary>
-        /// <param name="newStation">Station ID (with Stationname and Systemname)</param>
+        /// <param name="newStation">Location ID (with Locationname and Systemname)</param>
         internal void addVisit(string newStation)
         { 
             StationVisit Visit;

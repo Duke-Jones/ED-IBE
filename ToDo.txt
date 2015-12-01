@@ -20,12 +20,23 @@ todo:
    * default setting for new systems
 
 
-
+   Dangerous Ship Computer
+   Ship Data Intelligence
+   Dangerous Data Extension
    
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.26
+   * first version of a general "ExternalDataInterface" added 
+    (own internal companion interface is removed)
+   * extracted logfilescanner to its own class
+   * first run with ocr again
+   * improved algorithm for import of new prices
+   * getting data from external tool ist working
+     (also "Visited" and "Market Data Collected" events again)
+-------------------------------------------------------------------------------------         
 SQL 0.0.25
    * functionality of "PriceAnalysis"-tab completed
    * changed column settings can be saved (width, order, visibility)

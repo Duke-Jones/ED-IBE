@@ -103,7 +103,7 @@ namespace RegulatedNoise.EDDN
             {
             	Commodity_Class Commodity = this.Message.Commodities[i];
 
-                //System;Station;Commodity_Class;Sell;Buy;Demand;DemandLevel;Supply;SupplyLevel;Date;
+                //System;Location;Commodity_Class;Sell;Buy;Demand;DemandLevel;Supply;SupplyLevel;Date;
                 csvFormatted[i] = this.Message.SystemName + ";" +
                                   this.Message.StationName + ";" +
                                   Commodity.Name + ";" +

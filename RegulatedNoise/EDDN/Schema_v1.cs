@@ -78,7 +78,7 @@ namespace RegulatedNoise.EDDN
         internal String getEDDNCSVImportString()
         {
 
-            //System;Station;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
+            //System;Location;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
             string csvFormatted = this.Message.SystemName + ";" +
                                   this.Message.StationName + ";" +
                                   this.Message.ItemName + ";" +

@@ -45,11 +45,11 @@ namespace RegulatedNoise
     //    fra
     //}
 
-    public enum enCommodityLevel
-    {
-        LOW  = 0,
-        MED  = 1,
-        HIGH = 2
-    }
+    //public enum enCommodityLevel
+    //{
+    //    LOW  = 0,
+    //    MED  = 1,
+    //    HIGH = 2
+    //}
 
 }

@@ -334,7 +334,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 foreach (DataRow currentRow in Data.AsEnumerable())
                 {
                     // Debug.Print((String)lastCommodity["CommodityID"] + " " + (String)currentRow["CommodityID"]);
-                    // Debug.Print((String)currentRow["Stationname"]);
+                    // Debug.Print((String)currentRow["Locationname"]);
 
                     if((lastCommodity != null) && ((Int32)lastCommodity["CommodityID"] != (Int32)currentRow["CommodityID"]))
                     {

@@ -31,6 +31,10 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(tabSettings));
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.gbTesseract = new System.Windows.Forms.GroupBox();
+            this.txtOCRTraineddataFile = new System.Windows.Forms.TextBox();
+            this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.cmdFilter = new System.Windows.Forms.Button();
             this.label50 = new System.Windows.Forms.Label();
@@ -43,9 +47,6 @@
             this.txtOCRPixelAmount = new System.Windows.Forms.TextBoxInt32();
             this.lblPixelThreshold = new System.Windows.Forms.Label();
             this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
-            this.txtOCRTraineddataFile = new System.Windows.Forms.TextBox();
-            this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.cbAutoAdd_ReplaceVisited = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Marketdata = new System.Windows.Forms.CheckBox();
@@ -65,28 +66,93 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label25 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.gbExternalDataInterface = new System.Windows.Forms.GroupBox();
+            this.txtExtTool_ParamMarket = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtExtTool_ParamLocation = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtExtTool_Path = new System.Windows.Forms.TextBox();
+            this.cmdSelectExternalToolPath = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tcDataInterface = new System.Windows.Forms.TabControl();
+            this.tabOCRSettings = new System.Windows.Forms.TabPage();
+            this.tabExternalToolSettings = new System.Windows.Forms.TabPage();
+            this.gbDataInterface = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rbUseExternalTool = new System.Windows.Forms.RadioButton();
+            this.rbUseOCR = new System.Windows.Forms.RadioButton();
             this.groupBox6.SuspendLayout();
+            this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.gbExternalDataInterface.SuspendLayout();
+            this.tcDataInterface.SuspendLayout();
+            this.tabOCRSettings.SuspendLayout();
+            this.tabExternalToolSettings.SuspendLayout();
+            this.gbDataInterface.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.gbTesseract);
             this.groupBox6.Controls.Add(this.groupBox9);
             this.groupBox6.Controls.Add(this.groupBox11);
-            this.groupBox6.Controls.Add(this.txtOCRTraineddataFile);
-            this.groupBox6.Controls.Add(this.cmdSelectTraineddataFile);
-            this.groupBox6.Controls.Add(this.label12);
-            this.groupBox6.Location = new System.Drawing.Point(3, 3);
+            this.groupBox6.Location = new System.Drawing.Point(6, 6);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(641, 408);
+            this.groupBox6.Size = new System.Drawing.Size(619, 428);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "OCR-Settings";
+            // 
+            // gbTesseract
+            // 
+            this.gbTesseract.Controls.Add(this.txtOCRTraineddataFile);
+            this.gbTesseract.Controls.Add(this.cmdSelectTraineddataFile);
+            this.gbTesseract.Controls.Add(this.label12);
+            this.gbTesseract.Location = new System.Drawing.Point(11, 16);
+            this.gbTesseract.Name = "gbTesseract";
+            this.gbTesseract.Size = new System.Drawing.Size(597, 68);
+            this.gbTesseract.TabIndex = 16;
+            this.gbTesseract.TabStop = false;
+            this.gbTesseract.Text = "Tesseract Setting";
+            // 
+            // txtOCRTraineddataFile
+            // 
+            this.txtOCRTraineddataFile.Location = new System.Drawing.Point(102, 32);
+            this.txtOCRTraineddataFile.Name = "txtOCRTraineddataFile";
+            this.txtOCRTraineddataFile.ReadOnly = true;
+            this.txtOCRTraineddataFile.Size = new System.Drawing.Size(197, 20);
+            this.txtOCRTraineddataFile.TabIndex = 13;
+            this.txtOCRTraineddataFile.Tag = "OCRTraineddataFile;big";
+            // 
+            // cmdSelectTraineddataFile
+            // 
+            this.cmdSelectTraineddataFile.Location = new System.Drawing.Point(346, 30);
+            this.cmdSelectTraineddataFile.Name = "cmdSelectTraineddataFile";
+            this.cmdSelectTraineddataFile.Size = new System.Drawing.Size(176, 23);
+            this.cmdSelectTraineddataFile.TabIndex = 8;
+            this.cmdSelectTraineddataFile.Text = "Select";
+            this.cmdSelectTraineddataFile.UseVisualStyleBackColor = true;
+            this.cmdSelectTraineddataFile.Click += new System.EventHandler(this.cmdSelectTraineddataFile_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(122, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(177, 13);
+            this.label12.TabIndex = 7;
+            this.label12.Text = "\"traineddata\"-File for TesseractOCR";
             // 
             // groupBox9
             // 
@@ -94,7 +160,7 @@
             this.groupBox9.Controls.Add(this.label50);
             this.groupBox9.Controls.Add(this.label51);
             this.groupBox9.Controls.Add(this.txtGUIColorCutoffLevel);
-            this.groupBox9.Location = new System.Drawing.Point(11, 210);
+            this.groupBox9.Location = new System.Drawing.Point(11, 237);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(597, 150);
             this.groupBox9.TabIndex = 15;
@@ -149,7 +215,7 @@
             this.groupBox11.Controls.Add(this.txtOCRPixelAmount);
             this.groupBox11.Controls.Add(this.lblPixelThreshold);
             this.groupBox11.Controls.Add(this.txtOCRPixelThreshold);
-            this.groupBox11.Location = new System.Drawing.Point(11, 63);
+            this.groupBox11.Location = new System.Drawing.Point(11, 90);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(597, 141);
             this.groupBox11.TabIndex = 14;
@@ -220,34 +286,6 @@
             this.txtOCRPixelThreshold.Tag = "OCRPixelThresholdValue;0.6";
             this.txtOCRPixelThreshold.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelThreshold_KeyDown);
             this.txtOCRPixelThreshold.Leave += new System.EventHandler(this.txtOCRPixelThreshold_Leave);
-            // 
-            // txtOCRTraineddataFile
-            // 
-            this.txtOCRTraineddataFile.Location = new System.Drawing.Point(117, 36);
-            this.txtOCRTraineddataFile.Name = "txtOCRTraineddataFile";
-            this.txtOCRTraineddataFile.ReadOnly = true;
-            this.txtOCRTraineddataFile.Size = new System.Drawing.Size(197, 20);
-            this.txtOCRTraineddataFile.TabIndex = 13;
-            this.txtOCRTraineddataFile.Tag = "OCRTraineddataFile;big";
-            // 
-            // cmdSelectTraineddataFile
-            // 
-            this.cmdSelectTraineddataFile.Location = new System.Drawing.Point(361, 25);
-            this.cmdSelectTraineddataFile.Name = "cmdSelectTraineddataFile";
-            this.cmdSelectTraineddataFile.Size = new System.Drawing.Size(176, 23);
-            this.cmdSelectTraineddataFile.TabIndex = 8;
-            this.cmdSelectTraineddataFile.Text = "Select";
-            this.cmdSelectTraineddataFile.UseVisualStyleBackColor = true;
-            this.cmdSelectTraineddataFile.Click += new System.EventHandler(this.cmdSelectTraineddataFile_Click);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(137, 20);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(177, 13);
-            this.label12.TabIndex = 7;
-            this.label12.Text = "\"traineddata\"-File for TesseractOCR";
             // 
             // groupBox10
             // 
@@ -328,9 +366,9 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox8.Controls.Add(this.label48);
             this.groupBox8.Controls.Add(this.cmbLanguage);
-            this.groupBox8.Location = new System.Drawing.Point(3, 417);
+            this.groupBox8.Location = new System.Drawing.Point(650, 160);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(363, 45);
+            this.groupBox8.Size = new System.Drawing.Size(396, 45);
             this.groupBox8.TabIndex = 13;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Language";
@@ -366,9 +404,9 @@
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(650, 160);
+            this.groupBox12.Location = new System.Drawing.Point(650, 386);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(396, 429);
+            this.groupBox12.Size = new System.Drawing.Size(396, 203);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -377,7 +415,7 @@
             // 
             this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(203, 346);
+            this.label89.Location = new System.Drawing.Point(203, 120);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(29, 13);
             this.label89.TabIndex = 19;
@@ -386,7 +424,7 @@
             // nudPurgeOldDataDays
             // 
             this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 343);
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 117);
             this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
             365,
             0,
@@ -408,7 +446,7 @@
             // cmdPurgeOldData
             // 
             this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 341);
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 115);
             this.cmdPurgeOldData.Name = "cmdPurgeOldData";
             this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
             this.cmdPurgeOldData.TabIndex = 8;
@@ -443,7 +481,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 377);
+            this.button6.Location = new System.Drawing.Point(32, 151);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -454,11 +492,11 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(11, 480);
+            this.label25.Location = new System.Drawing.Point(27, 19);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(60, 13);
+            this.label25.Size = new System.Drawing.Size(65, 13);
             this.label25.TabIndex = 64;
-            this.label25.Text = "Visited filter";
+            this.label25.Text = "Filter Setting";
             this.toolTip1.SetToolTip(this.label25, "Here you can select, if you want to see in all analysis");
             // 
             // cmbVisitedFilter
@@ -466,7 +504,7 @@
             this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
             this.cmbVisitedFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisitedFilter.FormattingEnabled = true;
-            this.cmbVisitedFilter.Location = new System.Drawing.Point(14, 498);
+            this.cmbVisitedFilter.Location = new System.Drawing.Point(30, 37);
             this.cmbVisitedFilter.MaxValue = null;
             this.cmbVisitedFilter.MinValue = null;
             this.cmbVisitedFilter.Name = "cmbVisitedFilter";
@@ -478,18 +516,225 @@
         " only stations you\'ve directly visted");
             this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.cmbVisitedFilter);
+            this.groupBox1.Controls.Add(this.label25);
+            this.groupBox1.Location = new System.Drawing.Point(652, 211);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(394, 133);
+            this.groupBox1.TabIndex = 65;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Datafilter";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(27, 62);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(361, 57);
+            this.label1.TabIndex = 65;
+            this.label1.Text = resources.GetString("label1.Text");
+            // 
+            // gbExternalDataInterface
+            // 
+            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamMarket);
+            this.gbExternalDataInterface.Controls.Add(this.label6);
+            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamLocation);
+            this.gbExternalDataInterface.Controls.Add(this.label5);
+            this.gbExternalDataInterface.Controls.Add(this.label4);
+            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_Path);
+            this.gbExternalDataInterface.Controls.Add(this.cmdSelectExternalToolPath);
+            this.gbExternalDataInterface.Controls.Add(this.label3);
+            this.gbExternalDataInterface.Controls.Add(this.label2);
+            this.gbExternalDataInterface.Location = new System.Drawing.Point(6, 6);
+            this.gbExternalDataInterface.Name = "gbExternalDataInterface";
+            this.gbExternalDataInterface.Size = new System.Drawing.Size(619, 393);
+            this.gbExternalDataInterface.TabIndex = 66;
+            this.gbExternalDataInterface.TabStop = false;
+            this.gbExternalDataInterface.Text = "External Data Interface";
+            // 
+            // txtExtTool_ParamMarket
+            // 
+            this.txtExtTool_ParamMarket.Location = new System.Drawing.Point(11, 211);
+            this.txtExtTool_ParamMarket.Multiline = true;
+            this.txtExtTool_ParamMarket.Name = "txtExtTool_ParamMarket";
+            this.txtExtTool_ParamMarket.Size = new System.Drawing.Size(416, 20);
+            this.txtExtTool_ParamMarket.TabIndex = 72;
+            this.txtExtTool_ParamMarket.Tag = "txtExtTool_ParamMarket;EMPTY";
+            this.txtExtTool_ParamMarket.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
+            this.txtExtTool_ParamMarket.Leave += new System.EventHandler(this.TextBox_Leave);
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(9, 242);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(571, 29);
+            this.label6.TabIndex = 74;
+            this.label6.Text = "*) the path and the filename will be automatically selected. You can find it in y" +
+    "our \"LocalApplicationDataPath\".";
+            // 
+            // txtExtTool_ParamLocation
+            // 
+            this.txtExtTool_ParamLocation.Location = new System.Drawing.Point(11, 157);
+            this.txtExtTool_ParamLocation.Name = "txtExtTool_ParamLocation";
+            this.txtExtTool_ParamLocation.Size = new System.Drawing.Size(416, 20);
+            this.txtExtTool_ParamLocation.TabIndex = 70;
+            this.txtExtTool_ParamLocation.Tag = "ExtTool_ParamLocation;EMPTY";
+            this.txtExtTool_ParamLocation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
+            this.txtExtTool_ParamLocation.Leave += new System.EventHandler(this.TextBox_Leave);
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(9, 185);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(571, 29);
+            this.label5.TabIndex = 73;
+            this.label5.Text = "c) Parameters for getting market data. Use placeholder \"%OUTPUTFILE%\" (without qu" +
+    "otes) to specify the location of parameter for the destination file *).";
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(9, 114);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(562, 52);
+            this.label4.TabIndex = 71;
+            this.label4.Text = resources.GetString("label4.Text");
+            // 
+            // txtExtTool_Path
+            // 
+            this.txtExtTool_Path.Location = new System.Drawing.Point(11, 83);
+            this.txtExtTool_Path.Name = "txtExtTool_Path";
+            this.txtExtTool_Path.Size = new System.Drawing.Size(420, 20);
+            this.txtExtTool_Path.TabIndex = 69;
+            this.txtExtTool_Path.Tag = "ExtTool_Path;EMPTY";
+            this.txtExtTool_Path.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
+            this.txtExtTool_Path.Leave += new System.EventHandler(this.TextBox_Leave);
+            // 
+            // cmdSelectExternalToolPath
+            // 
+            this.cmdSelectExternalToolPath.Location = new System.Drawing.Point(437, 81);
+            this.cmdSelectExternalToolPath.Name = "cmdSelectExternalToolPath";
+            this.cmdSelectExternalToolPath.Size = new System.Drawing.Size(171, 23);
+            this.cmdSelectExternalToolPath.TabIndex = 68;
+            this.cmdSelectExternalToolPath.Text = "Select";
+            this.cmdSelectExternalToolPath.UseVisualStyleBackColor = true;
+            this.cmdSelectExternalToolPath.Click += new System.EventHandler(this.cmdSelectExternalToolPath_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 66);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(158, 13);
+            this.label3.TabIndex = 67;
+            this.label3.Text = "a) Path to the external data tool:";
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(8, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(605, 40);
+            this.label2.TabIndex = 66;
+            this.label2.Text = "If you don\'t wan\'t to use the internal OCR-interface you also can use external to" +
+    "ols (like \"ED Market Connector\") for getting the current station and market data" +
+    ".";
+            // 
+            // tcDataInterface
+            // 
+            this.tcDataInterface.Controls.Add(this.tabOCRSettings);
+            this.tcDataInterface.Controls.Add(this.tabExternalToolSettings);
+            this.tcDataInterface.Location = new System.Drawing.Point(6, 90);
+            this.tcDataInterface.Name = "tcDataInterface";
+            this.tcDataInterface.SelectedIndex = 0;
+            this.tcDataInterface.Size = new System.Drawing.Size(629, 426);
+            this.tcDataInterface.TabIndex = 67;
+            // 
+            // tabOCRSettings
+            // 
+            this.tabOCRSettings.Controls.Add(this.groupBox6);
+            this.tabOCRSettings.Location = new System.Drawing.Point(4, 22);
+            this.tabOCRSettings.Name = "tabOCRSettings";
+            this.tabOCRSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabOCRSettings.Size = new System.Drawing.Size(621, 400);
+            this.tabOCRSettings.TabIndex = 0;
+            this.tabOCRSettings.Text = "OCR";
+            this.tabOCRSettings.UseVisualStyleBackColor = true;
+            // 
+            // tabExternalToolSettings
+            // 
+            this.tabExternalToolSettings.Controls.Add(this.gbExternalDataInterface);
+            this.tabExternalToolSettings.Location = new System.Drawing.Point(4, 22);
+            this.tabExternalToolSettings.Name = "tabExternalToolSettings";
+            this.tabExternalToolSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabExternalToolSettings.Size = new System.Drawing.Size(621, 400);
+            this.tabExternalToolSettings.TabIndex = 1;
+            this.tabExternalToolSettings.Text = "External Tool";
+            this.tabExternalToolSettings.UseVisualStyleBackColor = true;
+            // 
+            // gbDataInterface
+            // 
+            this.gbDataInterface.Controls.Add(this.groupBox2);
+            this.gbDataInterface.Controls.Add(this.tcDataInterface);
+            this.gbDataInterface.Location = new System.Drawing.Point(3, 3);
+            this.gbDataInterface.Name = "gbDataInterface";
+            this.gbDataInterface.Size = new System.Drawing.Size(641, 586);
+            this.gbDataInterface.TabIndex = 68;
+            this.gbDataInterface.TabStop = false;
+            this.gbDataInterface.Text = "Data Interface";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rbUseExternalTool);
+            this.groupBox2.Controls.Add(this.rbUseOCR);
+            this.groupBox2.Location = new System.Drawing.Point(6, 19);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(629, 65);
+            this.groupBox2.TabIndex = 70;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Tag = "SelectedInterface;OCR";
+            this.groupBox2.Text = "Select Interface";
+            // 
+            // rbUseExternalTool
+            // 
+            this.rbUseExternalTool.AutoSize = true;
+            this.rbUseExternalTool.Location = new System.Drawing.Point(24, 38);
+            this.rbUseExternalTool.Name = "rbUseExternalTool";
+            this.rbUseExternalTool.Size = new System.Drawing.Size(107, 17);
+            this.rbUseExternalTool.TabIndex = 69;
+            this.rbUseExternalTool.TabStop = true;
+            this.rbUseExternalTool.Tag = "External";
+            this.rbUseExternalTool.Text = "use External Tool";
+            this.rbUseExternalTool.UseVisualStyleBackColor = true;
+            this.rbUseExternalTool.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
+            // 
+            // rbUseOCR
+            // 
+            this.rbUseOCR.AutoSize = true;
+            this.rbUseOCR.Location = new System.Drawing.Point(24, 15);
+            this.rbUseOCR.Name = "rbUseOCR";
+            this.rbUseOCR.Size = new System.Drawing.Size(103, 17);
+            this.rbUseOCR.TabIndex = 68;
+            this.rbUseOCR.TabStop = true;
+            this.rbUseOCR.Tag = "OCR";
+            this.rbUseOCR.Text = "use Built-In OCR";
+            this.rbUseOCR.UseVisualStyleBackColor = true;
+            this.rbUseOCR.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
+            // 
             // tabSettings
             // 
-            this.Controls.Add(this.label25);
+            this.Controls.Add(this.gbDataInterface);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox12);
-            this.Controls.Add(this.cmbVisitedFilter);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
-            this.Controls.Add(this.groupBox6);
             this.Name = "tabSettings";
             this.Size = new System.Drawing.Size(1049, 592);
             this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
+            this.gbTesseract.ResumeLayout(false);
+            this.gbTesseract.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.groupBox11.ResumeLayout(false);
@@ -501,8 +746,17 @@
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.gbExternalDataInterface.ResumeLayout(false);
+            this.gbExternalDataInterface.PerformLayout();
+            this.tcDataInterface.ResumeLayout(false);
+            this.tabOCRSettings.ResumeLayout(false);
+            this.tabExternalToolSettings.ResumeLayout(false);
+            this.gbDataInterface.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -543,6 +797,26 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.ComboBoxInt32 cmbVisitedFilter;
+        private System.Windows.Forms.GroupBox gbTesseract;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox gbExternalDataInterface;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtExtTool_ParamMarket;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtExtTool_ParamLocation;
+        private System.Windows.Forms.TextBox txtExtTool_Path;
+        private System.Windows.Forms.Button cmdSelectExternalToolPath;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TabControl tcDataInterface;
+        private System.Windows.Forms.TabPage tabOCRSettings;
+        private System.Windows.Forms.TabPage tabExternalToolSettings;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.GroupBox gbDataInterface;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbUseExternalTool;
+        private System.Windows.Forms.RadioButton rbUseOCR;
 
 
     }

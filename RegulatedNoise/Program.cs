@@ -15,6 +15,9 @@ using RegulatedNoise.SQL;
 using RegulatedNoise.MTCommandersLog;
 using RegulatedNoise.MTPriceAnalysis;
 using RegulatedNoise.MTSettings;
+using RegulatedNoise.ExtData;
+using RegulatedNoise.FileScanner;
+
 
 namespace RegulatedNoise
 {
@@ -23,12 +26,14 @@ namespace RegulatedNoise
 
         public const Decimal DB_VERSION_CURRENT     = 1.0M;
         public const Decimal DB_VERSION_NONE        = 0.0M; 
+        
 
         public const String NULLSTRING              = "?";
         public const String COMMODITY_NOT_SET       = "???";
         public const String BASE_LANGUAGE           = "eng";
 
-
+        //public String Directory_Data        { get; set; }
+        //public String Directory_Program     { get; set; }
 
 #region enums
 
@@ -50,19 +55,26 @@ namespace RegulatedNoise
         [STAThread]
         static void Main()
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            Application.ThreadException += Application_ThreadException;
+            try
+            {
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                Application.ThreadException += Application_ThreadException;
 
-            Init();
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            
-            Application.Run(new Form1());
+                Init();
 
-            Cleanup();
+                Application.Run(new Form1());
 
+                Cleanup();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in main routine", ex);
+            }
         }
 
         #endregion
@@ -147,8 +159,10 @@ namespace RegulatedNoise
 
         private static Boolean                          m_initDone                  = false;
 
+        public static ProgramPaths                      Paths;
         public static GUIColors                         Colors;
         public static CompanionInterface                CompanionIO;
+        public static ExternalDataInterface             ExternalData;
         public static DBConnector                       DBCon;
         public static RegulatedNoiseSettings            Settings_old;
         private static DBProcess                        EliteDBProcess;
@@ -157,6 +171,7 @@ namespace RegulatedNoise
         public static PriceAnalysis                     PriceAnalysis;
         public static EliteDBIO                         Data;
         public static Condition                         actualCondition;
+        public static EDLogfileScanner                  LogfileScanner;
 
 
         /// <summary>
@@ -202,12 +217,17 @@ namespace RegulatedNoise
 
                     /* **************** database is running ********************** */
                     
+
                     // prepare colors-object
                     Colors                                      = new GUIColors();
 
                     // preprare main data object
                     Data                                        = new RegulatedNoise.SQL.EliteDBIO();
+                    Data.InitializeData();
                     Data.PrepareBaseTables();
+
+                    // create global paths-object
+                    Paths                                       = new ProgramPaths();
 
                     // prepare settings
                     Settings                                    = new Settings();
@@ -221,14 +241,22 @@ namespace RegulatedNoise
                     PriceAnalysis                               = new PriceAnalysis();
                     PriceAnalysis.BaseData                      = Data.BaseData;
 
-                    // initializing the Companion-Interface
-                    //CompanionIO         = new CompanionInterface();
-                    CompanionIO = null;
+                    // starting the external data interface
+                    ExternalData                                = new ExternalDataInterface();
 
                     // initializing the object for the actual condition
-                    actualCondition = new Condition();
+                    actualCondition                             = new Condition();
+
+                    // initializing the LogfileScanner
+                    LogfileScanner                              = new EDLogfileScanner();
+
+                    // register the LogfileScanner in the CommandersLog for the ExternalDataEvent-event
+                    CommandersLog.registerLogFileScanner(LogfileScanner);
+                    CommandersLog.registerExternalTool(ExternalData);
+
 
                     m_initDone = true;
+
                 }
             }
             catch (Exception ex)

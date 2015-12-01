@@ -11,6 +11,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 {
     public partial class DataGridViewExt : DataGridView
     {
+
 #region event handler
 
         [System.ComponentModel.Browsable(true)]

@@ -63,8 +63,8 @@ namespace RegulatedNoise.EDDB_Data
         /// <summary>
         /// returns a station in a system by name
         /// </summary>
-        /// <param name="systemName"></param>
-        /// <param name="stationName"></param>
+        /// <param name="Systemname"></param>
+        /// <param name="Locationname"></param>
         /// <returns></returns>
         /// <param name="System"></param>
         public EDStation getStation(string systemName, string stationName)
@@ -77,8 +77,8 @@ namespace RegulatedNoise.EDDB_Data
             /// <summary>
         /// returns a station in a system by name
         /// </summary>
-        /// <param name="systemName"></param>
-        /// <param name="stationName"></param>
+        /// <param name="Systemname"></param>
+        /// <param name="Locationname"></param>
         /// <returns></returns>
         /// <param name="System"></param>
         public EDStation getStation(string systemName, string stationName, out EDSystem System)
@@ -100,8 +100,8 @@ namespace RegulatedNoise.EDDB_Data
         /// <summary>
         /// returns distance of a station to the star
         /// </summary>
-        /// <param name="systemName"></param>
-        /// <param name="stationName"></param>
+        /// <param name="Systemname"></param>
+        /// <param name="Locationname"></param>
         /// <returns></returns>
         public Int32 getStationDistance(string systemName, string stationName)
         {
@@ -903,7 +903,7 @@ namespace RegulatedNoise.EDDB_Data
                                                 (x.SystemId == System.Id));
                 if(Station != null)
                 { 
-                    // station is already existingClassification, copy new values into existingClassification Station
+                    // station is already existingClassification, copy new values into existingClassification Location
                     Station.getValues(m_currentStationdata);
                 }
                 else
@@ -950,7 +950,7 @@ namespace RegulatedNoise.EDDB_Data
                                                 (x.SystemId == System.Id));
                 if(Station != null)
                 { 
-                    // station is already existingClassification, copy new values into existingClassification Station
+                    // station is already existingClassification, copy new values into existingClassification Location
                     Station.getValues(m_currentStationdata);
                 }
                 else

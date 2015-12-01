@@ -341,7 +341,7 @@ namespace RegulatedNoise
                 HtmlTag("Create Log Event")+
 /*@"<form style=""font-size: 24pt"" action=""createnote.html"">"
 +NoteInputFieldHtml("EventType")
-+NoteInputFieldHtml("Station")
++NoteInputFieldHtml("Location")
 +NoteInputFieldHtml("System")
 +NoteInputFieldHtml("Cargo")
 +NoteInputFieldHtml("CargoAction")

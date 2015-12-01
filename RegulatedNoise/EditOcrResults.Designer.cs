@@ -219,7 +219,7 @@
             this.Systemname.ReadOnly = true;
             this.Systemname.Width = 150;
             // 
-            // Stationname
+            // Locationname
             // 
             this.Stationname.HeaderText = "Station";
             this.Stationname.Name = "Stationname";

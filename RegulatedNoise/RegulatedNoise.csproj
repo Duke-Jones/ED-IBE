@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RegulatedNoise</RootNamespace>
     <AssemblyName>RegulatedNoise</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -26,6 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -109,8 +110,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tesseract">
-      <HintPath>..\packages\Tesseract.2.1.1.1\lib\net45\Tesseract.dll</HintPath>
+    <Reference Include="Tesseract, Version=2.4.1.0, Culture=neutral, PublicKeyToken=ebeb3d86bef60cbe, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tesseract.2.4.1.0\lib\net451\Tesseract.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -121,12 +123,14 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExtData\ExternalDataInterface.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.Designer.cs">
       <DependentUpon>DataGridViewSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileScanner\EDLogfileScanner.cs" />
     <Compile Include="GUIColors.cs" />
     <Compile Include="MainTabs\Settings.cs" />
     <Compile Include="MainTabs\tabCommandersLog.cs">
@@ -292,6 +296,7 @@
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="ProgramPaths.cs" />
     <Compile Include="ProgressView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -333,6 +338,18 @@
     <Compile Include="Web\ExtendedWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Content Include="x64\liblept168.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x64\libtesseract302.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\liblept168.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\libtesseract302.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </EmbeddedResource>
@@ -880,18 +897,6 @@
     <None Include="Resources\PayPalDonate.jpg" />
     <None Include="Resources\RNSplash.png" />
     <Content Include="Resources\RegulatedNoise.ico" />
-    <Content Include="x64\liblept168.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x64\libtesseract302.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\liblept168.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\libtesseract302.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

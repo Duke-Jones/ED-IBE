@@ -29,7 +29,7 @@ namespace RegulatedNoise
     // <summary>
     // shows the progress view
     // </summary>
-    // <param name="Info"></param>
+    // <param name="ErrorInfo"></param>
     // <remarks></remarks>
     public void progressStart(string Info="") {
         try {
@@ -106,7 +106,7 @@ namespace RegulatedNoise
     // <summary>
     // sets a new info string
     // </summary>
-    // <param name="Info">new information</param>
+    // <param name="ErrorInfo">new information</param>
     // <remarks></remarks>
     public void progressInfo(string Info) {
         try {

@@ -127,6 +127,18 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.pbOriginalImage = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.tabExternal = new System.Windows.Forms.TabPage();
+            this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmdConfirm = new System.Windows.Forms.Button();
+            this.cmdGetMarketData = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtRecievedStation = new System.Windows.Forms.TextBox();
+            this.txtRecievedSystem = new System.Windows.Forms.TextBox();
+            this.txtExtInfo = new System.Windows.Forms.TextBox();
+            this.cmdLanded = new System.Windows.Forms.Button();
             this.tabSystemData = new System.Windows.Forms.TabPage();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.cmbStationStations = new System.Windows.Forms.ComboBox_ro();
@@ -274,6 +286,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbTrimmed)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).BeginInit();
+            this.tabExternal.SuspendLayout();
             this.tabSystemData.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.paEconomies.SuspendLayout();
@@ -473,7 +486,7 @@
             this.tabEDDN.Controls.Add(this.groupBox2);
             this.tabEDDN.Location = new System.Drawing.Point(4, 22);
             this.tabEDDN.Name = "tabEDDN";
-            this.tabEDDN.Size = new System.Drawing.Size(1076, 611);
+            this.tabEDDN.Size = new System.Drawing.Size(1076, 587);
             this.tabEDDN.TabIndex = 7;
             this.tabEDDN.Text = "EDDN";
             this.tabEDDN.UseVisualStyleBackColor = true;
@@ -671,7 +684,7 @@
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1076, 611);
+            this.tabWebserver.Size = new System.Drawing.Size(1076, 587);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -852,9 +865,9 @@
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1076, 611);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1076, 587);
             this.tabOCRGroup.TabIndex = 11;
-            this.tabOCRGroup.Text = "Optical Character Recognition";
+            this.tabOCRGroup.Text = "Market Data Interface";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
             // 
             // tabCtrlOCR
@@ -863,6 +876,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabCtrlOCR.Controls.Add(this.tabOCR);
+            this.tabCtrlOCR.Controls.Add(this.tabExternal);
             this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
             this.tabCtrlOCR.Name = "tabCtrlOCR";
             this.tabCtrlOCR.SelectedIndex = 0;
@@ -1280,13 +1294,135 @@
             this.label11.TabIndex = 2;
             this.label11.Text = "Original";
             // 
+            // tabExternal
+            // 
+            this.tabExternal.Controls.Add(this.txtLocalDataCollected);
+            this.tabExternal.Controls.Add(this.label4);
+            this.tabExternal.Controls.Add(this.cmdConfirm);
+            this.tabExternal.Controls.Add(this.cmdGetMarketData);
+            this.tabExternal.Controls.Add(this.label3);
+            this.tabExternal.Controls.Add(this.label2);
+            this.tabExternal.Controls.Add(this.label1);
+            this.tabExternal.Controls.Add(this.txtRecievedStation);
+            this.tabExternal.Controls.Add(this.txtRecievedSystem);
+            this.tabExternal.Controls.Add(this.txtExtInfo);
+            this.tabExternal.Controls.Add(this.cmdLanded);
+            this.tabExternal.Location = new System.Drawing.Point(4, 22);
+            this.tabExternal.Name = "tabExternal";
+            this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
+            this.tabExternal.Size = new System.Drawing.Size(1040, 560);
+            this.tabExternal.TabIndex = 5;
+            this.tabExternal.Text = "External IO";
+            this.tabExternal.UseVisualStyleBackColor = true;
+            // 
+            // txtLocalDataCollected
+            // 
+            this.txtLocalDataCollected.Location = new System.Drawing.Point(199, 132);
+            this.txtLocalDataCollected.Name = "txtLocalDataCollected";
+            this.txtLocalDataCollected.ReadOnly = true;
+            this.txtLocalDataCollected.Size = new System.Drawing.Size(151, 20);
+            this.txtLocalDataCollected.TabIndex = 10;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(196, 116);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(102, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "local data collected:";
+            // 
+            // cmdConfirm
+            // 
+            this.cmdConfirm.Enabled = false;
+            this.cmdConfirm.Location = new System.Drawing.Point(34, 74);
+            this.cmdConfirm.Name = "cmdConfirm";
+            this.cmdConfirm.Size = new System.Drawing.Size(139, 36);
+            this.cmdConfirm.TabIndex = 8;
+            this.cmdConfirm.Text = "Confirm Location";
+            this.cmdConfirm.UseVisualStyleBackColor = true;
+            this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
+            // 
+            // cmdGetMarketData
+            // 
+            this.cmdGetMarketData.Enabled = false;
+            this.cmdGetMarketData.Location = new System.Drawing.Point(34, 116);
+            this.cmdGetMarketData.Name = "cmdGetMarketData";
+            this.cmdGetMarketData.Size = new System.Drawing.Size(139, 36);
+            this.cmdGetMarketData.TabIndex = 7;
+            this.cmdGetMarketData.Text = "Get Market Data";
+            this.cmdGetMarketData.UseVisualStyleBackColor = true;
+            this.cmdGetMarketData.Click += new System.EventHandler(this.cmdGetMarketData_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(196, 73);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Recieved station";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(196, 32);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Recieved system";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(31, 166);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(25, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Info";
+            // 
+            // txtRecievedStation
+            // 
+            this.txtRecievedStation.Location = new System.Drawing.Point(199, 89);
+            this.txtRecievedStation.Name = "txtRecievedStation";
+            this.txtRecievedStation.ReadOnly = true;
+            this.txtRecievedStation.Size = new System.Drawing.Size(151, 20);
+            this.txtRecievedStation.TabIndex = 3;
+            // 
+            // txtRecievedSystem
+            // 
+            this.txtRecievedSystem.Location = new System.Drawing.Point(199, 48);
+            this.txtRecievedSystem.Name = "txtRecievedSystem";
+            this.txtRecievedSystem.ReadOnly = true;
+            this.txtRecievedSystem.Size = new System.Drawing.Size(151, 20);
+            this.txtRecievedSystem.TabIndex = 2;
+            // 
+            // txtExtInfo
+            // 
+            this.txtExtInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtExtInfo.Location = new System.Drawing.Point(34, 182);
+            this.txtExtInfo.Name = "txtExtInfo";
+            this.txtExtInfo.ReadOnly = true;
+            this.txtExtInfo.Size = new System.Drawing.Size(316, 20);
+            this.txtExtInfo.TabIndex = 1;
+            // 
+            // cmdLanded
+            // 
+            this.cmdLanded.Location = new System.Drawing.Point(34, 32);
+            this.cmdLanded.Name = "cmdLanded";
+            this.cmdLanded.Size = new System.Drawing.Size(139, 36);
+            this.cmdLanded.TabIndex = 0;
+            this.cmdLanded.Text = "Landed";
+            this.cmdLanded.UseVisualStyleBackColor = true;
+            this.cmdLanded.Click += new System.EventHandler(this.cmdLanded_Click);
+            // 
             // tabSystemData
             // 
             this.tabSystemData.Controls.Add(this.groupBox14);
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1076, 611);
+            this.tabSystemData.Size = new System.Drawing.Size(1076, 587);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -2816,6 +2952,8 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOriginalImage)).EndInit();
+            this.tabExternal.ResumeLayout(false);
+            this.tabExternal.PerformLayout();
             this.tabSystemData.ResumeLayout(false);
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
@@ -3064,6 +3202,18 @@
         private System.Windows.Forms.Label lblSubtitle;
         private System.Windows.Forms.Label lblRegulatedNoise;
         private System.Windows.Forms.TabControl tabCtrlMain;
+        private System.Windows.Forms.TabPage tabExternal;
+        private System.Windows.Forms.Button cmdLanded;
+        private System.Windows.Forms.TextBox txtExtInfo;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtRecievedStation;
+        private System.Windows.Forms.TextBox txtRecievedSystem;
+        private System.Windows.Forms.Button cmdConfirm;
+        private System.Windows.Forms.Button cmdGetMarketData;
+        private System.Windows.Forms.TextBox txtLocalDataCollected;
+        private System.Windows.Forms.Label label4;
 
         
     }

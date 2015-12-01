@@ -33,3 +33,6 @@
 /RNDatabase/SQL-Model/Elite_DB  MyISAM.mwb
 /RNDatabase/Database/*.bak
 /RNDatabase/SQL-Model/table_inserts/Test 1.sql
+/RNDatabase/Database/script/calculation_test.sql
+/RNDatabase/Database/script/test.sql
+/RNDatabase/SQL-Model/table_inserts/distance-check.sql

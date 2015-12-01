@@ -441,7 +441,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEventType` (
   `id` INT NOT NULL COMMENT '',
-  `event` VARCHAR(80) NOT NULL COMMENT '',
+  `eventtype` VARCHAR(80) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -451,7 +451,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCargoAction` (
   `id` INT NOT NULL COMMENT '',
-  `action` VARCHAR(80) NOT NULL COMMENT '',
+  `cargoaction` VARCHAR(80) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -889,7 +889,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`viSystemsAndStations` (`SystemID` INT, `S
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Elite_DB`.`vilog`;
 USE `Elite_DB`;
-CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`event` AS `eevent`,`c`.`action` AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` AS `credits_transaction`,`l`.`credits_total` AS `credits_total`,`l`.`notes` AS `notes` from (((((`tblog` `l` left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS 
+select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eevent`,`c`.`cargoaction` 
+AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` 
+AS `credits_transaction`,`l`.`credits_total` AS `credits_total`,`l`.`notes` AS `notes` from (((((`tblog` `l` 
+left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) 
+left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) 
+left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
 
 -- -----------------------------------------------------
 -- View `Elite_DB`.`viSystemsAndStations`
@@ -1061,18 +1067,18 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (1, 'Jumped To');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (2, 'Visited');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (3, 'Market Data Collected');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (4, 'Cargo');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (5, 'Fight');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (6, 'Docked');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (7, 'Took Off');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (8, 'Saved Game');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (9, 'Loaded Game');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (10, 'Accepted Mission');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (11, 'Completed Mission');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `event`) VALUES (12, 'Other');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (1, 'Jumped To');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (2, 'Visited');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (3, 'Market Data Collected');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (4, 'Cargo');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (5, 'Fight');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (6, 'Docked');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (7, 'Took Off');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (8, 'Saved Game');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (9, 'Loaded Game');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (10, 'Accepted Mission');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (11, 'Completed Mission');
+INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (12, 'Other');
 
 COMMIT;
 
@@ -1082,11 +1088,11 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (1, 'Bought');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (2, 'Sold');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (3, 'Mined');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (4, 'Stolen');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `action`) VALUES (5, 'Found');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (1, 'Bought');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (2, 'Sold');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (3, 'Mined');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (4, 'Stolen');
+INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (5, 'Found');
 
 COMMIT;
 

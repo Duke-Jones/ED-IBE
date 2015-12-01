@@ -31,7 +31,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         private const string ValueTagName = "value";
 
         /// <summary>
-        /// Diese Methode ist reserviert und sollte nicht verwendet werden. Wenn Sie die IXmlSerializable-Schnittstelle implementieren, sollten Sie null (Nothing in Visual Basic) von der Methode zurückgeben und stattdessen das <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> auf die Klasse anwenden, wenn ein benutzerdefiniertes Schema erforderlich ist.
+        /// Diese Methode ist reserviert und sollte nicht verwendet werden. Wenn Sie die IXmlSerializable-Schnittstelle implementieren, sollten Sie null (None in Visual Basic) von der Methode zurückgeben und stattdessen das <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> auf die Klasse anwenden, wenn ein benutzerdefiniertes Schema erforderlich ist.
         /// </summary>
         /// <returns>
         /// Ein <see cref="T:System.Xml.Schema.XmlSchema"/> zur Beschreibung der XML-Darstellung des Objekts, das von der <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/>-Methode erstellt und von der <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/>-Methode verwendet wird.

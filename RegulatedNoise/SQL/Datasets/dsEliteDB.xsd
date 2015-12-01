@@ -8,31 +8,6 @@
           <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="elite_dbConnectionString2" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="elite_dbConnectionString2 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.RegulatedNoise.Properties.Settings.GlobalReference.Default.elite_dbConnectionString2" Provider="MySql.Data.MySqlClient" />
         </Connections>
         <Tables>
-          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vilogTableAdapter" GeneratorDataComponentClassName="vilogTableAdapter" Name="vilog" UserDataComponentName="vilogTableAdapter">
-            <MainSource>
-              <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.vilog" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
-                <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT `time`, `systemname`, `stationname`, `eevent`, `action`, `loccommodity`, `cargovolume`, `credits_transaction`, `credits_total`, `notes` FROM `elite_db`.`vilog`</CommandText>
-                    <Parameters />
-                  </DbCommand>
-                </SelectCommand>
-              </DbSource>
-            </MainSource>
-            <Mappings>
-              <Mapping SourceColumn="time" DataSetColumn="time" />
-              <Mapping SourceColumn="systemname" DataSetColumn="systemname" />
-              <Mapping SourceColumn="stationname" DataSetColumn="stationname" />
-              <Mapping SourceColumn="eevent" DataSetColumn="eevent" />
-              <Mapping SourceColumn="action" DataSetColumn="action" />
-              <Mapping SourceColumn="loccommodity" DataSetColumn="loccommodity" />
-              <Mapping SourceColumn="cargovolume" DataSetColumn="cargovolume" />
-              <Mapping SourceColumn="credits_transaction" DataSetColumn="credits_transaction" />
-              <Mapping SourceColumn="credits_total" DataSetColumn="credits_total" />
-              <Mapping SourceColumn="notes" DataSetColumn="notes" />
-            </Mappings>
-            <Sources />
-          </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="visystemsandstationsTableAdapter" GeneratorDataComponentClassName="visystemsandstationsTableAdapter" Name="visystemsandstations" UserDataComponentName="visystemsandstationsTableAdapter">
             <MainSource>
               <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.visystemsandstations" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
@@ -143,52 +118,6 @@
             <Mappings>
               <Mapping SourceColumn="id" DataSetColumn="id" />
               <Mapping SourceColumn="Attribute" DataSetColumn="Attribute" />
-            </Mappings>
-            <Sources />
-          </TableAdapter>
-          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="tbcargoactionTableAdapter" GeneratorDataComponentClassName="tbcargoactionTableAdapter" Name="tbcargoaction" UserDataComponentName="tbcargoactionTableAdapter">
-            <MainSource>
-              <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.tbcargoaction" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
-                <DeleteCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>DELETE FROM `tbcargoaction` WHERE ((`id` = @p1) AND (`action` = @p2))</CommandText>
-                    <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="action" SourceColumnNullMapping="false" SourceVersion="Original" />
-                    </Parameters>
-                  </DbCommand>
-                </DeleteCommand>
-                <InsertCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>INSERT INTO `tbcargoaction` (`id`, `action`) VALUES (@p1, @p2)</CommandText>
-                    <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="action" SourceColumnNullMapping="false" SourceVersion="Current" />
-                    </Parameters>
-                  </DbCommand>
-                </InsertCommand>
-                <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT `id`, `action` FROM `tbcargoaction`</CommandText>
-                    <Parameters />
-                  </DbCommand>
-                </SelectCommand>
-                <UpdateCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>UPDATE `tbcargoaction` SET `id` = @p1, `action` = @p2 WHERE ((`id` = @p3) AND (`action` = @p4))</CommandText>
-                    <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="action" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p3" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p4" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="action" SourceColumnNullMapping="false" SourceVersion="Original" />
-                    </Parameters>
-                  </DbCommand>
-                </UpdateCommand>
-              </DbSource>
-            </MainSource>
-            <Mappings>
-              <Mapping SourceColumn="id" DataSetColumn="id" />
-              <Mapping SourceColumn="action" DataSetColumn="action" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -767,52 +696,6 @@
               <Mapping SourceColumn="id" DataSetColumn="id" />
               <Mapping SourceColumn="level" DataSetColumn="level" />
               <Mapping SourceColumn="loclevel" DataSetColumn="loclevel" />
-            </Mappings>
-            <Sources />
-          </TableAdapter>
-          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="tbeventtypeTableAdapter" GeneratorDataComponentClassName="tbeventtypeTableAdapter" Name="tbeventtype" UserDataComponentName="tbeventtypeTableAdapter">
-            <MainSource>
-              <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.tbeventtype" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
-                <DeleteCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>DELETE FROM `tbeventtype` WHERE ((`id` = @p1) AND (`event` = @p2))</CommandText>
-                    <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="event" SourceColumnNullMapping="false" SourceVersion="Original" />
-                    </Parameters>
-                  </DbCommand>
-                </DeleteCommand>
-                <InsertCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>INSERT INTO `tbeventtype` (`id`, `event`) VALUES (@p1, @p2)</CommandText>
-                    <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="event" SourceColumnNullMapping="false" SourceVersion="Current" />
-                    </Parameters>
-                  </DbCommand>
-                </InsertCommand>
-                <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT `id`, `event` FROM `tbeventtype`</CommandText>
-                    <Parameters />
-                  </DbCommand>
-                </SelectCommand>
-                <UpdateCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>UPDATE `tbeventtype` SET `id` = @p1, `event` = @p2 WHERE ((`id` = @p3) AND (`event` = @p4))</CommandText>
-                    <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="event" SourceColumnNullMapping="false" SourceVersion="Current" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p3" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
-                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p4" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="event" SourceColumnNullMapping="false" SourceVersion="Original" />
-                    </Parameters>
-                  </DbCommand>
-                </UpdateCommand>
-              </DbSource>
-            </MainSource>
-            <Mappings>
-              <Mapping SourceColumn="id" DataSetColumn="id" />
-              <Mapping SourceColumn="event" DataSetColumn="event" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -2970,6 +2853,123 @@
             </Mappings>
             <Sources />
           </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="tbeventtypeTableAdapter" GeneratorDataComponentClassName="tbeventtypeTableAdapter" Name="tbeventtype" UserDataComponentName="tbeventtypeTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.tbeventtype" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM `tbeventtype` WHERE ((`id` = @p1) AND (`eventtype` = @p2))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="eventtype" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO `tbeventtype` (`id`, `eventtype`) VALUES (@p1, @p2)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="eventtype" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT `id`, `eventtype` FROM `tbeventtype`</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE `tbeventtype` SET `id` = @p1, `eventtype` = @p2 WHERE ((`id` = @p3) AND (`eventtype` = @p4))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="eventtype" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p3" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p4" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="eventtype" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="eventtype" DataSetColumn="eventtype" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="tbcargoactionTableAdapter" GeneratorDataComponentClassName="tbcargoactionTableAdapter" Name="tbcargoaction" UserDataComponentName="tbcargoactionTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.tbcargoaction" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM `tbcargoaction` WHERE ((`id` = @p1) AND (`cargoaction` = @p2))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="cargoaction" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO `tbcargoaction` (`id`, `cargoaction`) VALUES (@p1, @p2)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="cargoaction" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT `id`, `cargoaction` FROM `tbcargoaction`</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE `tbcargoaction` SET `id` = @p1, `cargoaction` = @p2 WHERE ((`id` = @p3) AND (`cargoaction` = @p4))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p1" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p2" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="cargoaction" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@p3" Precision="0" ProviderType="Int32" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@p4" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="cargoaction" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="cargoaction" DataSetColumn="cargoaction" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vilogTableAdapter" GeneratorDataComponentClassName="vilogTableAdapter" Name="vilog" UserDataComponentName="vilogTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="elite_dbConnectionString2 (Settings)" DbObjectName="elite_db.vilog" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT `time`, `systemname`, `stationname`, `eevent`, `action`, `loccommodity`, `cargovolume`, `credits_transaction`, `credits_total`, `notes` FROM `elite_db`.`vilog`</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="time" DataSetColumn="time" />
+              <Mapping SourceColumn="systemname" DataSetColumn="systemname" />
+              <Mapping SourceColumn="stationname" DataSetColumn="stationname" />
+              <Mapping SourceColumn="eevent" DataSetColumn="eevent" />
+              <Mapping SourceColumn="action" DataSetColumn="action" />
+              <Mapping SourceColumn="loccommodity" DataSetColumn="loccommodity" />
+              <Mapping SourceColumn="cargovolume" DataSetColumn="cargovolume" />
+              <Mapping SourceColumn="credits_transaction" DataSetColumn="credits_transaction" />
+              <Mapping SourceColumn="credits_total" DataSetColumn="credits_total" />
+              <Mapping SourceColumn="notes" DataSetColumn="notes" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
         </Tables>
         <Sources />
       </DataSource>
@@ -2978,58 +2978,6 @@
   <xs:element name="dsEliteDB" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsEliteDB" msprop:Generator_UserDSName="dsEliteDB">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="vilog" msprop:Generator_TableClassName="vilogDataTable" msprop:Generator_TableVarName="tablevilog" msprop:Generator_TablePropName="vilog" msprop:Generator_RowDeletingName="vilogRowDeleting" msprop:Generator_RowChangingName="vilogRowChanging" msprop:Generator_RowEvHandlerName="vilogRowChangeEventHandler" msprop:Generator_RowDeletedName="vilogRowDeleted" msprop:Generator_UserTableName="vilog" msprop:Generator_RowChangedName="vilogRowChanged" msprop:Generator_RowEvArgName="vilogRowChangeEvent" msprop:Generator_RowClassName="vilogRow">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="time" msprop:Generator_ColumnVarNameInTable="columntime" msprop:Generator_ColumnPropNameInRow="time" msprop:Generator_ColumnPropNameInTable="timeColumn" msprop:Generator_UserColumnName="time" type="xs:dateTime" />
-              <xs:element name="systemname" msprop:Generator_ColumnVarNameInTable="columnsystemname" msprop:Generator_ColumnPropNameInRow="systemname" msprop:Generator_ColumnPropNameInTable="systemnameColumn" msprop:Generator_UserColumnName="systemname" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="stationname" msprop:Generator_ColumnVarNameInTable="columnstationname" msprop:Generator_ColumnPropNameInRow="stationname" msprop:Generator_ColumnPropNameInTable="stationnameColumn" msprop:Generator_UserColumnName="stationname" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="eevent" msprop:Generator_ColumnVarNameInTable="columneevent" msprop:Generator_ColumnPropNameInRow="eevent" msprop:Generator_ColumnPropNameInTable="eeventColumn" msprop:Generator_UserColumnName="eevent" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="action" msprop:Generator_ColumnVarNameInTable="columnaction" msprop:Generator_ColumnPropNameInRow="action" msprop:Generator_ColumnPropNameInTable="actionColumn" msprop:Generator_UserColumnName="action" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="loccommodity" msprop:Generator_ColumnVarNameInTable="columnloccommodity" msprop:Generator_ColumnPropNameInRow="loccommodity" msprop:Generator_ColumnPropNameInTable="loccommodityColumn" msprop:Generator_UserColumnName="loccommodity" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-              <xs:element name="cargovolume" msprop:Generator_ColumnVarNameInTable="columncargovolume" msprop:Generator_ColumnPropNameInRow="cargovolume" msprop:Generator_ColumnPropNameInTable="cargovolumeColumn" msprop:Generator_UserColumnName="cargovolume" type="xs:int" minOccurs="0" />
-              <xs:element name="credits_transaction" msprop:Generator_ColumnVarNameInTable="columncredits_transaction" msprop:Generator_ColumnPropNameInRow="credits_transaction" msprop:Generator_ColumnPropNameInTable="credits_transactionColumn" msprop:Generator_UserColumnName="credits_transaction" type="xs:int" minOccurs="0" />
-              <xs:element name="credits_total" msprop:Generator_ColumnVarNameInTable="columncredits_total" msprop:Generator_ColumnPropNameInRow="credits_total" msprop:Generator_ColumnPropNameInTable="credits_totalColumn" msprop:Generator_UserColumnName="credits_total" type="xs:int" minOccurs="0" />
-              <xs:element name="notes" msprop:Generator_ColumnVarNameInTable="columnnotes" msprop:Generator_ColumnPropNameInRow="notes" msprop:Generator_ColumnPropNameInTable="notesColumn" msprop:Generator_UserColumnName="notes" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="1024" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
         <xs:element name="visystemsandstations" msprop:Generator_TableClassName="visystemsandstationsDataTable" msprop:Generator_TableVarName="tablevisystemsandstations" msprop:Generator_TablePropName="visystemsandstations" msprop:Generator_RowDeletingName="visystemsandstationsRowDeleting" msprop:Generator_RowChangingName="visystemsandstationsRowChanging" msprop:Generator_RowEvHandlerName="visystemsandstationsRowChangeEventHandler" msprop:Generator_RowDeletedName="visystemsandstationsRowDeleted" msprop:Generator_UserTableName="visystemsandstations" msprop:Generator_RowChangedName="visystemsandstationsRowChanged" msprop:Generator_RowEvArgName="visystemsandstationsRowChangeEvent" msprop:Generator_RowClassName="visystemsandstationsRow">
           <xs:complexType>
             <xs:sequence>
@@ -3071,20 +3019,6 @@
             <xs:sequence>
               <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
               <xs:element name="Attribute" msprop:Generator_ColumnVarNameInTable="columnAttribute" msprop:Generator_ColumnPropNameInRow="Attribute" msprop:Generator_ColumnPropNameInTable="AttributeColumn" msprop:Generator_UserColumnName="Attribute" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="tbcargoaction" msprop:Generator_TableClassName="tbcargoactionDataTable" msprop:Generator_TableVarName="tabletbcargoaction" msprop:Generator_TablePropName="tbcargoaction" msprop:Generator_RowDeletingName="tbcargoactionRowDeleting" msprop:Generator_RowChangingName="tbcargoactionRowChanging" msprop:Generator_RowEvHandlerName="tbcargoactionRowChangeEventHandler" msprop:Generator_RowDeletedName="tbcargoactionRowDeleted" msprop:Generator_UserTableName="tbcargoaction" msprop:Generator_RowChangedName="tbcargoactionRowChanged" msprop:Generator_RowEvArgName="tbcargoactionRowChangeEvent" msprop:Generator_RowClassName="tbcargoactionRow">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
-              <xs:element name="action" msprop:Generator_ColumnVarNameInTable="columnaction" msprop:Generator_ColumnPropNameInRow="action" msprop:Generator_ColumnPropNameInTable="actionColumn" msprop:Generator_UserColumnName="action">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="80" />
@@ -3237,20 +3171,6 @@
                 </xs:simpleType>
               </xs:element>
               <xs:element name="loclevel" msprop:Generator_ColumnVarNameInTable="columnloclevel" msprop:Generator_ColumnPropNameInRow="loclevel" msprop:Generator_ColumnPropNameInTable="loclevelColumn" msprop:Generator_UserColumnName="loclevel" minOccurs="0">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="80" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="tbeventtype" msprop:Generator_TableClassName="tbeventtypeDataTable" msprop:Generator_TableVarName="tabletbeventtype" msprop:Generator_TablePropName="tbeventtype" msprop:Generator_RowDeletingName="tbeventtypeRowDeleting" msprop:Generator_RowChangingName="tbeventtypeRowChanging" msprop:Generator_RowEvHandlerName="tbeventtypeRowChangeEventHandler" msprop:Generator_RowDeletedName="tbeventtypeRowDeleted" msprop:Generator_UserTableName="tbeventtype" msprop:Generator_RowChangedName="tbeventtypeRowChanged" msprop:Generator_RowEvArgName="tbeventtypeRowChangeEvent" msprop:Generator_RowClassName="tbeventtypeRow">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
-              <xs:element name="event" msprop:Generator_ColumnVarNameInTable="columnevent" msprop:Generator_ColumnPropNameInRow="_event" msprop:Generator_ColumnPropNameInTable="eventColumn" msprop:Generator_UserColumnName="event">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="80" />
@@ -3872,13 +3792,89 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="tbeventtype" msprop:Generator_TableClassName="tbeventtypeDataTable" msprop:Generator_TableVarName="tabletbeventtype" msprop:Generator_RowChangedName="tbeventtypeRowChanged" msprop:Generator_TablePropName="tbeventtype" msprop:Generator_RowDeletingName="tbeventtypeRowDeleting" msprop:Generator_RowChangingName="tbeventtypeRowChanging" msprop:Generator_RowEvHandlerName="tbeventtypeRowChangeEventHandler" msprop:Generator_RowDeletedName="tbeventtypeRowDeleted" msprop:Generator_RowClassName="tbeventtypeRow" msprop:Generator_UserTableName="tbeventtype" msprop:Generator_RowEvArgName="tbeventtypeRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="eventtype" msprop:Generator_ColumnVarNameInTable="columneventtype" msprop:Generator_ColumnPropNameInRow="eventtype" msprop:Generator_ColumnPropNameInTable="eventtypeColumn" msprop:Generator_UserColumnName="eventtype">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="tbcargoaction" msprop:Generator_TableClassName="tbcargoactionDataTable" msprop:Generator_TableVarName="tabletbcargoaction" msprop:Generator_RowChangedName="tbcargoactionRowChanged" msprop:Generator_TablePropName="tbcargoaction" msprop:Generator_RowDeletingName="tbcargoactionRowDeleting" msprop:Generator_RowChangingName="tbcargoactionRowChanging" msprop:Generator_RowEvHandlerName="tbcargoactionRowChangeEventHandler" msprop:Generator_RowDeletedName="tbcargoactionRowDeleted" msprop:Generator_RowClassName="tbcargoactionRow" msprop:Generator_UserTableName="tbcargoaction" msprop:Generator_RowEvArgName="tbcargoactionRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="cargoaction" msprop:Generator_ColumnVarNameInTable="columncargoaction" msprop:Generator_ColumnPropNameInRow="cargoaction" msprop:Generator_ColumnPropNameInTable="cargoactionColumn" msprop:Generator_UserColumnName="cargoaction">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="vilog" msprop:Generator_TableClassName="vilogDataTable" msprop:Generator_TableVarName="tablevilog" msprop:Generator_TablePropName="vilog" msprop:Generator_RowDeletingName="vilogRowDeleting" msprop:Generator_RowChangingName="vilogRowChanging" msprop:Generator_RowEvHandlerName="vilogRowChangeEventHandler" msprop:Generator_RowDeletedName="vilogRowDeleted" msprop:Generator_UserTableName="vilog" msprop:Generator_RowChangedName="vilogRowChanged" msprop:Generator_RowEvArgName="vilogRowChangeEvent" msprop:Generator_RowClassName="vilogRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="time" msprop:Generator_ColumnVarNameInTable="columntime" msprop:Generator_ColumnPropNameInRow="time" msprop:Generator_ColumnPropNameInTable="timeColumn" msprop:Generator_UserColumnName="time" type="xs:dateTime" />
+              <xs:element name="systemname" msprop:Generator_ColumnVarNameInTable="columnsystemname" msprop:Generator_ColumnPropNameInRow="systemname" msprop:Generator_ColumnPropNameInTable="systemnameColumn" msprop:Generator_UserColumnName="systemname" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="stationname" msprop:Generator_ColumnVarNameInTable="columnstationname" msprop:Generator_ColumnPropNameInRow="stationname" msprop:Generator_ColumnPropNameInTable="stationnameColumn" msprop:Generator_UserColumnName="stationname" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="eevent" msprop:Generator_ColumnVarNameInTable="columneevent" msprop:Generator_ColumnPropNameInRow="eevent" msprop:Generator_ColumnPropNameInTable="eeventColumn" msprop:Generator_UserColumnName="eevent" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="action" msprop:Generator_ColumnVarNameInTable="columnaction" msprop:Generator_ColumnPropNameInRow="action" msprop:Generator_ColumnPropNameInTable="actionColumn" msprop:Generator_UserColumnName="action" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="loccommodity" msprop:Generator_ColumnVarNameInTable="columnloccommodity" msprop:Generator_ColumnPropNameInRow="loccommodity" msprop:Generator_ColumnPropNameInTable="loccommodityColumn" msprop:Generator_UserColumnName="loccommodity" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="80" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cargovolume" msprop:Generator_ColumnVarNameInTable="columncargovolume" msprop:Generator_ColumnPropNameInRow="cargovolume" msprop:Generator_ColumnPropNameInTable="cargovolumeColumn" msprop:Generator_UserColumnName="cargovolume" type="xs:int" minOccurs="0" />
+              <xs:element name="credits_transaction" msprop:Generator_ColumnVarNameInTable="columncredits_transaction" msprop:Generator_ColumnPropNameInRow="credits_transaction" msprop:Generator_ColumnPropNameInTable="credits_transactionColumn" msprop:Generator_UserColumnName="credits_transaction" type="xs:int" minOccurs="0" />
+              <xs:element name="credits_total" msprop:Generator_ColumnVarNameInTable="columncredits_total" msprop:Generator_ColumnPropNameInRow="credits_total" msprop:Generator_ColumnPropNameInTable="credits_totalColumn" msprop:Generator_UserColumnName="credits_total" type="xs:int" minOccurs="0" />
+              <xs:element name="notes" msprop:Generator_ColumnVarNameInTable="columnnotes" msprop:Generator_ColumnPropNameInRow="notes" msprop:Generator_ColumnPropNameInTable="notesColumn" msprop:Generator_UserColumnName="notes" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="1024" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
-      <xs:selector xpath=".//mstns:vilog" />
-      <xs:field xpath="mstns:time" />
-    </xs:unique>
-    <xs:unique name="visystemsandstations_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:visystemsandstations" />
       <xs:field xpath="mstns:SystemID" />
       <xs:field xpath="mstns:StationID" />
@@ -3889,10 +3885,6 @@
     </xs:unique>
     <xs:unique name="tbattribute_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:tbattribute" />
-      <xs:field xpath="mstns:id" />
-    </xs:unique>
-    <xs:unique name="tbcargoaction_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
-      <xs:selector xpath=".//mstns:tbcargoaction" />
       <xs:field xpath="mstns:id" />
     </xs:unique>
     <xs:unique name="tbcategory_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
@@ -3933,10 +3925,6 @@
     </xs:unique>
     <xs:unique name="tbeconomylevel_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:tbeconomylevel" />
-      <xs:field xpath="mstns:id" />
-    </xs:unique>
-    <xs:unique name="tbeventtype_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
-      <xs:selector xpath=".//mstns:tbeventtype" />
       <xs:field xpath="mstns:id" />
     </xs:unique>
     <xs:unique name="tbgovernment_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
@@ -4046,6 +4034,18 @@
       <xs:selector xpath=".//mstns:tmpa_bycommodity" />
       <xs:field xpath="mstns:Station_ID" />
     </xs:unique>
+    <xs:unique name="tbeventtype_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:tbeventtype" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+    <xs:unique name="tbcargoaction_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:tbcargoaction" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+    <xs:unique name="vilog_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:vilog" />
+      <xs:field xpath="mstns:time" />
+    </xs:unique>
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
@@ -4065,9 +4065,7 @@
       <msdata:Relationship name="fk_tbLocalization_tbLanguage1" msdata:parent="tblanguage" msdata:child="tbcommoditylocalization" msdata:parentkey="id" msdata:childkey="language_id" msprop:Generator_UserChildTable="tbcommoditylocalization" msprop:Generator_ChildPropName="GettbcommoditylocalizationRows" msprop:Generator_UserRelationName="fk_tbLocalization_tbLanguage1" msprop:Generator_RelationVarName="relationfk_tbLocalization_tbLanguage1" msprop:Generator_UserParentTable="tblanguage" msprop:Generator_ParentPropName="tblanguageRow" />
       <msdata:Relationship name="fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1" msdata:parent="tbeconomylevel" msdata:child="tblevellocalization" msdata:parentkey="id" msdata:childkey="economylevel_id" msprop:Generator_UserChildTable="tblevellocalization" msprop:Generator_ChildPropName="GettblevellocalizationRows" msprop:Generator_UserRelationName="fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1" msprop:Generator_ParentPropName="tbeconomylevelRow" msprop:Generator_RelationVarName="relationfk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1" msprop:Generator_UserParentTable="tbeconomylevel" />
       <msdata:Relationship name="fk_tbEconomyLevel_has_tbLanguage_tbLanguage1" msdata:parent="tblanguage" msdata:child="tblevellocalization" msdata:parentkey="id" msdata:childkey="language_id" msprop:Generator_UserChildTable="tblevellocalization" msprop:Generator_ChildPropName="GettblevellocalizationRows" msprop:Generator_UserRelationName="fk_tbEconomyLevel_has_tbLanguage_tbLanguage1" msprop:Generator_ParentPropName="tblanguageRow" msprop:Generator_RelationVarName="relationfk_tbEconomyLevel_has_tbLanguage_tbLanguage1" msprop:Generator_UserParentTable="tblanguage" />
-      <msdata:Relationship name="fk_tbLog_tbCargoAction1" msdata:parent="tbcargoaction" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="cargoaction_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCargoAction1" msprop:Generator_ParentPropName="tbcargoactionRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbCargoAction1" msprop:Generator_UserParentTable="tbcargoaction" />
       <msdata:Relationship name="fk_tbLog_tbCommodities1" msdata:parent="tbcommodity" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="commodity_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCommodities1" msprop:Generator_ParentPropName="tbcommodityRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbCommodities1" msprop:Generator_UserParentTable="tbcommodity" />
-      <msdata:Relationship name="fk_tbLog_tbEventType1" msdata:parent="tbeventtype" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="event_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbEventType1" msprop:Generator_ParentPropName="tbeventtypeRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbEventType1" msprop:Generator_UserParentTable="tbeventtype" />
       <msdata:Relationship name="fk_tbLog_tbStations1" msdata:parent="tbstations" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="station_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbStations1" msprop:Generator_RelationVarName="relationfk_tbLog_tbStations1" msprop:Generator_UserParentTable="tbstations" msprop:Generator_ParentPropName="tbstationsRow" />
       <msdata:Relationship name="fk_tbLog_tbSystems1" msdata:parent="tbsystems" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="system_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbSystems1" msprop:Generator_RelationVarName="relationfk_tbLog_tbSystems1" msprop:Generator_UserParentTable="tbsystems" msprop:Generator_ParentPropName="tbsystemsRow" />
       <msdata:Relationship name="fk_tbPriceHistory_tbEconomyLevel1" msdata:parent="tbeconomylevel" msdata:child="tbpricehistory" msdata:parentkey="id" msdata:childkey="DemandLevel" msprop:Generator_UserChildTable="tbpricehistory" msprop:Generator_ChildPropName="GettbpricehistoryRowsByfk_tbPriceHistory_tbEconomyLevel1" msprop:Generator_UserRelationName="fk_tbPriceHistory_tbEconomyLevel1" msprop:Generator_ParentPropName="tbeconomylevelRowByfk_tbPriceHistory_tbEconomyLevel1" msprop:Generator_RelationVarName="relationfk_tbPriceHistory_tbEconomyLevel1" msprop:Generator_UserParentTable="tbeconomylevel" />
@@ -4099,6 +4097,8 @@
       <msdata:Relationship name="fk_tbSystems_tbState10" msdata:parent="tbstate" msdata:child="tbsystems_org" msdata:parentkey="id" msdata:childkey="state_id" msprop:Generator_UserChildTable="tbsystems_org" msprop:Generator_ChildPropName="Gettbsystems_orgRows" msprop:Generator_UserRelationName="fk_tbSystems_tbState10" msprop:Generator_ParentPropName="tbstateRow" msprop:Generator_RelationVarName="relationfk_tbSystems_tbState10" msprop:Generator_UserParentTable="tbstate" />
       <msdata:Relationship name="fk_tbStations_tbVisitedStations" msdata:parent="tbstations" msdata:child="tbvisitedstations" msdata:parentkey="id" msdata:childkey="station_id" msprop:Generator_UserChildTable="tbvisitedstations" msprop:Generator_ChildPropName="GettbvisitedstationsRows" msprop:Generator_UserRelationName="fk_tbStations_tbVisitedStations" msprop:Generator_ParentPropName="tbstationsRow" msprop:Generator_RelationVarName="relationfk_tbStations_tbVisitedStations" msprop:Generator_UserParentTable="tbstations" />
       <msdata:Relationship name="fk_tbSystems_tbVisitedSystems" msdata:parent="tbsystems" msdata:child="tbvisitedsystems" msdata:parentkey="id" msdata:childkey="system_id" msprop:Generator_UserChildTable="tbvisitedsystems" msprop:Generator_ChildPropName="GettbvisitedsystemsRows" msprop:Generator_UserRelationName="fk_tbSystems_tbVisitedSystems" msprop:Generator_ParentPropName="tbsystemsRow" msprop:Generator_RelationVarName="relationfk_tbSystems_tbVisitedSystems" msprop:Generator_UserParentTable="tbsystems" />
+      <msdata:Relationship name="fk_tbLog_tbEventType1" msdata:parent="tbeventtype" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="event_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbEventType1" msprop:Generator_ParentPropName="tbeventtypeRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbEventType1" msprop:Generator_UserParentTable="tbeventtype" />
+      <msdata:Relationship name="fk_tbLog_tbCargoAction1" msdata:parent="tbcargoaction" msdata:child="tblog" msdata:parentkey="id" msdata:childkey="cargoaction_id" msprop:Generator_UserChildTable="tblog" msprop:Generator_ChildPropName="GettblogRows" msprop:Generator_UserRelationName="fk_tbLog_tbCargoAction1" msprop:Generator_ParentPropName="tbcargoactionRow" msprop:Generator_RelationVarName="relationfk_tbLog_tbCargoAction1" msprop:Generator_UserParentTable="tbcargoaction" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

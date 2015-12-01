@@ -23,12 +23,13 @@ using System.ComponentModel;
 using RegulatedNoise.EDDB_Data;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text.RegularExpressions;
 using CodeProject.Dialog;
 using RegulatedNoise.SQL;
 using RegulatedNoise.MTCommandersLog;
 using RegulatedNoise.MTPriceAnalysis;
 using RegulatedNoise.MTSettings;
+using System.Text.RegularExpressions;
+using RegulatedNoise.ExtData;
 
 namespace RegulatedNoise
 {
@@ -55,8 +56,6 @@ namespace RegulatedNoise
 
         const string ID_DELIMITER = "empty";
         const int MAX_NAME_LENGTH = 120;
-        const long SEARCH_MAXLENGTH = 160;
-        const long SEARCH_MINLENGTH = 5;
 
         const string ID_NEWITEM = "<NEW>";
         const string ID_NOT_SET = "<NOT_SET>";
@@ -73,8 +72,7 @@ namespace RegulatedNoise
         public PropertyInfo[] LogEventProperties;
         public static GameSettings GameSettings;
         public static OcrCalibrator OcrCalibrator;
-        public List<string> KnownCommodityNames = new List<string>();
-        public Dictionary<byte, string> CommodityLevel = new Dictionary<byte, string>();
+        //public Dictionary<byte, string> CommodityLevel = new Dictionary<byte, string>();
         private Ocr ocr;
         private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _stationToStationReturnColumnSorter, _commandersLogColumnSorter;
         private Thread _eddnSubscriberThread;
@@ -103,10 +101,6 @@ namespace RegulatedNoise
         private String m_lastestStationInfo                             = String.Empty;
         private System.Windows.Forms.Timer Clock; 
         private CommandersLogEvent m_RightMouseSelectedLogEvent         = null;
-        private bool m_Closing = false;
-        private AutoResetEvent m_LogfileScanner_ARE                     = new AutoResetEvent(false);
-        private Thread m_LogfileScanner_Thread;
-        private DateTime m_TimestampLastScan                            = DateTime.MinValue;
         private EDSystem m_loadedSystemdata                             = new EDSystem();
         private EDSystem m_currentSystemdata                            = new EDSystem();
         private EDStation m_loadedStationdata                           = new EDStation();
@@ -244,11 +238,6 @@ namespace RegulatedNoise
                 _Splash.InfoAdd("prepare GUI elements...");
                 SetupGui(true);
                 _Splash.InfoChange("prepare GUI elements...<OK>");
-
-                _Splash.InfoAdd("starting logfile watcher...");
-                UpdateSystemNameFromLogFile();
-                _logger.Log("  - fetched system name from file");
-                _Splash.InfoChange("starting logfile watcher...<OK>");
 
             }
             catch (Exception ex)
@@ -708,10 +697,7 @@ namespace RegulatedNoise
 
         void Application_ApplicationExit(object sender, EventArgs e)
         {
-            m_Closing = true;
-            m_LogfileScanner_ARE.Set();
 
-            if (stateTimer != null) stateTimer.Dispose();
             if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
 
             SaveSettings();
@@ -1437,25 +1423,6 @@ namespace RegulatedNoise
 
             tbOcrStationName.Text = s; // CLARK HUB
 
-            throw new NotImplementedException();
-            //var systemNames = StationDirectory.Keys.Where(x => x.ToUpper().Contains(s)).ToList();
-
-            //if (systemNames.Count == 1) // let's hope so!
-            //{
-            //    var tempName = systemNames.First();
-            //    var tempName2 = tempName.Substring(tempName.IndexOf("[", StringComparison.Ordinal)).Replace("[", "").Replace("]", "");
-            //    tbOcrSystemName.Text = tempName2;
-            //}
-            //else
-            //{
-            //    UpdateSystemNameFromLogFile();
-
-            //    if (Program.actualCondition.System != "")
-            //        tbOcrSystemName.Text = Program.actualCondition.System;
-            //    else
-            //        tbOcrSystemName.Text = "SomeSystem";
-
-            //}
         }
 
         public delegate void DisplayCommodityResultsDelegate(string[,] s, Bitmap[,] originalBitmaps, float[,] originalBitmapConfidences, string[] rowIds, string screenshotName);
@@ -1511,11 +1478,18 @@ namespace RegulatedNoise
 
         private void ContinueDisplayingResults()
         {
+            List<string> KnownCommodityNames;
+            Dictionary<String, String> EconomyLevels;
 
             try
             {
+                KnownCommodityNames = Program.Data.getCommodityNames();
+                EconomyLevels       = Program.Data.getEconomyLevels();
+
                 do
                 {
+                    
+
                     _correctionRow++;
                     if (_correctionRow > _commodityTexts.GetLength(0) - 1) { _correctionRow = 0; _correctionColumn++; }
 
@@ -1532,7 +1506,6 @@ namespace RegulatedNoise
                         var currentTextCamelCase =
                             _textInfo.ToTitleCase(_commodityTexts[_correctionRow, _correctionColumn].ToLower()); // There *was* a reason why I did this...
 
-
                         // if the ocr have found no char so we dont need to ask Mr. Levenshtein 
                         if (currentTextCamelCase.Trim().Length > 0)
                         {
@@ -1547,6 +1520,8 @@ namespace RegulatedNoise
                                 var lowestMatchingCommodity = "";
                                 var lowestMatchingCommodityRef = "";
                                 double LevenshteinLimit = 0;
+
+                                
 
                                 foreach (var reference in KnownCommodityNames)
                                 {
@@ -1612,25 +1587,25 @@ namespace RegulatedNoise
                     {
                         var commodityLevelUpperCase = StripPunctuationFromScannedText(_commodityTexts[_correctionRow, _correctionColumn]);
 
-                        var levenshteinLow = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.LOW].ToUpper(), commodityLevelUpperCase);
-                        var levenshteinMed = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.MED].ToUpper(), commodityLevelUpperCase);
-                        var levenshteinHigh = _levenshtein.LD2(CommodityLevel[(byte)enCommodityLevel.HIGH].ToUpper(), commodityLevelUpperCase);
-                        var levenshteinBlank = _levenshtein.LD2("", commodityLevelUpperCase);
+                        var levenshteinLow      = _levenshtein.LD2(EconomyLevels["LOW"].ToUpper(),    commodityLevelUpperCase);
+                        var levenshteinMed      = _levenshtein.LD2(EconomyLevels["MED"].ToUpper(),    commodityLevelUpperCase);
+                        var levenshteinHigh     = _levenshtein.LD2(EconomyLevels["HIGH"].ToUpper(),   commodityLevelUpperCase);
+                        var levenshteinBlank    = _levenshtein.LD2("",                                  commodityLevelUpperCase);
 
                         //Pick the lowest levenshtein number
                         var lowestLevenshtein = Math.Min(Math.Min(levenshteinLow, levenshteinMed), Math.Min(levenshteinHigh, levenshteinBlank));
 
                         if (lowestLevenshtein == levenshteinLow)
                         {
-                            _commodityTexts[_correctionRow, _correctionColumn] = "LOW";
+                            _commodityTexts[_correctionRow, _correctionColumn] = EconomyLevels["LOW"];
                         }
                         else if (lowestLevenshtein == levenshteinMed)
                         {
-                            _commodityTexts[_correctionRow, _correctionColumn] = "MED";
+                            _commodityTexts[_correctionRow, _correctionColumn] = EconomyLevels["MED"];
                         }
                         else if (lowestLevenshtein == levenshteinHigh)
                         {
-                            _commodityTexts[_correctionRow, _correctionColumn] = "HIGH";
+                            _commodityTexts[_correctionRow, _correctionColumn] = EconomyLevels["HIGH"];
                         }
                         else // lowestLevenshtein == levenshteinBlank
                         {
@@ -1859,9 +1834,12 @@ namespace RegulatedNoise
             Boolean finished = false;
             DialogResult Answer;
             string commodity;
-
+            List<string> KnownCommodityNames;
 
             commodity = _textInfo.ToTitleCase(tbCommoditiesOcrOutput.Text.ToLower().Trim());
+
+            KnownCommodityNames = Program.Data.getCommodityNames();
+
             if (commodity.ToUpper() == "Implausible Results!".ToUpper())
             {
                 // check results
@@ -1936,6 +1914,7 @@ namespace RegulatedNoise
         public bool checkPricePlausibility(string[] DataRows, bool simpleEDDNCheck = false)
         {
             bool implausible = false;
+            SQL.Datasets.dsEliteDB.tbcommodityRow[] CommodityData;
 
             foreach (string s in DataRows)
             {
@@ -1968,13 +1947,16 @@ namespace RegulatedNoise
 
                     DateTime.TryParse(values[9], out currentRow.SampleDate);
 
-                    throw new NotImplementedException();
-                    EDCommoditiesExt CommodityData = null; //myMilkyway.getCommodity(getLocalizedCommodity(enLanguage.eng, currentRow.CommodityName));
+                    CommodityData = (SQL.Datasets.dsEliteDB.tbcommodityRow[])
+                                    Program.Data.BaseData.tbcommodity.Select("commodity    = " + DBConnector.SQLAString(currentRow.CommodityName) + 
+                                                                             " or " +
+                                                                             "loccommodity = " + DBConnector.SQLAString(currentRow.CommodityName));
+                    
 
                     if (currentRow.CommodityName == "Panik")
                         Debug.Print("STOP");
                             
-                    if (CommodityData != null)
+                    if ((CommodityData != null) && (CommodityData.GetUpperBound(0) >= 0))
                     { 
                         if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) && (!String.IsNullOrEmpty(currentRow.DemandLevel)))
                         {
@@ -1991,15 +1973,15 @@ namespace RegulatedNoise
                                 implausible = true;
                             }
 
-                            if (((CommodityData.PriceWarningLevel_Supply_Sell_Low  >= 0) && (currentRow.SellPrice < CommodityData.PriceWarningLevel_Supply_Sell_Low)) ||
-                                ((CommodityData.PriceWarningLevel_Supply_Sell_High >= 0) && (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Sell_High)))
+                            if (((CommodityData[0].pwl_supply_sell_low  >= 0) && (currentRow.SellPrice < CommodityData[0].pwl_supply_sell_low)) ||
+                                ((CommodityData[0].pwl_supply_sell_high >= 0) && (currentRow.SellPrice > CommodityData[0].pwl_supply_sell_high)))
                             {
                                 // sell price is out of range
                                 implausible = true;
                             }
 
-                            if (((CommodityData.PriceWarningLevel_Supply_Buy_Low  >= 0) && (currentRow.BuyPrice  < CommodityData.PriceWarningLevel_Supply_Buy_Low)) ||
-                                ((CommodityData.PriceWarningLevel_Supply_Buy_High >= 0) && (currentRow.SellPrice > CommodityData.PriceWarningLevel_Supply_Buy_High)))
+                            if (((CommodityData[0].pwl_supply_buy_low  >= 0) && (currentRow.BuyPrice  < CommodityData[0].pwl_supply_buy_low)) ||
+                                ((CommodityData[0].pwl_supply_buy_high >= 0) && (currentRow.SellPrice > CommodityData[0].pwl_supply_buy_high)))
                             {
                                 // buy price is out of range
                                 implausible = true;
@@ -2022,16 +2004,16 @@ namespace RegulatedNoise
                                 implausible = true;
                             }
 
-                            if (((CommodityData.PriceWarningLevel_Demand_Sell_Low  >= 0) && (currentRow.SellPrice < CommodityData.PriceWarningLevel_Demand_Sell_Low)) ||
-                                ((CommodityData.PriceWarningLevel_Demand_Sell_High >= 0) && (currentRow.SellPrice > CommodityData.PriceWarningLevel_Demand_Sell_High)))
+                            if (((CommodityData[0].pwl_demand_sell_low  >= 0) && (currentRow.SellPrice < CommodityData[0].pwl_demand_sell_low)) ||
+                                ((CommodityData[0].pwl_demand_sell_high >= 0) && (currentRow.SellPrice > CommodityData[0].pwl_demand_sell_high)))
                             {
                                 // buy price is out of range
                                 implausible = true;
                             }
 
                             if (currentRow.BuyPrice >= 0) 
-                                if (((CommodityData.PriceWarningLevel_Demand_Buy_Low  >= 0) && (currentRow.BuyPrice < CommodityData.PriceWarningLevel_Demand_Buy_Low)) ||
-                                    ((CommodityData.PriceWarningLevel_Demand_Buy_High >= 0) && (currentRow.BuyPrice > CommodityData.PriceWarningLevel_Demand_Buy_High)))
+                                if (((CommodityData[0].pwl_demand_buy_low  >= 0) && (currentRow.BuyPrice < CommodityData[0].pwl_demand_buy_low)) ||
+                                    ((CommodityData[0].pwl_demand_buy_high >= 0) && (currentRow.BuyPrice > CommodityData[0].pwl_demand_buy_high)))
                                 {
                                     // buy price is out of range
                                     implausible = true;
@@ -2058,23 +2040,34 @@ namespace RegulatedNoise
             return implausible;
         }
 
-
-
         private void ImportFinalOcrOutput()
         {
-            foreach (var s in tbFinalOcrOutput.Text.Replace("\r", "").Split('\n'))
-            {
-                if (s.Contains(";"))
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            
-            CommandersLog_MarketDataCollectedEvent(tbOcrSystemName.Text, tbOcrStationName.Text);
-            if(Program.actualCondition.Station.Equals(Condition.STR_Scanning, StringComparison.InvariantCultureIgnoreCase))
-                Program.actualCondition.Station = tbOcrStationName.Text;
+            String[] CSVStrings;
+            String currentSystem;
 
-            SetupGui();
+            try
+            {
+                currentSystem = Program.actualCondition.System;
+                CSVStrings = tbFinalOcrOutput.Text.Split(new String[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < CSVStrings.Count(); i++)
+                {
+                    if(CSVStrings[i].StartsWith(";"))
+                        CSVStrings[i] = currentSystem + CSVStrings[i];
+                }
+
+                Program.Data.ImportPricesFromCSVStrings(CSVStrings, true);
+            
+                if(Program.actualCondition.Location.Equals("", StringComparison.InvariantCultureIgnoreCase))
+                    Program.actualCondition.Location = tbOcrStationName.Text;
+
+                Program.CommandersLog.createMarketdataCollectedEvent();
+
+                SetupGui();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing the OCR results", ex);
+            }
         }
 
         private string _oldOcrName;
@@ -2452,7 +2445,7 @@ namespace RegulatedNoise
                         if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
                         {
                             throw new NotImplementedException();
-                            //cachedSystem = _Milkyway.getSystem(messageDictionary["systemName"]);
+                            //cachedSystem = _Milkyway.getSystem(messageDictionary["Systemname"]);
                         }
                         if(cachedSystem == null)
                         {
@@ -2463,7 +2456,7 @@ namespace RegulatedNoise
                         if((cachedSystem != null) && ((cachedStation == null) || (!messageDictionary["stationName"].Equals(cachedStation.Name, StringComparison.InvariantCultureIgnoreCase))))
                         {
                             throw new NotImplementedException();
-                            //cachedStation = _Milkyway.getStation(messageDictionary["systemName"], messageDictionary["stationName"]);
+                            //cachedStation = _Milkyway.getLocation(messageDictionary["Systemname"], messageDictionary["Locationname"]);
                         }
                         if(cachedStation == null)
                         {
@@ -2474,7 +2467,7 @@ namespace RegulatedNoise
                         if(!String.IsNullOrEmpty(commodity))
                         {
 
-                            //System;Station;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
+                            //System;Location;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
                             if (headerDictionary["uploaderID"] != tbUsername.Text) // Don't import our own uploads...
                             {
                                 string csvFormatted = cachedSystem.Name + ";" +
@@ -2677,468 +2670,6 @@ namespace RegulatedNoise
             }
         }
 
-        private System.Threading.Timer stateTimer;
-
-        public void UpdateSystemNameFromLogFile()
-        {
-            if (m_LogfileScanner_Thread == null)
-            {
-                m_LogfileScanner_Thread = new Thread(() => this.UpdateSystemNameFromLogFile_worker());
-                m_LogfileScanner_Thread.Name = "LogfileScanner_Thread";
-                m_LogfileScanner_Thread.IsBackground = true;
-                m_LogfileScanner_Thread.Start();
-            }
-
-            if (stateTimer == null)
-            {
-                var autoEvent = new AutoResetEvent(false);
-                TimerCallback timerCallback = TimerCallback;
-                stateTimer = new System.Threading.Timer(timerCallback, autoEvent, 10000, 10000);
-            }
-
-
-            m_LogfileScanner_ARE.Set();
-        }
-
-        public void UpdateSystemNameFromLogFile_worker()
-        {
-            SingleThreadLogger logger = new SingleThreadLogger(ThreadLoggerType.FileScanner);
-
-            do
-            {
-                try
-                {
-                    DateTime TimestampCurrentLine = DateTime.MinValue;
-                    DateTime TimestampLastRecognized = DateTime.MinValue;
-                    Boolean EndNow = false;
-                    Boolean LocationChanged = false;
-                    string systemName = "";
-                    string stationName = "";
-                    string logLump;
-                    Regex RegExTest = null;
-                    Regex RegExTest2 = null;
-                    Match m = null;
-                    List<String> PossibleStations = new List<string>();
-
-#if extScanLog
-                    logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.RegulatedNoiseSettings.PilotsName)) + ">");
-#endif
-                    RegExTest  = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.Settings_old.PilotsName)), RegexOptions.IgnoreCase);
-                    RegExTest2 = new Regex(String.Format("vvv------------ ISLAND .+ CLAIMED ------------vvv"), RegexOptions.IgnoreCase);
-
-                    var appConfigPath = Program.Settings_old.ProductsPath;
-
-                    if (Directory.Exists(appConfigPath))
-                    {
-                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
-
-                        if (versions.Count() == 0)
-                        {
-#if extScanLog
-                                logger.Log("no dirs with <FORC-FDEV> found");
-                                var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
-                                foreach (string SubPath in versions2)
-                                {
-                                    logger.Log("but found <" +  SubPath + ">");   
-                                }
-#endif
-                        }
-                        else
-                        {
-#if extScanLog
-                                logger.Log("lookin' for files in <" + versions[0] + ">");
-#endif
-
-                            // We'll just go right ahead and use the latest log...
-                            var netLogs =
-                                Directory.GetFiles(versions[0] + "\\Logs", "netLog*.log")
-                                    .OrderByDescending(File.GetLastWriteTime)
-                                    .ToArray();
-
-                            if (netLogs.Length != 0)
-                            {
-                                var newestNetLog = netLogs[0];
-
-#if extScanLog
-                                Debug.Print("File opened : <" + newestNetLog + ">");
-                                logger.Log("File opened : <" + newestNetLog + ">");
-#endif
-                                FileStream Datei = new FileStream(newestNetLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                                Byte[] ByteBuffer = new Byte[1];
-                                Byte[] LineBuffer = new Byte[SEARCH_MAXLENGTH];
-
-                                Datei.Seek(0, SeekOrigin.End);
-
-                                while (!EndNow && String.IsNullOrEmpty(stationName) && (Datei.Position >= 2))
-                                {
-                                    long StartPos = -1;
-                                    long EndPos = -1;
-
-                                    do
-                                    {
-                                        Datei.Read(ByteBuffer, 0, ByteBuffer.Length);
-
-                                        if ((ByteBuffer[0] == 0x0A) || (ByteBuffer[0] == 0x0D))
-                                            if (EndPos == -1)
-                                            {
-                                                if (ByteBuffer[0] == 0x0D)
-                                                    EndPos = Datei.Position + 1;
-                                                else
-                                                    EndPos = Datei.Position;
-
-                                                Datei.Seek(-3, SeekOrigin.Current);
-                                            }
-                                            else
-                                            {
-                                                if (ByteBuffer[0] == 0x0D)
-                                                    StartPos = Datei.Position + 1;
-                                                else
-                                                    StartPos = Datei.Position;
-                                            }
-                                        else
-                                            Datei.Seek(-3, SeekOrigin.Current);
-
-                                    } while (StartPos == -1 && Datei.Position >= 3);
-
-                                    if((StartPos == -1) && ((EndPos - StartPos) > SEARCH_MINLENGTH))
-                                        StartPos = 0;
-
-                                    if ((StartPos >= 0) && ((EndPos - StartPos) <= SEARCH_MAXLENGTH))
-                                    {
-                                        // found a line and it's not too long
-                                        // read
-                                        Datei.Read(LineBuffer, 0, (int)(EndPos - StartPos));
-                                        // and convert to string
-                                        logLump = Encoding.ASCII.GetString(LineBuffer, 0, (int)(EndPos - StartPos) );
-
-                                        
-                                        if (logLump != null && String.IsNullOrEmpty(systemName))
-                                        {
-                                            // check the timestamp of the current line to avoid to re-analyse older data
-                                            TimestampCurrentLine = DateTime.MaxValue;
-                                            Int32 StartBracket = logLump.IndexOf('{', 0, 5);
-                                            Int32 EndBracket   = logLump.IndexOf('}', 0, 15);
-
-                                            if((StartBracket >= 0) && (EndBracket >= 0) && ((EndBracket - StartBracket) > 0))
-                                                if(DateTime.TryParse(logLump.Substring(StartBracket+1, EndBracket - (StartBracket+1)), out TimestampCurrentLine))
-                                                {
-                                                    if(TimestampLastRecognized.Equals(DateTime.MinValue))
-                                                        TimestampLastRecognized = TimestampCurrentLine;
-
-                                                    if(TimestampCurrentLine < m_TimestampLastScan)
-                                                    { 
-                                                        // everything is coming now is older
-                                                        EndNow = true;
-                                                    }
-                                                }
-
-                                            if(!EndNow)
-                                            {
-                                                // first looking for the systemname
-                                                if (logLump.Contains("System:"))
-                                                {
-    #if extScanLog
-                                                    Debug.Print("Systemstring:" + logLump);
-                                                    logger.Log("Systemstring:" + logLump.Replace("\n", "").Replace("\r", ""));
-    #endif
-                                                    systemName = logLump.Substring(logLump.IndexOf("(", StringComparison.Ordinal) + 1);
-                                                    systemName = systemName.Substring(0, systemName.IndexOf(")", StringComparison.Ordinal));
-
-    #if extScanLog
-                                                    Debug.Print("System: " + systemName);
-                                                    logger.Log("System: " + systemName);
-    #endif
-
-                                                    // preparing search for station info
-                                                    RegExTest = new Regex(String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)), RegexOptions.IgnoreCase);
-    #if extScanLog
-                                                    logger.Log("new Regex : <" + String.Format("FindBestIsland:.+:.+:.+:{0}", Regex.Escape(systemName)) + ">");
-    #endif
-
-                                                    // start search at the beginning
-
-                                                    if (RegExTest != null)
-                                                    {
-                                                        // we may have candidates, check them and if nothing found search from the current position
-                                                        foreach (string candidate in PossibleStations)
-                                                        {
-    #if extScanLog
-                                                            Debug.Print("check candidate : " + candidate);
-                                                            logger.Log("check candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-    #endif
-                                                            m = RegExTest.Match(candidate);
-                                                            //Debug.Print(logLump);
-                                                            //if (logLump.Contains("Duke Jones"))
-                                                            //    Debug.Print("Stop");
-                                                            if (m.Success)
-                                                            {
-    #if extScanLog
-                                                                Debug.Print("Stationstring from candidate : " + candidate);
-                                                                logger.Log("Stationstring from candidate : " + candidate.Replace("\n", "").Replace("\r", ""));
-    #endif
-                                                                getStation(ref stationName, m);
-                                                                break;
-                                                            }
-
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        // we must start from the end
-                                                        Datei.Seek(0, SeekOrigin.End);
-                                                    }
-                                                }
-                                                else if (RegExTest != null)
-                                                {
-                                                    m = RegExTest.Match(logLump);
-                                                    //Debug.Print(logLump);
-                                                    //if (logLump.Contains("Duke Jones"))
-                                                    //    Debug.Print("Stop");
-                                                    if (m.Success)
-                                                    {
-    #if extScanLog
-                                                        Debug.Print("Candidate : " + logLump);
-                                                        logger.Log("Candidate added : " + logLump.Replace("\n", "").Replace("\r", ""));
-    #endif
-                                                        PossibleStations.Add(logLump);
-                                                    }
-                                                    else
-                                                    {
-    #if extScanLog
-                                                        Debug.Print(logLump);
-    #endif
-                                                        m = RegExTest2.Match(logLump);
-                                                        if (m.Success)
-                                                        {
-                                                            LocationChanged = true;
-        #if extScanLog
-                                                            Debug.Print("Location changed");
-                                                            logger.Log("Location changed : " + logLump.Replace("\n", "").Replace("\r", ""));
-        #endif
-                                                        }
-
-                                                    }
-
-                                                }
-                                            }
-                                        }
-
-                                        if(!EndNow)
-                                        { 
-                                            // if we have the systemname we're looking for the stationname
-                                            if (!string.IsNullOrEmpty(systemName) && string.IsNullOrEmpty(stationName))
-                                            {
-                                                m = RegExTest.Match(logLump);
-                                                //Debug.Print(logLump);
-                                                //if (logLump.Contains("Duke Jones"))
-                                                //    Debug.Print("Stop");
-                                                if (m.Success)
-                                                {
-    #if extScanLog
-                                                    Debug.Print("Stationstring (direct) : " + logLump);
-                                                    logger.Log("Stationstring (direct) : " + logLump.Replace("\n", "").Replace("\r", ""));
-    #endif
-                                                    getStation(ref stationName, m);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    if(!EndNow)
-                                    { 
-                                        if (StartPos >= 3)
-                                        {
-                                            Datei.Seek(StartPos-1, SeekOrigin.Begin);
-                                        }
-                                        else
-                                            Datei.Seek(0, SeekOrigin.Begin);
-                                    }
-                                }
-
-                                if(m_TimestampLastScan < TimestampLastRecognized)
-                                    m_TimestampLastScan = TimestampLastRecognized;
-
-                                Datei.Close();
-                                Datei.Dispose();
-#if extScanLog
-                                Debug.Print("Datei geschlossen");
-                                logger.Log("File closed");
-#endif
-
-                                setLocationInfo(systemName, stationName, LocationChanged);
-
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.Print("AnalyseError");
-                    logger.Log(ex.Message + "\n" + ex.StackTrace + "\n\n");
-                }
-
-#if extScanLog
-                logger.Log("sleeping...");
-                logger.Log("\n\n\n");
-                Debug.Print("\n\n\n");
-#endif
-                m_LogfileScanner_ARE.WaitOne();
-#if extScanLog
-                logger.Log("awake...");
-#endif
-
-            }while (!this.Disposing && !m_Closing);
-
-#if extScanLog
-            Debug.Print("out");
-#endif
-        }
-
-        private void CommandersLog_CreateJumpedToEvent(string Systemname)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new ScreenshotsQueuedDelegate(CommandersLog_CreateJumpedToEvent), Systemname);
-            }
-            else
-            {
-                Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, "", "", "", 0, 0, 0, "Jumped To", "");
-            }
-        }
-
-        private void CommandersLog_StationVisitedEvent(string Systemname, string StationName)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new del_EventLocationInfo(CommandersLog_StationVisitedEvent), Systemname, StationName);
-            }
-            else
-            {
-                if (!_LoggedVisited.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    bool noLogging = _LoggedVisited.Equals(ID_NOT_SET);
-
-                    _LoggedVisited = Systemname + "|" + StationName;
-
-                    if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
-                    {
-                        Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
-                    }
-                }
-            }
-        }
-
-        private void CommandersLog_MarketDataCollectedEvent(string Systemname, string StationName)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new del_EventLocationInfo(CommandersLog_MarketDataCollectedEvent), Systemname, StationName);
-            }
-            else
-            {
-                try
-                {
-                    if (!_LoggedMarketData.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        _LoggedMarketData = Systemname + "|" + StationName;
-
-                        if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
-                        {
-                            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
-                            {
-                                //object logEvent = Program.CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
-
-                                //if (logEvent != null &&
-                                //   logEvent.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase) &&
-                                //   logEvent.Station.Equals(StationName, StringComparison.InvariantCultureIgnoreCase) &&
-                                //   logEvent.EventType.Equals("Visited", StringComparison.InvariantCultureIgnoreCase))
-                                //{
-                                //    logEvent.EventType = "Market m_BaseData Collected";
-                                //    Program.CommandersLog.UpdateCommandersLogListView();
-                                //}
-                                //else
-                                //{
-                                //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
-                                //    setActiveItem(_CmdrsLog_LastAutoEventID);
-                                //}
-                            }
-                            else
-                            {
-                                Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Market Data Collected", "");
-                            }
-
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-        }
-
-        private void getStation(ref string stationName, Match m)
-        {
-            string[] parts = m.Groups[0].ToString().Split(':');
-            if (parts.GetUpperBound(0) >= 3)
-            {
-                stationName = parts[parts.GetUpperBound(0)-1];
-
-                if (parts[0].Equals("FindBestIsland", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (String.IsNullOrEmpty(Program.Settings_old.PilotsName))
-                    { 
-                        Program.Settings_old.PilotsName       = parts[1];
-                        txtCmdrsName.Text                       = Program.Settings_old.PilotsName;
-                        Program.Settings_old.usePilotsName    = true;
-                        selectEDDN_ID();
-                    }
-                }
-                else
-                {
-                    if (String.IsNullOrEmpty(Program.Settings_old.PilotsName))
-                    { 
-                        Program.Settings_old.PilotsName       = parts[0];
-                        txtCmdrsName.Text                       = Program.Settings_old.PilotsName;
-                        Program.Settings_old.usePilotsName    = true;
-                        selectEDDN_ID();
-                    }
-                }
-            }
-        }
-
-        private void TimerCallback(object state)
-        {
-            UpdateSystemNameFromLogFile();
-        }
-
-
-        private ListViewItem theClickedOne;
-
-        private void lvCommandersLog_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var lv = ((ListView)sender);
-            if (lv.SelectedItems.Count == 0) return;
-            theClickedOne = lv.SelectedItems[0];
-            var selectedGuid = theClickedOne.SubItems[lv.Columns.IndexOfKey("EventID")].Text;
-
-            //var logEvent = Program.CommandersLog.LogEvents.Single(x => x.EventID == selectedGuid);
-
-            //cbLogEventType.Text = logEvent.EventType;
-            //tbLogEventID.Text = logEvent.EventID;
-            //tbLogNotes.Text = logEvent.Notes;
-            //nbCurrentCredits.Text = logEvent.Credits.ToString(CultureInfo.InvariantCulture);
-            //nbTransactionAmount.Text = logEvent.TransactionAmount.ToString(CultureInfo.InvariantCulture);
-            //cbLogQuantity.Text = logEvent.CargoVolume.ToString(CultureInfo.InvariantCulture);
-            //cbLogStationName.Text = logEvent.Station;
-            //cbLogSystemName.Text = logEvent.System;
-            //cbLogCargoAction.Text = logEvent.CargoAction;
-            //cbLogCargoName.Text = logEvent.Cargo;
-            //dtpLogEventDate.Value = logEvent.EventDate;
-            //btCreateAddEntry.Text = "Save Changed m_BaseData";
-
-        }
-
 
         #region Help button handlers
         private void ShowOcrHelpClick(object sender, EventArgs e)
@@ -3172,7 +2703,7 @@ namespace RegulatedNoise
                 _Splash.CloseDelayed();
 
                 loadSystemData(Program.actualCondition.System);
-                loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
+                loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
 
                 Program.Settings.GUI.Init();
                 Program.PriceAnalysis.GUI.Init();
@@ -3182,8 +2713,14 @@ namespace RegulatedNoise
 
                 SetupGui();
 
+                // starting the LogfileScanner
+                this.tbCurrentSystemFromLogs.Text       = Program.actualCondition.System;
+                this.tbCurrentStationinfoFromLogs.Text  = Program.actualCondition.Location;
+                Program.LogfileScanner.Start();
+
                 if(cbEDDNAutoListen.Checked)
                     startEDDNListening();
+
             }
             catch (Exception ex)
             {
@@ -3255,6 +2792,10 @@ namespace RegulatedNoise
             m_IsRefreshed      = new Dictionary<string,bool>();
             foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
                 m_IsRefreshed.Add(MainTabPage.Name, false);
+
+
+            Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+            Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
 
         }
 
@@ -3716,7 +3257,7 @@ namespace RegulatedNoise
 
         //        if (!_LoggedLocation.Equals(m_lastestStationInfo, StringComparison.InvariantCultureIgnoreCase))
         //        {                    
-        //            Program.actualCondition.Station = m_lastestStationInfo;
+        //            Program.actualCondition.Location = m_lastestStationInfo;
         //            _LoggedLocation = m_lastestStationInfo;
     
         //            if(Program.DBCon.getIniValue<Boolean>(Settings_old.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true)
@@ -3756,106 +3297,12 @@ namespace RegulatedNoise
             }
         }
 
-        private void setLocationInfo(string systemName, string stationName, Boolean ForceChangedLocation)
-        {
-
-            if(InvokeRequired)
-            { 
-                Invoke(new del_setLocationInfo(setLocationInfo), systemName, stationName, ForceChangedLocation);
-                return;
-            }
-
-            //bool Jumped_To      = false;
-            bool newSystem      = false;
-            bool newLocation    = false;
-            bool InitialRun     = false;
-
-            if(!String.IsNullOrEmpty(systemName))
-            { 
-                // system info found
-                if(!Program.actualCondition.System.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                { 
-                    // it's a new system
-                    Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
-                    Program.actualCondition.System = systemName;
-                    newSystem = true;
-                }
-
-                // system info found
-                if(!_LoggedSystem.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                { 
-                    // system is not logged yet
-
-                    // update Cmdr's Log ?
-                    if(_LoggedSystem != ID_NOT_SET)
-                    { 
-                        // it's not the first run, create a event if wanted
-                        if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true))
-                        {
-                            // create event is enabled
-                            CommandersLog_CreateJumpedToEvent(systemName);
-                        }
-                    }
-                    else
-                    {
-                        InitialRun = true;
-                    }
-                    
-                    //Jumped_To = true;
-                    _LoggedSystem = systemName;
-                }
-
-            }
-
-            if(!String.IsNullOrEmpty(stationName))
-            { 
-                // system info found
-                if(!Program.actualCondition.Station.Equals(stationName, StringComparison.InvariantCultureIgnoreCase))
-                { 
-                    // it's a new location
-                    Program.actualCondition.Station = stationName;
-                    newLocation = true;
-
-                    throw new NotImplementedException();
-                    List<EDStation> SystemStations = null; // _Milkyway.getStations(systemName);
-
-                    if((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(stationName, StringComparison.InvariantCultureIgnoreCase)) != null))
-                        if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true))
-                        {
-                            // create event is enabled
-                            CommandersLog_StationVisitedEvent(systemName, stationName);
-                        }
-
-                    _LoggedLocation = stationName;
-
-                    _LoggedMarketData = "";
-                    _LoggedVisited = "";
-
-                }
-            }else if(newSystem || ForceChangedLocation)
-                Program.actualCondition.Station = Condition.STR_Scanning;
-            
-
-            if((newSystem || newLocation) && (!InitialRun))
-            { 
-                loadSystemData(_LoggedSystem);
-                loadStationData(_LoggedSystem, _LoggedLocation);
-
-                if(Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true))
-                    tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
-            }
-
-            tbCurrentSystemFromLogs.Text        = Program.actualCondition.System;
-            tbCurrentStationinfoFromLogs.Text   = Program.actualCondition.Station;
-
-        }
-
-#region System / Station Tab
+#region System / Location Tab
 
         /*/////////////////////////////////////////////////////////////////////////////////////////
         *******************************************************************************************    
          *
-         *                             System / Station Tab
+         *                             System / Location Tab
          * 
         ******************************************************************************************* 
          /*//////////////////////////////////////////////////////////////////////////////////////*/
@@ -3878,7 +3325,7 @@ namespace RegulatedNoise
         {
 
             loadSystemData(Program.actualCondition.System);
-            loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
+            loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
 
             tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
 
@@ -4020,7 +3467,7 @@ namespace RegulatedNoise
                 cmbStationStations.SelectedItem    = Stationname;
 
                 MessageBox.Show("TODO");
-                //m_loadedStationdata                 = _Milkyway.getStation(Systemname, Stationname);
+                //m_loadedStationdata                 = _Milkyway.getLocation(Systemname, Locationname);
                 m_StationIsNew                      = false;
             }
 
@@ -4220,7 +3667,7 @@ namespace RegulatedNoise
             this.cbSystemNeedsPermit.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
 
 
-            // ********************** Station *******************
+            // ********************** Location *******************
 
             cmbStationType.Items.Add(Program.NULLSTRING);
             cmbStationType.Items.Add("Civilian Outpost");
@@ -4700,7 +4147,7 @@ namespace RegulatedNoise
 
             if (m_StationIsNew)
             {
-                // adding a new Station
+                // adding a new Location
                 throw new NotImplementedException();
                 existing = null; // _Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(m_currentStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) && 
                                  //                                                              (x.SystemId.Equals(m_currentSystemdata.Id)));
@@ -4712,7 +4159,7 @@ namespace RegulatedNoise
             }
             else if(!_oldStationName.Equals(m_currentStationdata.Name))
             {
-                // changing Station name
+                // changing Location name
                 throw new NotImplementedException();
                 existing = null; //_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Find(x => (x.Name.Equals(_oldStationName, StringComparison.InvariantCultureIgnoreCase)) && 
                                  //                                                           (x.SystemId.Equals(m_currentSystemdata.Id)));
@@ -4811,7 +4258,7 @@ namespace RegulatedNoise
             _oldSystemName  = m_currentSystemdata.Name;
             _oldStationName = m_currentStationdata.Name;
 
-            string newStationname = Program.actualCondition.Station;
+            string newStationname = Program.actualCondition.Location;
 
             throw new NotImplementedException();
             EDStation existing = null; //_Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
@@ -5423,9 +4870,9 @@ namespace RegulatedNoise
             var s = new StringBuilder();
 
             //string links = "<BR><A style=\"font-size: 14pt\" HREF=\"#lvAllComms\">All Commodities - </A>" +
-            //    "<A style=\"font-size: 14pt\" HREF=\"#lbPrices\">Station - </A>" +
+            //    "<A style=\"font-size: 14pt\" HREF=\"#lbPrices\">Location - </A>" +
             //    "<A style=\"font-size: 14pt\" HREF=\"#lbCommodities\">Commodity - </A>" +
-            //        "<A style=\"font-size: 14pt\" HREF=\"#lvStationToStation\">Station-to-Station</A><BR>";
+            //        "<A style=\"font-size: 14pt\" HREF=\"#lvStationToStation\">Location-to-Location</A><BR>";
 
             //s.Append(links);
 
@@ -5434,7 +4881,7 @@ namespace RegulatedNoise
 
             //s.Append(links);
 
-            //s.Append("<A name=\"lbPrices\"><P>Station: " + getCmbItemKey(cmbStation.SelectedItem) + "</P>");
+            //s.Append("<A name=\"lbPrices\"><P>Location: " + getCmbItemKey(cmbStation.SelectedItem) + "</P>");
             //s.Append(GetHTMLForListView(lbPrices));
 
             //s.Append(links);
@@ -5444,7 +4891,7 @@ namespace RegulatedNoise
 
             //s.Append(links);
 
-            //s.Append("<A name=\"lvStationToStation\"><P>Station-to-Station: " + getCmbItemKey(cmbStationToStationFrom.SelectedItem) + " => " + getCmbItemKey(cmbStationToStationTo.SelectedItem) + "</P>");
+            //s.Append("<A name=\"lvStationToStation\"><P>Location-to-Location: " + getCmbItemKey(cmbStationToStationFrom.SelectedItem) + " => " + getCmbItemKey(cmbStationToStationTo.SelectedItem) + "</P>");
             //s.Append(GetHTMLForListView(lvStationToStation));
 
             //s.Append(links);
@@ -5509,6 +4956,181 @@ namespace RegulatedNoise
         }
 
     #endregion
+
+#region ExternalTool
+
+        private FileScanner.EDLogfileScanner    m_LogfileScanner;
+
+        private void cmdLanded_Click(object sender, EventArgs e)
+        {
+            String extSystem    = "";
+            String extStation   = "";
+            String extInfo      = "";
+            Boolean ContinueChecking = true;
+            try
+            {
+                
+                cmdConfirm.Enabled = false;
+
+                do
+                {
+                    Cursor = Cursors.WaitCursor;
+
+                    txtExtInfo.Text = "checking for current station...";
+                    txtExtInfo.Refresh();
+
+                    txtRecievedSystem.Text          = "";
+                    txtRecievedStation.Text         = "";
+
+                    if(!Program.ExternalData.getLocation(out extSystem, out extStation, out extInfo))
+                    { 
+                        txtExtInfo.Text             = "error from external tool : <" + extInfo + ">";
+                        ContinueChecking            = false;
+                    }
+                    else
+                    {
+                        txtExtInfo.Text             = "checking for current station...<ok>";
+                        txtRecievedSystem.Text      = extSystem;
+                        txtRecievedStation.Text     = extStation;
+                        ContinueChecking            = false;
+
+                        if(Program.actualCondition.System.Equals(txtRecievedSystem.Text))
+                            cmdConfirm.Enabled      = true;
+                        else
+                            txtExtInfo.Text             = "The external recieved system does not correspond to the system from the logfile!";
+                    }
+
+
+                } while (ContinueChecking);
+                
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                throw new Exception("Error while retreiving station information from external Interface", ex);
+            }
+        }
+
+        /// <summary>
+        /// confirms the retrieved location
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdConfirm_Click(object sender, EventArgs e)
+        {
+            DialogResult MBResult = System.Windows.Forms.DialogResult.OK;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                cmdGetMarketData.Enabled = false;
+
+                if(!Program.actualCondition.System.Equals(txtRecievedSystem.Text))
+                {
+                    MBResult = MessageBox.Show("The external recieved system does not correspond to the system from the logfile!\n" +
+                                               "Confirm even so ?", "Unexpected system retrieved !", 
+                                               MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                }
+
+                if(MBResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    Program.ExternalData.Confirm();
+                    cmdGetMarketData.Enabled = true;
+                }
+
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                throw new Exception("Error while confirming retrieved location", ex);
+            }
+        }
+
+        private void cmdGetMarketData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                txtExtInfo.Text = "getting market data...";
+                txtExtInfo.Refresh();
+
+                if(Program.ExternalData.getMarketData())
+                    txtLocalDataCollected.Text = String.Format("{0} (utc)", DateTime.UtcNow);
+
+                txtExtInfo.Text = "getting market data...<ok>";
+
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                throw new Exception("/* whatever */", ex);
+            }
+        }
+
+        void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
+        {
+            try
+            {
+                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
+                {
+                    setText(txtExtInfo,             "jump recognized...");
+                    setText(txtRecievedSystem,      "");
+                    setText(txtRecievedStation,     "");
+                    setText(txtLocalDataCollected,  "");
+
+                    setButton(cmdConfirm, false);
+                    setButton(cmdGetMarketData, false);
+
+                    Program.actualCondition.Location = e.Location;
+                    setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
+                }
+
+                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
+                {
+                    Program.actualCondition.System   = e.System;
+                    setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
+                }
+
+                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Location) > 0)
+                {
+                    Program.actualCondition.Location   = e.Location;
+                    setText(tbCurrentStationinfoFromLogs,  Program.actualCondition.Location);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in m_LogfileScanner_LocationChanged", ex);
+            }
+        }
+
+        void ExternalDataInterface_ExternalDataEvent(object sender, ExternalDataInterface.LocationChangedEventArgs e)
+        {
+            try
+            {
+                if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) != 0)
+                {
+                    Program.actualCondition.System   = e.System;
+                    Program.actualCondition.Location = e.Location;
+                    
+                    setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
+                    setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the LocationChanged-event", ex);
+            }
+        }
+
+#endregion
 
     }
 

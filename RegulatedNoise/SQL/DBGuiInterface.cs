@@ -352,7 +352,10 @@ namespace RegulatedNoise.SQL
                     if(Parts != null)
                     {
                         m_currentLoadingObject = cbSender;
-                        cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        if(Parts.DefaultValue.Equals("EMPTY"))
+                            cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, "");
+                        else
+                            cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         m_currentLoadingObject = null;
                     }
                 }

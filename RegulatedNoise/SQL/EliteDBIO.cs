@@ -169,59 +169,39 @@ namespace RegulatedNoise.SQL
             }
         }
 
-        //internal void InitializeData()
-        //{
-        //    String RNPath;
-        //    var fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+        internal void InitializeData()
+        {
+            String RNPath;
+            var fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
 
-        //    try
-        //    {
-        //        /// muss auch klappen, wenn der user eine erstinstallation macht
+            try
+            {
+                Decimal DBVersion = Program.DBCon.getIniValue<Decimal>("Database", "Version", Program.DB_VERSION_NONE.ToString(), false);
 
-        //        fbFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
-        //        fbFolderDialog.Description = "First run. It's neccessary to import the data from your existing (old) installation." + Environment.NewLine +
-        //                                     "Select your RN-Folder with the old data files ....";
-        //        fbFolderDialog.SelectedPath = System.IO.Directory.GetCurrentDirectory();
-        //        fbFolderDialog.ShowDialog();
+                if(DBVersion <= Program.DB_VERSION_NONE)
+                { 
+                    Program.DBCon.setIniValue("General", 
+                                              "PathProgram", 
+                                              System.IO.Path.Combine(
+                                                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), 
+                                                System.Windows.Forms.Application.ProductName));
 
-        //        RNPath = fbFolderDialog.SelectedPath.Trim();
+                    Program.DBCon.setIniValue("General", 
+                                              "PathData", 
+                                              System.IO.Path.Combine(
+                                                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+                                                System.Windows.Forms.Application.ProductName));
 
-        //        if (!String.IsNullOrEmpty(RNPath))
-        //        {
-        //            // import the commodities from EDDB
-        //            Program.Data.ImportCommodities(Path.Combine(RNPath, @"Data\commodities.json"));
+                    DBVersion = Program.DB_VERSION_CURRENT;
+                    Program.DBCon.setIniValue("Database", "Version", Program.DB_VERSION_CURRENT.ToString());
+                }
 
-        //            // import the localizations from the old RN files
-        //            Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, @"Data\Commodities.xml"));
-
-        //            // import the self added localizations from the old RN files
-        //            Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, @"Data\Commodities_Own.xml"));
-
-        //            // import the pricewarnlevels from the old RN files
-        //            Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(RNPath, @"Data\Commodities_RN.json"));
-
-        //            // import the systems and stations from EDDB
-        //            Program.Data.ImportSystems(Path.Combine(RNPath, @"Data/systems.json"));
-        //            Program.Data.ImportStations(Path.Combine(RNPath, @"Data/stations.json"),);
-
-        //            // import (once) the self-changed or added systems and stations 
-        //            Dictionary<Int32, Int32> changedSystemIDs;
-        //            changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(RNPath, @"Data/systems_own.json"));
-        //            Program.Data.ImportStations_Own(Path.Combine(RNPath, @"Data/stations_own.json"), changedSystemIDs);
-
-        //            // import the Commander's Log from the old RN files
-        //            Program.Data.ImportCommandersLog(Path.Combine(RNPath, @"CommandersLogAutoSave.xml"));
-
-        //            //import the history of visited stations
-        //            Program.Data.ImportVisitedStations(Path.Combine(RNPath, @"Data/StationHistory.json"));
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error while importing the whole old data to database", ex);
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing the whole old data to database", ex);
+            }
+        }
 
 #endregion
 
@@ -234,7 +214,8 @@ namespace RegulatedNoise.SQL
                                                             "tbeconomy", 
                                                             "tbstationtype",
                                                             "tbcommodity", 
-                                                            "tbeventType",
+                                                            "tbeventtype",
+                                                            "tbcargoaction",
                                                             "tbsystems",
                                                             "tbstations", 
                                                             "tbattribute", 
@@ -1183,7 +1164,7 @@ namespace RegulatedNoise.SQL
 
                     if (FoundRows.Count() > 0)
                     {
-                        // Station is existing
+                        // Location is existing
 
                         if ((bool)(FoundRows[0]["is_changed"]))
                         {
@@ -1194,7 +1175,7 @@ namespace RegulatedNoise.SQL
 
                             if ((FoundRows_org != null) && (FoundRows_org.Count() > 0))
                             {
-                                // Station is in "tbStations_org" existing - keep the newer version 
+                                // Location is in "tbStations_org" existing - keep the newer version 
                                 Timestamp_old = (DateTime)(FoundRows_org[0]["updated_at"]);
                                 Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
 
@@ -1214,7 +1195,7 @@ namespace RegulatedNoise.SQL
                         }
                         else
                         {
-                            // Station is existing - keep the newer version 
+                            // Location is existing - keep the newer version 
                             Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
                             Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
 
@@ -1258,7 +1239,7 @@ namespace RegulatedNoise.SQL
                         }
                         else
                         {
-                            // add a new Station
+                            // add a new Location
                             dsEliteDB.tbstationsRow newStationRow = (dsEliteDB.tbstationsRow)Data.tbstations.NewRow();
 
                             CopyEDStationToDataRow(Station, (DataRow)newStationRow);
@@ -1444,7 +1425,7 @@ namespace RegulatedNoise.SQL
 
                         if ((FoundRows != null) && (FoundRows.Count() > 0))
                         {
-                            // Station is existing, get the same Id
+                            // Location is existing, get the same Id
                             Station.Id = (Int32)FoundRows[0]["id"];
 
                             if (!OnlyAddUnknown)
@@ -1798,7 +1779,7 @@ namespace RegulatedNoise.SQL
                     String System  = StructureHelper.CombinedNameToSystemName(VisitEvent.Station);                    
                     String Station = StructureHelper.CombinedNameToStationName(VisitEvent.Station);
 
-                    //Debug.Print(System + "," + Station);
+                    //Debug.Print(System + "," + Location);
 
                     try
                     {
@@ -1832,7 +1813,7 @@ namespace RegulatedNoise.SQL
                     }
                     catch (Exception)
                     {
-                        //Debug.Print("Error while importing station in history :" + Station);
+                        //Debug.Print("Error while importing station in history :" + Location);
                     };
                     
                     Counter++;
@@ -2095,16 +2076,13 @@ namespace RegulatedNoise.SQL
         }
 
         /// <summary>
-        /// Imports the prices from the list of stations. It's clever
-        /// firstly to import the stations from the same file.
+        /// Imports the prices from a file with csv-strings (e.g. the old autosave-file)
         /// </summary>
         /// <param name="Stations"></param>
-        public void ImportPricesFromAutoSave(String filename)
+        public void ImportPricesFromCSVFile(String filename)
         {
             try
             {
-                List<EDStation> StationData;
-                List<EDSystem> SystemData = null;
                 String[] CSV_Strings    = new String[0];
                 var reader              = new StreamReader(File.OpenRead(filename));
 
@@ -2118,25 +2096,68 @@ namespace RegulatedNoise.SQL
 
                 reader.Close();
 
-                // first be sure all systems and stations existing
-                StationData = fromCSV(CSV_Strings, ref SystemData);
-                ImportSystems_Own(ref SystemData, true);
+                ImportPricesFromCSVStrings(CSV_Strings);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing self collected price data", ex);
+            }
+        }
 
-                // transfer the found system-ids to the station objects
+        /// <summary>
+        /// Imports the prices from a list of csv-strings
+        /// </summary>
+        /// <param name="Stations"></param>
+        public void ImportPricesFromCSVStrings(String[] CSV_Strings, Boolean FromSingleStation = false)
+        {
+            Boolean MissingSystem   = false;
+            Boolean MissingStation  = false;
+
+            try
+            {
+                List<EDStation> StationData;
+                List<EDSystem> SystemData = null;
+
+                // convert csv-strings to EDStation-objects
+                StationData = fromCSV(CSV_Strings, ref SystemData);
+
+                // check if we've unknown systems or stations
                 foreach (EDStation Station in StationData)
                 {
-                    if(Station.SystemId == 0)
-                    {
-                        EDSystem System  = SystemData.Find(x => x.Name.Equals(Station.SystemName, StringComparison.InvariantCultureIgnoreCase));                        
-                        Station.SystemId = System.Id;
-                    }
+                    if (Station.SystemId == 0)
+                        MissingSystem = true;
+                    else if(Station.Id == 0)
+                        MissingStation = true;
                 }
 
-                ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
+                if (MissingSystem)
+                {
+                    // add unknown systems
+                    ImportSystems_Own(ref SystemData, true);
+                }
+
+                if (MissingSystem || MissingStation)
+                {
+                    // add unknown stations
+                    ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
+                }
 
                 // now import the prices
                 ImportPrices(StationData);
 
+                if (MissingSystem)
+                {
+                    // reloading of base tables
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                }
+
+                if (MissingSystem || MissingStation)
+                {
+                    // reloading of base tables
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
+                }
             }
             catch (Exception ex)
             {
@@ -2204,6 +2225,10 @@ namespace RegulatedNoise.SQL
                                 {
                                     LastSystem  = new EDSystem();
                                     LastSystem.Name = currentRow.SystemName;
+
+                                    if(LastSystem.Id == 0)
+                                        LastSystem.Id = currentStation.SystemId;
+
 
                                     foundSystems.Add(LastSystem);
                                     foundSystemIndex.Add(currentRow.SystemName, foundSystems.Count-1);
@@ -2460,6 +2485,100 @@ namespace RegulatedNoise.SQL
 #endregion
 
 
+        /// <summary>
+        /// retrieves all stationnames in the system in a array
+        /// </summary>
+        /// <param name="System"></param>
+        /// <returns></returns>
+        public string[] getStations(string System)
+        {
+            String sqlString;
+            DataTable Data;
+            String[] retValue = new String[0];
+            Int32 RowCounter;
+
+            try
+            {
+                Data = new DataTable();
+                
+                sqlString = "select St.Stationname from tbSystems Sy, tbStations St" +
+                            " where Sy.ID         = St.System_ID" +
+                            " and   Sy.Systemname = " + DBConnector.SQLAString(DBConnector.SQLEscape(System));
+
+                Program.DBCon.Execute(sqlString, Data);
+
+                Array.Resize(ref retValue, Data.Rows.Count);
+                RowCounter = 0;
+
+                foreach (DataRow currentRow in Data.Rows)
+                {
+                    retValue[RowCounter] = (String)currentRow["Stationname"];
+                    RowCounter++;
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting names of stations in a system", ex);
+            }
+        }
+
+        /// <summary>
+        /// retrieves all known commodity names in the current language
+        /// </summary>
+        /// <returns></returns>
+        internal List<string> getCommodityNames()
+        {
+            String sqlString;
+            DataTable Data;
+            List<string> retValue = new  List<string>();
+
+            try
+            {
+                Data = new DataTable();
+                
+                sqlString = "select loccommodity from tbCommodity";
+                Program.DBCon.Execute(sqlString, Data);
+
+                foreach (DataRow currentRow in Data.Rows)
+                    retValue.Add((String)currentRow["loccommodity"]);
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting names of all commodities", ex);
+            }
+        }
+
+        /// <summary>
+        /// retrieves all known economylevels as original string in capitals and in the current language
+        /// </summary>
+        /// <returns></returns>
+        internal Dictionary<string, string> getEconomyLevels()
+        {
+            String sqlString;
+            DataTable Data;
+            Dictionary<string, string> retValue = new  Dictionary<string, string>();
+
+            try
+            {
+                Data = new DataTable();
+                
+                sqlString = "select Upper(level) as level, loclevel from tbEconomyLevel";
+                Program.DBCon.Execute(sqlString, Data);
+
+                foreach (DataRow currentRow in Data.Rows)
+                    retValue.Add((String)currentRow["level"], (String)currentRow["loclevel"]);
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting dictionary of all economylevels", ex);
+            }
+        }
     }
 
 }

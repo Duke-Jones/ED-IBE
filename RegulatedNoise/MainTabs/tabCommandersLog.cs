@@ -239,6 +239,8 @@ namespace RegulatedNoise.MTCommandersLog
             }
         }
 
+        private delegate void delInt32(Int32 currentRow);
+
         /// <summary>
         /// forces refreshing this tab
         /// </summary>
@@ -246,12 +248,19 @@ namespace RegulatedNoise.MTCommandersLog
         {
             try
             {
-                // force refresh
-                m_DataSource.Retriever.MemoryCache.Clear();
-                dgvCommandersLog.Invalidate();
+                if(this.InvokeRequired)
+                {
+                    this.Invoke(new delInt32(RefreshTab), currentRow);
+                }
+                else
+                {
+                    // force refresh
+                    m_DataSource.Retriever.MemoryCache.Clear();
+                    dgvCommandersLog.Invalidate();
 
-                // jump to the new row
-                dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow];
+                    // jump to the new row
+                    dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow];
+                }
             }
             catch (Exception ex)
             {
@@ -293,8 +302,8 @@ namespace RegulatedNoise.MTCommandersLog
 
                 cbLogEventType.SelectedValue    = (Int32)12;
                 dtpLogEventDate.Value           = (DateTime)DateTime.Now;
-                cbLogSystemName.Text            = Program.actualCondition.System      != Condition.STR_Scanning ? Program.actualCondition.System  : "";
-                cbLogStationName.Text           = Program.actualCondition.Station     != Condition.STR_Scanning ? Program.actualCondition.Station : "";
+                cbLogSystemName.Text            = Program.actualCondition.System;
+                cbLogStationName.Text           = Program.actualCondition.Location;
                 nbTransactionAmount.Text        = "0";
                 nbCurrentCredits.Text           = "0";
                 cbLogCargoName.Text             = "";

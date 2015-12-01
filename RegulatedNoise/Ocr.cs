@@ -191,14 +191,12 @@ namespace RegulatedNoise
             var text = AnalyseFrameUsingTesseract(_bTrimmedHeader, engine, out level);
             Stationname_OCR = StripPunctuationFromScannedText(text);// (text + " {" + page.GetMeanConfidence() + "}\r\n");
 
-            // debug: SystemAtTimeOfScreenshot = "BD+65 1846"
-            throw new NotImplementedException();
-            string[] StationsInSystem = new String[0]; //_callingForm.myMilkyway.getStationNames(SystemAtTimeOfScreenshot);
+            string[] StationsInSystem = Program.Data.getStations(SystemAtTimeOfScreenshot);
 
-            if(Program.actualCondition.Station.Equals("scanning...", StringComparison.InvariantCultureIgnoreCase))
+            if(Program.actualCondition.Location.Equals("", StringComparison.InvariantCultureIgnoreCase))
                 StationameAnalysisBase = Stationname_OCR;
             else
-                StationameAnalysisBase = Program.actualCondition.Station;
+                StationameAnalysisBase = Program.actualCondition.Location;
 
             string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(StationameAnalysisBase, StringComparison.InvariantCultureIgnoreCase));
 

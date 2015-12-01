@@ -194,7 +194,7 @@ namespace RegulatedNoise
                             FileName = @"AutoSave.csv";
                             if(FileExistsOrMessage(RNPath, FileName))
                             { 
-                                Program.Data.ImportPricesFromAutoSave(Path.Combine(RNPath, FileName));
+                                Program.Data.ImportPricesFromCSVFile(Path.Combine(RNPath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 1, Total = 1});

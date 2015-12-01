@@ -897,12 +897,12 @@ namespace RegulatedNoise.SQL
 		        // Wert gar nicht vorhanden
 
 		        // Wert eintragen
-		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(Value) + ")";
+		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(SQLEscape(Value)) + ")";
 		        retValue = (Execute(sqlString) != 0);
 
 	        } else {
 		        // Wert bereits vorhanden
-		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAString(Value) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAString(SQLEscape(Value)) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 		        retValue = (Execute(sqlString) != 0);
 	        }
 
