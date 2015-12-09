@@ -914,6 +914,16 @@ namespace RegulatedNoise.SQL
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        public static string SQLAEscape(string str)
+        {
+            return "'" + SQLEscape(str) + "'";
+        }
+
+        /// <summary>
+        /// returns a fully escaped string for a database query
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string SQLEscape(string str)
         {
             return System.Text.RegularExpressions.Regex.Replace(str, @"[\x00'""\b\n\r\t\cZ\\%_]",

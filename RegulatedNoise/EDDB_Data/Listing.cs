@@ -38,7 +38,7 @@ namespace RegulatedNoise.EDDB_Data
         public String DemandLevel { get; set; }
 
         [JsonProperty("collected_at")]
-        public int CollectedAt { get; set; }
+        public long CollectedAt { get; set; }
 
         [JsonProperty("update_count")]
         public int UpdateCount { get; set; }

@@ -180,7 +180,7 @@ namespace RegulatedNoise.MTCommandersLog
                 if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     theCombobox.DataSource       = m_BaseData.tbeventtype;
-                    theCombobox.DisplayMember    = "event";
+                    theCombobox.DisplayMember    = "eventtype";
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -209,7 +209,7 @@ namespace RegulatedNoise.MTCommandersLog
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     theCombobox.DataSource       = m_BaseData.tbcargoaction;
-                    theCombobox.DisplayMember    = "action";
+                    theCombobox.DisplayMember    = "cargoaction";
                 }
 
                 theCombobox.ValueMember      = "id";
@@ -260,7 +260,7 @@ namespace RegulatedNoise.MTCommandersLog
         /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
         /// </summary>
         /// <param name="ChangedData">row with data to save</param>
-        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes)
+        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes, double? Distance=null)
         {
             try
             {
@@ -281,6 +281,9 @@ namespace RegulatedNoise.MTCommandersLog
                 TempRow.eevent              = EventType;
                 TempRow.notes               = Notes;
 
+                if(Distance.HasValue)
+                    TempRow.distance        = Distance.Value;
+
                 SaveEvent(TempRow);
             }
             catch (Exception ex)
@@ -297,12 +300,22 @@ namespace RegulatedNoise.MTCommandersLog
         internal void SaveEvent(dsEliteDB.vilogRow ChangedData)
         {
             String sqlString;
+            double? nDistance = null;
 
             try
             {
+                try
+                {
+                    nDistance = ChangedData.distance;
+                }
+                catch (Exception)
+                {
+                    // typed datasets can't handle nullvalues for non-string columns 
+                    // thank you, ms ]-P
+                }
 
                 sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
-                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
+                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes, distance)" +
                                             " SELECT d.* FROM (SELECT" +
                                             "          {0} AS time," +
                                             "          (select id from tbSystems  where systemname      = {1}" +
@@ -317,7 +330,8 @@ namespace RegulatedNoise.MTCommandersLog
                                             "          {6} AS cargovolume," +
                                             "          {7} AS credits_transaction," +
                                             "          {8} AS credits_total," +
-                                            "          {9} AS notes) AS d" +
+                                            "          {9} AS notes," +
+                                            "          {10} AS distance) AS d" +
                                             " ON DUPLICATE KEY UPDATE" +
                                             "  system_id            = d.system_id," +
                                             "  station_id           = d.station_id," +
@@ -327,7 +341,8 @@ namespace RegulatedNoise.MTCommandersLog
                                             "  cargovolume          = d.cargovolume," +
                                             "  credits_transaction  = d.credits_transaction," +
                                             "  credits_total        = d.credits_total," +
-                                            "  notes                = d.notes",
+                                            "  notes                = d.notes," +
+                                            "  distance             = d.distance",
                                             DBConnector.SQLDateTime(ChangedData.time),
                                             DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
                                             DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
@@ -337,7 +352,8 @@ namespace RegulatedNoise.MTCommandersLog
                                             ChangedData.cargovolume,
                                             ChangedData.credits_transaction,
                                             ChangedData.credits_total,
-                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)));
+                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)),
+                                            nDistance == null ? "null" : DBConnector.SQLDecimal(nDistance.Value));
 
                 Program.DBCon.Execute(sqlString); 
 
@@ -464,7 +480,7 @@ namespace RegulatedNoise.MTCommandersLog
 
         //            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
         //            {
-        //                Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
+        //                Program.CommandersLog.SaveEvent(DateTime.UtcNow, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
         //            }
         //        }
         //    }
@@ -500,7 +516,7 @@ namespace RegulatedNoise.MTCommandersLog
         //                        //}
         //                        //else
         //                        //{
-        //                        //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+        //                        //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.UtcNow);
         //                        //    setActiveItem(_CmdrsLog_LastAutoEventID);
         //                        //}
         //                    }
@@ -618,7 +634,8 @@ namespace RegulatedNoise.MTCommandersLog
             {
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
-                    SaveEvent(DateTime.Now, e.System, "", "", "", 0, 0, 0, "Jumped To", "");
+                    double? Distance = Program.Data.getDistanceBetween(e.System, e.OldSystem);
+                    SaveEvent(DateTime.UtcNow, e.System, "", "", "", 0, 0, 0, "Jumped To", "", Distance);
                 }
             }
             catch (Exception ex)
@@ -634,7 +651,7 @@ namespace RegulatedNoise.MTCommandersLog
                 if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) > 0)
                 {
                   
-                    SaveEvent(DateTime.Now, e.System, e.Location, "", "", 0, 0, 0, "Visited", "");
+                    SaveEvent(DateTime.UtcNow, e.System, e.Location, "", "", 0, 0, 0, "Visited", "");
                 }
 
                 if((e.Changed & ExternalDataInterface.enExternalDataEvents.DataCollected) > 0)
@@ -687,7 +704,7 @@ namespace RegulatedNoise.MTCommandersLog
                             else
                             {
                                 // add new
-                                Program.CommandersLog.SaveEvent(DateTime.Now, Program.actualCondition.System, 
+                                Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
                                                                 Program.actualCondition.Location, "", "", 0, 0, 0, 
                                                                 "Market Data Collected", "");
                             }
@@ -696,7 +713,7 @@ namespace RegulatedNoise.MTCommandersLog
                     else
                     {
                         // add new
-                        Program.CommandersLog.SaveEvent(DateTime.Now, Program.actualCondition.System, 
+                        Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
                                                         Program.actualCondition.Location, "", "", 0, 0, 0, 
                                                         "Market Data Collected", "");
                     }
@@ -706,6 +723,35 @@ namespace RegulatedNoise.MTCommandersLog
             catch (Exception ex)
             {
                 throw new Exception("Error while creating a MarketDataCollected-event", ex);
+            }
+        }
+
+        /// <summary>
+        /// deletes the rows in the database
+        /// </summary>
+        /// <param name="markedRows"></param>
+        internal void DeleteRows(DataGridViewSelectedRowCollection markedRows)
+        {
+            System.Text.StringBuilder sqlString = new System.Text.StringBuilder();
+
+            try
+            {
+                sqlString.Append("delete from tbLog where ");
+
+                for (int i = 0; i < markedRows.Count; i++)
+                {
+                    if(i == 0)
+                        sqlString.Append(String.Format(" time = {0}", DBConnector.SQLDateTime((DateTime)markedRows[i].Cells["time"].Value)));   
+                    else
+                        sqlString.Append(String.Format(" or time = {0} ", DBConnector.SQLDateTime((DateTime)markedRows[i].Cells["time"].Value)));   
+                }
+
+                Program.DBCon.Execute(sqlString.ToString());
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting rows", ex);
             }
         }
     }

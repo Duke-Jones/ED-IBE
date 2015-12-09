@@ -289,11 +289,11 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         {
             if (IsRowCachedInPage(0, rowIndex))
             {
-                cachePages[0].table.Rows[rowIndex % RowsPerPage][columnIndex] = element;
+                cachePages[0].table.Rows[rowIndex % RowsPerPage][columnIndex] = element == null ? DBNull.Value : element;
             }
             else if (IsRowCachedInPage(1, rowIndex))
             {
-                cachePages[1].table.Rows[rowIndex % RowsPerPage][columnIndex] = element;
+                cachePages[1].table.Rows[rowIndex % RowsPerPage][columnIndex] = element == null ? DBNull.Value : element;;
             }
         }
 

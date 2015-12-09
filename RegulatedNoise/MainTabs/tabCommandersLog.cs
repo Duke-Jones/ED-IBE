@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using RegulatedNoise.SQL;
 using System.Diagnostics;
 using RegulatedNoise.SQL.Datasets;
+using RegulatedNoise.Enums_and_Utility_Classes;
+
 namespace RegulatedNoise.MTCommandersLog
 {
     public partial class tabCommandersLog : UserControl
@@ -106,7 +108,6 @@ namespace RegulatedNoise.MTCommandersLog
                 dgvCommandersLog.ReadOnly                 = true;
                 dgvCommandersLog.AllowUserToAddRows       = false;
                 dgvCommandersLog.AllowUserToOrderColumns  = false;
-                dgvCommandersLog.SelectionMode            = DataGridViewSelectionMode.FullRowSelect;
 
                 dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
 
@@ -301,7 +302,7 @@ namespace RegulatedNoise.MTCommandersLog
                 setCLFieldsEditable(true, true);
 
                 cbLogEventType.SelectedValue    = (Int32)12;
-                dtpLogEventDate.Value           = (DateTime)DateTime.Now;
+                dtpLogEventDate.Value           = (DateTime)DateTime.UtcNow;
                 cbLogSystemName.Text            = Program.actualCondition.System;
                 cbLogStationName.Text           = Program.actualCondition.Location;
                 nbTransactionAmount.Text        = "0";
@@ -310,6 +311,7 @@ namespace RegulatedNoise.MTCommandersLog
                 cbLogCargoAction.Text            = "";
                 nbLogQuantity.Text              = "0";
                 tbLogNotes.Text                 = "";
+                txtLogDistance.Text             = "";
             }
             catch (Exception ex)
             {
@@ -340,12 +342,13 @@ namespace RegulatedNoise.MTCommandersLog
         /// </summary>
         private void saveLogEntry()
         {
+            Double Distance;
+
             try
             {
                 setCLFieldsEditable(false);
 
                 dgvCommandersLog.ReadOnly = false;
-
 
                 // put the changed data into the DataGridView (this will fire the "CellValuePushed"-event)
                 dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value              = cbLogEventType.Text;
@@ -358,6 +361,11 @@ namespace RegulatedNoise.MTCommandersLog
                 dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value              = cbLogCargoAction.Text;
                 dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value         = nbLogQuantity.Value;
                 dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value               = tbLogNotes.Text;
+
+                if(Double.TryParse(txtLogDistance.Text, out Distance))
+                    dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["distance"].Value        =  Distance;
+                else
+                    dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["distance"].Value        =  null;
 
                 dgvCommandersLog.ReadOnly = true;
 
@@ -421,11 +429,12 @@ namespace RegulatedNoise.MTCommandersLog
                     cbLogCargoAction.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
                     nbLogQuantity.Value         = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value;
                     tbLogNotes.Text             = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
+                    txtLogDistance.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["distance"].Value.ToString();
                 }
                 else
                 {
                     cbLogEventType.Text         = (String)"";
-                    dtpLogEventDate.Value       = (DateTime)DateTime.Now;
+                    dtpLogEventDate.Value       = (DateTime)DateTime.UtcNow;
                     cbLogSystemName.Text        = (String)"";
                     cbLogStationName.Text       = (String)"";
                     nbTransactionAmount.Text    = (String)"";
@@ -434,6 +443,7 @@ namespace RegulatedNoise.MTCommandersLog
                     cbLogCargoAction.Text       = (String)"";
                     nbLogQuantity.Value         = (Int32)0;
                     tbLogNotes.Text             = (String)"";
+                    txtLogDistance.Text         = (String)"";
                 }
 
                 setCLFieldsEditable(false);
@@ -459,6 +469,7 @@ namespace RegulatedNoise.MTCommandersLog
                 cbLogCargoAction.ReadOnly         = !Enabled;
                 nbLogQuantity.ReadOnly            = !Enabled;
                 tbLogNotes.ReadOnly               = !Enabled;
+                txtLogDistance.ReadOnly           = !Enabled;
 
                 dgvCommandersLog.Enabled          = !Enabled;
             }
@@ -579,6 +590,121 @@ namespace RegulatedNoise.MTCommandersLog
             {
                 throw new Exception("Error while refreshing data", ex);
             }
+        }
+
+        private void dgvCommandersLog_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs args;
+            DataGridView dgv;
+            DataGridView.HitTestInfo hit;
+
+            try
+            {
+                args   = (MouseEventArgs)e;
+
+                if(args.Button == System.Windows.Forms.MouseButtons.Right)
+                { 
+                    dgv   = (DataGridView)sender;
+                    hit   = dgv.HitTest(args.X, args.Y);
+
+                    if (hit.Type == DataGridViewHitTestType.TopLeftHeader)
+                    {
+                        DataGridViewSettings Tool = new DataGridViewSettings();
+
+                        if(Tool.setVisibility(dgv) == DialogResult.OK)
+                        {
+                            m_GUIInterface.saveSetting(dgv);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in DataGridView_Click", ex);
+            }
+        }
+
+        private void dgvCommandersLog_ColumnSorted(object sender, DataGridViewExt.SortedEventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender, e))
+                {
+                    sortDataGridView((DataGridView)sender);
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while changing the sort order (all CmdrsLog)");
+            }
+        }
+
+        /// <summary>
+        /// starts sorting of the all commodities-tab by the setting from the database
+        /// </summary>
+        private void sortDataGridView(DataGridView SortedDataGridView)
+        {
+            Cursor oldCursor =  this.Cursor;
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+                m_GUIInterface.loadSetting(SortedDataGridView);  
+                this.Cursor = oldCursor;
+            }
+            catch (Exception ex)
+            {
+                this.Cursor = oldCursor;
+                throw new Exception("Error while sorting grid", ex);
+            }
+        }
+
+        /// <summary>
+        /// switching the state of the delete button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dgvCommandersLog_SelectionChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                cmdCL_DeleteEntry.Enabled = (dgvCommandersLog.SelectedRows.Count > 0);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in dgvCommandersLog_SelectionChanged");
+            }
+        }
+
+        private void cmdCL_DeleteEntry_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Int32 RowCount =  dgvCommandersLog.SelectedRows.Count;
+                DialogResult DlgResult = DialogResult.Cancel;
+
+                if(RowCount == 1)
+                   DlgResult = MessageBox.Show("Delete one row. Are you sure ?", "Delete rows from log ...", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                else if(RowCount > 1)
+                   DlgResult = MessageBox.Show("Delete " + RowCount + "  rows. Are you sure ?", "Delete rows from log ...", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                if(DlgResult == DialogResult.OK)
+                { 
+                    Int32 RowIndex = dgvCommandersLog.SelectedRows[0].Index;
+
+                    m_DataSource.DeleteRows(dgvCommandersLog.SelectedRows);
+
+                    RefreshTab(RowIndex);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting rows from the commanders log", ex);
+            }
+        }
+
+        private void dgvCommandersLog_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            Debug.Print("dgvCommandersLog_ColumnWidthChanged");
         }
 
     }

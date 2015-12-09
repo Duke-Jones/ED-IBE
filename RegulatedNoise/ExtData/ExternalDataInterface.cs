@@ -64,6 +64,7 @@ namespace RegulatedNoise.ExtData
                 Changed     = enExternalDataEvents.None;
                 System      = "";
                 Location    = "";
+                
             }
 
             public String System                    { get; set; }
@@ -71,6 +72,7 @@ namespace RegulatedNoise.ExtData
             public String OldSystem                 { get; set; }
             public String OldLocation               { get; set; }
             public enExternalDataEvents Changed     { get; set; }
+            public Int32 Amount                     { get; set; }
         }
 
         #endregion
@@ -87,40 +89,17 @@ namespace RegulatedNoise.ExtData
         /// <param name="Station"></param>
         /// <param name="ErrorInfo"></param>
         /// <returns></returns>
-        public Boolean getLocation(out String System, out String Station, out String ErrorInfo)
+        public Boolean getLocation(out String System, out String Station, out String Info, out String ErrorInfo)
         {
             try
             {
-                return getData(enExternalDataFunction.getLocation, out System, out Station, out ErrorInfo);
+                return getData(enExternalDataFunction.getLocation, out System, out Station, out Info, out ErrorInfo);
             }
             catch (Exception ex)
             {
                 throw new Exception("Error while getting location trough external data tool ", ex);
             }
         }
-
-        ///// <summary>
-        ///// gets the current location and saves market data to a file
-        ///// </summary>
-        ///// <param name="System"></param>
-        ///// <param name="Station"></param>
-        ///// <param name="ErrorInfo"></param>
-        ///// <returns></returns>
-        //public Boolean getMarketData()
-        //{
-        //    String System      = "";
-        //    String Station     = "";
-        //    String ErrorInfo   = "";
-
-        //    try
-        //    {
-        //        return getData(enExternalDataFunction.getMarketdata, out System, out Station, out ErrorInfo);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error while getting location trough external data tool ", ex);
-        //    }
-        //}
 
         /// <summary>
         /// gets the current location and saves market data to a file
@@ -130,7 +109,7 @@ namespace RegulatedNoise.ExtData
         /// <param name="Station"></param>
         /// <param name="ErrorInfo"></param>
         /// <returns></returns>
-        private Boolean getData(enExternalDataFunction DataFunction, out String System, out String Station, out String ErrorInfo)
+        private Boolean getData(enExternalDataFunction DataFunction, out String System, out String Station, out String Info, out String ErrorInfo)
         {
             Process ProcessObject;
             Boolean retValue = false;
@@ -142,6 +121,7 @@ namespace RegulatedNoise.ExtData
 
                 System      = "";
                 Station     = "";
+                Info        = "";
                 ErrorInfo   = "";
 
                 ProcessObject = new Process();
@@ -187,7 +167,7 @@ namespace RegulatedNoise.ExtData
                     ProcessObject.Close();
                     ProcessObject.Dispose();
 
-                    if((ErrorInfo.Trim().Length == 0) && (m_OutPut.Count() > 0))
+                    if(m_OutPut.Count() > 0)
                     { 
                         // no error and we've got something
                         String [] Parts = m_OutPut[0].Split(new char[] {','});
@@ -200,11 +180,13 @@ namespace RegulatedNoise.ExtData
                             m_RetrievedSystem   = Parts[0].Trim();
                             m_RetrievedStation  = Parts[1].Trim();
 
+                            Info = m_OutPut[0];
+
                             retValue = true;
                         }
                         else
                         {
-                            ErrorInfo = "No station information.";
+                            Info = "No station information.";
                         }
                     }
                 }
@@ -289,33 +271,36 @@ namespace RegulatedNoise.ExtData
         /// <summary>
         /// collects the marketdata from a external tool
         /// </summary>
-        public Boolean getMarketData()
+        public Boolean getMarketData(out String System, out String Station, out String Info, out String ErrorInfo, out Int32 DataCount)
         {
-            String System;
-            String Station;
-            String ErrorInfo;
             Boolean DataOk = false;
             String Datafile;
             Boolean retValue = false;
 
             try
             {
-                DataOk = CheckDataFile(out Datafile);
+                System      = "";
+                Station     = "";
+                Info        = "";
+                ErrorInfo   = "";
+                DataCount   = 0;
+                DataOk      = CheckDataFile(out Datafile);
 
                 if(!DataOk)
-                    if(getData(enExternalDataFunction.getMarketdata, out System, out Station, out ErrorInfo))
+                    if(getData(enExternalDataFunction.getMarketdata, out System, out Station, out Info, out ErrorInfo))
                         DataOk = CheckDataFile(out Datafile);
 
                 if(DataOk)
                 {
-                    Program.Data.ImportPricesFromCSVFile(Datafile);
+                    DataCount = Program.Data.ImportPricesFromCSVFile(Datafile);
 
                     // something has changed -> fire event
                     var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
                                                               Location      = Program.actualCondition.Location,
                                                               OldSystem     = Program.actualCondition.System,  
                                                               OldLocation   = Program.actualCondition.Location,
-                                                              Changed       = enExternalDataEvents.DataCollected};
+                                                              Changed       = enExternalDataEvents.DataCollected,
+                                                              Amount        = DataCount};
                     ExternalDataEvent.Raise(this, EA);
 
                     retValue = true;

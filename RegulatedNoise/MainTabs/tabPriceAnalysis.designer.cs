@@ -879,7 +879,7 @@
             this.maxProfitDataGridViewTextBoxColumn,
             this.sourceDataGridViewTextBoxColumn});
             this.dgvByStation.DataSource = this.tmpabystationBindingSource;
-            this.dgvByStation.DoubleBuffer = false;
+            this.dgvByStation.DoubleBuffer = true;
             this.dgvByStation.Location = new System.Drawing.Point(4, 45);
             this.dgvByStation.Name = "dgvByStation";
             this.dgvByStation.Size = new System.Drawing.Size(1186, 444);
@@ -1247,7 +1247,7 @@
             this.demandLevelDataGridViewTextBoxColumn2,
             this.timestampDataGridViewTextBoxColumn2});
             this.dgvByCommodity.DataSource = this.tmpabycommodityBindingSource;
-            this.dgvByCommodity.DoubleBuffer = false;
+            this.dgvByCommodity.DoubleBuffer = true;
             this.dgvByCommodity.Location = new System.Drawing.Point(4, 41);
             this.dgvByCommodity.Name = "dgvByCommodity";
             this.dgvByCommodity.Size = new System.Drawing.Size(1186, 454);

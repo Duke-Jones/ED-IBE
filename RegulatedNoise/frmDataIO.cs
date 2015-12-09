@@ -173,6 +173,7 @@ namespace RegulatedNoise
                             if(FileExistsOrMessage(RNPath, FileName))
                             { 
                                 Program.Data.ImportCommandersLog(Path.Combine(RNPath, FileName));
+                                Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 1, Total = 1});

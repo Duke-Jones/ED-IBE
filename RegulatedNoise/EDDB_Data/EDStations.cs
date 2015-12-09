@@ -303,7 +303,8 @@ namespace RegulatedNoise.EDDB_Data
                     newListing.SellPrice    = (Int32)Csv_Row.SellPrice;
                     newListing.Demand       = (Int32)Csv_Row.Demand;
                     newListing.DemandLevel  = Csv_Row.DemandLevel.Trim() == "" ? null : Csv_Row.DemandLevel;
-                    newListing.CollectedAt  = UnixTimeStamp.DateTimeToUnixTimestamp(Csv_Row.SampleDate);
+                    newListing.CollectedAt  =  new System.DateTimeOffset(Csv_Row.SampleDate).ToUnixTimeSeconds();
+                    
                     newListing.UpdateCount  = -1;
 
                     Listings[currentIndex+1] = newListing;

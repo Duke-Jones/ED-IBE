@@ -697,6 +697,34 @@ namespace RegulatedNoise.SQL
 
         }
 
+        /// <summary>
+        /// retrieves all known commodity names in the current language
+        /// </summary>
+        /// <returns></returns>
+        internal List<string> getCommodityNames()
+        {
+            String sqlString;
+            DataTable Data;
+            List<string> retValue = new  List<string>();
+
+            try
+            {
+                Data = new DataTable();
+                
+                sqlString = "select loccommodity from tbCommodity";
+                Program.DBCon.Execute(sqlString, Data);
+
+                foreach (DataRow currentRow in Data.Rows)
+                    retValue.Add((String)currentRow["loccommodity"]);
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting names of all commodities", ex);
+            }
+        }
+
 
 #endregion
 
@@ -759,7 +787,7 @@ namespace RegulatedNoise.SQL
                             {
                                 // system is in "tbSystems_org" existing - keep the newer version 
                                 Timestamp_old = (DateTime)(FoundRows_org[0]["updated_at"]);
-                                Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(System.UpdatedAt);
+                                Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(System.UpdatedAt).DateTime;
 
                                 if (Timestamp_new > Timestamp_old)
                                 {
@@ -773,7 +801,7 @@ namespace RegulatedNoise.SQL
                         {
                             // system is existing - keep the newer version 
                             Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                            Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(System.UpdatedAt);
+                            Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(System.UpdatedAt).DateTime;
 
                             if (Timestamp_new > Timestamp_old)
                             {
@@ -941,7 +969,7 @@ namespace RegulatedNoise.SQL
                                     // old data is changed by user and the new data is also a user changed data
                                     // keep the newer version in the main table 
                                     Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                                    Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(System.UpdatedAt);
+                                    Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(System.UpdatedAt).DateTime;
 
                                     if (Timestamp_new > Timestamp_old)
                                     {
@@ -1091,7 +1119,7 @@ namespace RegulatedNoise.SQL
                 SystemRow["security_id"]            = DBConvert.From(BaseTableNameToID("security", SystemObject.Security));
                 SystemRow["primary_economy_id"]     = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy));
                 SystemRow["needs_permit"]           = DBConvert.From(SystemObject.NeedsPermit);
-                SystemRow["updated_at"]             = DBConvert.From(UnixTimeStamp.UnixTimeStampToDateTime(SystemObject.UpdatedAt));
+                SystemRow["updated_at"]             = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(SystemObject.UpdatedAt).DateTime);
                 SystemRow["is_changed"]             = OwnData ? DBConvert.From(1) : DBConvert.From(0);
                 SystemRow["visited"]                = DBConvert.From(0);
 
@@ -1177,7 +1205,7 @@ namespace RegulatedNoise.SQL
                             {
                                 // Location is in "tbStations_org" existing - keep the newer version 
                                 Timestamp_old = (DateTime)(FoundRows_org[0]["updated_at"]);
-                                Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
+                                Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(Station.UpdatedAt).DateTime;
 
                                 if (Timestamp_new > Timestamp_old)
                                 {
@@ -1197,7 +1225,7 @@ namespace RegulatedNoise.SQL
                         {
                             // Location is existing - keep the newer version 
                             Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                            Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
+                            Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(Station.UpdatedAt).DateTime;
 
                             if (Timestamp_new > Timestamp_old)
                             {
@@ -1435,7 +1463,7 @@ namespace RegulatedNoise.SQL
                                 {
                                     // existing data data is also changed by user - keep the newer version 
                                     Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                                    Timestamp_new = UnixTimeStamp.UnixTimeStampToDateTime(Station.UpdatedAt);
+                                    Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(Station.UpdatedAt).DateTime;
 
                                     if (Timestamp_new > Timestamp_old)
                                     {
@@ -1556,7 +1584,7 @@ namespace RegulatedNoise.SQL
                 StationRow["has_repair"]            = DBConvert.From(StationObject.HasRepair);
                 StationRow["has_rearm"]             = DBConvert.From(StationObject.HasRearm);
                 StationRow["has_outfitting"]        = DBConvert.From(StationObject.HasOutfitting);
-                StationRow["updated_at"]            = DBConvert.From(UnixTimeStamp.UnixTimeStampToDateTime(StationObject.UpdatedAt));
+                StationRow["updated_at"]            = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(StationObject.UpdatedAt).DateTime);
                 StationRow["is_changed"]            = OwnData ? DBConvert.From(1) : DBConvert.From(0);
                 StationRow["visited"]               = DBConvert.From(0);
 
@@ -1618,8 +1646,6 @@ namespace RegulatedNoise.SQL
                 throw new Exception("Error while copying station economy data", ex);
             }
         }
-
-        
 
         /// <summary>
         /// copies the commodities data from a "EDStation"-object to "tb_______Commodity"-table
@@ -1832,6 +1858,44 @@ namespace RegulatedNoise.SQL
             }
         }
 
+        /// <summary>
+        /// retrieves all stationnames in the system in a array
+        /// </summary>
+        /// <param name="System"></param>
+        /// <returns></returns>
+        public string[] getStations(string System)
+        {
+            String sqlString;
+            DataTable Data;
+            String[] retValue = new String[0];
+            Int32 RowCounter;
+
+            try
+            {
+                Data = new DataTable();
+                
+                sqlString = "select St.Stationname from tbSystems Sy, tbStations St" +
+                            " where Sy.ID         = St.System_ID" +
+                            " and   Sy.Systemname = " + DBConnector.SQLAString(DBConnector.SQLEscape(System));
+
+                Program.DBCon.Execute(sqlString, Data);
+
+                Array.Resize(ref retValue, Data.Rows.Count);
+                RowCounter = 0;
+
+                foreach (DataRow currentRow in Data.Rows)
+                {
+                    retValue[RowCounter] = (String)currentRow["Stationname"];
+                    RowCounter++;
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting names of stations in a system", ex);
+            }
+        }
 
 #endregion
 
@@ -2045,7 +2109,7 @@ namespace RegulatedNoise.SQL
                                                             StationListing.Supply,
                                                             SupplyLevel.ToNString("null"),
                                                             SourceID,
-                                                            DBConnector.SQLDateTime(UnixTimeStamp.UnixTimeStampToDateTime(StationListing.CollectedAt))
+                                                            DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime)
                                                             ));
 
                             AddComma = true;
@@ -2078,8 +2142,10 @@ namespace RegulatedNoise.SQL
         /// <summary>
         /// Imports the prices from a file with csv-strings (e.g. the old autosave-file)
         /// </summary>
-        /// <param name="Stations"></param>
-        public void ImportPricesFromCSVFile(String filename)
+        /// <param name="filename"></param>
+        /// <param name="timeStampIsLocal">true: timestamps are handled as local time, otherwise utc is assumed</param>
+        /// <returns></returns>
+        public Int32 ImportPricesFromCSVFile(String filename, Boolean timeStampIsLocal = false)
         {
             try
             {
@@ -2097,6 +2163,8 @@ namespace RegulatedNoise.SQL
                 reader.Close();
 
                 ImportPricesFromCSVStrings(CSV_Strings);
+
+                return CSV_Strings.Count();
             }
             catch (Exception ex)
             {
@@ -2108,7 +2176,7 @@ namespace RegulatedNoise.SQL
         /// Imports the prices from a list of csv-strings
         /// </summary>
         /// <param name="Stations"></param>
-        public void ImportPricesFromCSVStrings(String[] CSV_Strings, Boolean FromSingleStation = false)
+        public void ImportPricesFromCSVStrings(String[] CSV_Strings)
         {
             Boolean MissingSystem   = false;
             Boolean MissingStation  = false;
@@ -2251,6 +2319,7 @@ namespace RegulatedNoise.SQL
                 throw new Exception("Error while getting station values from CSV-String", ex);
             }
         }
+
 #endregion
 
         #region general
@@ -2308,20 +2377,25 @@ namespace RegulatedNoise.SQL
         /// from the visited-basetables (tbVisitedStations/tbVistitedSystems).
         /// </summary>
         /// <param name="Refresh"></param>
-        public void updateVisitedFlagsFromBase()
+        public void updateVisitedFlagsFromBase(Boolean newSystem = true, Boolean newStation = true)
         {
             String sqlString;
             
             try
             {
-                sqlString = "update tbSystems S left join tbVisitedSystems V on S.id = V.system_id" +
-                            "   set visited = if(V.system_id is null, 0, 1)";
-                Program.DBCon.Execute(sqlString);
+                if(newSystem)
+                { 
+                    sqlString = "update tbSystems S left join tbVisitedSystems V on S.id = V.system_id" +
+                                "   set visited = if(V.system_id is null, 0, 1)";
+                    Program.DBCon.Execute(sqlString);
+                }
 
-
-                sqlString = "update tbStations S left join tbVisitedStations V on S.id = V.station_id" +
-                            "   set visited = if(V.station_id is null, 0, 1)";
-                Program.DBCon.Execute(sqlString);
+                if(newStation)
+                { 
+                    sqlString = "update tbStations S left join tbVisitedStations V on S.id = V.station_id" +
+                                "   set visited = if(V.station_id is null, 0, 1)";
+                    Program.DBCon.Execute(sqlString);
+                }
 
             }
             catch (Exception ex)
@@ -2482,73 +2556,70 @@ namespace RegulatedNoise.SQL
             }
         }
 
-#endregion
-
-
-        /// <summary>
-        /// retrieves all stationnames in the system in a array
-        /// </summary>
-        /// <param name="System"></param>
-        /// <returns></returns>
-        public string[] getStations(string System)
+        public void SetAsVisited(String System, String Station)
         {
             String sqlString;
-            DataTable Data;
-            String[] retValue = new String[0];
-            Int32 RowCounter;
+            Int32 SystemID;
+            Int32 LocationID;
+            Boolean newSystem   = false;
+            Boolean newStation  = false;
+            DataTable Data      = new DataTable();
+            Boolean Visited;
 
             try
             {
-                Data = new DataTable();
-                
-                sqlString = "select St.Stationname from tbSystems Sy, tbStations St" +
-                            " where Sy.ID         = St.System_ID" +
-                            " and   Sy.Systemname = " + DBConnector.SQLAString(DBConnector.SQLEscape(System));
+                sqlString       = "select id, visited from tbSystems where Systemname = " + DBConnector.SQLAEscape(System);
+                if(Program.DBCon.Execute(sqlString, Data) > 0)
+                { 
+                    SystemID = (Int32)(Data.Rows[0]["ID"]);
+                    Visited  = (Boolean)(Data.Rows[0]["visited"]);
 
-                Program.DBCon.Execute(sqlString, Data);
-
-                Array.Resize(ref retValue, Data.Rows.Count);
-                RowCounter = 0;
-
-                foreach (DataRow currentRow in Data.Rows)
-                {
-                    retValue[RowCounter] = (String)currentRow["Stationname"];
-                    RowCounter++;
+                    if(!Visited)
+                    { 
+                        sqlString = String.Format("insert ignore into tbVisitedSystems(system_id, time) values" +
+                                                  " ({0},{1})", SystemID.ToString(),  DBConnector.SQLDateTime(DateTime.UtcNow));
+                        Program.DBCon.Execute(sqlString);
+                        newSystem = true;
+                    }
                 }
 
-                return retValue;
+                Data.Clear();
+
+                sqlString    = "select St.ID, St.visited from tbSystems Sy, tbStations St" +
+                               " where Sy.ID = St. System_ID" +
+                               " and   Sy.Systemname  = " + DBConnector.SQLAEscape(System) +
+                               " and   St.Stationname = " + DBConnector.SQLAEscape(Station);
+
+                if(Program.DBCon.Execute(sqlString, Data) > 0)
+                { 
+                    LocationID = (Int32)(Data.Rows[0]["ID"]);
+                    Visited    = (Boolean)(Data.Rows[0]["visited"]);
+
+                    if(!Visited)
+                    { 
+                        sqlString = String.Format("insert ignore into tbVisitedStations(station_id, time) values" +
+                                                  " ({0},{1})", LocationID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
+                        Program.DBCon.Execute(sqlString);
+                        newStation = true;
+                    }
+                }
+
+                if(newSystem || newStation)
+                {
+                    // if there's a new visitedflag set in the visited-tables
+                    // then update the maintables
+                    Program.Data.updateVisitedFlagsFromBase(newSystem, newStation);
+
+                    if(newSystem)
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+
+                    if(newStation)
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while getting names of stations in a system", ex);
-            }
-        }
-
-        /// <summary>
-        /// retrieves all known commodity names in the current language
-        /// </summary>
-        /// <returns></returns>
-        internal List<string> getCommodityNames()
-        {
-            String sqlString;
-            DataTable Data;
-            List<string> retValue = new  List<string>();
-
-            try
-            {
-                Data = new DataTable();
-                
-                sqlString = "select loccommodity from tbCommodity";
-                Program.DBCon.Execute(sqlString, Data);
-
-                foreach (DataRow currentRow in Data.Rows)
-                    retValue.Add((String)currentRow["loccommodity"]);
-
-                return retValue;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while getting names of all commodities", ex);
+                throw new Exception("Error while setting a visited flag", ex);
             }
         }
 
@@ -2577,6 +2648,113 @@ namespace RegulatedNoise.SQL
             catch (Exception ex)
             {
                 throw new Exception("Error while getting dictionary of all economylevels", ex);
+            }
+        }
+
+        /// <summary>
+        /// adds missing distances in the tbLog-table
+        /// </summary>
+        /// <param name="maxAge">considers only entrys, if they are younger or equal than ..</param>
+        internal void addMissingDistancesInLog(DateTime maxAge)
+        {
+            String sqlString;
+            Dictionary<string, string> retValue = new  Dictionary<string, string>();
+
+            try
+            {
+                sqlString = String.Format(
+                              "update tbLog Lg," + 
+                             " (select L1.time As T1, L1.system_id As System_1, " +
+                             "         L2.time As T2, L2.system_id As System_2," +
+                             "         sqrt(POW(L1.x - L2.x, 2) + POW(L1.y - L2.y, 2) +  POW(L1.z - L2.z, 2)) as Distance_Between " +
+                             " from (select L.time, L.system_id, Sy.systemname, Sy.x, Sy.y, Sy.z  from tbLog L, tbSystems Sy where L.system_id = sy.id) L1, " +
+                             "         (select L.time, L.system_id, Sy.systemname, Sy.x, Sy.y, Sy.z  from tbLog L, tbSystems Sy where L.system_id = sy.id) L2" +
+                             " where L1.Time > L2.Time" +
+                             "     and L2.Time = (select max(L3.time) from tbLog L3 where L3.time < L1.Time)" +
+                             "     and L1.system_id <> L2.system_id" +
+                             "     and ((L1.x <> 0.0 AND L1.y <> 0.0 AND L1.Z <> 0.0) Or (L1.Systemname = 'Sol'))" +
+                             "     and ((L2.x <> 0.0 AND L2.y <> 0.0 AND L2.Z <> 0.0) Or (L2.Systemname = 'Sol'))" +
+                             "     and L1.time >= {0}" +
+                             " order by L1.time desc) c" +
+                             " set Lg.distance = c.Distance_Between" +
+                             " where Lg.time = c.T1", 
+                             DBConnector.SQLDateTime(maxAge));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting dictionary of all economylevels", ex);
+            }
+        }
+
+#endregion
+
+        /// <summary>
+        /// retrun the distance between two systems (given by name)
+        /// </summary>
+        /// <param name="System_1"></param>
+        /// <param name="System_2"></param>
+        /// <returns></returns>
+        internal double? getDistanceBetween(string System_1, string System_2)
+        {
+            String sqlString;
+            DataTable Data;
+            double? retValue = null;
+
+            try
+            {
+                Data = new DataTable();
+
+                sqlString = String.Format("select sqrt(POW(L1.x - L2.x, 2) + POW(L1.y - L2.y, 2) +  POW(L1.z - L2.z, 2)) as Distance_Between " +
+                                          " from  " +
+                                          " (select Sy.id, Sy.systemname, Sy.x, Sy.y, Sy.z  from tbSystems Sy where sy.systemname = {0}) L1,  " +
+                                          " (select Sy.id, Sy.systemname, Sy.x, Sy.y, Sy.z  from tbSystems Sy where sy.systemname = {1}) L2 " +
+                                          "  where ((L1.x <> 0.0 AND L1.y <> 0.0 AND L1.Z <> 0.0) Or (L1.Systemname = 'Sol')) " +
+                                          "  and ((L2.x <> 0.0 AND L2.y <> 0.0 AND L2.Z <> 0.0) Or (L2.Systemname = 'Sol'))", 
+                                          DBConnector.SQLAEscape(System_1), DBConnector.SQLAEscape(System_2));
+
+                if(Program.DBCon.Execute(sqlString, Data) > 0)
+                    retValue = (Double)Data.Rows[0]["Distance_Between"];
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while calculating the distance between two systems", ex);
+            }
+        }
+
+        /// <summary>
+        /// returns the distance between two systems (given by id)
+        /// </summary>
+        /// <param name="System_1"></param>
+        /// <param name="System_2"></param>
+        /// <returns></returns>
+        internal double? getDistanceBetween(Int32 System_1, Int32 System_2)
+        {
+            String sqlString;
+            DataTable Data;
+            double? retValue = null;
+
+            try
+            {
+                Data = new DataTable();
+
+                sqlString = String.Format("select sqrt(POW(L1.x - L2.x, 2) + POW(L1.y - L2.y, 2) +  POW(L1.z - L2.z, 2)) as Distance_Between " +
+                                          " from  " +
+                                          " (select Sy.id, Sy.systemname, Sy.x, Sy.y, Sy.z  from tbSystems Sy where sy.id = {0}) L1,  " +
+                                          " (select Sy.id, Sy.systemname, Sy.x, Sy.y, Sy.z  from tbSystems Sy where sy.id = {1}) L2 " +
+                                          "  where ((L1.x <> 0.0 AND L1.y <> 0.0 AND L1.Z <> 0.0) Or (L1.Systemname = 'Sol')) " +
+                                          "  and ((L2.x <> 0.0 AND L2.y <> 0.0 AND L2.Z <> 0.0) Or (L2.Systemname = 'Sol'))", 
+                                          System_1, System_2);
+
+                if(Program.DBCon.Execute(sqlString, Data) > 0)
+                    retValue = (Double)Data.Rows[0]["Distance_Between"];
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while calculating the distance between two systems", ex);
             }
         }
     }

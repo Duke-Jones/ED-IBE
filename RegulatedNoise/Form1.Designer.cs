@@ -267,6 +267,8 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtExtInfo2 = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -1296,6 +1298,8 @@
             // 
             // tabExternal
             // 
+            this.tabExternal.Controls.Add(this.label5);
+            this.tabExternal.Controls.Add(this.txtExtInfo2);
             this.tabExternal.Controls.Add(this.txtLocalDataCollected);
             this.tabExternal.Controls.Add(this.label4);
             this.tabExternal.Controls.Add(this.cmdConfirm);
@@ -1320,7 +1324,7 @@
             this.txtLocalDataCollected.Location = new System.Drawing.Point(199, 132);
             this.txtLocalDataCollected.Name = "txtLocalDataCollected";
             this.txtLocalDataCollected.ReadOnly = true;
-            this.txtLocalDataCollected.Size = new System.Drawing.Size(151, 20);
+            this.txtLocalDataCollected.Size = new System.Drawing.Size(235, 20);
             this.txtLocalDataCollected.TabIndex = 10;
             // 
             // label4
@@ -1386,7 +1390,7 @@
             this.txtRecievedStation.Location = new System.Drawing.Point(199, 89);
             this.txtRecievedStation.Name = "txtRecievedStation";
             this.txtRecievedStation.ReadOnly = true;
-            this.txtRecievedStation.Size = new System.Drawing.Size(151, 20);
+            this.txtRecievedStation.Size = new System.Drawing.Size(235, 20);
             this.txtRecievedStation.TabIndex = 3;
             // 
             // txtRecievedSystem
@@ -1394,16 +1398,17 @@
             this.txtRecievedSystem.Location = new System.Drawing.Point(199, 48);
             this.txtRecievedSystem.Name = "txtRecievedSystem";
             this.txtRecievedSystem.ReadOnly = true;
-            this.txtRecievedSystem.Size = new System.Drawing.Size(151, 20);
+            this.txtRecievedSystem.Size = new System.Drawing.Size(235, 20);
             this.txtRecievedSystem.TabIndex = 2;
             // 
             // txtExtInfo
             // 
             this.txtExtInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtExtInfo.Location = new System.Drawing.Point(34, 182);
+            this.txtExtInfo.Multiline = true;
             this.txtExtInfo.Name = "txtExtInfo";
             this.txtExtInfo.ReadOnly = true;
-            this.txtExtInfo.Size = new System.Drawing.Size(316, 20);
+            this.txtExtInfo.Size = new System.Drawing.Size(400, 46);
             this.txtExtInfo.TabIndex = 1;
             // 
             // cmdLanded
@@ -2902,6 +2907,25 @@
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(31, 237);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(34, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Info 2";
+            // 
+            // txtExtInfo2
+            // 
+            this.txtExtInfo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtExtInfo2.Location = new System.Drawing.Point(34, 253);
+            this.txtExtInfo2.Multiline = true;
+            this.txtExtInfo2.Name = "txtExtInfo2";
+            this.txtExtInfo2.ReadOnly = true;
+            this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
+            this.txtExtInfo2.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3214,6 +3238,8 @@
         private System.Windows.Forms.Button cmdGetMarketData;
         private System.Windows.Forms.TextBox txtLocalDataCollected;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtExtInfo2;
 
         
     }
