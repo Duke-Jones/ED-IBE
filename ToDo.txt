@@ -93,6 +93,11 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.28
+   * fixes for adding unknown systems and stations on-the-fly
+   * quickfix: logfile scanning with ED 64 (it's another dir)
+   * some other small general fixes
+-------------------------------------------------------------------------------------         
 SQL 0.0.27
    * many fixes
    * showing jump distance in CmdrsLog

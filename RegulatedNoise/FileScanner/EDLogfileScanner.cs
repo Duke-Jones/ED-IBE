@@ -62,6 +62,30 @@ namespace RegulatedNoise.FileScanner
             public enLogEvents Changed      { get; set; }
         }
 
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<LocationInfoEventArgs> LocationInfo;
+
+        protected virtual void OnLocationInfo(LocationInfoEventArgs e)
+        {
+            EventHandler<LocationInfoEventArgs> myEvent = LocationInfo;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class LocationInfoEventArgs : EventArgs
+        {
+            public LocationInfoEventArgs()
+            {
+                System      = "";
+                Location     = "";
+            }
+
+            public String System            { get; set; }
+            public String Location          { get; set; }
+        }
+
         #endregion
 
         #region disposing
@@ -253,18 +277,12 @@ namespace RegulatedNoise.FileScanner
 
                     if (Directory.Exists(appConfigPath))
                     {
-                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
+                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("elite-dangerous-64")).ToList().OrderByDescending(x => x).ToList();
+                        //var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
 
                         if (versions.Count() == 0)
                         {
-                            #if extScanLog
-                                logger.Log("no dirs with <FORC-FDEV> found");
-                                var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
-                                foreach (string SubPath in versions2)
-                                {
-                                    logger.Log("but found <" +  SubPath + ">");   
-                                }
-                            #endif
+                            versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("elite-dangerous-64")).ToList().OrderByDescending(x => x).ToList();
                         }
                         else
                         {
@@ -543,6 +561,11 @@ namespace RegulatedNoise.FileScanner
                                     logger.Log("File closed");
                                 #endif
 
+                                if (false)
+                                {
+                                    LoggedEvents.Add(new LogEvent() { EventType = enLogEvents.System, Value = "Furz5", Time = DateTime.UtcNow });
+                                }
+
                                 processingLocationInfo(LoggedEvents);
 
                                 LoggedEvents.Clear();
@@ -714,8 +737,14 @@ namespace RegulatedNoise.FileScanner
                     }
 
                     if(EventFlags != enLogEvents.None)
-                    { 
-                        // something has changed -> fire event
+                    {
+                        // something has changed -> fire events
+
+                        var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
+                                                               Location      = Program.actualCondition.Location};
+                        LocationInfo.Raise(this, LI);
+
+
                         var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
                                                                   Location      = Program.actualCondition.Location,
                                                                   OldSystem     = OldSystemString,  

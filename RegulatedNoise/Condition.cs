@@ -28,7 +28,7 @@ namespace RegulatedNoise
             {
                 if(Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentSystem", value) &&
                   (!String.IsNullOrEmpty(value)))
-                    Program.Data.SetAsVisited(value, "");
+                    Program.Data.checkPotentiallyNewSystemOrStation(value, "");
             }
         }
 
@@ -45,7 +45,7 @@ namespace RegulatedNoise
             {
                 if(Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentStation", value) &&
                   (!String.IsNullOrEmpty(value)))
-                    Program.Data.SetAsVisited(System, value);
+                    Program.Data.checkPotentiallyNewSystemOrStation(System, value);
             }
         }
 

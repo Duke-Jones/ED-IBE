@@ -419,17 +419,24 @@ namespace RegulatedNoise.MTCommandersLog
             {
                 if((e.RowIndex >= 0) && (dgvCommandersLog.Rows.Count > 0) && (dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value != null))
                 {
-                    cbLogEventType.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = (DateTime)dgvCommandersLog.Rows[e.RowIndex].Cells["time"].Value;
-                    cbLogSystemName.Text        = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["systemname"].Value.ToString();
-                    cbLogStationName.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["stationname"].Value.ToString();
-                    nbTransactionAmount.Text    = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Value      = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["credits_total"].Value;
-                    cbLogCargoName.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["loccommodity"].Value.ToString();
-                    cbLogCargoAction.Text       = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["action"].Value.ToString();
-                    nbLogQuantity.Value         = (Int32)dgvCommandersLog.Rows[e.RowIndex].Cells["cargovolume"].Value;
-                    tbLogNotes.Text             = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
-                    txtLogDistance.Text         = (String)dgvCommandersLog.Rows[e.RowIndex].Cells["distance"].Value.ToString();
+                    var currentRow = dgvCommandersLog.Rows[e.RowIndex];
+
+                    cbLogEventType.Text         = (String)currentRow.Cells["eevent"].Value.ToString();
+                    dtpLogEventDate.Value       = (DateTime)currentRow.Cells["time"].Value;
+                    cbLogSystemName.Text        = (String)currentRow.Cells["systemname"].Value.ToString();
+
+                    // force reloading of the stations-ComboBox-data to avoid internal exceptions
+                    //m_DataSource.prepareCmb_EventTypes(ref cbLogStationName, cbLogSystemName);   
+
+                    //Debug.Print(currentRow.Cells["stationname"].Value.ToString());
+                    cbLogStationName.Text       = (String)currentRow.Cells["stationname"].Value.ToString();
+                    nbTransactionAmount.Text    = (String)currentRow.Cells["credits_transaction"].Value.ToString();
+                    nbCurrentCredits.Value      = (Int32)currentRow.Cells["credits_total"].Value;
+                    cbLogCargoName.Text         = (String)currentRow.Cells["loccommodity"].Value.ToString();
+                    cbLogCargoAction.Text       = (String)currentRow.Cells["action"].Value.ToString();
+                    nbLogQuantity.Value         = (Int32)currentRow.Cells["cargovolume"].Value;
+                    tbLogNotes.Text             = (String)currentRow.Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
+                    txtLogDistance.Text         = (String)currentRow.Cells["distance"].Value.ToString();
                 }
                 else
                 {
@@ -458,6 +465,16 @@ namespace RegulatedNoise.MTCommandersLog
         {
             try
             {
+                if(Enabled)
+                {
+                    cbLogSystemName.DropDownStyle  = ComboBoxStyle.DropDown;
+                    cbLogStationName.DropDownStyle = ComboBoxStyle.DropDown;
+                }
+                else
+                {
+                    cbLogSystemName.DropDownStyle  = ComboBoxStyle.DropDownList;
+                    cbLogStationName.DropDownStyle = ComboBoxStyle.DropDownList;
+                }
 
                 cbLogEventType.ReadOnly           = !Enabled;
                 dtpLogEventDate.ReadOnly          = !TimeEditable;

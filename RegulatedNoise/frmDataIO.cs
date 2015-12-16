@@ -74,7 +74,7 @@ namespace RegulatedNoise
                             FileName = @"Data\commodities.json";
                             if(FileExistsOrMessage(RNPath, FileName))
                             { 
-                                Program.Data.ImportCommodities(Path.Combine(RNPath, FileName));
+                                Program.Data.ImportCommoditiesFromFile(Path.Combine(RNPath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 1, Total = 1});

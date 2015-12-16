@@ -64,14 +64,15 @@ namespace RegulatedNoise.MTCommandersLog
         // ^^^^^^^^^^ replaced by view "viLog" vvvvvvvvvvvvvvv
         private const String _sqlString = "select * from viLog";
 
-        private dsEliteDB                       m_BaseData;
-        public tabCommandersLog                 m_GUI;
-        private BindingSource                   m_BindingSource;
-        private DataTable                       m_Datatable;
-        private DataRetriever                   retriever;
-        private Boolean                         m_NoGuiNotifyAfterSave;
-        private FileScanner.EDLogfileScanner    m_LogfileScanner;
-        private ExternalDataInterface           m_ExternalDataInterface;
+        private dsEliteDB                               m_BaseData;
+        public tabCommandersLog                         m_GUI;
+        private BindingSource                           m_BindingSource;
+        private DataTable                               m_Datatable;
+        private DataRetriever                           retriever;
+        private Boolean                                 m_NoGuiNotifyAfterSave;
+        private FileScanner.EDLogfileScanner            m_LogfileScanner;
+        private ExternalDataInterface                   m_ExternalDataInterface;
+        private Dictionary<Object, BindingSource>       m_BindingSources;
 
         /// <summary>
         /// constructor
@@ -82,7 +83,7 @@ namespace RegulatedNoise.MTCommandersLog
             {
                 m_BindingSource             = new BindingSource();
                 m_Datatable                 = new DataTable();
-
+                m_BindingSources            = new Dictionary<object,BindingSource>();
                 m_BindingSource.DataSource  = m_Datatable;
             }
             catch (Exception ex)
@@ -169,50 +170,93 @@ namespace RegulatedNoise.MTCommandersLog
             }
         }
 
+
         /// <summary>
         /// prepares the values of the comoboboxes
         /// </summary>
         /// <param name="theCombobox"></param>
         internal void prepareCmb_EventTypes(ref ComboBox_ro theCombobox, ComboBox_ro theReferenceCombobox = null)
         {
+            Boolean initial = false;
+            BindingSource currentBS = null;
+
             try
             {
+                if(!m_BindingSources.TryGetValue(theCombobox, out currentBS))
+                {
+                    BindingSource newBS     = new BindingSource();
+                    theCombobox.DataSource  = newBS;
+                    m_BindingSources.Add(theCombobox, newBS);
+
+                    currentBS = newBS;
+                    initial = true;
+                }
+
                 if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbeventtype;
-                    theCombobox.DisplayMember    = "eventtype";
+                    DataTable selectedDT = m_BaseData.tbeventtype;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                       theCombobox.DisplayMember    = "eventtype";
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbsystems;
-                    theCombobox.DisplayMember    = "systemname";
+                    DataTable selectedDT = m_BaseData.tbsystems;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                        theCombobox.DisplayMember    = "systemname";
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogStationName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     if((theReferenceCombobox == null) || (theReferenceCombobox.SelectedItem == null))
                     { 
+                    DataTable selectedDT = m_BaseData.tbstations;
+                    currentBS.DataSource = selectedDT.Copy();
+
                         theCombobox.DataSource       = m_BaseData.tbstations;
-                        theCombobox.DisplayMember    = "stationname";
                     }
                     else
                     {
                         Int32 SytemID                = (Int32)((System.Data.DataRowView)theReferenceCombobox.SelectedItem).Row["id"];
-                        theCombobox.DataSource       = m_BaseData.tbstations.Select("system_id = " + SytemID);
-                        theCombobox.DisplayMember    = "stationname";
+
+                        // small performance improvement -> only reload if necessary
+                        if((theCombobox.Tag == null) || (((Int32)theCombobox.Tag) != SytemID))
+                        { 
+                            DataTable selectedDT = m_BaseData.tbstations.Clone();
+                            m_BaseData.tbstations.Select("system_id = " + SytemID).CopyToDataTable(selectedDT,LoadOption.OverwriteChanges);
+                            currentBS.DataSource = selectedDT;
+
+                            theCombobox.Tag = SytemID;
+                        }
                     }
+
+                    if(initial)
+                        theCombobox.DisplayMember    = "stationname";
+
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbcommodity;
-                    theCombobox.DisplayMember    = "loccommodity";
+                    DataTable selectedDT = m_BaseData.tbcommodity;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                       theCombobox.DisplayMember    = "loccommodity";
+
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbcargoaction;
-                    theCombobox.DisplayMember    = "cargoaction";
+                    DataTable selectedDT = m_BaseData.tbcargoaction;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                       theCombobox.DisplayMember    = "cargoaction";
+
                 }
 
-                theCombobox.ValueMember      = "id";
+                if(initial)
+                    theCombobox.ValueMember      = "id";
 
             }
             catch (Exception ex)
@@ -380,7 +424,7 @@ namespace RegulatedNoise.MTCommandersLog
         //{
 
         //    //bool Jumped_To      = false;
-        //    bool newSystem      = false;
+        //    bool systemFirstTimeVisited      = false;
         //    bool newLocation    = false;
         //    bool InitialRun     = false;
 
@@ -392,7 +436,7 @@ namespace RegulatedNoise.MTCommandersLog
         //            // it's a new system
         //            Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
         //            Program.actualCondition.System = Systemname;
-        //            newSystem = true;
+        //            systemFirstTimeVisited = true;
         //        }
 
         //        // system info found
@@ -446,11 +490,11 @@ namespace RegulatedNoise.MTCommandersLog
         //            _LoggedVisited = "";
 
         //        }
-        //    }else if(newSystem || ForceChangedLocation)
+        //    }else if(systemFirstTimeVisited || ForceChangedLocation)
         //        Program.actualCondition.Location = Condition.STR_Scanning;
             
 
-        //    if((newSystem || newLocation) && (!InitialRun))
+        //    if((systemFirstTimeVisited || newLocation) && (!InitialRun))
         //    { 
         //        loadSystemData(_LoggedSystem);
         //        loadStationData(_LoggedSystem, _LoggedLocation);

@@ -75,6 +75,30 @@ namespace RegulatedNoise.ExtData
             public Int32 Amount                     { get; set; }
         }
 
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<LocationInfoEventArgs> LocationInfo;
+
+        protected virtual void OnLocationInfo(LocationInfoEventArgs e)
+        {
+            EventHandler<LocationInfoEventArgs> myEvent = LocationInfo;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class LocationInfoEventArgs : EventArgs
+        {
+            public LocationInfoEventArgs()
+            {
+                System      = "";
+                Location     = "";
+            }
+
+            public String System            { get; set; }
+            public String Location          { get; set; }
+        }
+
         #endregion
 
         String m_OutputDestination  = @"C:\temp\location.txt";
@@ -252,7 +276,12 @@ namespace RegulatedNoise.ExtData
                     
                     if(ChangedIs != enExternalDataEvents.None)
                     { 
-                        // something has changed -> fire event
+                        // something has changed -> fire events
+                        var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
+                                                               Location      = Program.actualCondition.Location};
+                        LocationInfo.Raise(this, LI);
+
+
                         var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
                                                                   Location      = Program.actualCondition.Location,
                                                                   OldSystem     = OldSystemString,  

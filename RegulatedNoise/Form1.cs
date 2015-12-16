@@ -1876,8 +1876,7 @@ namespace RegulatedNoise
                 if (Answer == System.Windows.Forms.DialogResult.OK)
                 {
                     // yes, it's really new
-                    MessageBox.Show("TODO");
-                    //addCommodity(commodity);
+                    //Program.Data.ImportCommodity(commodity);
                     
                     throw new NotImplementedException();
                     //_Milkyway.addLocalized2RN(_commodities.Names);
@@ -2793,7 +2792,7 @@ namespace RegulatedNoise
             foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
                 m_IsRefreshed.Add(MainTabPage.Name, false);
 
-
+            // register events for getting new location-infos for the gui
             Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
             Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
 

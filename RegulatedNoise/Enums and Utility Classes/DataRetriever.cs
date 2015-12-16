@@ -33,6 +33,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         private int                         m_RowCountValue = -1;
         private DataColumnCollection        m_ColumnsValue;
         private DataTable                   m_TableType = null;
+        private SQL.DBConnector             m_DBCon;
 
         /// <summary>
         /// constructor for the DataRetriever (used for loading and caching data in DGV VirtualMode)
@@ -52,6 +53,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
             m_ColumnSortOrder        = SortOrder;
             m_PrimaryKey             = DBCon.getPrimaryKey(this.m_BaseTableName);
             m_TableType              = TypeTable;
+            m_DBCon                  = DBCon;
 
             if(this.m_PrimaryKey.Count != 1)
                 throw new Exception("Length of primary key is not '1' (table '" + BaseTableName + "')");
@@ -90,6 +92,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                 }
 
                 // Retrieve the column information from the database.
+
                 m_Command.CommandText       = m_DataStatement;
                 MySqlDataAdapter adapter    = new MySqlDataAdapter();
                 adapter.SelectCommand       = m_Command;
@@ -110,7 +113,7 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
 
             // Retrieve the specified number of rows from the database, starting
             // with the row specified by the lowerPageBoundary parameter.
-            m_Command.CommandText = String.Format("select * from ({0}) L1 left join (" +
+            String sqlString    = String.Format("select * from ({0}) L1 left join (" +
                                                 "                         select {6} from ({0}) L3 order by L3.{3} {5} limit {4}" +
                                                 "                       ) L2 on L1.{6} = L2.{6}" +
                                                 " where L2.{6} is null order by L1.{3} {5} limit {1}", 
@@ -122,9 +125,12 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
                                                 m_ColumnSortOrder, 
                                                 m_PrimaryKey[0]);
 
-            m_Adapter.SelectCommand = m_Command;
+
+
             DataTable table         = GetDataTable();
-            m_Adapter.Fill(table);
+
+            m_DBCon.Execute(sqlString, table);
+
             return table;
         }
 
