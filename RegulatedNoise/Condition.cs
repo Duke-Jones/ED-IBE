@@ -15,6 +15,9 @@ namespace RegulatedNoise
     {
         public const String        DB_GROUPNAME                    = "Condition";
 
+        /// <summary>
+        /// the actual system
+        /// </summary>
         public String System
         {
             get
@@ -23,10 +26,15 @@ namespace RegulatedNoise
             }
             set
             {
-                Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentSystem", value);
+                if(Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentSystem", value) &&
+                  (!String.IsNullOrEmpty(value)))
+                    Program.Data.checkPotentiallyNewSystemOrStation(value, "");
             }
         }
 
+        /// <summary>
+        /// the actual location (if existing)
+        /// </summary>
         public String Location
         {
             get
@@ -35,18 +43,20 @@ namespace RegulatedNoise
             }
             set
             {
-                Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentStation", value);
+                if(Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentStation", value) &&
+                  (!String.IsNullOrEmpty(value)))
+                    Program.Data.checkPotentiallyNewSystemOrStation(System, value);
             }
         }
 
         /// <summary>
-        /// returns the id of the system if existing
+        /// returns the id of the actual system if existing
         /// </summary>
         public int? System_ID
         {
             get
             {
-                String sqlString    = "select ID from tbSystems where Systemname = " + SQL.DBConnector.SQLAString(this.System);
+                String sqlString    = "select ID from tbSystems where Systemname = " + SQL.DBConnector.SQLAEscape(this.System);
                 DataTable Data      = new DataTable();
                 int? retValue       = null;
 
@@ -58,7 +68,7 @@ namespace RegulatedNoise
         }
 
         /// <summary>
-        /// returns the id of the station if existing
+        /// returns the id of the actual location if existing
         /// </summary>
         public int? Location_ID
         {
@@ -66,8 +76,8 @@ namespace RegulatedNoise
             {
                 String sqlString    = "select St.ID from tbSystems Sy, tbStations St" +
                                       " where Sy.ID = St. System_ID" +
-                                      " and   Sy.Systemname  = " + SQL.DBConnector.SQLAString(this.System) +
-                                      " and   St.Stationname = " + SQL.DBConnector.SQLAString(this.Location);
+                                      " and   Sy.Systemname  = " + SQL.DBConnector.SQLAEscape(this.System) +
+                                      " and   St.Stationname = " + SQL.DBConnector.SQLAEscape(this.Location);
 
                 DataTable Data      = new DataTable();
                 int? retValue       = null;

@@ -73,7 +73,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-                throw new Exception("Error in main routine", ex);
+                cErr.showError(ex, "Error in main routine !");
             }
         }
 
@@ -250,10 +250,14 @@ namespace RegulatedNoise
                     // initializing the LogfileScanner
                     LogfileScanner                              = new EDLogfileScanner();
 
+
+                    // forwards a potentially new system or station information to database
+                    Program.LogfileScanner.LocationInfo += LogfileScanner_LocationInfo;
+                    Program.ExternalData.LocationInfo   += ExternalData_LocationInfo;
+
                     // register the LogfileScanner in the CommandersLog for the ExternalDataEvent-event
                     CommandersLog.registerLogFileScanner(LogfileScanner);
                     CommandersLog.registerExternalTool(ExternalData);
-
 
                     m_initDone = true;
 
@@ -278,6 +282,40 @@ namespace RegulatedNoise
             { 
                 EliteDBProcess.Dispose();
                 EliteDBProcess = null;
+            }
+        }
+
+        /// <summary>
+        /// forwards a potentially new system or station information to database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void LogfileScanner_LocationInfo(object sender, EDLogfileScanner.LocationInfoEventArgs e)
+        {
+            try
+            {
+                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while in LogfileScanner_LocationInfo", ex); 
+            }
+        }
+
+        /// <summary>
+        /// forwards a potentially new system or station information to database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void ExternalData_LocationInfo(object sender, ExternalDataInterface.LocationInfoEventArgs e)
+        {
+            try
+            {
+                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while in ExternalData_LocationInfo", ex); 
             }
         }
 

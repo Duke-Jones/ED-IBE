@@ -1,3 +1,57 @@
+*****************************************************************************************
+*****************************************************************************************
+*****************************************************************************************
+
+Needed for development:
+
+- VS2013
+- dotNet 4.6 (and 4.6 targeting pack) (http://getdotnet.azurewebsites.net/target-dotnet-platforms.html#)
+- MySQL for Visual Studio and MySQL Workbench (over MySQL Installer http://dev.mysql.com/tech-resources/articles/mysql-installer-for-windows.htmlvisual)
+
+Establish a data-connection in Visual Studio:
+1. create a new database : start script "create.cmd" in ".\RNDatabase\Database\script\"
+   (leave the second cmd window open - it's the server process).
+   Datafiles will be created in ".\RNDatabase\Database\data\"
+
+-  test it with "MySQL Workbench" 
+   * add a new connection (hostname = localhost, port 3306, username = root, pw = EliteAdmin ).
+     If you can connect everything is fine :-) .
+
+   * if you open the connection in "MySQL Workbench" you can explorer the data structure,
+     select data from the tables (at the moment most tables are still empty) 
+	 and many other things
+
+   * if you open "\RNDatabase\SQL-Model\Elite_DB.mwb" you see
+     the database structure which is created by "create.cmd" and "create_Elite_DB.sql"  
+
+	 (btw: the content of "create_Elite_DB.sql" comes from "Elite_DB.mwb". Open it and
+	 enter "Database->Forward Engineer", select the connection -> go on with "next" until 
+	 "Review the SQL Script to be Executed". Here you can "Copy to Clipboard" and ..... 
+	 you have the content of the file "create_Elite_DB.sql" :-) )
+
+2. establish the connection in the VS project
+   * goto Server-Explorer and add a new connection.
+     Select "MySQL Database" ("MySQL for Visual Studio" required) and the set 
+	 "Servername = localhost, User=root, pass = EliteAdmin".
+	 Select "elite_db" as database.
+     Thats it - now you can use the structures from the DB in the project.
+        
+		
+Other hints: 		
+
+*  "start_server.cmd" in ".\RNDatabase\Database\script\"
+   RN starts the db process itself. But you can also start the db process
+   manually by running this script.
+
+*  if you want to recreate the database from scratch you can use 
+   the script "create.cmd" in ".\RNDatabase\Database\script\" again.
+   It will recreate the whole database. All old data will be gone.
+
+
+*****************************************************************************************   
+*****************************************************************************************
+*****************************************************************************************
+
 todo:
    * option "take jumps into account"
    * Cmdrs Log must using ED-Time
@@ -23,18 +77,38 @@ todo:
    Dangerous Ship Computer
    Ship Data Intelligence
    Dangerous Data Extension
+   Intelligent Ship Extension
+   ED Intelligent Computer Extension -> E Dangerous ICE
+   ED Improved Ship Computer
+   ED Intelligent Spacecraft Database 
+   Dangerous Ship Computer
+   Dangerous Ship Computer Extension
+   BFG 9000 Extension
+   *** ED Intelligent Boardcomputer Extension 
+   ED Intelligent Shipcomputer Extension 
+
+   new name will be : "Intelligent Boardcomputer Extension"
    
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.28
+   * fixes for adding unknown systems and stations on-the-fly
+   * quickfix: logfile scanning with ED 64 (it's another dir)
+   * some other small general fixes
+-------------------------------------------------------------------------------------         
+SQL 0.0.27
+   * many fixes
+   * showing jump distance in CmdrsLog
+-------------------------------------------------------------------------------------         
 SQL 0.0.26
    * first version of a general "ExternalDataInterface" added 
     (own internal companion interface is removed)
    * extracted logfilescanner to its own class
    * first run with ocr again
    * improved algorithm for import of new prices
-   * getting data from external tool ist working
+   * getting data from external tool is working
      (also "Visited" and "Market Data Collected" events again)
 -------------------------------------------------------------------------------------         
 SQL 0.0.25

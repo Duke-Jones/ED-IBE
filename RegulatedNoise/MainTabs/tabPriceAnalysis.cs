@@ -459,53 +459,57 @@ namespace RegulatedNoise.MTPriceAnalysis
                 
                 // get the id of the selected "base system"
                 if(cmbSystemBase.SelectedIndex <= 0)
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(Program.actualCondition.System);
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
                 else
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAString(cmbSystemBase.Text);
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(cmbSystemBase.Text);
                 Data = new DataTable();
                 Program.DBCon.Execute(sqlString, Data);
-                SystemID = (Int32)Data.Rows[0]["ID"];
 
-                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
-                                                                                    "VisitedFilter", 
-                                                                                    ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
-                                                                                    false);
-
-                m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter);
-
-                Int32 StationCount;
-                Int32 SystemCount;
-                m_DataSource.getFilteredSystemAndStationCount(out StationCount, out SystemCount);
-
-                lblSystemsFound.Text  = SystemCount.ToString();
-                lblStationsFound.Text = StationCount.ToString();
-
-                sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," + 
-                            "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
-                            "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
-                            "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
-                            "       Fs.Distance" +
-                            " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
-                            " where FS.Station_ID = St.ID" +
-                            " and   St.System_ID  = Sy.ID;" ;
-                
-
-                Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
-
-                
-                if(cmbStation1.ValueMember == "")
+                if (Data.Rows.Count > 0)
                 { 
-                    // prepare functional settings of the comboboxes
-                    // (earlyier not possible because the columns are not existing at the beginning)
-                    cmbStation1.DisplayMember       = "StationSystem";
-                    cmbStation1.ValueMember         = "StationID";
-                    cmbStation2.DisplayMember       = "StationSystem";
-                    cmbStation2.ValueMember         = "StationID";
-                    cmbByStation.DisplayMember      = "StationSystem";
-                    cmbByStation.ValueMember        = "StationID";
-                }
+                    SystemID = (Int32)Data.Rows[0]["ID"];
 
-                orderComboBoxes();
+                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
+                                                                                        "VisitedFilter", 
+                                                                                        ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
+                                                                                        false);
+
+                    m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter);
+
+                    Int32 StationCount;
+                    Int32 SystemCount;
+                    m_DataSource.getFilteredSystemAndStationCount(out StationCount, out SystemCount);
+
+                    lblSystemsFound.Text  = SystemCount.ToString();
+                    lblStationsFound.Text = StationCount.ToString();
+
+                    sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," + 
+                                "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
+                                "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
+                                "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
+                                "       Fs.Distance" +
+                                " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
+                                " where FS.Station_ID = St.ID" +
+                                " and   St.System_ID  = Sy.ID;" ;
+                
+
+                    Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
+
+                
+                    if(cmbStation1.ValueMember == "")
+                    { 
+                        // prepare functional settings of the comboboxes
+                        // (earlyier not possible because the columns are not existing at the beginning)
+                        cmbStation1.DisplayMember       = "StationSystem";
+                        cmbStation1.ValueMember         = "StationID";
+                        cmbStation2.DisplayMember       = "StationSystem";
+                        cmbStation2.ValueMember         = "StationID";
+                        cmbByStation.DisplayMember      = "StationSystem";
+                        cmbByStation.ValueMember        = "StationID";
+                    }
+
+                    orderComboBoxes();
+                }
                 
                 this.Cursor = oldCursor;
             }

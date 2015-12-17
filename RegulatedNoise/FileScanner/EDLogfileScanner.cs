@@ -62,6 +62,30 @@ namespace RegulatedNoise.FileScanner
             public enLogEvents Changed      { get; set; }
         }
 
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<LocationInfoEventArgs> LocationInfo;
+
+        protected virtual void OnLocationInfo(LocationInfoEventArgs e)
+        {
+            EventHandler<LocationInfoEventArgs> myEvent = LocationInfo;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class LocationInfoEventArgs : EventArgs
+        {
+            public LocationInfoEventArgs()
+            {
+                System      = "";
+                Location     = "";
+            }
+
+            public String System            { get; set; }
+            public String Location          { get; set; }
+        }
+
         #endregion
 
         #region disposing
@@ -120,9 +144,12 @@ namespace RegulatedNoise.FileScanner
         private System.Threading.Timer  m_stateTimer;
         private Thread                  m_LogfileScanner_Thread;
         private DateTime                m_TimestampLastScan;
+        private String                  m_InfoLastScan;
         private AutoResetEvent          m_LogfileScanner_ARE;
         private bool                    m_Closing;
         private String                  m_CommandersName;
+        private Boolean                 m_InitialJumpFound;
+        private String                  m_currentLogFile;
 
         /// <summary>
         /// create a new LogFileScanner-object
@@ -137,6 +164,10 @@ namespace RegulatedNoise.FileScanner
 
                 m_LogfileScanner_ARE                    = new AutoResetEvent(false);
                 m_TimestampLastScan                     = Program.DBCon.getIniValue<DateTime>(DB_GROUPNAME, "TimestampLastScan", new DateTime(2000, 1, 1).ToString(), false);
+                m_InfoLastScan                          = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "InfoLastScan", "", true);
+                m_InitialJumpFound                      = Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME,  "InitialJumpFound", false.ToString(), false);
+                m_currentLogFile                        = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "CurrentLogfile",  "", true);
+
                 m_Closing                               = false;
 
             }
@@ -228,10 +259,15 @@ namespace RegulatedNoise.FileScanner
                     string currentLogString;
                     Match m = null;
                     Boolean Got_Jump = false;
-                    List<String> PossibleLocations = new List<string>();
-                    List<LogEvent> LoggedEvents = new List<LogEvent>();  
+                    List<String> PossibleLocations      = new List<string>();
+                    List<LogEvent> LoggedEvents         = new List<LogEvent>();  
                     DateTime TimestampCurrentLine       = DateTime.MinValue;
-                    DateTime TimestampLastRecognized    = DateTime.MinValue;
+                    String InfoCurrentLine              = "";
+                    //DateTime Timestamp_YoungestLine     = DateTime.MaxValue;
+                    Int32 LineCountRaw                  = 0;
+                    Int32 LineCount                     = 0;
+                    DateTime TimestampLastScanCandidate = DateTime.MinValue;
+                    String InfoLastScanCandidate        = "";
 
                     #if extScanLog
                         logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.RegulatedNoiseSettings.PilotsName)) + ">");
@@ -241,18 +277,12 @@ namespace RegulatedNoise.FileScanner
 
                     if (Directory.Exists(appConfigPath))
                     {
-                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
+                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("elite-dangerous-64")).ToList().OrderByDescending(x => x).ToList();
+                        //var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
 
                         if (versions.Count() == 0)
                         {
-                            #if extScanLog
-                                logger.Log("no dirs with <FORC-FDEV> found");
-                                var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
-                                foreach (string SubPath in versions2)
-                                {
-                                    logger.Log("but found <" +  SubPath + ">");   
-                                }
-                            #endif
+                            versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("elite-dangerous-64")).ToList().OrderByDescending(x => x).ToList();
                         }
                         else
                         {
@@ -272,6 +302,21 @@ namespace RegulatedNoise.FileScanner
                                 Locationname         = "";
                                 LoggedEvents.Clear();
                                 var newestNetLog    = netLogs[0];
+
+                                if(!m_currentLogFile.Equals(newestNetLog, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    // new logfile -> ignore the first jump again, it's simpply the "startjump" of ED, not a real jump
+                                    m_InitialJumpFound = false;
+                                    m_currentLogFile   = newestNetLog;
+
+                                    Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentLogfile",    m_currentLogFile);
+                                    Program.DBCon.setIniValue(DB_GROUPNAME, "InitialJumpFound",  m_InitialJumpFound.ToString());
+
+                                    m_TimestampLastScan = DateTime.MinValue;
+                                    m_InfoLastScan      = "";
+                                    Program.DBCon.setIniValue(DB_GROUPNAME, "TimestampLastScan", m_TimestampLastScan.ToString());
+                                    Program.DBCon.setIniValue(DB_GROUPNAME, "InfoLastScan",      m_InfoLastScan);      
+                                }
 
                                 #if extScanLog
                                     Debug.Print("File opened : <" + newestNetLog + ">");
@@ -312,7 +357,7 @@ namespace RegulatedNoise.FileScanner
                                             }
                                         else
                                         {
-                                            if(TimestampLastRecognized.Equals(DateTime.MinValue) && (EndPos == -1))
+                                            if((LineCountRaw == 0) && (EndPos == -1))
                                             { 
                                                 EndPos = Datei.Position;
                                             }
@@ -322,6 +367,8 @@ namespace RegulatedNoise.FileScanner
                                             
 
                                     } while (StartPos == -1 && Datei.Position >= 3);
+
+                                    LineCountRaw++;
 
                                     if((StartPos == -1) && ((EndPos - StartPos) > SEARCH_MINLENGTH))
                                         StartPos = 0;
@@ -334,23 +381,35 @@ namespace RegulatedNoise.FileScanner
                                         // and convert to string
                                         currentLogString = Encoding.ASCII.GetString(LineBuffer, 0, (int)(EndPos - StartPos) );
 
-                                        //' Debug.Print("log - scanning :" + currentLogString);
+                                        Debug.Print("log - scanning :" + currentLogString);
 
                                         if (currentLogString != null)
                                         {
 
                                             // *********************************************
                                             // check the timestamp of the current line to avoid to re-analyse older data
-                                            if(TryGetTimeFromLine(currentLogString, ref TimestampCurrentLine))
+                                            if(TryGetTimeFromLine(currentLogString, ref TimestampCurrentLine, ref InfoCurrentLine))
                                             { 
-                                                if(TimestampLastRecognized.Equals(DateTime.MinValue))
-                                                    TimestampLastRecognized = TimestampCurrentLine;
-
-                                                if(TimestampCurrentLine <= m_TimestampLastScan)
+                                                if(TimestampCurrentLine < m_TimestampLastScan)
                                                 { 
                                                     // everything is coming now is older
                                                     EndNow = true;
                                                 }
+                                                else if ((TimestampCurrentLine == m_TimestampLastScan) && (InfoCurrentLine.Equals(m_InfoLastScan)))
+                                                {
+                                                    // everything is coming now is older
+                                                    EndNow = true;
+                                                }
+
+                                                // if it's the first line we have to save the "new youngest line" 
+                                                // to avoid to re-analyse the same lines lines next scan
+                                                if(LineCount == 0)
+                                                {
+                                                    TimestampLastScanCandidate = TimestampCurrentLine;
+                                                    InfoLastScanCandidate      = InfoCurrentLine;
+                                                }
+
+                                                LineCount++;
 
                                                 if(!EndNow)
                                                 {
@@ -420,7 +479,8 @@ namespace RegulatedNoise.FileScanner
                                                                     getLocation(ref Locationname, m);
 
                                                                     DateTime CurrentTimestamp = new DateTime();
-                                                                    TryGetTimeFromLine(currentLogString, ref CurrentTimestamp);
+                                                                    String   CurrentInfo      = "";
+                                                                    TryGetTimeFromLine(currentLogString, ref CurrentTimestamp, ref CurrentInfo);
                                                                     LoggedEvents.Add(new LogEvent() { EventType = enLogEvents.Location, Value = Locationname, Time = CurrentTimestamp});
 
                                                                     EndNow = true;
@@ -482,10 +542,15 @@ namespace RegulatedNoise.FileScanner
                                     }
                                 }
 
-                                if(m_TimestampLastScan < TimestampLastRecognized)
-                                { 
-                                    m_TimestampLastScan = TimestampLastRecognized;
+
+                                if((!m_TimestampLastScan.Equals(TimestampLastScanCandidate)) || (!m_InfoLastScan.Equals(InfoLastScanCandidate)))
+                                {
+                                    // save only if changed
+                                    m_TimestampLastScan = TimestampLastScanCandidate;
+                                    m_InfoLastScan      = InfoLastScanCandidate;
+
                                     Program.DBCon.setIniValue(DB_GROUPNAME, "TimestampLastScan", m_TimestampLastScan.ToString());
+                                    Program.DBCon.setIniValue(DB_GROUPNAME, "InfoLastScan",      m_InfoLastScan);      
                                 }
 
                                 Datei.Close();
@@ -495,6 +560,11 @@ namespace RegulatedNoise.FileScanner
                                     Debug.Print("Datei geschlossen");
                                     logger.Log("File closed");
                                 #endif
+
+                                if (false)
+                                {
+                                    LoggedEvents.Add(new LogEvent() { EventType = enLogEvents.System, Value = "Furz5", Time = DateTime.UtcNow });
+                                }
 
                                 processingLocationInfo(LoggedEvents);
 
@@ -536,7 +606,7 @@ namespace RegulatedNoise.FileScanner
         /// <param name="currentLogString"></param>
         /// <param name="extractedTimeStamp"></param>
         /// <returns></returns>
-        private Boolean TryGetTimeFromLine(string currentLogString, ref DateTime extractedTimeStamp)
+        private Boolean TryGetTimeFromLine(string currentLogString, ref DateTime extractedTimeStamp, ref String info)
         {
             Int32 StartBracket = -1;
             Int32 EndBracket = -1;
@@ -559,6 +629,8 @@ namespace RegulatedNoise.FileScanner
                 if((StartBracket >= 0) && (EndBracket >= 0) && ((EndBracket - StartBracket) > 0))
                 {
                     success = DateTime.TryParse(currentLogString.Substring(StartBracket+1, EndBracket - (StartBracket+1)), out extractedTimeStamp);
+                    if(success)
+                        info = currentLogString.Substring(EndBracket+1).Replace("\n", "").Replace("\r", "");
                 }
 
                 return success;
@@ -613,15 +685,25 @@ namespace RegulatedNoise.FileScanner
                         {
                             case enLogEvents.Jump:
                                 // after a jump we are no longer on a station
-                                if(!String.IsNullOrEmpty(Program.actualCondition.Location))
-                                { 
-                                    EventFlags |= enLogEvents.Location;
-                                    Program.actualCondition.Location  = Event.Value;
-                                }
-                                    
-                                EventFlags |= enLogEvents.Jump;
 
-                                Debug.Print("log - scanning : jump found");
+                                if(!m_InitialJumpFound)
+                                { 
+                                    // it's only the "startjump" of ED, not really a jump
+                                    m_InitialJumpFound = true;
+                                    Program.DBCon.setIniValue(DB_GROUPNAME, "InitialJumpFound", m_InitialJumpFound.ToString());
+                                }
+                                else
+                                { 
+                                    if(!String.IsNullOrEmpty(Program.actualCondition.Location))
+                                    { 
+                                        EventFlags |= enLogEvents.Location;
+                                        Program.actualCondition.Location  = Event.Value;
+                                    }
+                                    
+                                    EventFlags |= enLogEvents.Jump;
+
+                                    Debug.Print("log - scanning : jump found");
+                                }
                                 break;
 
                             case enLogEvents.System:
@@ -655,8 +737,14 @@ namespace RegulatedNoise.FileScanner
                     }
 
                     if(EventFlags != enLogEvents.None)
-                    { 
-                        // something has changed -> fire event
+                    {
+                        // something has changed -> fire events
+
+                        var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
+                                                               Location      = Program.actualCondition.Location};
+                        LocationInfo.Raise(this, LI);
+
+
                         var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
                                                                   Location      = Program.actualCondition.Location,
                                                                   OldSystem     = OldSystemString,  

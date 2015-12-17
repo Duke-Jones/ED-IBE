@@ -92,9 +92,8 @@
     <Reference Include="clrzmq">
       <HintPath>.\clrzmq.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.9.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\MySQL\MySQL Connector Net 6.9.5\Assemblies\v4.5\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -210,7 +209,6 @@
     <Compile Include="Enums and Utility Classes\SerializableDictionary.cs" />
     <Compile Include="Enums and Utility Classes\StationHistory.cs" />
     <Compile Include="Enums and Utility Classes\StructureHelper.cs" />
-    <Compile Include="Enums and Utility Classes\UnixTimeStamp.cs" />
     <Compile Include="Brainerous Pixeltest\Picturedata.cs">
       <SubType>UserControl</SubType>
     </Compile>

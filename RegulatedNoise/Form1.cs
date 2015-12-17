@@ -1876,8 +1876,7 @@ namespace RegulatedNoise
                 if (Answer == System.Windows.Forms.DialogResult.OK)
                 {
                     // yes, it's really new
-                    MessageBox.Show("TODO");
-                    //addCommodity(commodity);
+                    //Program.Data.ImportCommodity(commodity);
                     
                     throw new NotImplementedException();
                     //_Milkyway.addLocalized2RN(_commodities.Names);
@@ -2055,7 +2054,7 @@ namespace RegulatedNoise
                         CSVStrings[i] = currentSystem + CSVStrings[i];
                 }
 
-                Program.Data.ImportPricesFromCSVStrings(CSVStrings, true);
+                Program.Data.ImportPricesFromCSVStrings(CSVStrings);
             
                 if(Program.actualCondition.Location.Equals("", StringComparison.InvariantCultureIgnoreCase))
                     Program.actualCondition.Location = tbOcrStationName.Text;
@@ -2793,7 +2792,7 @@ namespace RegulatedNoise
             foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
                 m_IsRefreshed.Add(MainTabPage.Name, false);
 
-
+            // register events for getting new location-infos for the gui
             Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
             Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
 
@@ -3369,7 +3368,7 @@ namespace RegulatedNoise
                 txtSystemZ.Text = m_loadedSystemdata.Z.ToString("0.00000", CultureInfo.CurrentCulture);
                 txtSystemFaction.Text = m_loadedSystemdata.Faction.NToString();
                 txtSystemPopulation.Text = m_loadedSystemdata.Population.ToNString("#,##0.", CultureInfo.CurrentCulture);
-                txtSystemUpdatedAt.Text = UnixTimeStamp.UnixTimeStampToDateTime(m_loadedSystemdata.UpdatedAt).ToString(CultureInfo.CurrentUICulture);
+                txtSystemUpdatedAt.Text = DateTimeOffset.FromUnixTimeSeconds(m_loadedSystemdata.UpdatedAt).DateTime.ToString(CultureInfo.CurrentUICulture);
                 cbSystemNeedsPermit.CheckState = m_loadedSystemdata.NeedsPermit.toCheckState();
                 cmbSystemPrimaryEconomy.Text = m_loadedSystemdata.PrimaryEconomy.NToString();
                 cmbSystemSecurity.Text = m_loadedSystemdata.Security.NToString();
@@ -3485,7 +3484,7 @@ namespace RegulatedNoise
                 cmbStationState.Text = m_loadedStationdata.State.NToString();
                 cmbStationType.Text = m_loadedStationdata.Type.NToString();
 
-                txtStationUpdatedAt.Text = UnixTimeStamp.UnixTimeStampToDateTime(m_loadedStationdata.UpdatedAt).ToString(CultureInfo.CurrentUICulture);
+                txtStationUpdatedAt.Text = DateTimeOffset.FromUnixTimeSeconds(m_loadedStationdata.UpdatedAt).DateTime.ToString(CultureInfo.CurrentUICulture);
 
                 lbStationEconomies.Items.Clear();
 
@@ -4966,6 +4965,7 @@ namespace RegulatedNoise
             String extSystem    = "";
             String extStation   = "";
             String extInfo      = "";
+            String ErrInfo      = "";
             Boolean ContinueChecking = true;
             try
             {
@@ -4982,14 +4982,16 @@ namespace RegulatedNoise
                     txtRecievedSystem.Text          = "";
                     txtRecievedStation.Text         = "";
 
-                    if(!Program.ExternalData.getLocation(out extSystem, out extStation, out extInfo))
+                    if(!Program.ExternalData.getLocation(out extSystem, out extStation, out extInfo, out ErrInfo))
                     { 
-                        txtExtInfo.Text             = "error from external tool : <" + extInfo + ">";
+                        txtExtInfo.Text             = "Message:\n" + extInfo;
+                        txtExtInfo2.Text            = "Message:\n" + ErrInfo;
                         ContinueChecking            = false;
                     }
                     else
                     {
                         txtExtInfo.Text             = "checking for current station...<ok>";
+                        txtExtInfo2.Text            = "Message:\n" + ErrInfo;
                         txtRecievedSystem.Text      = extSystem;
                         txtRecievedStation.Text     = extStation;
                         ContinueChecking            = false;
@@ -5051,6 +5053,12 @@ namespace RegulatedNoise
 
         private void cmdGetMarketData_Click(object sender, EventArgs e)
         {
+            Int32 DataCount     = 0;
+            String extSystem    = "";
+            String extStation   = "";
+            String extInfo      = "";
+            String ErrInfo      = "";
+
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -5058,10 +5066,19 @@ namespace RegulatedNoise
                 txtExtInfo.Text = "getting market data...";
                 txtExtInfo.Refresh();
 
-                if(Program.ExternalData.getMarketData())
-                    txtLocalDataCollected.Text = String.Format("{0} (utc)", DateTime.UtcNow);
-
-                txtExtInfo.Text = "getting market data...<ok>";
+                if(!Program.ExternalData.getMarketData(out extSystem, out extStation, out extInfo, out ErrInfo, out DataCount))
+                { 
+                    txtExtInfo.Text             = "Message:\n" + extInfo;
+                    txtExtInfo2.Text            = "Message:\n" + ErrInfo;
+                }
+                else
+                {
+                    txtLocalDataCollected.Text  = String.Format("{0} (utc): {1} prices collected", DateTime.UtcNow, DataCount);
+                    txtExtInfo.Text             = "getting market data......<ok>";
+                    txtExtInfo2.Text            = "Message:\n" + ErrInfo;
+                    txtRecievedSystem.Text      = extSystem;
+                    txtRecievedStation.Text     = extStation;
+                }
 
                 Cursor = Cursors.Default;
             }

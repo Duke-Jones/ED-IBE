@@ -186,7 +186,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                     sqlString = sqlString + 
                             "   and exists (select CD.Station_ID from tbCommodityData CD" +
 			                "                 where St.ID = CD.Station_ID" +
-			                "                 group by STation_ID)";
+			                "                 group by Station_ID)";
                 }
 
                 if(VisitedFilter == Program.enVisitedFilter.showOnlyVistedStations)                            

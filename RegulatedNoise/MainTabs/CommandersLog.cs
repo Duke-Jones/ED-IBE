@@ -64,14 +64,15 @@ namespace RegulatedNoise.MTCommandersLog
         // ^^^^^^^^^^ replaced by view "viLog" vvvvvvvvvvvvvvv
         private const String _sqlString = "select * from viLog";
 
-        private dsEliteDB                       m_BaseData;
-        public tabCommandersLog                 m_GUI;
-        private BindingSource                   m_BindingSource;
-        private DataTable                       m_Datatable;
-        private DataRetriever                   retriever;
-        private Boolean                         m_NoGuiNotifyAfterSave;
-        private FileScanner.EDLogfileScanner    m_LogfileScanner;
-        private ExternalDataInterface           m_ExternalDataInterface;
+        private dsEliteDB                               m_BaseData;
+        public tabCommandersLog                         m_GUI;
+        private BindingSource                           m_BindingSource;
+        private DataTable                               m_Datatable;
+        private DataRetriever                           retriever;
+        private Boolean                                 m_NoGuiNotifyAfterSave;
+        private FileScanner.EDLogfileScanner            m_LogfileScanner;
+        private ExternalDataInterface                   m_ExternalDataInterface;
+        private Dictionary<Object, BindingSource>       m_BindingSources;
 
         /// <summary>
         /// constructor
@@ -82,7 +83,7 @@ namespace RegulatedNoise.MTCommandersLog
             {
                 m_BindingSource             = new BindingSource();
                 m_Datatable                 = new DataTable();
-
+                m_BindingSources            = new Dictionary<object,BindingSource>();
                 m_BindingSource.DataSource  = m_Datatable;
             }
             catch (Exception ex)
@@ -169,50 +170,93 @@ namespace RegulatedNoise.MTCommandersLog
             }
         }
 
+
         /// <summary>
         /// prepares the values of the comoboboxes
         /// </summary>
         /// <param name="theCombobox"></param>
         internal void prepareCmb_EventTypes(ref ComboBox_ro theCombobox, ComboBox_ro theReferenceCombobox = null)
         {
+            Boolean initial = false;
+            BindingSource currentBS = null;
+
             try
             {
+                if(!m_BindingSources.TryGetValue(theCombobox, out currentBS))
+                {
+                    BindingSource newBS     = new BindingSource();
+                    theCombobox.DataSource  = newBS;
+                    m_BindingSources.Add(theCombobox, newBS);
+
+                    currentBS = newBS;
+                    initial = true;
+                }
+
                 if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbeventtype;
-                    theCombobox.DisplayMember    = "event";
+                    DataTable selectedDT = m_BaseData.tbeventtype;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                       theCombobox.DisplayMember    = "eventtype";
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbsystems;
-                    theCombobox.DisplayMember    = "systemname";
+                    DataTable selectedDT = m_BaseData.tbsystems;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                        theCombobox.DisplayMember    = "systemname";
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogStationName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     if((theReferenceCombobox == null) || (theReferenceCombobox.SelectedItem == null))
                     { 
+                    DataTable selectedDT = m_BaseData.tbstations;
+                    currentBS.DataSource = selectedDT.Copy();
+
                         theCombobox.DataSource       = m_BaseData.tbstations;
-                        theCombobox.DisplayMember    = "stationname";
                     }
                     else
                     {
                         Int32 SytemID                = (Int32)((System.Data.DataRowView)theReferenceCombobox.SelectedItem).Row["id"];
-                        theCombobox.DataSource       = m_BaseData.tbstations.Select("system_id = " + SytemID);
-                        theCombobox.DisplayMember    = "stationname";
+
+                        // small performance improvement -> only reload if necessary
+                        if((theCombobox.Tag == null) || (((Int32)theCombobox.Tag) != SytemID))
+                        { 
+                            DataTable selectedDT = m_BaseData.tbstations.Clone();
+                            m_BaseData.tbstations.Select("system_id = " + SytemID).CopyToDataTable(selectedDT,LoadOption.OverwriteChanges);
+                            currentBS.DataSource = selectedDT;
+
+                            theCombobox.Tag = SytemID;
+                        }
                     }
+
+                    if(initial)
+                        theCombobox.DisplayMember    = "stationname";
+
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbcommodity;
-                    theCombobox.DisplayMember    = "loccommodity";
+                    DataTable selectedDT = m_BaseData.tbcommodity;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                       theCombobox.DisplayMember    = "loccommodity";
+
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    theCombobox.DataSource       = m_BaseData.tbcargoaction;
-                    theCombobox.DisplayMember    = "action";
+                    DataTable selectedDT = m_BaseData.tbcargoaction;
+                    currentBS.DataSource = selectedDT.Copy();
+
+                    if(initial)
+                       theCombobox.DisplayMember    = "cargoaction";
+
                 }
 
-                theCombobox.ValueMember      = "id";
+                if(initial)
+                    theCombobox.ValueMember      = "id";
 
             }
             catch (Exception ex)
@@ -260,7 +304,7 @@ namespace RegulatedNoise.MTCommandersLog
         /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
         /// </summary>
         /// <param name="ChangedData">row with data to save</param>
-        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes)
+        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes, double? Distance=null)
         {
             try
             {
@@ -281,6 +325,9 @@ namespace RegulatedNoise.MTCommandersLog
                 TempRow.eevent              = EventType;
                 TempRow.notes               = Notes;
 
+                if(Distance.HasValue)
+                    TempRow.distance        = Distance.Value;
+
                 SaveEvent(TempRow);
             }
             catch (Exception ex)
@@ -297,12 +344,22 @@ namespace RegulatedNoise.MTCommandersLog
         internal void SaveEvent(dsEliteDB.vilogRow ChangedData)
         {
             String sqlString;
+            double? nDistance = null;
 
             try
             {
+                try
+                {
+                    nDistance = ChangedData.distance;
+                }
+                catch (Exception)
+                {
+                    // typed datasets can't handle nullvalues for non-string columns 
+                    // thank you, ms ]-P
+                }
 
                 sqlString = String.Format("INSERT INTO tbLog(time, system_id, station_id, event_id, commodity_id," +
-                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
+                                            "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes, distance)" +
                                             " SELECT d.* FROM (SELECT" +
                                             "          {0} AS time," +
                                             "          (select id from tbSystems  where systemname      = {1}" +
@@ -317,7 +374,8 @@ namespace RegulatedNoise.MTCommandersLog
                                             "          {6} AS cargovolume," +
                                             "          {7} AS credits_transaction," +
                                             "          {8} AS credits_total," +
-                                            "          {9} AS notes) AS d" +
+                                            "          {9} AS notes," +
+                                            "          {10} AS distance) AS d" +
                                             " ON DUPLICATE KEY UPDATE" +
                                             "  system_id            = d.system_id," +
                                             "  station_id           = d.station_id," +
@@ -327,7 +385,8 @@ namespace RegulatedNoise.MTCommandersLog
                                             "  cargovolume          = d.cargovolume," +
                                             "  credits_transaction  = d.credits_transaction," +
                                             "  credits_total        = d.credits_total," +
-                                            "  notes                = d.notes",
+                                            "  notes                = d.notes," +
+                                            "  distance             = d.distance",
                                             DBConnector.SQLDateTime(ChangedData.time),
                                             DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
                                             DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
@@ -337,7 +396,8 @@ namespace RegulatedNoise.MTCommandersLog
                                             ChangedData.cargovolume,
                                             ChangedData.credits_transaction,
                                             ChangedData.credits_total,
-                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)));
+                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)),
+                                            nDistance == null ? "null" : DBConnector.SQLDecimal(nDistance.Value));
 
                 Program.DBCon.Execute(sqlString); 
 
@@ -364,7 +424,7 @@ namespace RegulatedNoise.MTCommandersLog
         //{
 
         //    //bool Jumped_To      = false;
-        //    bool newSystem      = false;
+        //    bool systemFirstTimeVisited      = false;
         //    bool newLocation    = false;
         //    bool InitialRun     = false;
 
@@ -376,7 +436,7 @@ namespace RegulatedNoise.MTCommandersLog
         //            // it's a new system
         //            Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
         //            Program.actualCondition.System = Systemname;
-        //            newSystem = true;
+        //            systemFirstTimeVisited = true;
         //        }
 
         //        // system info found
@@ -430,11 +490,11 @@ namespace RegulatedNoise.MTCommandersLog
         //            _LoggedVisited = "";
 
         //        }
-        //    }else if(newSystem || ForceChangedLocation)
+        //    }else if(systemFirstTimeVisited || ForceChangedLocation)
         //        Program.actualCondition.Location = Condition.STR_Scanning;
             
 
-        //    if((newSystem || newLocation) && (!InitialRun))
+        //    if((systemFirstTimeVisited || newLocation) && (!InitialRun))
         //    { 
         //        loadSystemData(_LoggedSystem);
         //        loadStationData(_LoggedSystem, _LoggedLocation);
@@ -464,7 +524,7 @@ namespace RegulatedNoise.MTCommandersLog
 
         //            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
         //            {
-        //                Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
+        //                Program.CommandersLog.SaveEvent(DateTime.UtcNow, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
         //            }
         //        }
         //    }
@@ -500,7 +560,7 @@ namespace RegulatedNoise.MTCommandersLog
         //                        //}
         //                        //else
         //                        //{
-        //                        //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.Now);
+        //                        //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.UtcNow);
         //                        //    setActiveItem(_CmdrsLog_LastAutoEventID);
         //                        //}
         //                    }
@@ -618,7 +678,8 @@ namespace RegulatedNoise.MTCommandersLog
             {
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
-                    SaveEvent(DateTime.Now, e.System, "", "", "", 0, 0, 0, "Jumped To", "");
+                    double? Distance = Program.Data.getDistanceBetween(e.System, e.OldSystem);
+                    SaveEvent(DateTime.UtcNow, e.System, "", "", "", 0, 0, 0, "Jumped To", "", Distance);
                 }
             }
             catch (Exception ex)
@@ -634,7 +695,7 @@ namespace RegulatedNoise.MTCommandersLog
                 if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) > 0)
                 {
                   
-                    SaveEvent(DateTime.Now, e.System, e.Location, "", "", 0, 0, 0, "Visited", "");
+                    SaveEvent(DateTime.UtcNow, e.System, e.Location, "", "", 0, 0, 0, "Visited", "");
                 }
 
                 if((e.Changed & ExternalDataInterface.enExternalDataEvents.DataCollected) > 0)
@@ -687,7 +748,7 @@ namespace RegulatedNoise.MTCommandersLog
                             else
                             {
                                 // add new
-                                Program.CommandersLog.SaveEvent(DateTime.Now, Program.actualCondition.System, 
+                                Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
                                                                 Program.actualCondition.Location, "", "", 0, 0, 0, 
                                                                 "Market Data Collected", "");
                             }
@@ -696,7 +757,7 @@ namespace RegulatedNoise.MTCommandersLog
                     else
                     {
                         // add new
-                        Program.CommandersLog.SaveEvent(DateTime.Now, Program.actualCondition.System, 
+                        Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
                                                         Program.actualCondition.Location, "", "", 0, 0, 0, 
                                                         "Market Data Collected", "");
                     }
@@ -706,6 +767,35 @@ namespace RegulatedNoise.MTCommandersLog
             catch (Exception ex)
             {
                 throw new Exception("Error while creating a MarketDataCollected-event", ex);
+            }
+        }
+
+        /// <summary>
+        /// deletes the rows in the database
+        /// </summary>
+        /// <param name="markedRows"></param>
+        internal void DeleteRows(DataGridViewSelectedRowCollection markedRows)
+        {
+            System.Text.StringBuilder sqlString = new System.Text.StringBuilder();
+
+            try
+            {
+                sqlString.Append("delete from tbLog where ");
+
+                for (int i = 0; i < markedRows.Count; i++)
+                {
+                    if(i == 0)
+                        sqlString.Append(String.Format(" time = {0}", DBConnector.SQLDateTime((DateTime)markedRows[i].Cells["time"].Value)));   
+                    else
+                        sqlString.Append(String.Format(" or time = {0} ", DBConnector.SQLDateTime((DateTime)markedRows[i].Cells["time"].Value)));   
+                }
+
+                Program.DBCon.Execute(sqlString.ToString());
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting rows", ex);
             }
         }
     }

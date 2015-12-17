@@ -401,7 +401,7 @@ namespace RegulatedNoise.EDDB_Data
         /// go and get station clones from the own data for a new station
         /// and adds them to the merged data
         /// </summary>
-        /// <param name="newSystem">new created system in merged data </param>
+        /// <param name="systemFirstTimeVisited">new created system in merged data </param>
         private void copyStationsForNewSystem(EDSystem newSystem)
         {
             // get the list from own data with the name of the new station 
