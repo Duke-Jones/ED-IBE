@@ -128,6 +128,8 @@
             this.pbOriginalImage = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tabExternal = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtExtInfo2 = new System.Windows.Forms.TextBox();
             this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.cmdConfirm = new System.Windows.Forms.Button();
@@ -267,8 +269,7 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtExtInfo2 = new System.Windows.Forms.TextBox();
+            this.bManualLoadImage = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -1203,6 +1204,7 @@
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox3.Controls.Add(this.bManualLoadImage);
             this.groupBox3.Controls.Add(this.lblScreenshotsQueued);
             this.groupBox3.Controls.Add(this.button7);
             this.groupBox3.Controls.Add(this.pbStation);
@@ -1318,6 +1320,25 @@
             this.tabExternal.TabIndex = 5;
             this.tabExternal.Text = "External IO";
             this.tabExternal.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(31, 237);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(34, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Info 2";
+            // 
+            // txtExtInfo2
+            // 
+            this.txtExtInfo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtExtInfo2.Location = new System.Drawing.Point(34, 253);
+            this.txtExtInfo2.Multiline = true;
+            this.txtExtInfo2.Name = "txtExtInfo2";
+            this.txtExtInfo2.ReadOnly = true;
+            this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
+            this.txtExtInfo2.TabIndex = 11;
             // 
             // txtLocalDataCollected
             // 
@@ -2907,24 +2928,16 @@
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
-            // label5
+            // bManualLoadImage
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(31, 237);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Info 2";
-            // 
-            // txtExtInfo2
-            // 
-            this.txtExtInfo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtExtInfo2.Location = new System.Drawing.Point(34, 253);
-            this.txtExtInfo2.Multiline = true;
-            this.txtExtInfo2.Name = "txtExtInfo2";
-            this.txtExtInfo2.ReadOnly = true;
-            this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
-            this.txtExtInfo2.TabIndex = 11;
+            this.bManualLoadImage.Location = new System.Drawing.Point(263, 47);
+            this.bManualLoadImage.Name = "bManualLoadImage";
+            this.bManualLoadImage.Size = new System.Drawing.Size(145, 23);
+            this.bManualLoadImage.TabIndex = 11;
+            this.bManualLoadImage.Text = "(debug) LoadPicture";
+            this.bManualLoadImage.UseVisualStyleBackColor = true;
+            this.bManualLoadImage.Visible = false;
+            this.bManualLoadImage.Click += new System.EventHandler(this.bManualLoadImage_Click);
             // 
             // Form1
             // 
@@ -3240,8 +3253,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtExtInfo2;
-
-        
+        private System.Windows.Forms.Button bManualLoadImage;
     }
 }
 

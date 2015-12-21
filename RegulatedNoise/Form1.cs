@@ -1189,7 +1189,7 @@ namespace RegulatedNoise
             }
 
             var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = Environment.GetFolderPath((Environment.SpecialFolder.MyPictures)) + @"\Frontier Developments\Elite Dangerous";
+            dialog.SelectedPath = Program.Settings_old.MostRecentOCRFolder;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Program.Settings_old.MostRecentOCRFolder = dialog.SelectedPath;
@@ -1215,6 +1215,20 @@ namespace RegulatedNoise
                 ocr.IsMonitoring = true;
             }
 
+        }
+
+        private void bManualLoadImage_Click(object sender, EventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.InitialDirectory = Program.Settings_old.MostRecentOCRFolder;
+            dialog.Filter = "BMP Files|*.bmp";
+            dialog.CheckFileExists = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                var fsa = new FileSystemEventArgs(WatcherChangeTypes.All, Path.GetDirectoryName(dialog.FileName), dialog.SafeFileName);
+                ScreenshotCreated(this, fsa);
+
+            }
         }
 
         #region UpdateOriginalImage
@@ -2604,7 +2618,7 @@ namespace RegulatedNoise
             if (_eddnSubscriberThread != null && _eddnSubscriberThread.IsAlive)
                 _eddnSubscriberThread.Abort();
         }
-
+   
 
         private void button17_Click(object sender, EventArgs e)
         {
@@ -2795,6 +2809,11 @@ namespace RegulatedNoise
             // register events for getting new location-infos for the gui
             Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
             Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
+
+            // Debug spesific functionality
+            #if DEBUG
+            bManualLoadImage.Visible = true;
+            #endif
 
         }
 
@@ -4592,7 +4611,7 @@ namespace RegulatedNoise
             tbUsername.Enabled   = rbUserID.Checked;
             txtCmdrsName.Enabled = rbCmdrsName.Checked;
         }
-
+   
 
         private void rbCmdrsName_CheckedChanged(object sender, EventArgs e)
         {
@@ -4800,7 +4819,9 @@ namespace RegulatedNoise
 
         }
 
-    #region HTML
+      
+
+        #region HTML
 
         private void PopulateNetworkInterfaces()
         {
@@ -4954,9 +4975,11 @@ namespace RegulatedNoise
             return s.ToString();
         }
 
-    #endregion
+    
 
-#region ExternalTool
+        #endregion
+
+        #region ExternalTool
 
         private FileScanner.EDLogfileScanner    m_LogfileScanner;
 
