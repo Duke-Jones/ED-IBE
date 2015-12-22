@@ -185,7 +185,6 @@
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\dsCommodities.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -272,7 +271,13 @@
       <DependentUpon>HelpOCR.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\ListViewItemComparer.cs" />
-    <Compile Include="Ocr.cs" />
+    <Compile Include="Ocr\OcrCaptureAndCorrect.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Ocr\OcrCaptureAndCorrect.Designer.cs">
+      <DependentUpon>OcrCaptureAndCorrect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ocr\Ocr.cs" />
     <Compile Include="Ocr\Calibration\FilterTest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -293,6 +298,7 @@
     <Compile Include="MainTabs\tabPriceAnalysis.designer.cs">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </Compile>
+    <Compile Include="Ocr\OcrHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramPaths.cs" />
     <Compile Include="ProgressView.cs">
@@ -316,7 +322,6 @@
     </Compile>
     <Compile Include="SQL\Datasets\dsEliteDB.cs">
       <DependentUpon>dsEliteDB.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SQL\Datasets\dsEliteDB.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -405,6 +410,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainTabs\tabPriceAnalysis.resx">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ocr\OcrCaptureAndCorrect.resx">
+      <DependentUpon>OcrCaptureAndCorrect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressView.resx">
       <DependentUpon>ProgressView.cs</DependentUpon>

@@ -55,20 +55,21 @@ namespace RegulatedNoise
         [STAThread]
         static void Main()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Application.ThreadException += Application_ThreadException;
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            Init();
+
+            Application.Run(new Form1());
+
+            Cleanup();
             try
             {
 
-                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-                Application.ThreadException += Application_ThreadException;
-
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-
-                Init();
-
-                Application.Run(new Form1());
-
-                Cleanup();
+              
 
             }
             catch (Exception ex)
