@@ -223,7 +223,11 @@ namespace RegulatedNoise.SQL
                                                             "tbsource", 
                                                             "visystemsandstations", 
                                                             "tbcommoditylocalization", 
-                                                            "tblevellocalization"};
+                                                            "tblevellocalization", 
+                                                            "tbcategory", 
+                                                            "tbeconomylevel", 
+                                                            "tbvisitedsystems", 
+                                                            "tbvisitedstations"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -1981,15 +1985,15 @@ namespace RegulatedNoise.SQL
                                                   "                  cargoaction_id, cargovolume, credits_transaction, credits_total, notes)" +
                                                   " SELECT d.* FROM (SELECT" +
                                                   "          {0} AS time," +
-                                                  "          (select id from tbSystems  where systemname  = {1}" +
+                                                  "          (select id from tbSystems  where systemname        = {1}" +
                                                   "          ) AS system_id," +
-                                                  "          (select id from tbStations where stationname = {2} " + 
-                                                  "                                     and   system_id   = (select id from tbSystems" + 
-                                                  "                                                           where systemname = {1})" +
+                                                  "          (select id from tbStations where stationname       = {2} " + 
+                                                  "                                     and   system_id         = (select id from tbSystems" + 
+                                                  "                                                                 where systemname = {1})" +
                                                   "          ) AS station_id," +
-                                                  "          (select id from tbEventType   where event     = {3}) As event_id," +
-                                                  "          (select id from tbCommodity   where commodity = {4} or loccommodity = {4} limit 1) As commodity_id," +
-                                                  "          (select id from tbCargoAction where action    = {5}) AS cargoaction_id," +
+                                                  "          (select id from tbEventType   where eventtype      = {3}) As event_id," +
+                                                  "          (select id from tbCommodity   where commodity      = {4} or loccommodity = {4} limit 1) As commodity_id," +
+                                                  "          (select id from tbCargoAction where cargoaction    = {5}) AS cargoaction_id," +
                                                   "          {6} AS cargovolume," +
                                                   "          {7} AS credits_transaction," +
                                                   "          {8} AS credits_total," +
@@ -2107,7 +2111,7 @@ namespace RegulatedNoise.SQL
                 // now add the commodities and prices
                 foreach (EDStation Station in Stations)
                 {
-                    if (Station.Listings.Count() > 0)
+                    if ((Station.Id != 0) && (Station.Listings.Count() > 0))
                     {
                         sqlStringB.Clear();
                         sqlStringB.Append("insert into tbCommodityData(id, station_id, commodity_id, Sell, Buy," +

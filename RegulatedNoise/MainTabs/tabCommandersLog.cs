@@ -257,10 +257,13 @@ namespace RegulatedNoise.MTCommandersLog
                 {
                     // force refresh
                     m_DataSource.Retriever.MemoryCache.Clear();
+                    dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount;
                     dgvCommandersLog.Invalidate();
+                    
 
                     // jump to the new row
-                    dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow];
+                    if (dgvCommandersLog.RowCount > currentRow)
+                        dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow];
                 }
             }
             catch (Exception ex)

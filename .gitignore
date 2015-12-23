@@ -36,6 +36,7 @@
 /RNDatabase/Database/script/calculation_test.sql
 /RNDatabase/Database/script/test.sql
 /RNDatabase/SQL-Model/table_inserts/distance-check.sql
+<<<<<<< HEAD
 RegulatedNoise/Data/Commodities_own.xml
 RegulatedNoise/Data/Commodities_own_bak.xml
 RegulatedNoise/Data/systems_own.json
@@ -44,3 +45,7 @@ RegulatedNoise/Data/commodities_RN.json
 RegulatedNoise/Data/commodities_RN_bak.json
 RegulatedNoise/Data/StationHistory.json
 RegulatedNoise/Data/stations_own.json
+=======
+/Installer/Package
+/RNDatabase/Database/data_cay
+>>>>>>> refs/remotes/Duke-Jones/MySQL

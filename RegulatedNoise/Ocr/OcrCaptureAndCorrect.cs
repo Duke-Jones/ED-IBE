@@ -21,12 +21,10 @@ namespace RegulatedNoise.Ocr
         public OcrCaptureAndCorrect()
         {
             InitializeComponent();
-            
         }
 
         private void OcrCaptureAndCorrect_Load(object sender, EventArgs e)
         {
-          
             cbAutoImport.Checked = Program.Settings_old.AutoImport;
             cbExtendedInfoInCSV.Checked = Program.Settings_old.IncludeExtendedCSVInfo;
             cbDeleteScreenshotOnImport.Checked = Program.Settings_old.DeleteScreenshotOnImport;
@@ -34,14 +32,8 @@ namespace RegulatedNoise.Ocr
             cbPostOnImport.Checked = Program.Settings_old.PostToEddnOnImport;
 
 
-            if (Program.Settings_old.UserName != "")
-                tbUsername.Text = Program.Settings_old.UserName;
-            else
-                tbUsername.Text = Guid.NewGuid().ToString();
 
-            txtCmdrsName.Text = Program.Settings_old.PilotsName;
-
-
+            getEDDNUserid();
             selectEDDN_ID();
 
 
@@ -49,6 +41,36 @@ namespace RegulatedNoise.Ocr
 #if DEBUG
             bManualLoadImage.Visible = true;
 #endif
+        }
+
+        private void getEDDNUserid()
+        {
+            if (Program.Settings_old.UserName != "")
+                tbUsername.Text = Program.Settings_old.UserName;
+            else
+                tbUsername.Text = Guid.NewGuid().ToString();
+
+            txtCmdrsName.Text = Program.Settings_old.PilotsName;
+        }
+        private void selectEDDN_ID()
+        {
+            if (Program.Settings_old.usePilotsName)
+            {
+                if (!String.IsNullOrEmpty(Program.Settings_old.PilotsName))
+                {
+                    rbCmdrsName.Checked = true;
+                }
+                else
+                {
+                    rbUserID.Checked = true;
+                    Program.Settings_old.usePilotsName = false;
+                    rbCmdrsName.Enabled = false;
+                }
+            }
+            else
+                rbUserID.Checked = true;
+
+            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.Settings_old.PilotsName);
         }
 
         public void startOcrOnload(bool doStart)
@@ -1091,26 +1113,7 @@ namespace RegulatedNoise.Ocr
         } /// <summary>
           /// selects, which ID to use for sending to EDDNCommunicator
           /// </summary>
-        private void selectEDDN_ID()
-        {
-            if (Program.Settings_old.usePilotsName)
-            {
-                if (!String.IsNullOrEmpty(Program.Settings_old.PilotsName))
-                {
-                    rbCmdrsName.Checked = true;
-                }
-                else
-                {
-                    rbUserID.Checked = true;
-                    Program.Settings_old.usePilotsName = false;
-                    rbCmdrsName.Enabled = false;
-                }
-            }
-            else
-                rbUserID.Checked = true;
-
-            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.Settings_old.PilotsName);
-        }
+ 
 
         private void rbUserID_CheckedChanged(object sender, EventArgs e)
         {
