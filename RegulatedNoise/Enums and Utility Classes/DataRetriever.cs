@@ -138,11 +138,6 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         {
             get
             {
-                // Return the existingClassification value if it has already been determined.
-                if (m_RowCountValue != -1)
-                {
-                    return m_RowCountValue;
-                }
 
                 Object result = -1;
                 // Retrieve the row count from the database.

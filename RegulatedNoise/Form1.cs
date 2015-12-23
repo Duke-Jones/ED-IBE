@@ -4778,6 +4778,7 @@ namespace RegulatedNoise
 
         #endregion
 
+
         /// <summary>
         /// opens the data import dialog
         /// </summary>
@@ -4795,7 +4796,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while opening import tool", ex);
+                cErr.showError(ex, "Error while opening import tool");
             }
 
         }

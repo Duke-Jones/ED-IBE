@@ -93,6 +93,10 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.29
+   * different fixes on build a new database from scratch / import existing data
+   * first steps for installer  with Inno Setup 5
+-------------------------------------------------------------------------------------         
 SQL 0.0.28
    * fixes for adding unknown systems and stations on-the-fly
    * quickfix: logfile scanning with ED 64 (it's another dir)

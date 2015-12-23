@@ -71,10 +71,10 @@ start .\bin\mysqld.exe --defaults-file=Elite.ini --console
 .\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'%computername%';"
 .\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'%computername%';"
 
-rem set GRANT_LOCATION=*
-rem .\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'%GRANT_LOCATION%' IDENTIFIED BY '%RN_USER_PW%';"
-rem .\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'%GRANT_LOCATION%';"
-rem .\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'%GRANT_LOCATION%';"
+set GRANT_LOCATION=*
+.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'%GRANT_LOCATION%' IDENTIFIED BY '%RN_USER_PW%';"
+.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'%GRANT_LOCATION%';"
+.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'%GRANT_LOCATION%';"
 
 
 .\bin\mysql -u root --password=%ROOT_PW% < .\script\create_Elite_DB.sql
