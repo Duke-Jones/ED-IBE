@@ -41,7 +41,7 @@ namespace RegulatedNoise
             }
         }
 
-        private static Point _resolutionTemplate => new Point
+        private static Point _resolutionTemplate = new Point
         {
             X = 2560,
             Y = 1440

@@ -123,8 +123,8 @@ namespace RegulatedNoise.SQL
                     else
                         ProgressSendLevel =  -1;
                     
-                    if(((((100 * Index/Total) % m_PercentSlice) == 0) && (ProgressSendLevel != m_lastProgress)) || 
-                        (ProgressSendLevel != m_lastProgress))
+                    if(((Total != 0) && (((100 * Index/Total) % m_PercentSlice) == 0) && (ProgressSendLevel != m_lastProgress)) || 
+                       (ProgressSendLevel != m_lastProgress))
                     { 
                         // time is reason
                         Progress.Raise(this, new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total});
