@@ -6,12 +6,50 @@ namespace RegulatedNoise
 {
     public class OcrCalibrator
     {
-        private readonly Point[] _calibrationTemplate;
-        private readonly Point _resolutionTemplate;
 
-        public List<CalibrationPoint> CalibrationBoxes;
+        private static Point[] _calibrationTemplate
+        {
+            get
+            {
+               var p = new Point[12];
+                p[0].X = 102;
+                p[0].Y = 90;
+                p[1].X = 823;
+                p[1].Y = 130;
+                p[2].X = 106;
+                p[2].Y = 326;
+                p[3].X = 590;
+                p[3].Y = 326;
+                p[4].X = 706;
+                p[4].Y = 326;
+                p[5].X = 823;
+                p[5].Y = 326;
+                p[6].X = 948;
+                p[6].Y = 326;
+                p[7].X = 1098;
+                p[7].Y = 326;
+                p[8].X = 1191;
+                p[8].Y = 326;
+                p[9].X = 1346;
+                p[9].Y = 326;
+                p[10].X = 1460;
+                p[10].Y = 326;
+                p[11].X = 106;
+                p[11].Y = 1300;
 
-        public void SaveCalibration()
+                return p;
+            }
+        }
+
+        private static Point _resolutionTemplate => new Point
+        {
+            X = 2560,
+            Y = 1440
+        };
+
+        public static List<CalibrationPoint> CalibrationBoxes;
+
+        public static void SaveCalibration()
         {
             if (File.Exists("Calibration.txt"))
                 File.Delete("Calibration.txt");
@@ -30,7 +68,7 @@ namespace RegulatedNoise
                 File.Delete(@"Brainerous\settings.ini");
 
         }
-        public void LoadCalibration()
+        public static void LoadCalibration()
         {
             if (!File.Exists("Calibration.txt")) return;
 
@@ -58,36 +96,13 @@ namespace RegulatedNoise
 
         public OcrCalibrator()
         {
-            _resolutionTemplate.X = 2560;
-            _resolutionTemplate.Y = 1440;
+            
 
-            _calibrationTemplate = new Point[12];
-            _calibrationTemplate[0].X = 102;
-            _calibrationTemplate[0].Y = 90;
-            _calibrationTemplate[1].X = 823;
-            _calibrationTemplate[1].Y = 130;
-            _calibrationTemplate[2].X = 106;
-            _calibrationTemplate[2].Y = 326;
-            _calibrationTemplate[3].X = 590;
-            _calibrationTemplate[3].Y = 326;
-            _calibrationTemplate[4].X = 706;
-            _calibrationTemplate[4].Y = 326;
-            _calibrationTemplate[5].X = 823;
-            _calibrationTemplate[5].Y = 326;
-            _calibrationTemplate[6].X = 948;
-            _calibrationTemplate[6].Y = 326;
-            _calibrationTemplate[7].X = 1098;
-            _calibrationTemplate[7].Y = 326;
-            _calibrationTemplate[8].X = 1191;
-            _calibrationTemplate[8].Y = 326;
-            _calibrationTemplate[9].X = 1346;
-            _calibrationTemplate[9].Y = 326;
-            _calibrationTemplate[10].X = 1460;
-            _calibrationTemplate[10].Y = 326;
-            _calibrationTemplate[11].X = 106;
-            _calibrationTemplate[11].Y = 1300;
+          //TODO is this ever called?
+
+             LoadCalibration();
         }
-        public Point[] GetCalculatedCalibrationPoints(Point resolution)
+        public static Point[] GetCalculatedCalibrationPoints(Point resolution)
         {
             var returnVal = _calibrationTemplate;
 

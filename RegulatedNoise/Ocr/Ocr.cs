@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Threading;
-using System.IO;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using Tesseract;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using RegulatedNoise.EDDB_Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using RegulatedNoise.Enums_and_Utility_Classes;
+using Tesseract;
 
-namespace RegulatedNoise
+namespace RegulatedNoise.Ocr
 {
     class Ocr
     {
@@ -25,7 +19,6 @@ namespace RegulatedNoise
         public string CurrentScreenshot;
         public DateTime CurrentScreenshotDateTime;
         public string SystemAtTimeOfScreenshot;
-        
         private readonly Form1 _callingForm;
         private Point[] _calibrationPoints;
         private readonly SingleThreadLogger _logger;
@@ -87,7 +80,7 @@ namespace RegulatedNoise
             {
                 _logger.Log("Ignoring _bOriginal.Clone() error...\r\n"+ex);
             }
-            _calibrationPoints = _callingForm.UpdateOriginalImage(_bAnotherClone);
+            _calibrationPoints = _callingForm.cOcrCaptureAndCorrect.UpdateOriginalImage(_bAnotherClone);
 
             // get the area of the commodity data
             var trim_4_CommodityArea = new Rectangle(_calibrationPoints[2].X ,  _calibrationPoints[2].Y,
@@ -143,7 +136,7 @@ namespace RegulatedNoise
             _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Program.Settings_old.GUIColorCutoffLevel);
 
             // show preprocessed parts on the GUI
-            _callingForm.UpdateTrimmedImage(_bTrimmed_4_OCR, _bTrimmedHeader);
+            _callingForm.cOcrCaptureAndCorrect.UpdateTrimmedImage(_bTrimmed_4_OCR, _bTrimmedHeader);
 
             int min=100, max=0;
 
@@ -223,7 +216,7 @@ namespace RegulatedNoise
             
             // show station on GUI
 
-            _callingForm.DisplayResults(Stationname_OCR);
+            _callingForm.cOcrCaptureAndCorrect.DisplayResults(Stationname_OCR);
             
             var commodityColumnText         = new string[textRowLocations.Count(), 8]; 
             var originalBitmaps             = new Bitmap[textRowLocations.Count(),8];
@@ -495,12 +488,12 @@ namespace RegulatedNoise
             if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
             {
                 Program.DBCon.setIniValue(MTSettings.tabSettings.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString());
-                Form1.InstanceObject.clearOcrOutput();
+                Form1.InstanceObject.cOcrCaptureAndCorrect.clearOcrOutput();
             }
             else
             {
                 // Send the results for this screenshot back to the Form
-                _callingForm.DisplayCommodityResults(commodityColumnText, originalBitmaps, originalBitmapConfidences, rowIds, CurrentScreenshot);
+                _callingForm.cOcrCaptureAndCorrect.DisplayCommodityResults(commodityColumnText, originalBitmaps, originalBitmapConfidences, rowIds, CurrentScreenshot);
             }
 
             // ...and if we've got any buffered screenshots waiting to be processed, process the next one

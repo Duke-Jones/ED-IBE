@@ -175,7 +175,7 @@ namespace RegulatedNoise
                 // http://192.168.1.16:8080/resortlistview.html?grid=lbPrices&col=7
 
                 case "\\resortlistview.html":
-                    _callingForm.GenericSingleParameterMessage(requestedUrl, AppDelegateType.ChangeGridSort);
+                    _callingForm.cOcrCaptureAndCorrect.GenericSingleParameterMessage(requestedUrl, AppDelegateType.ChangeGridSort);
                     SendTradeDataPage(clientSocket);
                     break;
                 case "\\": sendResponse(clientSocket, "<HTML>" + BodyTag + "<font size=\"12\">RegulatedNoise</font><br><br><form action=\"/ocrpoll\"><input type=\"submit\" style=\"font-size: 44pt\" value=\"OCR Corrections\"></form><br><form action=\"/tradedata\"><input type=\"submit\" style=\"font-size: 44pt\" value=\"Trade Data\"></form><br><form action=\"/enternotedata\"><input type=\"submit\" style=\"font-size: 44pt\" value=\"Add Note\"></form></BODY></HTML>", "200 OK", "text/html"); break;
@@ -191,17 +191,17 @@ namespace RegulatedNoise
                     break;
                 case "\\ocr":
                 case "\\ocr.html":                  ReturnOcrHtml(clientSocket); break;
-                case "\\returnocrvalues.html": _callingForm.SetOcrValueFromWeb(requestedUrl.Replace("/returnocrvalues.html?fname=", "").Replace("+", " ")); ReturnOcrHtml(clientSocket); break;
+                case "\\returnocrvalues.html": _callingForm.cOcrCaptureAndCorrect.SetOcrValueFromWeb(requestedUrl.Replace("/returnocrvalues.html?fname=", "").Replace("+", " ")); ReturnOcrHtml(clientSocket); break;
                 case "\\import.html":
-                    _callingForm.ImportCurrentOcrData();
+                    _callingForm.cOcrCaptureAndCorrect.ImportCurrentOcrData();
                     sendResponse(clientSocket, "<HTML>"+BodyTag+"<meta http-equiv=\"Refresh\" content=\"0; url=ocrpoll.html\"></BODY></HTML>", "200 OK", "text/html");
                     break;
                 case "\\ocrpoll":
                 case "\\ocrpoll.html":
 
-                    var ocrValueFromWeb = _callingForm.GetOcrValueForWeb()[0];
+                    var ocrValueFromWeb = _callingForm.cOcrCaptureAndCorrect.GetOcrValueForWeb()[0];
 
-                    if (!_callingForm.ReturnOcrMonitoringStatus())
+                    if (!_callingForm.cOcrCaptureAndCorrect.ReturnOcrMonitoringStatus())
                     {
                         sendResponse(clientSocket, "<HTML>"+BodyTag+"<meta http-equiv=\"Refresh\" content=\"5; url=ocrpoll.html\"><font size=\"12\">Start monitoring first!  Go to OCR => Monitor Directory.<BR><BR>  Refreshing every 5 seconds for a new screenshot...</font><br>"+ReturnToHome+"</BODY></HTML>", "200 OK", "text/html");
                     }
@@ -223,7 +223,7 @@ namespace RegulatedNoise
                 case "\\updatestationandsystem.html":
 
                     var returnParams1 = requestedUrl.Replace("/updatestationandsystem.html?station=", "").Replace("+", " ").Replace("&system=","!").Split(new char[1] { '!' });
-                    _callingForm.SetStationAndSystem(returnParams1[0], returnParams1[1]);
+                    _callingForm.cOcrCaptureAndCorrect.SetStationAndSystem(returnParams1[0], returnParams1[1]);
                     ReturnOcrHtml(clientSocket); 
                     break;
                 case "\\enternotedata":
@@ -278,7 +278,7 @@ namespace RegulatedNoise
                 }
 
             }
-            _callingForm.GenericSingleParameterMessage(newEvent, AppDelegateType.AddEventToLog);
+            _callingForm.cOcrCaptureAndCorrect.GenericSingleParameterMessage(newEvent, AppDelegateType.AddEventToLog);
         }
 
         private string ReturnToHome
@@ -292,7 +292,7 @@ namespace RegulatedNoise
 
         private void ReturnOcrHtml(Socket clientSocket)
         {
-            var currentTextBoxValue = _callingForm.GetOcrValueForWeb();
+            var currentTextBoxValue = _callingForm.cOcrCaptureAndCorrect.GetOcrValueForWeb();
 
             if (currentTextBoxValue[0] == "<FINISHED>")
             {
@@ -309,7 +309,7 @@ namespace RegulatedNoise
             }
             else
             {
-                var valuesFromForm = _callingForm.GetOcrValueForWeb();
+                var valuesFromForm = _callingForm.cOcrCaptureAndCorrect.GetOcrValueForWeb();
 
                 var inputStyle = "text";
                 if (valuesFromForm[3] == "1" || valuesFromForm[3] == "2" || valuesFromForm[3] == "3")
@@ -318,14 +318,14 @@ namespace RegulatedNoise
                 sendResponse(clientSocket, @"<HTML>
 "+BodyTag+@"<font size=""12"">OCR Correction</font><BR>
 <form action=""updatestationandsystem.html"">
-    <input type=""text"" style=""font-size: 44pt"" value=""" + _callingForm.GetOcrValueForWeb()[1] + @""" name=""station"">
+    <input type=""text"" style=""font-size: 44pt"" value=""" + _callingForm.cOcrCaptureAndCorrect.GetOcrValueForWeb()[1] + @""" name=""station"">
     <br>
-<input type=""text"" style=""font-size: 44pt"" value=""" + _callingForm.GetOcrValueForWeb()[2] + @""" name=""system"">
+<input type=""text"" style=""font-size: 44pt"" value=""" + _callingForm.cOcrCaptureAndCorrect.GetOcrValueForWeb()[2] + @""" name=""system"">
     <input type=""submit"" style=""font-size: 24pt""  value=""Amend"">
 </form>
 <IMG SRC=""latestocrimage.bmp"" id=""ocrimg""></IMG><button type=""button"" style=""font-size: 24pt"" onclick=""document.getElementById('ocrimg').src = 'latestocrimage.bmp?random='+new Date().getTime();"">Reload Image</button><br>
 <form action=""returnocrvalues.html"">
-    <input id=""inputValue"" type=""" + inputStyle + @""" style=""font-size: 44pt"" value=""" + _callingForm.GetOcrValueForWeb()[0] + @""" name=""fname"">"
+    <input id=""inputValue"" type=""" + inputStyle + @""" style=""font-size: 44pt"" value=""" + _callingForm.cOcrCaptureAndCorrect.GetOcrValueForWeb()[0] + @""" name=""fname"">"
                     +
 
                     @"<button type=""button"" style=""font-size: 24pt"" onclick=""document.getElementById('inputValue').value=''"">Clear</button><br>"
@@ -373,7 +373,7 @@ namespace RegulatedNoise
 
         private void ReturnCurrentOcrImage(Socket clientSocket, string extension)
         {
-            var notResizedOutput = _callingForm.ReturnTrimmedImage();
+            var notResizedOutput = _callingForm.cOcrCaptureAndCorrect.ReturnTrimmedImage();
             Bitmap output = new Bitmap(notResizedOutput,notResizedOutput.Width*2,notResizedOutput.Height*2);
             var outBytes = ImageToByte2(output);
             sendOkResponse(clientSocket, outBytes, _extensions[extension]);

@@ -20,6 +20,7 @@ namespace RegulatedNoise
         private bool _isMouseDown;
         private bool _drawPoints;
 
+
         private void OcrCalibratorTab_Load(object sender, EventArgs e)
         {
             SetResolutionValues();
@@ -42,27 +43,27 @@ namespace RegulatedNoise
         }
         private void DoCalibration()
         {
-            if (Form1.GameSettings.Display != null && (Form1.OcrCalibrator.CalibrationBoxes == null || Form1.OcrCalibrator.CalibrationBoxes.Count < 1))
+            if (Form1.GameSettings.Display != null && (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 1))
             {
-                var calibrations = Form1.OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
                 DrawCalibrationPoints(calibrations);
                 return;
             }
 
-            if (Form1.OcrCalibrator.CalibrationBoxes != null || Form1.OcrCalibrator.CalibrationBoxes.Count >= 1)
+            if (OcrCalibrator.CalibrationBoxes != null || OcrCalibrator.CalibrationBoxes.Count >= 1)
                 return;
 
             MessageBox.Show("Unable to calibrate automatically, please calibrate manually...");
         }
         private void ManualCalibrate()
         {
-            Form1.OcrCalibrator.CalibrationBoxes = new List<CalibrationPoint>();
+            OcrCalibrator.CalibrationBoxes = new List<CalibrationPoint>();
             var p = new Point(30, 30);
             tb_description.Text = "Point 1: " + new CalibrationPoint().CalibrationDescriptions[0];
             for (var i = 0; i < 12; i++)
             {
                 var cb = new CalibrationPoint(i, new Point(p.X+(50*(i+1)), p.Y));
-                Form1.OcrCalibrator.CalibrationBoxes.Add(cb);
+                OcrCalibrator.CalibrationBoxes.Add(cb);
             }
             FillRawData();
             _drawPoints = true;
@@ -71,9 +72,9 @@ namespace RegulatedNoise
 
         private void FillRawData()
         {
-            if (Form1.OcrCalibrator.CalibrationBoxes == null || Form1.OcrCalibrator.CalibrationBoxes.Count < 1)
+            if (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 1)
                 return;
-            tb_rawdata.Text = string.Join(Environment.NewLine, Form1.OcrCalibrator.CalibrationBoxes.Select(p => p.Position.X + ";" + p.Position.Y));
+            tb_rawdata.Text = string.Join(Environment.NewLine, OcrCalibrator.CalibrationBoxes.Select(p => p.Position.X + ";" + p.Position.Y));
         }
 
         private Bitmap getReferenceScreenshot()
@@ -105,7 +106,7 @@ namespace RegulatedNoise
                 Form1.GameSettings.Display.ScreenHeight = bmp.Height;
                 Form1.GameSettings.Display.ScreenWidth = bmp.Width;
                 SetResolutionValues();
-                var calibrations = Form1.OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
                 DrawCalibrationPoints(calibrations);
 
                 return bmp;
@@ -134,7 +135,7 @@ namespace RegulatedNoise
             btn_calibration_reset.Enabled = true;
             pb_calibratorBox.Image = _refbmp;
 
-            if (Form1.OcrCalibrator.CalibrationBoxes == null)
+            if (OcrCalibrator.CalibrationBoxes == null)
             {
                 //Manual calibrate here 
                 MessageBox.Show("To calibrate, drag the crosshairs to the position shown and described on the right.");
@@ -144,7 +145,7 @@ namespace RegulatedNoise
             {
                 FillRawData();
                 _drawPoints = true;
-                Form1.OcrCalibrator.SaveCalibration();
+                OcrCalibrator.SaveCalibration();
             }
 
         }
@@ -156,23 +157,23 @@ namespace RegulatedNoise
 
         protected void DrawCalibrationPoints(IEnumerable<Point> calibration)
         {
-            Form1.OcrCalibrator.CalibrationBoxes = new List<CalibrationPoint>();
+            OcrCalibrator.CalibrationBoxes = new List<CalibrationPoint>();
             var i = 0;
             foreach (var c in calibration)
             {
                 var r = new CalibrationPoint(i, c);
-                Form1.OcrCalibrator.CalibrationBoxes.Add(r);
+                OcrCalibrator.CalibrationBoxes.Add(r);
                 i++;
             }
         }
 
         private void Pb_calibratorBox_Paint(object sender, PaintEventArgs e)
         {
-            if (Form1.OcrCalibrator.CalibrationBoxes == null || Form1.OcrCalibrator.CalibrationBoxes.Count < 1 || !_drawPoints)
+            if (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 1 || !_drawPoints)
                 return;
 
             var i = 0;
-            foreach (var calibrationBox in Form1.OcrCalibrator.CalibrationBoxes)
+            foreach (var calibrationBox in OcrCalibrator.CalibrationBoxes)
             {
                 //e.Graphics.FillRectangle(new SolidBrush(Color.RoyalBlue), calibrationBox.Hitbox); //Uncomment to show hitbox
                 e.Graphics.DrawString("⊗", new Font("Arial", 30), new SolidBrush(Color.Yellow), calibrationBox.Hitbox.X-8, calibrationBox.Hitbox.Y-11);
@@ -183,11 +184,11 @@ namespace RegulatedNoise
 
         private void Pb_calibratorBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (Form1.OcrCalibrator.CalibrationBoxes == null)
+            if (OcrCalibrator.CalibrationBoxes == null)
                 return;
 
             //Detect if mouse if over a calibration point
-            foreach (var cb in Form1.OcrCalibrator.CalibrationBoxes)
+            foreach (var cb in OcrCalibrator.CalibrationBoxes)
             {
                 if (cb.Hitbox.Contains(e.Location))
                 {
@@ -203,7 +204,7 @@ namespace RegulatedNoise
         }
         private void Pb_calibratorBox_MouseUp(object sender, MouseEventArgs e)
         {
-            if (Form1.OcrCalibrator.CalibrationBoxes == null)
+            if (OcrCalibrator.CalibrationBoxes == null)
                 return;
 
             _isMouseDown = false;
@@ -212,15 +213,15 @@ namespace RegulatedNoise
             if (_selCalibrationPoint == null)
                 return;
 
-            Form1.OcrCalibrator.CalibrationBoxes[_selCalibrationPoint.Id] = _selCalibrationPoint;
+            OcrCalibrator.CalibrationBoxes[_selCalibrationPoint.Id] = _selCalibrationPoint;
 
-            AlignCalibrationBoxesWhereRelevant(Form1.OcrCalibrator.CalibrationBoxes);
+            AlignCalibrationBoxesWhereRelevant(OcrCalibrator.CalibrationBoxes);
 
             FillRawData();
 
             pb_calibratorBox.Refresh();
 
-            Form1.OcrCalibrator.SaveCalibration();
+            OcrCalibrator.SaveCalibration();
         }
 
         private static void AlignCalibrationBoxesWhereRelevant(List<CalibrationPoint> calibrationBoxes )
@@ -241,7 +242,7 @@ namespace RegulatedNoise
 
         private void Pb_calibratorBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Form1.OcrCalibrator.CalibrationBoxes == null)
+            if (OcrCalibrator.CalibrationBoxes == null)
                 return;
 
             if (_isMouseDown)
@@ -324,11 +325,11 @@ namespace RegulatedNoise
         {
             if (Form1.GameSettings.Display != null)
             {
-                var calibrations = Form1.OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
                 DrawCalibrationPoints(calibrations);
                 FillRawData();
                 pb_calibratorBox.Refresh();
-                Form1.OcrCalibrator.SaveCalibration();
+                OcrCalibrator.SaveCalibration();
                 return;
             }
 

@@ -174,7 +174,7 @@ namespace RegulatedNoise
 
             if (_parent != null)
             {
-                _parent.setOCRCalibrationTabVisibility();
+                _parent.setOCRTabsVisibility();
             }
         }
 

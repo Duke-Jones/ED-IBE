@@ -3,7 +3,7 @@ using System.IO;
 
 namespace RegulatedNoise
 {
-    class SingleThreadLogger
+    public class SingleThreadLogger
     {
         private readonly string _logPathName;
 
