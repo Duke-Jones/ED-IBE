@@ -1034,9 +1034,11 @@ namespace RegulatedNoise.SQL
 
                             dsEliteDB.tbsystemsRow newRow = (dsEliteDB.tbsystemsRow)Data.tbsystems.NewRow();
                             CopyEDSystemToDataRow(System, (DataRow)newRow, true);
-                            newRow.visited = setVisitedFlag;
-                            Data.tbsystems.Rows.Add(newRow);
 
+                            newRow.visited      = setVisitedFlag;
+                            newRow.updated_at   = DateTime.UtcNow;
+
+                            Data.tbsystems.Rows.Add(newRow);
 
                             currentSelfCreatedIndex -= 1;
                             ImportCounter += 1;
@@ -1528,7 +1530,8 @@ namespace RegulatedNoise.SQL
                             dsEliteDB.tbstationsRow newRow = (dsEliteDB.tbstationsRow)Data.tbstations.NewRow();
 
                             CopyEDStationToDataRow(Station, (DataRow)newRow, true);
-                            newRow.visited = setVisitedFlag;
+                            newRow.visited      = setVisitedFlag;
+                            newRow.updated_at   = DateTime.UtcNow;
 
                             Data.tbstations.Rows.Add(newRow);
 
@@ -2665,6 +2668,7 @@ namespace RegulatedNoise.SQL
                             // add a new station
                             EDStation newStation    = new EDStation();
                             newStation.Name         = Station;
+                            newStation.SystemId     = SystemID;
 
                             ImportStations_Own(newStation, true, setVisitedFlag);
                                          

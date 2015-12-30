@@ -93,6 +93,8 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+   * adding unknown stations on visit/grab marketdata is now working
+-------------------------------------------------------------------------------------         
 SQL 0.0.29
    * different fixes on build a new database from scratch / import existing data
    * first steps for installer  with Inno Setup 5

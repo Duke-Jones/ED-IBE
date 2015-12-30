@@ -724,24 +724,24 @@ namespace RegulatedNoise.MTCommandersLog
                         String sqlString                = "select * from tbLog" +
                                                           " order by time desc limit 1";
 
-                        dsEliteDB.tblogDataTable Data   = new dsEliteDB.tblogDataTable();
+                        DataTable Data   = new DataTable();
 
                         if(Program.DBCon.Execute(sqlString, Data) == 1)
                         {
-                            if((Data[0].system_id  == Program.actualCondition.System_ID) && 
-                               (Data[0].station_id == Program.actualCondition.Location_ID) && 
-                               (Data[0].event_id   == (Int32)Program.Data.BaseTableNameToID("EventType", "Visited")))
+                            if(((Int32)Data.Rows[0]["system_id"]  == Program.actualCondition.System_ID) && 
+                               ((System.Convert.IsDBNull(Data.Rows[0]["station_id"]) ? null : (int?)Data.Rows[0]["station_id"])  == Program.actualCondition.Location_ID) && 
+                               ((Int32)Data.Rows[0]["event_id"]   == (Int32)Program.Data.BaseTableNameToID("EventType", "Visited")))
                             {
                                 // change existing
                                 sqlString = "update tbLog" +
                                             " set event_id = " + (Int32)Program.Data.BaseTableNameToID("EventType", "Market Data Collected") +
-                                            " where time   = " + DBConnector.SQLDateTime(Data[0].time);
+                                            " where time   = " + DBConnector.SQLDateTime((DateTime)Data.Rows[0]["time"]);
 
                                 Program.DBCon.Execute(sqlString);
 
                                 if(!m_NoGuiNotifyAfterSave)
                                 {
-                                    DataChanged.Raise(this, new DataChangedEventArgs() { DataRow = 0, DataKey = Data[0].time});                     
+                                    DataChanged.Raise(this, new DataChangedEventArgs() { DataRow = 0, DataKey = (DateTime)Data.Rows[0]["time"]});                     
                                 }
 
                             }
