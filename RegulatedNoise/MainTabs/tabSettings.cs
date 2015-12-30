@@ -245,12 +245,18 @@ namespace RegulatedNoise.MTSettings
 
         private void cmdWarnLevels_Click(object sender, EventArgs e)
         {
-            string Commodity = String.Empty;
+            try
+            {
+                string Commodity = String.Empty;
 
-            EDCommodityListView CView = new EDCommodityListView();
+                EDCommodityListView CView = new EDCommodityListView();
 
-            CView.ShowDialog(this);
-
+                CView.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while showing warnlevels from settingstab");
+            }
         }
 
         private Bitmap getReferenceScreenshot()

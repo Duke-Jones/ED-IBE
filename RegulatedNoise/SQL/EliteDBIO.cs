@@ -434,21 +434,40 @@ namespace RegulatedNoise.SQL
         /// </summary>
         internal void ImportCommodityLocalizations(String Filename)
         {
-            dsEliteDB                 Data;
             DataSet                   DataNames;
-            Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
-            String                    sqlString;
-            Int32                     currentSelfCreatedIndex;
-            Int32 Counter = 0;
 
-            Data      = new dsEliteDB();
             DataNames = new DataSet();
 
             try
             {
 
                 DataNames.ReadXml(Filename);
+                ImportCommodityLocalizations(DataNames);
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading commodity names", ex);
+            }
+
+        }
+
+        /// <summary>
+        /// loads the localized commodity names and check if 
+        /// the self added names now included in the official dictionary
+        /// </summary>
+        internal void ImportCommodityLocalizations(DataSet DataNames)
+        {
+            dsEliteDB                 Data;
+            Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
+            String                    sqlString;
+            Int32                     currentSelfCreatedIndex;
+            Int32 Counter = 0;
+
+            Data      = new dsEliteDB();
+
+            try
+            {
                 sqlString = "select min(id) As min_id from tbCommodity";
                 Program.DBCon.Execute(sqlString, "minID", DataNames);
 
@@ -2181,6 +2200,9 @@ namespace RegulatedNoise.SQL
         /// <returns></returns>
         public Int32 ImportPricesFromCSVFile(String filename, Boolean timeStampIsLocal = false)
         {
+            String currentLanguage;
+            DataTable newData;
+
             try
             {
                 String[] CSV_Strings    = new String[0];
@@ -2193,8 +2215,56 @@ namespace RegulatedNoise.SQL
                 {
                     CSV_Strings = reader.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
                 }
-
                 reader.Close();
+
+
+                // *****************************************************************
+                // START :section for automatically add unknown commodities
+
+                currentLanguage     = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "Language");
+                newData             = new DataTable();
+                newData.TableName   = "Names";
+                newData.Columns.Add(Program.BASE_LANGUAGE, typeof(String));
+                if(currentLanguage != Program.BASE_LANGUAGE)
+                    newData.Columns.Add(currentLanguage, typeof(String));
+
+                foreach (String DataLine in CSV_Strings)
+	            {
+                    String currentName;
+                    List<dsEliteDB.tbcommoditylocalizationRow> currentCommodity;
+
+                    if(DataLine.Trim().Length > 0)
+                    {
+                        currentName         = new CsvRow(DataLine).CommodityName;
+                        currentCommodity    = Program.Data.BaseData.tbcommoditylocalization.Where(x => x.locname.Equals(currentName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+                        if((currentCommodity.Count == 0) && (!String.IsNullOrEmpty(currentName)))
+                        {
+                            if(currentLanguage == Program.BASE_LANGUAGE)
+                                newData.Rows.Add(currentName);
+                            else
+                                newData.Rows.Add(currentName, currentName);
+                        }
+                    }
+	            }
+
+                if(newData.Rows.Count > 0)
+                {
+                    // add found unknown commodities
+                    var ds = new DataSet();
+                    ds.Tables.Add(newData);
+                    ImportCommodityLocalizations(ds);
+
+                    // refresh translation columns
+                    Program.Data.updateTranslation();
+
+                    // refresh working tables 
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                }
+                    
+                // END : section for automatically add unknown commodities
+                // *****************************************************************
 
                 ImportPricesFromCSVStrings(CSV_Strings);
 
