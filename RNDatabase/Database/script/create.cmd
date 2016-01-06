@@ -1,87 +1,127 @@
-rem @echo off
+@echo off
+set DEBUG = 0
 
-echo. 
-echo. 
-echo This script generates the Elite-DB in the "..\data\"-folder of this file.
-echo For starting the server again after the DB is created simply type : 
-echo. 
-echo            .\bin\mysqld.exe --defaults-file=Elite.ini --console
-echo. 
-echo Warning: the complete database will be deleted and new generated !!! ALL DATA WILL BE LOST !!!
-set /p userinput=If you want to to proceed type (without quotes) "kill'em all" :
+if [%1] EQU [/forceinstall] (
+	REM the installationscript will redirect all messages into a log-file
+	@echo on
+) else (
+	REM show messages only if wanted
+	if [%DEBUG%] EQU [1] @echo on
+)
 
-if "%userinput%" NEQ "kill'em all" goto end
+Setlocal EnableDelayedExpansion
 
 set EliteDBName=Elite_DB
 set ROOT_PW=EliteAdmin
 set RN_USER=RN_User
 set RN_USER_PW=Elite
 set RN_USER_PRIV=Insert, Select, Update, Delete, Create Temporary Tables, Create View, Drop
+set SQL_HOSTS=localhost 127.0.0.1 ::1 %computername% ASTERISK
 
-rem "super" permission is needed for performance reasons while inserting big data plenties
+REM "super" permission is needed for performance reasons while inserting big data plenties
 set RN_USER_PRIV_GLOB=Super	
 
 SET SOURCE_DIR=%~dp0
-SET SOURCE_DRIVE=%~d0
 
-REM SET MYSQL_DIR=%1
-REM SET MYSQL_DATADIR=%2
-REM SET LOGFILE=.log\Install.log
+REM if parameter 1 is /forceinstall ?  then don't ask
+if [%1] EQU [/forceinstall] goto start
 
-REM goto current working dir
-%SOURCE_DRIVE%
-cd %SOURCE_DIR%..
+REM ask before delete something
+echo. 
+echo. 
+echo This script generates the Elite-DB in the "..\data\"-folder of this file.
+echo For starting the server again after the DB is created simply type : 
+echo. 
+echo            %MYSQL_PATH%\bin\mysqld.exe --defaults-file=Elite.ini --console
+echo. 
+echo Warning: the complete database will be deleted and new generated !!! ALL DATA WILL BE LOST !!!
 
-if not exist data goto no_delete_required
-rmdir /S /Q data 
-timeout /t 2
+set /p userinput=If you want to to proceed type (without quotes) "kill'em all" :
+if "%userinput%" NEQ "kill'em all" goto end
 
-:no_delete_required
+:start
 
-mkdir .\data
+REM goto current working dir (one level up from this script)
+cd /D %SOURCE_DIR%..
+SET SOURCE_DIR=%cd%
 
-if exist .\share\all.sql del .\share\all.sql 
-type .\share\mysql_system_tables.sql .\share\mysql_system_tables_data.sql .\share\fill_help_tables.sql > .\share\all.sql
-.\bin\mysqld.exe --defaults-file=Elite.ini --bootstrap --console  < .\share\all.sql 
-if exist .\share\all.sql del .\share\all.sql
+if [%DEBUG%] EQU [1] pause
 
-start .\bin\mysqld.exe --defaults-file=Elite.ini --console
+REM get the optional dirs in the installation routine (destination)
+if not [%2] EQU [] (
+   SET DESTINATION_DIR=%~2
+) else (
+   SET DESTINATION_DIR=%SOURCE_DIR%
+)
 
-.\bin\mysql -u root --execute="UPDATE mysql.user SET Password = PASSWORD('%ROOT_PW%') WHERE User = 'root'; FLUSH PRIVILEGES;"
+REM get the optional dirs in the installation routine (source)
+if not [%3] EQU [] (
+   SET MYSQL_PATH=%~3
+) else (
+   SET MYSQL_PATH=%SOURCE_DIR%
+)
 
-.\bin\mysql -u root --password=%ROOT_PW% --execute="DELETE FROM mysql.user WHERE User <> 'root';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="DELETE FROM mysql.db WHERE User <> 'root';"
+if [%DEBUG%] EQU [1] echo SOURCE_DIR = %SOURCE_DIR%
+if [%DEBUG%] EQU [1] echo DESTINATION_DIR = %DESTINATION_DIR%
+if [%DEBUG%] EQU [1] pause
 
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE SCHEMA IF NOT EXISTS `%EliteDBName%` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
+REM shut down the server if runnin'
+"%MYSQL_PATH%\bin\mysqladmin" -u root --password=%ROOT_PW% shutdown
+timeout /t 5
 
-                    
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'localhost' IDENTIFIED BY '%RN_USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'localhost';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'localhost';"
+REM delete old data dir if existing and (re)create
+if exist %DESTINATION_DIR%\data del /s /f /q %DESTINATION_DIR%\data & rd /s /q %DESTINATION_DIR%\data
+mkdir %DESTINATION_DIR%\data
 
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'127.0.0.1' IDENTIFIED BY '%RN_USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'127.0.0.1';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'127.0.0.1';"
+REM create script for creating the database
+if exist %DESTINATION_DIR%\all.sql del %DESTINATION_DIR%\all.sql 
+type "%MYSQL_PATH%\share\mysql_system_tables.sql" "%MYSQL_PATH%\share\mysql_system_tables_data.sql" "%MYSQL_PATH%\share\fill_help_tables.sql" > "%DESTINATION_DIR%\all.sql"
 
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'::1' IDENTIFIED BY '%RN_USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'::1';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'::1';"
+REM create the database
+"%MYSQL_PATH%\bin\mysqld.exe" --defaults-file="%DESTINATION_DIR%\Elite.ini" --bootstrap --console  < "%DESTINATION_DIR%\all.sql"
+del "%DESTINATION_DIR%\all.sql"
 
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'%computername%' IDENTIFIED BY '%RN_USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'%computername%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'%computername%';"
+if [%DEBUG%] EQU [1] pause
+if [%DEBUG%] EQU [1] pause
 
-set GRANT_LOCATION=*
-.\bin\mysql -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'%GRANT_LOCATION%' IDENTIFIED BY '%RN_USER_PW%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'%GRANT_LOCATION%';"
-.\bin\mysql -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'%GRANT_LOCATION%';"
+rem start sql-server first time
+start /D "%MYSQL_PATH%" bin\mysqld.exe --defaults-file="%DESTINATION_DIR%\Elite.ini" --console
 
+if [%DEBUG%] EQU [1] pause 
 
-.\bin\mysql -u root --password=%ROOT_PW% < .\script\create_Elite_DB.sql
+REM prepare root-user and delete all other waste-accounts
+"%MYSQL_PATH%\bin\mysql.exe" -u root --execute="UPDATE mysql.user SET Password = PASSWORD('%ROOT_PW%') WHERE User = 'root'; FLUSH PRIVILEGES;"
+"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="DELETE FROM mysql.user WHERE User <> 'root';"
+"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="DELETE FROM mysql.db WHERE User <> 'root';"
 
+REM create elite schema
+"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="CREATE SCHEMA IF NOT EXISTS `%EliteDBName%` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
 
+REM add user-account for expectable locations
+for %%h in (%SQL_HOSTS%) do (
+	if [%%h] EQU [ASTERISK] (
+		set GRANT_LOCATION=*  
+	) Else (
+		set GRANT_LOCATION=%%h
+	)
+	
+	"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="CREATE USER '%RN_USER%'@'!GRANT_LOCATION!' IDENTIFIED BY '%RN_USER_PW%';"
+	"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV% On `%EliteDBName%`.* To '%RN_USER%'@'!GRANT_LOCATION!';"
+	
+	REM "super" permission is needed for performance reasons while inserting big data plenties	
+	"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="Grant %RN_USER_PRIV_GLOB% On *.* To '%RN_USER%'@'!GRANT_LOCATION!';"
+) 
+
+REM create the Elite database itself
+"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% < "%DESTINATION_DIR%\script\create_Elite_DB.sql"
+
+REM go back into script directory
 cd script
 
-pause
+if [%DEBUG%] EQU [1] pause
+
+REM shut down the server if it's a installation
+rem if [%1] EQU [/forceinstall] mysqladmin -u root --password=%ROOT_PW% shutdown
+"%MYSQL_PATH%\bin\mysqladmin" -u root --password=%ROOT_PW% shutdown
 
 :end

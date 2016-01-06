@@ -173,7 +173,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 sqlString = String.Format(
                             "insert into tmFilteredStations(System_id, Station_id, Distance, x, y, z) " +
-                            "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance, Sy.x, Sy.x, Sy.z" + 
+                            "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance, Sy.x, Sy.y, Sy.z" + 
                             "   from tbSystems Sy, tbStations St" +
                             "   where Sy.ID = St.System_id",
                             DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["x"]), 
@@ -203,7 +203,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 if(Distance != null)                            
                 {
                     sqlString = sqlString + String.Format(
-                            "   and ((Sy.x <> 0.0 AND Sy.y <> 0.0 AND Sy.Z <> 0.0) Or (Sy.Systemname = 'Sol'))" +
+                            "   and ((Sy.x <> 0.0 AND Sy.y <> 0.0 AND Sy.z <> 0.0) Or (Sy.Systemname = 'Sol'))" +
                             "   and sqrt(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) <=  {3}",
                             DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["x"]), 
                             DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["y"]), 
@@ -485,7 +485,10 @@ namespace RegulatedNoise.MTPriceAnalysis
                 {
                     // preparing a table with the stations from "tmFilteredStations" and all 
                     // their neighbour stations who are not further away than the max trading distance
-
+                    
+                    if((CurrentStation.System_id == 12761) || (CurrentStation.System_id == 19737))
+                        Debug.Print("Stop");
+                    
                     if(maxTradingDistance >= 0)
                         sqlString = String.Format(sqlBaseString, CurrentStation.Station_id, maxTradingDistance);
                     else

@@ -28,6 +28,8 @@ SetupIconFile=H:\RN\RegulatedNoise_MySQL\RegulatedNoise\RegulatedNoise.ico
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64 ia64
+; Tell Windows Explorer to reload the environment
+ChangesEnvironment=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -70,16 +72,16 @@ Source: "..\RegulatedNoise\bin\Release\Calibration Examples\6.png"; DestDir: "{a
 Source: "..\RegulatedNoise\bin\Release\Calibration Examples\7.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\Calibration Examples\8.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\Calibration Examples\9.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion createallsubdirs recursesubdirs
-Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
+;Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion createallsubdirs recursesubdirs
+;Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: "..\RNDatabase\Database\COPYING"; DestDir: "{app}\Database\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{app}\Database\"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{localappdata}\ED-IBE\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\README"; DestDir: "{app}\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\bin\*"; DestDir: "{app}\Database\bin\"; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: "..\RNDatabase\Database\share\*"; DestDir: "{app}\Database\share\"; Flags: ignoreversion createallsubdirs recursesubdirs
-Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{app}\Database\script\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{app}\Database\script\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{app}\Database\script\"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -88,7 +90,7 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{app}\Database\script\create.cmd"; Parameters: "/forceinstall /{localappdata}\ED-IBE\Database\Data"; WorkingDir: "{app}\Database\"
+;Filename: "{localappdata}\ED-IBE\Database\script\create.cmd"; Parameters: "/forceinstall ""{localappdata}\ED-IBE\Database"" ""{app}\Database"""; WorkingDir: "{localappdata}\ED-IBE\Database"
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [Dirs]
@@ -109,3 +111,47 @@ Name: "{app}\Database\data\"
 Name: "{app}\Database\data\mysql\"
 Name: "{app}\Database\data\performance_schema\"
 Name: "{app}\Database\data\elite_db\"
+
+[Registry]
+Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLBIN"; ValueData: "{app}\Database\bin\"; Flags: createvalueifdoesntexist uninsdeletevalue
+Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLDATA"; ValueData: "{localappdata}\ED-IBE\Database\"; Flags: createvalueifdoesntexist uninsdeletevalue
+
+[INI]
+Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: "{code:ToUnixPath|{app}\Database\}" 
+Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "datadir"; String: "{code:ToUnixPath|{localappdata}\ED-IBE\Database\data\}"
+Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: "{code:ToUnixPath|{app}\Database\share}"
+
+[Code]
+(* replaces all '\' with '/' *)
+function ToUnixPath(Param: String): String;
+var 
+  temp: String;
+begin
+  temp   := ExpandConstant(Param);
+  StringChangeEx(temp, '\', '/', True);
+  Result := temp;
+end;
+
+
+(* event : CurStepChanged, used for starting the database script *)
+procedure CurStepChanged(CurStep: TSetupStep);
+var 
+  ResultCode: Integer;
+  BasePath: String;
+  CommandLine: String;
+
+  begin
+    if CurStep=ssPostInstall then begin
+
+      BasePath := ExpandConstant('{localappdata}\ED-IBE\Database');
+      CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "{localappdata}\ED-IBE\Database" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
+      Log('CommandLine : <' + CommandLine + '>');
+
+      Exec('cmd.exe', 
+            CommandLine, 
+            BasePath, 
+            SW_HIDE, 
+            ewWaitUntilTerminated, 
+            ResultCode);
+     end;
+end;
