@@ -127,34 +127,33 @@ namespace RegulatedNoise
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
         {
-            _InitDone = false ;
-
-            InstanceObject = this;
-
-            _Splash = new SplashScreenForm();
-
-#if !ep_Debug
-            _Splash.Show();
-#endif
-            Cursor = Cursors.WaitCursor;
-
-            doInit();
             try
             {
+                _InitDone = false ;
 
-                
+                InstanceObject = this;
 
+                _Splash = new SplashScreenForm();
+
+#if !ep_Debug
+                _Splash.Show();
+#endif
+                Cursor = Cursors.WaitCursor;
+
+                doInit();
+
+                _Splash.InfoAdd("\nstart sequence finished !!!");
+
+                Cursor = Cursors.Default;
+                _InitDone = true;
             }
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error in main init function");    
+                //cErr.processError(ex, "Error in main init function");    
+                throw new Exception("Error in main init function", ex);    
             }
 
-            _Splash.InfoAdd("\nstart sequence finished !!!");
-
-            Cursor = Cursors.Default;
-            _InitDone = true;
         }
 
         private void doInit()
@@ -229,9 +228,10 @@ namespace RegulatedNoise
 
             doSpecial(enDoSpecial.afterMilkyway);
 
-            _Splash.InfoAdd("load station history...");
-            _StationHistory.loadHistory(@".\Data\StationHistory.json", true);
-            _Splash.InfoChange("load station history...<OK>");
+            //MessageBox.Show("Todo");
+            //_Splash.InfoAdd("load station history...");
+            //_StationHistory.loadHistory(@".\Data\StationHistory.json", true);
+            //_Splash.InfoChange("load station history...<OK>");
 
             _Splash.InfoAdd("apply settings...");
             ApplySettings();
@@ -239,8 +239,8 @@ namespace RegulatedNoise
 
             _logger.Log("  - applied settings");
 
-            if (!Directory.Exists(".//OCR Correction Images"))
-                Directory.CreateDirectory(".//OCR Correction Images");
+            if (!Directory.Exists(Path.Combine(Program.GetDataPath(), "OCR Correction Images")))
+                Directory.CreateDirectory(Path.Combine(Program.GetDataPath(), "OCR Correction Images"));
 
             _logger.Log("Initialisation complete");
 
@@ -257,7 +257,8 @@ namespace RegulatedNoise
             //edl.Initialize();
             //edl.StartWatcher();
 
-            setOCRTabsVisibility();
+//DEBUG: removed for the moment because I got strange behaviour in an full new/uninitialized environment (-> investigation needed)
+            //setOCRTabsVisibility();
 
             _Splash.InfoAdd("prepare system/location view...");
             //prePrepareSystemAndStationFields();

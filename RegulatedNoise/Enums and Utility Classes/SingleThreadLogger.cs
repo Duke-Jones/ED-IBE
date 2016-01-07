@@ -9,10 +9,11 @@ namespace RegulatedNoise
 
         public SingleThreadLogger(ThreadLoggerType threadLoggerType)
         {
-            if (!Directory.Exists(".//Logs"))
-                Directory.CreateDirectory(".//Logs");
+            String destPath = Path.Combine(Program.GetDataPath(), "Logs");
+            if (!Directory.Exists(destPath))
+                Directory.CreateDirectory(destPath);
 
-            _logPathName = ".//Logs//" + threadLoggerType + "_" + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")+Guid.NewGuid()+".log";
+            _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}{2}.log", threadLoggerType, DateTime.Now, Guid.NewGuid()));
         }
 
         public void Log(string logMessage, bool error = false)

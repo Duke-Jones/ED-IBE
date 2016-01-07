@@ -48,6 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug DJ|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -122,6 +123,7 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums and Utility Classes\Settings\STA_INIFile.cs" />
     <Compile Include="ExtData\ExternalDataInterface.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.cs">
       <SubType>Form</SubType>
@@ -185,6 +187,7 @@
     <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\dsCommodities.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -322,6 +325,7 @@
     </Compile>
     <Compile Include="SQL\Datasets\dsEliteDB.cs">
       <DependentUpon>dsEliteDB.xsd</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SQL\Datasets\dsEliteDB.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -763,6 +767,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\systems.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ED-IBE.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Enums and Utility Classes\dsCommodities.xsc">

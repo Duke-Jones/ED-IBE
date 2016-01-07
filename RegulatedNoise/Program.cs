@@ -98,7 +98,7 @@ namespace RegulatedNoise
             if (ex == null)
                 return;
             // ExceptionPolicy.HandleException(ex, "Default Policy");
-            CreateMiniDump();
+            CreateMiniDump("RegulatedNoiseDump.dmp");
             MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"RegulatedNoiseDump.dmp\" has been created in your RegulatedNoise directory.  \r\n\r\nPlease place this in a file-sharing service such as Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
             Application.Exit();
         }
@@ -132,14 +132,12 @@ namespace RegulatedNoise
                                                     IntPtr UserStreamParam,
                                                     IntPtr CallackParam);
 
-        public static void CreateMiniDump()
-        {
-            CreateMiniDump("RegulatedNoiseDump.dmp");
-        }
-
         public static void CreateMiniDump(string Filename)
         {
-            using (FileStream fs = new FileStream(".//" + Filename, FileMode.Create))
+
+            
+
+            using (FileStream fs = new FileStream(System.IO.Path.Combine(GetDataPath(), Filename), FileMode.Create))
             {
                 using (System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess())
                 {
@@ -154,6 +152,36 @@ namespace RegulatedNoise
             }
         }
 
+        /// <summary>
+        /// Gets a path where logs and/or dumps can be saved.
+        /// Default is the program path (development) or the data path which is by default "{localappdata}\ED-IBE\"
+        /// </summary>
+        /// <returns></returns>
+        public static String GetDataPath()
+        {
+            String path;
+
+            try
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                    path = ".";
+                else
+                {
+                    Microsoft.Win32.RegistryKey myKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ED-IBE", false);
+
+                    path = (String)myKey.GetValue("Data");
+
+                    if (String.IsNullOrEmpty(path))
+                        path = ".";
+                }
+            }
+            catch (Exception)
+            {
+                path = ".";
+            }
+
+            return path;
+        }
     #endregion// Exception Handling
 
     #region global objects
@@ -166,6 +194,7 @@ namespace RegulatedNoise
         public static ExternalDataInterface             ExternalData;
         public static DBConnector                       DBCon;
         public static RegulatedNoiseSettings            Settings_old;
+        public static STA.Settings.INIFile              IniFile;
         private static DBProcess                        EliteDBProcess;
         public static Settings                          Settings;
         public static CommandersLog                     CommandersLog;
@@ -185,32 +214,32 @@ namespace RegulatedNoise
             {
                 if(!m_initDone)
                 { 
-                    // loading settings from file
+                    // load settings from file
                     Settings_old = RegulatedNoiseSettings.LoadSettings();
+                    IniFile = new STA.Settings.INIFile(Path.Combine(GetDataPath(), "ED-IBE.ini"), false, true);
 
-
-                    // starting database process (if not running)
-                    DBProcess.DBProcessParams newProcessParams = new DBProcess.DBProcessParams() { };
-                    newProcessParams.Commandline                = Settings_old.SQL_Commandline;    
-                    newProcessParams.Commandargs                = Settings_old.SQL_CommandArgs;
-                    newProcessParams.Workingdirectory           = Settings_old.SQL_Workingdirectory;
-                    newProcessParams.Port                       = Settings_old.SQL_Port;
-                    newProcessParams.DBStartTimeout             = Settings_old.DBStartTimeout;
+                    // starT database process (if not running)
+                    DBProcess.DBProcessParams newProcessParams  = new DBProcess.DBProcessParams() { };
+                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",        "Commandline",      @"bin\mysqld.exe");    
+                    newProcessParams.Commandargs                = IniFile.GetValue("DB_Server",        "CommandArgs",      @"--defaults-file=Elite.ini --console");
+                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",        "WorkingDirectory", @"..\..\..\RNDatabase\Database");
+                    newProcessParams.Port                       = IniFile.GetValue<Int16>("DB_Server", "Port",             "3306");
+                    newProcessParams.DBStartTimeout             = IniFile.GetValue<Int16>("DB_Server", "DBStartTimeout",   "60");
                 
                     EliteDBProcess                              = new DBProcess(newProcessParams);
 
 
-                    // connecting to the database
+                    // connecT to the database
                     DBConnector.ConnectionParams newConnectionParams = new DBConnector.ConnectionParams() { };
 
-                    newConnectionParams.Name                    = Settings_old.SQL_Name;    
-                    newConnectionParams.Server                  = Settings_old.SQL_Server;
-                    newConnectionParams.Database                = Settings_old.SQL_Database;
-                    newConnectionParams.User                    = Settings_old.SQL_User;
-                    newConnectionParams.Pass                    = Settings_old.SQL_Pass;
-                    newConnectionParams.ConnectTimeout          = Settings_old.SQL_TimeOut;
-                    newConnectionParams.StayAlive               = Settings_old.SQL_StayAlive;
-                    newConnectionParams.TimeOut                 = Settings_old.SQL_ConnectTimeout;
+                    newConnectionParams.Name                    = IniFile.GetValue("DB_Connection",          "Name",           "master");   
+                    newConnectionParams.Server                  = IniFile.GetValue("DB_Connection",          "Server",         "localhost");
+                    newConnectionParams.Database                = IniFile.GetValue("DB_Connection",          "Database",       "Elite_DB"); 
+                    newConnectionParams.User                    = IniFile.GetValue("DB_Connection",          "User",           "RN_User");  
+                    newConnectionParams.Pass                    = IniFile.GetValue("DB_Connection",          "Pass",           "Elite");    
+                    newConnectionParams.ConnectTimeout          = IniFile.GetValue<Int16>("DB_Connection",   "ConnectTimeout", "60");   
+                    newConnectionParams.StayAlive               = IniFile.GetValue<Boolean>("DB_Connection", "StayAlive",      "false");    
+                    newConnectionParams.TimeOut                 = IniFile.GetValue<Int16>("DB_Connection",   "TimeOut",        "60");
 
                     DBCon                                       = new DBConnector(newConnectionParams);
 
@@ -266,7 +295,7 @@ namespace RegulatedNoise
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while initializing the program object", ex);
+                cErr.processError(ex, "Error while initializing the program object", true);
             }
 
         }

@@ -92,7 +92,12 @@ todo:
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
-
+SQL 0.0.30
+   * IMPORTANT : From now use for every dynamic data files (ini-files, logs, Dumps and so on...) the path from 'Program.GetDataPath()' as basepath.
+                 The use of "." (current directory) is not longer allowed, because after a regular installation it's the "Program Files"
+				 direcory, where writing is not allowed !!!!!!!!!!
+   * MySQL updated to '5.6.28-winx64''
+   * removed flag : "Prefer 32-Bit" 
    * general updates for installer 
    * fixed: wrong calculation of systems
 -------------------------------------------------------------------------------------         

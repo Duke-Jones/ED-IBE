@@ -72,8 +72,8 @@ Source: "..\RegulatedNoise\bin\Release\Calibration Examples\6.png"; DestDir: "{a
 Source: "..\RegulatedNoise\bin\Release\Calibration Examples\7.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\Calibration Examples\8.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\Calibration Examples\9.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-;Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion createallsubdirs recursesubdirs
-;Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: "..\RNDatabase\Database\COPYING"; DestDir: "{app}\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{localappdata}\ED-IBE\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\README"; DestDir: "{app}\Database\"; Flags: ignoreversion
@@ -82,6 +82,7 @@ Source: "..\RNDatabase\Database\share\*"; DestDir: "{app}\Database\share\"; Flag
 Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\ED-IBE.ini"; DestDir: "{localappdata}\ED-IBE"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -115,11 +116,19 @@ Name: "{app}\Database\data\elite_db\"
 [Registry]
 Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLBIN"; ValueData: "{app}\Database\bin\"; Flags: createvalueifdoesntexist uninsdeletevalue
 Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLDATA"; ValueData: "{localappdata}\ED-IBE\Database\"; Flags: createvalueifdoesntexist uninsdeletevalue
+Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Program"; ValueData: "{app}"; Flags: createvalueifdoesntexist uninsdeletevalue
+Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Data"; ValueData: "{localappdata}\ED-IBE"; Flags: createvalueifdoesntexist uninsdeletevalue
 
 [INI]
-Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: "{code:ToUnixPath|{app}\Database\}" 
+;Database
+Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: "{code:ToUnixPath|{app}\Database\}"
 Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "datadir"; String: "{code:ToUnixPath|{localappdata}\ED-IBE\Database\data\}"
 Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: "{code:ToUnixPath|{app}\Database\share}"
+
+;ProgramSettings
+Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"; Flags: createkeyifdoesntexist
+Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={localappdata}\ED-IBE\Database\Elite.ini --console"; Flags: createkeyifdoesntexist
+Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database\bin\"; Flags: createkeyifdoesntexist
 
 [Code]
 (* replaces all '\' with '/' *)

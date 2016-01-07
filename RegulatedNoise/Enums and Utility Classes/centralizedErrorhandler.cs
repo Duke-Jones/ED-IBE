@@ -56,7 +56,7 @@ namespace RegulatedNoise
             }
         }
 
-        static public void showError(Exception ex, string Infotext)
+        static public void showError(Exception ex, string Infotext, Boolean ForceEnd = false)
         {
             string Info;
 
