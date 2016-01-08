@@ -346,29 +346,40 @@ namespace RegulatedNoise.MTCommandersLog
         private void saveLogEntry()
         {
             Double Distance;
-
+            DataGridViewRow currentRow;
             try
             {
                 setCLFieldsEditable(false);
 
                 dgvCommandersLog.ReadOnly = false;
 
+                
+
+                if (dgvCommandersLog.CurrentRow == null)
+                {
+                    dgvCommandersLog.Rows.Add();
+                    currentRow = dgvCommandersLog.Rows[dgvCommandersLog.RowCount-1];
+                }
+                else
+                    currentRow = dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index];
+
+                //dgvCommandersLog.Rows.Add()
                 // put the changed data into the DataGridView (this will fire the "CellValuePushed"-event)
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["eevent"].Value              = cbLogEventType.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["time"].Value                = dtpLogEventDate.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["systemname"].Value          = cbLogSystemName.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["stationname"].Value         = cbLogStationName.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_transaction"].Value = nbTransactionAmount.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["credits_total"].Value       = nbCurrentCredits.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["loccommodity"].Value        = cbLogCargoName.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["action"].Value              = cbLogCargoAction.Text;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["cargovolume"].Value         = nbLogQuantity.Value;
-                dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["notes"].Value               = tbLogNotes.Text;
+                currentRow.Cells["eevent"].Value              = cbLogEventType.Text;
+                currentRow.Cells["time"].Value                = dtpLogEventDate.Value;
+                currentRow.Cells["systemname"].Value          = cbLogSystemName.Text;
+                currentRow.Cells["stationname"].Value         = cbLogStationName.Text;
+                currentRow.Cells["credits_transaction"].Value = nbTransactionAmount.Value;
+                currentRow.Cells["credits_total"].Value       = nbCurrentCredits.Value;
+                currentRow.Cells["loccommodity"].Value        = cbLogCargoName.Text;
+                currentRow.Cells["action"].Value              = cbLogCargoAction.Text;
+                currentRow.Cells["cargovolume"].Value         = nbLogQuantity.Value;
+                currentRow.Cells["notes"].Value               = tbLogNotes.Text;
 
                 if(Double.TryParse(txtLogDistance.Text, out Distance))
-                    dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["distance"].Value        =  Distance;
+                    currentRow.Cells["distance"].Value        =  Distance;
                 else
-                    dgvCommandersLog.Rows[dgvCommandersLog.CurrentRow.Index].Cells["distance"].Value        =  null;
+                    currentRow.Cells["distance"].Value        =  null;
 
                 dgvCommandersLog.ReadOnly = true;
 

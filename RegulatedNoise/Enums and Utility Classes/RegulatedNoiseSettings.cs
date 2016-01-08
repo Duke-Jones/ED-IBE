@@ -177,9 +177,9 @@ namespace RegulatedNoise
             
             var serializer = new XmlSerializer(typeof(RegulatedNoiseSettings));
 
-            if (File.Exists(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @".\RegulatedNoiseSettings.xml")))
+            if (File.Exists(Program.GetDataPath("RegulatedNoiseSettings.xml")))
             {
-                var fs = new FileStream("RegulatedNoiseSettings.xml", FileMode.Open);
+                var fs = new FileStream(Program.GetDataPath("RegulatedNoiseSettings.xml"), FileMode.Open);
                 var reader = XmlReader.Create(fs);
 
                 try

@@ -92,6 +92,11 @@ todo:
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
+
+   * RN is working with the installer, but needs more testing 
+   * added missing Program.GetDataPath() to several locations in code 
+   * small fix on empty station list in price analysis tab
+-------------------------------------------------------------------------------------         
 SQL 0.0.30
    * IMPORTANT : From now use for every dynamic data files (ini-files, logs, Dumps and so on...) the path from 'Program.GetDataPath()' as basepath.
                  The use of "." (current directory) is not longer allowed, because after a regular installation it's the "Program Files"

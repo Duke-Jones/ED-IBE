@@ -167,18 +167,18 @@ namespace RegulatedNoise.Ocr
         public void PerformOcr(List<Tuple<int, int>> textRowLocations)
         {
             int DarkPixels;
-            var engine = new TesseractEngine(@"./tessdata", Program.Settings_old.TraineddataFile, EngineMode.Default);
+            var engine = new TesseractEngine(Program.GetDataPath(@"tessdata"), Program.Settings_old.TraineddataFile, EngineMode.Default);
             engine.DefaultPageSegMode = PageSegMode.SingleLine;
 
             string Stationname_OCR;
             string StationameAnalysisBase;
 
             // delete the old brainerous images - otherwise Brainerous will process older but not relevant images too
-            if (Directory.Exists(@".\Brainerous\images"))
-                foreach (string file in Directory.GetFiles(@".\\Brainerous\\images", "*.*"))
+            if (Directory.Exists(Program.GetDataPath(@"Brainerous\images")))
+                foreach (string file in Directory.GetFiles(Program.GetDataPath(@"Brainerous\\images"), "*.*"))
                     File.Delete(file);
             else
-                Directory.CreateDirectory("./Brainerous/images");
+                Directory.CreateDirectory(Program.GetDataPath(@"\Brainerousimages"));
 
             float level;
             var text = AnalyseFrameUsingTesseract(_bTrimmedHeader, engine, out level);
@@ -241,7 +241,7 @@ namespace RegulatedNoise.Ocr
                 rowIds[rowCtr] = Guid.NewGuid().ToString();
                 using (Bitmap b = RNGraphics.Crop(_bTrimmed_4_OCR, new Rectangle(0, startRow, _bTrimmed_4_OCR.Width, heightRow)))
                 {
-                    b.Save(".//OCR Correction Images//" + rowIds[rowCtr] + ".png");
+                    b.Save(Program.GetDataPath(@"OCR Correction Images\" + rowIds[rowCtr] + ".png"));
                 }
 
                 int columnCounter = 0;
@@ -333,7 +333,7 @@ namespace RegulatedNoise.Ocr
                             }
 
                             if (DarkPixels >= Program.Settings_old.EBPixelAmount)
-                                brainerousOut.Save("./Brainerous/images/" + bitmapCtr + ".png");
+                                brainerousOut.Save(Program.GetDataPath(@"Brainerous\images\" + bitmapCtr + ".png"));
 
                             bitmapCtr++;
                         }
@@ -419,8 +419,8 @@ namespace RegulatedNoise.Ocr
                     pr.StartInfo.UseShellExecute = false;
                     pr.StartInfo.CreateNoWindow = true;
                     pr.StartInfo.RedirectStandardOutput = true;
-                    pr.StartInfo.FileName = "./Brainerous/nn_training.exe";
-                    pr.StartInfo.WorkingDirectory = "./Brainerous/";
+                    pr.StartInfo.FileName = Program.GetDataPath(@"Brainerous\nn_training.exe");
+                    pr.StartInfo.WorkingDirectory = Program.GetDataPath("Brainerous");
                     pr.Start();
                     outputFromBrainerous = pr.StandardOutput.ReadToEnd();
 
@@ -428,7 +428,7 @@ namespace RegulatedNoise.Ocr
                     {
                         var o2 = outputFromBrainerous.IndexOf("Failed to ");
                         var o3 = outputFromBrainerous.Substring(0, o2);
-                        var o4 = outputFromBrainerous.Substring(o2).IndexOf("./images", StringComparison.InvariantCultureIgnoreCase);
+                        var o4 = outputFromBrainerous.Substring(o2).IndexOf(Program.GetDataPath("images"), StringComparison.InvariantCultureIgnoreCase);
 
                         // I had a string with "Failed to pad successfully" and only some trash behind but no "./images"
                         // so "o4" was "-1" and this results in strange behaviour
@@ -452,7 +452,7 @@ namespace RegulatedNoise.Ocr
                         string Filename = (i / 2).ToString() + ".png";
                         if ((splitOutput.Count <= i) || (splitOutput[i].Length < 14) || (splitOutput[i].Substring(9) != Filename))
                         {
-                            splitOutput.Insert(i, "./images/" + Filename);
+                            splitOutput.Insert(i, Program.GetDataPath(@"images\" + Filename));
                             splitOutput.Insert(i + 1, "");
                         }
                     }

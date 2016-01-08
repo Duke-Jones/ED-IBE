@@ -273,13 +273,19 @@ namespace RegulatedNoise.Enums_and_Utility_Classes
         {
             if (IsRowCachedInPage(0, rowIndex))
             {
-                element = cachePages[0].table.Rows[rowIndex % RowsPerPage];
-                return true;
+                if (cachePages[0].table.Rows.Count >= (rowIndex % RowsPerPage + 1))
+                {
+                    element = cachePages[0].table.Rows[rowIndex % RowsPerPage];
+                    return true;
+                }
             }
             else if (IsRowCachedInPage(1, rowIndex))
             {
-                element = cachePages[1].table.Rows[rowIndex % RowsPerPage];
-                return true;
+                if (cachePages[1].table.Rows.Count >= (rowIndex % RowsPerPage + 1))
+                {
+                    element = cachePages[1].table.Rows[rowIndex % RowsPerPage];
+                    return true;
+                }
             }
 
             return false;

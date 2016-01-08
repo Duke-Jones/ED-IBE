@@ -792,7 +792,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                             " tbCommodity Cm" +
                             "   on Sd1.Commodity_ID = Cm.ID" +
                             "   having Profit is not null" +
-                            "   order by Profit Desc;", Station_From.ToString(), Station_To.ToString());
+                            "   order by Profit Desc;", Station_From.ToNString("null"), Station_To.ToNString("null"));
             
                 Program.DBCon.Execute(sqlString, Data);
 

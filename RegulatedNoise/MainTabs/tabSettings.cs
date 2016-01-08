@@ -165,7 +165,7 @@ namespace RegulatedNoise.MTSettings
 
             OCRFile.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
             OCRFile.FileName = Program.Settings_old.TraineddataFile;
-            OCRFile.InitialDirectory = System.IO.Path.GetFullPath("./tessdata");  
+            OCRFile.InitialDirectory = Program.GetDataPath("tessdata");  
             OCRFile.Title = "select Tesseract Traineddata-File...";
 
             if (OCRFile.ShowDialog(this) == DialogResult.OK)

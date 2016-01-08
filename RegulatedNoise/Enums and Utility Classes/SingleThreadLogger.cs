@@ -9,7 +9,7 @@ namespace RegulatedNoise
 
         public SingleThreadLogger(ThreadLoggerType threadLoggerType)
         {
-            String destPath = Path.Combine(Program.GetDataPath(), "Logs");
+            String destPath = Program.GetDataPath("Logs");
             if (!Directory.Exists(destPath))
                 Directory.CreateDirectory(destPath);
 

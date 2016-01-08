@@ -114,8 +114,8 @@ namespace RegulatedNoise
                 if (pbEditOcrResultsOriginalImage.Image != null)
                     pbEditOcrResultsOriginalImage.Image.Dispose();
 
-                if (File.Exists(Path.Combine(Program.GetDataPath(), @"OCR Correction Images\" + rowId + ".png")))
-                    pbEditOcrResultsOriginalImage.Image = Bitmap.FromFile(Path.Combine(Program.GetDataPath(), @"OCR Correction Images\" + rowId + ".png"));
+                if (File.Exists(Program.GetDataPath(@"OCR Correction Images\" + rowId + ".png")))
+                    pbEditOcrResultsOriginalImage.Image = Bitmap.FromFile(Program.GetDataPath(@"OCR Correction Images\" + rowId + ".png"));
 
                 tbEditOcrResultsCommodityName.Text = dgvData.CurrentRow.Cells[2].Value.ToString();
                 tbEditOcrResultsSellPrice.Text = dgvData.CurrentRow.Cells[3].Value.ToString();

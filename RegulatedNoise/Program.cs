@@ -137,7 +137,7 @@ namespace RegulatedNoise
 
             
 
-            using (FileStream fs = new FileStream(System.IO.Path.Combine(GetDataPath(), Filename), FileMode.Create))
+            using (FileStream fs = new FileStream(GetDataPath(Filename), FileMode.Create))
             {
                 using (System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess())
                 {
@@ -156,8 +156,9 @@ namespace RegulatedNoise
         /// Gets a path where logs and/or dumps can be saved.
         /// Default is the program path (development) or the data path which is by default "{localappdata}\ED-IBE\"
         /// </summary>
+        /// <param name="subPath">subpath to be added (optional)</param>
         /// <returns></returns>
-        public static String GetDataPath()
+        public static String GetDataPath(String subPath = "")
         {
             String path;
 
@@ -174,6 +175,9 @@ namespace RegulatedNoise
                     if (String.IsNullOrEmpty(path))
                         path = ".";
                 }
+
+                if(!String.IsNullOrEmpty(subPath))
+                    path = Path.Combine(path, subPath);
             }
             catch (Exception)
             {
@@ -216,7 +220,7 @@ namespace RegulatedNoise
                 { 
                     // load settings from file
                     Settings_old = RegulatedNoiseSettings.LoadSettings();
-                    IniFile = new STA.Settings.INIFile(Path.Combine(GetDataPath(), "ED-IBE.ini"), false, true);
+                    IniFile = new STA.Settings.INIFile(GetDataPath("ED-IBE.ini"), false, true);
 
                     // starT database process (if not running)
                     DBProcess.DBProcessParams newProcessParams  = new DBProcess.DBProcessParams() { };

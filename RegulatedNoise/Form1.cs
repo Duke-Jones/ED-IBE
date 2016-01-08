@@ -230,7 +230,7 @@ namespace RegulatedNoise
 
             //MessageBox.Show("Todo");
             //_Splash.InfoAdd("load station history...");
-            //_StationHistory.loadHistory(@".\Data\StationHistory.json", true);
+            //_StationHistory.loadHistory(Program.GetDataPath(@"\Data\StationHistory.json"), true);
             //_Splash.InfoChange("load station history...<OK>");
 
             _Splash.InfoAdd("apply settings...");
@@ -239,8 +239,8 @@ namespace RegulatedNoise
 
             _logger.Log("  - applied settings");
 
-            if (!Directory.Exists(Path.Combine(Program.GetDataPath(), "OCR Correction Images")))
-                Directory.CreateDirectory(Path.Combine(Program.GetDataPath(), "OCR Correction Images"));
+            if (!Directory.Exists(Program.GetDataPath("OCR Correction Images")))
+                Directory.CreateDirectory(Program.GetDataPath("OCR Correction Images"));
 
             _logger.Log("Initialisation complete");
 
@@ -565,10 +565,10 @@ namespace RegulatedNoise
         {
             string newFile, backupFile, currentFile;
 
-            currentFile = "RegulatedNoiseSettings.xml";
+            currentFile = Program.GetDataPath("RegulatedNoiseSettings.xml");
 
-            newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-            backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+            newFile = Program.GetDataPath(String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
+            backupFile = Program.GetDataPath(String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
 
             var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
             var x = new XmlSerializer(Program.Settings_old.GetType());
@@ -1234,10 +1234,10 @@ namespace RegulatedNoise
 
                 if (cbSpoolEddnToFile.Checked){
                     if (_eddnSpooler == null){
-                        if (!File.Exists(".//EddnOutput.txt"))
-                            _eddnSpooler = File.CreateText(".//EddnOutput.txt");
+                        if (!File.Exists(Program.GetDataPath("EddnOutput.txt")))
+                            _eddnSpooler = File.CreateText(Program.GetDataPath("EddnOutput.txt"));
                         else
-                            _eddnSpooler = File.AppendText(".//EddnOutput.txt");
+                            _eddnSpooler = File.AppendText(Program.GetDataPath("EddnOutput.txt"));
                     }
                     _eddnSpooler.WriteLine(e.RawData);
                 }
@@ -1337,7 +1337,7 @@ namespace RegulatedNoise
                             if(cbSpoolImplausibleToFile.Checked){
 
                                 FileStream LogFileStream = null;
-                                string FileName = @".\EddnImplausibleOutput.txt";
+                                string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
 
                                 if(File.Exists(FileName))
                                     LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
@@ -1554,7 +1554,7 @@ namespace RegulatedNoise
                                     if(cbSpoolImplausibleToFile.Checked)
                                     {
                                         FileStream LogFileStream = null;
-                                        string FileName = @".\EddnImplausibleOutput.txt";
+                                        string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
 
                                         if(File.Exists(FileName))
                                         { 
@@ -1604,7 +1604,7 @@ namespace RegulatedNoise
                             {
 
                                 FileStream LogFileStream = null;
-                                string FileName = @".\EddnImplausibleOutput.txt";
+                                string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
 
                                 if(File.Exists(FileName))
                                 { 
@@ -1899,9 +1899,9 @@ namespace RegulatedNoise
                 // do all the things that must be done for the new versions
                 if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.22m)))
                 { 
-                    String currentFile = "AutoSave.csv";
-                    String newFile = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-                    String backupFile = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                    String currentFile = Program.GetDataPath("AutoSave.csv");
+                    String newFile = Program.GetDataPath(String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
+                    String backupFile = Program.GetDataPath(String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
 
                     // change name Resonanzbegrenzer -> Resonanzabgrenzer
                     if (File.Exists(currentFile))
@@ -1951,9 +1951,9 @@ namespace RegulatedNoise
                     StringBuilder InfoOut   = new StringBuilder(Info);
                     Int32 Count             = 0;
                     Int32 Count2            = 0;
-                    String currentFile      = "AutoSave.csv";
-                    String newFile          = String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
-                    String backupFile       = String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile));
+                    String currentFile      = Program.GetDataPath("AutoSave.csv");
+                    String newFile          = Program.GetDataPath(String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
+                    String backupFile       = Program.GetDataPath(String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
                     String lastSystemName   = String.Empty;
                     EDSystem System         = null;
                     Int32 CountPos          = Info.IndexOf("**********");

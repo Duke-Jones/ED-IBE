@@ -144,7 +144,7 @@ namespace RegulatedNoise.EDDB_Data
             m_Commodities.Distinct();
             m_Commodities = newList;
 
-            saveRNCommodityData(@"./Data/commodities_RN.json", true);
+            saveRNCommodityData(Program.GetDataPath(@"Data\commodities_RN.json"), true);
         }
 
         /// <summary>
@@ -845,8 +845,8 @@ namespace RegulatedNoise.EDDB_Data
             if(m_cachedLocations.ContainsKey(oldSystemName))
                 m_cachedLocations.Remove(oldSystemName);
 
-            saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
-            saveSystemData(@"./Data/systems_own.json", EDMilkyway.enDataType.Data_Own, true);
+            saveStationData(Program.GetDataPath(@"Data\stations_own.json"), EDMilkyway.enDataType.Data_Own, true);
+            saveSystemData(Program.GetDataPath(@"Data\systems_own.json"), EDMilkyway.enDataType.Data_Own, true);
         }
 
         /// <summary>
@@ -968,8 +968,8 @@ namespace RegulatedNoise.EDDB_Data
             if(m_cachedStationDistances.ContainsKey(oldStationName))
                 m_cachedStationDistances.Remove(oldStationName);
 
-            saveStationData(@"./Data/stations_own.json", EDMilkyway.enDataType.Data_Own, true);
-            saveSystemData(@"./Data/Systems_own.json", EDMilkyway.enDataType.Data_Own, true);        
+            saveStationData(Program.GetDataPath(@"Data\stations_own.json"), EDMilkyway.enDataType.Data_Own, true);
+            saveSystemData(Program.GetDataPath(@"Data\Systems_own.json"), EDMilkyway.enDataType.Data_Own, true);        
         }
     }
 
