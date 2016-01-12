@@ -92,7 +92,8 @@ todo:
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
-
+   * installationscript improved: detection of a existing database with optional re-creation
+-------------------------------------------------------------------------------------         
    * RN is working with the installer, but needs more testing 
    * added missing Program.GetDataPath() to several locations in code 
    * small fix on empty station list in price analysis tab

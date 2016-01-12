@@ -22,21 +22,22 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\ED-IBE
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-OutputDir=H:\RN\RegulatedNoise_MySQL\Installer\Package
+OutputDir=.\Package
 OutputBaseFilename=setup
-SetupIconFile=H:\RN\RegulatedNoise_MySQL\RegulatedNoise\RegulatedNoise.ico
+SetupIconFile=..\RegulatedNoise\RegulatedNoise.ico
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64 ia64
-; Tell Windows Explorer to reload the environment
 ChangesEnvironment=yes
+DirExistsWarning=no
+
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; OnlyBelowVersion: 0,6.1
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -53,36 +54,26 @@ Source: "..\RegulatedNoise\bin\Release\clrzmq.pdb"; DestDir: "{app}"; Flags: ign
 Source: "..\RegulatedNoise\bin\Release\clrzmq.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\EdClasses.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\EdClasses.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Json\Bin\Net45\Newtonsoft.Json.dll"; DestDir: "{app}\Json\Bin\Net45\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\tessdata\big.traineddata"; DestDir: "{app}\tessdata\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\tessdata\eng.traineddata"; DestDir: "{app}\tessdata\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\x64\liblept168.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\x64\libtesseract302.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\x86\liblept168.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion
 Source: "..\RegulatedNoise\bin\Release\x86\libtesseract302.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\1.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\10.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\11.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\12.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\2.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\3.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\4.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\5.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\6.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\7.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\8.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\9.png"; DestDir: "{app}\Calibration Examples\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion createallsubdirs recursesubdirs
-Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\RegulatedNoise\bin\Release\Json\Bin\Net45\Newtonsoft.Json.dll"; DestDir: "{app}\Json\Bin\Net45\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\COPYING"; DestDir: "{app}\Database\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{localappdata}\ED-IBE\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\README"; DestDir: "{app}\Database\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\bin\*"; DestDir: "{app}\Database\bin\"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\RNDatabase\Database\bin\*"; DestDir: "{app}\Database\bin\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\share\*"; DestDir: "{app}\Database\share\"; Flags: ignoreversion createallsubdirs recursesubdirs
+;data path
+Source: "..\RegulatedNoise\bin\Release\Calibration Examples\*"; DestDir: "{localappdata}\ED-IBE\Calibration Examples"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\tessdata\*"; DestDir: "{localappdata}\ED-IBE\tessdata"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
+;ini files
 Source: "..\RegulatedNoise\bin\Release\ED-IBE.ini"; DestDir: "{localappdata}\ED-IBE"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{localappdata}\ED-IBE\Database\"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -95,23 +86,19 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [Dirs]
-Name: "{app}\Data\"
-Name: "{app}\Json\"
-Name: "{app}\Json\Bin\"
-Name: "{app}\Json\Bin\Net45\"
-Name: "{app}\tessdata\"
-Name: "{app}\x64\"
-Name: "{app}\x86\"
-Name: "{app}\Calibration Examples\"
-Name: "{app}\Database\"
-Name: "{app}\Database\bin\"
-Name: "{app}\Database\script\"
-Name: "{app}\Database\share\"
-Name: "{app}\Database\share\english\"
-Name: "{app}\Database\data\"
-Name: "{app}\Database\data\mysql\"
-Name: "{app}\Database\data\performance_schema\"
-Name: "{app}\Database\data\elite_db\"
+Name: "{app}\Json\Json"
+Name: "{app}\Json\Bin\Bin"
+Name: "{app}\Json\Bin\Net45\Net45"
+Name: "{app}\x64\x64"
+Name: "{app}\x86\x86"
+Name: "{app}\Database\Database"
+Name: "{app}\Database\bin\bin"
+Name: "{app}\Database\share\share"
+Name: "{app}\Database\share\english\english"
+Name: "{localappdata}\ED-IBE\Logs\Logs"
+Name: "{localappdata}\ED-IBE\OCR Correction Images\OCR Correction Images"
+Name: "{localappdata}\ED-IBE\ED-IBE"; Flags: uninsalwaysuninstall
+Name: "{app}\ED-IBE"
 
 [Registry]
 Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLBIN"; ValueData: "{app}\Database\bin\"; Flags: createvalueifdoesntexist uninsdeletevalue
@@ -126,12 +113,29 @@ Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "d
 Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: "{code:ToUnixPath|{app}\Database\share}"
 
 ;ProgramSettings
-Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"; Flags: createkeyifdoesntexist
-Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={localappdata}\ED-IBE\Database\Elite.ini --console"; Flags: createkeyifdoesntexist
-Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database\bin\"; Flags: createkeyifdoesntexist
+Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"
+Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={localappdata}\ED-IBE\Database\Elite.ini --console"
+Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database\bin\"
+
+[Types]
+Name: "EmptyList"; Description: "EmptyList"; Flags: iscustom
+
+[CustomMessages]
+existing_form_Caption=Intelligent Boardcomputer Extension - Database
+existing_form_Description1=...existing ED-IBE database was found
+existing_form_Info1=Setup will use the existing database in :
+existing_form_Info2=If you want to re-create the database (all contained data will be lost)%ncheck for confirmation the box below:
+existing_form_CheckBoxLabel=Delete all existing data and re-create the database
+
+
 
 [Code]
+var
+  cbDeleteOldData: TCheckBox;
+
+(*****************************************************************************)
 (* replaces all '\' with '/' *)
+(*****************************************************************************)
 function ToUnixPath(Param: String): String;
 var 
   temp: String;
@@ -140,27 +144,121 @@ begin
   StringChangeEx(temp, '\', '/', True);
   Result := temp;
 end;
+  
+(*****************************************************************************)
+(* creates the "DataBase Is Existing"-page *)
+(*****************************************************************************)
+function Database_Existing_Page(PreviousPageId: Integer): Integer;
+var
+  Page: TWizardPage;
+  InfoLabel1: TLabel;
+  InfoLabel2: TLabel;
+  DatabasePath: TEdit;
 
+begin
+  Page := CreateCustomPage(
+            PreviousPageId,
+            ExpandConstant('{cm:existing_form_Caption}'),
+            ExpandConstant('{cm:existing_form_Description1}'));
 
+  InfoLabel1 := TLabel.Create(Page);
+  with InfoLabel1 do
+  begin
+    Parent := Page.Surface;
+    WordWrap := false;
+    Left := ScaleX(16);
+    Top := ScaleY(0);
+    Width := ScaleX(350);
+    Height := ScaleY(20);
+    Caption := ExpandConstant('{cm:existing_form_Info1}');
+  end;
+ 
+  DatabasePath := TEdit.Create(Page);
+  with DatabasePath do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(16);
+    Top := ScaleY(24);
+    Width := ScaleX(350);
+    Height := ScaleY(22);
+    TabOrder := 1;
+    ReadOnly := true;
+    Text := ExpandConstant('{localappdata}\ED-IBE\Database\');
+  end;
+
+  InfoLabel2 := TLabel.Create(Page);
+  with InfoLabel2 do
+  begin
+    Parent := Page.Surface;
+    WordWrap := false;
+    Left := ScaleX(16);
+    Top := ScaleY(70);
+    Width := ScaleX(350);
+    Height := ScaleY(40);
+    Caption := ExpandConstant('{cm:existing_form_Info2}');
+  end;
+
+  cbDeleteOldData := TCheckBox.Create(Page)
+  with cbDeleteOldData do
+  begin
+    Parent := Page.Surface;
+    AllowGrayed := False;
+    Caption := ExpandConstant('{cm:existing_form_CheckBoxLabel}');
+    Left := ScaleX(16);
+    Top := ScaleY(110);
+    Width := ScaleX(350);
+    Height := ScaleY(17);
+    TabOrder := 0;
+  end;
+
+  Result := Page.ID;
+end;
+
+(*****************************************************************************)
+(* checks if the db is already existing from a previous installation *)
+(*****************************************************************************)
+function DBIsExisting: boolean;
+begin
+   Result := FileExists(ExpandConstant('{localappdata}\ED-IBE\Database\data\ibdata1'));
+end;
+
+(*****************************************************************************)
+(* call of InitializeWizard *)
+(*****************************************************************************)
+procedure InitializeWizard();
+begin
+    if DBIsExisting() = true then 
+    begin
+      Database_Existing_Page(wpSelectTasks);
+    end;
+end;
+
+(*****************************************************************************)
 (* event : CurStepChanged, used for starting the database script *)
+(*****************************************************************************)
 procedure CurStepChanged(CurStep: TSetupStep);
 var 
   ResultCode: Integer;
   BasePath: String;
   CommandLine: String;
 
-  begin
-    if CurStep=ssPostInstall then begin
+begin
 
-      BasePath := ExpandConstant('{localappdata}\ED-IBE\Database');
-      CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "{localappdata}\ED-IBE\Database" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
-      Log('CommandLine : <' + CommandLine + '>');
+    if CurStep=ssPostInstall then 
+    begin
+      if (not DBIsExisting()) or (cbDeleteOldData.Checked) then
+         begin
+            BasePath := ExpandConstant('{localappdata}\ED-IBE\Database');
+            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "{localappdata}\ED-IBE\Database" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
+            Log('CommandLine : <' + CommandLine + '>');
 
-      Exec('cmd.exe', 
-            CommandLine, 
-            BasePath, 
-            SW_HIDE, 
-            ewWaitUntilTerminated, 
-            ResultCode);
-     end;
+            Exec('cmd.exe', 
+                  CommandLine, 
+                  BasePath, 
+                  SW_HIDE, 
+                  ewWaitUntilTerminated, 
+                  ResultCode);
+      end;
+    end;
+
 end;
