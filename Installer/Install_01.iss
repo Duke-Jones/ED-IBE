@@ -64,16 +64,16 @@ Source: "..\RNDatabase\Database\README"; DestDir: "{app}\Database\"; Flags: igno
 Source: "..\RNDatabase\Database\bin\*"; DestDir: "{app}\Database\bin\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\share\*"; DestDir: "{app}\Database\share\"; Flags: ignoreversion createallsubdirs recursesubdirs
 ;data path
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\*"; DestDir: "{localappdata}\ED-IBE\Calibration Examples"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\tessdata\*"; DestDir: "{localappdata}\ED-IBE\tessdata"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{localappdata}\ED-IBE\Data"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{localappdata}\ED-IBE\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
-Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{localappdata}\ED-IBE\Database\script\"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\Calibration Examples\*"; DestDir: "{code:GetDataBasepath}\Calibration Examples"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\tessdata\*"; DestDir: "{code:GetDataBasepath}\tessdata"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{code:GetDataBasepath}\Data"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{code:GetDataBasepath}\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
 ;ini files
-Source: "..\RegulatedNoise\bin\Release\ED-IBE.ini"; DestDir: "{localappdata}\ED-IBE"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{localappdata}\ED-IBE\Database\"; Flags: ignoreversion
+Source: "..\RegulatedNoise\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion
+Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{code:GetDataBasepath}\Database\"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -86,36 +86,33 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [Dirs]
-Name: "{app}\Json\Json"
-Name: "{app}\Json\Bin\Bin"
-Name: "{app}\Json\Bin\Net45\Net45"
-Name: "{app}\x64\x64"
-Name: "{app}\x86\x86"
-Name: "{app}\Database\Database"
-Name: "{app}\Database\bin\bin"
-Name: "{app}\Database\share\share"
-Name: "{app}\Database\share\english\english"
-Name: "{localappdata}\ED-IBE\Logs\Logs"
-Name: "{localappdata}\ED-IBE\OCR Correction Images\OCR Correction Images"
-Name: "{localappdata}\ED-IBE\ED-IBE"; Flags: uninsalwaysuninstall
-Name: "{app}\ED-IBE"
+Name: "{app}\Json"
+Name: "{app}\Json\Bin"
+Name: "{app}\Json\Bin\Net45"
+Name: "{app}\x64"
+Name: "{app}\x86"
+Name: "{app}\Database"
+Name: "{app}\Database\bin"
+Name: "{app}\Database\share"
+Name: "{app}\Database\share\english"
+Name: "{code:GetDataBasepath}\Logs"
+Name: "{code:GetDataBasepath}\OCR Correction Images"
+Name: "{code:GetDataBasepath}"
+Name: "{app}"; Flags: uninsalwaysuninstall
 
 [Registry]
-Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLBIN"; ValueData: "{app}\Database\bin\"; Flags: createvalueifdoesntexist uninsdeletevalue
-Root: "HKLM"; Subkey: "System\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "IBE_SQLDATA"; ValueData: "{localappdata}\ED-IBE\Database\"; Flags: createvalueifdoesntexist uninsdeletevalue
-Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Program"; ValueData: "{app}"; Flags: createvalueifdoesntexist uninsdeletevalue
-Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Data"; ValueData: "{localappdata}\ED-IBE"; Flags: createvalueifdoesntexist uninsdeletevalue
+Root: "HKLM"; Subkey: "System\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1"; ValueName: "Inno Setup: Data Path"; Flags: createvalueifdoesntexist
 
 [INI]
 ;Database
-Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: "{code:ToUnixPath|{app}\Database\}"
-Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "datadir"; String: "{code:ToUnixPath|{localappdata}\ED-IBE\Database\data\}"
-Filename: "{localappdata}\ED-IBE\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: "{code:ToUnixPath|{app}\Database\share}"
+Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: "{code:ToUnixPath|{app}\Database\}"
+Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "datadir"; String: "{code:ToUnixPath|{code:GetDataBasepath}\Database\data\}"
+Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: "{code:ToUnixPath|{app}\Database\share}"
 
 ;ProgramSettings
-Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"
-Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={localappdata}\ED-IBE\Database\Elite.ini --console"
-Filename: "{localappdata}\ED-IBE\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database\bin\"
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={code:GetDataBasepath}\Database\Elite.ini --console"
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database\bin\"
 
 [Types]
 Name: "EmptyList"; Description: "EmptyList"; Flags: iscustom
@@ -127,11 +124,22 @@ existing_form_Info1=Setup will use the existing database in :
 existing_form_Info2=If you want to re-create the database (all contained data will be lost)%ncheck for confirmation the box below:
 existing_form_CheckBoxLabel=Delete all existing data and re-create the database
 
+datapath_form_Caption=Select Destination Location
+datapath_form_Description1=Where should the {#emit SetupSetting("AppName")} data structure be installed ?
+datapath_form_Info1=Setup will install the {#emit SetupSetting("AppName")} data structure into following folder.%n%nTo continue, click Next. If you would like to select a different folder, click Browse%n(be sure to have writing rights in this folder!!!)
 
+datapath_form_Info2=If you want to re-create the database (all contained data will be lost)%ncheck for confirmation the box below:
+datapath_form_CheckBoxLabel=Delete all existing data and re-create the database
 
 [Code]
 var
-  cbDeleteOldData: TCheckBox;
+  
+  Page_DataPath:         TInputDirWizardPage;
+  Page_DataPathExisting: TWizardPage;
+
+  cbDeleteOldData:       TCheckBox;
+  strNewDatabasePath:    String;
+  DatabasePath: TEdit;  
 
 (*****************************************************************************)
 (* replaces all '\' with '/' *)
@@ -146,25 +154,51 @@ begin
 end;
   
 (*****************************************************************************)
+(* returns the actual database path *)
+(*****************************************************************************)
+function GetDataBasepath(Dummy: string): String;
+var 
+  DataPath: String;
+begin
+  Log('strNewDatabasePath : <' + strNewDatabasePath + '>');
+
+  if strNewDatabasePath = '' then
+  begin
+     if not RegQueryStringValue(HKEY_CURRENT_USER, ExpandConstant('System\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1'), 'Inno Setup: Data Path', DataPath) then
+     begin
+       // value not found
+       DataPath := ExpandConstant('{localappdata}\ED-IBE');
+     end else if DataPath = '' then
+     begin
+       // value not set
+       DataPath := ExpandConstant('{localappdata}\ED-IBE');
+     end;
+  end else
+  begin
+	   DataPath := strNewDatabasePath;
+  end;
+
+  Result := DataPath;
+end;
+
+(*****************************************************************************)
 (* creates the "DataBase Is Existing"-page *)
 (*****************************************************************************)
 function Database_Existing_Page(PreviousPageId: Integer): Integer;
 var
-  Page: TWizardPage;
   InfoLabel1: TLabel;
   InfoLabel2: TLabel;
-  DatabasePath: TEdit;
 
 begin
-  Page := CreateCustomPage(
+  Page_DataPathExisting := CreateCustomPage(
             PreviousPageId,
             ExpandConstant('{cm:existing_form_Caption}'),
             ExpandConstant('{cm:existing_form_Description1}'));
 
-  InfoLabel1 := TLabel.Create(Page);
+  InfoLabel1 := TLabel.Create(Page_DataPathExisting);
   with InfoLabel1 do
   begin
-    Parent := Page.Surface;
+    Parent := Page_DataPathExisting.Surface;
     WordWrap := false;
     Left := ScaleX(16);
     Top := ScaleY(0);
@@ -173,23 +207,22 @@ begin
     Caption := ExpandConstant('{cm:existing_form_Info1}');
   end;
  
-  DatabasePath := TEdit.Create(Page);
+  DatabasePath := TEdit.Create(Page_DataPathExisting);
   with DatabasePath do
   begin
-    Parent := Page.Surface;
+    Parent := Page_DataPathExisting.Surface;
     Left := ScaleX(16);
     Top := ScaleY(24);
     Width := ScaleX(350);
     Height := ScaleY(22);
     TabOrder := 1;
     ReadOnly := true;
-    Text := ExpandConstant('{localappdata}\ED-IBE\Database\');
   end;
 
-  InfoLabel2 := TLabel.Create(Page);
+  InfoLabel2 := TLabel.Create(Page_DataPathExisting);
   with InfoLabel2 do
   begin
-    Parent := Page.Surface;
+    Parent := Page_DataPathExisting.Surface;
     WordWrap := false;
     Left := ScaleX(16);
     Top := ScaleY(70);
@@ -198,10 +231,10 @@ begin
     Caption := ExpandConstant('{cm:existing_form_Info2}');
   end;
 
-  cbDeleteOldData := TCheckBox.Create(Page)
+  cbDeleteOldData := TCheckBox.Create(Page_DataPathExisting)
   with cbDeleteOldData do
   begin
-    Parent := Page.Surface;
+    Parent := Page_DataPathExisting.Surface;
     AllowGrayed := False;
     Caption := ExpandConstant('{cm:existing_form_CheckBoxLabel}');
     Left := ScaleX(16);
@@ -211,15 +244,48 @@ begin
     TabOrder := 0;
   end;
 
-  Result := Page.ID;
+  Result := Page_DataPathExisting.ID;
+end;
+
+
+(*****************************************************************************)
+(* creates the DataPath-page *)
+(*****************************************************************************)
+function DataPath_Page(PreviousPageId: Integer): Integer;
+var
+  InfoLabel1: TLabel;
+  InfoLabel2: TLabel;
+  DatabasePath: TEdit;
+  DataPath: String;
+
+begin
+
+  Page_DataPath := CreateInputDirPage(
+                   PreviousPageId,
+                   ExpandConstant('{cm:datapath_form_Caption}'),
+                   ExpandConstant('{cm:datapath_form_Description1}'), 
+                   ExpandConstant('{cm:datapath_form_Info1}'),
+                   false, '');
+
+  // Add item (with an empty caption)
+  Page_DataPath.Add('');
+
+  // Set initial path 
+  Page_DataPath.Values[0] := GetDataBasepath('');
+
+  Result := Page_DataPath.ID;
 end;
 
 (*****************************************************************************)
 (* checks if the db is already existing from a previous installation *)
 (*****************************************************************************)
 function DBIsExisting: boolean;
+var
+   testPath: String;   
 begin
-   Result := FileExists(ExpandConstant('{localappdata}\ED-IBE\Database\data\ibdata1'));
+   testPath := ExpandConstant(GetDataBasepath('') + '\Database\data\ibdata1');
+   Log('Testpath : <' + testPath + '>');
+   Result := FileExists(testPath);
 end;
 
 (*****************************************************************************)
@@ -227,10 +293,8 @@ end;
 (*****************************************************************************)
 procedure InitializeWizard();
 begin
-    if DBIsExisting() = true then 
-    begin
-      Database_Existing_Page(wpSelectTasks);
-    end;
+    Database_Existing_Page(wpSelectComponents);
+    DataPath_Page(wpSelectComponents);
 end;
 
 (*****************************************************************************)
@@ -248,8 +312,8 @@ begin
     begin
       if (not DBIsExisting()) or (cbDeleteOldData.Checked) then
          begin
-            BasePath := ExpandConstant('{localappdata}\ED-IBE\Database');
-            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "{localappdata}\ED-IBE\Database" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
+            BasePath := ExpandConstant(GetDataBasepath('') + '\Database');
+            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
             Log('CommandLine : <' + CommandLine + '>');
 
             Exec('cmd.exe', 
@@ -261,4 +325,104 @@ begin
       end;
     end;
 
+end;
+
+
+(*****************************************************************************)
+(* event : ShouldSkipPage *)
+(*****************************************************************************)
+function ShouldSkipPage(CurrentPage: integer): boolean;
+begin
+   case CurrentPage of
+   Page_DataPathExisting.ID:
+   begin
+      Result := not DBIsExisting();
+   end else
+      Result := false;
+   end;
+end;
+
+(*****************************************************************************)
+(* event : NextButtonClick *)
+(*****************************************************************************)
+function NextButtonClick(CurPageID: integer): boolean;
+begin
+
+
+   if(CurPageID = Page_DataPath.ID) then
+   begin
+      Log('Datapath : <' + Page_DataPath.Values[0] + '>');      
+      strNewDatabasePath := Page_DataPath.Values[0];
+      DatabasePath.Text := Page_DataPath.Values[0];
+   end;
+
+   Result := true;
+
+end;
+
+(*****************************************************************************)
+(* event : UpdateReadyMemo *)
+(*****************************************************************************)
+function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo, MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
+var
+  s: string;
+  
+begin
+    if MemoUserInfoInfo <> '' then
+    begin
+      s := s + MemoUserInfoInfo;
+      s := s + NewLine + NewLine;
+    end
+
+    if MemoDirInfo <> '' then
+    begin
+      s := s + MemoDirInfo;
+      s := s + NewLine + NewLine;
+    end
+
+    s := s + 'Destination location (data):' + NewLine +
+              Space + GetDataBasepath('') + NewLine;
+
+    if not DBIsExisting() then
+    begin
+      s := s + Space + 'A new MySQL database will be created.';
+      s := s + NewLine + NewLine;
+
+    end else if (not cbDeleteOldData.Checked) then
+    begin
+      s := s + Space + 'Existing MySQL database will kept unchanged';
+      s := s + NewLine + NewLine;
+
+    end else
+    begin
+      s := s + Space + 'Existing MySQL database will be re-created. All data will be lost.';
+      s := s + NewLine + NewLine;
+    end;
+
+    if MemoTypeInfo <> '' then
+    begin
+      s := s + MemoTypeInfo;
+      s := s + NewLine + NewLine;
+    end
+
+    if MemoComponentsInfo <> '' then
+    begin
+      s := s + MemoComponentsInfo;
+      s := s + NewLine + NewLine;
+    end
+
+    if MemoGroupInfo <> '' then
+    begin
+      s := s + MemoGroupInfo;
+      s := s + NewLine + NewLine;
+    end
+
+    if MemoTasksInfo <> '' then
+    begin
+      s := s + MemoTasksInfo;
+      s := s + NewLine + NewLine;
+    end
+
+
+    Result := s
 end;
