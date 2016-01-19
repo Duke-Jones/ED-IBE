@@ -33,6 +33,8 @@ echo This script generates the Elite-DB in the "..\data\"-folder of this file.
 echo For starting the server again after the DB is created simply type : 
 echo. 
 echo            %MYSQL_PATH%\bin\mysqld.exe --defaults-file=Elite.ini --console
+echo                                     or call
+echo                                start_server.cmd
 echo. 
 echo Warning: the complete database will be deleted and new generated !!! ALL DATA WILL BE LOST !!!
 
@@ -71,6 +73,7 @@ timeout /t 5
 
 REM delete old data dir if existing and (re)create
 if exist %DESTINATION_DIR%\data del /s /f /q %DESTINATION_DIR%\data & rd /s /q %DESTINATION_DIR%\data
+timeout /t 1
 mkdir %DESTINATION_DIR%\data
 
 REM create script for creating the database
@@ -121,7 +124,13 @@ cd script
 if [%DEBUG%] EQU [1] pause
 
 REM shut down the server if it's a installation
-rem if [%1] EQU [/forceinstall] mysqladmin -u root --password=%ROOT_PW% shutdown
-"%MYSQL_PATH%\bin\mysqladmin" -u root --password=%ROOT_PW% shutdown
+if [%1] EQU [/forceinstall] (
+   "%MYSQL_PATH%\bin\mysqladmin" -u root --password=%ROOT_PW% shutdown
+   timeout /t 5
+)
 
 :end
+
+echo. 
+echo finished !
+echo. 

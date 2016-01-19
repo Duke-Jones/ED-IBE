@@ -47,6 +47,23 @@ Other hints:
    the script "create.cmd" in ".\RNDatabase\Database\script\" again.
    It will recreate the whole database. All old data will be gone.
 
+   optional parameters for create.cmd:
+
+   /forceinstall (must be first parameter):
+       don't ask the user for overwriting a existing database (for InnoSetup)
+   <second parameter> (for Innosetup): 
+       path to destination directory fpr the data-structure 
+
+   <third parameter> (for Innosetup): 
+       path to program directory for acessing the MySQL binaries
+   
+   examples:
+     for developing : in a cmd goto script directory and start "create.cmd"
+	 for installer  : create.cmd /forceinstall "F:\ED-IBE" "F:\Program Files\ED-IBE"
+   
+
+*  for creating a installer package use InnoSetup
+
 
 *****************************************************************************************   
 *****************************************************************************************
@@ -93,7 +110,9 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
-
+SQL 0.0.31
+   * installationscript improved: bug fixes
+-------------------------------------------------------------------------------------         
    * installationscript improved: flexible path selection
 -------------------------------------------------------------------------------------         
    * installationscript improved: detection of a existing database with optional re-creation

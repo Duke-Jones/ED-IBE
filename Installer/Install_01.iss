@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ED - Intelligent Boardcomputer Extension"
-#define MyAppVersion "0.0"
+#define MyAppVersion GetStringFileInfo("..\RegulatedNoise\bin\Release\RegulatedNoise.exe", "FileVersion")
 #define MyAppPublisher "Duke Jones"
 #define MyAppURL "https://github.com/Duke-Jones/RegulatedNoise"
 #define MyAppExeName "RegulatedNoise.exe"
@@ -82,7 +82,6 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
-;Filename: "{localappdata}\ED-IBE\Database\script\create.cmd"; Parameters: "/forceinstall ""{localappdata}\ED-IBE\Database"" ""{app}\Database"""; WorkingDir: "{localappdata}\ED-IBE\Database"
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [Dirs]
@@ -101,7 +100,8 @@ Name: "{code:GetDataBasepath}"
 Name: "{app}"; Flags: uninsalwaysuninstall
 
 [Registry]
-Root: "HKLM"; Subkey: "System\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1"; ValueName: "Inno Setup: Data Path"; Flags: createvalueifdoesntexist
+Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Program"; ValueData: "{app}"; Flags: uninsdeletevalue
+Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Data"; ValueData: "{code:GetDataBasepath}"; Flags: uninsdeletevalue
 
 [INI]
 ;Database
@@ -118,18 +118,17 @@ Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "Worki
 Name: "EmptyList"; Description: "EmptyList"; Flags: iscustom
 
 [CustomMessages]
+datapath_form_Caption=DataPath: Select Destination Location
+datapath_form_Description1=Where should the {#emit SetupSetting("AppName")} data structure be installed ?
+datapath_form_Info1=Setup will install the {#emit SetupSetting("AppName")} data structure into following folder.%n%nTo continue, click Next. If you would like to select a different folder, click Browse%n(be sure to have writing rights in this folder!!!)
+datapath_form_Info2=If you want to re-create the database (all contained data will be lost)%ncheck for confirmation the box below:
+datapath_form_CheckBoxLabel=Delete all existing data and re-create the database
+
 existing_form_Caption=Intelligent Boardcomputer Extension - Database
 existing_form_Description1=...existing ED-IBE database was found
 existing_form_Info1=Setup will use the existing database in :
 existing_form_Info2=If you want to re-create the database (all contained data will be lost)%ncheck for confirmation the box below:
 existing_form_CheckBoxLabel=Delete all existing data and re-create the database
-
-datapath_form_Caption=Select Destination Location
-datapath_form_Description1=Where should the {#emit SetupSetting("AppName")} data structure be installed ?
-datapath_form_Info1=Setup will install the {#emit SetupSetting("AppName")} data structure into following folder.%n%nTo continue, click Next. If you would like to select a different folder, click Browse%n(be sure to have writing rights in this folder!!!)
-
-datapath_form_Info2=If you want to re-create the database (all contained data will be lost)%ncheck for confirmation the box below:
-datapath_form_CheckBoxLabel=Delete all existing data and re-create the database
 
 [Code]
 var
@@ -164,7 +163,7 @@ begin
 
   if strNewDatabasePath = '' then
   begin
-     if not RegQueryStringValue(HKEY_CURRENT_USER, ExpandConstant('System\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1'), 'Inno Setup: Data Path', DataPath) then
+     if not RegQueryStringValue(HKLM, ExpandConstant('Software\ED-IBE\'), 'Data', DataPath) then
      begin
        // value not found
        DataPath := ExpandConstant('{localappdata}\ED-IBE');
@@ -348,12 +347,13 @@ end;
 function NextButtonClick(CurPageID: integer): boolean;
 begin
 
-
-   if(CurPageID = Page_DataPath.ID) then
-   begin
-      Log('Datapath : <' + Page_DataPath.Values[0] + '>');      
-      strNewDatabasePath := Page_DataPath.Values[0];
-      DatabasePath.Text := Page_DataPath.Values[0];
+   case CurPageID of
+      Page_DataPath.ID:
+      begin
+         Log('Datapath : <' + Page_DataPath.Values[0] + '>');      
+         strNewDatabasePath := Page_DataPath.Values[0];
+         DatabasePath.Text := Page_DataPath.Values[0];
+      end;
    end;
 
    Result := true;
