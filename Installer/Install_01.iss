@@ -2,6 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ED - Intelligent Boardcomputer Extension"
+#define MyAppShortName "ED-IBE"
 #define MyAppVersion GetStringFileInfo("..\RegulatedNoise\bin\Release\RegulatedNoise.exe", "FileVersion")
 #define MyAppPublisher "Duke Jones"
 #define MyAppURL "https://github.com/Duke-Jones/RegulatedNoise"
@@ -23,7 +24,7 @@ DefaultDirName={pf}\ED-IBE
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=.\Package
-OutputBaseFilename=setup
+OutputBaseFilename={#MyAppShortName}_{#MyAppVersion}
 SetupIconFile=..\RegulatedNoise\RegulatedNoise.ico
 Compression=lzma
 SolidCompression=yes
