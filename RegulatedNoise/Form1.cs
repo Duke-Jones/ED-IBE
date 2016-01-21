@@ -150,125 +150,132 @@ namespace RegulatedNoise
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                //cErr.processError(ex, "Error in main init function");    
-                throw new Exception("Error in main init function", ex);    
+                throw new Exception("Error while creating main form", ex);    
             }
 
         }
 
         private void doInit()
         {
-            _logger = new SingleThreadLogger(ThreadLoggerType.Form);
-            _logger.Log("Initialising...\n");
+            try
+            {
+                _logger = new SingleThreadLogger(ThreadLoggerType.Form);
+                _logger.Log("Initialising...\n");
 
-            string FormName = this.GetType().Name;
-            if (Program.Settings_old.WindowBaseData.ContainsKey(FormName))
-                _Splash.setPosition(Program.Settings_old.WindowBaseData[FormName]);
+                string FormName = this.GetType().Name;
+                if (Program.Settings_old.WindowBaseData.ContainsKey(FormName))
+                    _Splash.setPosition(Program.Settings_old.WindowBaseData[FormName]);
 
-            _Splash.InfoAdd("initialize components...");
-            InitializeComponent();
-            _logger.Log("  - initialised component");
-            _Splash.InfoChange("initialize components...<OK>");
+                _Splash.InfoAdd("initialize components...");
+                InitializeComponent();
+                _logger.Log("  - initialised component");
+                _Splash.InfoChange("initialize components...<OK>");
 
-            _Splash.InfoAdd("doing special work if something to do...");
-            doSpecial(enDoSpecial.onStart);
-            _logger.Log("  - special things done");
-            _Splash.InfoChange("doing special work if something to do...<OK>");
+                _Splash.InfoAdd("doing special work if something to do...");
+                doSpecial(enDoSpecial.onStart);
+                _logger.Log("  - special things done");
+                _Splash.InfoChange("doing special work if something to do...<OK>");
 
-            _Splash.InfoAdd("load settings...");
-            SetProductPath();
-            _logger.Log("  - product path set");
-            _Splash.InfoChange("load settings...<OK>");
+                _Splash.InfoAdd("load settings...");
+                SetProductPath();
+                _logger.Log("  - product path set");
+                _Splash.InfoChange("load settings...<OK>");
 
-            SetProductAppDataPath();
-            _logger.Log("  - product appdata set");
+                SetProductAppDataPath();
+                _logger.Log("  - product appdata set");
 
-            _Splash.InfoAdd("load game settings...");
-            GameSettings = new GameSettings(this);
-            _logger.Log("  - loaded game settings");
-            _Splash.InfoChange("load game settings...<OK>");
+                _Splash.InfoAdd("load game settings...");
+                GameSettings = new GameSettings(this);
+                _logger.Log("  - loaded game settings");
+                _Splash.InfoChange("load game settings...<OK>");
 
-            _Splash.InfoAdd("prepare network interfaces...");
-            PopulateNetworkInterfaces();
-            _logger.Log("  - populated network interfaces");
-            _Splash.InfoChange("prepare network interfaces...<OK>");
+                _Splash.InfoAdd("prepare network interfaces...");
+                PopulateNetworkInterfaces();
+                _logger.Log("  - populated network interfaces");
+                _Splash.InfoChange("prepare network interfaces...<OK>");
 
-            /*_Splash.InfoAdd("create OCR object...");
-           // ocr = new Ocr.Ocr(this); //moved to ocrcaptureandcorrect
-            _logger.Log("  - created OCR object");
-            _Splash.InfoChange("create OCR object...<OK>"); */
+                /*_Splash.InfoAdd("create OCR object...");
+               // ocr = new Ocr.Ocr(this); //moved to ocrcaptureandcorrect
+                _logger.Log("  - created OCR object");
+                _Splash.InfoChange("create OCR object...<OK>"); */
 
-            Application.ApplicationExit += Application_ApplicationExit;
-            _logger.Log("  - set application exit handler");
+                Application.ApplicationExit += Application_ApplicationExit;
+                _logger.Log("  - set application exit handler");
 
-            _Splash.InfoAdd("initiate ocr...");
-            var OcrCapAndCorrectTabPage = new TabPage("Capture And Correct");
-            OcrCapAndCorrectTabPage.Name = "OCR_CaptureAndCorrect";
-            cOcrCaptureAndCorrect.Dock = DockStyle.Fill;
-            cOcrCaptureAndCorrect._parent = this;
+                _Splash.InfoAdd("initiate ocr...");
+                var OcrCapAndCorrectTabPage = new TabPage("Capture And Correct");
+                OcrCapAndCorrectTabPage.Name = "OCR_CaptureAndCorrect";
+                cOcrCaptureAndCorrect.Dock = DockStyle.Fill;
+                cOcrCaptureAndCorrect._parent = this;
 
-            OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
-            tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
-            _logger.Log("  - initialised Ocr ");
-            _Splash.InfoChange("create ocr ...<OK>");
+                OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
+                tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
+                _logger.Log("  - initialised Ocr ");
+                _Splash.InfoChange("create ocr ...<OK>");
 
-            _Splash.InfoAdd("create ocr calibrator...");
-            var OcrCalibratorTabPage = new TabPage("OCR Calibration");
-            OcrCalibratorTabPage.Name = "OCR_Calibration";
-            var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
-            OcrCalibratorTabPage.Controls.Add(oct);
-            tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
-            _logger.Log("  - initialised Ocr Calibrator");
-            _Splash.InfoChange("create ocr calibrator...<OK>");
+                _Splash.InfoAdd("create ocr calibrator...");
+                var OcrCalibratorTabPage = new TabPage("OCR Calibration");
+                OcrCalibratorTabPage.Name = "OCR_Calibration";
+                var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
+                OcrCalibratorTabPage.Controls.Add(oct);
+                tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
+                _logger.Log("  - initialised Ocr Calibrator");
+                _Splash.InfoChange("create ocr calibrator...<OK>");
 
-            _Splash.InfoAdd("prepare EDDN interface...");
-            EDDNComm = new RegulatedNoise.EDDN.EDDNCommunicator(this);
-            _logger.Log("  - created EDDN object");
-            _Splash.InfoChange("prepare EDDN interface...<OK>");
+                _Splash.InfoAdd("prepare EDDN interface...");
+                EDDNComm = new RegulatedNoise.EDDN.EDDNCommunicator(this);
+                _logger.Log("  - created EDDN object");
+                _Splash.InfoChange("prepare EDDN interface...<OK>");
 
-            doSpecial(enDoSpecial.afterMilkyway);
+                doSpecial(enDoSpecial.afterMilkyway);
 
-            //MessageBox.Show("Todo");
-            //_Splash.InfoAdd("load station history...");
-            //_StationHistory.loadHistory(Program.GetDataPath(@"\Data\StationHistory.json"), true);
-            //_Splash.InfoChange("load station history...<OK>");
+                //MessageBox.Show("Todo");
+                //_Splash.InfoAdd("load station history...");
+                //_StationHistory.loadHistory(Program.GetDataPath(@"\Data\StationHistory.json"), true);
+                //_Splash.InfoChange("load station history...<OK>");
 
-            _Splash.InfoAdd("apply settings...");
-            ApplySettings();
-            _Splash.InfoChange("apply settings...<OK>");
+                _Splash.InfoAdd("apply settings...");
+                ApplySettings();
+                _Splash.InfoChange("apply settings...<OK>");
 
-            _logger.Log("  - applied settings");
+                _logger.Log("  - applied settings");
 
-            if (!Directory.Exists(Program.GetDataPath("OCR Correction Images")))
-                Directory.CreateDirectory(Program.GetDataPath("OCR Correction Images"));
+                if (!Directory.Exists(Program.GetDataPath("OCR Correction Images")))
+                    Directory.CreateDirectory(Program.GetDataPath("OCR Correction Images"));
 
-            _logger.Log("Initialisation complete");
+                _logger.Log("Initialisation complete");
 
-            // two methods with the same functionality 
-            // maybe this was the better way but I've already improved the other 
-            // way (UpdateSystemNameFromLogFile()) 
-            // maybe this will some day be reactivated
-            //var edl = new EdLogWatcher();
+                // two methods with the same functionality 
+                // maybe this was the better way but I've already improved the other 
+                // way (UpdateSystemNameFromLogFile()) 
+                // maybe this will some day be reactivated
+                //var edl = new EdLogWatcher();
 
-            //subscribe to edlogwatcherevents
-            //edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
+                //subscribe to edlogwatcherevents
+                //edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
 
-            //After event subscriptino we can initialize
-            //edl.Initialize();
-            //edl.StartWatcher();
+                //After event subscriptino we can initialize
+                //edl.Initialize();
+                //edl.StartWatcher();
 
-//DEBUG: removed for the moment because I got strange behaviour in an full new/uninitialized environment (-> investigation needed)
-            //setOCRTabsVisibility();
+    //DEBUG: removed for the moment because I got strange behaviour in an full new/uninitialized environment (-> investigation needed)
+                //setOCRTabsVisibility();
 
-            _Splash.InfoAdd("prepare system/location view...");
-            //prePrepareSystemAndStationFields();
-            MessageBox.Show("todo");
-            _Splash.InfoChange("prepare system/location view...<OK>");
+                _Splash.InfoAdd("prepare system/location view...");
+                //prePrepareSystemAndStationFields();
+                MessageBox.Show("todo");
+                _Splash.InfoChange("prepare system/location view...<OK>");
 
-            _Splash.InfoAdd("prepare GUI elements...");
-            SetupGui(true);
-            _Splash.InfoChange("prepare GUI elements...<OK>");
+                _Splash.InfoAdd("prepare GUI elements...");
+                SetupGui(true);
+                _Splash.InfoChange("prepare GUI elements...<OK>");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in main-init-routine", ex);
+            }
         }
+
         private string EscapeLikeValue(string value)
         {
             StringBuilder sb = new StringBuilder(value.Length);
@@ -1843,6 +1850,7 @@ namespace RegulatedNoise
 
             // register events for getting new location-infos for the gui
             Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+
             Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
 
 
@@ -2200,21 +2208,40 @@ namespace RegulatedNoise
 
         public void setOCRTabsVisibility()
         {
-            if (GameSettings != null && tabCtrlOCR.TabPages["OCR_Calibration"] != null)
+            try
             {
-                var OCRTabPage = tabCtrlOCR.TabPages["OCR_Calibration"];
-                OCRTabPage.Enabled = (GameSettings.Display != null);
-                var TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
+                try
+                {
+                    if (this.InvokeRequired)
+                        this.Invoke(new MethodInvoker(setOCRTabsVisibility));
+                    else
+                    {
+                        if (GameSettings != null && tabCtrlOCR.TabPages["OCR_Calibration"] != null)
+                        {
+                            var OCRTabPage = tabCtrlOCR.TabPages["OCR_Calibration"];
+                            OCRTabPage.Enabled = (GameSettings.Display != null);
+                            var TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
                 
-                TabControl.lblWarning.Visible = (GameSettings.Display == null); 
-            }
+                            TabControl.lblWarning.Visible = (GameSettings.Display == null); 
+                        }
 
-            if (GameSettings != null && tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"] != null)
+                        if (GameSettings != null && tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"] != null)
+                        {
+                            var OCRTabPage = tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"];
+                            OCRTabPage.Enabled = (GameSettings.Display != null);
+                            var TabControl = (OcrCaptureAndCorrect)(OCRTabPage.Controls[0]);
+                            TabControl.startOcrOnload(Program.Settings_old.StartOCROnLoad && Directory.Exists(Program.Settings_old.MostRecentOCRFolder));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error in setOCRTabsVisibility (inline)", ex);
+                }
+            }
+            catch (Exception ex)
             {
-                var OCRTabPage = tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"];
-                OCRTabPage.Enabled = (GameSettings.Display != null);
-                var TabControl = (OcrCaptureAndCorrect)(OCRTabPage.Controls[0]);
-                TabControl.startOcrOnload(Program.Settings_old.StartOCROnLoad &&Program.Settings_old.MostRecentOCRFolder != "");
+                throw new Exception("Error in setOCRTabsVisibility (outline)", ex);
             }
         }
 
@@ -3795,14 +3822,14 @@ namespace RegulatedNoise
 
             var s = new StringBuilder();
 
-            //string links = "<BR><A style=\"font-size: 14pt\" HREF=\"#lvAllComms\">All Commodities - </A>" +
+            //string links = "<BR><A style=\"font-size: 14pt\" HREF=\"#lvAllComms\">All newCommodityClassification - </A>" +
             //    "<A style=\"font-size: 14pt\" HREF=\"#lbPrices\">Location - </A>" +
-            //    "<A style=\"font-size: 14pt\" HREF=\"#lbCommodities\">Commodity - </A>" +
+            //    "<A style=\"font-size: 14pt\" HREF=\"#lbCommodities\">Classification - </A>" +
             //        "<A style=\"font-size: 14pt\" HREF=\"#lvStationToStation\">Location-to-Location</A><BR>";
 
             //s.Append(links);
 
-            //s.Append("<A name=\"lvAllComms\"><P>All Commodities</P>");
+            //s.Append("<A name=\"lvAllComms\"><P>All newCommodityClassification</P>");
             //s.Append(GetHTMLForListView(lvAllComms));
 
             //s.Append(links);
@@ -3812,7 +3839,7 @@ namespace RegulatedNoise
 
             //s.Append(links);
 
-            //s.Append("<A name=\"lbCommodities\"><P>Commodity: " + cbCommodity.SelectedItem + "</P>");
+            //s.Append("<A name=\"lbCommodities\"><P>Classification: " + cbCommodity.SelectedItem + "</P>");
             //s.Append(GetHTMLForListView(lbCommodities));
 
             //s.Append(links);
@@ -4022,6 +4049,7 @@ namespace RegulatedNoise
         {
             try
             {
+
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
                 {
                     setText(txtExtInfo,             "jump recognized...");
@@ -4038,6 +4066,9 @@ namespace RegulatedNoise
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
                 {
+                    // the location has changed -> the reference for all distances has changed  
+                    Program.PriceAnalysis.GUI.RefreshData();
+
                     Program.actualCondition.System   = e.System;
                     setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
                 }

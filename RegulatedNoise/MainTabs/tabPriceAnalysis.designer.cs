@@ -1177,11 +1177,11 @@
             this.cmbByCommodity.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cmbByCommodity.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbByCommodity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbByCommodity.FormattingEnabled = true;
             this.cmbByCommodity.Location = new System.Drawing.Point(71, 10);
             this.cmbByCommodity.Name = "cmbByCommodity";
             this.cmbByCommodity.Size = new System.Drawing.Size(264, 21);
             this.cmbByCommodity.TabIndex = 5;
+            this.cmbByCommodity.FormattingEnabled = false;
             // 
             // label18
             // 

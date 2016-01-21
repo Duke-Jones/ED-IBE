@@ -12,6 +12,24 @@ namespace RegulatedNoise
 {
     public partial class frmDataIO : RegulatedNoise.Enums_and_Utility_Classes.RNBaseForm
     {
+
+        [Flags] enum enImportTypes
+        {
+            Undefiend                       = 0x0000,
+            EDDB_Commodities                = 0x0001,     /* default is "commodities.json" */  
+            RN_Localizations_Commodities    = 0x0002,     /* default is "newCommodityClassification.xml" */
+            RN_Localizations_EcoLevels      = 0x0004,     /* default is "newCommodityClassification.xml" */
+            RN_SelfAddedLocalizations       = 0x0008,     /* default is "Commodities_Own.xml" */
+            RN_Pricewarnlevels              = 0x0010,     /* default is "Commodities_RN.json" */
+            EDDB_Systems                    = 0x0020,     /* default is "systems.json" */  
+            EDDB_Stations                   = 0x0040,     /* default is "stations.json" */  
+            RN_Systems                      = 0x0080,     /* default is "systems_own.json" */  
+            RN_Stations                     = 0x0100,     /* default is "stations_own.json" */  
+            RN_CommandersLog                = 0x0200,     /* default is "CommandersLogAutoSave.xml" */  
+            RN_StationHistory               = 0x0400,     /* default is "StationHistory.json" */  
+            RN_MarketData                   = 0x0800,     /* default is "AutoSave.csv" */  
+        }
+
         public frmDataIO()
         {
             InitializeComponent();
@@ -32,7 +50,7 @@ namespace RegulatedNoise
         }
 
         /// <summary>
-        /// imports the whole data from the old RN version
+        /// imports the whole data from the old RN directory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -40,6 +58,7 @@ namespace RegulatedNoise
         {
             String FileName;
             String RNPath;
+            Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
 
             try
             {
@@ -146,7 +165,6 @@ namespace RegulatedNoise
                             }
 
                             // import the self-changed or added systems and stations 
-                            Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 0, Total = 0});
                             FileName = @"Data\systems_own.json";
                             if(FileExistsOrMessage(RNPath, FileName))
@@ -242,7 +260,7 @@ namespace RegulatedNoise
         /// <summary>
         /// checks if a file ist existingClassification, If not it shows a info-messsage
         /// </summary
-        /// <param name="RNPath"></param>
+        /// <param name="sourcePath"></param>
         /// <param name="FileName"></param>
         /// <returns></returns>
         private bool FileExistsOrMessage(string RNPath, string FileName)
@@ -341,10 +359,319 @@ namespace RegulatedNoise
             }
         }
 
-        private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
+        private void ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "")
         {
+            String FileName;
+            String sourcePath;
+            Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
 
+            try
+            {
+                fbFolderDialog.RootFolder   = Environment.SpecialFolder.MyComputer;
+                fbFolderDialog.Description  = importInfo;
+                fbFolderDialog.SelectedPath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+
+                if (fbFolderDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    sourcePath = fbFolderDialog.SelectedPath.Trim();
+
+                    if (!String.IsNullOrEmpty(sourcePath))
+                    {
+
+                        Program.DBCon.setIniValue("General", "Path_Import", sourcePath);
+
+                        Program.Data.Progress += Data_Progress;
+                        Cursor = Cursors.WaitCursor;
+
+                        lbProgess.Items.Clear();
+
+                        Application.DoEvents();
+
+
+                        if (importFlags.HasFlag(enImportTypes.EDDB_Commodities))
+                        {
+                            // import the commodities from EDDB
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 0, Total = 0 });
+                            FileName = "commodities.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportCommoditiesFromFile(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_Localizations_Commodities))
+                        {
+                            // import the localizations (commodities) from the old RN files
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 0, Total = 0 });
+                            FileName = "Commodities.xml";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportCommodityLocalizations(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_Localizations_EcoLevels))
+                        {
+                            // import the localizations (economy levels) from the old RN files
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 0, Total = 0 });
+                            FileName = "Commodities.xml";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportEconomyLevelLocalizations(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tblevellocalization.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbeconomylevel.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+
+                        if (importFlags.HasFlag(enImportTypes.RN_SelfAddedLocalizations))
+                        {
+                            // import the self added localizations from the old RN files
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 0, Total = 0 });
+                            FileName = "Commodities_Own.xml";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportCommodityLocalizations(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_Pricewarnlevels))
+                        {
+                            // import the pricewarnlevels from the old RN files
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 0, Total = 0 });
+                            FileName = "Commodities_RN.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.EDDB_Systems))
+                        {
+                            // import the systems and stations from EDDB
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 0, Total = 0 });
+                            FileName = "systems.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportSystems(Path.Combine(sourcePath, FileName));
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.EDDB_Stations))
+                        {
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 0, Total = 0 });
+                            FileName = "stations.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportStations(Path.Combine(sourcePath, FileName), cbImportPriceData.Checked);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_Systems))
+                        {
+                            // import the self-changed or added systems and stations
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 0, Total = 0 });
+                            FileName = "systems_own.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(sourcePath, FileName));
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_Stations))
+                        {
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 0, Total = 0 });
+                            FileName = "stations_own.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportStations_Own(Path.Combine(sourcePath, FileName), changedSystemIDs);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_CommandersLog))
+                        {
+                            // import the Commander's Log from the old RN files
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 0, Total = 0 });
+                            string[] files;
+                            string Filter;
+
+                            if (optionalFilter != "")
+                                Filter = optionalFilter;
+                            else
+                                Filter = "CommandersLogAutoSave.xml";
+
+                            files = Directory.GetFiles(sourcePath, Filter);
+
+                            if (files.GetUpperBound(0) >= 0)
+                            {
+                                foreach (String importFile in files)
+                                {
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "importing " + importFile + "...", Index = 0, Total = 0 });
+
+                                    Int32 added = Program.Data.ImportCommandersLog(Path.Combine(sourcePath, importFile));
+                                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "importing " + importFile + "... (" + added + " new entries)", Index = 1, Total = 1 });
+                                }
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 1, Total = 1 });
+
+                                Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
+
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + Filter, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_StationHistory))
+                        {
+                            //import the history of visited stations
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 0, Total = 0 });
+                            FileName = "StationHistory.json";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportVisitedStations(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.RN_MarketData))
+                        {
+                            //import the self collected price data
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 0, Total = 0 });
+                            FileName = "AutoSave.csv";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        // update the visited information
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 0, Total = 0 });
+                        Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
+                        Program.Data.updateVisitedFlagsFromBase();
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 1, Total = 1 });
+
+                        // update localization of all commodities
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities", Index = 0, Total = 0 });
+                        Program.Data.updateTranslation();
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities...", Index = 1, Total = 1 });
+
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "finished", Index = 1, Total = 1 });
+
+                        Cursor = Cursors.Default;
+
+                        Program.Data.Progress -= Data_Progress;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                throw new Exception("Error while importing data to database", ex);
+            }
         }
 
+        private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                enImportTypes importFlags = enImportTypes.EDDB_Commodities | enImportTypes.EDDB_Systems | enImportTypes.EDDB_Stations;
+                ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags);
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while importing system/station data from EDDN");
+            }
+        }
+
+        private void cmdImportCommandersLog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                enImportTypes importFlags = enImportTypes.RN_CommandersLog;
+                ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "CommandersLog*.xml");
+            }            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while importing system/station data from EDDN");
+            }
+        }
     }
 }

@@ -19,20 +19,27 @@ namespace RegulatedNoise
 
         public GameSettings(Form1 parent)
         {
-            _parent = parent;
+            try
+            {
+                _parent = parent;
 
-            //Load DisplaySettings from AppData
-            LoadDisplaySettings();
+                //Load DisplaySettings from AppData
+                LoadDisplaySettings();
 
-            //Load AppConfig
-            LoadAppConfig();
+                //Load AppConfig
+                LoadAppConfig();
 
-            //Set up some filewatchers, If user changes config its reflected here
-            WatcherDisplaySettings();
-            WatcherAppDataSettings(); //Currently disabled as we only check Verbose logging and that cant be changed from the game
+                //Set up some filewatchers, If user changes config its reflected here
+                WatcherDisplaySettings();
+                WatcherAppDataSettings(); //Currently disabled as we only check Verbose logging and that cant be changed from the game
 
-            //Check and Request for Verbose Logging
-            CheckAndRequestVerboseLogging();
+                //Check and Request for Verbose Logging
+                CheckAndRequestVerboseLogging();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while creating the object", ex);
+            }
         }
 
         void CheckAndRequestVerboseLogging()
@@ -129,58 +136,72 @@ namespace RegulatedNoise
 
         void LoadDisplaySettings()
         {
-            
-            TimeSpan delta;
-            DialogResult MBResult = DialogResult.Ignore;
-            EdDisplayConfig locDisplay;
-
-            var configFile = Path.Combine(Program.Settings_old.ProductAppData, "Graphics" ,"DisplaySettings.xml");
-            if (!File.Exists(configFile))
+            try
             {
-                return;
-            }
-            var serializer = new XmlSerializer(typeof(EdDisplayConfig));
+                TimeSpan delta;
+                DialogResult MBResult = DialogResult.Ignore;
+                EdDisplayConfig locDisplay;
 
-
-            do
-            {
-                try
+                var configFile = Path.Combine(Program.Settings_old.ProductAppData, "Graphics" ,"DisplaySettings.xml");
+                if (!File.Exists(configFile))
                 {
-                    using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    {
-                        locDisplay = (EdDisplayConfig)serializer.Deserialize(myFileStream);
-                        Display = locDisplay;
-                    }
+                    return;
                 }
-                catch (Exception ex)
+                var serializer = new XmlSerializer(typeof(EdDisplayConfig));
+
+
+                do
                 {
-                    if (Display == null)
+                    try
                     {
-                        // ignore this if it was loaded short before
-                        delta = DateTime.Now - lastTry_Displaydata;
-                        if (delta.TotalMilliseconds > 1000)
+                        using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         {
-                            // ignore this if it was asked before
-                            MBResult = MessageBox.Show(String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
-                            if (MBResult == DialogResult.Abort)
-                            {
-                                cErr.processError(ex, "Error in AppData_Changed()", true);
-                            }
-                            lastTry_Displaydata = DateTime.Now;
+                            locDisplay = (EdDisplayConfig)serializer.Deserialize(myFileStream);
+                            Display = locDisplay;
                         }
                     }
-                }
-            } while (MBResult == DialogResult.Retry);
+                    catch (Exception ex)
+                    {
+                        if (Display == null)
+                        {
+                            // ignore this if it was loaded short before
+                            delta = DateTime.Now - lastTry_Displaydata;
+                            if (delta.TotalMilliseconds > 1000)
+                            {
+                                // ignore this if it was asked before
+                                MBResult = MessageBox.Show(String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
+                                if (MBResult == DialogResult.Abort)
+                                {
+                                    cErr.processError(ex, "Error in AppData_Changed()", true);
+                                }
+                                lastTry_Displaydata = DateTime.Now;
+                            }
+                        }
+                    }
+                } while (MBResult == DialogResult.Retry);
 
-            if (_parent != null)
+                // this makes problems -> another solution is needed
+                //if (_parent != null)
+                //{
+                //    _parent.setOCRTabsVisibility();
+                //}
+            }
+            catch (Exception ex)
             {
-                _parent.setOCRTabsVisibility();
+                throw new Exception("Error while loading display settings", ex);
             }
         }
 
         private void LoadDisplaySettings(object sender, FileSystemEventArgs e)
         {
-            LoadDisplaySettings();
+            try
+            {
+                LoadDisplaySettings();
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error while loading displaysettigns from event");
+            }
         }
 
         private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();

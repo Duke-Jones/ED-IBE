@@ -197,7 +197,7 @@ namespace RegulatedNoise
             this.Stationname.ReadOnly = true;
             this.Stationname.Width = 150;
             // 
-            // Commodity
+            // Classification
             // 
             this.Commodity.HeaderText = "Commodity";
             this.Commodity.Name = "Commodity";

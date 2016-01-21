@@ -110,6 +110,15 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.0.32
+   * added support to import multiple old "Commander's Log" files from RN
+   * implemented EDDN API v4 changes for import of systems.json, stations.json, commodities.json
+     (todo: changes for listings.json, changes for new fields in API V4 and API V4.1 )
+   * corrected consideration of landingpad sizes 
+   * added some exception handlers
+   * hyperjumping or collecting prices raises recalculation of depending values in 
+     "Price Analysis"-tab
+-------------------------------------------------------------------------------------         
 SQL 0.0.31
    * installationscript improved: bug fixes
 -------------------------------------------------------------------------------------         

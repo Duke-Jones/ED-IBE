@@ -79,8 +79,8 @@ namespace RegulatedNoise
             Info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
             Info += "Create a dump file ?";
 
-            MessageBox.Show(Info, "Exception occured",MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-               // Program.CreateMiniDump("RegulatedNoiseDump.dmp");
+            if (MessageBox.Show(Info, "Exception occured",MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+               Program.CreateMiniDump("RegulatedNoiseDump.dmp");
 
         }
     }

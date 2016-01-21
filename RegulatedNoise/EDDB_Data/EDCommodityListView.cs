@@ -101,7 +101,7 @@ namespace RegulatedNoise.EDDB_Data
                     // save and change
                     updateCommodityList();
                     throw new NotImplementedException();
-                    //Form1.InstanceObject.myMilkyway.setCommodities(Commodities.OrderBy(x => x.Id).ToList());
+                    //Form1.InstanceObject.myMilkyway.setCommodities(newCommodityClassification.OrderBy(x => x.Id).ToList());
                     this.Close();
                 }
                 else

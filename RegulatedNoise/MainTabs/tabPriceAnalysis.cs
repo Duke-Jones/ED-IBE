@@ -148,6 +148,12 @@ namespace RegulatedNoise.MTPriceAnalysis
                         Debug.Print("unknown");
                 }
 
+                cmbStation1.SelectedIndex       = -1;
+                cmbStation2.SelectedIndex       = -1;
+                cmbByStation.SelectedIndex      = -1;
+                cmbByCommodity.SelectedIndex    = -1;
+                cmbSystemBase.SelectedIndex     = -1;
+
                 ComboboxValues = Program.DBCon.getIniValue(DB_GROUPNAME, "SystemLightYearCmbValues", "10;25;50;100;200;1000", false);
                 cmbSystemLightYears.Items.Clear();
                 foreach (String Value in ComboboxValues.Split(';'))
@@ -372,18 +378,30 @@ namespace RegulatedNoise.MTPriceAnalysis
         }
 
         /// <summary>
-        /// external call for refreshing this tab
+        /// external call to signal this tab "data has changed"
         /// </summary>
         public void RefreshData()
         {
             try
             {
-                setFilterHasChanged(true);                
-                ActivateFilterSettings();
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(RefreshData));
+                else
+                {
+                    try 
+	                {	        
+                        setFilterHasChanged(true);                
+                        ActivateFilterSettings();
+	                }
+	                catch (Exception ex)
+	                {
+		                cErr.showError(ex, "Error while refresing data (inline)");
+	                }
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while refreshing data", ex);
+                throw new Exception("Error while refreshing data (outline)", ex);
             }
         }
 
@@ -418,7 +436,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                         cmbStation2.DisplayMember   = "SystemDistance";
                         cmbByStation.DisplayMember  = "SystemDistance";
 
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "Distance";
                         break;
                 }
             }
@@ -1059,7 +1077,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// </summary>
         private void loadStationCommoditiesFromComboBoxes()
         {
-            DataTable Data = null;
+            dsEliteDB.tmpa_s2s_stationdataDataTable Data = null;
             int? Station1 = null;
             int? Station2 = null;
 
@@ -1070,16 +1088,42 @@ namespace RegulatedNoise.MTPriceAnalysis
                     switch (i)
                     {
                         case 0:
-                            Station1 = (int?)cmbStation1.SelectedValue;
-                            Station2 = (int?)cmbStation2.SelectedValue;
+                            try
+                            {
+                                Station1 = (int?)cmbStation1.SelectedValue;
+                            }
+                            catch (Exception){
+                                Station1 = null;
+                            }
+                            
+                            try
+                            {
+                                Station2 = (int?)cmbStation2.SelectedValue;
+                            }
+                            catch (Exception){
+                                Station2 = null;
+                            }
 
-                            Data     = m_DGVTables[dgvStation1.Name];
+                            Data     = (dsEliteDB.tmpa_s2s_stationdataDataTable)m_DGVTables[dgvStation1.Name];
                             break;
                         case 1:
-                            Station2 = (int?)cmbStation1.SelectedValue;
-                            Station1 = (int?)cmbStation2.SelectedValue;
+                            try
+                            {
+                                Station2 = (int?)cmbStation1.SelectedValue;
+                            }
+                            catch (Exception){
+                                Station2 = null;
+                            }
+                            
+                            try
+                            {
+                                Station1 = (int?)cmbStation2.SelectedValue;
+                            }
+                            catch (Exception){
+                                Station1 = null;
+                            }
 
-                            Data     = m_DGVTables[dgvStation2.Name];
+                            Data     = (dsEliteDB.tmpa_s2s_stationdataDataTable)m_DGVTables[dgvStation2.Name];
                             break;
                     }             
                     

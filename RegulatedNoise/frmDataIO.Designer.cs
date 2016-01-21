@@ -36,11 +36,13 @@
             this.cmdImportSystemsAndStations = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.cmdClearAll = new System.Windows.Forms.Button();
+            this.cmdImportCommandersLog = new System.Windows.Forms.Button();
             this.fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.lbProgess = new System.Windows.Forms.ListBox();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
             this.gbRepeat = new System.Windows.Forms.GroupBox();
             this.cbClear = new System.Windows.Forms.GroupBox();
+            this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.cbClear.SuspendLayout();
@@ -74,8 +76,10 @@
             this.cmdImportSystemsAndStations.Name = "cmdImportSystemsAndStations";
             this.cmdImportSystemsAndStations.Size = new System.Drawing.Size(276, 34);
             this.cmdImportSystemsAndStations.TabIndex = 0;
-            this.cmdImportSystemsAndStations.Text = "Import system/station-data from EDDB-files";
-            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, resources.GetString("cmdImportSystemsAndStations.ToolTip"));
+            this.cmdImportSystemsAndStations.Text = "Import data of systems/stations/commodities from EDDB-files";
+            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, "Imports the data of systems, stations and commodities from \r\nEDDN files (\"system." +
+        "json\", \"stations.json\", \"commodities.json\").\r\nSuggestion is to import all three " +
+        "files to avoid missing dependences.\r\n");
             this.cmdImportSystemsAndStations.UseVisualStyleBackColor = true;
             this.cmdImportSystemsAndStations.Click += new System.EventHandler(this.cmdImportSystemsAndStations_Click);
             // 
@@ -102,15 +106,26 @@
             this.cmdClearAll.UseVisualStyleBackColor = true;
             this.cmdClearAll.Click += new System.EventHandler(this.cmdClearAll_Click);
             // 
+            // cmdImportCommandersLog
+            // 
+            this.cmdImportCommandersLog.Location = new System.Drawing.Point(13, 92);
+            this.cmdImportCommandersLog.Name = "cmdImportCommandersLog";
+            this.cmdImportCommandersLog.Size = new System.Drawing.Size(276, 34);
+            this.cmdImportCommandersLog.TabIndex = 3;
+            this.cmdImportCommandersLog.Text = "Import RN-CommandersLog-files";
+            this.ttToolTip.SetToolTip(this.cmdImportCommandersLog, resources.GetString("cmdImportCommandersLog.ToolTip"));
+            this.cmdImportCommandersLog.UseVisualStyleBackColor = true;
+            this.cmdImportCommandersLog.Click += new System.EventHandler(this.cmdImportCommandersLog_Click);
+            // 
             // lbProgess
             // 
             this.lbProgess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbProgess.FormattingEnabled = true;
-            this.lbProgess.Location = new System.Drawing.Point(12, 176);
+            this.lbProgess.Location = new System.Drawing.Point(12, 332);
             this.lbProgess.Name = "lbProgess";
-            this.lbProgess.Size = new System.Drawing.Size(1083, 368);
+            this.lbProgess.Size = new System.Drawing.Size(1083, 303);
             this.lbProgess.TabIndex = 1;
             // 
             // gbFirstTime
@@ -126,11 +141,12 @@
             // 
             // gbRepeat
             // 
+            this.gbRepeat.Controls.Add(this.cmdImportCommandersLog);
             this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
             this.gbRepeat.Controls.Add(this.checkBox1);
             this.gbRepeat.Location = new System.Drawing.Point(363, 12);
             this.gbRepeat.Name = "gbRepeat";
-            this.gbRepeat.Size = new System.Drawing.Size(345, 158);
+            this.gbRepeat.Size = new System.Drawing.Size(345, 283);
             this.gbRepeat.TabIndex = 4;
             this.gbRepeat.TabStop = false;
             this.gbRepeat.Text = "Repeatable imports";
@@ -145,10 +161,14 @@
             this.cbClear.TabStop = false;
             this.cbClear.Text = "Reset Database";
             // 
+            // ofdFileDialog
+            // 
+            this.ofdFileDialog.FileName = "openFileDialog1";
+            // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1107, 564);
+            this.ClientSize = new System.Drawing.Size(1107, 664);
             this.Controls.Add(this.cbClear);
             this.Controls.Add(this.gbRepeat);
             this.Controls.Add(this.gbFirstTime);
@@ -177,5 +197,7 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.GroupBox cbClear;
         private System.Windows.Forms.Button cmdClearAll;
+        private System.Windows.Forms.OpenFileDialog ofdFileDialog;
+        private System.Windows.Forms.Button cmdImportCommandersLog;
     }
 }

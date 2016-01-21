@@ -312,6 +312,9 @@ namespace RegulatedNoise.SQL
                 retValue = Command.ExecuteNonQuery();
 
                 System.Diagnostics.Debug.Print("SQL:<" + CommandText + ">");
+
+                Command.Dispose();
+
             }
             catch (Exception ex) {
                 MonitorExit(this);
@@ -355,6 +358,9 @@ namespace RegulatedNoise.SQL
                     DataAdapter.Fill(Data);
 
                 retValue = Data.Tables.Count;
+
+                DataAdapter.Dispose();
+                Command.Dispose();
             }
             catch (Exception ex) {
                 MonitorExit(this);
@@ -392,6 +398,9 @@ namespace RegulatedNoise.SQL
                 Data.Clear();
                 DataAdapter.Fill(Data);
                 retValue = Data.Rows.Count;
+
+                DataAdapter.Dispose();
+                Command.Dispose();
             }
             catch (Exception ex) {
                 MonitorExit(this);
@@ -468,12 +477,80 @@ namespace RegulatedNoise.SQL
                     //  save commandbuilder object 
                     m_UpdateObjects.Add(Tablename, DataAdapter);
                     retValue  = Data.Tables.Count;
+
                 }
                 else 
                 {
                     //  data already loaded - now only refreshing
                     Data.Tables[Tablename].Rows.Clear();
                     m_UpdateObjects[Tablename].Fill(Data.Tables[Tablename]);
+                }
+            }
+            catch (Exception ex) 
+            {
+                MonitorExit(this);
+                throw new Exception(("Error on \'TableRead\', SQLString = <" 
+                                + (CommandText + (">" + ("(" 
+                                + (m_ConfigData.Name + ")"))))), ex);
+            }
+            MonitorExit(this);
+
+            return retValue;
+        }
+
+        public Int32 TableRead(string Tablename, System.Data.DataSet Data, ref MySqlDataAdapter dataAdapter) 
+        {
+            try 
+            {
+                return TableRead("", Tablename, Data, ref dataAdapter);
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception("Error while reloading data through DataAdapter", ex);
+            }
+        }
+
+        public Int32 TableRead(string CommandText, string Tablename, System.Data.DataSet Data, ref MySqlDataAdapter dataAdapter) 
+        {
+            Int32 retValue = 0;
+
+            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
+                throw new Exception("Timeout while waiting for monitor-lock for TableRead()");
+            }
+
+            try {
+                if (dataAdapter == null) {
+                    //  loading data first time
+                    if (string.IsNullOrEmpty(CommandText)) 
+                        throw new Exception("no sql command specified");
+
+                    DbCommand Command                   = new MySqlCommand();
+                    dataAdapter                         = new MySqlDataAdapter();
+                    DbCommandBuilder CommandBuilder     = new MySqlCommandBuilder();
+
+                    //  prepare m_Command
+                    Command.CommandText     = CommandText;
+                    Command.Connection      = m_Connection;
+
+                    if (m_Transaction != null) 
+                        Command.Transaction = m_Transaction;
+
+                    //  preparing dataadapter and stringbuilder (for changes on the tables) 
+                    CommandBuilder.DataAdapter          = dataAdapter;
+                    dataAdapter.MissingSchemaAction     = System.Data.MissingSchemaAction.AddWithKey;
+                    dataAdapter.SelectCommand           = (MySqlCommand)Command;
+
+                    //  read data and fill table
+                    dataAdapter.Fill(Data, Tablename);
+
+                    retValue  = Data.Tables.Count;
+
+                }
+                else 
+                {
+                    //  data already loaded - now only refreshing
+                    Data.Tables[Tablename].Rows.Clear();
+                    dataAdapter.Fill(Data.Tables[Tablename]);
                 }
             }
             catch (Exception ex) 
@@ -517,6 +594,13 @@ namespace RegulatedNoise.SQL
         {
             return TableUpdate(TypifiedTable.TableName, TypifiedTable.DataSet, removeTableReadObject, null);
         }
+
+        //public Int32 TableUpdate(System.Data.DataSet Data, DbDataAdapter DataAdapter)
+        //{
+        //    string tablename = String.Empty;
+        //    bool removeTableReadObject = false;
+        //    return TableUpdate(tablename, Data, removeTableReadObject, DataAdapter);
+        //}
 
         public Int32 TableUpdate(string Tablename, System.Data.DataSet Data, bool removeTableReadObject, DbDataAdapter DataAdapter){
 

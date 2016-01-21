@@ -55,26 +55,23 @@ namespace RegulatedNoise
         [STAThread]
         static void Main()
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            Application.ThreadException += Application_ThreadException;
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-            Init();
-
-            Application.Run(new Form1());
-
-            Cleanup();
             try
             {
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                Application.ThreadException += Application_ThreadException;
 
-              
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
+                Init();
+
+                Application.Run(new Form1());
+
+                Cleanup();
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in main routine !");
+                cErr.processError(ex, "Error in main routine !");
             }
         }
 
@@ -292,6 +289,9 @@ namespace RegulatedNoise
                     // register the LogfileScanner in the CommandersLog for the ExternalDataEvent-event
                     CommandersLog.registerLogFileScanner(LogfileScanner);
                     CommandersLog.registerExternalTool(ExternalData);
+
+                    PriceAnalysis.registerLogFileScanner(LogfileScanner);
+                    PriceAnalysis.registerExternalTool(ExternalData);
 
                     m_initDone = true;
 

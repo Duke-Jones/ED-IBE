@@ -12,6 +12,8 @@ using System.Diagnostics;
 using RegulatedNoise.SQL;
 using RegulatedNoise.SQL.Datasets;
 using System.Collections.Generic;
+using RegulatedNoise.ExtData;
+
 
 namespace RegulatedNoise.MTPriceAnalysis
 {
@@ -49,12 +51,14 @@ namespace RegulatedNoise.MTPriceAnalysis
 
 #endregion
 
-        private dsEliteDB           m_BaseData;
-        private tabPriceAnalysis    m_GUI;
-        private BindingSource       m_BindingSource;
-        private DataTable           m_Datatable;
-        private DataRetriever       retriever;
-        private Boolean             m_NoGuiNotifyAfterSave;
+        private dsEliteDB                           m_BaseData;
+        private tabPriceAnalysis                    m_GUI;
+        private BindingSource                       m_BindingSource;
+        private DataTable                           m_Datatable;
+        private DataRetriever                       retriever;
+        private Boolean                             m_NoGuiNotifyAfterSave;
+        private FileScanner.EDLogfileScanner        m_LogfileScanner;
+        private ExternalDataInterface               m_ExternalDataInterface;
 
         /// <summary>
         /// constructor
@@ -130,6 +134,134 @@ namespace RegulatedNoise.MTPriceAnalysis
                 m_GUI = value;
                 if((m_GUI != null) && (m_GUI.DataSource != this))
                     m_GUI.DataSource = this;
+            }
+        }
+
+        /// <summary>
+        /// register the LogfileScanner in the CommandersLog for the DataEvent
+        /// </summary>
+        /// <param name="LogfileScanner"></param>
+        public void registerLogFileScanner(FileScanner.EDLogfileScanner LogfileScanner)
+        {
+            try
+            {
+                if(m_LogfileScanner == null)
+                { 
+                    m_LogfileScanner = LogfileScanner;
+                    m_LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+                }
+                else 
+                    throw new Exception("LogfileScanner already registered");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while registering the LogfileScanner", ex);
+            }
+        }
+
+        /// <summary>
+        /// register the external tool in the CommandersLog for the DataEvent
+        /// </summary>
+        /// <param name="LogfileScanner"></param>
+        public void registerExternalTool(ExternalDataInterface ExternalDataInterface)
+        {
+            try
+            {
+                if(m_ExternalDataInterface == null)
+                { 
+                    m_ExternalDataInterface                    = ExternalDataInterface;
+                    m_ExternalDataInterface.ExternalDataEvent += m_ExternalDataInterface_ExternalDataEvent;
+                }
+                else 
+                    throw new Exception("LogfileScanner already registered");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while registering the LogfileScanner", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// unregister the LogfileScanner
+        /// </summary>
+        /// <param name="LogfileScanner"></param>
+        public void unregisterLogFileScanner()
+        {
+            try
+            {
+                if(m_LogfileScanner != null)
+                { 
+                    m_LogfileScanner.LocationChanged -= LogfileScanner_LocationChanged;
+                    m_LogfileScanner = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while unregistering the LogfileScanner", ex);
+            }
+        }
+
+        /// <summary>
+        /// unregister the LogfileScanner
+        /// </summary>
+        /// <param name="LogfileScanner"></param>
+        public void unregisterExternalTool()
+        {
+            try
+            {
+                if(m_ExternalDataInterface != null)
+                { 
+                    m_ExternalDataInterface.ExternalDataEvent -= m_ExternalDataInterface_ExternalDataEvent;
+                    m_ExternalDataInterface = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while unregistering the ExternalDataTool", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// event-worker for ExternalDataEvent-event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
+        {
+            try
+            {
+                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
+                {
+                    GUI.RefreshData();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the LocationChanged-event", ex);
+            }
+        }
+
+        void m_ExternalDataInterface_ExternalDataEvent(object sender, ExternalDataInterface.LocationChangedEventArgs e)
+        {
+            try
+            {
+                if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) > 0)
+                {
+                  
+                }
+
+                if((e.Changed & ExternalDataInterface.enExternalDataEvents.DataCollected) > 0)
+                {
+                    GUI.RefreshData();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the LocationChanged-event", ex);
             }
         }
 
@@ -226,17 +358,17 @@ namespace RegulatedNoise.MTPriceAnalysis
                     switch (((String)minLandingPadSize).ToUpper())
                     {
                         case "S":
-                            LandingPadString = "(St.max_landing_pad_size = 'S')";
-                            break;
-                        case "M":
-                            LandingPadString = "(St.max_landing_pad_size = 'S') or " +
-                                               "(St.max_landing_pad_size = 'M')";
-                            break;
-                        case "L":
                             LandingPadString = "(St.max_landing_pad_size = 'S') or " +
                                                "(St.max_landing_pad_size = 'M') or " +
                                                "(St.max_landing_pad_size = 'L')";
-                        break;
+                            break;
+                        case "M":
+                            LandingPadString = "(St.max_landing_pad_size = 'M') or " +
+                                               "(St.max_landing_pad_size = 'L')";
+                            break;
+                        case "L":
+                            LandingPadString = "(St.max_landing_pad_size = 'L')";
+                            break;
                     }
 
                     sqlString = sqlString + String.Format(
@@ -772,29 +904,38 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// <param name="Data"></param>
         /// <param name="Station_From"></param>
         /// <param name="Station_To"></param>
-        public void loadBestProfitStationCommodities(DataTable Data, int? Station_From, int? Station_To)
+        public void loadBestProfitStationCommodities(dsEliteDB.tmpa_s2s_stationdataDataTable Data, int? Station_From, int? Station_To)
         {
             String sqlString;
             try
             {
-                sqlString = String.Format(
-                            "select Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
-                            "       Sd1.Buy, Sd1.Supply, Sd1.SupplyLevel, Sd1.timestamp As Timestamp1, " +
-                            "       Sd2.Sell, Sd2.Demand, Sd2.DemandLevel, Sd2.timestamp As Timestamp2, " +
-                            "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit from " +
-                            " (select * from tbCommodityData " +
-                            "   where Station_ID   = {0}) Sd1 " +
-                            " join" +
-                            " (select * from tbCommodityData " +
-                            "   where Station_ID   = {1}) Sd2" +
-                            "   on Sd1.Commodity_ID = Sd2.Commodity_ID" +
-                            " join" +
-                            " tbCommodity Cm" +
-                            "   on Sd1.Commodity_ID = Cm.ID" +
-                            "   having Profit is not null" +
-                            "   order by Profit Desc;", Station_From.ToNString("null"), Station_To.ToNString("null"));
-            
-                Program.DBCon.Execute(sqlString, Data);
+                if ((Station_From == null) || (Station_To == null))
+                {
+                    // if a id equals null it will result in a exception from mysql:
+                    // "There is already an open DataReader associated with this Connection which must be closed first."
+                    Data.Clear();
+                }
+                else
+                {
+                    sqlString = String.Format(
+                                "select Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
+                                "       Sd1.Buy, Sd1.Supply, Sd1.SupplyLevel, Sd1.timestamp As Timestamp1, " +
+                                "       Sd2.Sell, Sd2.Demand, Sd2.DemandLevel, Sd2.timestamp As Timestamp2, " +
+                                "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit from " +
+                                " (select * from tbCommodityData " +
+                                "   where Station_ID   = {0}) Sd1 " +
+                                " join" +
+                                " (select * from tbCommodityData " +
+                                "   where Station_ID   = {1}) Sd2" +
+                                "   on Sd1.Commodity_ID = Sd2.Commodity_ID" +
+                                " join" +
+                                " tbCommodity Cm" +
+                                "   on Sd1.Commodity_ID = Cm.ID" +
+                                "   having Profit is not null" +
+                                "   order by Profit Desc;", Station_From.ToNString("null"), Station_To.ToNString("null"));
+
+                    Program.DBCon.Execute(sqlString, Data);
+                }
 
             }
             catch (Exception ex)
