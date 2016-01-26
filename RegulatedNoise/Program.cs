@@ -269,7 +269,7 @@ namespace RegulatedNoise
                     CommandersLog.BaseData                      = Data.BaseData;
 
                     // prepare price analysis 
-                    PriceAnalysis                               = new PriceAnalysis();
+                    PriceAnalysis                               = new PriceAnalysis(new DBConnector(DBCon.ConfigData, true));
                     PriceAnalysis.BaseData                      = Data.BaseData;
 
                     // starting the external data interface

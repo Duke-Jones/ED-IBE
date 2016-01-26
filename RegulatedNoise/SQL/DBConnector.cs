@@ -60,7 +60,7 @@ namespace RegulatedNoise.SQL
         /// constructor for predefined settings
         /// </summary>
         /// <param name="Parameter"></param>
-        public DBConnector(ConnectionParams Parameter) 
+        public DBConnector(ConnectionParams Parameter, Boolean AutoConnect = false) 
         {
             try 
             {
@@ -69,11 +69,15 @@ namespace RegulatedNoise.SQL
 
                 Init(Parameter);
 
+                if(AutoConnect)
+                    Connect();
+
             }
             catch (Exception ex) {
                 throw new Exception("Error in Init function", ex);
             }
         }
+
 
         //Implement IDisposable.
         public void Dispose()
@@ -1139,6 +1143,14 @@ namespace RegulatedNoise.SQL
             catch (Exception ex)
             {
                 throw new Exception("Error while retrieving a rowindex", ex);
+            }
+        }
+
+        public ConnectionParams ConfigData
+        {
+            get
+            {
+                return m_ConfigData;
             }
         }
     }

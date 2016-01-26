@@ -561,11 +561,6 @@ namespace RegulatedNoise.FileScanner
                                     logger.Log("File closed");
                                 #endif
 
-                                if (false)
-                                {
-                                    LoggedEvents.Add(new LogEvent() { EventType = enLogEvents.System, Value = "Furz5", Time = DateTime.UtcNow });
-                                }
-
                                 processingLocationInfo(LoggedEvents);
 
                                 LoggedEvents.Clear();

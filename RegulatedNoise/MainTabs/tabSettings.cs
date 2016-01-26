@@ -97,7 +97,7 @@ namespace RegulatedNoise.MTSettings
 
 
                 // loading all settings
-                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
                 Cursor = oldCursor;

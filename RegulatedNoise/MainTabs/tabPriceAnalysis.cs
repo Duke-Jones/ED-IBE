@@ -31,7 +31,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         public const String                             DB_GROUPNAME                    = "PriceAnalysis";
         public const String                             CURRENT_SYSTEM                  = "<current system>";
         private const string                            BASE_DATA                       = "BaseData";
-
+        
         private PriceAnalysis                           m_DataSource;                   // data object
         private Dictionary<String, DataTable>           m_DGVTables;                 
         private Dictionary<String, BindingSource>       m_BindingSources;
@@ -40,6 +40,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                                                                                             
         private Dictionary<String, Boolean>             m_IsRefreshed;                  // shows, which tabs already refreshed after a new filtering
+        private Int32                                   m_ActiveCounter;                  
 
         /// <summary>
         /// Constructor
@@ -47,8 +48,9 @@ namespace RegulatedNoise.MTPriceAnalysis
         public tabPriceAnalysis()
         {
             InitializeComponent();
-            Dock        = DockStyle.Fill;
-            this.Name   = "tabPriceAnalysis";
+            Dock            = DockStyle.Fill;
+            this.Name       = "tabPriceAnalysis";
+            m_ActiveCounter = 0;
         }
 
         /// <summary>
@@ -169,7 +171,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 foreach (String Value in ComboboxValues.Split(';'))
                 cmbMaxTripDistance.Items.Add(Int32.Parse(Value));
 
-                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
                 loadCommoditiesForByCommodity();
@@ -197,11 +199,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         {
             try
             {
-                throw new NotImplementedException();
 
-                // force refresh
-                m_DataSource.Retriever.MemoryCache.Clear();
-                
             }
             catch (Exception ex)
             {
@@ -215,7 +213,7 @@ namespace RegulatedNoise.MTPriceAnalysis
         /// sets the buttons as marked or not
         /// </summary>
         /// <param name="setMarked"></param>
-        private void setFilterHasChanged(Boolean setMarked)
+        public void setFilterHasChanged(Boolean setMarked)
         {
             try
             {
@@ -458,9 +456,6 @@ namespace RegulatedNoise.MTPriceAnalysis
             Cursor oldCursor =  this.Cursor;
             String sqlString;
             DataTable Data;
-            Int32 SystemID;
-            Program.enVisitedFilter VFilter;
-            BindingSource bs;
 
             try
             {
@@ -484,11 +479,13 @@ namespace RegulatedNoise.MTPriceAnalysis
                 Program.DBCon.Execute(sqlString, Data);
 
                 if (Data.Rows.Count > 0)
-                { 
+                {
+                    Int32 SystemID;
+                    Program.enVisitedFilter VFilter;
                     SystemID = (Int32)Data.Rows[0]["ID"];
 
-                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
-                                                                                        "VisitedFilter", 
+                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME,
+                                                                                        "VisitedFilter",
                                                                                         ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                         false);
 
@@ -498,21 +495,20 @@ namespace RegulatedNoise.MTPriceAnalysis
                     Int32 SystemCount;
                     m_DataSource.getFilteredSystemAndStationCount(out StationCount, out SystemCount);
 
-                    lblSystemsFound.Text  = SystemCount.ToString();
+                    lblSystemsFound.Text = SystemCount.ToString();
                     lblStationsFound.Text = StationCount.ToString();
 
-                    sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," + 
+                    sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," +
                                 "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
                                 "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
                                 "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
                                 "       Fs.Distance" +
                                 " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
                                 " where FS.Station_ID = St.ID" +
-                                " and   St.System_ID  = Sy.ID;" ;
-                
+                                " and   St.System_ID  = Sy.ID;";
+
 
                     Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
-
                 
                     if(cmbStation1.ValueMember == "")
                     { 
@@ -1167,17 +1163,26 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if(Activate)
                 {
-                    cmbStation1.SelectedValueChanged    += cmbStation_SelectedValueChanged;
-                    cmbStation2.SelectedValueChanged    += cmbStation_SelectedValueChanged;
-                    cmbByStation.SelectedValueChanged   += cmbByStation_SelectedValueChanged;
-                    cmbByCommodity.SelectedValueChanged += cmbByCommodity_SelectedValueChanged;
+                    if (m_ActiveCounter == 0)
+                    {
+                        cmbStation1.SelectedValueChanged    += cmbStation_SelectedValueChanged;
+                        cmbStation2.SelectedValueChanged    += cmbStation_SelectedValueChanged;
+                        cmbByStation.SelectedValueChanged   += cmbByStation_SelectedValueChanged;
+                        cmbByCommodity.SelectedValueChanged += cmbByCommodity_SelectedValueChanged;
+                    }
+                    m_ActiveCounter++;
                 }
                 else
                 {
-                    cmbStation1.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
-                    cmbStation2.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
-                    cmbByStation.SelectedValueChanged   -= cmbByStation_SelectedValueChanged;
-                    cmbByCommodity.SelectedValueChanged -= cmbByCommodity_SelectedValueChanged;
+                    if(m_ActiveCounter == 1)
+                    {
+                        cmbStation1.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
+                        cmbStation2.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
+                        cmbByStation.SelectedValueChanged   -= cmbByStation_SelectedValueChanged;
+                        cmbByCommodity.SelectedValueChanged -= cmbByCommodity_SelectedValueChanged;
+                    }
+                    m_ActiveCounter--;
+
                 }
             }
             catch (Exception ex)

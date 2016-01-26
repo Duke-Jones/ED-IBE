@@ -115,7 +115,7 @@ namespace RegulatedNoise.MTCommandersLog
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
                 dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
 
-                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME);
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
                 Cursor = oldCursor;

@@ -13,11 +13,11 @@ namespace RegulatedNoise.SQL
 {
     class DBGuiInterface
     {
-        String m_InitGroup;
-        Object m_currentLoadingObject   = null;        
-        Int32  m_inloadAllSettings      = 0;
-        Int32  m_inloadSetting          = 0;
-
+        String      m_InitGroup;
+        Object      m_currentLoadingObject   = null;        
+        Int32       m_inloadAllSettings      = 0;
+        Int32       m_inloadSetting          = 0;
+        DBConnector m_DBCon                  = null;
 #region  TagParts
 
         private class TagParts
@@ -33,10 +33,11 @@ namespace RegulatedNoise.SQL
         /// constructor
         /// </summary>
         /// <param name="InitGroup"></param>
-        public DBGuiInterface(String InitGroup)
+        public DBGuiInterface(String InitGroup, DBConnector useDBCon)
         {
             try
             {
+                m_DBCon     = useDBCon;
                 m_InitGroup = InitGroup;
             }
             catch (Exception ex)
@@ -63,7 +64,7 @@ namespace RegulatedNoise.SQL
                         var Parts    = splitTag(cbSender.Tag);    
 
                         if(Parts != null)
-                            retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Checked.ToString());
+                            retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Checked.ToString());
                     }
                     else if((sender.GetType() == typeof(ComboBox)) || (sender.GetType() == typeof(ComboBoxInt32)))
                     {
@@ -105,16 +106,16 @@ namespace RegulatedNoise.SQL
 
                                 
 
-                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, Convert.ChangeType(SelectComboBoxValue, FoundColumnType).ToString());
+                                retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, Convert.ChangeType(SelectComboBoxValue, FoundColumnType).ToString());
                             }
                             else
-                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                                retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
 
                         }
                             //if (cbSender.ValueMember != null)
-                            //    retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.SelectedValue.ToString());
+                            //    retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.SelectedValue.ToString());
                             //else
-                            //    retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                            //    retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
                     }
                     else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)) || (sender.GetType() == typeof(TextBoxDouble)))
                     {
@@ -122,7 +123,7 @@ namespace RegulatedNoise.SQL
                         var Parts    = splitTag(cbSender.Tag);    
 
                         if(Parts != null)
-                            retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                            retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
                     }
                     else if(sender.GetType() == typeof(NumericUpDown))
                     {
@@ -130,7 +131,7 @@ namespace RegulatedNoise.SQL
                         var Parts    = splitTag(cbSender.Tag);    
 
                         if(Parts != null)
-                            retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                            retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
                     }
                     else if(sender.GetType() == typeof(RadioButton))
                     {
@@ -164,7 +165,7 @@ namespace RegulatedNoise.SQL
 
                                     if(rbControl.Checked)
                                     {
-                                        retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, rbControl.Tag.ToString());
+                                        retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, rbControl.Tag.ToString());
                                         Found = true;
                                         break;
                                     }
@@ -172,7 +173,7 @@ namespace RegulatedNoise.SQL
                             }
 
                             if(!Found)
-                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, Parts.DefaultValue);
+                                retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, Parts.DefaultValue);
 
                         }
                     }
@@ -188,8 +189,8 @@ namespace RegulatedNoise.SQL
                                 var SortEA = (DataGridViewExt.SortedEventArgs)Param1;
 
                                 // sortorder changed
-                                retValue  = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortColumn", SortEA.SortColumn.Index.ToString());
-                                retValue |= Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortOrder", SortEA.SortOrder.ToString());
+                                retValue  = m_DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortColumn", SortEA.SortColumn.Index.ToString());
+                                retValue |= m_DBCon.setIniValue(m_InitGroup, Parts.IDString + "_SortOrder", SortEA.SortOrder.ToString());
                             }
 
                             StringBuilder SaveString = new StringBuilder();
@@ -202,7 +203,7 @@ namespace RegulatedNoise.SQL
                                                                                             currentColumn.FillWeight.ToString().Replace(",","."), 
                                                                                             currentColumn.MinimumWidth.ToString()));
                             }
-                            Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
+                            m_DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
                         }
                     }
                     else if(sender.GetType() == typeof(SplitContainer))
@@ -219,7 +220,7 @@ namespace RegulatedNoise.SQL
                                 SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance) * 100  / ((Single)cbSender.Height)), 0);
                             
                             if(SplitterRatio > 0)
-                                retValue = Program.DBCon.setIniValue(m_InitGroup, Parts.IDString, SplitterRatio.ToString());
+                                retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, SplitterRatio.ToString());
                         }
                     }
                 }
@@ -251,7 +252,7 @@ namespace RegulatedNoise.SQL
                     if(Parts != null)
                     {
                         m_currentLoadingObject = cbSender;
-                        cbSender.Checked       = Program.DBCon.getIniValue<Boolean>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        cbSender.Checked       = m_DBCon.getIniValue<Boolean>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         m_currentLoadingObject = null;
                     }
                 }
@@ -297,7 +298,7 @@ namespace RegulatedNoise.SQL
                             { 
                                 GenericMethodInfo       = typeof(DBConnector).GetMethod("getIniValue", new Type[] {typeof(String), typeof(String), typeof(String) , typeof(Boolean) , typeof(Boolean)} );
                                 GenericMethodInfo       = GenericMethodInfo.MakeGenericMethod(FoundColumnType);
-                                ValueToSet              = GenericMethodInfo.Invoke(Program.DBCon, new object[] { m_InitGroup, TagParts.IDString, TagParts.DefaultValue, false, true });
+                                ValueToSet              = GenericMethodInfo.Invoke(m_DBCon, new object[] { m_InitGroup, TagParts.IDString, TagParts.DefaultValue, false, true });
                             }
 
                             if (FoundPropertyItem != null)
@@ -339,7 +340,7 @@ namespace RegulatedNoise.SQL
                             }
                         }
                         else
-                            cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, TagParts.IDString, TagParts.DefaultValue, false, true);
+                            cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, TagParts.IDString, TagParts.DefaultValue, false, true);
 
                         m_currentLoadingObject = null;
                     }
@@ -353,9 +354,9 @@ namespace RegulatedNoise.SQL
                     {
                         m_currentLoadingObject = cbSender;
                         if(Parts.DefaultValue.Equals("EMPTY"))
-                            cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, "");
+                            cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, "");
                         else
-                            cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                            cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         m_currentLoadingObject = null;
                     }
                 }
@@ -367,7 +368,7 @@ namespace RegulatedNoise.SQL
                     if(Parts != null)
                     {
                         m_currentLoadingObject = cbSender;
-                        cbSender.Text          = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         m_currentLoadingObject = null;
                     }
                 }
@@ -394,7 +395,7 @@ namespace RegulatedNoise.SQL
                         String Value;
 
                         m_currentLoadingObject  = cbSender;
-                        Value                   = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        Value                   = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         m_currentLoadingObject  = null;
 
                         // Search all radionbuttons in the combobox and 
@@ -439,8 +440,9 @@ namespace RegulatedNoise.SQL
 
                     if(Parts != null)
                     {
-                        var Column    = cbSender.Columns[Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString + "_SortColumn", Parts.DefaultValue, false, true)];
-                        OrderStr      = Program.DBCon.getIniValue<String>(m_InitGroup, Parts.IDString + "_SortOrder", SortOrder.Ascending.ToString(), false, true);
+                        var columnName = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString + "_SortColumn", Parts.DefaultValue, false, true);
+                        var Column    = cbSender.Columns[columnName];
+                        OrderStr      = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString + "_SortOrder", SortOrder.Ascending.ToString(), false, true);
 
                         if(OrderStr.Equals(SortOrder.Descending.ToString(), StringComparison.InvariantCultureIgnoreCase))
                             Order = System.ComponentModel.ListSortDirection.Descending;
@@ -456,10 +458,10 @@ namespace RegulatedNoise.SQL
 
                             //    SaveString.Append(String.Format("{0}/{1}/{2}/{3}/{4};", currentColumn.DisplayIndex, currentColumn.Width, currentColumn.Visible, currentColumn.FillWeight, currentColumn.AutoSizeMode));
                             //}
-                            //Program.DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
+                            //m_DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
 
                         String[] VisibilityStrings = null;
-                        VisibilityStrings = Program.DBCon.getIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                        VisibilityStrings = m_DBCon.getIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
                         Int32 ColumnIndex = 0;
 
                         cbSender.SuspendLayout();
@@ -513,7 +515,7 @@ namespace RegulatedNoise.SQL
 
                     if(Parts != null)
                     {
-                        SplitterRatio = Program.DBCon.getIniValue<Int32>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                        SplitterRatio = m_DBCon.getIniValue<Int32>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         if(cbSender.Orientation == Orientation.Vertical)
                             SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Width)) / 100, 0);
                         else

@@ -109,7 +109,9 @@ todo:
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
-
+SQL 0.0.33
+   * fixed a problem with multiple querys on a single connection
+-------------------------------------------------------------------------------------         
 SQL 0.0.32
    * added support to import multiple old "Commander's Log" files from RN
    * implemented EDDN API v4 changes for import of systems.json, stations.json, commodities.json

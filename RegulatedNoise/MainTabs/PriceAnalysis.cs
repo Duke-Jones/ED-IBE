@@ -59,14 +59,16 @@ namespace RegulatedNoise.MTPriceAnalysis
         private Boolean                             m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner        m_LogfileScanner;
         private ExternalDataInterface               m_ExternalDataInterface;
+        private DBConnector                         m_lDBCon;
 
         /// <summary>
         /// constructor
         /// </summary>
-        public PriceAnalysis()
+        public PriceAnalysis(DBConnector ownDBConnector)
         {
             try
             {
+                m_lDBCon                    = ownDBConnector;
                 m_BindingSource             = new BindingSource();
                 m_Datatable                 = new DataTable();
 
@@ -236,7 +238,8 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
-                    GUI.RefreshData();
+                    GUI.setFilterHasChanged(true);
+                    //GUI.RefreshData();
                 }
             }
             catch (Exception ex)
@@ -256,7 +259,8 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 if((e.Changed & ExternalDataInterface.enExternalDataEvents.DataCollected) > 0)
                 {
-                    GUI.RefreshData();
+                    GUI.setFilterHasChanged(true);
+                    //GUI.RefreshData();
                 }
             }
             catch (Exception ex)
@@ -298,10 +302,10 @@ namespace RegulatedNoise.MTPriceAnalysis
             {
                 // get info of basesystem
                 sqlString = "select * from tbSystems where ID = " + SystemID.ToString();
-                Program.DBCon.Execute(sqlString, currentSystem);
+                m_lDBCon.Execute(sqlString, currentSystem);
 
                 sqlString = "truncate table tmFilteredStations;";
-                Program.DBCon.Execute(sqlString);
+                m_lDBCon.Execute(sqlString);
 
                 sqlString = String.Format(
                             "insert into tmFilteredStations(System_id, Station_id, Distance, x, y, z) " +
@@ -378,7 +382,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                 sqlString += ";";
 
-                Program.DBCon.Execute(sqlString);
+                m_lDBCon.Execute(sqlString);
 
             }
             catch (Exception ex)
@@ -403,7 +407,7 @@ namespace RegulatedNoise.MTPriceAnalysis
             try
             {
                 // gettin' some freaky performance
-                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+                m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 if(OnlyTradedCommodities)
                 {
@@ -456,7 +460,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 " order by C.ID, FS.Distance";
                 }
   
-                Program.DBCon.Execute(sqlString, Data);
+                m_lDBCon.Execute(sqlString, Data);
 
                 lastCommodity   = null;
                 BuyMin          = null;
@@ -532,13 +536,13 @@ namespace RegulatedNoise.MTPriceAnalysis
                     }
                 }
 
-                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                 return Result;
             }
             catch (Exception ex)
             {
-                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                 throw new Exception("Error while getting the best market prices", ex);
             }
@@ -570,22 +574,22 @@ namespace RegulatedNoise.MTPriceAnalysis
                 Debug.Print("start :" + DateTime.Now.ToShortTimeString());
 
                 // gettin' some freaky performance
-                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+                m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 getFilteredSystemAndStationCount(out StationCount, out SystemCount);
 
                 // get the results for a cancellable loop
                 sqlString = "select * from tmfilteredstations" +
                             " order by Station_ID";
-                Program.DBCon.Execute(sqlString, tmFilteredStations);
+                m_lDBCon.Execute(sqlString, tmFilteredStations);
 
                 maxTradingDistance = -1;
-                if(Program.DBCon.getIniValue<Boolean>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistance"))
-                    maxTradingDistance = Program.DBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistanceValue");
+                if(m_lDBCon.getIniValue<Boolean>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistance"))
+                    maxTradingDistance = m_lDBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistanceValue");
 
                 // delete old content
                 sqlString = "truncate table tmNeighbourstations;";
-                Program.DBCon.Execute(sqlString);
+                m_lDBCon.Execute(sqlString);
 
                 sqlBaseString =  "insert into tmNeighbourstations(System_ID_From, Station_ID_From, Distance_From," +
                                  "                                System_ID_To, Station_ID_To, Distance_To, " +
@@ -626,7 +630,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                     else
                         sqlString = String.Format(sqlBaseString, CurrentStation.Station_id);
 
-                    Program.DBCon.Execute(sqlString);
+                    m_lDBCon.Execute(sqlString);
                         
                     Current += 1;
                     PV.progressUpdate(Current, tmFilteredStations.Rows.Count);
@@ -698,13 +702,13 @@ namespace RegulatedNoise.MTPriceAnalysis
                     Current     = 0;
                     Calculated.Clear();
 
-                    Program.DBCon.Execute("truncate table tmBestProfits");
+                    m_lDBCon.Execute("truncate table tmBestProfits");
 
                     // get the start stations for a cancellable loop
                     sqlString = "select Station_ID_From, count(*) As Neighbours from tmNeighbourstations" +
                                 " group by Station_ID_From" +
                                 " order by Station_ID_From";
-                    Program.DBCon.Execute(sqlString, "StartStations", Data);
+                    m_lDBCon.Execute(sqlString, "StartStations", Data);
 
                     PV = new ProgressView();
 
@@ -722,7 +726,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                         // get the trading data 
                         sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue);
 
-                        Program.DBCon.Execute(sqlString, "MinProfit", Data);
+                        m_lDBCon.Execute(sqlString, "MinProfit", Data);
 
                         if((Data.Tables["minProfit"].Rows.Count > 0) && (!Convert.IsDBNull(Data.Tables["MinProfit"])))
                             currentMinValue = (Int32)Data.Tables["MinProfit"].Rows[0]["Min_Profit"];
@@ -741,7 +745,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                     }
 
 
-                    Program.DBCon.Execute("truncate table tmPA_S2S_BestTrips");
+                    m_lDBCon.Execute("truncate table tmPA_S2S_BestTrips");
 
                     sqlString = "create temporary table tmpForDelete As" +
                                 " (select BP1.Station_Id_From, BP1.Station_Id_To from tmBestProfits BP1" +
@@ -757,7 +761,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
                                 "drop temporary table tmpForDelete;" ;
 
-                    Program.DBCon.Execute(sqlString);
+                    m_lDBCon.Execute(sqlString);
 
                     Result = new dsEliteDB.tmpa_s2s_besttripsDataTable();
 
@@ -768,7 +772,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 }
 
 
-                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
                 sqlString = "select distinct St1.*, St2.*, Bp.Max_Profit As Profit, NS.Distance_Between As Distance," +
                             "                null As TimeStamp_1, null As TimeStamp_2 from tmBestProfits Bp" +
@@ -798,7 +802,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                             " order by Max_Profit desc";
 
                 Result = new dsEliteDB.tmpa_s2s_besttripsDataTable();
-                Program.DBCon.Execute(sqlString, Result);
+                m_lDBCon.Execute(sqlString, Result);
 
                 sqlBaseString = "select PR1.Commodity_ID As FWCommodityID, Pr1.LocCommodity As FWCommodity," +
                                 "	   PR1.timestamp    As FWTimeStamp," +
@@ -847,7 +851,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 foreach (dsEliteDB.tmpa_s2s_besttripsRow CurrentRow in Result)
                 {
                     sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1");
-                    Program.DBCon.Execute(sqlString, "Timestamps", Data);
+                    m_lDBCon.Execute(sqlString, "Timestamps", Data);
 
                     if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"]))
                         CurrentRow.TimeStamp_1 = (DateTime)Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"];
@@ -866,7 +870,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 	        }
 	        catch (Exception ex)
 	        {
-                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
 		        throw new Exception("Error while calculating possible trading routes", ex);
 	        }
@@ -887,7 +891,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 // get amount of data for viewing
                 sqlString = "select count(distinct(System_id)) As Systems, count(*) As Stations" +
                             " from tmFilteredStations";
-                Program.DBCon.Execute(sqlString, Data);
+                m_lDBCon.Execute(sqlString, Data);
 
                 SystemCount  = (Int32)(Int64)Data.Rows[0]["Systems"];
                 StationCount = (Int32)(Int64)Data.Rows[0]["Stations"];
@@ -934,7 +938,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 "   having Profit is not null" +
                                 "   order by Profit Desc;", Station_From.ToNString("null"), Station_To.ToNString("null"));
 
-                    Program.DBCon.Execute(sqlString, Data);
+                    m_lDBCon.Execute(sqlString, Data);
                 }
 
             }
@@ -978,7 +982,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                           " and   Cd.Commodity_ID 	= Co.ID " +
                                           " and St.ID = {0}", Station);
   
-                Program.DBCon.Execute(sqlString, Data);
+                m_lDBCon.Execute(sqlString, Data);
 
             }
             catch (Exception ex)
@@ -1006,7 +1010,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                           " and   St.ID           = Fi.station_id" +
                                           " and   Cd.Commodity_ID = {0}", Commodity_ID);
   
-                Program.DBCon.Execute(sqlString, Data);
+                m_lDBCon.Execute(sqlString, Data);
 
             }
             catch (Exception ex)
@@ -1027,7 +1031,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                 sqlString = String.Format("select Id, LocCommodity As Commodity" + 
                                           " from tbCommodity");
   
-                Program.DBCon.Execute(sqlString, Data);
+                m_lDBCon.Execute(sqlString, Data);
 
             }
             catch (Exception ex)
@@ -1067,7 +1071,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                                 " order by SystemName)" ;
                 }
 
-                Program.DBCon.Execute(sqlString, Data);
+                m_lDBCon.Execute(sqlString, Data);
 
             }
             catch (Exception ex)

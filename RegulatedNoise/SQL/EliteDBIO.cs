@@ -232,23 +232,28 @@ namespace RegulatedNoise.SQL
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
+        private Dictionary<DataTable, DBConnector> m_BaseData_Connector = null;
 
         /// <summary>
         /// access to the dataset with the base data
         /// </summary>
         public dsEliteDB                              BaseData { get { return m_BaseData; } }
-        private Dictionary<DataTable, MySql.Data.MySqlClient.MySqlDataAdapter>     m_BaseData_UpdateObjects = new Dictionary<DataTable, MySql.Data.MySqlClient.MySqlDataAdapter>();
+//        private Dictionary<DataTable, MySql.Data.MySqlClient.MySqlDataAdapter>     m_BaseData_UpdateObjects = new Dictionary<DataTable, MySql.Data.MySqlClient.MySqlDataAdapter>();
+        
 
 
 
         /// <summary>
-        /// loads the data from the basetables into memory
+        /// loads the data from the basetables into memory. For correct initialization it is
+        /// necessary to call this fuction with a unset tableName
+        /// 
         /// </summary>
         /// <param name="m_BaseData"></param>
         internal void PrepareBaseTables(String TableName = "", Boolean saveChanged = false)
         {
             PerformanceTimer Runtime;
-            MySql.Data.MySqlClient.MySqlDataAdapter dataAdapter;
+            //MySql.Data.MySqlClient.MySqlDataAdapter dataAdapter;
+            DBConnector currentDBCon;
 
             try
             {
@@ -258,44 +263,54 @@ namespace RegulatedNoise.SQL
                 { 
                     if(m_BaseData == null)
                     {
-                        m_BaseData = new dsEliteDB();
+                        m_BaseData              = new dsEliteDB();
+                        m_BaseData_Connector    = new Dictionary<DataTable, DBConnector>();
                     }
 
                     foreach (String BaseTable in BaseTables_Systems)
                     {
-                        if (! m_BaseData_UpdateObjects.ContainsKey(m_BaseData.Tables[BaseTable]))
-                            m_BaseData_UpdateObjects.Add(m_BaseData.Tables[BaseTable], null);
+                        if (!m_BaseData_Connector.TryGetValue(m_BaseData.Tables[BaseTable], out currentDBCon))
+                        {
+                            // each basetable gets it's own DBConnector, because 
+                            // the contained DataReaders will be hold open for possible 
+                            // changes (MySQL doesn't support MARS "Multiple Active Result Sets")
+
+                            currentDBCon = new DBConnector(Program.DBCon.ConfigData);
+                            m_BaseData_Connector.Add(m_BaseData.Tables[BaseTable], currentDBCon);
+
+                            currentDBCon.Connect();
+                        }
 
                         Runtime.startMeasuring();
                         m_BaseData.Tables[BaseTable].Clear();
 
                         // preload all tables with base data
-                        dataAdapter = m_BaseData_UpdateObjects[m_BaseData.Tables[BaseTable]];
-                        Program.DBCon.TableRead(String.Format("select * from {0}", BaseTable), BaseTable, m_BaseData, ref dataAdapter);
+                        currentDBCon.TableRead(String.Format("select * from {0}", BaseTable), BaseTable, m_BaseData);
                         
-                        if(m_BaseData_UpdateObjects[m_BaseData.Tables[BaseTable]] == null)
-                            m_BaseData_UpdateObjects[m_BaseData.Tables[BaseTable]] = dataAdapter;
-
                         Runtime.PrintAndReset("loading full table '" + BaseTable + "':");
                     }
                 }
                 else if(BaseTables_Systems.Contains(TableName))
                 {
-                    dataAdapter = m_BaseData_UpdateObjects[m_BaseData.Tables[TableName]];
+                    currentDBCon = m_BaseData_Connector[m_BaseData.Tables[TableName]];
 
                     if(saveChanged)
                     {
+                        // save all containing changes
                         Runtime.PrintAndReset("saving changes in table '" + TableName + "':");
-                        Program.DBCon.TableUpdate(TableName, m_BaseData, dataAdapter);
+                        currentDBCon.TableUpdate(TableName, m_BaseData);
                     }
+                    else
+                    {
+                        Runtime.startMeasuring();
 
-                    Runtime.startMeasuring();
-                    m_BaseData.Tables[TableName].Clear();
+                        m_BaseData.Tables[TableName].Clear();
 
-                    // reload selected table
-                    Program.DBCon.TableRead(TableName, m_BaseData, ref dataAdapter);
+                        // reload selected table
+                        currentDBCon.TableRead("", TableName, m_BaseData);
 
-                    Runtime.PrintAndReset("re-loading full table '" + TableName + "':");
+                        Runtime.PrintAndReset("re-loading full table '" + TableName + "':");
+                    }
                 }
                 else
                 {
@@ -1208,6 +1223,8 @@ namespace RegulatedNoise.SQL
                 SystemRow["state_id"]               = DBConvert.From(BaseTableNameToID("state", SystemObject.State, insertUnknown));
                 SystemRow["security_id"]            = DBConvert.From(BaseTableNameToID("security", SystemObject.Security, insertUnknown));
                 SystemRow["primary_economy_id"]     = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy, insertUnknown));
+                SystemRow["power"]                  = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy, insertUnknown));
+                SystemRow["power_state"]            = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy, insertUnknown));
                 SystemRow["needs_permit"]           = DBConvert.From(SystemObject.NeedsPermit);
                 SystemRow["updated_at"]             = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(SystemObject.UpdatedAt).DateTime);
                 SystemRow["is_changed"]             = OwnData ? DBConvert.From(1) : DBConvert.From(0);
@@ -1675,7 +1692,6 @@ namespace RegulatedNoise.SQL
                 StationRow["has_commodities"]       = DBConvert.From(StationObject.HasCommodities);
                 StationRow["has_refuel"]            = DBConvert.From(StationObject.HasRefuel);
                 StationRow["has_repair"]            = DBConvert.From(StationObject.HasRepair);
-                StationRow["has_rearm"]             = DBConvert.From(StationObject.HasRearm);
                 StationRow["has_outfitting"]        = DBConvert.From(StationObject.HasOutfitting);
                 StationRow["updated_at"]            = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(StationObject.UpdatedAt).DateTime);
                 StationRow["is_changed"]            = OwnData ? DBConvert.From(1) : DBConvert.From(0);
