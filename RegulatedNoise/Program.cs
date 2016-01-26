@@ -23,6 +23,7 @@ namespace RegulatedNoise
 {
     public static class Program
     {
+        public const String GIT_PATH                = @"https://github.com/Duke-Jones/ED-IBE";
 
         public const Decimal DB_VERSION_CURRENT     = 1.0M;
         public const Decimal DB_VERSION_NONE        = 0.0M; 

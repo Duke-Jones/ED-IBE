@@ -226,7 +226,6 @@
             this.label46 = new System.Windows.Forms.Label();
             this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
             this.pbForegroundColour = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button23 = new System.Windows.Forms.Button();
             this.button22 = new System.Windows.Forms.Button();
             this.lblSubtitle = new System.Windows.Forms.Label();
@@ -252,7 +251,6 @@
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabCtrlMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -308,7 +306,7 @@
             // cmdLoadCurrentSystem
             // 
             this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(935, 69);
+            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(963, 69);
             this.cmdLoadCurrentSystem.Name = "cmdLoadCurrentSystem";
             this.cmdLoadCurrentSystem.Size = new System.Drawing.Size(148, 21);
             this.cmdLoadCurrentSystem.TabIndex = 60;
@@ -360,7 +358,7 @@
             // 
             this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(731, 52);
+            this.label45.Location = new System.Drawing.Point(759, 52);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(91, 13);
             this.label45.TabIndex = 10;
@@ -369,7 +367,7 @@
             // tbCurrentStationinfoFromLogs
             // 
             this.tbCurrentStationinfoFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(828, 49);
+            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(856, 49);
             this.tbCurrentStationinfoFromLogs.Name = "tbCurrentStationinfoFromLogs";
             this.tbCurrentStationinfoFromLogs.ReadOnly = true;
             this.tbCurrentStationinfoFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -379,7 +377,7 @@
             // 
             this.label37.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(741, 31);
+            this.label37.Location = new System.Drawing.Point(769, 31);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(81, 13);
             this.label37.TabIndex = 8;
@@ -388,7 +386,7 @@
             // tbCurrentSystemFromLogs
             // 
             this.tbCurrentSystemFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(828, 28);
+            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(856, 28);
             this.tbCurrentSystemFromLogs.Name = "tbCurrentSystemFromLogs";
             this.tbCurrentSystemFromLogs.ReadOnly = true;
             this.tbCurrentSystemFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -402,7 +400,7 @@
             this.dataToolStripMenuItem});
             this.msMainMenu.Location = new System.Drawing.Point(0, 0);
             this.msMainMenu.Name = "msMainMenu";
-            this.msMainMenu.Size = new System.Drawing.Size(1089, 24);
+            this.msMainMenu.Size = new System.Drawing.Size(1117, 24);
             this.msMainMenu.TabIndex = 61;
             this.msMainMenu.Text = "menuStrip1";
             // 
@@ -443,7 +441,7 @@
             this.tabEDDN.Controls.Add(this.groupBox2);
             this.tabEDDN.Location = new System.Drawing.Point(4, 22);
             this.tabEDDN.Name = "tabEDDN";
-            this.tabEDDN.Size = new System.Drawing.Size(1076, 587);
+            this.tabEDDN.Size = new System.Drawing.Size(1104, 606);
             this.tabEDDN.TabIndex = 7;
             this.tabEDDN.Text = "EDDN";
             this.tabEDDN.UseVisualStyleBackColor = true;
@@ -467,7 +465,7 @@
             this.lbEddnImplausible.Location = new System.Drawing.Point(3, 401);
             this.lbEddnImplausible.Name = "lbEddnImplausible";
             this.lbEddnImplausible.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbEddnImplausible.Size = new System.Drawing.Size(1045, 173);
+            this.lbEddnImplausible.Size = new System.Drawing.Size(1073, 186);
             this.lbEddnImplausible.TabIndex = 2;
             // 
             // tbEddnStats
@@ -477,7 +475,7 @@
             this.tbEddnStats.Location = new System.Drawing.Point(459, 3);
             this.tbEddnStats.Multiline = true;
             this.tbEddnStats.Name = "tbEddnStats";
-            this.tbEddnStats.Size = new System.Drawing.Size(589, 379);
+            this.tbEddnStats.Size = new System.Drawing.Size(617, 379);
             this.tbEddnStats.TabIndex = 1;
             // 
             // groupBox2
@@ -641,7 +639,7 @@
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1076, 587);
+            this.tabWebserver.Size = new System.Drawing.Size(1104, 606);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -668,7 +666,7 @@
             this.groupBox1.Controls.Add(this.lblURL);
             this.groupBox1.Location = new System.Drawing.Point(10, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1027, 559);
+            this.groupBox1.Size = new System.Drawing.Size(1055, 578);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Webserver";
@@ -822,7 +820,7 @@
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1076, 587);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1104, 606);
             this.tabOCRGroup.TabIndex = 11;
             this.tabOCRGroup.Text = "Market Data Interface";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
@@ -836,7 +834,7 @@
             this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
             this.tabCtrlOCR.Name = "tabCtrlOCR";
             this.tabCtrlOCR.SelectedIndex = 0;
-            this.tabCtrlOCR.Size = new System.Drawing.Size(1048, 586);
+            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 605);
             this.tabCtrlOCR.TabIndex = 0;
             // 
             // tabExternal
@@ -857,7 +855,7 @@
             this.tabExternal.Location = new System.Drawing.Point(4, 22);
             this.tabExternal.Name = "tabExternal";
             this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternal.Size = new System.Drawing.Size(1040, 560);
+            this.tabExternal.Size = new System.Drawing.Size(1068, 579);
             this.tabExternal.TabIndex = 5;
             this.tabExternal.Text = "External IO";
             this.tabExternal.UseVisualStyleBackColor = true;
@@ -989,7 +987,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1076, 587);
+            this.tabSystemData.Size = new System.Drawing.Size(1104, 606);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -1042,7 +1040,7 @@
             this.groupBox14.Controls.Add(this.cmbStationMaxLandingPadSize);
             this.groupBox14.Location = new System.Drawing.Point(506, 49);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(530, 524);
+            this.groupBox14.Size = new System.Drawing.Size(558, 543);
             this.groupBox14.TabIndex = 0;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Station Data";
@@ -1653,7 +1651,7 @@
             this.gbSystemSystemData.Controls.Add(this.cmbSystemGovernment);
             this.gbSystemSystemData.Location = new System.Drawing.Point(14, 49);
             this.gbSystemSystemData.Name = "gbSystemSystemData";
-            this.gbSystemSystemData.Size = new System.Drawing.Size(486, 524);
+            this.gbSystemSystemData.Size = new System.Drawing.Size(486, 543);
             this.gbSystemSystemData.TabIndex = 0;
             this.gbSystemSystemData.TabStop = false;
             this.gbSystemSystemData.Text = "System Data";
@@ -2066,14 +2064,13 @@
             this.tabHelpAndChangeLog.Controls.Add(this.label46);
             this.tabHelpAndChangeLog.Controls.Add(this.pbBackgroundColour);
             this.tabHelpAndChangeLog.Controls.Add(this.pbForegroundColour);
-            this.tabHelpAndChangeLog.Controls.Add(this.pictureBox1);
             this.tabHelpAndChangeLog.Controls.Add(this.button23);
             this.tabHelpAndChangeLog.Controls.Add(this.button22);
             this.tabHelpAndChangeLog.Controls.Add(this.lblSubtitle);
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1076, 587);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1104, 606);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -2083,18 +2080,18 @@
             this.label93.AutoSize = true;
             this.label93.Location = new System.Drawing.Point(297, 221);
             this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(121, 13);
+            this.label93.Size = new System.Drawing.Size(122, 13);
             this.label93.TabIndex = 47;
-            this.label93.Text = "RN im deutschen Forum";
+            this.label93.Text = "IBE im deutschen Forum";
             // 
             // label92
             // 
             this.label92.AutoSize = true;
             this.label92.Location = new System.Drawing.Point(297, 186);
             this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(92, 13);
+            this.label92.Size = new System.Drawing.Size(93, 13);
             this.label92.TabIndex = 46;
-            this.label92.Text = "english RN thread";
+            this.label92.Text = "english IBE thread";
             // 
             // label91
             // 
@@ -2132,10 +2129,10 @@
             this.llVisitUpdate.AutoSize = true;
             this.llVisitUpdate.Location = new System.Drawing.Point(27, 200);
             this.llVisitUpdate.Name = "llVisitUpdate";
-            this.llVisitUpdate.Size = new System.Drawing.Size(238, 13);
+            this.llVisitUpdate.Size = new System.Drawing.Size(197, 13);
             this.llVisitUpdate.TabIndex = 42;
             this.llVisitUpdate.TabStop = true;
-            this.llVisitUpdate.Text = "https://github.com/Duke-Jones/RegulatedNoise";
+            this.llVisitUpdate.Text = "https://github.com/Duke-Jones/ED-IBE";
             this.llVisitUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
             // 
             // cmdUpdate
@@ -2168,7 +2165,7 @@
             this.lblUpdateDetail.Multiline = true;
             this.lblUpdateDetail.Name = "lblUpdateDetail";
             this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lblUpdateDetail.Size = new System.Drawing.Size(664, 190);
+            this.lblUpdateDetail.Size = new System.Drawing.Size(692, 209);
             this.lblUpdateDetail.TabIndex = 39;
             // 
             // cmdDonate
@@ -2177,9 +2174,9 @@
             this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(870, 380);
+            this.cmdDonate.Location = new System.Drawing.Point(838, 366);
             this.cmdDonate.Name = "cmdDonate";
-            this.cmdDonate.Size = new System.Drawing.Size(154, 36);
+            this.cmdDonate.Size = new System.Drawing.Size(161, 43);
             this.cmdDonate.TabIndex = 37;
             this.cmdDonate.UseVisualStyleBackColor = true;
             this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
@@ -2187,13 +2184,15 @@
             // label42
             // 
             this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(711, 350);
+            this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.ForeColor = System.Drawing.Color.Green;
+            this.label42.Location = new System.Drawing.Point(749, 245);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(315, 52);
+            this.label42.Size = new System.Drawing.Size(352, 139);
             this.label42.TabIndex = 38;
-            this.label42.Text = "If you like this program and you want to support my development, \r\nI was very hap" +
-    "py about a small donation. \r\n\r\nThank you, Duke Jones";
+            this.label42.Text = "Hi guys. I spent many (hundreds) of hours for this tool.\r\nIf you like this progra" +
+    "m and you want to support furthermore development, \r\nI was very happy about a sm" +
+    "all donation. \r\n\r\nThank you, Duke Jones";
             // 
             // panel2
             // 
@@ -2208,20 +2207,20 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(1, 490);
+            this.panel2.Location = new System.Drawing.Point(10, 523);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1051, 68);
+            this.panel2.Size = new System.Drawing.Size(1079, 77);
             this.panel2.TabIndex = 33;
             // 
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(247, 6);
+            this.label44.Location = new System.Drawing.Point(235, 6);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(546, 13);
+            this.label44.Size = new System.Drawing.Size(663, 13);
             this.label44.TabIndex = 5;
-            this.label44.Text = "RegulatedNoise is as unofficial as it gets.   Elite: Dangerous is a registered tr" +
-    "ademark of Frontier Developments plc.";
+            this.label44.Text = "ED - Intelligent Boardcomputer Extension is as unofficial as it gets.   Elite: Da" +
+    "ngerous is a registered trademark of Frontier Developments plc.";
             // 
             // linkLabel9
             // 
@@ -2329,7 +2328,7 @@
             this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BackgroundSet.AutoSize = true;
             this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackgroundSet.Location = new System.Drawing.Point(1000, 192);
+            this.BackgroundSet.Location = new System.Drawing.Point(1064, 69);
             this.BackgroundSet.Name = "BackgroundSet";
             this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
             this.BackgroundSet.TabIndex = 30;
@@ -2341,7 +2340,7 @@
             this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ForegroundSet.AutoSize = true;
             this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForegroundSet.Location = new System.Drawing.Point(1000, 154);
+            this.ForegroundSet.Location = new System.Drawing.Point(1064, 31);
             this.ForegroundSet.Name = "ForegroundSet";
             this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
             this.ForegroundSet.TabIndex = 29;
@@ -2351,7 +2350,7 @@
             // button20
             // 
             this.button20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button20.Location = new System.Drawing.Point(877, 224);
+            this.button20.Location = new System.Drawing.Point(941, 101);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(148, 44);
             this.button20.TabIndex = 28;
@@ -2363,7 +2362,7 @@
             // 
             this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(893, 194);
+            this.label47.Location = new System.Drawing.Point(957, 71);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(98, 13);
             this.label47.TabIndex = 27;
@@ -2373,7 +2372,7 @@
             // 
             this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(893, 155);
+            this.label46.Location = new System.Drawing.Point(957, 32);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(94, 13);
             this.label46.TabIndex = 26;
@@ -2383,7 +2382,7 @@
             // 
             this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbBackgroundColour.Location = new System.Drawing.Point(993, 186);
+            this.pbBackgroundColour.Location = new System.Drawing.Point(1057, 63);
             this.pbBackgroundColour.Name = "pbBackgroundColour";
             this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbBackgroundColour.TabIndex = 25;
@@ -2394,23 +2393,12 @@
             // 
             this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbForegroundColour.Location = new System.Drawing.Point(993, 148);
+            this.pbForegroundColour.Location = new System.Drawing.Point(1057, 25);
             this.pbForegroundColour.Name = "pbForegroundColour";
             this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbForegroundColour.TabIndex = 24;
             this.pbForegroundColour.TabStop = false;
             this.pbForegroundColour.Click += new System.EventHandler(this.pbForegroundColour_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(877, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(148, 130);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 19;
-            this.pictureBox1.TabStop = false;
             // 
             // button23
             // 
@@ -2445,12 +2433,12 @@
             // lblRegulatedNoise
             // 
             this.lblRegulatedNoise.AutoSize = true;
-            this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold);
-            this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 0);
+            this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 49);
             this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(641, 106);
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(726, 50);
             this.lblRegulatedNoise.TabIndex = 2;
-            this.lblRegulatedNoise.Text = "RegulatedNoise";
+            this.lblRegulatedNoise.Text = "ED - Intelligent Bordcomputer Extension";
             // 
             // tabCtrlMain
             // 
@@ -2465,7 +2453,7 @@
             this.tabCtrlMain.Location = new System.Drawing.Point(3, 72);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1084, 613);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1112, 632);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -2474,7 +2462,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1089, 686);
+            this.ClientSize = new System.Drawing.Size(1117, 705);
             this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
             this.Controls.Add(this.label53);
@@ -2490,7 +2478,7 @@
             this.MainMenuStrip = this.msMainMenu;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "RegulatedNoise v";
+            this.Text = "ED - Intelligent Bordcomputer Extension v";
             this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -2523,7 +2511,6 @@
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabCtrlMain.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -2715,7 +2702,6 @@
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.PictureBox pbBackgroundColour;
         private System.Windows.Forms.PictureBox pbForegroundColour;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button23;
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.Label lblSubtitle;

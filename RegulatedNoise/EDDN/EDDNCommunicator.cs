@@ -179,7 +179,7 @@ namespace RegulatedNoise.EDDN
 
                 // fill the header
                 Data.Header = new Schema_v2.Header_Class() {SoftwareName        = "RegulatedNoise__DJ", 
-                                                            SoftwareVersion     = Program.Settings_old.getVersionString(),
+                                                            SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
                                                             GatewayTimestamp    = TimeStamp, 
                                                             UploaderID          = UserID};
 

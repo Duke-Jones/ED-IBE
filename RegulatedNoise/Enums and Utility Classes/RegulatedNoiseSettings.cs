@@ -61,12 +61,6 @@ namespace RegulatedNoise
     {
         public static RegulatedNoiseSettings instance = null;
 
-        public readonly decimal Version   = 1.84m;
-
-#if DukeJones
-
-        public readonly decimal VersionDJ = 0.27m;
-#endif
         public string PilotsName                                        = String.Empty;
         public string UserName                                          = String.Empty;
         public bool usePilotsName                                       = true;
@@ -197,128 +191,6 @@ namespace RegulatedNoise
             return instance;
         }
 
-        public void CheckVersion2()
-        {
-            string sURL;
-            sURL = @"https://api.github.com/repos/Duke-Jones/RegulatedNoise/releases";
-            string response;
-
-            HttpWebRequest webRequest = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
-            webRequest.Method = "GET";
-            webRequest.ServicePoint.Expect100Continue = false;
-            webRequest.UserAgent = "YourAppName";
-                
-            decimal maxVersion = -1;
-            decimal maxVersionDJ = -1;
-
-            try
-            {
-                string[] Versions;
-                decimal MainVersion;
-                decimal DJVersion;
-                string release;
-                bool PR;
-
-                using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
-                    response = responseReader.ReadToEnd();
-
-                dynamic data = JsonConvert.DeserializeObject<dynamic>(response);
-
-                var ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-                ci.NumberFormat.CurrencyDecimalSeparator = ".";
-
-                dynamic releaseDetails = null;
-
-                foreach (var x in data)
-                {
-                    release = x.tag_name;
-                    PR      = (bool)x.prerelease;
-
-                    if (PR == false)
-                    {
-                        release = release.Replace("v", "");
-                        Versions = release.Split('_');
-
-                        MainVersion = decimal.Parse(Versions[0], NumberStyles.Any, ci);
-
-                        if (Versions.GetUpperBound(0) > 0)
-                            DJVersion = decimal.Parse(Versions[1], NumberStyles.Any, ci);
-                        else
-                            DJVersion = decimal.Parse("0.00", NumberStyles.Any, ci);
-
-                        if (maxVersion < MainVersion)
-                        {
-                            maxVersion      = MainVersion;
-                            maxVersionDJ    = DJVersion;
-                            releaseDetails = x;
-                        }
-                        else if ((maxVersion == MainVersion) && (maxVersionDJ < DJVersion))
-                        {
-                            maxVersion      = MainVersion;
-                            maxVersionDJ    = DJVersion;
-                            releaseDetails  = x;
-                        }
-                    }
-                }
-
-                if ((Version < maxVersion) || ((Version == maxVersion) && (VersionDJ < maxVersionDJ)))
-                {
-                
-                    Form1.InstanceObject.lblUpdateInfo.Text = "newer DJ-version found!";
-                    Form1.InstanceObject.lblUpdateInfo.ForeColor = Color.Black;
-                    Form1.InstanceObject.lblUpdateInfo.BackColor = Color.Yellow;
-
-                    Form1.InstanceObject.lblUpdateDetail.Text = maxVersion.ToString().Replace(",", ".") + "-" + maxVersionDJ.ToString().Replace(",", ".") + ":\r\n";
-
-                    Form1.InstanceObject.lblUpdateDetail.Text += releaseDetails.body;
-
-                }
-                else
-                { 
-                    Form1.InstanceObject.lblUpdateInfo.Text = "you have the latest version of RegulatedNoise";
-                    Form1.InstanceObject.lblUpdateInfo.ForeColor = Color.DarkGreen;
-
-                    Form1.InstanceObject.lblUpdateDetail.Text = maxVersion.ToString().Replace(",", ".") + "-" + maxVersionDJ.ToString().Replace(",", ".") + ":\r\n";
-                    Form1.InstanceObject.lblUpdateDetail.Text += releaseDetails.body;
-                }
-            }
-            catch
-            {
-                // Not a disaster if we can't do the version check...
-                return;
-            }
-
-        }
-
-        /// <summary>
-        /// checks if this is the first time of this version running
-        /// </summary>
-        /// <returns></returns>
-        public bool isFirstVersionRun()
-        {
-            
-            return lastVersionIsBefore(Version, VersionDJ);
-        }
-
-        public bool lastVersionIsBefore(Decimal Version_Main, Decimal Version_DJ)
-        {
-            try
-            {
-                bool retValue = false;
-
-                if ((lastVersion < Version_Main) || ((lastVersion == Version_Main) && (lastVersionDJ < Version_DJ)))
-                { 
-                    retValue = true;
-                }
-
-                return retValue;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error when checking last version", ex);
-            }
-        }
-
         /// <summary>
         /// returns the UI color as color object
         /// </summary>
@@ -350,21 +222,6 @@ namespace RegulatedNoise
             return Color.FromArgb(int.Parse(BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber), 
                                   int.Parse(BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
                                   int.Parse(BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
-        }
-
-
-        /// <summary>
-        /// really dirty but quick
-        /// </summary>
-        public void prepareVersion()
-        {
-            lastVersion     = Version;
-            lastVersionDJ   = VersionDJ;
-        }
-
-        public String getVersionString()
-        {
-            return Version.ToString(CultureInfo.InvariantCulture) + "_" + VersionDJ.ToString(CultureInfo.InvariantCulture);
         }
 
         public String GetUserID()

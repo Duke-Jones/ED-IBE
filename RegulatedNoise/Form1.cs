@@ -171,11 +171,6 @@ namespace RegulatedNoise
                 _logger.Log("  - initialised component");
                 _Splash.InfoChange("initialize components...<OK>");
 
-                _Splash.InfoAdd("doing special work if something to do...");
-                doSpecial(enDoSpecial.onStart);
-                _logger.Log("  - special things done");
-                _Splash.InfoChange("doing special work if something to do...<OK>");
-
                 _Splash.InfoAdd("load settings...");
                 SetProductPath();
                 _logger.Log("  - product path set");
@@ -226,8 +221,6 @@ namespace RegulatedNoise
                 EDDNComm = new RegulatedNoise.EDDN.EDDNCommunicator(this);
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
-
-                doSpecial(enDoSpecial.afterMilkyway);
 
                 //MessageBox.Show("Todo");
                 //_Splash.InfoAdd("load station history...");
@@ -579,7 +572,6 @@ namespace RegulatedNoise
 
             var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
             var x = new XmlSerializer(Program.Settings_old.GetType());
-            Program.Settings_old.prepareVersion();
             x.Serialize(stream, Program.Settings_old);
             stream.Close();
 
@@ -1789,13 +1781,7 @@ namespace RegulatedNoise
 
             TabPage     newTab;
 
-            Text += Program.Settings_old.Version.ToString(CultureInfo.InvariantCulture);
-
-#if DukeJones
-            Program.Settings_old.CheckVersion2();
-            Text += "_" + Program.Settings_old.VersionDJ.ToString(CultureInfo.InvariantCulture);
-#endif
-
+            Text += VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
 
             if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
                  DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
@@ -1854,6 +1840,10 @@ namespace RegulatedNoise
             Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
 
 
+            // until this is working again 
+            tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
+            tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
+
         }
 
         private void Clock_Tick(object sender, EventArgs e)
@@ -1869,180 +1859,6 @@ namespace RegulatedNoise
             { 
                 txtLocalTime.Text = DateTime.Now.ToString("T");
                 txtEDTime.Text = DateTime.UtcNow.ToString("T");
-            }
-        }
-
-        private void doSpecial(enDoSpecial when)
-        {
-            decimal lastVersion   = Program.Settings_old.lastVersion;
-            decimal lastVersionDJ = Program.Settings_old.lastVersionDJ;
-
-            if (Program.Settings_old.isFirstVersionRun())
-            {
-
-                // do all the things that must be done for the new versions
-                if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.09m)))
-                { 
-                    // this value works much better
-                    Program.Settings_old.EBPixelThreshold = 0.6f;
-                    Program.Settings_old.EBPixelAmount    = 22;
-                }
-
-                // do all the things that must be done for the new versions
-                if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.17m)))
-                { 
-                    if(Program.Settings_old.UseEddnTestSchema)
-                    { 
-                        Program.Settings_old.UseEddnTestSchema = false;
-                        SaveSettings();
-                        if(Program.Settings_old.PostToEddnOnImport)
-                        { 
-                            MsgBox.Show("Set EDDN-mode uniquely to <non-test>-mode. \n" +
-                                            "If you know, what you're doing (e.g. you're developer) you can change it back again to <test>-mode", 
-                                            "Changing a mistakable setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                }
-
-                // do all the things that must be done for the new versions
-                if((when == enDoSpecial.onStart) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.22m)))
-                { 
-                    String currentFile = Program.GetDataPath("AutoSave.csv");
-                    String newFile = Program.GetDataPath(String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
-                    String backupFile = Program.GetDataPath(String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
-
-                    // change name Resonanzbegrenzer -> Resonanzabgrenzer
-                    if (File.Exists(currentFile))
-                    {
-                        // delete old backup
-                        if (File.Exists(newFile))
-                            File.Delete(newFile);
-
-                        StringBuilder line = new StringBuilder();
-
-                        StreamReader reader = new StreamReader(File.OpenRead(currentFile));
-                        StreamWriter writer = new StreamWriter(File.OpenWrite(newFile));
-
-                        string header = reader.ReadLine();
-
-                        writer.WriteLine(header);
-
-                        while (!reader.EndOfStream)
-                        {
-                            line.Clear();
-                            line.Append(reader.ReadLine());
-                            line.Replace("Resonanzbegrenzer", "Resonanzabgrenzer");
-                            writer.WriteLine(line.ToString());
-                        }
-                        reader.Close();
-                        writer.Close();
-
-                        // delete old backup
-                        if (File.Exists(backupFile))
-                            File.Delete(backupFile);
-
-                        // rename current file to old backup
-                        if (File.Exists(currentFile))
-                            File.Move(currentFile, backupFile);
-
-                        // rename new file to current file
-                        File.Move(newFile, currentFile);
-
-                    }
-                }
-
-                // do all the things that must be done for the new versions
-                if((when == enDoSpecial.afterMilkyway) && (Program.Settings_old.lastVersionIsBefore(1.84m, 0.24m)))
-                { 
-                    _Splash.InfoAdd("one time action: correcting capitalisation of systemnames...");
-                    String Info             = "  >> ********** records checked ";
-                    StringBuilder InfoOut   = new StringBuilder(Info);
-                    Int32 Count             = 0;
-                    Int32 Count2            = 0;
-                    String currentFile      = Program.GetDataPath("AutoSave.csv");
-                    String newFile          = Program.GetDataPath(String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
-                    String backupFile       = Program.GetDataPath(String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
-                    String lastSystemName   = String.Empty;
-                    EDSystem System         = null;
-                    Int32 CountPos          = Info.IndexOf("**********");
-
-                    _Splash.InfoAdd(Info);
-
-                    // change name Resonanzbegrenzer -> Resonanzabgrenzer
-                    if (File.Exists(currentFile))
-                    {
-                        // delete old backup
-                        if (File.Exists(newFile))
-                            File.Delete(newFile);
-
-                        StringBuilder line = new StringBuilder();
-
-                        StreamReader reader = new StreamReader(File.OpenRead(currentFile));
-                        StreamWriter writer = new StreamWriter(File.OpenWrite(newFile));
-
-                        string header = reader.ReadLine();
-
-                        writer.WriteLine(header);
-
-                        while (!reader.EndOfStream)
-                        {
-                            line.Clear();
-                            line.Append(reader.ReadLine());
-
-                            Int32 semicolon1 = line.ToString().IndexOf(";",0);
-                            String SystemName = line.ToString().Substring(0, semicolon1);
-
-                            if(!lastSystemName.Equals(SystemName, StringComparison.InvariantCultureIgnoreCase) || (System == null))
-                            { 
-                               throw new NotImplementedException();
-                               //System = _Milkyway.getSystem(SystemName);
-                            }
-
-                            if(System != null)
-                            {
-                                line = line.Replace(SystemName, System.Name, 0, semicolon1);
-                                lastSystemName =  SystemName;
-                            }
-                            else
-                            {
-                                line.Replace(SystemName, _textInfo.ToTitleCase(SystemName), semicolon1, SystemName.Length);    
-                            }
-
-                            writer.WriteLine(line.ToString());
-
-                            if((Count2 % 20) == 0)
-                            { 
-                                InfoOut.Append("*");
-                                if((InfoOut.Length % 120) == 0)
-                                { 
-                                    InfoOut.Clear();
-                                    InfoOut.Append(Info);
-                                }
-                                InfoOut.Remove(CountPos, 10).Insert(CountPos, Count2.ToString("D10"));
-                                _Splash.InfoChange(InfoOut.ToString());
-                                Count ++;
-                            }
-                            Count2++;
-                        }
-                        reader.Close();
-                        writer.Close();
-
-                        // delete old backup
-                        if (File.Exists(backupFile))
-                            File.Delete(backupFile);
-
-                        // rename current file to old backup
-                        if (File.Exists(currentFile))
-                            File.Move(currentFile, backupFile);
-
-                        // rename new file to current file
-                        File.Move(newFile, currentFile);
-
-                        _Splash.InfoChange(InfoOut.ToString() + "<OK>");
-
-                    }
-                }
-
             }
         }
 
@@ -3584,7 +3400,7 @@ namespace RegulatedNoise
 
         private void cmdUpdate_Click(object sender, EventArgs e)
         {
-            Process.Start(@"https://github.com/Duke-Jones/RegulatedNoise/releases");
+            Process.Start(Program.GIT_PATH + "/releases");
         }
 
         private void llVisitUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -4108,6 +3924,7 @@ namespace RegulatedNoise
         }
 
 #endregion
+
 
     }
 

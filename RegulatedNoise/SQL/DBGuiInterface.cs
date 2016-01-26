@@ -113,9 +113,9 @@ namespace RegulatedNoise.SQL
 
                         }
                             //if (cbSender.ValueMember != null)
-                            //    retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.SelectedValue.ToString());
+                            //    retValue = m_DBCon.setIniValue(m_InitGroup, parts.IDString, cbSender.SelectedValue.ToString());
                             //else
-                            //    retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                            //    retValue = m_DBCon.setIniValue(m_InitGroup, parts.IDString, cbSender.Text);
                     }
                     else if((sender.GetType() == typeof(TextBox)) || (sender.GetType() == typeof(TextBoxInt32)) || (sender.GetType() == typeof(TextBoxDouble)))
                     {
@@ -458,7 +458,7 @@ namespace RegulatedNoise.SQL
 
                             //    SaveString.Append(String.Format("{0}/{1}/{2}/{3}/{4};", currentColumn.DisplayIndex, currentColumn.Width, currentColumn.Visible, currentColumn.FillWeight, currentColumn.AutoSizeMode));
                             //}
-                            //m_DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
+                            //m_DBCon.setIniValue(m_InitGroup, parts.IDString + "_ColumnSettings", SaveString.ToString());
 
                         String[] VisibilityStrings = null;
                         VisibilityStrings = m_DBCon.getIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
