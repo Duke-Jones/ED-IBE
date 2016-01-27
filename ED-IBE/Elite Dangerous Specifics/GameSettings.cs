@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace RegulatedNoise
+namespace IBE
 {
     //GameSettings class interfaces with the actual Game configuration files.
     //Note only needed functions and properties are loaded.

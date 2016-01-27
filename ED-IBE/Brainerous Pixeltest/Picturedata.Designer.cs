@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.Brainerous_Pixeltest
+﻿namespace IBE.Brainerous_Pixeltest
 {
     partial class PictureData
     {

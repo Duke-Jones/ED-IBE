@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace RegulatedNoise.Enums_and_Utility_Classes {
+namespace IBE.Enums_and_Utility_Classes {
     
     
     /// <summary>

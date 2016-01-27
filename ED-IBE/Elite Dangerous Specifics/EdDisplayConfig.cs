@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace RegulatedNoise
+namespace IBE
 {
     [System.Xml.Serialization.XmlRoot("DisplayConfig")]
     public class EdDisplayConfig

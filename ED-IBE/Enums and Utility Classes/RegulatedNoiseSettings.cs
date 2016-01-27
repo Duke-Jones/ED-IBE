@@ -8,12 +8,12 @@ using System.Net.Mime;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.Xml;
 using System.Xml.Serialization;
 
 
-namespace RegulatedNoise
+namespace IBE
 {
 
     [Serializable]

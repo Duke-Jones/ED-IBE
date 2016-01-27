@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Diagnostics;
 
-namespace RegulatedNoise.SQL
+namespace IBE.SQL
 {
     class DBProcess : IDisposable
     {

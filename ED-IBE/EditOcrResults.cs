@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.SqlServer.Server;
 using System.Diagnostics;
-using RegulatedNoise.EDDB_Data;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.EDDB_Data;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public partial class EditOcrResults : RNBaseForm
     {

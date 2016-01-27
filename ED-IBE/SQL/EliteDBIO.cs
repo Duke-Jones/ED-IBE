@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using RegulatedNoise.EDDB_Data;
+using IBE.EDDB_Data;
 using Newtonsoft.Json;
 using System.IO;
 using System.Data;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.Diagnostics;
 using System.Globalization;
-using RegulatedNoise.SQL.Datasets;
+using IBE.SQL.Datasets;
 using System.Data.Common;
 
-namespace RegulatedNoise.SQL
+namespace IBE.SQL
 {
     public class EliteDBIO
     {

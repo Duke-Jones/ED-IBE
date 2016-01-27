@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.EDDB_Data
+﻿namespace IBE.EDDB_Data
 {
     partial class EDStationView
     {

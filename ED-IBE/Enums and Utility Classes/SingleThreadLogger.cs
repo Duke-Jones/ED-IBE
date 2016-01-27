@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public class SingleThreadLogger
     {

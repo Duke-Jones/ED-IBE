@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using ZeroMQ;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.Globalization;
 using System.Net;
 using CodeProject.Dialog;
@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 
 
-namespace RegulatedNoise.EDDN
+namespace IBE.EDDN
 {
     public class RecievedEDDNArgs : EventArgs
     {

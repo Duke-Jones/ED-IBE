@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise
+﻿namespace IBE
 {
     partial class Form1
     {
@@ -37,7 +37,7 @@
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dsCommodities = new RegulatedNoise.Enums_and_Utility_Classes.dsCommodities();
+            this.dsCommodities = new IBE.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
@@ -2171,7 +2171,7 @@
             // cmdDonate
             // 
             this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdDonate.BackgroundImage = global::RegulatedNoise.Properties.Resources.PayPalDonate;
+            this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
             this.cmdDonate.Location = new System.Drawing.Point(838, 366);
@@ -2523,7 +2523,7 @@
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.TextBox tbCurrentSystemFromLogs;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private RegulatedNoise.Enums_and_Utility_Classes.dsCommodities dsCommodities;
+        private IBE.Enums_and_Utility_Classes.dsCommodities dsCommodities;
         private System.Windows.Forms.BindingSource namesBindingSource;
         private System.Windows.Forms.ToolTip toolTip1;
         public System.Windows.Forms.TextBox tbCurrentStationinfoFromLogs;

@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.Ocr
+﻿namespace IBE.Ocr
 {
     partial class OcrCaptureAndCorrect
     {

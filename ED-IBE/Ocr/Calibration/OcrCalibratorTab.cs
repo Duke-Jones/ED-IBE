@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 // ReSharper disable once CheckNamespace
-namespace RegulatedNoise
+namespace IBE
 {
     public partial class OcrCalibratorTab : UserControl
     {

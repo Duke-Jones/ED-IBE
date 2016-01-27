@@ -5,12 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.IO;
 
-namespace RegulatedNoise
+namespace IBE
 {
-    public partial class frmDataIO : RegulatedNoise.Enums_and_Utility_Classes.RNBaseForm
+    public partial class frmDataIO : IBE.Enums_and_Utility_Classes.RNBaseForm
     {
 
         [Flags] enum enImportTypes

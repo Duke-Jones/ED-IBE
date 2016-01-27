@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.Brainerous_Pixeltest;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Brainerous_Pixeltest;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public partial class EBPixeltest : RNBaseForm
     {
-        public delegate void delStartModal(RegulatedNoise.Form1 parent);
+        public delegate void delStartModal(IBE.Form1 parent);
         private Form m_parent = null;
 
         public override string thisObjectName { get { return "EBPixeltest"; } }
@@ -55,7 +55,7 @@ namespace RegulatedNoise
         /// starts the form modal with it's parent
         /// </summary>
         /// <param name="parent"></param>
-        public void StartModal(RegulatedNoise.Form1 parent)
+        public void StartModal(IBE.Form1 parent)
         {
             if (parent.InvokeRequired)
             {

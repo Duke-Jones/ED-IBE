@@ -1,7 +1,7 @@
 ﻿using System;
 using EdClasses.ClassDefinitions;
 
-namespace RegulatedNoise
+namespace IBE
 {
     class EdLogLine
     {

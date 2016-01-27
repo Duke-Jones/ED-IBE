@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.MTSettings
+﻿namespace IBE.MTSettings
 {
     partial class tabSettings
     {

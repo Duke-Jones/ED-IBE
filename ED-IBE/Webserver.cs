@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
-namespace RegulatedNoise
+namespace IBE
 {
     // taken from http://www.codeproject.com/Articles/452052/Build-Your-Own-Web-Server
     class SimpleWebserver

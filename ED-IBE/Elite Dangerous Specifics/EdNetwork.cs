@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public class EdNetwork
     {

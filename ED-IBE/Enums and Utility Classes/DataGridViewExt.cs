@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
     public partial class DataGridViewExt : DataGridView
     {

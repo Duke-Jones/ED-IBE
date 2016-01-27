@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise
+﻿namespace IBE
 {
     [System.Xml.Serialization.XmlRoot("AppConfig")]
     public class AppConfig

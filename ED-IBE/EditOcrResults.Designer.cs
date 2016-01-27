@@ -1,6 +1,6 @@
-﻿using RegulatedNoise.Enums_and_Utility_Classes;
+﻿using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise
+namespace IBE
 {
     partial class EditOcrResults
     {
@@ -46,7 +46,7 @@ namespace RegulatedNoise
             this.tbEditOcrResultsSupplyLevel = new System.Windows.Forms.TextBox();
             this.tbEditOcrResultsSupply = new System.Windows.Forms.TextBox();
             this.bEditOcrResultsOK = new System.Windows.Forms.Button();
-            this.dgvData = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.Systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Stationname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Commodity = new System.Windows.Forms.DataGridViewTextBoxColumn();

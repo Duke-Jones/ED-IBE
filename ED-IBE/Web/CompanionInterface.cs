@@ -8,7 +8,7 @@ using System.IO;
 using System.Globalization;
 using System.Collections;
 
-namespace RegulatedNoise.Web
+namespace IBE.Web
 {
     public class CompanionInterface
     {

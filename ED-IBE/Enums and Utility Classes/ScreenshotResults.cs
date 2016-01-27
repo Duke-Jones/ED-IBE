@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public class ScreeenshotResults
     {

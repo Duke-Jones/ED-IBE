@@ -6,11 +6,11 @@ using System.Threading;
 using System.Data.Common;
 using MySql.Data;
 using MySql.Data.MySqlClient;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.Data;
 using System.Collections;
 
-namespace RegulatedNoise.SQL
+namespace IBE.SQL
 {
     public class DBConnector : IDisposable
     {

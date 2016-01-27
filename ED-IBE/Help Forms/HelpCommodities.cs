@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public partial class HelpCommodities : RNBaseForm
     {

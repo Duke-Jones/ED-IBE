@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise;
+using IBE;
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
     
     static class Extensions_CheckBox

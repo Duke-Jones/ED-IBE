@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.Enums_and_Utility_Classes
+﻿namespace IBE.Enums_and_Utility_Classes
 {
     partial class DataGridViewExt
     {

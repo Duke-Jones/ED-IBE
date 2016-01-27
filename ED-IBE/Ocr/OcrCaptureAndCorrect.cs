@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using CodeProject.Dialog;
-using RegulatedNoise.MTCommandersLog;
+using IBE.MTCommandersLog;
 
-namespace RegulatedNoise.Ocr
+namespace IBE.Ocr
 {
     public partial class OcrCaptureAndCorrect : UserControl
     {

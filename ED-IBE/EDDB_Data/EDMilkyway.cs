@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise.EDDB_Data
+namespace IBE.EDDB_Data
 {
 
     public class EDMilkyway

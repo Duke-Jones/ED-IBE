@@ -6,15 +6,15 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
-using RegulatedNoise.SQL;
-using RegulatedNoise.SQL.Datasets;
+using IBE.SQL;
+using IBE.SQL.Datasets;
 using System.Collections.Generic;
 using CodeProject.Dialog;
 
-namespace RegulatedNoise.MTSettings
+namespace IBE.MTSettings
 {
     public class Settings
     {

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace RegulatedNoise.EDDB_Data
+namespace IBE.EDDB_Data
 {
 
     public class EDSystem

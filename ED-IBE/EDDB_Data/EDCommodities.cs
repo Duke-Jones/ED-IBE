@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
+using IBE.EDDB_Data.CommoditiesJsonTypes;
 
-namespace RegulatedNoise.EDDB_Data
+namespace IBE.EDDB_Data
 {
 
     public class EDCommodities

@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.Enums_and_Utility_Classes
+﻿namespace IBE.Enums_and_Utility_Classes
 {
     partial class DataGridViewSettings
     {
@@ -35,7 +35,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cmdOk = new System.Windows.Forms.Button();
             this.cmdCancel = new System.Windows.Forms.Button();
-            this.dgvColumns = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvColumns = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCaption = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDisplayIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();

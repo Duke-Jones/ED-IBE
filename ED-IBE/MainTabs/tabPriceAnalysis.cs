@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.SQL;
+using IBE.SQL;
 using System.Diagnostics;
-using RegulatedNoise.SQL.Datasets;
+using IBE.SQL.Datasets;
 using System.Reflection;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise.MTPriceAnalysis
+namespace IBE.MTPriceAnalysis
 {
     public partial class tabPriceAnalysis : UserControl
     {
@@ -484,7 +484,7 @@ namespace RegulatedNoise.MTPriceAnalysis
                     Program.enVisitedFilter VFilter;
                     SystemID = (Int32)Data.Rows[0]["ID"];
 
-                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME,
+                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME,
                                                                                         "VisitedFilter",
                                                                                         ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                         false);
@@ -561,7 +561,7 @@ namespace RegulatedNoise.MTPriceAnalysis
 
             try
             {
-                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(RegulatedNoise.MTSettings.tabSettings.DB_GROUPNAME, 
+                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, 
                                                                                     "VisitedFilter", 
                                                                                     ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                     false);

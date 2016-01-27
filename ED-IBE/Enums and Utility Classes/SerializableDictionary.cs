@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
     [XmlRoot("dictionary")]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable

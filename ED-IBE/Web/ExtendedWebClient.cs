@@ -14,7 +14,7 @@ using System.Net.Security;
 using System.Reflection;
 using System.Web;
 
-namespace RegulatedNoise.Web
+namespace IBE.Web
 {
     /// <summary>
     /// Erweitert den System.Net.WebClient um Funktionen zum expliziten Ausführen von HTTP-GET- und HTTP-POST-Anfragen, bei denen Cookies für eine Session bestehen bleiben.

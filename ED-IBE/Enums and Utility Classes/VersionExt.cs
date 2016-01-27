@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
     public static class VersionHelper
     {

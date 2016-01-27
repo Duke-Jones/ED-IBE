@@ -160,7 +160,7 @@
             // pbSampleTooHigh
             // 
             this.pbSampleTooHigh.BackColor = System.Drawing.Color.DarkGray;
-            this.pbSampleTooHigh.Image = global::RegulatedNoise.Properties.Resources.SampleTooHigh;
+            this.pbSampleTooHigh.Image = global::IBE.Properties.Resources.SampleTooHigh;
             this.pbSampleTooHigh.Location = new System.Drawing.Point(6, 19);
             this.pbSampleTooHigh.Name = "pbSampleTooHigh";
             this.pbSampleTooHigh.Size = new System.Drawing.Size(255, 162);
@@ -183,7 +183,7 @@
             // pbSampleTooLow
             // 
             this.pbSampleTooLow.BackColor = System.Drawing.Color.DarkGray;
-            this.pbSampleTooLow.Image = global::RegulatedNoise.Properties.Resources.SampleTooLow;
+            this.pbSampleTooLow.Image = global::IBE.Properties.Resources.SampleTooLow;
             this.pbSampleTooLow.Location = new System.Drawing.Point(6, 19);
             this.pbSampleTooLow.Name = "pbSampleTooLow";
             this.pbSampleTooLow.Size = new System.Drawing.Size(255, 162);

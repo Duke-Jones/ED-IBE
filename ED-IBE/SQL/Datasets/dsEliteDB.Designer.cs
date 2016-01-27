@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace RegulatedNoise.SQL.Datasets {
+namespace IBE.SQL.Datasets {
     
     
     /// <summary>
@@ -24654,7 +24654,7 @@ namespace RegulatedNoise.SQL.Datasets {
         }
     }
 }
-namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
+namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
     
     
     /// <summary>
@@ -24789,7 +24789,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -25031,7 +25031,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -25419,7 +25419,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -25825,7 +25825,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -26252,7 +26252,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -27194,7 +27194,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -27933,7 +27933,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -28317,7 +28317,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -29044,7 +29044,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -29647,7 +29647,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -30020,7 +30020,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -30440,7 +30440,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -30837,7 +30837,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -31258,7 +31258,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -31675,7 +31675,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -32078,7 +32078,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -32857,7 +32857,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -33454,7 +33454,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -33842,7 +33842,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -34215,7 +34215,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -34585,7 +34585,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -35713,7 +35713,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -37354,7 +37354,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -38216,7 +38216,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -39180,7 +39180,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -40527,7 +40527,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -41279,7 +41279,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -41628,7 +41628,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -42029,7 +42029,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -42602,7 +42602,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -43310,7 +43310,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -44571,7 +44571,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -46052,7 +46052,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -47254,7 +47254,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -48480,7 +48480,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -49723,7 +49723,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -50425,7 +50425,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -50794,7 +50794,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -51099,7 +51099,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -51785,7 +51785,7 @@ namespace RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::MySql.Data.MySqlClient.MySqlConnection();
-            this._connection.ConnectionString = global::RegulatedNoise.Properties.Settings.Default.elite_dbConnectionString2;
+            this._connection.ConnectionString = global::IBE.Properties.Settings.Default.elite_dbConnectionString2;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

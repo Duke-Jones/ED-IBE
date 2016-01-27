@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.MTCommandersLog
+﻿namespace IBE.MTCommandersLog
 {
     partial class tabCommandersLog
     {
@@ -66,7 +66,7 @@
             this.nbCurrentCredits = new System.Windows.Forms.NumericUpDown_ro();
             this.label1 = new System.Windows.Forms.Label();
             this.cb_ShowEditField = new System.Windows.Forms.CheckBox();
-            this.dgvCommandersLog = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvCommandersLog = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.stationname = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -473,7 +473,7 @@
             this.dgvCommandersLog.Size = new System.Drawing.Size(1202, 409);
             this.dgvCommandersLog.TabIndex = 44;
             this.dgvCommandersLog.Tag = "CommandersLog;1";
-            this.dgvCommandersLog.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.dgvCommandersLog_ColumnSorted);
+            this.dgvCommandersLog.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.dgvCommandersLog_ColumnSorted);
             this.dgvCommandersLog.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgvCommandersLog_ColumnWidthChanged);
             this.dgvCommandersLog.SelectionChanged += new System.EventHandler(this.dgvCommandersLog_SelectionChanged);
             this.dgvCommandersLog.Click += new System.EventHandler(this.dgvCommandersLog_Click);

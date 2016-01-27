@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegulatedNoise.Ocr
+namespace IBE.Ocr
 {
     class OcrHandler
     {

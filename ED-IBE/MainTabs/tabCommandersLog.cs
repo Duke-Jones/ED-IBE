@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.SQL;
+using IBE.SQL;
 using System.Diagnostics;
-using RegulatedNoise.SQL.Datasets;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.SQL.Datasets;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise.MTCommandersLog
+namespace IBE.MTCommandersLog
 {
     public partial class tabCommandersLog : UserControl
     {

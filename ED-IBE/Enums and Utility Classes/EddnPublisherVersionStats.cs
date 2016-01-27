@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise
+﻿namespace IBE
 {
     class EddnPublisherVersionStats
     {

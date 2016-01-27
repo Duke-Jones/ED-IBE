@@ -17,22 +17,22 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Reflection;
 using EdClasses.ClassDefinitions;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using Microsoft.Win32;
 using System.ComponentModel;
-using RegulatedNoise.EDDB_Data;
+using IBE.EDDB_Data;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using CodeProject.Dialog;
-using RegulatedNoise.SQL;
-using RegulatedNoise.MTCommandersLog;
-using RegulatedNoise.MTPriceAnalysis;
-using RegulatedNoise.MTSettings;
+using IBE.SQL;
+using IBE.MTCommandersLog;
+using IBE.MTPriceAnalysis;
+using IBE.MTSettings;
 using System.Text.RegularExpressions;
-using RegulatedNoise.ExtData;
-using RegulatedNoise.Ocr;
+using IBE.ExtData;
+using IBE.Ocr;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public partial class Form1 : RNBaseForm
     {
@@ -67,7 +67,7 @@ namespace RegulatedNoise
 
         public static Form1 InstanceObject;
         
-        public RegulatedNoise.EDDN.EDDNCommunicator EDDNComm;
+        public IBE.EDDN.EDDNCommunicator EDDNComm;
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
@@ -218,7 +218,7 @@ namespace RegulatedNoise
                 _Splash.InfoChange("create ocr calibrator...<OK>");
 
                 _Splash.InfoAdd("prepare EDDN interface...");
-                EDDNComm = new RegulatedNoise.EDDN.EDDNCommunicator(this);
+                EDDNComm = new IBE.EDDN.EDDNCommunicator(this);
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
 

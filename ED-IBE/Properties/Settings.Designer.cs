@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RegulatedNoise.Properties {
+namespace IBE.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

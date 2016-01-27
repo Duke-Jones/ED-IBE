@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using EdClasses.ClassDefinitions;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public class EdLogWatcher
     {

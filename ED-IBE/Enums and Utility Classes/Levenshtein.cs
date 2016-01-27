@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public class Levenshtein
     {

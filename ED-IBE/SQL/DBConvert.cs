@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegulatedNoise.SQL
+namespace IBE.SQL
 {
     public static class DBConvert
     {

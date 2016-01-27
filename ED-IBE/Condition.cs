@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RegulatedNoise.EDDB_Data;
+using IBE.EDDB_Data;
 using System.Data;
 
-namespace RegulatedNoise
+namespace IBE
 {
     /// <summary>
     /// class for holding the current state/location of the commander/ship

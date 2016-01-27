@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace RegulatedNoise.EDDB_Data
+namespace IBE.EDDB_Data
 {
 
     public class Listing

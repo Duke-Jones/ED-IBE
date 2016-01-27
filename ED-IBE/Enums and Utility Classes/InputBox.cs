@@ -2,7 +2,7 @@
 using System.Drawing;
 using System;
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
 
     public static class InputBox

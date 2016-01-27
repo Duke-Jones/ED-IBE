@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RegulatedNoise
+namespace IBE
 {
-    public partial class ProgressView : RegulatedNoise.Enums_and_Utility_Classes.RNBaseForm
+    public partial class ProgressView : IBE.Enums_and_Utility_Classes.RNBaseForm
     {
         PerformanceTimer m_PTimer = new PerformanceTimer();
         //string THISOBJECTNAME = "FormProgressView";

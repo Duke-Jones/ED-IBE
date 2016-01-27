@@ -1,4 +1,4 @@
-﻿namespace RegulatedNoise.MTPriceAnalysis
+﻿namespace IBE.MTPriceAnalysis
 {
     partial class tabPriceAnalysis
     {
@@ -92,7 +92,7 @@
             this.scAllCommodities_1 = new System.Windows.Forms.SplitContainer();
             this.cbShowDiagramAllCommodities = new System.Windows.Forms.CheckBox();
             this.cbOnlyTradedCommodities = new System.Windows.Forms.CheckBox();
-            this.dgvAllCommodities = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvAllCommodities = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.commodityIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.commodityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Max_Profit = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -122,7 +122,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tpByStation = new System.Windows.Forms.TabPage();
-            this.dgvByStation = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvByStation = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.commodityIDDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.commodityDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buyDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -137,7 +137,7 @@
             this.maxProfitDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sourceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tmpabystationBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dsEliteDB = new RegulatedNoise.SQL.Datasets.dsEliteDB();
+            this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
@@ -158,7 +158,7 @@
             this.cmbByCommodity = new System.Windows.Forms.ComboBox();
             this.label18 = new System.Windows.Forms.Label();
             this.tpByCommodity = new System.Windows.Forms.TabPage();
-            this.dgvByCommodity = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvByCommodity = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.systemIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.stationIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -173,15 +173,15 @@
             this.timestampDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tmpabycommodityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.scStationToStation_2 = new System.Windows.Forms.SplitContainer();
-            this.dgvStation1 = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
-            this.dgvStationToStationCommodities1 = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
-            this.dgvStation2 = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
-            this.dgvStationToStationCommodities2 = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvStation1 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvStationToStationCommodities1 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvStation2 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvStationToStationCommodities2 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.label19 = new System.Windows.Forms.Label();
             this.cbMaxTripDistance = new System.Windows.Forms.CheckBox();
             this.cmdRoundTripCaclulation = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dgvStationToStationRoutes = new RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dgvStationToStationRoutes = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.systemID1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemName1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.stationID1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -216,9 +216,9 @@
             this.lblSystemsFound = new System.Windows.Forms.Label();
             this.lblStationsFound = new System.Windows.Forms.Label();
             this.cmdFilter = new System.Windows.Forms.Button();
-            this.tmpa_bystationTableAdapter = new RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters.tmpa_bystationTableAdapter();
+            this.tmpa_bystationTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tmpa_bystationTableAdapter();
             this.tmpabystationBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.tmpa_bycommodityTableAdapter = new RegulatedNoise.SQL.Datasets.dsEliteDBTableAdapters.tmpa_bycommodityTableAdapter();
+            this.tmpa_bycommodityTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tmpa_bycommodityTableAdapter();
             this.cmbStationLightSeconds = new System.Windows.Forms.ComboBoxInt32();
             this.cmbSystemLightYears = new System.Windows.Forms.ComboBoxInt32();
             this.commodityIDDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -536,7 +536,7 @@
             this.dgvAllCommodities.Size = new System.Drawing.Size(814, 461);
             this.dgvAllCommodities.TabIndex = 45;
             this.dgvAllCommodities.Tag = "AllCommodities;1";
-            this.dgvAllCommodities.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvAllCommodities.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
             this.dgvAllCommodities.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // commodityIDDataGridViewTextBoxColumn
@@ -885,7 +885,7 @@
             this.dgvByStation.Size = new System.Drawing.Size(1186, 444);
             this.dgvByStation.TabIndex = 18;
             this.dgvByStation.Tag = "byStation;1";
-            this.dgvByStation.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvByStation.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
             this.dgvByStation.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // commodityIDDataGridViewTextBoxColumn2
@@ -1252,7 +1252,7 @@
             this.dgvByCommodity.Size = new System.Drawing.Size(1186, 454);
             this.dgvByCommodity.TabIndex = 26;
             this.dgvByCommodity.Tag = "byCcommodity;stationDataGridViewTextBoxColumn";
-            this.dgvByCommodity.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvByCommodity.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
             this.dgvByCommodity.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // systemIDDataGridViewTextBoxColumn
@@ -1411,7 +1411,7 @@
             this.dgvStation1.Size = new System.Drawing.Size(575, 218);
             this.dgvStation1.TabIndex = 47;
             this.dgvStation1.Tag = "Station1;1";
-            this.dgvStation1.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvStation1.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
             this.dgvStation1.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // dgvStationToStationCommodities1
@@ -1480,7 +1480,7 @@
             this.dgvStation2.Size = new System.Drawing.Size(575, 218);
             this.dgvStation2.TabIndex = 48;
             this.dgvStation2.Tag = "Station2;1";
-            this.dgvStation2.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvStation2.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
             this.dgvStation2.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // dgvStationToStationCommodities2
@@ -1601,7 +1601,7 @@
             this.dgvStationToStationRoutes.Size = new System.Drawing.Size(576, 399);
             this.dgvStationToStationRoutes.TabIndex = 47;
             this.dgvStationToStationRoutes.Tag = "StationToStationRoutes;12";
-            this.dgvStationToStationRoutes.ColumnSorted += new System.EventHandler<RegulatedNoise.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvStationToStationRoutes.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
             this.dgvStationToStationRoutes.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvStationToStationRoutes_RowEnter);
             this.dgvStationToStationRoutes.Click += new System.EventHandler(this.DataGridView_Click);
             // 

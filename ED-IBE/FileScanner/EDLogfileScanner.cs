@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise.FileScanner
+namespace IBE.FileScanner
 {
     public class EDLogfileScanner: IDisposable
     {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RegulatedNoise.Brainerous_Pixeltest
+namespace IBE.Brainerous_Pixeltest
 {
     public partial class PictureData : UserControl
     {

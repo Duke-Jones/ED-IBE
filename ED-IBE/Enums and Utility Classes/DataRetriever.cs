@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using MySql.Data.MySqlClient;
-using RegulatedNoise.SQL;
+using IBE.SQL;
 using System.Diagnostics;
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
     public interface IDataPageRetriever
     {

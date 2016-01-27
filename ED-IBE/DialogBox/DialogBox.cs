@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 using CodeProject.Win32API;
 using CodeProject.Win32API.Hook;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 
 namespace CodeProject.Dialog
 {

@@ -9,17 +9,17 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
-using RegulatedNoise.EDDB_Data;
-using RegulatedNoise.Web;
-using RegulatedNoise.SQL;
-using RegulatedNoise.MTCommandersLog;
-using RegulatedNoise.MTPriceAnalysis;
-using RegulatedNoise.MTSettings;
-using RegulatedNoise.ExtData;
-using RegulatedNoise.FileScanner;
+using IBE.EDDB_Data;
+using IBE.Web;
+using IBE.SQL;
+using IBE.MTCommandersLog;
+using IBE.MTPriceAnalysis;
+using IBE.MTSettings;
+using IBE.ExtData;
+using IBE.FileScanner;
 
 
-namespace RegulatedNoise
+namespace IBE
 {
     public static class Program
     {
@@ -254,7 +254,7 @@ namespace RegulatedNoise
                     Colors                                      = new GUIColors();
 
                     // preprare main data object
-                    Data                                        = new RegulatedNoise.SQL.EliteDBIO();
+                    Data                                        = new IBE.SQL.EliteDBIO();
                     Data.InitializeData();
                     Data.PrepareBaseTables();
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public abstract class ObjectDirectory : Dictionary<string,List<CsvRow>>
     {

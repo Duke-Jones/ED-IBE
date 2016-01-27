@@ -9,7 +9,7 @@ using System.IO;
 using System.Diagnostics;
 
 
-namespace RegulatedNoise.Enums_and_Utility_Classes
+namespace IBE.Enums_and_Utility_Classes
 {
     internal class StationVisit
     {

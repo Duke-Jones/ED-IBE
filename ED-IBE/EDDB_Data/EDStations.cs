@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RegulatedNoise.EDDB_Data.CommoditiesJsonTypes;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.EDDB_Data.CommoditiesJsonTypes;
+using IBE.Enums_and_Utility_Classes;
 using System.Diagnostics;
 
-namespace RegulatedNoise.EDDB_Data
+namespace IBE.EDDB_Data
 {
 
     public class EDStation

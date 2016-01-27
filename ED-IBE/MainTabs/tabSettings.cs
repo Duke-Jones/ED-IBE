@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.SQL;
+using IBE.SQL;
 using System.Diagnostics;
-using RegulatedNoise.SQL.Datasets;
+using IBE.SQL.Datasets;
 using System.Globalization;
 using CodeProject.Dialog;
-using RegulatedNoise.EDDB_Data;
+using IBE.EDDB_Data;
 
-namespace RegulatedNoise.MTSettings
+namespace IBE.MTSettings
 {
     public partial class tabSettings : UserControl
     {

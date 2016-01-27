@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RegulatedNoise.Enums_and_Utility_Classes;
+using IBE.Enums_and_Utility_Classes;
 using System.Reflection;
 using System.Data;
 using System.Diagnostics;
 
-namespace RegulatedNoise.SQL
+namespace IBE.SQL
 {
     class DBGuiInterface
     {

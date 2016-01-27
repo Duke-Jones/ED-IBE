@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace RegulatedNoise
+namespace IBE
 {
     public class GUIColors
     {
