@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ED-IBE", "RegulatedNoise\ED-IBE.csproj", "{D720EB9A-C879-4E3B-AA19-B820E8192B7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ED-IBE", "ED-IBE\ED-IBE.csproj", "{D720EB9A-C879-4E3B-AA19-B820E8192B7A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48173B0B-160E-4748-99F8-4079BAAE5754}"
 	ProjectSection(SolutionItems) = preProject
