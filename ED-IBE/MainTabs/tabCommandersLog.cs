@@ -510,55 +510,6 @@ namespace IBE.MTCommandersLog
             }
         }
 
-        private void setColumns(ListView currentListView)
-        {
-            List<ColumnData> currentData = Program.Settings_old.ListViewColumnData[currentListView.Name];
-
-            switch (currentListView.Name)
-            {
-                case "lvCommandersLog":
-                    currentListView.Columns[0].Width 	=  113;
-                    currentListView.Columns[1].Width 	=  119;
-                    currentListView.Columns[2].Width 	=  122;
-                    currentListView.Columns[3].Width 	=  141;
-                    currentListView.Columns[4].Width 	=   96;
-                    currentListView.Columns[5].Width 	=   72;
-                    currentListView.Columns[6].Width 	=   77;
-                    currentListView.Columns[7].Width 	=  127;
-                    currentListView.Columns[8].Width 	=   60;
-                    currentListView.Columns[9].Width 	=   63;
-                    currentListView.Columns[10].Width 	=   60;
-                    break;
-            }
-
-            foreach (ColumnHeader currentHeader in currentListView.Columns)
-            {
-                ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (Data.Width > -1)
-                    currentHeader.Width = Data.Width;
-            }
-
-            currentListView.ColumnWidthChanged += lvCommandersLog_ColumnWidthChanged;
-        }
-
-        void lvCommandersLog_ColumnWidthChanged(object sender, System.Windows.Forms.ColumnWidthChangedEventArgs e)
-        {
-            saveColumns((ListView)sender);            
-        }
-
-        private void saveColumns(ListView currentListView)
-        {
-            List<ColumnData> currentData = Program.Settings_old.ListViewColumnData[currentListView.Name];
-
-            foreach (ColumnHeader currentHeader in currentListView.Columns)
-            {
-                ColumnData Data = currentData.Find(x => x.ColumnName.Equals(currentHeader.Name, StringComparison.InvariantCultureIgnoreCase));
-                Data.Width = currentHeader.Width;
-            }
-
-            //SaveSettings();
-        }
-
         /// <summary>
         /// show/hides the editable fields
         /// </summary>

@@ -13,6 +13,7 @@ using IBE.SQL.Datasets;
 using System.Globalization;
 using CodeProject.Dialog;
 using IBE.EDDB_Data;
+using System.IO;
 
 namespace IBE.MTSettings
 {
@@ -95,7 +96,6 @@ namespace IBE.MTSettings
                 cmbVisitedFilter.DisplayMember   = "Item2";
                 cmbVisitedFilter.ValueMember     = "Item1";
 
-
                 // loading all settings
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
@@ -164,7 +164,7 @@ namespace IBE.MTSettings
             OpenFileDialog OCRFile = new OpenFileDialog();
 
             OCRFile.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
-            OCRFile.FileName = Program.Settings_old.TraineddataFile;
+            OCRFile.FileName = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "TraineddataFile");
             OCRFile.InitialDirectory = Program.GetDataPath("tessdata");  
             OCRFile.Title = "select Tesseract Traineddata-File...";
 
@@ -182,11 +182,11 @@ namespace IBE.MTSettings
 
             if (int.TryParse(txtOCRPixelAmount.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
                 if (newValue >= 0 && newValue <= 99)
-                    Program.Settings_old.EBPixelAmount = newValue;
+                    Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount", newValue.ToString());
                 else
-                    txtOCRPixelAmount.Text = Program.Settings_old.EBPixelAmount.ToString();
+                    txtOCRPixelAmount.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount");
             else
-                txtOCRPixelAmount.Text = Program.Settings_old.EBPixelAmount.ToString();
+                txtOCRPixelAmount.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount");
         }
 
         private void txtGUIColorCutoffLevel_LostFocus(object sender, EventArgs e)
@@ -195,11 +195,11 @@ namespace IBE.MTSettings
 
             if (int.TryParse(txtGUIColorCutoffLevel.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
                 if (newValue >= 0 && newValue <= 255)
-                    Program.Settings_old.GUIColorCutoffLevel = newValue;
+                    Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel", newValue.ToString());
                 else
-                    txtGUIColorCutoffLevel.Text = Program.Settings_old.GUIColorCutoffLevel.ToString();
+                    txtGUIColorCutoffLevel.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel");
             else
-                txtGUIColorCutoffLevel.Text = Program.Settings_old.GUIColorCutoffLevel.ToString();
+                txtGUIColorCutoffLevel.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel");
         }     
     
         private void loadToolTips()
@@ -231,7 +231,7 @@ namespace IBE.MTSettings
 
             FilterTest FTest = new FilterTest();
 
-            FTest.CutoffLevel = Program.Settings_old.GUIColorCutoffLevel;
+            FTest.CutoffLevel = Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel");
             FTest.TestBitmap = _refbmp;
 
             FTest.ShowDialog(this);
@@ -239,7 +239,7 @@ namespace IBE.MTSettings
             if (FTest.DialogResult == System.Windows.Forms.DialogResult.OK)
             { 
                 txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
-                Program.Settings_old.GUIColorCutoffLevel = FTest.CutoffLevel;
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel", FTest.CutoffLevel.ToString());
             }
         }
 
@@ -553,5 +553,55 @@ namespace IBE.MTSettings
             }
         }
 
+        /// <summary>
+        /// selects another game path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdGamePath_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SelectGamePath();
+            }
+            catch (Exception ex)
+            {
+                cErr.showError(ex, "Error in cmdGamePath_Click");
+            }
+        }
+
+        public DialogResult SelectGamePath()
+        {
+            FolderBrowserDialog BrwsDlg = new FolderBrowserDialog();
+            DialogResult result;
+
+            BrwsDlg.Description  = "Please select manually your active game path. (it's one of the subdirs under the ED-'products'-dir)";
+            BrwsDlg.SelectedPath = Program.DBCon.getIniValue(DB_GROUPNAME, "GamePath");
+
+            result = BrwsDlg.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                String newPath = BrwsDlg.SelectedPath;
+                String newProductPath = Directory.GetParent(newPath).FullName;
+                String newGamePath = newPath;
+
+                if (newProductPath.Substring(Directory.GetParent(newProductPath).FullName.Length).Replace("\\","").Equals("Products", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Program.DBCon.setIniValue(DB_GROUPNAME, "GamePath", newGamePath);
+                    Program.DBCon.setIniValue(DB_GROUPNAME, "ProductsPath", newProductPath);
+                    txtGamePath.Text = newGamePath;
+
+                    MessageBox.Show("Path changed. Please restart ED-IBE", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                }
+                else
+                {
+                    result = MessageBox.Show("Sorry, this seems not to be the correct dir (no 'Products' in the path).", "Wrong path", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+                }
+            }
+
+            return result;
+        }
     }
 }

@@ -171,7 +171,7 @@ namespace IBE.ExtData
                     ProcessObject.StartInfo.Arguments               = ProcessObject.StartInfo.Arguments.Replace(
                                                                             "\\%OUTPUTFILE\\%", 
                                                                             Path.Combine(
-                                                                                    Program.Paths.DataPath_temp, 
+                                                                                    Program.GetDataPath("temp"), 
                                                                                     String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow)));
                     
                     
@@ -354,7 +354,7 @@ namespace IBE.ExtData
             DataFile = "";
 
             Files = System.IO.Directory.GetFiles(
-                                Program.Paths.DataPath_temp, "marketdata_utc*.csv",
+                                Program.GetDataPath("temp"), "marketdata_utc*.csv",
                                 SearchOption.TopDirectoryOnly)
                                     .OrderByDescending(x => x).ToList();
 
@@ -384,7 +384,7 @@ namespace IBE.ExtData
             String[] Files;
 
             Files = System.IO.Directory.GetFiles(
-                    Program.Paths.DataPath_temp, "marketdata*.csv",
+                    Program.GetDataPath("temp"), "marketdata*.csv",
                     SearchOption.TopDirectoryOnly);
 
             foreach (String FileInDir in Files)

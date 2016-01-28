@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\Settings\STA_INIFile.cs" />
     <Compile Include="Enums and Utility Classes\VersionExt.cs" />
+    <Compile Include="Enums and Utility Classes\WindowData.cs" />
     <Compile Include="ExtData\ExternalDataInterface.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.cs">
       <SubType>Form</SubType>
@@ -196,8 +197,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dsCommodities.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Elite Dangerous Specifics\EdLogLine.cs" />
-    <Compile Include="Elite Dangerous Specifics\EdLogWatcher.cs" />
     <Compile Include="Enums and Utility Classes\EddnPublisherVersionStats.cs" />
     <Compile Include="Enums and Utility Classes\FileSaver.cs" />
     <Compile Include="Enums and Utility Classes\InputBox.cs" />
@@ -253,7 +252,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\ScreenshotResults.cs" />
-    <Compile Include="Enums and Utility Classes\RegulatedNoiseSettings.cs" />
     <Compile Include="Enums and Utility Classes\SingleThreadLogger.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -276,11 +274,11 @@
       <DependentUpon>HelpOCR.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\ListViewItemComparer.cs" />
-    <Compile Include="Ocr\OcrCaptureAndCorrect.cs">
+    <Compile Include="Ocr\tabOCR.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Ocr\OcrCaptureAndCorrect.Designer.cs">
-      <DependentUpon>OcrCaptureAndCorrect.cs</DependentUpon>
+    <Compile Include="Ocr\tabOCR.Designer.cs">
+      <DependentUpon>tabOCR.cs</DependentUpon>
     </Compile>
     <Compile Include="Ocr\Ocr.cs" />
     <Compile Include="Ocr\Calibration\FilterTest.cs">
@@ -303,9 +301,7 @@
     <Compile Include="MainTabs\tabPriceAnalysis.designer.cs">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </Compile>
-    <Compile Include="Ocr\OcrHandler.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgramPaths.cs" />
     <Compile Include="ProgressView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -414,8 +410,8 @@
     <EmbeddedResource Include="MainTabs\tabPriceAnalysis.resx">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Ocr\OcrCaptureAndCorrect.resx">
-      <DependentUpon>OcrCaptureAndCorrect.cs</DependentUpon>
+    <EmbeddedResource Include="Ocr\tabOCR.resx">
+      <DependentUpon>tabOCR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressView.resx">
       <DependentUpon>ProgressView.cs</DependentUpon>

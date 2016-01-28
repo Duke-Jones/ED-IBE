@@ -7,11 +7,16 @@ using System.IO;
 using System.Linq;
 using IBE.Enums_and_Utility_Classes;
 using Tesseract;
+using IBE.SQL.Datasets;
 
 namespace IBE.Ocr
 {
-    class Ocr
+    public class Ocr
     {
+        public tabOCR               m_GUI;
+        private dsEliteDB           m_BaseData;
+
+
         public string FolderPath { get; set; }
         public bool Working = false;
         public bool IsMonitoring { get; set; }
@@ -26,6 +31,7 @@ namespace IBE.Ocr
         private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         private EBPixeltest PixelTest;
 
+
         Bitmap _bTrimmedHeader, _bTrimmed_4_OCR, _bOriginal, _bOriginalClone, _bTrimmed_4_View;
 
         public Ocr(Form1 callingForm)
@@ -33,6 +39,38 @@ namespace IBE.Ocr
             _callingForm = callingForm;
             
             _logger = new SingleThreadLogger(ThreadLoggerType.Ocr);
+        }
+
+        /// <summary>
+        /// gets or sets the belonging base dataset
+        /// </summary>
+        public dsEliteDB BaseData
+        {
+            get
+            {
+                return m_BaseData;
+            }
+            set
+            {
+                m_BaseData = value;
+            }
+        }
+
+        /// <summary>
+        /// access to the belonging gui object
+        /// </summary>
+        public tabOCR GUI
+        {
+            get
+            {
+                return m_GUI;
+            }
+            set
+            {
+                m_GUI = value;
+                if((m_GUI != null) && (m_GUI.DataSource != this))
+                    m_GUI.DataSource = this;
+            }
         }
 
         public void ScreenshotCreated(string filePath, string systemAtTimeOfScreenshot)
@@ -94,7 +132,7 @@ namespace IBE.Ocr
             _bTrimmed_4_View = (Bitmap)(_bTrimmed_4_OCR.Clone());
 
             // set all dark colors to black - this removes all crap
-            _bTrimmed_4_OCR = RNGraphics.changeColour(_bTrimmed_4_OCR, Color.Black, Color.Black, Program.Settings_old.GUIColorCutoffLevel , RNGraphics.enPixelCompare.pc_RGB_all);
+            _bTrimmed_4_OCR = RNGraphics.changeColour(_bTrimmed_4_OCR, Color.Black, Color.Black, Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel") , RNGraphics.enPixelCompare.pc_RGB_all);
 
             // find automatically the textlines in the commodity area 
             var textRowLocations = new List<Tuple<int, int>>();
@@ -130,10 +168,10 @@ namespace IBE.Ocr
                                               _calibrationPoints[1].Y  - _calibrationPoints[0].Y);
 
             // RNGraphics.Crop image to the header area and preprocess for OCR
-            _bTrimmedHeader = RNGraphics.PreprocessScreenshot(RNGraphics.Crop(_bOriginalClone, trim_4_Header),1, Program.Settings_old.GUIColorCutoffLevel);
+            _bTrimmedHeader = RNGraphics.PreprocessScreenshot(RNGraphics.Crop(_bOriginalClone, trim_4_Header),1, Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel"));
 
             // now process screenshot for OCR and Elitebrainerous 
-            _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Program.Settings_old.GUIColorCutoffLevel);
+            _bTrimmed_4_OCR  = RNGraphics.PreprocessScreenshot(_bTrimmed_4_OCR,1, Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel"));
 
             // show preprocessed parts on the GUI
             _callingForm.cOcrCaptureAndCorrect.UpdateTrimmedImage(_bTrimmed_4_OCR, _bTrimmedHeader);
@@ -167,7 +205,7 @@ namespace IBE.Ocr
         public void PerformOcr(List<Tuple<int, int>> textRowLocations)
         {
             int DarkPixels;
-            var engine = new TesseractEngine(Program.GetDataPath(@"tessdata"), Program.Settings_old.TraineddataFile, EngineMode.Default);
+            var engine = new TesseractEngine(Program.GetDataPath(@"tessdata"), Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "TraineddataFile"), EngineMode.Default);
             engine.DefaultPageSegMode = PageSegMode.SingleLine;
 
             string Stationname_OCR;
@@ -305,7 +343,7 @@ namespace IBE.Ocr
                             // check how much dark pixels are on the bitmap
                             for (int i = 0; i < brainerousOut.Height; i++)
                                 for (int j = 0; j < brainerousOut.Width; j++)
-                                    if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.Settings_old.EBPixelThreshold)
+                                    if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelThreshold"))
                                         DarkPixels++;
 
                             PixelTest.addPicture(brainerousOut, DarkPixels);
@@ -322,17 +360,17 @@ namespace IBE.Ocr
                         {   //If it's a numeric column write it out for Brainerous to process later
                             var brainerousOut = RNGraphics.Crop(_bTrimmed_4_OCR, new Rectangle(left, startRow, width, heightRow));
 
-                            if (Program.Settings_old.EBPixelAmount > 0)
+                            if (Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount") > 0)
                             {
                                 // check how much dark pixels are on the bitmap -> we process only bitmaps 
                                 // with something on it (minimum one digit supposed, a "1" hat about 25 pixels in default 1920x1200)
                                 for (int i = 0; i < brainerousOut.Height; i++)
                                     for (int j = 0; j < brainerousOut.Width; j++)
-                                        if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.Settings_old.EBPixelThreshold)
+                                        if (brainerousOut.GetPixel(j, i).GetBrightness() < Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelThreshold"))
                                             DarkPixels++;
                             }
 
-                            if (DarkPixels >= Program.Settings_old.EBPixelAmount)
+                            if (DarkPixels >= Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount"))
                                 brainerousOut.Save(Program.GetDataPath(@"Brainerous\images\" + bitmapCtr + ".png"));
 
                             bitmapCtr++;

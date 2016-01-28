@@ -27,7 +27,7 @@ namespace IBE
 
             FillRawData();
 
-            tb_uicolor.Text = Program.Settings_old.UiColour;
+            tb_uicolor.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UiColour");
         }
 
         private void SetResolutionValues()
@@ -311,7 +311,7 @@ namespace IBE
 
                 pb_uicolor.BackColor = Color.FromArgb(red, green, blue);
 
-                Program.Settings_old.UiColour = tb_uicolor.Text;
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UiColour", tb_uicolor.Text);
             }
 // ReSharper disable once EmptyGeneralCatchClause
             catch

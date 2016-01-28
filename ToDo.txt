@@ -111,6 +111,15 @@ todo:
 *************************************************************************************
 
 
+SQL 0.0.34
+   * removed old RegulatedNoiseSetting.cs and changed all
+     remaining refrences to DB "tbInitValue" ("Settings"/"<NAME>")
+   * removed "DukeJones"-compilerflag, use "Default"-configuration by default again
+-------------------------------------------------------------------------------------         
+   * changed namespace "RegulatedNoise" to "IBE"
+-------------------------------------------------------------------------------------         
+   * renamed project directory
+-------------------------------------------------------------------------------------         
    * fixed a problem with multiple querys on a single connection
    * first time running under ED-IBE, project get its own
      repository under https://github.com/Duke-Jones/ED-IBE

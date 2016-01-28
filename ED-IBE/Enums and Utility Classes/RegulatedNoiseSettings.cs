@@ -16,22 +16,22 @@ using System.Xml.Serialization;
 namespace IBE
 {
 
-    [Serializable]
-    public class WindowData
-    {
-        public WindowData()
-        {
-            Position.X          = -1;
-            Position.Y          = -1;
-            Position.Width      = -1;
-            Position.Height     = -1;
+    //[Serializable]
+    //public class WindowData
+    //{
+    //    public WindowData()
+    //    {
+    //        Position.X          = -1;
+    //        Position.Y          = -1;
+    //        Position.Width      = -1;
+    //        Position.Height     = -1;
 
-            State = FormWindowState.Normal;
-        }
+    //        State = FormWindowState.Normal;
+    //    }
 
-        public Rectangle Position;
-        public FormWindowState State;
-    }
+    //    public Rectangle Position;
+    //    public FormWindowState State;
+    //}
 
     [Serializable]
     public class ColumnData

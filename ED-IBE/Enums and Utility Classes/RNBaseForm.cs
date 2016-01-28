@@ -14,7 +14,8 @@ namespace IBE.Enums_and_Utility_Classes
     {
         public virtual string thisObjectName { get { return ""; } }
 
-        private bool m_LoadingDone = false;
+        private bool               m_LoadingDone       = false;
+        private WindowData         m_Buffer            = new WindowData();
 
         public RNBaseForm()
         {
@@ -23,80 +24,56 @@ namespace IBE.Enums_and_Utility_Classes
 
         protected void loadWindowPosition()
         {
-            if (Program.Settings_old == null)
+            if (Program.DBCon == null)
                 return;
 
-            string Classname        = this.GetType().Name;
-            WindowData FormPosition;
+            string Classname            = this.GetType().Name;
 
-            if (Program.Settings_old.WindowBaseData.TryGetValue(Classname, out FormPosition))
+            if(Program.DBCon.getIniValue(Classname, "Location") != "")
             {
+                m_Buffer.LocationString = Program.DBCon.getIniValue(Classname, "Location",    m_Buffer.LocationString, false);
+                m_Buffer.StateString    = Program.DBCon.getIniValue(Classname, "WindowState", m_Buffer.StateString,    false);
 
-                if (FormPosition.Position.Height > -1)
-                {
-                    this.Top = FormPosition.Position.Top;
-                    this.Left = FormPosition.Position.Left;
-                    this.Height = FormPosition.Position.Height;
-                    this.Width = FormPosition.Position.Width;
-
-                    this.WindowState = FormPosition.State;
-                }
-                else
-                {
-                    FormPosition.Position.Y = this.Top;
-                    FormPosition.Position.X = this.Left;
-                    FormPosition.Position.Height = this.Height;
-                    FormPosition.Position.Width = this.Width;
-
-                    FormPosition.State = this.WindowState;
-                }
-
+                m_Buffer.SetValuesToForm(this);
             }
-            else
-            {
-                Program.Settings_old.WindowBaseData.Add(Classname, new WindowData());
-                loadWindowPosition();
-                //MessageBox.Show("Not positioninfo for <" + Classname + "> found !");
-            }
-
+            
             m_LoadingDone = true;
+        }
+
+        public WindowData GetWindowData()
+        {
+            WindowData retValue     = new WindowData();
+            String     Classname    = this.GetType().Name;
+
+            if(Program.DBCon.getIniValue(Classname, "Location") != "")
+            {
+                retValue.LocationString = Program.DBCon.getIniValue(Classname, "Location",    m_Buffer.LocationString, false);
+                retValue.StateString    = Program.DBCon.getIniValue(Classname, "WindowState", m_Buffer.StateString,    false);
+            }
+
+            return retValue;
         }
 
         protected void saveWindowPosition()
         {
-            bool changed = false;
-
             string Classname        = this.GetType().Name;
-            WindowData FormPosition;
-
-            if (Program.Settings_old.WindowBaseData.TryGetValue(Classname, out FormPosition))
-            {
-                if (this.WindowState != FormWindowState.Minimized)
-                    if (FormPosition.State != this.WindowState)
-                    {
-                        FormPosition.State = this.WindowState;
-                        changed = true;
-                    }
-
-                if (this.WindowState == FormWindowState.Normal)
+    
+            if (this.WindowState != FormWindowState.Minimized)
+                if (m_Buffer.State != this.WindowState)
                 {
-                    if ((FormPosition.Position.Y != this.Top) ||
-                        (FormPosition.Position.X != this.Left) ||
-                        (FormPosition.Position.Height != this.Height) ||
-                        (FormPosition.Position.Width != this.Width))
-                    {
-                        FormPosition.Position.Y = this.Top;
-                        FormPosition.Position.X = this.Left;
-                        FormPosition.Position.Height = this.Height;
-                        FormPosition.Position.Width = this.Width;
-
-                        changed = true;
-                    }
+                    m_Buffer.State = this.WindowState;
+                    Program.DBCon.setIniValue(Classname, "WindowState", m_Buffer.StateString);
                 }
 
-                if (changed)
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                if ((m_Buffer.Position.Y        != this.Top) ||
+                    (m_Buffer.Position.X        != this.Left) ||
+                    (m_Buffer.Position.Height   != this.Height) ||
+                    (m_Buffer.Position.Width    != this.Width))
                 {
-                    //SaveSettings();
+                    m_Buffer.GetValuesFromForm(this);
+                    Program.DBCon.setIniValue(Classname, "Location", m_Buffer.LocationString);
                 }
             }
         }
@@ -116,7 +93,7 @@ namespace IBE.Enums_and_Utility_Classes
         private void Form_Shown(object sender, System.EventArgs e)
         {
             loadWindowPosition();
-            if (Program.Settings_old != null)
+            if (Program.DBCon != null)
                 this.Icon = Properties.Resources.RegulatedNoise;
         }
 

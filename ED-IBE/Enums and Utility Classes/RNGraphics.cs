@@ -277,7 +277,7 @@ namespace IBE.Enums_and_Utility_Classes
             		break;
 	            case 1:
 
-                    Color UIColor = Program.Settings_old.getUiColor();
+                    Color UIColor = Program.DBCon.getIniValue<Color>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UIColor");
                     Bitmap reserve = (Bitmap)b.Clone();
 
                     b = (Bitmap)reserve.Clone();
@@ -374,7 +374,7 @@ namespace IBE.Enums_and_Utility_Classes
 
             var p = (byte*)(void*)scan0;
 
-            Color UIColor = Program.Settings_old.getUiColor();
+            Color UIColor = Program.DBCon.getIniValue<Color>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UIColor");
 
             int lowRed      = UIColor.R - 64 < 0   ? 0   : UIColor.R - 64;
             int lowGreen    = UIColor.G - 64 < 0   ? 0   : UIColor.G - 64;

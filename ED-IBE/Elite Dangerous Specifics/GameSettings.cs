@@ -53,7 +53,7 @@ namespace IBE
 
                 if (setLog == DialogResult.Yes)
                 {
-                    var appconfig = Path.Combine(Program.Settings_old.GamePath, "AppConfig.xml");
+                    var appconfig = Path.Combine(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath"), "AppConfig.xml");
 
                     //Make backup
                     File.Copy(appconfig, appconfig+".bak", true);
@@ -94,7 +94,7 @@ namespace IBE
             AppConfig locAppConfig;
 
             DialogResult MBResult = DialogResult.Ignore;
-            string configFile = Path.Combine(Program.Settings_old.GamePath, "AppConfig.xml");
+            string configFile = Path.Combine(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath"), "AppConfig.xml");
             XmlSerializer serializer; 
 
             do{
@@ -142,7 +142,7 @@ namespace IBE
                 DialogResult MBResult = DialogResult.Ignore;
                 EdDisplayConfig locDisplay;
 
-                var configFile = Path.Combine(Program.Settings_old.ProductAppData, "Graphics" ,"DisplaySettings.xml");
+                var configFile = Path.Combine(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductAppData"), "Graphics" ,"DisplaySettings.xml");
                 if (!File.Exists(configFile))
                 {
                     return;
@@ -207,7 +207,7 @@ namespace IBE
         private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();
         void WatcherDisplaySettings()
         {
-            var path = Path.Combine(Program.Settings_old.ProductAppData, "Graphics");
+            var path = Path.Combine(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductAppData"), "Graphics");
             if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "DisplaySettings.xml")))
                 return;
 
@@ -221,7 +221,7 @@ namespace IBE
         private readonly FileSystemWatcher _appdataWatcher = new FileSystemWatcher();
         void WatcherAppDataSettings()
         {
-            _appdataWatcher.Path = Program.Settings_old.GamePath;
+            _appdataWatcher.Path = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath");
             _appdataWatcher.Filter = "AppConfig.xml";
             _appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
             _appdataWatcher.Changed += AppData_Changed;

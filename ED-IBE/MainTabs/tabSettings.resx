@@ -129,14 +129,14 @@ So all "-" and less are ignored , all "1" and other digits are detected.</value>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Here you can decide, which systems and station do you want to use as database. You can use "all" or you can limit it to stations and/or systems you have really visited ingame. 
-Default is "vistited systems".</value>
-  </data>
   <data name="label4.Text" xml:space="preserve">
     <value>b) Parameters for getting location info (information must be commited by the tool over the standard input). 
 Optional: use placeholder "%OUTPUTFILE%" (without quotes) to specify the location of parameter for the destination file for market data *) (as under point c), if the tool supports this (reduces dataquerys on the server)
 </value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Here you can decide, which systems and station do you want to use as database. You can use "all" or you can limit it to stations and/or systems you have really visited ingame. 
+Default is "vistited systems".</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>68</value>

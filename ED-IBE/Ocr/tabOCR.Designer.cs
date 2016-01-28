@@ -1,6 +1,6 @@
 ﻿namespace IBE.Ocr
 {
-    partial class OcrCaptureAndCorrect
+    partial class tabOCR
     {
         /// <summary> 
         /// Required designer variable.
@@ -496,7 +496,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "OcrCaptureAndCorrect";
             this.Size = new System.Drawing.Size(1047, 560);
-            this.Load += new System.EventHandler(this.OcrCaptureAndCorrect_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStation)).EndInit();

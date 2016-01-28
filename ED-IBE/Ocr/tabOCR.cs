@@ -10,67 +10,99 @@ using System.Threading;
 using System.Windows.Forms;
 using CodeProject.Dialog;
 using IBE.MTCommandersLog;
+using IBE.SQL;
 
 namespace IBE.Ocr
 {
-    public partial class OcrCaptureAndCorrect : UserControl
+    public partial class tabOCR : UserControl
     {
+        public const String        DB_GROUPNAME                    = "OCR";
+        private Ocr                 m_DataSource;                   // data object
+        private DBGuiInterface      m_GUIInterface;
+
         private FileSystemWatcher _fileSystemWatcher;
         public Form1 _parent;
         private Ocr ocr;
-        public OcrCaptureAndCorrect()
+
+        public tabOCR()
         {
             InitializeComponent();
+            Dock = DockStyle.Fill;
+            this.Name = "tabOCR";
+
         }
 
-        private void OcrCaptureAndCorrect_Load(object sender, EventArgs e)
+        /// <summary>
+        /// sets or gets the data object
+        /// </summary>
+        public Ocr DataSource
         {
-            cbAutoImport.Checked = Program.Settings_old.AutoImport;
-            cbExtendedInfoInCSV.Checked = Program.Settings_old.IncludeExtendedCSVInfo;
-            cbDeleteScreenshotOnImport.Checked = Program.Settings_old.DeleteScreenshotOnImport;
-            cbUseEddnTestSchema.Checked = Program.Settings_old.UseEddnTestSchema;
-            cbPostOnImport.Checked = Program.Settings_old.PostToEddnOnImport;
-
-
-
-            getEDDNUserid();
-            selectEDDN_ID();
-
-
-            // Debug spesific functionality
-#if DEBUG
-            bManualLoadImage.Visible = true;
-#endif
+            get
+            {
+                return m_DataSource;
+            }
+            set
+            {
+                m_DataSource     = value;
+            }
         }
+
+        /// <summary>
+        /// initialization of the whole log
+        /// </summary>
+        public void Init()
+        {
+            Cursor oldCursor = Cursor;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                // loading all settings
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
+                m_GUIInterface.loadAllSettings(this);
+
+                getEDDNUserid();
+                selectEDDN_ID();
+                
+#if DEBUG       // Debug spesific functionality
+                bManualLoadImage.Visible = true;
+#endif
+
+                Cursor = oldCursor;
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldCursor;
+                throw new Exception("Error during initialization the commanders log tab", ex);
+            }
+        }
+
 
         private void getEDDNUserid()
         {
-            if (Program.Settings_old.UserName != "")
-                tbUsername.Text = Program.Settings_old.UserName;
-            else
-                tbUsername.Text = Guid.NewGuid().ToString();
-
-            txtCmdrsName.Text = Program.Settings_old.PilotsName;
+            tbUsername.Text     = Program.DBCon.getIniValue<String>(DB_GROUPNAME, "UserName", Guid.NewGuid().ToString(), false, true);
+            txtCmdrsName.Text   = Program.DBCon.getIniValue(DB_GROUPNAME, "PilotsName", "");
         }
         private void selectEDDN_ID()
         {
-            if (Program.Settings_old.usePilotsName)
+            if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "usePilotsName"))
             {
-                if (!String.IsNullOrEmpty(Program.Settings_old.PilotsName))
+                if (!String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PilotsName")))
                 {
                     rbCmdrsName.Checked = true;
                 }
                 else
                 {
                     rbUserID.Checked = true;
-                    Program.Settings_old.usePilotsName = false;
+                    Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "usePilotsName", false.ToString());
                     rbCmdrsName.Enabled = false;
                 }
             }
             else
                 rbUserID.Checked = true;
 
-            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.Settings_old.PilotsName);
+            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PilotsName"));
         }
 
         public void startOcrOnload(bool doStart)
@@ -78,12 +110,12 @@ namespace IBE.Ocr
 
             ocr = new Ocr(_parent);
             cbStartOCROnLoad.Checked = true;
-            //ocr.StartMonitoring(Program.Settings_old.MostRecentOCRFolder);
+            //ocr.StartMonitoring(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder);
 
             if (_fileSystemWatcher == null)
                 _fileSystemWatcher = new FileSystemWatcher();
 
-            _fileSystemWatcher.Path = Program.Settings_old.MostRecentOCRFolder;
+            _fileSystemWatcher.Path = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder");
 
             _fileSystemWatcher.Filter = "*.bmp";
 
@@ -734,7 +766,7 @@ namespace IBE.Ocr
                     UpdateOriginalImage(null);
                     UpdateTrimmedImage(null, null);
 
-                    if (Program.Settings_old.DeleteScreenshotOnImport)
+                    if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "DeleteScreenshotOnImport"))
                         File.Delete(_screenshotName);
 
                     Acquisition();
@@ -775,7 +807,7 @@ namespace IBE.Ocr
                     {
                         tbFinalOcrOutput.Enabled = true;
 
-                        if ((!noAutoImport) && Program.Settings_old.AutoImport)
+                        if ((!noAutoImport) && Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "AutoImport"))
                         {
                             tbCommoditiesOcrOutput.Text = "Imported!";
                             ImportFinalOcrOutput();
@@ -936,10 +968,10 @@ namespace IBE.Ocr
             }
 
             var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = Program.Settings_old.MostRecentOCRFolder;
+            dialog.SelectedPath = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder");
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings_old.MostRecentOCRFolder = dialog.SelectedPath;
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder", dialog.SelectedPath);
 
                 if (_fileSystemWatcher == null)
                     _fileSystemWatcher = new FileSystemWatcher();
@@ -971,7 +1003,7 @@ namespace IBE.Ocr
                 return;
             }
             var dialog = new OpenFileDialog();
-            dialog.InitialDirectory = Program.Settings_old.MostRecentOCRFolder;
+            dialog.InitialDirectory = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder");
             dialog.Filter = "BMP Files|*.bmp";
             dialog.CheckFileExists = true;
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -1123,21 +1155,21 @@ namespace IBE.Ocr
 
         private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbStartOCROnLoad.Checked && Program.Settings_old.MostRecentOCRFolder == "")
+            if (cbStartOCROnLoad.Checked && Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder") == "")
             {
                 MessageBox.Show("You need to pick a directory first, using the Monitor Directory button.  Once you've done that, you can enable Start OCR On Load.");
-                Program.Settings_old.StartOCROnLoad = false;
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartOCROnLoad", false.ToString());
                 cbStartOCROnLoad.Checked = false;
             }
             else
             {
-                Program.Settings_old.StartOCROnLoad = cbStartOCROnLoad.Checked;
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartOCROnLoad", cbStartOCROnLoad.Checked.ToString());
             }
         }
 
         private void cbAutoImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.AutoImport = cbAutoImport.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "AutoImport", cbAutoImport.Checked.ToString());
         }
 
         private void rbCmdrsName_CheckedChanged(object sender, EventArgs e)
@@ -1145,27 +1177,27 @@ namespace IBE.Ocr
             tbUsername.Enabled = rbUserID.Checked;
             txtCmdrsName.Enabled = rbCmdrsName.Checked;
 
-            Program.Settings_old.usePilotsName = rbCmdrsName.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "usePilotsName", rbCmdrsName.Checked.ToString());
         }
         private void tbUsername_TextChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.UserName = tbUsername.Text;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserName", tbUsername.Text);
         }
 
         private void cbExtendedInfoInCSV_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.IncludeExtendedCSVInfo = cbExtendedInfoInCSV.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "IncludeExtendedCSVInfo", cbExtendedInfoInCSV.Checked.ToString());
         }
 
         private void cbPostOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.PostToEddnOnImport = cbPostOnImport.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PostToEddnOnImport", cbPostOnImport.Checked.ToString());
         }
 
 
         private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.DeleteScreenshotOnImport = cbDeleteScreenshotOnImport.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "DeleteScreenshotOnImport", cbDeleteScreenshotOnImport.Checked.ToString());
         }
 
         private void cmdHint_Click(object sender, EventArgs e)
@@ -1177,7 +1209,7 @@ namespace IBE.Ocr
 
         private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.UseEddnTestSchema = cbUseEddnTestSchema.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", cbUseEddnTestSchema.Checked.ToString());
         }
     }
 

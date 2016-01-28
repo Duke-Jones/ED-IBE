@@ -184,18 +184,19 @@ namespace IBE
 
             return path;
         }
+
     #endregion// Exception Handling
 
     #region global objects
 
         private static Boolean                          m_initDone                  = false;
 
-        public static ProgramPaths                      Paths;
+//        public static ProgramPaths                      Paths;
         public static GUIColors                         Colors;
         public static CompanionInterface                CompanionIO;
         public static ExternalDataInterface             ExternalData;
         public static DBConnector                       DBCon;
-        public static RegulatedNoiseSettings            Settings_old;
+        //public static RegulatedNoiseSettings            Settings_old;
         public static STA.Settings.INIFile              IniFile;
         private static DBProcess                        EliteDBProcess;
         public static Settings                          Settings;
@@ -217,7 +218,6 @@ namespace IBE
                 if(!m_initDone)
                 { 
                     // load settings from file
-                    Settings_old = RegulatedNoiseSettings.LoadSettings();
                     IniFile = new STA.Settings.INIFile(GetDataPath("ED-IBE.ini"), false, true);
 
                     // starT database process (if not running)
@@ -259,7 +259,7 @@ namespace IBE
                     Data.PrepareBaseTables();
 
                     // create global paths-object
-                    Paths                                       = new ProgramPaths();
+                    //Paths                                       = new ProgramPaths();
 
                     // prepare settings
                     Settings                                    = new Settings();

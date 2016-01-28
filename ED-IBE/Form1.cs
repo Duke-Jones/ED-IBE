@@ -122,7 +122,7 @@ namespace IBE
         private DateTime m_lastEDDNAutoImport                           = DateTime.MinValue;
         private System.Timers.Timer _AutoImportDelayTimer;
 
-        public OcrCaptureAndCorrect cOcrCaptureAndCorrect               =  new OcrCaptureAndCorrect();
+        public tabOCR cOcrCaptureAndCorrect               =  new tabOCR();
 
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
@@ -163,8 +163,7 @@ namespace IBE
                 _logger.Log("Initialising...\n");
 
                 string FormName = this.GetType().Name;
-                if (Program.Settings_old.WindowBaseData.ContainsKey(FormName))
-                    _Splash.setPosition(Program.Settings_old.WindowBaseData[FormName]);
+                _Splash.setPosition(this.GetWindowData());
 
                 _Splash.InfoAdd("initialize components...");
                 InitializeComponent();
@@ -314,6 +313,7 @@ namespace IBE
        
         private string getProductPathAutomatically()
         {
+            // check in typical directorys
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
                                        Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
 
@@ -329,6 +329,7 @@ namespace IBE
                     break;
                 }
             }
+
             if (returnValue != null) return returnValue;
 
             if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Frontier_Developments\Products\"))
@@ -358,7 +359,6 @@ namespace IBE
                     }
 
                 }
-               
             }
 
             return returnValue;
@@ -394,7 +394,7 @@ namespace IBE
         private void SetProductPath()
         {
             //Already set, no reason to set it again :)
-            if (Program.Settings_old.ProductsPath != "" && Program.Settings_old.GamePath != "") return;
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductsPath", "") != "" && Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", "") != "") return;
             
             //Automatic
             var path = getProductPathAutomatically();
@@ -428,7 +428,7 @@ namespace IBE
                     if (gamedirs.Count > 0)
                     {
                         //Get highest Forc-fdev dir.
-                        Program.Settings_old.GamePath = gamedirs.OrderByDescending(x => x).ToArray()[0];
+                        Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", gamedirs.OrderByDescending(x => x).ToArray()[0]);
                         b = true;
                         continue;
                     }
@@ -442,7 +442,7 @@ namespace IBE
                     dirs = Directory.GetDirectories(path);
                 }
 
-                Program.Settings_old.ProductsPath = path;
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductsPath", path);
             }
         }
 
@@ -482,7 +482,7 @@ namespace IBE
         private void SetProductAppDataPath()
         {
             //Already set, no reason to set it again :)
-            if (Program.Settings_old.ProductAppData != "") return;
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductAppData") != "") return;
 
             //Automatic
             var path = getProductAppDataPathAutomatically();
@@ -498,32 +498,35 @@ namespace IBE
                 path = getProductAppDataPathManually();
             }
 
-            Program.Settings_old.ProductAppData = path;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductAppData", path);
         }
 
         private void ApplySettings()
         {
-            if (Program.Settings_old.WebserverForegroundColor != "") tbForegroundColour.Text = Program.Settings_old.WebserverForegroundColor;
-            if (Program.Settings_old.WebserverBackgroundColor != "") tbBackgroundColour.Text = Program.Settings_old.WebserverBackgroundColor;
-            txtWebserverPort.Text = Program.Settings_old.WebserverPort;
-            if (Program.Settings_old.WebserverIpAddress != "") cbInterfaces.Text = Program.Settings_old.WebserverIpAddress;
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverForegroundColor") != "") 
+                tbForegroundColour.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverForegroundColor");
+
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverBackgroundColor") != "") 
+                tbBackgroundColour.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverBackgroundColor");
+
+            txtWebserverPort.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverPort");
+
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverIpAddress") != "") 
+                cbInterfaces.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverIpAddress");
             
             ShowSelectedUiColours();
-            
-            
-          
 
-            if (Program.Settings_old.StartWebserverOnLoad)
+            if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartWebserverOnLoad", false.ToString(), false, true))
             {
                 cbStartWebserverOnLoad.Checked = true;
                 bStart_Click(null, null);
             }
    
 
-            cbSpoolEddnToFile.Checked               = Program.Settings_old.SpoolEddnToFile;
-            cbSpoolImplausibleToFile.Checked        = Program.Settings_old.SpoolImplausibleToFile;
-            cbEDDNAutoListen.Checked                = Program.Settings_old.EDDNAutoListen;
-            checkboxImportEDDN.Checked              = Program.Settings_old.EDDNAutoImport;
+            cbSpoolEddnToFile.Checked               = Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "SpoolEddnToFile", false.ToString(), false, true);
+            cbSpoolImplausibleToFile.Checked        = Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "SpoolImplausibleToFile", false.ToString(), false, true);
+            cbEDDNAutoListen.Checked                = Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EDDNAutoListen", false.ToString(), false, true);
+            checkboxImportEDDN.Checked              = Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EDDNAutoImport", false.ToString(), false, true);
         }
 
        
@@ -555,39 +558,8 @@ namespace IBE
 
             if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
 
-            SaveSettings();
-
             if (sws.Running)
                 sws.Stop();
-        }
-
-        public void SaveSettings()
-        {
-            string newFile, backupFile, currentFile;
-
-            currentFile = Program.GetDataPath("RegulatedNoiseSettings.xml");
-
-            newFile = Program.GetDataPath(String.Format("{0}_new{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
-            backupFile = Program.GetDataPath(String.Format("{0}_bak{1}", Path.GetFileNameWithoutExtension(currentFile), Path.GetExtension(currentFile)));
-
-            var stream = new FileStream(newFile, FileMode.Create, FileAccess.Write, FileShare.None);
-            var x = new XmlSerializer(Program.Settings_old.GetType());
-            x.Serialize(stream, Program.Settings_old);
-            stream.Close();
-
-            // we delete the current file not until the new file is written without errors
-
-            // delete old backup
-            if (File.Exists(backupFile))
-                File.Delete(backupFile);
-
-            // rename current file to old backup
-            if (File.Exists(currentFile))
-                File.Move(currentFile, backupFile);
-
-            // rename new file to current file
-            File.Move(newFile, currentFile);
-
         }
 
         public void setButton(Button myButton, bool enable)
@@ -1016,10 +988,10 @@ namespace IBE
 
             if (cbInterfaces.SelectedItem != null) 
             {
-                Program.Settings_old.WebserverIpAddress = cbInterfaces.SelectedItem.ToString();
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverIpAddress", cbInterfaces.SelectedItem.ToString());
             }
 
-            Program.Settings_old.WebserverPort = txtWebserverPort.Text;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverPort", txtWebserverPort.Text);
 
         }
 
@@ -1195,14 +1167,14 @@ namespace IBE
         {
             sws.ForegroundColour = tbForegroundColour.Text;
             cbColourScheme.SelectedItem = null;
-            Program.Settings_old.WebserverForegroundColor = tbForegroundColour.Text;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverForegroundColor", tbForegroundColour.Text);
         }
 
         private void tbBackgroundColour_TextChanged(object sender, EventArgs e)
         {
             sws.BackgroundColour = tbBackgroundColour.Text;
             cbColourScheme.SelectedItem = null;
-            Program.Settings_old.WebserverBackgroundColor = tbBackgroundColour.Text;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverBackgroundColor", tbBackgroundColour.Text);
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -1246,13 +1218,13 @@ namespace IBE
                 	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v1_Recieved:
                         
                         // process only if it's the correct schema
-                        if(!(Program.Settings_old.UseEddnTestSchema ^ ((EDDN.Schema_v1)e.Data).isTest()))
+                        if(!(Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.Schema_v1)e.Data).isTest()))
                         {
                             Debug.Print("handle v1 message");
                             EDDN.Schema_v1 DataObject   = (EDDN.Schema_v1)e.Data;
 
                             // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.Settings_old.GetUserID()) 
+                            if(DataObject.Header.UploaderID != Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserID")) 
                             { 
                                 DataRows                    = new String[1] {DataObject.getEDDNCSVImportString()};
                                 nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
@@ -1271,7 +1243,7 @@ namespace IBE
                 	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v2_Recieved:
 
                         // process only if it's the correct schema
-                        if(!(Program.Settings_old.UseEddnTestSchema ^ ((EDDN.Schema_v2)e.Data).isTest()))
+                        if(!(Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.Schema_v2)e.Data).isTest()))
                         {
                             Debug.Print("handle v2 message");
 
@@ -1279,7 +1251,7 @@ namespace IBE
                             EDDN.Schema_v2 DataObject   = (EDDN.Schema_v2)e.Data;
 
                             // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.Settings_old.GetUserID()) 
+                            if(DataObject.Header.UploaderID != Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserID")) 
                             { 
                                 DataRows                    = DataObject.getEDDNCSVImportStrings();
                                 nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
@@ -1311,7 +1283,9 @@ namespace IBE
                 {
                     updatePublisherStats(nameAndVersion, DataRows.GetUpperBound(0)+1);
 
-                    bool isTrusty = Program.Settings_old.trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    List<String> trustedSenders = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "trustedSenders", "").Split(new char[] {'|'}).ToList();
+
+                    bool isTrusty = trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                     foreach (String DataRow in DataRows){
 
@@ -1456,8 +1430,8 @@ namespace IBE
                     var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
 
 
-                    if((Program.Settings_old.UseEddnTestSchema  && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
-                       (!Program.Settings_old.UseEddnTestSchema && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase)  < 0)))
+                    if((Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true)  && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
+                       (!Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase)  < 0)))
                     {
                         foreach (var rawHeaderPair in headerRawPairs)
                         {
@@ -1493,7 +1467,7 @@ namespace IBE
                         tbEddnStats.Text = output;
 
                         MessageBox.Show("TODO");
-                        string commodity = ""; //' getLocalizedCommodity(Program.Settings_old.Language, messageDictionary["itemName"]);
+                        string commodity = ""; //' getLocalizedCommodity(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "Language, messageDictionary["itemName"]);
 
                         if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -1521,7 +1495,7 @@ namespace IBE
                         {
 
                             //System;Location;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
-                            if (headerDictionary["uploaderID"] != Program.Settings_old.UserName) // Don't import our own uploads...
+                            if (headerDictionary["uploaderID"] != Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserName")) // Don't import our own uploads...
                             {
                                 string csvFormatted = cachedSystem.Name + ";" +
                                                       cachedStation.Name + ";" +
@@ -1632,7 +1606,7 @@ namespace IBE
         public void setText(Control Destination, String newText)
         {
             if(Destination.InvokeRequired)
-                Destination.Invoke(new OcrCaptureAndCorrect.del_setControlText(setText), Destination, newText);
+                Destination.Invoke(new tabOCR.del_setControlText(setText), Destination, newText);
             else
                 Destination.Text = newText;
         }
@@ -1866,17 +1840,18 @@ namespace IBE
         {
             bool noBackColor = false;
 
-            if (Program.Settings_old.ForegroundColour == null || Program.Settings_old.BackgroundColour == null) return;
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour", "") == "" || 
+                Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour", "") == "") return;
 
             var x = GetAll(this);
 
-            int redF = int.Parse(Program.Settings_old.ForegroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenF = int.Parse(Program.Settings_old.ForegroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueF = int.Parse(Program.Settings_old.ForegroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+            int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+            int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
             var f = Color.FromArgb(redF, greenF, blueF);
-            int redB = int.Parse(Program.Settings_old.BackgroundColour.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenB = int.Parse(Program.Settings_old.BackgroundColour.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueB = int.Parse(Program.Settings_old.BackgroundColour.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+            int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+            int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+            int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
             var b = Color.FromArgb(redB, greenB, blueB);
             foreach (Control c in x)
             {
@@ -2045,8 +2020,8 @@ namespace IBE
                         {
                             var OCRTabPage = tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"];
                             OCRTabPage.Enabled = (GameSettings.Display != null);
-                            var TabControl = (OcrCaptureAndCorrect)(OCRTabPage.Controls[0]);
-                            TabControl.startOcrOnload(Program.Settings_old.StartOCROnLoad && Directory.Exists(Program.Settings_old.MostRecentOCRFolder));
+                            var TabControl = (tabOCR)(OCRTabPage.Controls[0]);
+                            TabControl.startOcrOnload(Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartOCROnLoad", false.ToString(), false, true) && Directory.Exists(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder", "")));
                         }
                     }
                 }
@@ -3330,12 +3305,6 @@ namespace IBE
 
 #endregion
 
-        private void cbAutoActivateSystem_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings_old.AutoActivateSystemTab = Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true);
-            SaveSettings();
-        }
-
         public string getAppPath()
         {
             return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
@@ -3408,35 +3377,29 @@ namespace IBE
             System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
         }
 
-      
-
         private void cbSpoolEddnToFile_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.SpoolEddnToFile = cbSpoolEddnToFile.Checked;
-            SaveSettings();
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "SpoolEddnToFile", cbSpoolEddnToFile.Checked.ToString());
         }
 
         private void cbSpoolImplausibleToFile_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.SpoolImplausibleToFile = cbSpoolImplausibleToFile.Checked;
-            SaveSettings();
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "SpoolImplausibleToFile", cbSpoolImplausibleToFile.Checked.ToString());
         }
 
         private void cbEDDNAutoListen_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.EDDNAutoListen = cbEDDNAutoListen.Checked;
-            SaveSettings();
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EDDNAutoListen", cbEDDNAutoListen.Checked.ToString());
         }
 
         private void checkboxImportEDDN_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.EDDNAutoImport = checkboxImportEDDN.Checked;
-            SaveSettings();
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EDDNAutoImport", checkboxImportEDDN.Checked.ToString());
         }
 
         private void cbStartWebserverOnLoad_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Settings_old.StartWebserverOnLoad = cbStartWebserverOnLoad.Checked;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartWebserverOnLoad", cbStartWebserverOnLoad.Checked.ToString());
         }
 
      
@@ -3449,8 +3412,8 @@ namespace IBE
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings_old.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2");
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                                                          c.Color.B.ToString("X2"));
 
                 ShowSelectedUiColours();
                 Retheme();
@@ -3463,8 +3426,8 @@ namespace IBE
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings_old.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2");
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                                          c.Color.B.ToString("X2"));
                 ShowSelectedUiColours();
                 Retheme();
             }
@@ -3473,15 +3436,15 @@ namespace IBE
         private void ShowSelectedUiColours()
         {
             if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
-            if (Program.Settings_old.ForegroundColour != null)
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour") != "")
             {
                 ForegroundSet.Visible = false;
                 Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(Program.Settings_old.ForegroundColour.Substring(1, 2),
+                int red = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(1, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(Program.Settings_old.ForegroundColour.Substring(3, 2),
+                int green = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(3, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(Program.Settings_old.ForegroundColour.Substring(5, 2),
+                int blue = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(5, 2),
                     System.Globalization.NumberStyles.HexNumber);
 
                 using (var g = Graphics.FromImage(b))
@@ -3492,16 +3455,16 @@ namespace IBE
             }
             else ForegroundSet.Visible = true;
 
-            if (Program.Settings_old.BackgroundColour != null)
+            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour", "") != "")
             {
                 BackgroundSet.Visible = false;
                 if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
                 Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(Program.Settings_old.BackgroundColour.Substring(1, 2),
+                int red = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(1, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(Program.Settings_old.BackgroundColour.Substring(3, 2),
+                int green = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(3, 2),
                     System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(Program.Settings_old.BackgroundColour.Substring(5, 2),
+                int blue = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(5, 2),
                     System.Globalization.NumberStyles.HexNumber);
                 using (var g = Graphics.FromImage(b))
                 {
@@ -3514,8 +3477,8 @@ namespace IBE
 
         private void button20_Click(object sender, EventArgs e)
         {
-            Program.Settings_old.ForegroundColour = null;
-            Program.Settings_old.BackgroundColour = null;
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour", "");
+            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour", "");
         }
 
         private void ForegroundSet_Click(object sender, EventArgs e)
@@ -3523,8 +3486,8 @@ namespace IBE
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings_old.ForegroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2");
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                                                          c.Color.B.ToString("X2"));
 
                 ShowSelectedUiColours();
                 Retheme();
@@ -3536,8 +3499,8 @@ namespace IBE
             ColorDialog c = new ColorDialog();
             if (c.ShowDialog() == DialogResult.OK)
             {
-                Program.Settings_old.BackgroundColour = "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2");
+                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
+                                          c.Color.B.ToString("X2"));
                 ShowSelectedUiColours();
                 Retheme();
             }
@@ -3681,7 +3644,7 @@ namespace IBE
             for (int i = 0; i < listViewToDump.Columns.Count; i++)
             {
                 var style = "style=\"border:1px solid black; font-weight: bold;\"";
-                header.Append("<TD " + style + "><A style=\"color: #" + Program.Settings_old.WebserverForegroundColor + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
+                header.Append("<TD " + style + "><A style=\"color: #" + Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "WebserverForegroundColor", "") + "\" HREF=\"resortlistview.html?grid=" + listViewToDump.Name + "&col=" + i + "&rand=" + random.Next() + "#" + listViewToDump.Name + "\">" + listViewToDump.Columns[i].Text + "</A></TD>");
             }
 
             header.Append("</TR>");

@@ -66,17 +66,17 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label25 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.gbExternalDataInterface = new System.Windows.Forms.GroupBox();
             this.txtExtTool_ParamMarket = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.txtExtTool_ParamLocation = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtExtTool_Path = new System.Windows.Forms.TextBox();
             this.cmdSelectExternalToolPath = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.gbExternalDataInterface = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tcDataInterface = new System.Windows.Forms.TabControl();
             this.tabOCRSettings = new System.Windows.Forms.TabPage();
@@ -85,6 +85,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rbUseExternalTool = new System.Windows.Forms.RadioButton();
             this.rbUseOCR = new System.Windows.Forms.RadioButton();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txtGamePath = new System.Windows.Forms.TextBox();
+            this.cmdGamePath = new System.Windows.Forms.Button();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -100,6 +103,7 @@
             this.tabExternalToolSettings.SuspendLayout();
             this.gbDataInterface.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox6
@@ -404,9 +408,9 @@
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(650, 386);
+            this.groupBox12.Location = new System.Drawing.Point(650, 418);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(396, 203);
+            this.groupBox12.Size = new System.Drawing.Size(396, 171);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -415,7 +419,7 @@
             // 
             this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(203, 120);
+            this.label89.Location = new System.Drawing.Point(203, 88);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(29, 13);
             this.label89.TabIndex = 19;
@@ -424,7 +428,7 @@
             // nudPurgeOldDataDays
             // 
             this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 117);
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 85);
             this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
             365,
             0,
@@ -446,7 +450,7 @@
             // cmdPurgeOldData
             // 
             this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 115);
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 83);
             this.cmdPurgeOldData.Name = "cmdPurgeOldData";
             this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
             this.cmdPurgeOldData.TabIndex = 8;
@@ -481,7 +485,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 151);
+            this.button6.Location = new System.Drawing.Point(32, 119);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -516,45 +520,6 @@
         " only stations you\'ve directly visted");
             this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.cmbVisitedFilter);
-            this.groupBox1.Controls.Add(this.label25);
-            this.groupBox1.Location = new System.Drawing.Point(652, 211);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(394, 133);
-            this.groupBox1.TabIndex = 65;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Datafilter";
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(27, 62);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(361, 57);
-            this.label1.TabIndex = 65;
-            this.label1.Text = resources.GetString("label1.Text");
-            // 
-            // gbExternalDataInterface
-            // 
-            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamMarket);
-            this.gbExternalDataInterface.Controls.Add(this.label6);
-            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamLocation);
-            this.gbExternalDataInterface.Controls.Add(this.label5);
-            this.gbExternalDataInterface.Controls.Add(this.label4);
-            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_Path);
-            this.gbExternalDataInterface.Controls.Add(this.cmdSelectExternalToolPath);
-            this.gbExternalDataInterface.Controls.Add(this.label3);
-            this.gbExternalDataInterface.Controls.Add(this.label2);
-            this.gbExternalDataInterface.Location = new System.Drawing.Point(6, 6);
-            this.gbExternalDataInterface.Name = "gbExternalDataInterface";
-            this.gbExternalDataInterface.Size = new System.Drawing.Size(619, 393);
-            this.gbExternalDataInterface.TabIndex = 66;
-            this.gbExternalDataInterface.TabStop = false;
-            this.gbExternalDataInterface.Text = "External Data Interface";
-            // 
             // txtExtTool_ParamMarket
             // 
             this.txtExtTool_ParamMarket.Location = new System.Drawing.Point(11, 211);
@@ -566,15 +531,6 @@
             this.toolTip1.SetToolTip(this.txtExtTool_ParamMarket, "Example (for EDMC): \"-m \\%OUTPUTFILE\\%\"");
             this.txtExtTool_ParamMarket.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.txtExtTool_ParamMarket.Leave += new System.EventHandler(this.TextBox_Leave);
-            // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(9, 242);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(571, 29);
-            this.label6.TabIndex = 74;
-            this.label6.Text = "*) the path and the filename will be automatically selected. You can find it in y" +
-    "our \"LocalApplicationDataPath\".";
             // 
             // txtExtTool_ParamLocation
             // 
@@ -637,6 +593,54 @@
             this.label3.TabIndex = 67;
             this.label3.Text = "a) Path to the external data tool:";
             this.toolTip1.SetToolTip(this.label3, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.cmbVisitedFilter);
+            this.groupBox1.Controls.Add(this.label25);
+            this.groupBox1.Location = new System.Drawing.Point(652, 211);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(394, 133);
+            this.groupBox1.TabIndex = 65;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Datafilter";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(27, 62);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(361, 57);
+            this.label1.TabIndex = 65;
+            this.label1.Text = resources.GetString("label1.Text");
+            // 
+            // gbExternalDataInterface
+            // 
+            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamMarket);
+            this.gbExternalDataInterface.Controls.Add(this.label6);
+            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamLocation);
+            this.gbExternalDataInterface.Controls.Add(this.label5);
+            this.gbExternalDataInterface.Controls.Add(this.label4);
+            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_Path);
+            this.gbExternalDataInterface.Controls.Add(this.cmdSelectExternalToolPath);
+            this.gbExternalDataInterface.Controls.Add(this.label3);
+            this.gbExternalDataInterface.Controls.Add(this.label2);
+            this.gbExternalDataInterface.Location = new System.Drawing.Point(6, 6);
+            this.gbExternalDataInterface.Name = "gbExternalDataInterface";
+            this.gbExternalDataInterface.Size = new System.Drawing.Size(619, 393);
+            this.gbExternalDataInterface.TabIndex = 66;
+            this.gbExternalDataInterface.TabStop = false;
+            this.gbExternalDataInterface.Text = "External Data Interface";
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(9, 242);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(571, 29);
+            this.label6.TabIndex = 74;
+            this.label6.Text = "*) the path and the filename will be automatically selected. You can find it in y" +
+    "our \"LocalApplicationDataPath\".";
             // 
             // label2
             // 
@@ -730,8 +734,38 @@
             this.rbUseOCR.UseVisualStyleBackColor = true;
             this.rbUseOCR.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.txtGamePath);
+            this.groupBox3.Controls.Add(this.cmdGamePath);
+            this.groupBox3.Location = new System.Drawing.Point(652, 350);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(394, 62);
+            this.groupBox3.TabIndex = 69;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Active Product Path";
+            // 
+            // txtGamePath
+            // 
+            this.txtGamePath.Location = new System.Drawing.Point(12, 14);
+            this.txtGamePath.Name = "txtGamePath";
+            this.txtGamePath.ReadOnly = true;
+            this.txtGamePath.Size = new System.Drawing.Size(373, 20);
+            this.txtGamePath.TabIndex = 68;
+            // 
+            // cmdGamePath
+            // 
+            this.cmdGamePath.Location = new System.Drawing.Point(283, 36);
+            this.cmdGamePath.Name = "cmdGamePath";
+            this.cmdGamePath.Size = new System.Drawing.Size(102, 23);
+            this.cmdGamePath.TabIndex = 67;
+            this.cmdGamePath.Text = "Select";
+            this.cmdGamePath.UseVisualStyleBackColor = true;
+            this.cmdGamePath.Click += new System.EventHandler(this.cmdGamePath_Click);
+            // 
             // tabSettings
             // 
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox12);
@@ -763,6 +797,8 @@
             this.gbDataInterface.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -824,6 +860,9 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rbUseExternalTool;
         private System.Windows.Forms.RadioButton rbUseOCR;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox txtGamePath;
+        private System.Windows.Forms.Button cmdGamePath;
 
 
     }

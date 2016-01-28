@@ -246,7 +246,7 @@ namespace IBE.FileScanner
         private void UpdateSystemNameFromLogFile_worker()
         {
             SingleThreadLogger logger           = new SingleThreadLogger(ThreadLoggerType.FileScanner);
-            Regex RegExTest_FindBestIsland      = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.Settings_old.PilotsName)), RegexOptions.IgnoreCase);
+            Regex RegExTest_FindBestIsland      = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PilotsName"))), RegexOptions.IgnoreCase);
             Regex RegExTest_Island_Claimed      = new Regex(String.Format("vvv------------ ISLAND .+ CLAIMED ------------vvv"), RegexOptions.IgnoreCase);
 
             do
@@ -273,22 +273,29 @@ namespace IBE.FileScanner
                         logger.Log("start, RegEx = <" + String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.RegulatedNoiseSettings.PilotsName)) + ">");
                     #endif
 
-                    var appConfigPath = Program.Settings_old.ProductsPath;
+                    var appConfigPath = Program.DBCon.getIniValue("Settings", "GamePath");
 
                     if (Directory.Exists(appConfigPath))
                     {
-                        var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("elite-dangerous-64")).ToList().OrderByDescending(x => x).ToList();
                         //var versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("FORC-FDEV")).ToList().OrderByDescending(x => x).ToList();
+                        var versions = new String[] {appConfigPath};
 
                         if (versions.Count() == 0)
                         {
-                            versions = Directory.GetDirectories(appConfigPath).Where(x => x.Contains("elite-dangerous-64")).ToList().OrderByDescending(x => x).ToList();
+#if extScanLog
+                                logger.Log("no dirs with <FORC-FDEV> found");
+                                var versions2 = Directory.GetDirectories(appConfigPath).ToList().OrderByDescending(x => x).ToList();
+                                foreach (string SubPath in versions2)
+                                {
+                                    logger.Log("but found <" +  SubPath + ">");   
+                                }
+#endif
                         }
                         else
                         {
-                            #if extScanLog
+#if extScanLog
                                 logger.Log("lookin' for files in <" + versions[0] + ">");
-                            #endif
+#endif
 
                             // We'll just go right ahead and use the latest log...
                             var netLogs =
