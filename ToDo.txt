@@ -90,27 +90,13 @@ todo:
    * show hint (new star system, changed data, original data)
    * default setting for new systems
 
-
-   Dangerous Ship Computer
-   Ship Data Intelligence
-   Dangerous Data Extension
-   Intelligent Ship Extension
-   ED Intelligent Computer Extension -> E Dangerous ICE
-   ED Improved Ship Computer
-   ED Intelligent Spacecraft Database 
-   Dangerous Ship Computer
-   Dangerous Ship Computer Extension
-   BFG 9000 Extension
-   *** ED Intelligent Boardcomputer Extension 
-   ED Intelligent Shipcomputer Extension 
-
-   new name will be : "Intelligent Boardcomputer Extension"
    
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
 
-
+   * changed splashscreen
+-------------------------------------------------------------------------------------         
 SQL 0.0.34
    * removed old RegulatedNoiseSetting.cs and changed all
      remaining refrences to DB "tbInitValue" ("Settings"/"<NAME>")

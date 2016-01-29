@@ -895,7 +895,6 @@
     <None Include="libzmq.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Resources\m.png" />
     <Compile Include="Enums and Utility Classes\enumBindTo.cs" />
     <Content Include="Json\Bin\Net45\Newtonsoft.Json.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
