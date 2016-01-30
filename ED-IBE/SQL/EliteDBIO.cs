@@ -228,7 +228,9 @@ namespace IBE.SQL
                                                             "tbcategory", 
                                                             "tbeconomylevel", 
                                                             "tbvisitedsystems", 
-                                                            "tbvisitedstations"};
+                                                            "tbvisitedstations", 
+                                                            "tbpower",
+                                                            "tbpowerstate"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -344,9 +346,14 @@ namespace IBE.SQL
                     DataRow[] data = m_BaseData.Tables[fullTableName].Select(String.Format("{0} = '{1}'", Tablename, Name));
 
                     if ((data.GetUpperBound(0) == -1) && insertUnknown)
-                    {
+                    { 
+                        int maxValue;
                         DataTable Table     = m_BaseData.Tables[fullTableName];
-                        int maxValue        = Convert.ToInt32(Table.Compute("Max(id)", string.Empty));
+                        if (Table.Rows.Count > 0)
+                            maxValue        = Convert.ToInt32(Table.Compute("Max(id)", string.Empty));
+                        else
+                            maxValue        = 0;
+
                         DataRow newRow      = Table.NewRow();
                         newRow["id"]        = maxValue + 1;
                         newRow[Tablename]   = DBConnector.DTEscape(Name);
@@ -1223,8 +1230,8 @@ namespace IBE.SQL
                 SystemRow["state_id"]               = DBConvert.From(BaseTableNameToID("state", SystemObject.State, insertUnknown));
                 SystemRow["security_id"]            = DBConvert.From(BaseTableNameToID("security", SystemObject.Security, insertUnknown));
                 SystemRow["primary_economy_id"]     = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy, insertUnknown));
-                SystemRow["power"]                  = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy, insertUnknown));
-                SystemRow["power_state"]            = DBConvert.From(BaseTableNameToID("economy", SystemObject.PrimaryEconomy, insertUnknown));
+                SystemRow["power_id"]               = DBConvert.From(BaseTableNameToID("power", SystemObject.Power, insertUnknown));
+                SystemRow["powerstate_id"]          = DBConvert.From(BaseTableNameToID("powerstate", SystemObject.PowerState, insertUnknown));
                 SystemRow["needs_permit"]           = DBConvert.From(SystemObject.NeedsPermit);
                 SystemRow["updated_at"]             = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(SystemObject.UpdatedAt).DateTime);
                 SystemRow["is_changed"]             = OwnData ? DBConvert.From(1) : DBConvert.From(0);

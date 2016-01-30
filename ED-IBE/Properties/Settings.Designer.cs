@@ -54,5 +54,15 @@ namespace IBE.Properties {
                 return ((string)(this["elite_dbConnectionString2"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;user id=root;database=elite_db;persistsecurityinfo=True")]
+        public string elite_dbConnectionString3 {
+            get {
+                return ((string)(this["elite_dbConnectionString3"]));
+            }
+        }
     }
 }

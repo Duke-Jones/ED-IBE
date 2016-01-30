@@ -50,12 +50,21 @@ namespace IBE.EDDB_Data
         [JsonProperty("primary_economy")]
         public string PrimaryEconomy { get; set; }
 
+        [JsonProperty("power")]
+        public string Power { get; set; }
+
+        [JsonProperty("power_state")]
+        public string PowerState { get; set; }
+
         [JsonProperty("needs_permit")]
         public int? NeedsPermit { get; set; }
 
         [JsonProperty("updated_at")]
         public int UpdatedAt { get; set; }
 
+        [JsonProperty("simbad_ref")]
+        public string Simbad_Ref { get; set; }
+        
         /// <summary>
          /// creates a new system
         /// </summary>
@@ -99,8 +108,11 @@ namespace IBE.EDDB_Data
                     ObjectCompare.EqualsNullable(this.State, eqSystem.State) &&
                     ObjectCompare.EqualsNullable(this.Security, eqSystem.Security) &&
                     ObjectCompare.EqualsNullable(this.PrimaryEconomy, eqSystem.PrimaryEconomy) &&
+                    ObjectCompare.EqualsNullable(this.Power, eqSystem.Power) &&
+                    ObjectCompare.EqualsNullable(this.PowerState, eqSystem.PowerState) &&
                     ObjectCompare.EqualsNullable(this.NeedsPermit, eqSystem.NeedsPermit) &&
-                    ObjectCompare.EqualsNullable(this.UpdatedAt, eqSystem.UpdatedAt))
+                    ObjectCompare.EqualsNullable(this.UpdatedAt, eqSystem.UpdatedAt) &&
+                    ObjectCompare.EqualsNullable(this.Simbad_Ref, eqSystem.Simbad_Ref))
                     retValue = true;
             }
 
@@ -127,8 +139,11 @@ namespace IBE.EDDB_Data
             State           = ownSystem.State;
             Security        = ownSystem.Security;
             PrimaryEconomy  = ownSystem.PrimaryEconomy;
+            Power           = ownSystem.Power;
+            PowerState      = ownSystem.PowerState;
             NeedsPermit     = ownSystem.NeedsPermit;
             UpdatedAt       = ownSystem.UpdatedAt;
+            Simbad_Ref      = ownSystem.Simbad_Ref;
         }
 
         /// <summary>
@@ -148,8 +163,11 @@ namespace IBE.EDDB_Data
             State           = null;
             Security        = null;
             PrimaryEconomy  = null;
+            Power           = null;
+            PowerState      = null;
             NeedsPermit     = null;
             UpdatedAt       = 0;
+            Simbad_Ref      = null;
 
         }
 
