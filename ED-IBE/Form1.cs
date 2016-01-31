@@ -311,18 +311,37 @@ namespace IBE
         {
             // check in typical directorys
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
-                                       Environment.GetEnvironmentVariable("PROGRAMFILES(X86)") };
+                                       Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"), 
+                                       Path.Combine(Environment.GetEnvironmentVariable("ProgramW6432"), @"Steam\steamapps\common"), 
+                                       Path.Combine(Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"), @"Steam\steamapps\common") };
 
             string returnValue = null;
             foreach (var directory in autoSearchdir)
             { 
                 if (directory == null) continue;
-                foreach (var dir in Directory.GetDirectories(directory))
+
+                if(Directory.Exists(directory))
                 {
-                    if (Path.GetFileName(dir) != "Frontier") continue;
-                    var p = Path.Combine(dir, "EDLaunch", "Products");
-                    returnValue = Directory.Exists(p) ? p : null;
-                    break;
+                    foreach (var dir in Directory.GetDirectories(directory))
+                    {
+                        if ((Path.GetFileName(dir) != "Frontier") && (Path.GetFileName(dir) != "Frontier_Developments") && (Path.GetFileName(dir) != "Elite Dangerous")) 
+                            continue;
+                       String p;
+
+                        p = Path.Combine(dir, "Products");
+                        if(Directory.Exists(p))
+                        {
+                            returnValue = p;
+                            break;
+                        }
+
+                        p = Path.Combine(dir, "EDLaunch", "Products");
+                        if(Directory.Exists(p))
+                        {
+                            returnValue = p;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -374,6 +393,16 @@ namespace IBE
                         return dialog.SelectedPath;
                         
                     }
+                    else
+                    {
+                        DirectoryInfo di = new DirectoryInfo(dialog.SelectedPath);
+                        String parentDir = di.Parent.FullName;              
+
+                        if (Path.GetFileName(parentDir) == "Products")
+                            return parentDir;
+                    }
+
+
                 }
                 else
                     return null;
@@ -384,7 +413,7 @@ namespace IBE
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
-                    return null;
+                    Environment.Exit(-1);
             }
         }
         private void SetProductPath()
@@ -398,10 +427,12 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.RetryCancel);
+                var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.OKCancel);
 
                 if (MBResult != System.Windows.Forms.DialogResult.Cancel)
                     path = getProductPathManually();
+                else
+                   Environment.Exit(-1);
             }
 
             if (path != null)
@@ -419,20 +450,62 @@ namespace IBE
                         {
                             gamedirs.Add(dir);
                         }
+                        if (Path.GetFileName(dir).StartsWith("elite-dangerous-64"))
+                        {
+                            gamedirs.Add(dir);
+                        }
                     }
 
                     if (gamedirs.Count > 0)
                     {
-                        //Get highest Forc-fdev dir.
-                        Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", gamedirs.OrderByDescending(x => x).ToArray()[0]);
+                        DateTime youngestDate = new DateTime(2000, 1, 1);
+                        String   youngestPath = "";
+
+                        foreach (String foundDir in gamedirs)
+                        {
+                            String currentDir = Path.Combine(foundDir, "Logs");
+
+                            if (Directory.Exists(currentDir))
+                            {
+                                FileInfo[] filesInDirectory = new DirectoryInfo(currentDir).GetFiles("netLog.*.log", SearchOption.TopDirectoryOnly);
+                                List<FileInfo> ordered      = (from te in filesInDirectory orderby te.CreationTimeUtc descending select te).ToList();
+
+                                if((ordered.Count > 0) && (ordered[0].CreationTimeUtc > youngestDate))
+                                {
+                                    youngestDate  = ordered[0].CreationTimeUtc;
+                                    youngestPath  = foundDir;
+                                }
+                            }
+                        }
+
+                        if (youngestPath != "")
+                        {
+                            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", youngestPath);
+                        }
+                        else
+                        {
+                            String x64Dir = gamedirs.FirstOrDefault(x => Path.GetFileName(x) == "elite-dangerous-64");
+
+                            if(x64Dir != null)
+                            {
+                                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", x64Dir);
+                            }
+                            else
+                            {
+                                //Get highest Forc-fdev dir.
+                                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", gamedirs.OrderByDescending(x => x).ToArray()[0]);
+                            }
+                        }
+
                         b = true;
                         continue;
+
                     }
 
                     var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
 
                     if (MBResult == System.Windows.Forms.DialogResult.Cancel)
-                        Application.Exit();
+                        Environment.Exit(-1);
 
                     path = getProductPathManually();
                     dirs = Directory.GetDirectories(path);

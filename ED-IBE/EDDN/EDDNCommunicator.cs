@@ -171,7 +171,7 @@ namespace IBE.EDDN
 
                 UserID = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserName", Guid.NewGuid().ToString(), false, true);
 
-                // test or real ?
+                // filesInDirectory or real ?
                 if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), true))
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
                 else

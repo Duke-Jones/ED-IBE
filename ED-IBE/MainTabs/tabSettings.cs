@@ -215,7 +215,7 @@ namespace IBE.MTSettings
         }
 
         /// <summary>
-        /// starts the filter test
+        /// starts the filter filesInDirectory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -588,9 +588,11 @@ namespace IBE.MTSettings
 
                 if (newProductPath.Substring(Directory.GetParent(newProductPath).FullName.Length).Replace("\\","").Equals("Products", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Program.DBCon.setIniValue(DB_GROUPNAME, "GamePath", newGamePath);
-                    Program.DBCon.setIniValue(DB_GROUPNAME, "ProductsPath", newProductPath);
+
                     txtGamePath.Text = newGamePath;
+                    m_GUIInterface.saveSetting(txtGamePath);
+
+                    Program.DBCon.setIniValue(DB_GROUPNAME, "ProductsPath", newProductPath);
 
                     MessageBox.Show("Path changed. Please restart ED-IBE", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
@@ -603,5 +605,6 @@ namespace IBE.MTSettings
 
             return result;
         }
+
     }
 }

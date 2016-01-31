@@ -96,7 +96,7 @@ namespace IBE.EDDN
         }
 
         /// <summary>
-        /// returns, if this is a main message or only a message from the test schema
+        /// returns, if this is a main message or only a message from the filesInDirectory schema
         /// </summary>
         /// <returns></returns>
         public Boolean isTest()

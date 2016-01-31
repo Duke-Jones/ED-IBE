@@ -94,6 +94,14 @@ todo:
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
+
+
+SQL 0.0.36
+   * changes in installer script for new directoy names
+   * re-added missed MYSQL connector
+   * improved behaviour on searching productspath and gamepath of ED
+   * added possibility to change gamedir on settings tab
+-------------------------------------------------------------------------------------         
 SQL 0.0.35
    * added station.has_market, station.selling_ships, station.selling_modules, station.is_planetary
      station.market_updated_at to db structures (EDDB API V4/V4.1)

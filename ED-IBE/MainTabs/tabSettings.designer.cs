@@ -65,7 +65,6 @@
             this.button6 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label25 = new System.Windows.Forms.Label();
-            this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.txtExtTool_ParamMarket = new System.Windows.Forms.TextBox();
             this.txtExtTool_ParamLocation = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -73,6 +72,7 @@
             this.txtExtTool_Path = new System.Windows.Forms.TextBox();
             this.cmdSelectExternalToolPath = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.gbExternalDataInterface = new System.Windows.Forms.GroupBox();
@@ -503,23 +503,6 @@
             this.label25.Text = "Filter Setting";
             this.toolTip1.SetToolTip(this.label25, "Here you can select, if you want to see in all analysis");
             // 
-            // cmbVisitedFilter
-            // 
-            this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
-            this.cmbVisitedFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbVisitedFilter.FormattingEnabled = true;
-            this.cmbVisitedFilter.Location = new System.Drawing.Point(30, 37);
-            this.cmbVisitedFilter.MaxValue = null;
-            this.cmbVisitedFilter.MinValue = null;
-            this.cmbVisitedFilter.Name = "cmbVisitedFilter";
-            this.cmbVisitedFilter.Size = new System.Drawing.Size(149, 21);
-            this.cmbVisitedFilter.TabIndex = 63;
-            this.cmbVisitedFilter.Tag = "VisitedFilter;1";
-            this.toolTip1.SetToolTip(this.cmbVisitedFilter, "Here you can select, if you want to see in all analysis\r\n- all stations (independ" +
-        "ent if you\'ve visted them or not)\r\n- only stations in systems you\'ve visited \r\n-" +
-        " only stations you\'ve directly visted");
-            this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
-            // 
             // txtExtTool_ParamMarket
             // 
             this.txtExtTool_ParamMarket.Location = new System.Drawing.Point(11, 211);
@@ -593,6 +576,23 @@
             this.label3.TabIndex = 67;
             this.label3.Text = "a) Path to the external data tool:";
             this.toolTip1.SetToolTip(this.label3, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
+            // 
+            // cmbVisitedFilter
+            // 
+            this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
+            this.cmbVisitedFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbVisitedFilter.FormattingEnabled = true;
+            this.cmbVisitedFilter.Location = new System.Drawing.Point(30, 37);
+            this.cmbVisitedFilter.MaxValue = null;
+            this.cmbVisitedFilter.MinValue = null;
+            this.cmbVisitedFilter.Name = "cmbVisitedFilter";
+            this.cmbVisitedFilter.Size = new System.Drawing.Size(149, 21);
+            this.cmbVisitedFilter.TabIndex = 63;
+            this.cmbVisitedFilter.Tag = "VisitedFilter;1";
+            this.toolTip1.SetToolTip(this.cmbVisitedFilter, "Here you can select, if you want to see in all analysis\r\n- all stations (independ" +
+        "ent if you\'ve visted them or not)\r\n- only stations in systems you\'ve visited \r\n-" +
+        " only stations you\'ve directly visted");
+            this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -743,7 +743,7 @@
             this.groupBox3.Size = new System.Drawing.Size(394, 62);
             this.groupBox3.TabIndex = 69;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Active Product Path";
+            this.groupBox3.Text = "Active Game Path (for analysing ED-logfiles)";
             // 
             // txtGamePath
             // 
@@ -752,6 +752,7 @@
             this.txtGamePath.ReadOnly = true;
             this.txtGamePath.Size = new System.Drawing.Size(373, 20);
             this.txtGamePath.TabIndex = 68;
+            this.txtGamePath.Tag = "GamePath;";
             // 
             // cmdGamePath
             // 

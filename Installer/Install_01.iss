@@ -3,10 +3,10 @@
 
 #define MyAppName "ED - Intelligent Boardcomputer Extension"
 #define MyAppShortName "ED-IBE"
-#define MyAppVersion GetStringFileInfo("..\RegulatedNoise\bin\Release\RegulatedNoise.exe", "FileVersion")
+#define MyAppVersion GetStringFileInfo("..\ED-IBE\bin\Release\ED-IBE.exe", "FileVersion")
 #define MyAppPublisher "Duke Jones"
-#define MyAppURL "https://github.com/Duke-Jones/RegulatedNoise"
-#define MyAppExeName "RegulatedNoise.exe"
+#define MyAppURL "https://github.com/Duke-Jones/ED-IBE"
+#define MyAppExeName "ED-IBE.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -25,7 +25,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=.\Package
 OutputBaseFilename={#MyAppShortName}_{#MyAppVersion}
-SetupIconFile=..\RegulatedNoise\RegulatedNoise.ico
+SetupIconFile=..\ED-IBE\RegulatedNoise.ico
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64 ia64
@@ -42,38 +42,38 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "..\RegulatedNoise\bin\Release\RegulatedNoise.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\libzmq.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\RegulatedNoise.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\RegulatedNoise.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Tesseract.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Tesseract.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\clrzmq.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\clrzmq.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\clrzmq.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\EdClasses.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\EdClasses.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\x64\liblept168.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\x64\libtesseract302.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\x86\liblept168.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\x86\libtesseract302.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Json\Bin\Net45\Newtonsoft.Json.dll"; DestDir: "{app}\Json\Bin\Net45\"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\ED-IBE.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\libzmq.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\ED-IBE.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\ED-IBE.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\Tesseract.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\Tesseract.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\clrzmq.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\clrzmq.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\clrzmq.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\EdClasses.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\EdClasses.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\x64\liblept168.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\x64\libtesseract302.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\x86\liblept168.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\x86\libtesseract302.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\Json\Bin\Net45\Newtonsoft.Json.dll"; DestDir: "{app}\Json\Bin\Net45\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\COPYING"; DestDir: "{app}\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\README"; DestDir: "{app}\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\bin\*"; DestDir: "{app}\Database\bin\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\share\*"; DestDir: "{app}\Database\share\"; Flags: ignoreversion createallsubdirs recursesubdirs
 ;data path
-Source: "..\RegulatedNoise\bin\Release\Calibration Examples\*"; DestDir: "{code:GetDataBasepath}\Calibration Examples"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\tessdata\*"; DestDir: "{code:GetDataBasepath}\tessdata"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Data\*"; DestDir: "{code:GetDataBasepath}\Data"; Flags: ignoreversion
-Source: "..\RegulatedNoise\bin\Release\Brainerous\*"; DestDir: "{code:GetDataBasepath}\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\ED-IBE\bin\Release\Calibration Examples\*"; DestDir: "{code:GetDataBasepath}\Calibration Examples"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\tessdata\*"; DestDir: "{code:GetDataBasepath}\tessdata"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\Data\*"; DestDir: "{code:GetDataBasepath}\Data"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\Brainerous\*"; DestDir: "{code:GetDataBasepath}\Brainerous"; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
 ;ini files
-Source: "..\RegulatedNoise\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{code:GetDataBasepath}\Database\"; Flags: ignoreversion
 
 [Icons]
