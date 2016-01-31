@@ -94,8 +94,12 @@ todo:
 *************************************************************************************
 *************************************************************************************
 *************************************************************************************
-
-
+SQL 0.0.35
+   * added station.has_market, station.selling_ships, station.selling_modules, station.is_planetary
+     station.market_updated_at to db structures (EDDB API V4/V4.1)
+   * minor bugfixed
+   * prohibited multiple instance running
+-------------------------------------------------------------------------------------         
    * added system.power and system.power_state to db structures (EDDB API V4)
 -------------------------------------------------------------------------------------         
    * changed splashscreen

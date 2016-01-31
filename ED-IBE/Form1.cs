@@ -129,6 +129,8 @@ namespace IBE
         {
             try
             {
+                Cursor = Cursors.WaitCursor;
+
                 _InitDone = false ;
 
                 InstanceObject = this;
@@ -138,8 +140,6 @@ namespace IBE
 #if !ep_Debug
                 _Splash.Show();
 #endif
-                Cursor = Cursors.WaitCursor;
-
                 doInit();
 
                 _Splash.InfoAdd("\nstart sequence finished !!!");
@@ -221,11 +221,6 @@ namespace IBE
                 _logger.Log("  - created EDDN object");
                 _Splash.InfoChange("prepare EDDN interface...<OK>");
 
-                //MessageBox.Show("Todo");
-                //_Splash.InfoAdd("load station history...");
-                //_StationHistory.loadHistory(Program.GetDataPath(@"\Data\StationHistory.json"), true);
-                //_Splash.InfoChange("load station history...<OK>");
-
                 _Splash.InfoAdd("apply settings...");
                 ApplySettings();
                 _Splash.InfoChange("apply settings...<OK>");
@@ -255,7 +250,8 @@ namespace IBE
 
                 _Splash.InfoAdd("prepare system/location view...");
                 //prePrepareSystemAndStationFields();
-                MessageBox.Show("todo");
+                if (Debugger.IsAttached)
+                    MessageBox.Show("todo");
                 _Splash.InfoChange("prepare system/location view...<OK>");
 
                 _Splash.InfoAdd("prepare GUI elements...");
@@ -1466,7 +1462,8 @@ namespace IBE
                         }
                         tbEddnStats.Text = output;
 
-                        MessageBox.Show("TODO");
+                        if (Debugger.IsAttached)
+                            MessageBox.Show("TODO");
                         string commodity = ""; //' getLocalizedCommodity(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "Language, messageDictionary["itemName"]);
 
                         if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
@@ -2142,7 +2139,8 @@ namespace IBE
             {
                 cmbSystemsAllSystems.SelectedValue = Systemname;
 
-                MessageBox.Show("TODO");
+                if (Debugger.IsAttached)
+                    MessageBox.Show("TODO");
                 // throw new NotImplementedException();
                 //m_loadedSystemdata = _Milkyway.getSystem(Systemname);
                 m_loadedSystemdata = null;
@@ -2261,7 +2259,8 @@ namespace IBE
             {
                 cmbStationStations.SelectedItem    = Stationname;
 
-                MessageBox.Show("TODO");
+                if (Debugger.IsAttached)
+                    MessageBox.Show("TODO");
                 //m_loadedStationdata                 = _Milkyway.getLocation(Systemname, Locationname);
                 m_StationIsNew                      = false;
             }
@@ -2287,7 +2286,7 @@ namespace IBE
                 foreach (string Economy in m_loadedStationdata.Economies)
                     lbStationEconomies.Items.Add(Economy);
 
-                cbStationHasCommodities.CheckState = m_loadedStationdata.HasCommodities.toCheckState();
+                cbStationHasMarket.CheckState = m_loadedStationdata.HasMarket.toCheckState();
                 cbStationHasBlackmarket.CheckState = m_loadedStationdata.HasBlackmarket.toCheckState();
                 cbStationHasOutfitting.CheckState = m_loadedStationdata.HasOutfitting.toCheckState();
                 cbStationHasShipyard.CheckState = m_loadedStationdata.HasShipyard.toCheckState();
@@ -2310,7 +2309,9 @@ namespace IBE
 
 //                if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
 //                                                                                      (x.SystemId == m_loadedStationdata.SystemId)))
-                MessageBox.Show("TODO");
+                if (Debugger.IsAttached)
+                    MessageBox.Show("TODO");
+
                 if(false)
                 {
                     txtStationName.ReadOnly = true;
@@ -2340,7 +2341,7 @@ namespace IBE
 
                 lbStationEconomies.Items.Clear();
 
-                cbStationHasCommodities.CheckState = CheckState.Unchecked;
+                cbStationHasMarket.CheckState = CheckState.Unchecked;
                 cbStationHasBlackmarket.CheckState = CheckState.Unchecked;
                 cbStationHasOutfitting.CheckState = CheckState.Unchecked;
                 cbStationHasShipyard.CheckState = CheckState.Unchecked;
@@ -2544,7 +2545,7 @@ namespace IBE
             this.cmbStationType.TextChanged += txtStation_TextChanged;
 
 
-            this.cbStationHasCommodities.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
+            this.cbStationHasMarket.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
             this.cbStationHasBlackmarket.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
             this.cbStationHasOutfitting.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
             this.cbStationHasShipyard.CheckedChanged += new System.EventHandler(this.CheckBox_StationSystem_CheckedChanged);
@@ -2801,7 +2802,7 @@ namespace IBE
                     break;
 
                 case "cbStationHasCommodities":
-                    m_currentStationdata.HasCommodities = cbStationHasCommodities.toNInt();
+                    m_currentStationdata.HasMarket = cbStationHasMarket.toNInt();
                     break;
 
                 case "cbStationHasBlackmarket":
@@ -3197,7 +3198,7 @@ namespace IBE
                 cmbStationState.ReadOnly                = !enabled;
                 cmbStationType.ReadOnly                 = !enabled;
 
-                cbStationHasCommodities.ReadOnly        = !enabled;
+                cbStationHasMarket.ReadOnly        = !enabled;
                 cbStationHasBlackmarket.ReadOnly        = !enabled;
                 cbStationHasOutfitting.ReadOnly         = !enabled;
                 cbStationHasShipyard.ReadOnly           = !enabled;

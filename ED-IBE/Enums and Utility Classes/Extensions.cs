@@ -120,6 +120,21 @@ namespace IBE.Enums_and_Utility_Classes
         }
     }
     
+    static class Extensions_Int32ArrayNullable
+    {
+        /// <summary>
+        /// clones a string array and return null if the source array is null
+        /// </summary>
+        /// <param name="thisString">a string or null</param>
+        /// <returns></returns>
+        public static Int32[] CloneN(this Int32[] thisInt32Array)
+        {
+            if(thisInt32Array == null)
+                return null;
+            else
+                return (Int32[])thisInt32Array.Clone();
+        }
+    }
     
     static class Extensions_StringArrayNullable
     {

@@ -53,8 +53,8 @@ namespace IBE.EDDB_Data
         [JsonProperty("has_blackmarket")]
         public int? HasBlackmarket { get; set; }
 
-        [JsonProperty("has_commodities")]
-        public int? HasCommodities { get; set; }
+        [JsonProperty("has_market")]
+        public int? HasMarket { get; set; }
 
         [JsonProperty("has_refuel")]
         public int? HasRefuel { get; set; }
@@ -88,6 +88,32 @@ namespace IBE.EDDB_Data
 
         [JsonProperty("listings")]
         public Listing[] Listings { get; set; }
+
+        // v4 / v4.1
+
+        [JsonProperty("shipyard_updated_at")]
+        public int? Shipyard_UpdatedAt { get; set; }
+
+        [JsonProperty("outfitting_updated_at")]
+        public int? Outfitting_UpdatedAt { get; set; }
+
+        [JsonProperty("market_updated_at")]
+        public int? Market_UpdatedAt { get; set; }
+
+        [JsonProperty("type_id")]
+        public int? TypeID { get; set; }
+
+        [JsonProperty("has_commodities")]
+        public int? HasCommodities { get; set; }
+
+        [JsonProperty("is_planetary")]
+        public int? IsPlanetary { get; set; }
+
+        [JsonProperty("selling_ships")]
+        public string[] SellingShips { get; set; }
+
+        [JsonProperty("selling_modules")]
+        public int[] SellingModules { get; set; }
 
          /// <summary>
          /// creates a new station 
@@ -151,7 +177,7 @@ namespace IBE.EDDB_Data
                 State                 = null;
                 Type                  = null;
                 HasBlackmarket        = null;
-                HasCommodities        = null;
+                HasMarket             = null;
                 HasRefuel             = null;
                 HasRepair             = null;
                 HasRearm              = null;
@@ -164,6 +190,16 @@ namespace IBE.EDDB_Data
                 Economies             = new String[0];
 
                 Listings              = new Listing[0];
+                    
+                UpdatedAt             = 0; 
+                Shipyard_UpdatedAt    = 0;
+                Outfitting_UpdatedAt  = 0;
+                Market_UpdatedAt      = 0;
+                TypeID                = null;
+                HasCommodities        = null; 
+                IsPlanetary           = null;
+                SellingShips          = new String[0];
+                SellingModules        = new Int32[0];
 
 
             }
@@ -186,7 +222,7 @@ namespace IBE.EDDB_Data
             State                 = null;
             Type                  = null;
             HasBlackmarket        = null;
-            HasCommodities        = null;
+            HasMarket             = null;
             HasRefuel             = null;
             HasRepair             = null;
             HasRearm              = null;
@@ -199,6 +235,16 @@ namespace IBE.EDDB_Data
             Economies             = new String[0];
 
             Listings              = new Listing[0];
+
+            UpdatedAt             = 0; //new System.DateTimeOffset(##).ToUnixTimeSeconds();
+            Shipyard_UpdatedAt    = 0;
+            Outfitting_UpdatedAt  = 0;
+            Market_UpdatedAt      = 0;
+            TypeID                = null;
+            HasCommodities        = null; 
+            IsPlanetary           = null;
+            SellingShips          = new String[0];
+            SellingModules        = new Int32[0];
 
             ListingExtendMode     = false;
         }
@@ -225,7 +271,7 @@ namespace IBE.EDDB_Data
                     ObjectCompare.EqualsNullable(this.State, eqStation.State) && 
                     ObjectCompare.EqualsNullable(this.Type, eqStation.Type) && 
                     ObjectCompare.EqualsNullable(this.HasBlackmarket, eqStation.HasBlackmarket) && 
-                    ObjectCompare.EqualsNullable(this.HasCommodities, eqStation.HasCommodities) && 
+                    ObjectCompare.EqualsNullable(this.HasMarket, eqStation.HasMarket) && 
                     ObjectCompare.EqualsNullable(this.HasRefuel, eqStation.HasRefuel) &&
                     ObjectCompare.EqualsNullable(this.HasRepair, eqStation.HasRepair) && 
                     ObjectCompare.EqualsNullable(this.HasRearm, eqStation.HasRearm) &&
@@ -234,7 +280,17 @@ namespace IBE.EDDB_Data
                     ObjectCompare.EqualsNullable(this.ImportCommodities, eqStation.ImportCommodities) &&
                     ObjectCompare.EqualsNullable(this.ExportCommodities, eqStation.ExportCommodities) &&
                     ObjectCompare.EqualsNullable(this.ProhibitedCommodities, eqStation.ProhibitedCommodities) &&
-                    ObjectCompare.EqualsNullable(this.Economies, eqStation.Economies))
+                    ObjectCompare.EqualsNullable(this.Economies, eqStation.Economies) &&
+                    ObjectCompare.EqualsNullable(this.UpdatedAt, eqStation.UpdatedAt) &&             
+                    ObjectCompare.EqualsNullable(this.Shipyard_UpdatedAt, eqStation.Shipyard_UpdatedAt) &&
+                    ObjectCompare.EqualsNullable(this.Outfitting_UpdatedAt, eqStation.Outfitting_UpdatedAt) &&  
+                    ObjectCompare.EqualsNullable(this.Market_UpdatedAt, eqStation.Market_UpdatedAt) &&      
+                    ObjectCompare.EqualsNullable(this.TypeID, eqStation.TypeID) &&                
+                    ObjectCompare.EqualsNullable(this.HasCommodities, eqStation.HasCommodities) &&        
+                    ObjectCompare.EqualsNullable(this.IsPlanetary, eqStation.IsPlanetary) &&           
+                    ObjectCompare.EqualsNullable(this.SellingShips, eqStation.SellingShips) &&          
+                    ObjectCompare.EqualsNullable(this.SellingModules, eqStation.SellingModules)        
+                    )
                         retValue = true;
 
             }
@@ -263,7 +319,7 @@ namespace IBE.EDDB_Data
             State                 = ValueStation.State;
             Type                  = ValueStation.Type;
             HasBlackmarket        = ValueStation.HasBlackmarket;
-            HasCommodities        = ValueStation.HasCommodities;
+            HasMarket             = ValueStation.HasMarket;
             HasRefuel             = ValueStation.HasRefuel;
             HasRepair             = ValueStation.HasRepair;
             HasRearm              = ValueStation.HasRearm;
@@ -274,6 +330,16 @@ namespace IBE.EDDB_Data
             ExportCommodities     = ValueStation.ExportCommodities.CloneN();
             ProhibitedCommodities = ValueStation.ProhibitedCommodities.CloneN();
             Economies             = ValueStation.Economies.CloneN();
+
+            UpdatedAt             = ValueStation.UpdatedAt;             
+            Shipyard_UpdatedAt    = ValueStation.Shipyard_UpdatedAt;    
+            Outfitting_UpdatedAt  = ValueStation.Outfitting_UpdatedAt;  
+            Market_UpdatedAt      = ValueStation.Market_UpdatedAt;      
+            TypeID                = ValueStation.TypeID;                
+            HasCommodities        = ValueStation.HasCommodities;        
+            IsPlanetary           = ValueStation.IsPlanetary;           
+            SellingShips          = ValueStation.SellingShips.CloneN();          
+            SellingModules        = ValueStation.SellingModules.CloneN();        
 
         }
 

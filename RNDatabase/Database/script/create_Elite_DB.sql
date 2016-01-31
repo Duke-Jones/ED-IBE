@@ -66,6 +66,26 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `Elite_DB`.`tbPower`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPower` (
+  `id` INT NOT NULL,
+  `power` VARCHAR(80) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbPowerState`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPowerState` (
+  `id` INT NOT NULL,
+  `powerstate` VARCHAR(80) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `Elite_DB`.`tbSystems`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
@@ -83,8 +103,10 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
   `primary_economy_id` INT NULL,
   `needs_permit` TINYINT(1) NULL,
   `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_changed` TINYINT(1) NULL DEFAULT 0,
   `visited` TINYINT(1) NOT NULL DEFAULT 0,
+  `Power_id` INT NULL,
+  `PowerState_id` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC),
   INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC),
@@ -95,6 +117,8 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
   INDEX `idx_y` USING BTREE (`y` ASC),
   INDEX `idx_z` (`z` ASC),
   INDEX `idx_tbSystems_Systemname` (`systemname` ASC),
+  INDEX `fk_tbSystems_tbPower1_idx` (`Power_id` ASC),
+  INDEX `fk_tbSystems_tbPowerState1_idx` (`PowerState_id` ASC),
   CONSTRAINT `fk_tbSystems_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
     REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
@@ -118,6 +142,16 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
   CONSTRAINT `fk_tbSystems_tbSecurity1`
     FOREIGN KEY (`security_id`)
     REFERENCES `Elite_DB`.`tbSecurity` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbPower1`
+    FOREIGN KEY (`Power_id`)
+    REFERENCES `Elite_DB`.`tbPower` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbPowerState1`
+    FOREIGN KEY (`PowerState_id`)
+    REFERENCES `Elite_DB`.`tbPowerState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -148,14 +182,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations` (
   `state_id` INT NULL,
   `stationtype_id` INT NULL,
   `has_blackmarket` TINYINT(1) NULL,
-  `has_commodities` TINYINT(1) NULL,
+  `has_market` TINYINT(1) NULL,
   `has_refuel` TINYINT(1) NULL,
   `has_repair` TINYINT(1) NULL,
   `has_rearm` TINYINT(1) NULL,
   `has_outfitting` TINYINT(1) NULL,
+  `has_shipyard` TINYINT(1) NULL,
+  `has_commodities` TINYINT(1) NULL,
+  `is_planetary` TINYINT(1) NULL,
   `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
+  `shipyard_updated_at` DATETIME NULL,
+  `outfitting_updated_at` DATETIME NULL,
+  `market_updated_at` DATETIME NULL,
+  `is_changed` TINYINT(1) NULL DEFAULT 0,
+  `visited` TINYINT(1) NULL DEFAULT 0,
+  `type_id` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC),
   INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC),
@@ -506,120 +547,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbSystems_org`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems_org` (
-  `id` INT NOT NULL,
-  `systemname` VARCHAR(80) NOT NULL,
-  `x` DOUBLE NULL,
-  `y` DOUBLE NULL,
-  `z` DOUBLE NULL,
-  `faction` VARCHAR(80) NULL,
-  `population` MEDIUMTEXT NULL,
-  `government_id` INT NULL,
-  `allegiance_id` INT NULL,
-  `state_id` INT NULL,
-  `security_id` INT NULL,
-  `primary_economy_id` INT NULL,
-  `needs_permit` TINYINT(1) NULL,
-  `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC),
-  INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC),
-  INDEX `fk_tbSystems_tbGovernment1_idx` (`government_id` ASC),
-  INDEX `fk_tbSystems_tbState1_idx` (`state_id` ASC),
-  INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC),
-  INDEX `idx_x` USING BTREE (`x` ASC),
-  INDEX `idx_y` USING BTREE (`y` ASC),
-  INDEX `idx_z` USING BTREE (`z` ASC),
-  CONSTRAINT `fk_tbSystems_tbAllegiance10`
-    FOREIGN KEY (`allegiance_id`)
-    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbSystems_tbEconomy10`
-    FOREIGN KEY (`primary_economy_id`)
-    REFERENCES `Elite_DB`.`tbEconomy` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbSystems_tbGovernment10`
-    FOREIGN KEY (`government_id`)
-    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbSystems_tbState10`
-    FOREIGN KEY (`state_id`)
-    REFERENCES `Elite_DB`.`tbState` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbSystems_tbSecurity10`
-    FOREIGN KEY (`security_id`)
-    REFERENCES `Elite_DB`.`tbSecurity` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Elite_DB`.`tbStations_org`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
-  `id` INT NOT NULL,
-  `stationname` VARCHAR(80) NOT NULL,
-  `system_id` INT NOT NULL,
-  `max_landing_pad_size` CHAR(1) NULL,
-  `distance_to_star` INT NULL,
-  `faction` VARCHAR(80) NULL,
-  `government_id` INT NULL,
-  `allegiance_id` INT NULL,
-  `state_id` INT NULL,
-  `stationtype_id` INT NULL,
-  `has_blackmarket` TINYINT(1) NULL,
-  `has_commodities` TINYINT(1) NULL,
-  `has_refuel` TINYINT(1) NULL,
-  `has_repair` TINYINT(1) NULL,
-  `has_rearm` TINYINT(1) NULL,
-  `has_outfitting` TINYINT(1) NULL,
-  `updated_at` DATETIME NOT NULL,
-  `is_changed` TINYINT(1) NOT NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC),
-  INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC),
-  INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC),
-  INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC),
-  INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC),
-  CONSTRAINT `fk_tbStations_tbSystems0`
-    FOREIGN KEY (`system_id`)
-    REFERENCES `Elite_DB`.`tbSystems` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbStations_tbAllegiance10`
-    FOREIGN KEY (`allegiance_id`)
-    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbStations_tbGovernment10`
-    FOREIGN KEY (`government_id`)
-    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbStations_tbState10`
-    FOREIGN KEY (`state_id`)
-    REFERENCES `Elite_DB`.`tbState` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbStations_tbStationType10`
-    FOREIGN KEY (`stationtype_id`)
-    REFERENCES `Elite_DB`.`tbStationType` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `Elite_DB`.`tbVisitedSystems`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedSystems` (
@@ -871,6 +798,143 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_ByCommodity` (
   `DemandLevel` VARCHAR(80) NULL,
   `Timestamp` DATETIME NULL,
   PRIMARY KEY (`Station_ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbSystems_org`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems_org` (
+  `id` INT NOT NULL,
+  `systemname` VARCHAR(80) NOT NULL,
+  `x` DOUBLE NULL,
+  `y` DOUBLE NULL,
+  `z` DOUBLE NULL,
+  `faction` VARCHAR(80) NULL,
+  `population` MEDIUMTEXT NULL,
+  `government_id` INT NULL,
+  `allegiance_id` INT NULL,
+  `state_id` INT NULL,
+  `security_id` INT NULL,
+  `primary_economy_id` INT NULL,
+  `needs_permit` TINYINT(1) NULL,
+  `updated_at` DATETIME NOT NULL,
+  `is_changed` TINYINT(1) NULL DEFAULT 0,
+  `visited` TINYINT(1) NOT NULL DEFAULT 0,
+  `Power_id` INT NULL,
+  `PowerState_id` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tbSystems_tbAllegiance1_idx` (`allegiance_id` ASC),
+  INDEX `fk_tbSystems_tbEconomy1_idx` (`primary_economy_id` ASC),
+  INDEX `fk_tbSystems_tbGovernment1_idx` (`government_id` ASC),
+  INDEX `fk_tbSystems_tbState1_idx` (`state_id` ASC),
+  INDEX `fk_tbSystems_tbSecurity1_idx` (`security_id` ASC),
+  INDEX `idx_x` USING BTREE (`x` ASC),
+  INDEX `idx_y` USING BTREE (`y` ASC),
+  INDEX `idx_z` (`z` ASC),
+  INDEX `idx_tbSystems_Systemname` (`systemname` ASC),
+  INDEX `fk_tbSystems_tbPower1_idx` (`Power_id` ASC),
+  INDEX `fk_tbSystems_tbPowerState1_idx` (`PowerState_id` ASC),
+  CONSTRAINT `fk_tbSystems_tbAllegiance10`
+    FOREIGN KEY (`allegiance_id`)
+    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbEconomy10`
+    FOREIGN KEY (`primary_economy_id`)
+    REFERENCES `Elite_DB`.`tbEconomy` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbGovernment10`
+    FOREIGN KEY (`government_id`)
+    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbState10`
+    FOREIGN KEY (`state_id`)
+    REFERENCES `Elite_DB`.`tbState` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbSecurity10`
+    FOREIGN KEY (`security_id`)
+    REFERENCES `Elite_DB`.`tbSecurity` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbPower10`
+    FOREIGN KEY (`Power_id`)
+    REFERENCES `Elite_DB`.`tbPower` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbPowerState10`
+    FOREIGN KEY (`PowerState_id`)
+    REFERENCES `Elite_DB`.`tbPowerState` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Elite_DB`.`tbStations_org`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
+  `id` INT NOT NULL,
+  `stationname` VARCHAR(80) NOT NULL,
+  `system_id` INT NOT NULL,
+  `max_landing_pad_size` CHAR(1) NULL,
+  `distance_to_star` INT NULL,
+  `faction` VARCHAR(80) NULL,
+  `government_id` INT NULL,
+  `allegiance_id` INT NULL,
+  `state_id` INT NULL,
+  `stationtype_id` INT NULL,
+  `has_blackmarket` TINYINT(1) NULL,
+  `has_market` TINYINT(1) NULL,
+  `has_refuel` TINYINT(1) NULL,
+  `has_repair` TINYINT(1) NULL,
+  `has_rearm` TINYINT(1) NULL,
+  `has_outfitting` TINYINT(1) NULL,
+  `has_shipyard` TINYINT(1) NULL,
+  `has_commodities` TINYINT(1) NULL,
+  `is_planetary` TINYINT(1) NULL,
+  `updated_at` DATETIME NOT NULL,
+  `shipyard_updated_at` DATETIME NULL,
+  `outfitting_updated_at` DATETIME NULL,
+  `market_updated_at` DATETIME NULL,
+  `is_changed` TINYINT(1) NULL DEFAULT 0,
+  `visited` TINYINT(1) NULL DEFAULT 0,
+  `type_id` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC),
+  INDEX `fk_tbStations_tbAllegiance1_idx` (`allegiance_id` ASC),
+  INDEX `fk_tbStations_tbGovernment1_idx` (`government_id` ASC),
+  INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC),
+  INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC),
+  INDEX `idx_tbStations_Stationname` (`stationname` ASC),
+  CONSTRAINT `fk_tbStations_tbSystems0`
+    FOREIGN KEY (`system_id`)
+    REFERENCES `Elite_DB`.`tbSystems` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_tbStations_tbAllegiance10`
+    FOREIGN KEY (`allegiance_id`)
+    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbStations_tbGovernment10`
+    FOREIGN KEY (`government_id`)
+    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbStations_tbState10`
+    FOREIGN KEY (`state_id`)
+    REFERENCES `Elite_DB`.`tbState` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbStations_tbStationType10`
+    FOREIGN KEY (`stationtype_id`)
+    REFERENCES `Elite_DB`.`tbStationType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 USE `Elite_DB` ;

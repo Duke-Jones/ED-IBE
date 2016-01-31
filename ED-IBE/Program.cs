@@ -18,7 +18,6 @@ using IBE.MTSettings;
 using IBE.ExtData;
 using IBE.FileScanner;
 
-
 namespace IBE
 {
     public static class Program
@@ -58,20 +57,37 @@ namespace IBE
         {
             try
             {
-                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-                Application.ThreadException += Application_ThreadException;
+                bool blnOK;
+                Cursor.Current = Cursors.WaitCursor;
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
+                using (System.Threading.Mutex mut = new System.Threading.Mutex(true, "Anwendungsname", out blnOK))
+                {
+                    if (blnOK)
+                    {
+                        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                        Application.ThreadException += Application_ThreadException;
 
-                Init();
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
 
-                Application.Run(new Form1());
+                        Init();
 
-                Cleanup();
+                        Application.Run(new Form1());
+
+                        Cleanup();
+                    }
+                    else
+                    {
+                        MessageBox.Show("A instance of ED-IBE is already running!", "Aborted !", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    }
+                }
+
+                Cursor.Current = Cursors.Default;
+
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 cErr.processError(ex, "Error in main routine !");
             }
         }
@@ -151,7 +167,7 @@ namespace IBE
         }
 
         /// <summary>
-        /// Gets a path where logs and/or dumps can be saved.
+        /// Gets a path where data (logs/dumps/other data) can be saved.
         /// Default is the program path (development) or the data path which is by default "{localappdata}\ED-IBE\"
         /// </summary>
         /// <param name="subPath">subpath to be added (optional)</param>
@@ -166,21 +182,35 @@ namespace IBE
                     path = ".";
                 else
                 {
-                    Microsoft.Win32.RegistryKey myKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ED-IBE", false);
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        // special to find on x64-systems the value while debugging
+                        using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64))
+                        {   // key now points to the 64-bit key
+                            using (var myKey = hklm.OpenSubKey(@"SOFTWARE\ED-IBE", false))
+                            {
+                                path = (String)myKey.GetValue("Data").ToString().Trim();
+                            }
+                        }
 
-                    path = (String)myKey.GetValue("Data");
+                        if (String.IsNullOrEmpty(path))
+                            path = ".";
+                    }
+                    else
+                    {
+                        Microsoft.Win32.RegistryKey myKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ED-IBE", false);
 
-                    if (String.IsNullOrEmpty(path))
-                        path = ".";
+                        path = (String)myKey.GetValue("Data");
+                    }
                 }
-
-                if(!String.IsNullOrEmpty(subPath))
-                    path = Path.Combine(path, subPath);
             }
             catch (Exception)
             {
                 path = ".";
             }
+
+            if(!String.IsNullOrEmpty(subPath))
+                path = Path.Combine(path, subPath);
 
             return path;
         }

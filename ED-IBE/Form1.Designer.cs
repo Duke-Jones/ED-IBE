@@ -134,7 +134,7 @@
             this.cbStationHasRepair = new System.Windows.Forms.CheckBox_ro();
             this.cbStationHasRearm = new System.Windows.Forms.CheckBox_ro();
             this.cbStationHasRefuel = new System.Windows.Forms.CheckBox_ro();
-            this.cbStationHasCommodities = new System.Windows.Forms.CheckBox_ro();
+            this.cbStationHasMarket = new System.Windows.Forms.CheckBox_ro();
             this.cbStationHasBlackmarket = new System.Windows.Forms.CheckBox_ro();
             this.label87 = new System.Windows.Forms.Label();
             this.cmdStationNew = new System.Windows.Forms.Button();
@@ -1014,7 +1014,7 @@
             this.groupBox14.Controls.Add(this.cbStationHasRepair);
             this.groupBox14.Controls.Add(this.cbStationHasRearm);
             this.groupBox14.Controls.Add(this.cbStationHasRefuel);
-            this.groupBox14.Controls.Add(this.cbStationHasCommodities);
+            this.groupBox14.Controls.Add(this.cbStationHasMarket);
             this.groupBox14.Controls.Add(this.cbStationHasBlackmarket);
             this.groupBox14.Controls.Add(this.label87);
             this.groupBox14.Controls.Add(this.cmdStationNew);
@@ -1359,16 +1359,16 @@
             this.cbStationHasRefuel.Text = "Refuel";
             this.cbStationHasRefuel.UseVisualStyleBackColor = true;
             // 
-            // cbStationHasCommodities
+            // cbStationHasMarket
             // 
-            this.cbStationHasCommodities.AutoSize = true;
-            this.cbStationHasCommodities.Location = new System.Drawing.Point(328, 151);
-            this.cbStationHasCommodities.Name = "cbStationHasCommodities";
-            this.cbStationHasCommodities.ReadOnly = false;
-            this.cbStationHasCommodities.Size = new System.Drawing.Size(85, 17);
-            this.cbStationHasCommodities.TabIndex = 11;
-            this.cbStationHasCommodities.Text = "Commodities";
-            this.cbStationHasCommodities.UseVisualStyleBackColor = false;
+            this.cbStationHasMarket.AutoSize = true;
+            this.cbStationHasMarket.Location = new System.Drawing.Point(328, 151);
+            this.cbStationHasMarket.Name = "cbStationHasCommodities";
+            this.cbStationHasMarket.ReadOnly = false;
+            this.cbStationHasMarket.Size = new System.Drawing.Size(85, 17);
+            this.cbStationHasMarket.TabIndex = 11;
+            this.cbStationHasMarket.Text = "Commodities";
+            this.cbStationHasMarket.UseVisualStyleBackColor = false;
             // 
             // cbStationHasBlackmarket
             // 
@@ -2610,7 +2610,7 @@
         private System.Windows.Forms.CheckBox_ro cbStationHasRepair;
         private System.Windows.Forms.CheckBox_ro cbStationHasRearm;
         private System.Windows.Forms.CheckBox_ro cbStationHasRefuel;
-        private System.Windows.Forms.CheckBox_ro cbStationHasCommodities;
+        private System.Windows.Forms.CheckBox_ro cbStationHasMarket;
         private System.Windows.Forms.CheckBox_ro cbStationHasBlackmarket;
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.Button cmdStationNew;

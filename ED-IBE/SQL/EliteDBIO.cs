@@ -1269,7 +1269,6 @@ namespace IBE.SQL
 
             try
             {
-                
 
                 // gettin' some freaky performance
                 Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -1696,13 +1695,20 @@ namespace IBE.SQL
                 StationRow["state_id"]              = DBConvert.From(BaseTableNameToID("state", StationObject.State, insertUnknown));
                 StationRow["stationtype_id"]        = DBConvert.From(BaseTableNameToID("stationtype", StationObject.Type, insertUnknown));
                 StationRow["has_blackmarket"]       = DBConvert.From(StationObject.HasBlackmarket);
-                StationRow["has_commodities"]       = DBConvert.From(StationObject.HasCommodities);
+                StationRow["has_market"]            = DBConvert.From(StationObject.HasMarket);
                 StationRow["has_refuel"]            = DBConvert.From(StationObject.HasRefuel);
                 StationRow["has_repair"]            = DBConvert.From(StationObject.HasRepair);
                 StationRow["has_outfitting"]        = DBConvert.From(StationObject.HasOutfitting);
+                StationRow["has_shipyard"]          = DBConvert.From(StationObject.HasShipyard);
                 StationRow["updated_at"]            = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(StationObject.UpdatedAt).DateTime);
                 StationRow["is_changed"]            = OwnData ? DBConvert.From(1) : DBConvert.From(0);
                 StationRow["visited"]               = DBConvert.From(0);
+                StationRow["shipyard_updated_at"]   = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(StationObject.Shipyard_UpdatedAt.GetValueOrDefault()).DateTime);
+                StationRow["outfitting_updated_at"] = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(StationObject.Outfitting_UpdatedAt.GetValueOrDefault()).DateTime);
+                StationRow["market_updated_at"]     = DBConvert.From(DateTimeOffset.FromUnixTimeSeconds(StationObject.Market_UpdatedAt.GetValueOrDefault()).DateTime);
+                StationRow["type_id"]               = DBConvert.From(StationObject.TypeID);
+                StationRow["has_commodities"]       = DBConvert.From(StationObject.HasCommodities); 
+                StationRow["is_planetary"]          = DBConvert.From(StationObject.IsPlanetary);
 
             }
             catch (Exception ex)
