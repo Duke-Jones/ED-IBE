@@ -334,6 +334,7 @@
     <Compile Include="Station.cs" />
     <Compile Include="ObjectDirectory.cs" />
     <Compile Include="StationDirectory.cs" />
+    <Compile Include="Updater.cs" />
     <Compile Include="Webserver.cs" />
     <Compile Include="Web\CompanionInterface.cs" />
     <Compile Include="Web\ExtendedWebClient.cs">

@@ -25,7 +25,7 @@ namespace IBE
         }
 
         /// <summary>
-        /// adds a new filesInDirectory picture
+        /// adds a new test picture
         /// </summary>
         /// <param name="newPicture"></param>
         /// <param name="Pixelcount"></param>

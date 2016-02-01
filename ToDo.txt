@@ -96,6 +96,13 @@ todo:
 *************************************************************************************
 
 
+SQL 0.1.0
+   * beta-RC1
+   * cleaned up 
+   * added a new Updater for getting info's about new releases
+   * fixed a problem if subdirs not existing
+   * added changes from https://github.com/Duke-Jones/RegulatedNoise/pull/104
+-------------------------------------------------------------------------------------         
 SQL 0.0.36
    * changes in installer script for new directoy names
    * re-added missed MYSQL connector

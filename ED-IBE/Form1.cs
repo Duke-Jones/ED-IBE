@@ -202,19 +202,22 @@ namespace IBE
                 cOcrCaptureAndCorrect.Dock = DockStyle.Fill;
                 cOcrCaptureAndCorrect._parent = this;
 
-                OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
-                tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
-                _logger.Log("  - initialised Ocr ");
-                _Splash.InfoChange("create ocr ...<OK>");
+                if(Debugger.IsAttached)
+                {
+                    OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
+                    tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
+                    _logger.Log("  - initialised Ocr ");
+                    _Splash.InfoChange("create ocr ...<OK>");
 
-                _Splash.InfoAdd("create ocr calibrator...");
-                var OcrCalibratorTabPage = new TabPage("OCR Calibration");
-                OcrCalibratorTabPage.Name = "OCR_Calibration";
-                var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
-                OcrCalibratorTabPage.Controls.Add(oct);
-                tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
-                _logger.Log("  - initialised Ocr Calibrator");
-                _Splash.InfoChange("create ocr calibrator...<OK>");
+                    _Splash.InfoAdd("create ocr calibrator...");
+                    var OcrCalibratorTabPage = new TabPage("OCR Calibration");
+                    OcrCalibratorTabPage.Name = "OCR_Calibration";
+                    var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
+                    OcrCalibratorTabPage.Controls.Add(oct);
+                    tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
+                    _logger.Log("  - initialised Ocr Calibrator");
+                    _Splash.InfoChange("create ocr calibrator...<OK>");
+                }
 
                 _Splash.InfoAdd("prepare EDDN interface...");
                 EDDNComm = new IBE.EDDN.EDDNCommunicator(this);
@@ -324,7 +327,10 @@ namespace IBE
                 {
                     foreach (var dir in Directory.GetDirectories(directory))
                     {
-                        if ((Path.GetFileName(dir) != "Frontier") && (Path.GetFileName(dir) != "Frontier_Developments") && (Path.GetFileName(dir) != "Elite Dangerous")) 
+                        if ((Path.GetFileName(dir) != "Frontier") && 
+                            (Path.GetFileName(dir) != "Frontier_Developments") && 
+                            (Path.GetFileName(dir) != "Elite Dangerous") && 
+                            (Path.GetFileName(dir) != "Elite Dangerous Horizons")) 
                             continue;
                        String p;
 
@@ -1791,7 +1797,27 @@ namespace IBE
         {
             try
             {
-                _Splash.CloseDelayed();
+                Version newVersion;
+                String newInfo;
+
+                Updater updater = new Updater();
+
+                if (updater.CheckVersion(out newVersion, out newInfo))
+                {
+                    lblUpdateInfo.Text = "newer version of ED-IBE found!";
+                    lblUpdateInfo.ForeColor = Color.Black;
+                    lblUpdateInfo.BackColor = Color.Yellow;
+
+                    lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
+                }
+                else 
+                {
+                    lblUpdateInfo.Text = "you have the latest version of ED-IBE";
+                    lblUpdateInfo.ForeColor = Color.DarkGreen;
+
+                    if (newVersion != new Version(0,0,0,0))
+                        lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
+                }
 
                 loadSystemData(Program.actualCondition.System);
                 loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
@@ -1811,6 +1837,8 @@ namespace IBE
 
                 if(cbEDDNAutoListen.Checked)
                     startEDDNListening();
+
+                _Splash.CloseDelayed();
 
             }
             catch (Exception ex)
@@ -1887,7 +1915,7 @@ namespace IBE
             // until this is working again 
             tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
             tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
-
+            tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabEDDN"]);
         }
 
         private void Clock_Tick(object sender, EventArgs e)

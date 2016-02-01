@@ -101,7 +101,6 @@ namespace IBE.ExtData
 
         #endregion
 
-        String m_OutputDestination  = @"C:\temp\location.txt";
         List<String> m_OutPut       = new List<String>();
         String m_RetrievedSystem    = "";
         String m_RetrievedStation   = "";
@@ -152,67 +151,74 @@ namespace IBE.ExtData
 
                 ProcessObject.StartInfo.FileName                = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "ExtTool_Path").Trim();
 
-                if(!String.IsNullOrEmpty(ProcessObject.StartInfo.FileName))
-                { 
-                    ProcessObject.StartInfo.WorkingDirectory        = Path.GetDirectoryName(ProcessObject.StartInfo.FileName);
-                    ProcessObject.StartInfo.UseShellExecute         = false;
-        	        ProcessObject.StartInfo.RedirectStandardOutput  = true;
-        	        ProcessObject.StartInfo.RedirectStandardInput   = true;
-                    ProcessObject.StartInfo.RedirectStandardError   = true;
-                    ProcessObject.StartInfo.CreateNoWindow          = true;
-
-                    if(DataFunction == enExternalDataFunction.getLocation)
-                        ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, 
-                                                                                                "ExtTool_ParamLocation").Trim();
-                    else
-                        ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, 
-                                                                                                "txtExtTool_ParamMarket").Trim();
-
-                    ProcessObject.StartInfo.Arguments               = ProcessObject.StartInfo.Arguments.Replace(
-                                                                            "\\%OUTPUTFILE\\%", 
-                                                                            Path.Combine(
-                                                                                    Program.GetDataPath("temp"), 
-                                                                                    String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow)));
-                    
-                    
-                    //// Set our event handler to asynchronously read the output.
-                    ProcessObject.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
-
-                    ProcessObject.Start();
-
-                    ProcessObject.BeginOutputReadLine(); 
-
-                    ErrorInfo = ProcessObject.StandardError.ReadToEnd();
-
-                    ProcessObject.WaitForExit();
-
-                    ProcessObject.OutputDataReceived -= new DataReceivedEventHandler(SortOutputHandler);
-
-                    ProcessObject.Close();
-                    ProcessObject.Dispose();
-
-                    if(m_OutPut.Count() > 0)
+                if(ProcessObject.StartInfo.FileName != "")
+                {
+                    if(!String.IsNullOrEmpty(ProcessObject.StartInfo.FileName))
                     { 
-                        // no error and we've got something
-                        String [] Parts = m_OutPut[0].Split(new char[] {','});
+                        ProcessObject.StartInfo.WorkingDirectory        = Path.GetDirectoryName(ProcessObject.StartInfo.FileName);
+                        ProcessObject.StartInfo.UseShellExecute         = false;
+        	            ProcessObject.StartInfo.RedirectStandardOutput  = true;
+        	            ProcessObject.StartInfo.RedirectStandardInput   = true;
+                        ProcessObject.StartInfo.RedirectStandardError   = true;
+                        ProcessObject.StartInfo.CreateNoWindow          = true;
 
-                        if(Parts.Count() >= 2)
-                        { 
-                            System              = Parts[0].Trim();
-                            Station             = Parts[1].Trim();
-
-                            m_RetrievedSystem   = Parts[0].Trim();
-                            m_RetrievedStation  = Parts[1].Trim();
-
-                            Info = m_OutPut[0];
-
-                            retValue = true;
-                        }
+                        if(DataFunction == enExternalDataFunction.getLocation)
+                            ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, 
+                                                                                                    "ExtTool_ParamLocation").Trim();
                         else
-                        {
-                            Info = "No station information.";
+                            ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, 
+                                                                                                    "txtExtTool_ParamMarket").Trim();
+
+                        ProcessObject.StartInfo.Arguments               = ProcessObject.StartInfo.Arguments.Replace(
+                                                                                "\\%OUTPUTFILE\\%", 
+                                                                                Path.Combine(
+                                                                                        Program.GetDataPath("temp"), 
+                                                                                        String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow)));
+                    
+                    
+                        //// Set our event handler to asynchronously read the output.
+                        ProcessObject.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
+
+                        ProcessObject.Start();
+
+                        ProcessObject.BeginOutputReadLine(); 
+
+                        ErrorInfo = ProcessObject.StandardError.ReadToEnd();
+
+                        ProcessObject.WaitForExit();
+
+                        ProcessObject.OutputDataReceived -= new DataReceivedEventHandler(SortOutputHandler);
+
+                        ProcessObject.Close();
+                        ProcessObject.Dispose();
+
+                        if(m_OutPut.Count() > 0)
+                        { 
+                            // no error and we've got something
+                            String [] Parts = m_OutPut[0].Split(new char[] {','});
+
+                            if(Parts.Count() >= 2)
+                            { 
+                                System              = Parts[0].Trim();
+                                Station             = Parts[1].Trim();
+
+                                m_RetrievedSystem   = Parts[0].Trim();
+                                m_RetrievedStation  = Parts[1].Trim();
+
+                                Info = m_OutPut[0];
+
+                                retValue = true;
+                            }
+                            else
+                            {
+                                Info = "No station information.";
+                            }
                         }
                     }
+                }
+                else
+                {
+                    Info = "External Tool Not Defined";
                 }
 
                 return retValue;

@@ -69,6 +69,7 @@
             this.cbImportPriceData.Text = "also import price-data from EDDB-files (slow, maybe > 10 mins)";
             this.ttToolTip.SetToolTip(this.cbImportPriceData, resources.GetString("cbImportPriceData.ToolTip"));
             this.cbImportPriceData.UseVisualStyleBackColor = true;
+            this.cbImportPriceData.Visible = false;
             // 
             // cmdImportSystemsAndStations
             // 
@@ -93,6 +94,7 @@
             this.checkBox1.Text = "also import price-data from EDDB-files (slow, maybe > 10 mins)";
             this.ttToolTip.SetToolTip(this.checkBox1, resources.GetString("checkBox1.ToolTip"));
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Visible = false;
             // 
             // cmdClearAll
             // 

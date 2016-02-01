@@ -212,7 +212,18 @@ namespace IBE
             if(!String.IsNullOrEmpty(subPath))
                 path = Path.Combine(path, subPath);
 
-            return path;
+            Boolean isFile = Path.GetFileName(path).Contains('.');
+            String fullPath;
+
+            if(isFile)
+                fullPath = Path.GetDirectoryName(Path.GetFullPath(path));
+            else
+                fullPath = Path.GetFullPath(path);
+
+            if(!Directory.Exists(fullPath))
+                Directory.CreateDirectory(fullPath);
+
+            return Path.GetFullPath(path);
         }
 
     #endregion// Exception Handling

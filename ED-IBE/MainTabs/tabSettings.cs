@@ -215,7 +215,7 @@ namespace IBE.MTSettings
         }
 
         /// <summary>
-        /// starts the filter filesInDirectory
+        /// starts the filter test
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

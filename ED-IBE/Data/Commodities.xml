@@ -28,7 +28,7 @@
   <Names>
     <eng>Imperial Slaves</eng>
     <ger>Imperiale Sklaven</ger>
-    <fra>Empire Esclaves</fra>
+    <fra>Esclaves Impériaux</fra>
   </Names>
   <Names>
     <eng>Slaves</eng>
@@ -148,17 +148,17 @@
   <Names>
     <eng>Clothing</eng>
     <ger>Kleidung</ger>
-    <fra>Maquillage</fra>
+    <fra>Vêtements</fra>
   </Names>
   <Names>
     <eng>Consumer Technology</eng>
     <ger>Unterhaltungselektronik</ger>
-    <fra>Vêtements</fra>
+    <fra>Électronique Grand Public</fra>
   </Names>
   <Names>
     <eng>Domestic Appliances</eng>
     <ger>Haushaltsgeräte</ger>
-    <fra>Équipement de Loisir</fra>
+    <fra>Équipement Ménager</fra>
   </Names>
   <Names>
     <eng>Animal Meat</eng>
@@ -413,17 +413,17 @@
   <Names>
     <eng>Zeessze Ant Grub Glue</eng>
     <ger>Zeessze-Ameisenkleber</ger>
-    <fra>Colle de Larve de Fourmi De</fra>  
+    <fra>Colle de Larve de Fourmi De</fra>
   </Names>
   <Names>
     <eng>Tauri Chimes</eng>
     <ger>Tauri-Glockenspiel</ger>
-    <fra>Carillons Taurins</fra>  
+    <fra>Carillons Taurins</fra>
   </Names>
   <Names>
     <eng>SAP 8 CORE CONTAINER</eng>
     <ger>Container Mit Sap 8-Kern</ger>
-    <fra>SAP 8 CORE CONTAINER</fra>
+    <fra>Conteneur Fusion SAP 8</fra>
   </Names>
   <Levels>
     <ID>0</ID>
