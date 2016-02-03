@@ -173,7 +173,6 @@ namespace IBE.SQL
 
         internal void InitializeData()
         {
-            String RNPath;
             var fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
 
             try

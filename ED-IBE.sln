@@ -31,14 +31,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ini-file", "ini-file", "{54
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug ep|Any CPU = Debug ep|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug ep|Any CPU.ActiveCfg = Debug ep|Any CPU
+		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug ep|Any CPU.Build.0 = Debug ep|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D720EB9A-C879-4E3B-AA19-B820E8192B7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Debug ep|Any CPU.ActiveCfg = Debug ep|Any CPU
+		{236A934B-5543-4751-BAA2-018DFA825271}.Debug ep|Any CPU.Build.0 = Debug ep|Any CPU
 		{236A934B-5543-4751-BAA2-018DFA825271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{236A934B-5543-4751-BAA2-018DFA825271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{236A934B-5543-4751-BAA2-018DFA825271}.Release|Any CPU.ActiveCfg = Release|Any CPU

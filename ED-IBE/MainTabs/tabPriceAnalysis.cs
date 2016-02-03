@@ -259,7 +259,10 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
-                ActivateFilterSettings();
+                if (Program.actualCondition.System == "")
+                    MessageBox.Show("Current system is unknown.", "Can't calculate...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                else
+                    ActivateFilterSettings();
             }
             catch (Exception ex)
             {
@@ -988,35 +991,40 @@ namespace IBE.MTPriceAnalysis
 
             try
             {
-                SetComboBoxEventsActive(false);
-
-                ActivateFilterSettings();
-
-                bs              = new BindingSource(); 
-                bs.DataSource   = m_DataSource.calculateTradingRoutes();        
-
-                dgvStationToStationRoutes.AutoGenerateColumns = false;
-                dgvStationToStationRoutes.DataSource          = bs;
-
-                m_IsRefreshed["tpStationToStation"] = true;
-
-                cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
-                cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
-
-                if(dgvStationToStationRoutes.RowCount > 0)
+                if (Program.actualCondition.System == "")
+                    MessageBox.Show("Current system is unknown.", "Can't calculate...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                else
                 {
-                    //dgvStationToStationRoutes.Rows[0].Selected  = true;
-                    if(dgvStationToStationRoutes.CurrentCell.Equals(dgvStationToStationRoutes.Rows[0].Cells[1]))
-                        setFromToComboBoxesFromRoutingRow(0);
-                    else
-                        dgvStationToStationRoutes.CurrentCell       = dgvStationToStationRoutes.Rows[0].Cells[1]; 
-                }
+                    SetComboBoxEventsActive(false);
+
+                    ActivateFilterSettings();
+
+                    bs              = new BindingSource(); 
+                    bs.DataSource   = m_DataSource.calculateTradingRoutes();        
+
+                    dgvStationToStationRoutes.AutoGenerateColumns = false;
+                    dgvStationToStationRoutes.DataSource          = bs;
+
+                    m_IsRefreshed["tpStationToStation"] = true;
+
+                    cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
+                    cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
+
+                    if(dgvStationToStationRoutes.RowCount > 0)
+                    {
+                        //dgvStationToStationRoutes.Rows[0].Selected  = true;
+                        if(dgvStationToStationRoutes.CurrentCell.Equals(dgvStationToStationRoutes.Rows[0].Cells[1]))
+                            setFromToComboBoxesFromRoutingRow(0);
+                        else
+                            dgvStationToStationRoutes.CurrentCell       = dgvStationToStationRoutes.Rows[0].Cells[1]; 
+                    }
                 
-                loadStationCommoditiesFromComboBoxes();
+                    loadStationCommoditiesFromComboBoxes();
 
-                SetComboBoxEventsActive(true);
+                    SetComboBoxEventsActive(true);
 
-                sortDataGridView(dgvStationToStationRoutes);
+                    sortDataGridView(dgvStationToStationRoutes);
+                }
 
             }
             catch (Exception ex)

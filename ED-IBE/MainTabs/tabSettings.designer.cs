@@ -39,14 +39,11 @@
             this.cmdFilter = new System.Windows.Forms.Button();
             this.label50 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
-            this.txtGUIColorCutoffLevel = new System.Windows.Forms.TextBoxInt32();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.label52 = new System.Windows.Forms.Label();
             this.cbCheckNextScreenshotForOne = new System.Windows.Forms.CheckBox();
             this.lblPixelAmount = new System.Windows.Forms.Label();
-            this.txtOCRPixelAmount = new System.Windows.Forms.TextBoxInt32();
             this.lblPixelThreshold = new System.Windows.Forms.Label();
-            this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.cbAutoAdd_ReplaceVisited = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Marketdata = new System.Windows.Forms.CheckBox();
@@ -72,7 +69,6 @@
             this.txtExtTool_Path = new System.Windows.Forms.TextBox();
             this.cmdSelectExternalToolPath = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.gbExternalDataInterface = new System.Windows.Forms.GroupBox();
@@ -88,6 +84,10 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtGamePath = new System.Windows.Forms.TextBox();
             this.cmdGamePath = new System.Windows.Forms.Button();
+            this.txtGUIColorCutoffLevel = new System.Windows.Forms.TextBoxInt32();
+            this.txtOCRPixelAmount = new System.Windows.Forms.TextBoxInt32();
+            this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
+            this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -199,18 +199,6 @@
             this.label51.TabIndex = 14;
             this.label51.Text = "UI Color Cutoff Level (0 to 255, default=150)";
             // 
-            // txtGUIColorCutoffLevel
-            // 
-            this.txtGUIColorCutoffLevel.Location = new System.Drawing.Point(239, 107);
-            this.txtGUIColorCutoffLevel.MaxValue = 255;
-            this.txtGUIColorCutoffLevel.MinValue = 0;
-            this.txtGUIColorCutoffLevel.Name = "txtGUIColorCutoffLevel";
-            this.txtGUIColorCutoffLevel.Size = new System.Drawing.Size(37, 20);
-            this.txtGUIColorCutoffLevel.TabIndex = 13;
-            this.txtGUIColorCutoffLevel.Tag = "GUIColorCutoffLevelValue;150";
-            this.txtGUIColorCutoffLevel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtGUIColorCutoffLevel_KeyDown);
-            this.txtGUIColorCutoffLevel.Leave += new System.EventHandler(this.txtGUIColorCutoffLevel_Leave);
-            // 
             // groupBox11
             // 
             this.groupBox11.Controls.Add(this.label52);
@@ -257,18 +245,6 @@
             this.lblPixelAmount.TabIndex = 16;
             this.lblPixelAmount.Text = "dark pixel amount (default=22, 0=off)";
             // 
-            // txtOCRPixelAmount
-            // 
-            this.txtOCRPixelAmount.Location = new System.Drawing.Point(212, 115);
-            this.txtOCRPixelAmount.MaxValue = null;
-            this.txtOCRPixelAmount.MinValue = null;
-            this.txtOCRPixelAmount.Name = "txtOCRPixelAmount";
-            this.txtOCRPixelAmount.Size = new System.Drawing.Size(37, 20);
-            this.txtOCRPixelAmount.TabIndex = 15;
-            this.txtOCRPixelAmount.Tag = "OCRPixelAmountValue;22";
-            this.txtOCRPixelAmount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelAmount_KeyDown);
-            this.txtOCRPixelAmount.Leave += new System.EventHandler(this.txtOCRPixelAmount_Leave);
-            // 
             // lblPixelThreshold
             // 
             this.lblPixelThreshold.AutoSize = true;
@@ -277,19 +253,6 @@
             this.lblPixelThreshold.Size = new System.Drawing.Size(160, 13);
             this.lblPixelThreshold.TabIndex = 14;
             this.lblPixelThreshold.Text = "dark pixel threshold (default=0.6)";
-            // 
-            // txtOCRPixelThreshold
-            // 
-            this.txtOCRPixelThreshold.Digits = 2;
-            this.txtOCRPixelThreshold.Location = new System.Drawing.Point(212, 88);
-            this.txtOCRPixelThreshold.MaxValue = 1D;
-            this.txtOCRPixelThreshold.MinValue = 0.01D;
-            this.txtOCRPixelThreshold.Name = "txtOCRPixelThreshold";
-            this.txtOCRPixelThreshold.Size = new System.Drawing.Size(37, 20);
-            this.txtOCRPixelThreshold.TabIndex = 13;
-            this.txtOCRPixelThreshold.Tag = "OCRPixelThresholdValue;0.6";
-            this.txtOCRPixelThreshold.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelThreshold_KeyDown);
-            this.txtOCRPixelThreshold.Leave += new System.EventHandler(this.txtOCRPixelThreshold_Leave);
             // 
             // groupBox10
             // 
@@ -510,8 +473,8 @@
             this.txtExtTool_ParamMarket.Name = "txtExtTool_ParamMarket";
             this.txtExtTool_ParamMarket.Size = new System.Drawing.Size(416, 20);
             this.txtExtTool_ParamMarket.TabIndex = 72;
-            this.txtExtTool_ParamMarket.Tag = "txtExtTool_ParamMarket;EMPTY";
-            this.toolTip1.SetToolTip(this.txtExtTool_ParamMarket, "Example (for EDMC): \"-m \\%OUTPUTFILE\\%\"");
+            this.txtExtTool_ParamMarket.Tag = "ExtTool_ParamMarket;-m !OUTPUTFILE!";
+            this.toolTip1.SetToolTip(this.txtExtTool_ParamMarket, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
             this.txtExtTool_ParamMarket.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.txtExtTool_ParamMarket.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
@@ -521,8 +484,8 @@
             this.txtExtTool_ParamLocation.Name = "txtExtTool_ParamLocation";
             this.txtExtTool_ParamLocation.Size = new System.Drawing.Size(416, 20);
             this.txtExtTool_ParamLocation.TabIndex = 70;
-            this.txtExtTool_ParamLocation.Tag = "ExtTool_ParamLocation;EMPTY";
-            this.toolTip1.SetToolTip(this.txtExtTool_ParamLocation, "Example (for EDMC): \"-m \\%OUTPUTFILE\\%\"");
+            this.txtExtTool_ParamLocation.Tag = "ExtTool_ParamLocation;-m !OUTPUTFILE!";
+            this.toolTip1.SetToolTip(this.txtExtTool_ParamLocation, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
             this.txtExtTool_ParamLocation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.txtExtTool_ParamLocation.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
@@ -532,9 +495,9 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(571, 29);
             this.label5.TabIndex = 73;
-            this.label5.Text = "c) Parameters for getting market data. Use placeholder \"%OUTPUTFILE%\" (without qu" +
+            this.label5.Text = "c) Parameters for getting market data. Use placeholder \"!OUTPUTFILE!\" (without qu" +
     "otes) to specify the location of parameter for the destination file *).";
-            this.toolTip1.SetToolTip(this.label5, "Example (for EDMC): \"-m \\%OUTPUTFILE\\%\"");
+            this.toolTip1.SetToolTip(this.label5, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
             // 
             // label4
             // 
@@ -543,7 +506,7 @@
             this.label4.Size = new System.Drawing.Size(562, 52);
             this.label4.TabIndex = 71;
             this.label4.Text = resources.GetString("label4.Text");
-            this.toolTip1.SetToolTip(this.label4, "Example (for EDMC): \"-m \\%OUTPUTFILE\\%\"");
+            this.toolTip1.SetToolTip(this.label4, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
             // 
             // txtExtTool_Path
             // 
@@ -572,27 +535,10 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(8, 66);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(158, 13);
+            this.label3.Size = new System.Drawing.Size(352, 13);
             this.label3.TabIndex = 67;
-            this.label3.Text = "a) Path to the external data tool:";
+            this.label3.Text = "a) Path to the ED Market Connector (command line version \"EDMC.exe\")";
             this.toolTip1.SetToolTip(this.label3, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
-            // 
-            // cmbVisitedFilter
-            // 
-            this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
-            this.cmbVisitedFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbVisitedFilter.FormattingEnabled = true;
-            this.cmbVisitedFilter.Location = new System.Drawing.Point(30, 37);
-            this.cmbVisitedFilter.MaxValue = null;
-            this.cmbVisitedFilter.MinValue = null;
-            this.cmbVisitedFilter.Name = "cmbVisitedFilter";
-            this.cmbVisitedFilter.Size = new System.Drawing.Size(149, 21);
-            this.cmbVisitedFilter.TabIndex = 63;
-            this.cmbVisitedFilter.Tag = "VisitedFilter;1";
-            this.toolTip1.SetToolTip(this.cmbVisitedFilter, "Here you can select, if you want to see in all analysis\r\n- all stations (independ" +
-        "ent if you\'ve visted them or not)\r\n- only stations in systems you\'ve visited \r\n-" +
-        " only stations you\'ve directly visted");
-            this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -631,7 +577,7 @@
             this.gbExternalDataInterface.Size = new System.Drawing.Size(619, 393);
             this.gbExternalDataInterface.TabIndex = 66;
             this.gbExternalDataInterface.TabStop = false;
-            this.gbExternalDataInterface.Text = "External Data Interface";
+            this.gbExternalDataInterface.Text = "ED Market Connector Interface";
             // 
             // label6
             // 
@@ -649,9 +595,8 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(605, 40);
             this.label2.TabIndex = 66;
-            this.label2.Text = "If you don\'t wan\'t to use the internal OCR-interface you also can use external to" +
-    "ols (like \"ED Market Connector\") for getting the current station and market data" +
-    ".";
+            this.label2.Text = "If you don\'t wan\'t to use the internal OCR-interface you also can use the \"ED Mar" +
+    "ket Connector\" \r\nfor getting the current station and market data.";
             // 
             // tcDataInterface
             // 
@@ -682,7 +627,7 @@
             this.tabExternalToolSettings.Padding = new System.Windows.Forms.Padding(3);
             this.tabExternalToolSettings.Size = new System.Drawing.Size(621, 400);
             this.tabExternalToolSettings.TabIndex = 1;
-            this.tabExternalToolSettings.Text = "External Tool";
+            this.tabExternalToolSettings.Text = "ED Market Connector";
             this.tabExternalToolSettings.UseVisualStyleBackColor = true;
             // 
             // gbDataInterface
@@ -763,6 +708,60 @@
             this.cmdGamePath.Text = "Select";
             this.cmdGamePath.UseVisualStyleBackColor = true;
             this.cmdGamePath.Click += new System.EventHandler(this.cmdGamePath_Click);
+            // 
+            // txtGUIColorCutoffLevel
+            // 
+            this.txtGUIColorCutoffLevel.Location = new System.Drawing.Point(239, 107);
+            this.txtGUIColorCutoffLevel.MaxValue = 255;
+            this.txtGUIColorCutoffLevel.MinValue = 0;
+            this.txtGUIColorCutoffLevel.Name = "txtGUIColorCutoffLevel";
+            this.txtGUIColorCutoffLevel.Size = new System.Drawing.Size(37, 20);
+            this.txtGUIColorCutoffLevel.TabIndex = 13;
+            this.txtGUIColorCutoffLevel.Tag = "GUIColorCutoffLevelValue;150";
+            this.txtGUIColorCutoffLevel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtGUIColorCutoffLevel_KeyDown);
+            this.txtGUIColorCutoffLevel.Leave += new System.EventHandler(this.txtGUIColorCutoffLevel_Leave);
+            // 
+            // txtOCRPixelAmount
+            // 
+            this.txtOCRPixelAmount.Location = new System.Drawing.Point(212, 115);
+            this.txtOCRPixelAmount.MaxValue = null;
+            this.txtOCRPixelAmount.MinValue = null;
+            this.txtOCRPixelAmount.Name = "txtOCRPixelAmount";
+            this.txtOCRPixelAmount.Size = new System.Drawing.Size(37, 20);
+            this.txtOCRPixelAmount.TabIndex = 15;
+            this.txtOCRPixelAmount.Tag = "OCRPixelAmountValue;22";
+            this.txtOCRPixelAmount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelAmount_KeyDown);
+            this.txtOCRPixelAmount.Leave += new System.EventHandler(this.txtOCRPixelAmount_Leave);
+            // 
+            // txtOCRPixelThreshold
+            // 
+            this.txtOCRPixelThreshold.Digits = 2;
+            this.txtOCRPixelThreshold.Location = new System.Drawing.Point(212, 88);
+            this.txtOCRPixelThreshold.MaxValue = 1D;
+            this.txtOCRPixelThreshold.MinValue = 0.01D;
+            this.txtOCRPixelThreshold.Name = "txtOCRPixelThreshold";
+            this.txtOCRPixelThreshold.Size = new System.Drawing.Size(37, 20);
+            this.txtOCRPixelThreshold.TabIndex = 13;
+            this.txtOCRPixelThreshold.Tag = "OCRPixelThresholdValue;0.6";
+            this.txtOCRPixelThreshold.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOCRPixelThreshold_KeyDown);
+            this.txtOCRPixelThreshold.Leave += new System.EventHandler(this.txtOCRPixelThreshold_Leave);
+            // 
+            // cmbVisitedFilter
+            // 
+            this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
+            this.cmbVisitedFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbVisitedFilter.FormattingEnabled = true;
+            this.cmbVisitedFilter.Location = new System.Drawing.Point(30, 37);
+            this.cmbVisitedFilter.MaxValue = null;
+            this.cmbVisitedFilter.MinValue = null;
+            this.cmbVisitedFilter.Name = "cmbVisitedFilter";
+            this.cmbVisitedFilter.Size = new System.Drawing.Size(149, 21);
+            this.cmbVisitedFilter.TabIndex = 63;
+            this.cmbVisitedFilter.Tag = "VisitedFilter;1";
+            this.toolTip1.SetToolTip(this.cmbVisitedFilter, "Here you can select, if you want to see in all analysis\r\n- all stations (independ" +
+        "ent if you\'ve visted them or not)\r\n- only stations in systems you\'ve visited \r\n-" +
+        " only stations you\'ve directly visted");
+            this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
             // tabSettings
             // 

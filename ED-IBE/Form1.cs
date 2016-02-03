@@ -170,18 +170,33 @@ namespace IBE
                 _logger.Log("  - initialised component");
                 _Splash.InfoChange("initialize components...<OK>");
 
-                _Splash.InfoAdd("load settings...");
-                SetProductPath();
-                _logger.Log("  - product path set");
-                _Splash.InfoChange("load settings...<OK>");
+                Boolean retry = false;
+                do
+                {
+                    try
+                    {
+                        _Splash.InfoAdd("load settings...");
+                        SetProductPath();
+                        _logger.Log("  - product path set");
+                        _Splash.InfoChange("load settings...<OK>");
 
-                SetProductAppDataPath();
-                _logger.Log("  - product appdata set");
+                        SetProductAppDataPath();
+                        _logger.Log("  - product appdata set");
 
-                _Splash.InfoAdd("load game settings...");
-                GameSettings = new GameSettings(this);
-                _logger.Log("  - loaded game settings");
-                _Splash.InfoChange("load game settings...<OK>");
+                        _Splash.InfoAdd("load game settings...");
+                        GameSettings = new GameSettings(this);
+                        _logger.Log("  - loaded game settings");
+                        _Splash.InfoChange("load game settings...<OK>");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //Already set, no reason to set it again :)
+                        Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductsPath", "");
+                        Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", "");
+                        retry = true;
+                    }
+                } while (retry);
 
                 _Splash.InfoAdd("prepare network interfaces...");
                 PopulateNetworkInterfaces();

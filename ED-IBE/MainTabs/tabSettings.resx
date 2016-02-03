@@ -131,7 +131,7 @@ So all "-" and less are ignored , all "1" and other digits are detected.</value>
   </metadata>
   <data name="label4.Text" xml:space="preserve">
     <value>b) Parameters for getting location info (information must be commited by the tool over the standard input). 
-Optional: use placeholder "%OUTPUTFILE%" (without quotes) to specify the location of parameter for the destination file for market data *) (as under point c), if the tool supports this (reduces dataquerys on the server)
+Optional: use placeholder "!OUTPUTFILE!" (without quotes) to specify the location of parameter for the destination file for market data *) (as under point c), if the tool supports this (reduces dataquerys on the server)
 </value>
   </data>
   <data name="label1.Text" xml:space="preserve">

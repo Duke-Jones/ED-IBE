@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Diagnostics;
+using System.IO;
 
 namespace IBE.SQL
 {
@@ -103,6 +104,47 @@ namespace IBE.SQL
                 } while ((!isRunning) && ((pc.currentMeasuring() / 1000) < m_Params.DBStartTimeout));
 
 
+            }
+        }
+
+        /// <summary>
+        /// stops the sql server
+        /// </summary>
+        public void StopServer()
+        {
+            try
+            {
+                String user  = Program.IniFile.GetValue("DB_Server", "RootUser", "root");  
+                String pass  = Program.IniFile.GetValue("DB_Server", "RootPass", "EliteAdmin");    
+
+                String CommandArgs = String.Format("-u {0} --password={1} shutdown", user, pass);
+                String fullPath = Path.GetDirectoryName(Path.GetFullPath(Path.Combine(m_Params.Workingdirectory, m_Params.Commandline)));
+
+                ProcessStartInfo psi;
+
+                psi                         = new ProcessStartInfo(@"bin\mysqladmin.exe", CommandArgs);
+                psi.WorkingDirectory        = m_Params.Workingdirectory;
+                psi.RedirectStandardOutput  = false;
+
+                // start the process for stopping the server
+                if(Debugger.IsAttached)
+                { 
+                    psi.WindowStyle             = ProcessWindowStyle.Normal;
+                    psi.CreateNoWindow          = false;
+                    psi.UseShellExecute         = true;
+                }
+                else
+                { 
+                    psi.WindowStyle             = ProcessWindowStyle.Hidden;
+                    psi.CreateNoWindow          = true;
+                    psi.UseShellExecute         = true;
+                }
+
+                System.Diagnostics.Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while shutting down the server", ex);
             }
         }
 

@@ -347,18 +347,35 @@ namespace IBE
         }
 
         public static void Cleanup()
-        { 
-            if(DBCon != null)
-            { 
-                DBCon.Dispose();
-                DBCon = null;
+        {
+            try
+            {
+                if(LogfileScanner != null)
+                {
+                    LogfileScanner.Dispose();
+                    LogfileScanner = null;
+                }
+
+                if(DBCon != null)
+                { 
+                    DBCon.Dispose();
+                    DBCon = null;
+                }
+
+                // if EliteDBProcess is not null the process is created 
+                // by this program, so we also have to do the cleanup
+                if(EliteDBProcess != null)
+                { 
+                    EliteDBProcess.StopServer();
+                    EliteDBProcess.Dispose();
+                    EliteDBProcess = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while cleaning up", ex);
             }
 
-            if(EliteDBProcess != null)
-            { 
-                EliteDBProcess.Dispose();
-                EliteDBProcess = null;
-            }
         }
 
         /// <summary>

@@ -170,7 +170,7 @@ namespace IBE.ExtData
                                                                                                     "txtExtTool_ParamMarket").Trim();
 
                         ProcessObject.StartInfo.Arguments               = ProcessObject.StartInfo.Arguments.Replace(
-                                                                                "\\%OUTPUTFILE\\%", 
+                                                                                "!OUTPUTFILE!", 
                                                                                 Path.Combine(
                                                                                         Program.GetDataPath("temp"), 
                                                                                         String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow)));
@@ -373,7 +373,7 @@ namespace IBE.ExtData
                 {
                     Age = DateTime.UtcNow.Subtract(TimeStamp);
 
-                    if (Age.TotalSeconds <= 10)
+                    if (Age.TotalSeconds <= 60)
                     { 
                         DataOk = true;
                         DataFile = Files[0];
