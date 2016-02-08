@@ -878,7 +878,20 @@ namespace IBE.SQL
         {
 	        T functionReturnValue = default(T);
 	        try {
-                functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
+
+                if (!typeof(T).IsValueType)
+                {
+                    String value    = getIniValue(Group, Key, DefaultValue, AllowEmptyValue);
+                    var parse       = typeof(T).GetMethod("Parse", new[] { typeof(string) });
+
+                    if (parse != null) 
+                        functionReturnValue = (T)parse.Invoke(null, new object[] { value });
+                    else
+                        functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
+                }
+                else
+                    functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
+
 	        } catch (ArgumentNullException ex) {
 		        throw new Exception("conversionType ist Nothing", ex);
 	        } catch (Exception ex) {

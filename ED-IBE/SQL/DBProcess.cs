@@ -110,24 +110,23 @@ namespace IBE.SQL
         /// <summary>
         /// stops the sql server
         /// </summary>
-        public void StopServer()
+        public void StopServer(String user, String pass)
         {
+            ProcessStartInfo psi=null;
+
             try
             {
-                String user  = Program.IniFile.GetValue("DB_Server", "RootUser", "root");  
-                String pass  = Program.IniFile.GetValue("DB_Server", "RootPass", "EliteAdmin");    
 
                 String CommandArgs = String.Format("-u {0} --password={1} shutdown", user, pass);
-                String fullPath = Path.GetDirectoryName(Path.GetFullPath(Path.Combine(m_Params.Workingdirectory, m_Params.Commandline)));
+                String fullPath = Path.GetDirectoryName(Path.GetFullPath(m_Params.Workingdirectory));
 
-                ProcessStartInfo psi;
 
-                psi                         = new ProcessStartInfo(@"bin\mysqladmin.exe", CommandArgs);
+                psi                         = new ProcessStartInfo("mysqladmin.exe", CommandArgs);
                 psi.WorkingDirectory        = m_Params.Workingdirectory;
                 psi.RedirectStandardOutput  = false;
 
                 // start the process for stopping the server
-                if(Debugger.IsAttached)
+                if(true || Debugger.IsAttached)
                 { 
                     psi.WindowStyle             = ProcessWindowStyle.Normal;
                     psi.CreateNoWindow          = false;
@@ -144,7 +143,7 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while shutting down the server", ex);
+                throw new Exception(String.Format("Error while shutting down the server: {0}\n{1}\n{2}", psi.FileName, psi.Arguments, psi.WorkingDirectory), ex);
             }
         }
 

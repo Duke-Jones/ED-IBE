@@ -17,6 +17,7 @@ using IBE.MTPriceAnalysis;
 using IBE.MTSettings;
 using IBE.ExtData;
 using IBE.FileScanner;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE
 {
@@ -24,16 +25,10 @@ namespace IBE
     {
         public const String GIT_PATH                = @"https://github.com/Duke-Jones/ED-IBE";
 
-        public const Decimal DB_VERSION_CURRENT     = 1.0M;
-        public const Decimal DB_VERSION_NONE        = 0.0M; 
-        
-
         public const String NULLSTRING              = "?";
         public const String COMMODITY_NOT_SET       = "???";
         public const String BASE_LANGUAGE           = "eng";
 
-        //public String Directory_Data        { get; set; }
-        //public String Directory_Program     { get; set; }
 
 #region enums
 
@@ -47,7 +42,7 @@ namespace IBE
 #endregion
 
 
-        #region main object creation and disposing
+    #region main object creation and disposing
 
         /// <summary>
         /// The main entry point for the application.
@@ -92,7 +87,7 @@ namespace IBE
             }
         }
 
-        #endregion
+    #endregion
 
     #region Exception Handling
 
@@ -246,6 +241,7 @@ namespace IBE
         public static EliteDBIO                         Data;
         public static Condition                         actualCondition;
         public static EDLogfileScanner                  LogfileScanner;
+        public static SplashScreenForm                 SplashScreen;
 
 
         /// <summary>
@@ -263,9 +259,9 @@ namespace IBE
 
                     // starT database process (if not running)
                     DBProcess.DBProcessParams newProcessParams  = new DBProcess.DBProcessParams() { };
-                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",        "Commandline",      @"bin\mysqld.exe");    
+                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",        "Commandline",      @"mysqld.exe");    
                     newProcessParams.Commandargs                = IniFile.GetValue("DB_Server",        "CommandArgs",      @"--defaults-file=Elite.ini --console");
-                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",        "WorkingDirectory", @"..\..\..\RNDatabase\Database");
+                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",        "WorkingDirectory", @"..\..\..\RNDatabase\Database\bin");
                     newProcessParams.Port                       = IniFile.GetValue<Int16>("DB_Server", "Port",             "3306");
                     newProcessParams.DBStartTimeout             = IniFile.GetValue<Int16>("DB_Server", "DBStartTimeout",   "60");
                 
@@ -296,7 +292,6 @@ namespace IBE
 
                     // preprare main data object
                     Data                                        = new IBE.SQL.EliteDBIO();
-                    Data.InitializeData();
                     Data.PrepareBaseTables();
 
                     // create global paths-object
@@ -366,7 +361,10 @@ namespace IBE
                 // by this program, so we also have to do the cleanup
                 if(EliteDBProcess != null)
                 { 
-                    EliteDBProcess.StopServer();
+                    String user = IniFile.GetValue("DB_Connection", "User", "RN_User");  
+                    String pass = IniFile.GetValue("DB_Connection", "Pass", "Elite");    
+
+                    EliteDBProcess.StopServer(user, pass);
                     EliteDBProcess.Dispose();
                     EliteDBProcess = null;
                 }
@@ -412,7 +410,53 @@ namespace IBE
             }
         }
 
+        /// <summary>
+        /// this sub starts special things to do if this version runs
+        /// for the first time
+        /// </summary>
+        internal static void DoSpecial()
+        {
+            Version dbVersion;
+            Version appVersion;
+            Version testVersion = new Version();
+
+            try
+            {
+                dbVersion   = Program.DBCon.getIniValue<Version>("Database", "Version", new Version(0,0,0,0).ToString(), false);
+                appVersion  = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+                if (dbVersion < appVersion)
+                {
+                    if (dbVersion < (testVersion = new Version(0,1,0)))
+                    {
+                        // here it's required to import all master data 
+                        var DataIO = new frmDataIO();
+
+                        Program.SplashScreen.InfoAdd("Importing master data...");
+                        Thread.Sleep(3000);
+
+                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.StartMasterImport(GetDataPath("Data"));
+
+                        DataIO.Close();
+                        DataIO.Dispose();
+                        
+
+                        Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+                    }
+
+                    Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while doing special things", ex);
+            }
+        }
+
     #endregion //global objects
+
 
     }
 }

@@ -95,11 +95,13 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+   * splashscreen globalized
+   * first time import is starting automatically
 -------------------------------------------------------------------------------------         
    * fixed shutdown of sql-process and ED-IBE
    * fixed a problem with EDMC parameters
 -------------------------------------------------------------------------------------         
-SQL 0.1.0
+SQL 0.1.0 beta 1
    * beta-RC1
    * cleaned up 
    * added a new Updater for getting info's about new releases

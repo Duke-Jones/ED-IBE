@@ -4,6 +4,7 @@
 #define MyAppName "ED - Intelligent Boardcomputer Extension"
 #define MyAppShortName "ED-IBE"
 #define MyAppVersion GetStringFileInfo("..\ED-IBE\bin\Release\ED-IBE.exe", "FileVersion")
+#define MyAppVersion_s Copy(MyAppVersion, 1, Len(MyAppVersion)-2)
 #define MyAppPublisher "Duke Jones"
 #define MyAppURL "https://github.com/Duke-Jones/ED-IBE"
 #define MyAppExeName "ED-IBE.exe"
@@ -15,7 +16,7 @@
 AppId={{4408F8B2-35C2-418D-9765-92FD85C35BE9}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+;AppVerName={#MyAppName} {#MyAppVersion_s}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -24,7 +25,7 @@ DefaultDirName={pf}\ED-IBE
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=.\Package
-OutputBaseFilename={#MyAppShortName}_{#MyAppVersion}
+OutputBaseFilename={#MyAppShortName}_{#MyAppVersion_s}
 SetupIconFile=..\ED-IBE\RegulatedNoise.ico
 Compression=lzma
 SolidCompression=yes
@@ -427,3 +428,4 @@ begin
 
     Result := s
 end;
+

@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.SplashInfo = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // listBox1
+            // SplashInfo
             // 
-            this.listBox1.BackColor = System.Drawing.SystemColors.WindowText;
-            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(152)))), ((int)(((byte)(77)))));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Items.AddRange(new object[] {
+            this.SplashInfo.BackColor = System.Drawing.SystemColors.WindowText;
+            this.SplashInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.SplashInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(152)))), ((int)(((byte)(77)))));
+            this.SplashInfo.FormattingEnabled = true;
+            this.SplashInfo.Items.AddRange(new object[] {
             "starting..."});
-            this.listBox1.Location = new System.Drawing.Point(68, 172);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.ScrollAlwaysVisible = true;
-            this.listBox1.Size = new System.Drawing.Size(569, 143);
-            this.listBox1.TabIndex = 6;
+            this.SplashInfo.Location = new System.Drawing.Point(68, 172);
+            this.SplashInfo.Name = "SplashInfo";
+            this.SplashInfo.ScrollAlwaysVisible = true;
+            this.SplashInfo.Size = new System.Drawing.Size(569, 143);
+            this.SplashInfo.TabIndex = 6;
             // 
             // label1
             // 
@@ -62,7 +62,7 @@
             this.BackgroundImage = global::IBE.Properties.Resources.RNSplash;
             this.ClientSize = new System.Drawing.Size(700, 340);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.SplashInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MinimizeBox = false;
             this.Name = "SplashScreenForm";
@@ -77,7 +77,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label1;
+        internal System.Windows.Forms.ListBox SplashInfo;
     }
 }

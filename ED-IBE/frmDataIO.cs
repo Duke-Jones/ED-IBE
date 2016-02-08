@@ -12,6 +12,9 @@ namespace IBE
 {
     public partial class frmDataIO : IBE.Enums_and_Utility_Classes.RNBaseForm
     {
+        public delegate void DelTextParam(String text);
+
+        public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
 
         [Flags] enum enImportTypes
         {
@@ -46,6 +49,31 @@ namespace IBE
             catch (Exception ex)
             {
                 cErr.showError(ex, "Error in Load-Event");
+            }
+        }
+
+        /// <summary>
+        /// start the master import (master data for systems/station/commoditynames ...)
+        /// </summary>
+        public void StartMasterImport(String path)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new DelTextParam(StartMasterImport), new Object[] {path});
+            }
+            else
+            {
+                this.Visible = false;
+
+                try
+                {
+                    enImportTypes importFlags = enImportTypes.EDDB_Commodities | enImportTypes.EDDB_Systems | enImportTypes.EDDB_Stations;
+                    ImportData(null, importFlags, "", path);
+                }
+                catch (Exception ex)
+                {
+                    cErr.processError(ex, "Error while starting master import");
+                }
             }
         }
 
@@ -284,26 +312,35 @@ namespace IBE
             }
         }
 
+
+
         void Data_Progress(object sender, SQL.EliteDBIO.ProgressEventArgs e)
         {
             try
             {
+                ListBox destination;
+
+                if (InfoTarget != null)
+                    destination = InfoTarget;
+                else
+                    destination = lbProgess;
+
                 if(e.Index == 0 && e.Total == 0)
                 {
-                    lbProgess.Items.Add("-------------------------------");
-                    lbProgess.Items.Add(String.Format("{0}", e.Tablename));
+                    destination.Items.Add("-------------------------------");
+                    destination.Items.Add(String.Format("{0}", e.Tablename));
                 }
                 else if(e.Index == 1 && e.Total == 1)
                 {
-                    lbProgess.Items.Add(String.Format("{0} : 100%", e.Tablename));
+                    destination.Items.Add(String.Format("{0} : 100%", e.Tablename));
                 }
                 else
                 { 
-                    lbProgess.Items.Add(String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index/e.Total, e.Index, e.Total));
+                    destination.Items.Add(String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index/e.Total, e.Index, e.Total));
                 }
                 
-                lbProgess.SelectedIndex = lbProgess.Items.Count-1;
-                lbProgess.Refresh();
+                destination.SelectedIndex = destination.Items.Count-1;
+                destination.Refresh();
                 Application.DoEvents();
             }
             catch (Exception ex)
@@ -341,7 +378,9 @@ namespace IBE
 
                         Program.Data.ClearAll();
 
+                        Program.DBCon.setIniValue("Database", "Version", new Version(0,0,0,0).ToString());
                         Program.Data.OldDataImportDone  = false;
+
                         cmdImportOldData.Enabled        = true;
                         cbImportPriceData.Enabled       = true;
 
@@ -349,6 +388,7 @@ namespace IBE
                         Cursor = Cursors.Default;
 
                         Program.Data.Progress -= Data_Progress;
+                        
                     }
             }
             catch (Exception ex)
@@ -359,7 +399,7 @@ namespace IBE
             }
         }
 
-        private void ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "")
+        private void ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "")
         {
             String FileName;
             String sourcePath;
@@ -367,18 +407,29 @@ namespace IBE
 
             try
             {
-                fbFolderDialog.RootFolder   = Environment.SpecialFolder.MyComputer;
-                fbFolderDialog.Description  = importInfo;
-                fbFolderDialog.SelectedPath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                if (optionalPath == "")
+                    sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                else
+                    sourcePath = optionalPath;
 
-                if (fbFolderDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                if (importInfo != null)
                 {
-                    sourcePath = fbFolderDialog.SelectedPath.Trim();
+                    fbFolderDialog.RootFolder   = Environment.SpecialFolder.MyComputer;
+                    fbFolderDialog.Description  = importInfo;
+                    fbFolderDialog.SelectedPath = sourcePath;
+                }
+
+                if ((importInfo == null) || (fbFolderDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK))
+                {
+                    if (importInfo != null)
+                        sourcePath = fbFolderDialog.SelectedPath.Trim();
+                    
 
                     if (!String.IsNullOrEmpty(sourcePath))
                     {
 
-                        Program.DBCon.setIniValue("General", "Path_Import", sourcePath);
+                        if (importInfo != null)
+                            Program.DBCon.setIniValue("General", "Path_Import", sourcePath);
 
                         Program.Data.Progress += Data_Progress;
                         Cursor = Cursors.WaitCursor;

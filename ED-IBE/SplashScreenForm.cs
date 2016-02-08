@@ -17,22 +17,22 @@ namespace IBE
         public SplashScreenForm()
         {
             InitializeComponent();
-            listBox1.Items.Add("");
+            SplashInfo.Items.Add("");
         }
 
         public void InfoAdd(string Info)
         { 
-            listBox1.Items.Insert(listBox1.Items.Count-1, Info);
-            listBox1.SelectedIndex = listBox1.Items.Count-1;
-            listBox1.SelectedIndex = -1;
+            SplashInfo.Items.Insert(SplashInfo.Items.Count-1, Info);
+            SplashInfo.SelectedIndex = SplashInfo.Items.Count-1;
+            SplashInfo.SelectedIndex = -1;
             this.Refresh();
         }
 
         public void InfoChange(string Info)
         { 
-            listBox1.Items[listBox1.Items.Count-2] = Info;
-            listBox1.SelectedIndex = listBox1.Items.Count-1;
-            listBox1.SelectedIndex = -1;
+            SplashInfo.Items[SplashInfo.Items.Count-2] = Info;
+            SplashInfo.SelectedIndex = SplashInfo.Items.Count-1;
+            SplashInfo.SelectedIndex = -1;
             this.Refresh();
         }
 

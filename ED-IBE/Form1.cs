@@ -44,14 +44,7 @@ namespace IBE
 
 /* ************************************************ */
 
-        private enum enDoSpecial
-        {
-            onStart,
-            afterMilkyway
-        }
-
         private const string STR_START_MARKER = "<START>";
-        private SplashScreenForm _Splash;
 
         public override string thisObjectName { get { return "Form1"; } }
 
@@ -135,14 +128,14 @@ namespace IBE
 
                 InstanceObject = this;
 
-                _Splash = new SplashScreenForm();
+                Program.SplashScreen = new SplashScreenForm();
 
 #if !ep_Debug
-                _Splash.Show();
+                Program.SplashScreen.Show();
 #endif
                 doInit();
 
-                _Splash.InfoAdd("\nstart sequence finished !!!");
+                Program.SplashScreen.InfoAdd("\nstart sequence finished !!!");
 
                 Cursor = Cursors.Default;
                 _InitDone = true;
@@ -163,55 +156,54 @@ namespace IBE
                 _logger.Log("Initialising...\n");
 
                 string FormName = this.GetType().Name;
-                _Splash.setPosition(this.GetWindowData());
+                Program.SplashScreen.setPosition(this.GetWindowData());
 
-                _Splash.InfoAdd("initialize components...");
+                Program.SplashScreen.InfoAdd("initialize components...");
                 InitializeComponent();
                 _logger.Log("  - initialised component");
-                _Splash.InfoChange("initialize components...<OK>");
+                Program.SplashScreen.InfoChange("initialize components...<OK>");
 
                 Boolean retry = false;
                 do
                 {
                     try
                     {
-                        _Splash.InfoAdd("load settings...");
+                        Program.SplashScreen.InfoAdd("load settings...");
                         SetProductPath();
                         _logger.Log("  - product path set");
-                        _Splash.InfoChange("load settings...<OK>");
+                        Program.SplashScreen.InfoChange("load settings...<OK>");
 
                         SetProductAppDataPath();
                         _logger.Log("  - product appdata set");
 
-                        _Splash.InfoAdd("load game settings...");
+                        Program.SplashScreen.InfoAdd("load game settings...");
                         GameSettings = new GameSettings(this);
                         _logger.Log("  - loaded game settings");
-                        _Splash.InfoChange("load game settings...<OK>");
+                        Program.SplashScreen.InfoChange("load game settings...<OK>");
 
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        //Already set, no reason to set it again :)
                         Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductsPath", "");
                         Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", "");
                         retry = true;
                     }
                 } while (retry);
 
-                _Splash.InfoAdd("prepare network interfaces...");
+                Program.SplashScreen.InfoAdd("prepare network interfaces...");
                 PopulateNetworkInterfaces();
                 _logger.Log("  - populated network interfaces");
-                _Splash.InfoChange("prepare network interfaces...<OK>");
+                Program.SplashScreen.InfoChange("prepare network interfaces...<OK>");
 
-                /*_Splash.InfoAdd("create OCR object...");
+                /*Program.SplashScreen.InfoAdd("create OCR object...");
                // ocr = new Ocr.Ocr(this); //moved to ocrcaptureandcorrect
                 _logger.Log("  - created OCR object");
-                _Splash.InfoChange("create OCR object...<OK>"); */
+                Program.SplashScreen.InfoChange("create OCR object...<OK>"); */
 
                 Application.ApplicationExit += Application_ApplicationExit;
                 _logger.Log("  - set application exit handler");
 
-                _Splash.InfoAdd("initiate ocr...");
+                Program.SplashScreen.InfoAdd("initiate ocr...");
                 var OcrCapAndCorrectTabPage = new TabPage("Capture And Correct");
                 OcrCapAndCorrectTabPage.Name = "OCR_CaptureAndCorrect";
                 cOcrCaptureAndCorrect.Dock = DockStyle.Fill;
@@ -222,26 +214,26 @@ namespace IBE
                     OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
                     tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
                     _logger.Log("  - initialised Ocr ");
-                    _Splash.InfoChange("create ocr ...<OK>");
+                    Program.SplashScreen.InfoChange("create ocr ...<OK>");
 
-                    _Splash.InfoAdd("create ocr calibrator...");
+                    Program.SplashScreen.InfoAdd("create ocr calibrator...");
                     var OcrCalibratorTabPage = new TabPage("OCR Calibration");
                     OcrCalibratorTabPage.Name = "OCR_Calibration";
                     var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
                     OcrCalibratorTabPage.Controls.Add(oct);
                     tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
                     _logger.Log("  - initialised Ocr Calibrator");
-                    _Splash.InfoChange("create ocr calibrator...<OK>");
+                    Program.SplashScreen.InfoChange("create ocr calibrator...<OK>");
                 }
 
-                _Splash.InfoAdd("prepare EDDN interface...");
+                Program.SplashScreen.InfoAdd("prepare EDDN interface...");
                 EDDNComm = new IBE.EDDN.EDDNCommunicator(this);
                 _logger.Log("  - created EDDN object");
-                _Splash.InfoChange("prepare EDDN interface...<OK>");
+                Program.SplashScreen.InfoChange("prepare EDDN interface...<OK>");
 
-                _Splash.InfoAdd("apply settings...");
+                Program.SplashScreen.InfoAdd("apply settings...");
                 ApplySettings();
-                _Splash.InfoChange("apply settings...<OK>");
+                Program.SplashScreen.InfoChange("apply settings...<OK>");
 
                 _logger.Log("  - applied settings");
 
@@ -250,31 +242,18 @@ namespace IBE
 
                 _logger.Log("Initialisation complete");
 
-                // two methods with the same functionality 
-                // maybe this was the better way but I've already improved the other 
-                // way (UpdateSystemNameFromLogFile()) 
-                // maybe this will some day be reactivated
-                //var edl = new EdLogWatcher();
-
-                //subscribe to edlogwatcherevents
-                //edl.ClientArrivedtoNewSystem += (OnClientArrivedtoNewSystem);
-
-                //After event subscriptino we can initialize
-                //edl.Initialize();
-                //edl.StartWatcher();
-
     //DEBUG: removed for the moment because I got strange behaviour in an full new/uninitialized environment (-> investigation needed)
                 //setOCRTabsVisibility();
 
-                _Splash.InfoAdd("prepare system/location view...");
+                Program.SplashScreen.InfoAdd("prepare system/location view...");
                 //prePrepareSystemAndStationFields();
                 if (Debugger.IsAttached)
                     MessageBox.Show("todo");
-                _Splash.InfoChange("prepare system/location view...<OK>");
+                Program.SplashScreen.InfoChange("prepare system/location view...<OK>");
 
-                _Splash.InfoAdd("prepare GUI elements...");
+                Program.SplashScreen.InfoAdd("prepare GUI elements...");
                 SetupGui(true);
-                _Splash.InfoChange("prepare GUI elements...<OK>");
+                Program.SplashScreen.InfoChange("prepare GUI elements...<OK>");
             }
             catch (Exception ex)
             {
@@ -307,24 +286,6 @@ namespace IBE
             return sb.ToString();
         }
 
-        //private void OnClientArrivedtoNewSystem(object sender, EdLogLineSystemArgs args)
-        //{
-        //    if (InvokeRequired)
-        //    {
-        //        this.Invoke(new Action<EdSystem>(ClientArrivedtoNewSystem), new object[] { args.System });
-        //        return;
-        //    }
-        //    ClientArrivedtoNewSystem(args.System);
-            
-        //}
-
-        //private void ClientArrivedtoNewSystem(EdSystem System)
-        //{
-        //    CurrentSystem = System;
-        //    Program.actualCondition.System  = System.Name;
-        //    //replace UpdateSystemNameFromLogFile
-        //}
-       
         private string getProductPathAutomatically()
         {
             // check in typical directorys
@@ -1853,7 +1814,9 @@ namespace IBE
                 if(cbEDDNAutoListen.Checked)
                     startEDDNListening();
 
-                _Splash.CloseDelayed();
+                Program.DoSpecial();
+
+                Program.SplashScreen.CloseDelayed();
 
             }
             catch (Exception ex)

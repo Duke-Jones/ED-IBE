@@ -144,68 +144,6 @@ namespace IBE.SQL
 
 #endregion
 
-#region import data
-
-        
-
-        /// <summary>
-        /// checks if the database is already initialized
-        /// </summary>
-        /// <returns></returns>
-        internal Boolean checkDBVersion()
-        {
-            Boolean retValue = true;
-            try
-            {
-                Decimal DBVersion = Program.DBCon.getIniValue<Decimal>("Database", "Version", Program.DB_VERSION_NONE.ToString(), false);
-
-                if(DBVersion == Program.DB_VERSION_NONE)
-                    retValue = false;
-                
-                return retValue;
-                   
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while checking db-version", ex);
-            }
-        }
-
-        internal void InitializeData()
-        {
-            var fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-
-            try
-            {
-                Decimal DBVersion = Program.DBCon.getIniValue<Decimal>("Database", "Version", Program.DB_VERSION_NONE.ToString(), false);
-
-                if(DBVersion <= Program.DB_VERSION_NONE)
-                { 
-                    Program.DBCon.setIniValue("General", 
-                                              "PathProgram", 
-                                              System.IO.Path.Combine(
-                                                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), 
-                                                System.Windows.Forms.Application.ProductName));
-
-                    Program.DBCon.setIniValue("General", 
-                                              "PathData", 
-                                              System.IO.Path.Combine(
-                                                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
-                                                System.Windows.Forms.Application.ProductName));
-
-                    DBVersion = Program.DB_VERSION_CURRENT;
-                    Program.DBCon.setIniValue("Database", "Version", Program.DB_VERSION_CURRENT.ToString());
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while importing the whole old data to database", ex);
-            }
-        }
-
-#endregion
-
 #region basedata
 
         private String[] BaseTables_Systems = new String[] {"tbgovernment", 

@@ -15,11 +15,11 @@ set EliteDBName=Elite_DB
 set ROOT_PW=EliteAdmin
 set RN_USER=RN_User
 set RN_USER_PW=Elite
-set RN_USER_PRIV=Insert, Select, Update, Delete, Create Temporary Tables, Create View, Drop, Shutdown
+set RN_USER_PRIV=Insert, Select, Update, Delete, Create Temporary Tables, Create View, Drop
 set SQL_HOSTS=localhost 127.0.0.1 ::1 %computername% ASTERISK
 
 REM "super" permission is needed for performance reasons while inserting big data plenties
-set RN_USER_PRIV_GLOB=Super	
+set RN_USER_PRIV_GLOB=Super, Shutdown	
 
 SET SOURCE_DIR=%~dp0
 
