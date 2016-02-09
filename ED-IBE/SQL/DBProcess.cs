@@ -17,7 +17,15 @@ namespace IBE.SQL
         private Process             m_Process           = null;
         private bool                disposed            = false;
 
-        public Process SQLDB_Process { get { return m_Process;} }
+        public bool WasRunning
+        {
+            get
+            {
+                return m_wasRunning;
+            }
+        }
+
+        public Process SQLDB_Process { get { return m_Process; } }
 
         public class DBProcessParams
         {
@@ -84,26 +92,32 @@ namespace IBE.SQL
 
                 pc.startMeasuring();
                 System.Threading.Thread.Sleep(1000);
-                do
+
+                if (!m_Process.HasExited)
                 {
-                    ipGlobalProperties      = IPGlobalProperties.GetIPGlobalProperties();
-                    tcpConnInfoArray        = ipGlobalProperties.GetActiveTcpListeners();
+                    do
+                    {
+                        ipGlobalProperties      = IPGlobalProperties.GetIPGlobalProperties();
+                        tcpConnInfoArray        = ipGlobalProperties.GetActiveTcpListeners();
 
-                    foreach (IPEndPoint tcpi in tcpConnInfoArray)
-                        if (tcpi.Port == m_Params.Port)
-                        {
-                            isRunning = true;
-                            break;
-                        }
+                        foreach (IPEndPoint tcpi in tcpConnInfoArray)
+                            if (tcpi.Port == m_Params.Port)
+                            {
+                                isRunning = true;
+                                break;
+                            }
 
-                    if(!isRunning)
-                        System.Threading.Thread.Sleep(1000);
+                        if(!isRunning)
+                            System.Threading.Thread.Sleep(1000);
                     
-                    Debug.Print("Waiting " + pc.currentMeasuring().ToString());
+                        Debug.Print("Waiting " + pc.currentMeasuring().ToString());
 
-                } while ((!isRunning) && ((pc.currentMeasuring() / 1000) < m_Params.DBStartTimeout));
-
-
+                    } while ((!isRunning) && ((pc.currentMeasuring() / 1000) < m_Params.DBStartTimeout));
+                }
+                else
+                {
+                    throw new Exception("can't start sql server !");
+                }
             }
         }
 
@@ -121,12 +135,12 @@ namespace IBE.SQL
                 String fullPath = Path.GetDirectoryName(Path.GetFullPath(m_Params.Workingdirectory));
 
 
-                psi                         = new ProcessStartInfo("mysqladmin.exe", CommandArgs);
+                psi                         = new ProcessStartInfo(@"bin\mysqladmin.exe", CommandArgs);
                 psi.WorkingDirectory        = m_Params.Workingdirectory;
                 psi.RedirectStandardOutput  = false;
 
                 // start the process for stopping the server
-                if(true || Debugger.IsAttached)
+                if(Debugger.IsAttached)
                 { 
                     psi.WindowStyle             = ProcessWindowStyle.Normal;
                     psi.CreateNoWindow          = false;

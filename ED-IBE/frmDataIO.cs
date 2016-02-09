@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using IBE.Enums_and_Utility_Classes;
 using System.IO;
@@ -15,31 +11,34 @@ namespace IBE
         public delegate void DelTextParam(String text);
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
-
+        public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
+        
         [Flags] enum enImportTypes
         {
             Undefiend                       = 0x0000,
-            EDDB_Commodities                = 0x0001,     /* default is "commodities.json" */  
-            RN_Localizations_Commodities    = 0x0002,     /* default is "newCommodityClassification.xml" */
-            RN_Localizations_EcoLevels      = 0x0004,     /* default is "newCommodityClassification.xml" */
-            RN_SelfAddedLocalizations       = 0x0008,     /* default is "Commodities_Own.xml" */
-            RN_Pricewarnlevels              = 0x0010,     /* default is "Commodities_RN.json" */
-            EDDB_Systems                    = 0x0020,     /* default is "systems.json" */  
-            EDDB_Stations                   = 0x0040,     /* default is "stations.json" */  
-            RN_Systems                      = 0x0080,     /* default is "systems_own.json" */  
-            RN_Stations                     = 0x0100,     /* default is "stations_own.json" */  
-            RN_CommandersLog                = 0x0200,     /* default is "CommandersLogAutoSave.xml" */  
-            RN_StationHistory               = 0x0400,     /* default is "StationHistory.json" */  
-            RN_MarketData                   = 0x0800,     /* default is "AutoSave.csv" */  
+            EDDB_Commodities                = 0x0001,           /* default is "commodities.json" */  
+            RN_Localizations_Commodities    = 0x0002,           /* default is "newCommodityClassification.xml" */
+            RN_Localizations_EcoLevels      = 0x0004,           /* default is "newCommodityClassification.xml" */
+            RN_SelfAddedLocalizations       = 0x0008,           /* default is "Commodities_Own.xml" */
+            RN_Pricewarnlevels              = 0x0010,           /* default is "Commodities_RN.json" */
+            EDDB_Systems                    = 0x0020,           /* default is "systems.json" */  
+            EDDB_Stations                   = 0x0040,           /* default is "stations.json" */  
+            RN_Systems                      = 0x0080,           /* default is "systems_own.json" */  
+            RN_Stations                     = 0x0100,           /* default is "stations_own.json" */  
+            RN_CommandersLog                = 0x0200,           /* default is "CommandersLogAutoSave.xml" */  
+            RN_StationHistory               = 0x0400,           /* default is "StationHistory.json" */  
+            RN_MarketData                   = 0x0800,           /* default is "AutoSave.csv" */  
         }
 
         public frmDataIO()
         {
             InitializeComponent();
-            this.Load += frmDataIO_Load;
+            this.Load          += frmDataIO_Load;
+            this.InfoTarget     = null;
+            this.ReUseLine      = false;
         }
 
-        void frmDataIO_Load(object sender, EventArgs e)
+        private void frmDataIO_Load(object sender, EventArgs e)
         {
             try
             {
@@ -67,8 +66,13 @@ namespace IBE
 
                 try
                 {
-                    enImportTypes importFlags = enImportTypes.EDDB_Commodities | enImportTypes.EDDB_Systems | enImportTypes.EDDB_Stations;
-                    ImportData(null, importFlags, "", path);
+                    enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+                                                enImportTypes.EDDB_Systems | 
+                                                enImportTypes.EDDB_Stations |
+                                                enImportTypes.RN_Localizations_Commodities |
+                                                enImportTypes.RN_Localizations_EcoLevels;
+
+                    ImportData(null, importFlags, null, path);
                 }
                 catch (Exception ex)
                 {
@@ -78,216 +82,8 @@ namespace IBE
         }
 
         /// <summary>
-        /// imports the whole data from the old RN directory
+        /// checks if a file ist existing, if not it shows a info-message
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cmdImportOldData_Click(object sender, EventArgs e)
-        {
-            String FileName;
-            String RNPath;
-            Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
-
-            try
-            {
-                fbFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
-                fbFolderDialog.Description = "Select your RN-Folder with the old data files ....";
-                fbFolderDialog.SelectedPath = System.IO.Directory.GetCurrentDirectory();
-
-                if(System.Diagnostics.Debugger.IsAttached)
-        #if ep_Debug
-                    fbFolderDialog.SelectedPath = @"I:\RN\RegulatedNoise_MySQL\RegulatedNoise\bin\Debug DJ ep";
-        #else
-                    fbFolderDialog.SelectedPath = @"F:\Games\ED\sonstiges\RegulatedNoise.v1.81";                    
-        #endif 
-                if(fbFolderDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-                {
-                    RNPath = fbFolderDialog.SelectedPath.Trim();
-
-                    if (!String.IsNullOrEmpty(RNPath))
-                    {
-
-                        if(File.Exists(Path.Combine(RNPath, "RegulatedNoise.exe")))
-                        { 
-                            Program.Data.Progress += Data_Progress;
-                            Cursor = Cursors.WaitCursor;
-
-                            lbProgess.Items.Clear();
-
-                            Application.DoEvents();
-
-                            // import the commodities from EDDB
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 0, Total = 0});
-                            FileName = @"Data\commodities.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportCommoditiesFromFile(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 1, Total = 1});
-                            }
-
-                            // import the localizations (commodities) from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 0, Total = 0});
-                            FileName = @"Data\Commodities.xml";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1});
-                            }
-
-                            // import the localizations (economy levels) from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 0, Total = 0});
-                            FileName = @"Data\Commodities.xml";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportEconomyLevelLocalizations(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tblevellocalization.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbeconomylevel.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 1, Total = 1});
-                            }
-                            
-
-                            // import the self added localizations from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 0, Total = 0});
-                            FileName = @"Data\Commodities_Own.xml";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportCommodityLocalizations(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 1, Total = 1});
-                            }
-
-                            // import the pricewarnlevels from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 0, Total = 0});
-                            FileName = @"Data\Commodities_RN.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 1, Total = 1});
-                            }
-
-                            // import the systems and stations from EDDB
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 0, Total = 0});
-                            FileName = @"Data\systems.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportSystems(Path.Combine(RNPath, FileName));
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 1, Total = 1});
-                            }
-
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 0, Total = 0});
-                            FileName = @"Data\stations.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportStations(Path.Combine(RNPath, FileName), cbImportPriceData.Checked);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 1, Total = 1});
-                            }
-
-                            // import the self-changed or added systems and stations 
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 0, Total = 0});
-                            FileName = @"Data\systems_own.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(RNPath, FileName));
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 1, Total = 1});
-                            }
-
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 0, Total = 0});
-                            FileName = @"Data\stations_own.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportStations_Own(Path.Combine(RNPath, FileName), changedSystemIDs);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 1, Total = 1});
-                            }
-
-                            // import the Commander's Log from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 0, Total = 0});
-                            FileName = @"CommandersLogAutoSave.xml";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportCommandersLog(Path.Combine(RNPath, FileName));
-                                Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 1, Total = 1});
-                            }
-
-                            //import the history of visited stations
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 0, Total = 0});
-                            FileName = @"Data\StationHistory.json";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportVisitedStations(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 1, Total = 1});
-                            }
-
-                            //import the self collected price data
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 0, Total = 0});
-                            FileName = @"AutoSave.csv";
-                            if(FileExistsOrMessage(RNPath, FileName))
-                            { 
-                                Program.Data.ImportPricesFromCSVFile(Path.Combine(RNPath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 1, Total = 1});
-                            }
-
-                            // update the visited information
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 0, Total = 0});
-                            Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
-                            Program.Data.updateVisitedFlagsFromBase();
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 1, Total = 1});
-
-                            // update localization of all commodities
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities", Index = 0, Total = 0});
-                            Program.Data.updateTranslation();
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities...", Index = 1, Total = 1});
-
-
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "finished", Index = 1, Total = 1});
-
-                            Cursor = Cursors.Default;
-
-                            Program.Data.Progress -= Data_Progress;
-
-                            // set a flag : full import of old data is done
-                            Program.Data.OldDataImportDone  = true;
-                            cmdImportOldData.Enabled        = false;
-                            cbImportPriceData.Enabled       = false;
-                        }
-                        else
-                        {
-                            MessageBox.Show("<RegulatedNoise.exe> not found. Wrong directory ?", "Data import",  MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Cursor = Cursors.Default;
-                cErr.showError(ex,"Error while importing the whole old data to database");
-            }
-        }
-
-        /// <summary>
-        /// checks if a file ist existingClassification, If not it shows a info-messsage
-        /// </summary
         /// <param name="sourcePath"></param>
         /// <param name="FileName"></param>
         /// <returns></returns>
@@ -312,34 +108,51 @@ namespace IBE
             }
         }
 
-
-
-        void Data_Progress(object sender, SQL.EliteDBIO.ProgressEventArgs e)
+        /// <summary>
+        /// shows the data progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Data_Progress(object sender, SQL.EliteDBIO.ProgressEventArgs e)
         {
             try
             {
                 ListBox destination;
 
                 if (InfoTarget != null)
+                {
                     destination = InfoTarget;
+                }
                 else
+                {
                     destination = lbProgess;
-
-                if(e.Index == 0 && e.Total == 0)
+                }
+                if (e.Index == 0 && e.Total == 0)
                 {
                     destination.Items.Add("-------------------------------");
                     destination.Items.Add(String.Format("{0}", e.Tablename));
                 }
-                else if(e.Index == 1 && e.Total == 1)
-                {
-                    destination.Items.Add(String.Format("{0} : 100%", e.Tablename));
-                }
                 else
-                { 
-                    destination.Items.Add(String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index/e.Total, e.Index, e.Total));
+                {
+                    if (e.Index == 1 && e.Total == 1)
+                    {
+                        destination.Items.Add(String.Format("{0} : 100%", e.Tablename));
+                    }
+                    else
+                    {
+                        if (ReUseLine && (destination.Items.Count > 0))
+                        {
+                            destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total);
+                        }
+                        else
+                        {
+                            destination.Items.Add(String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total));
+                        }
+                    }
                 }
-                
-                destination.SelectedIndex = destination.Items.Count-1;
+
+                destination.TopIndex = destination.Items.Count - 1;
+
                 destination.Refresh();
                 Application.DoEvents();
             }
@@ -349,27 +162,20 @@ namespace IBE
             }
         }
 
-        private void cmdTest_Click(object sender, EventArgs e)
-        {
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in Test", ex);
-            }
-        }
-
+        /// <summary>
+        /// clears all data from the database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmdClearAll_Click(object sender, EventArgs e)
         {
             String retString = "";
 
             try
             {
-
-                if(InputBox.Show("Clear database", "This will delete all your data. Are you sure ? Type 'yes' to proceed.",ref retString) == System.Windows.Forms.DialogResult.OK)
-                    if(retString == "yes")
+                if (InputBox.Show("Clear database", "This will delete all your data. Are you sure ? Type 'yes' to proceed.", ref retString) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (retString == "yes")
                     {
                         Program.Data.Progress += Data_Progress;
                         Cursor = Cursors.WaitCursor;
@@ -378,7 +184,7 @@ namespace IBE
 
                         Program.Data.ClearAll();
 
-                        Program.DBCon.setIniValue("Database", "Version", new Version(0,0,0,0).ToString());
+                        Program.DBCon.setIniValue("Database", "Version", new Version(0, 0, 0, 0).ToString());
                         Program.Data.OldDataImportDone  = false;
 
                         cmdImportOldData.Enabled        = true;
@@ -388,8 +194,8 @@ namespace IBE
                         Cursor = Cursors.Default;
 
                         Program.Data.Progress -= Data_Progress;
-                        
                     }
+                }
             }
             catch (Exception ex)
             {
@@ -399,11 +205,21 @@ namespace IBE
             }
         }
 
-        private void ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "")
+        /// <summary>
+        /// main working routine for importing data
+        /// </summary>
+        /// <param name="importInfo">if this is set a FolderDialog will ask with this text for a import directory.
+        /// If this is not set, the path from "General"->"Path_Import" or from "optionalPath" will be taken</param>
+        /// <param name="importFlags">flags what to import</param>
+        /// <param name="optionalFilter">filefilter (only for importing Commander's Log multiple times)</param>
+        /// <param name="optionalPath">preset for the import path. Also taken by the FolderDialog if importInfo is set</param>
+        /// <returns></returns>
+        private Boolean ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "")
         {
             String FileName;
             String sourcePath;
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
+            Boolean retValue = false;
 
             try
             {
@@ -412,7 +228,7 @@ namespace IBE
                 else
                     sourcePath = optionalPath;
 
-                if (importInfo != null)
+                if (!String.IsNullOrEmpty(importInfo))
                 {
                     fbFolderDialog.RootFolder   = Environment.SpecialFolder.MyComputer;
                     fbFolderDialog.Description  = importInfo;
@@ -606,7 +422,7 @@ namespace IBE
                             string[] files;
                             string Filter;
 
-                            if (optionalFilter != "")
+                            if (!String.IsNullOrEmpty(optionalFilter))
                                 Filter = optionalFilter;
                             else
                                 Filter = "CommandersLogAutoSave.xml";
@@ -688,8 +504,12 @@ namespace IBE
                         Cursor = Cursors.Default;
 
                         Program.Data.Progress -= Data_Progress;
+
+                        retValue = true;
                     }
                 }
+
+                return retValue;
             }
             catch (Exception ex)
             {
@@ -702,10 +522,11 @@ namespace IBE
         {
             try
             {
+                enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+                                  enImportTypes.EDDB_Systems | 
+                                  enImportTypes.EDDB_Stations;
 
-                enImportTypes importFlags = enImportTypes.EDDB_Commodities | enImportTypes.EDDB_Systems | enImportTypes.EDDB_Stations;
                 ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags);
-
             }
             catch (Exception ex)
             {
@@ -718,10 +539,65 @@ namespace IBE
             try
             {
                 enImportTypes importFlags = enImportTypes.RN_CommandersLog;
-                ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "CommandersLog*.xml");
-            }            catch (Exception ex)
+                ImportData("Select folder with your old Commander's Log data (accepted file pattern : CommandersLog*.xml)", importFlags, "CommandersLog*.xml");
+            }
+            catch (Exception ex)
             {
                 cErr.processError(ex, "Error while importing system/station data from EDDN");
+            }
+        }
+
+        /// <summary>
+        /// imports the collected data from the old RN directory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdImportOldData_Click(object sender, EventArgs e)
+        {
+            String RNPath;
+
+            try
+            {
+                
+                enImportTypes importFlags = enImportTypes.RN_SelfAddedLocalizations |  
+                                            enImportTypes.RN_Pricewarnlevels | 
+                                            enImportTypes.RN_Systems | 
+                                            enImportTypes.RN_Stations | 
+                                            enImportTypes.RN_CommandersLog | 
+                                            enImportTypes.RN_StationHistory | 
+                                            enImportTypes.RN_MarketData;
+
+                fbFolderDialog.RootFolder       = Environment.SpecialFolder.MyComputer;
+                fbFolderDialog.Description      = "Select your RN-Folder with the old data files ....";
+                fbFolderDialog.SelectedPath     = System.IO.Directory.GetCurrentDirectory();
+
+                if (fbFolderDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    RNPath = fbFolderDialog.SelectedPath.Trim();
+
+                    if (!String.IsNullOrEmpty(RNPath))
+                    {
+                        if (File.Exists(Path.Combine(RNPath, "RegulatedNoise.exe")))
+                        {
+                            ImportData(null, importFlags, null, RNPath);
+
+                            Program.Data.OldDataImportDone = true;
+                            cmdImportOldData.Enabled = false;
+                            cbImportPriceData.Enabled = false;
+
+                            MessageBox.Show("Import has finished. Please restart ED-IBE", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        else
+                        {
+                            MessageBox.Show("<RegulatedNoise.exe> not found. Wrong directory ?", "Data import",  MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                cErr.showError(ex, "Error while importing the existing RN-data");
             }
         }
     }

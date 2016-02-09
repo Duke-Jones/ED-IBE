@@ -36,6 +36,14 @@ namespace IBE
             this.Refresh();
         }
 
+        public void InfoAppendLast(string Info)
+        {
+            SplashInfo.Items[SplashInfo.Items.Count - 2] += Info;
+            SplashInfo.SelectedIndex = SplashInfo.Items.Count - 1;
+            SplashInfo.SelectedIndex = -1;
+            Refresh();
+        }
+
         public void CloseDelayed()
         {
             _CloseTimer = new System.Windows.Forms.Timer();

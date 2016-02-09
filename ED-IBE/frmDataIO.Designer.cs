@@ -139,7 +139,7 @@
             this.gbFirstTime.Size = new System.Drawing.Size(345, 80);
             this.gbFirstTime.TabIndex = 3;
             this.gbFirstTime.TabStop = false;
-            this.gbFirstTime.Text = "First time import";
+            this.gbFirstTime.Text = "Import data from \"RegulatedNoise\"";
             // 
             // gbRepeat
             // 

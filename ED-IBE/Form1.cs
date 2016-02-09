@@ -71,7 +71,6 @@ namespace IBE
         private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _stationToStationReturnColumnSorter, _commandersLogColumnSorter;
         private Thread _eddnSubscriberThread;
         
-        public SingleThreadLogger _logger;
         public TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         public Levenshtein _levenshtein = new Levenshtein();
         private dsCommodities _commodities = new dsCommodities();
@@ -120,66 +119,45 @@ namespace IBE
         [SecurityPermission(SecurityAction.Demand, ControlAppDomain = true)]
         public Form1()
         {
-            try
-            {
-                Cursor = Cursors.WaitCursor;
-
-                _InitDone = false ;
-
-                InstanceObject = this;
-
-                Program.SplashScreen = new SplashScreenForm();
-
-#if !ep_Debug
-                Program.SplashScreen.Show();
-#endif
-                doInit();
-
-                Program.SplashScreen.InfoAdd("\nstart sequence finished !!!");
-
-                Cursor = Cursors.Default;
-                _InitDone = true;
-            }
-            catch (Exception ex)
-            {
-                Cursor = Cursors.Default;
-                throw new Exception("Error while creating main form", ex);    
-            }
-
+            Program.SplashScreen.InfoAdd("initialize components...");
+            InitializeComponent();
+            Program.Logger.Log("  - initialised component");
+            Program.SplashScreen.InfoAppendLast("<OK>");
         }
 
         private void doInit()
         {
             try
             {
-                _logger = new SingleThreadLogger(ThreadLoggerType.Form);
-                _logger.Log("Initialising...\n");
+                Cursor = Cursors.WaitCursor;
+
+                TabPage     newTab;
+
+                _InitDone = false ;
+
+                InstanceObject = this;
 
                 string FormName = this.GetType().Name;
                 Program.SplashScreen.setPosition(this.GetWindowData());
 
-                Program.SplashScreen.InfoAdd("initialize components...");
-                InitializeComponent();
-                _logger.Log("  - initialised component");
-                Program.SplashScreen.InfoChange("initialize components...<OK>");
-
-                Boolean retry = false;
+                Boolean retry;
                 do
                 {
+                    retry = false;
                     try
                     {
                         Program.SplashScreen.InfoAdd("load settings...");
                         SetProductPath();
-                        _logger.Log("  - product path set");
-                        Program.SplashScreen.InfoChange("load settings...<OK>");
+                        Program.Logger.Log("  - product path set");
+                        Program.SplashScreen.InfoAppendLast("<OK>");
 
                         SetProductAppDataPath();
-                        _logger.Log("  - product appdata set");
+                        Program.Logger.Log("  - product appdata set");
 
                         Program.SplashScreen.InfoAdd("load game settings...");
                         GameSettings = new GameSettings(this);
-                        _logger.Log("  - loaded game settings");
-                        Program.SplashScreen.InfoChange("load game settings...<OK>");
+                        Program.Logger.Log("  - loaded game settings");
+                        Program.SplashScreen.InfoAppendLast("<OK>");
 
                     }
                     catch (Exception)
@@ -192,16 +170,16 @@ namespace IBE
 
                 Program.SplashScreen.InfoAdd("prepare network interfaces...");
                 PopulateNetworkInterfaces();
-                _logger.Log("  - populated network interfaces");
-                Program.SplashScreen.InfoChange("prepare network interfaces...<OK>");
+                Program.Logger.Log("  - populated network interfaces");
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
                 /*Program.SplashScreen.InfoAdd("create OCR object...");
                // ocr = new Ocr.Ocr(this); //moved to ocrcaptureandcorrect
-                _logger.Log("  - created OCR object");
+                Program.Logger.Log("  - created OCR object");
                 Program.SplashScreen.InfoChange("create OCR object...<OK>"); */
 
                 Application.ApplicationExit += Application_ApplicationExit;
-                _logger.Log("  - set application exit handler");
+                Program.Logger.Log("  - set application exit handler");
 
                 Program.SplashScreen.InfoAdd("initiate ocr...");
                 var OcrCapAndCorrectTabPage = new TabPage("Capture And Correct");
@@ -213,8 +191,8 @@ namespace IBE
                 {
                     OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
                     tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
-                    _logger.Log("  - initialised Ocr ");
-                    Program.SplashScreen.InfoChange("create ocr ...<OK>");
+                    Program.Logger.Log("  - initialised Ocr ");
+                    Program.SplashScreen.InfoAppendLast("<OK>");
 
                     Program.SplashScreen.InfoAdd("create ocr calibrator...");
                     var OcrCalibratorTabPage = new TabPage("OCR Calibration");
@@ -222,25 +200,23 @@ namespace IBE
                     var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
                     OcrCalibratorTabPage.Controls.Add(oct);
                     tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
-                    _logger.Log("  - initialised Ocr Calibrator");
-                    Program.SplashScreen.InfoChange("create ocr calibrator...<OK>");
+                    Program.Logger.Log("  - initialised Ocr Calibrator");
+                    Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
                 Program.SplashScreen.InfoAdd("prepare EDDN interface...");
                 EDDNComm = new IBE.EDDN.EDDNCommunicator(this);
-                _logger.Log("  - created EDDN object");
-                Program.SplashScreen.InfoChange("prepare EDDN interface...<OK>");
+                Program.Logger.Log("  - created EDDN object");
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Program.SplashScreen.InfoAdd("apply settings...");
                 ApplySettings();
-                Program.SplashScreen.InfoChange("apply settings...<OK>");
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
-                _logger.Log("  - applied settings");
+                Program.Logger.Log("  - applied settings");
 
                 if (!Directory.Exists(Program.GetDataPath("OCR Correction Images")))
                     Directory.CreateDirectory(Program.GetDataPath("OCR Correction Images"));
-
-                _logger.Log("Initialisation complete");
 
     //DEBUG: removed for the moment because I got strange behaviour in an full new/uninitialized environment (-> investigation needed)
                 //setOCRTabsVisibility();
@@ -254,6 +230,80 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("prepare GUI elements...");
                 SetupGui(true);
                 Program.SplashScreen.InfoChange("prepare GUI elements...<OK>");
+
+                if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
+                     DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
+                    (DateTime.Now.Day == 1 && DateTime.Now.Month == 1))
+                {
+                    _timer = new System.Windows.Forms.Timer();
+                    _timer.Interval = 75;
+                    _timer.Tick += OnTick;
+                    _timer.Start();
+                }
+
+                Retheme();
+
+                Clock = new System.Windows.Forms.Timer();
+                Clock.Interval = 1000;
+                Clock.Start();
+                Clock.Tick += Clock_Tick;
+
+                _AutoImportDelayTimer            = new System.Timers.Timer(10000);
+                _AutoImportDelayTimer.AutoReset  = false;
+                _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
+
+
+                Program.SplashScreen.InfoAdd("initialize settings tab...");
+                // Settings
+                tabSettings newSControl           = new tabSettings();
+                newSControl.DataSource            = Program.Settings;
+                newTab                            = new TabPage("Settings");
+                newTab.Name                       = newSControl.Name;
+                newTab.Controls.Add(newSControl);
+                tabCtrlMain.TabPages.Insert(5, newTab);
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Program.SplashScreen.InfoAdd("initialize settings tab...");
+                // Price Analysis
+                tabPriceAnalysis newPAControl     = new tabPriceAnalysis();
+                newPAControl.DataSource           = Program.PriceAnalysis;
+                newTab                            = new TabPage("Price Analysis");
+                newTab.Name                       = newPAControl.Name;
+                newTab.Controls.Add(newPAControl);
+                tabCtrlMain.TabPages.Insert(2, newTab);
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Program.SplashScreen.InfoAdd("initialize settings tab...");
+                // Commander's Log
+                tabCommandersLog newCLControl     = new tabCommandersLog();
+                newCLControl.DataSource           = Program.CommandersLog;
+                newTab                            = new TabPage("Commander's Log");
+                newTab.Name                       = newCLControl.Name;
+                newTab.Controls.Add(newCLControl);
+                tabCtrlMain.TabPages.Insert(3, newTab);
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Program.SplashScreen.InfoAdd("initialize message handlers...");
+                // fill dictionary with "RefreshDone"-flags
+                m_IsRefreshed      = new Dictionary<string,bool>();
+                foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
+                    m_IsRefreshed.Add(MainTabPage.Name, false);
+
+                // register events for getting new location-infos for the gui
+                Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+
+                Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
+
+
+                // until this is working again 
+                tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
+                tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
+                tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabEDDN"]);
+
+                Cursor = Cursors.Default;
+                _InitDone = true;
+
+                Program.SplashScreen.InfoAppendLast("<OK>");
             }
             catch (Exception ex)
             {
@@ -1733,12 +1783,12 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                _logger.Log("Error recursing directories:", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
+                Program.Logger.Log("Error recursing directories:", true);
+                Program.Logger.Log(ex.ToString(), true);
+                Program.Logger.Log(ex.Message, true);
+                Program.Logger.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
+                    Program.Logger.Log(ex.InnerException.ToString(), true);
                 Console.WriteLine(ex.Message);
             }
         }
@@ -1776,6 +1826,7 @@ namespace IBE
                 Version newVersion;
                 String newInfo;
 
+                Program.SplashScreen.InfoAdd("checking for updates");
                 Updater updater = new Updater();
 
                 if (updater.CheckVersion(out newVersion, out newInfo))
@@ -1794,30 +1845,55 @@ namespace IBE
                     if (newVersion != new Version(0,0,0,0))
                         lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
                 }
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Program.SplashScreen.InfoAdd("load system data...");
                 loadSystemData(Program.actualCondition.System);
                 loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Program.SplashScreen.InfoAdd("init settings gui...");
                 Program.Settings.GUI.Init();
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Program.SplashScreen.InfoAdd("init price analysis gui");
                 Program.PriceAnalysis.GUI.Init();
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Program.SplashScreen.InfoAdd("init commanders log gui");
                 Program.CommandersLog.GUI.Init();
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Program.SplashScreen.InfoAdd("init system numbers");
                 showSystemNumbers();
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Program.SplashScreen.InfoAdd("init main gui");
                 SetupGui();
 
-                // starting the LogfileScanner
                 this.tbCurrentSystemFromLogs.Text       = Program.actualCondition.System;
                 this.tbCurrentStationinfoFromLogs.Text  = Program.actualCondition.Location;
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Program.SplashScreen.InfoAdd("starting logfile scanner");
                 Program.LogfileScanner.Start();
+                Program.SplashScreen.InfoAppendLast("<OK>");
 
-                if(cbEDDNAutoListen.Checked)
-                    startEDDNListening();
-
+                
                 Program.DoSpecial();
 
+                if(cbEDDNAutoListen.Checked)
+                {
+                    Program.SplashScreen.InfoAdd("starting eddn listening");
+                    startEDDNListening();
+                    Program.SplashScreen.InfoAppendLast("<OK>");
+                }
+
+
+                Program.SplashScreen.InfoAdd("init sequence finished");
                 Program.SplashScreen.CloseDelayed();
 
+                
             }
             catch (Exception ex)
             {
@@ -1827,73 +1903,11 @@ namespace IBE
 
         private void Form_Load(object sender, EventArgs e)
         {
-            // TODO: Diese Codezeile lädt Daten in die Tabelle "dsElite_DB.tbsystems". Sie können sie bei Bedarf verschieben oder entfernen.
-
-            TabPage     newTab;
 
             Text += VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
 
-            if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
-                 DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
-                (DateTime.Now.Day == 1 && DateTime.Now.Month == 1))
-            {
-                _timer = new System.Windows.Forms.Timer();
-                _timer.Interval = 75;
-                _timer.Tick += OnTick;
-                _timer.Start();
-            }
+            doInit();
 
-            Retheme();
-
-            Clock = new System.Windows.Forms.Timer();
-            Clock.Interval = 1000;
-            Clock.Start();
-            Clock.Tick += Clock_Tick;
-
-            _AutoImportDelayTimer            = new System.Timers.Timer(10000);
-            _AutoImportDelayTimer.AutoReset  = false;
-            _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
-
-
-            // Settings
-            tabSettings newSControl           = new tabSettings();
-            newSControl.DataSource            = Program.Settings;
-            newTab                            = new TabPage("Settings");
-            newTab.Name                       = newSControl.Name;
-            newTab.Controls.Add(newSControl);
-            tabCtrlMain.TabPages.Insert(5, newTab);
-
-            // Price Analysis
-            tabPriceAnalysis newPAControl     = new tabPriceAnalysis();
-            newPAControl.DataSource           = Program.PriceAnalysis;
-            newTab                            = new TabPage("Price Analysis");
-            newTab.Name                       = newPAControl.Name;
-            newTab.Controls.Add(newPAControl);
-            tabCtrlMain.TabPages.Insert(2, newTab);
-
-            // Commander's Log
-            tabCommandersLog newCLControl     = new tabCommandersLog();
-            newCLControl.DataSource           = Program.CommandersLog;
-            newTab                            = new TabPage("Commander's Log");
-            newTab.Name                       = newCLControl.Name;
-            newTab.Controls.Add(newCLControl);
-            tabCtrlMain.TabPages.Insert(3, newTab);
-
-            // fill dictionary with "RefreshDone"-flags
-            m_IsRefreshed      = new Dictionary<string,bool>();
-            foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
-                m_IsRefreshed.Add(MainTabPage.Name, false);
-
-            // register events for getting new location-infos for the gui
-            Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
-
-            Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
-
-
-            // until this is working again 
-            tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
-            tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
-            tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabEDDN"]);
         }
 
         private void Clock_Tick(object sender, EventArgs e)
@@ -3658,12 +3672,12 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                _logger.Log("Error starting webserver", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
+                Program.Logger.Log("Error starting webserver", true);
+                Program.Logger.Log(ex.ToString(), true);
+                Program.Logger.Log(ex.Message, true);
+                Program.Logger.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
+                    Program.Logger.Log(ex.InnerException.ToString(), true);
                 MsgBox.Show(
                     "Couldn't start webserver.  Maybe something is already using port 8080...?");
             }

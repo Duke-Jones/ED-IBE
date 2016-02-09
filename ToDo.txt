@@ -7,6 +7,7 @@ Needed for development:
 - VS2013
 - dotNet 4.6 (and 4.6 targeting pack) (http://getdotnet.azurewebsites.net/target-dotnet-platforms.html#)
 - MySQL for Visual Studio and MySQL Workbench (over MySQL Installer http://dev.mysql.com/tech-resources/articles/mysql-installer-for-windows.htmlvisual)
+- MySQL Connector (manual or also over MySQL Installer)
 
 Establish a data-connection in Visual Studio:
 1. create a new database : start script "create.cmd" in ".\RNDatabase\Database\script\"
@@ -95,6 +96,13 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+
+   * corrections on different data imports 
+   * process logger globalized
+   * added more splash infos
+   * fixed some more issues with shutdown of the sql server 
+   * added a first version of a readme (only german for the moment)
+-------------------------------------------------------------------------------------         
    * splashscreen globalized
    * first time import is starting automatically
 -------------------------------------------------------------------------------------         

@@ -114,7 +114,7 @@ Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "
 ;ProgramSettings
 Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"
 Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={code:GetDataBasepath}\Database\Elite.ini --console"
-Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database\bin\"
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database"
 
 [Types]
 Name: "EmptyList"; Description: "EmptyList"; Flags: iscustom

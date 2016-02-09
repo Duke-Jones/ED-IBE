@@ -267,12 +267,12 @@ namespace IBE.Ocr
             catch (Exception ex)
             {
                 Debug.WriteLine("Doh!");
-                _parent._logger.Log("Exception in UpdateOriginalImage", true);
-                _parent._logger.Log(ex.ToString(), true);
-                _parent._logger.Log(ex.Message, true);
-                _parent._logger.Log(ex.StackTrace, true);
+                Program.Logger.Log("Exception in UpdateOriginalImage", true);
+                Program.Logger.Log(ex.ToString(), true);
+                Program.Logger.Log(ex.Message, true);
+                Program.Logger.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
-                    _parent._logger.Log(ex.InnerException.ToString(), true);
+                    Program.Logger.Log(ex.InnerException.ToString(), true);
                 return new Point[12];
             }
         }

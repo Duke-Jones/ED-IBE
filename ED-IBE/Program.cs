@@ -241,7 +241,8 @@ namespace IBE
         public static EliteDBIO                         Data;
         public static Condition                         actualCondition;
         public static EDLogfileScanner                  LogfileScanner;
-        public static SplashScreenForm                 SplashScreen;
+        public static SplashScreenForm                  SplashScreen;
+        public static SingleThreadLogger                Logger;
 
 
         /// <summary>
@@ -254,21 +255,39 @@ namespace IBE
             {
                 if(!m_initDone)
                 { 
+                    Program.SplashScreen = new SplashScreenForm();
+                    Program.SplashScreen.Show();
+
+                    Program.SplashScreen.InfoAdd("initializing logger...");
+                    Program.Logger = new SingleThreadLogger(ThreadLoggerType.Form);
+                    Program.Logger.Log("Initialising...\n");
+                    Program.SplashScreen.InfoAppendLast("<OK>");
+
+                    Program.SplashScreen.InfoAdd("starting sql server...");
+
                     // load settings from file
                     IniFile = new STA.Settings.INIFile(GetDataPath("ED-IBE.ini"), false, true);
 
                     // starT database process (if not running)
                     DBProcess.DBProcessParams newProcessParams  = new DBProcess.DBProcessParams() { };
-                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",        "Commandline",      @"mysqld.exe");    
+                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",        "Commandline",      @"bin\mysqld.exe");    
                     newProcessParams.Commandargs                = IniFile.GetValue("DB_Server",        "CommandArgs",      @"--defaults-file=Elite.ini --console");
-                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",        "WorkingDirectory", @"..\..\..\RNDatabase\Database\bin");
+                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",        "WorkingDirectory", @"..\..\..\RNDatabase\Database");
                     newProcessParams.Port                       = IniFile.GetValue<Int16>("DB_Server", "Port",             "3306");
                     newProcessParams.DBStartTimeout             = IniFile.GetValue<Int16>("DB_Server", "DBStartTimeout",   "60");
                 
                     EliteDBProcess                              = new DBProcess(newProcessParams);
 
+                    if (EliteDBProcess.WasRunning)
+                        Program.SplashScreen.InfoAppendLast("already running...<OK>"); 
+                    else
+                        Program.SplashScreen.InfoAppendLast("<OK>");
+                        
+
 
                     // connecT to the database
+                    Program.SplashScreen.InfoAdd("connect to sql server...");
+
                     DBConnector.ConnectionParams newConnectionParams = new DBConnector.ConnectionParams() { };
 
                     newConnectionParams.Name                    = IniFile.GetValue("DB_Connection",          "Name",           "master");   
@@ -284,8 +303,11 @@ namespace IBE
 
                     DBCon.Connect();
 
+                    Program.SplashScreen.InfoAppendLast("<OK>");
+
                     /* **************** database is running ********************** */
                     
+                    Program.SplashScreen.InfoAdd("preparing global objects...");
 
                     // prepare colors-object
                     Colors                                      = new GUIColors();
@@ -330,6 +352,8 @@ namespace IBE
                     PriceAnalysis.registerLogFileScanner(LogfileScanner);
                     PriceAnalysis.registerExternalTool(ExternalData);
 
+                    Program.SplashScreen.InfoAppendLast("<OK>");
+
                     m_initDone = true;
 
                 }
@@ -359,7 +383,7 @@ namespace IBE
 
                 // if EliteDBProcess is not null the process is created 
                 // by this program, so we also have to do the cleanup
-                if(EliteDBProcess != null)
+                if((EliteDBProcess != null) && (!EliteDBProcess.WasRunning))
                 { 
                     String user = IniFile.GetValue("DB_Connection", "User", "RN_User");  
                     String pass = IniFile.GetValue("DB_Connection", "Pass", "Elite");    
@@ -436,6 +460,8 @@ namespace IBE
                         Thread.Sleep(3000);
 
                         DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.ReUseLine  = true;
+
                         DataIO.StartMasterImport(GetDataPath("Data"));
 
                         DataIO.Close();
