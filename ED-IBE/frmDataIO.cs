@@ -213,8 +213,9 @@ namespace IBE
         /// <param name="importFlags">flags what to import</param>
         /// <param name="optionalFilter">filefilter (only for importing Commander's Log multiple times)</param>
         /// <param name="optionalPath">preset for the import path. Also taken by the FolderDialog if importInfo is set</param>
+        /// <param name="RNData">causes to look for some files in the "/data/" subdirectory (for importing old RN data) </param>
         /// <returns></returns>
-        private Boolean ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "")
+        private Boolean ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "", Boolean RNData = false)
         {
             String FileName;
             String sourcePath;
@@ -260,6 +261,10 @@ namespace IBE
                             // import the commodities from EDDB
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 0, Total = 0 });
                             FileName = "commodities.json";
+                            
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportCommoditiesFromFile(Path.Combine(sourcePath, FileName));
@@ -278,6 +283,10 @@ namespace IBE
                             // import the localizations (commodities) from the old RN files
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 0, Total = 0 });
                             FileName = "Commodities.xml";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportCommodityLocalizations(Path.Combine(sourcePath, FileName));
@@ -296,6 +305,10 @@ namespace IBE
                             // import the localizations (economy levels) from the old RN files
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 0, Total = 0 });
                             FileName = "Commodities.xml";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportEconomyLevelLocalizations(Path.Combine(sourcePath, FileName));
@@ -315,6 +328,10 @@ namespace IBE
                             // import the self added localizations from the old RN files
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 0, Total = 0 });
                             FileName = "Commodities_Own.xml";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportCommodityLocalizations(Path.Combine(sourcePath, FileName));
@@ -333,6 +350,10 @@ namespace IBE
                             // import the pricewarnlevels from the old RN files
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 0, Total = 0 });
                             FileName = "Commodities_RN.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(sourcePath, FileName));
@@ -350,6 +371,10 @@ namespace IBE
                             // import the systems and stations from EDDB
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 0, Total = 0 });
                             FileName = "systems.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportSystems(Path.Combine(sourcePath, FileName));
@@ -367,6 +392,10 @@ namespace IBE
                         {
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 0, Total = 0 });
                             FileName = "stations.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportStations(Path.Combine(sourcePath, FileName), cbImportPriceData.Checked);
@@ -385,6 +414,10 @@ namespace IBE
                             // import the self-changed or added systems and stations
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 0, Total = 0 });
                             FileName = "systems_own.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(sourcePath, FileName));
@@ -402,6 +435,10 @@ namespace IBE
                         {
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 0, Total = 0 });
                             FileName = "stations_own.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportStations_Own(Path.Combine(sourcePath, FileName), changedSystemIDs);
@@ -457,6 +494,10 @@ namespace IBE
                             //import the history of visited stations
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 0, Total = 0 });
                             FileName = "StationHistory.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportVisitedStations(Path.Combine(sourcePath, FileName));
@@ -579,7 +620,7 @@ namespace IBE
                     {
                         if (File.Exists(Path.Combine(RNPath, "RegulatedNoise.exe")))
                         {
-                            ImportData(null, importFlags, null, RNPath);
+                            ImportData(null, importFlags, null, RNPath, true);
 
                             Program.Data.OldDataImportDone = true;
                             cmdImportOldData.Enabled = false;
