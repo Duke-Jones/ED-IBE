@@ -35,7 +35,7 @@ namespace IBE
             InitializeComponent();
             this.Load          += frmDataIO_Load;
             this.InfoTarget     = null;
-            this.ReUseLine      = false;
+            this.ReUseLine      = true;
         }
 
         private void frmDataIO_Load(object sender, EventArgs e)
@@ -181,6 +181,7 @@ namespace IBE
                         Cursor = Cursors.WaitCursor;
                         lbProgess.Items.Clear();
                         Application.DoEvents();
+                        ReUseLine = false;
 
                         Program.Data.ClearAll();
 
@@ -192,7 +193,7 @@ namespace IBE
 
                         System.Threading.Thread.Sleep(50);
                         Cursor = Cursors.Default;
-
+                        ReUseLine = true;
                         Program.Data.Progress -= Data_Progress;
                     }
                 }
@@ -620,6 +621,13 @@ namespace IBE
                     {
                         if (File.Exists(Path.Combine(RNPath, "RegulatedNoise.exe")))
                         {
+                            Program.Data.Progress += Data_Progress;
+                            Cursor = Cursors.WaitCursor;
+
+                            lbProgess.Items.Clear();
+
+                            Application.DoEvents();
+
                             ImportData(null, importFlags, null, RNPath, true);
 
                             Program.Data.OldDataImportDone = true;
@@ -627,6 +635,9 @@ namespace IBE
                             cbImportPriceData.Enabled = false;
 
                             MessageBox.Show("Import has finished. Please restart ED-IBE", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                            Program.Data.Progress -= Data_Progress;
+                            Cursor = Cursors.Default;
                         }
                         else
                         {
@@ -642,6 +653,11 @@ namespace IBE
             }
         }
 
+        /// <summary>
+        /// exports the market data to a csv file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmdExportCSV_Click(object sender, EventArgs e)
         {
             try
@@ -658,13 +674,78 @@ namespace IBE
 
 		        if (result == DialogResult.OK)
                 {
+                    Program.Data.Progress += Data_Progress;
+                    Cursor = Cursors.WaitCursor;
+                    lbProgess.Items.Clear();
+
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 0, Total = 0 });
+
+                    Application.DoEvents();
+
                     Program.Data.ExportToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked);
+
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 1, Total = 1 });
+                    Program.Data.Progress -= Data_Progress;
+                    Cursor = Cursors.Default;
                 }
             }
             catch (Exception ex)
             {
+                Cursor = Cursors.Default;
                 cErr.processError(ex, "Error while exporting to csv");
             }
+        }
+
+        /// <summary>
+        /// imports the market data from a csv file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdImportFromCSV_Click(object sender, EventArgs e)
+        {
+            String sourcePath;
+            OpenFileDialog fbFileDialog;
+            try
+            {
+                sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+
+                fbFileDialog = new OpenFileDialog();
+                fbFileDialog.InitialDirectory = sourcePath;
+                fbFileDialog.Title = "Select the csv-file with market data to import...";
+                fbFileDialog.CheckFileExists    = true;
+                fbFileDialog.Filter             = "CVS files (*.csv)|*.csv|Text documents (*.txt)|*.txt|All files (*.*)|*.*";
+                fbFileDialog.FilterIndex = 3;
+
+
+                fbFileDialog.ShowDialog(this);
+
+                if ((!String.IsNullOrEmpty(fbFileDialog.FileName)) && System.IO.File.Exists(fbFileDialog.FileName))
+                {
+                    Program.Data.Progress += Data_Progress;
+                    Cursor = Cursors.WaitCursor;
+                    lbProgess.Items.Clear();
+
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 0, Total = 0 });
+
+                    SQL.EliteDBIO.enImportBehaviour importBehaviour = SQL.EliteDBIO.enImportBehaviour.OnlyNewer;
+                    if(rbImportSame.Checked)
+                        importBehaviour = SQL.EliteDBIO.enImportBehaviour.NewerOrEqual;
+
+                    Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 1, Total = 1 });
+
+                    Cursor = Cursors.Default;
+                    Program.Data.Progress -= Data_Progress;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                cErr.processError(ex, "Error while importing from csv");
+            }       
         }
     }
 }

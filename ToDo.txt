@@ -96,6 +96,12 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+
+SQL 0.1.0 beta 4
+   * fixed error in csvrow class
+   * added a switch for hiding ToDo messageboxes while debugging
+   * finished ex- and import of marketdata csv-files
+-------------------------------------------------------------------------------------         
 SQL 0.1.0 beta 3
    * improved behaviour when Appconfig is not accessible on start
    * improved behaviour when gamepath or product path not accessible on start

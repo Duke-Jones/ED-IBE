@@ -415,7 +415,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // dataToolStripMenuItem
@@ -424,13 +424,13 @@
             this.importToolStripMenuItem});
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
             this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.dataToolStripMenuItem.Text = "Data";
+            this.dataToolStripMenuItem.Text = "&Data";
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
-            this.importToolStripMenuItem.Text = "Import";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.importToolStripMenuItem.Text = "&Import && Export";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // tabEDDN

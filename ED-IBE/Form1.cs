@@ -226,7 +226,7 @@ namespace IBE
 
                 Program.SplashScreen.InfoAdd("prepare system/location view...");
                 //prePrepareSystemAndStationFields();
-                if (Debugger.IsAttached)
+                if (Debugger.IsAttached && Program.showToDo)
                     MessageBox.Show("todo");
                 Program.SplashScreen.InfoChange("prepare system/location view...<OK>");
 
@@ -1570,7 +1570,7 @@ namespace IBE
                         }
                         tbEddnStats.Text = output;
 
-                        if (Debugger.IsAttached)
+                        if (Debugger.IsAttached && Program.showToDo)
                             MessageBox.Show("TODO");
                         string commodity = ""; //' getLocalizedCommodity(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "Language, messageDictionary["itemName"]);
 
@@ -2235,7 +2235,7 @@ namespace IBE
             {
                 cmbSystemsAllSystems.SelectedValue = Systemname;
 
-                if (Debugger.IsAttached)
+                if (Debugger.IsAttached && Program.showToDo)
                     MessageBox.Show("TODO");
                 // throw new NotImplementedException();
                 //m_loadedSystemdata = _Milkyway.getSystem(Systemname);
@@ -2355,7 +2355,7 @@ namespace IBE
             {
                 cmbStationStations.SelectedItem    = Stationname;
 
-                if (Debugger.IsAttached)
+                if (Debugger.IsAttached && Program.showToDo)
                     MessageBox.Show("TODO");
                 //m_loadedStationdata                 = _Milkyway.getLocation(Systemname, Locationname);
                 m_StationIsNew                      = false;
@@ -2405,7 +2405,7 @@ namespace IBE
 
 //                if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
 //                                                                                      (x.SystemId == m_loadedStationdata.SystemId)))
-                if (Debugger.IsAttached)
+                if (Debugger.IsAttached && Program.showToDo)
                     MessageBox.Show("TODO");
 
                 if(false)

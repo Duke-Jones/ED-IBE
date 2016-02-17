@@ -21,8 +21,11 @@ using IBE.Enums_and_Utility_Classes;
 
 namespace IBE
 {
+
     public static class Program
     {
+        public static bool showToDo;
+
         public const String GIT_PATH                = @"https://github.com/Duke-Jones/ED-IBE";
 
         public const String NULLSTRING              = "?";
@@ -52,6 +55,12 @@ namespace IBE
         {
             try
             {
+#if ShowToDo
+    showToDo = true;    
+#else
+    showToDo = false;
+#endif
+
                 bool blnOK;
                 Cursor.Current = Cursors.WaitCursor;
 

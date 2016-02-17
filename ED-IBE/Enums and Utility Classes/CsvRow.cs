@@ -85,7 +85,7 @@ namespace IBE.Enums_and_Utility_Classes
                     SupplyLevel         = Parts[8];
                     SampleDate          = DateTime.Parse(Parts[9], CultureInfo.CurrentUICulture, DateTimeStyles.AssumeUniversal);
 
-                    if(Parts.Count() >= 10)
+                    if(Parts.Count() > 10)
                         SourceFileName  = Parts[10];
                     else
                         SourceFileName  = "";

@@ -30,6 +30,14 @@ namespace IBE.SQL
             Systems  = 2
         }
 
+        public enum enImportBehaviour
+        {
+            OnlyNewer    = 0,
+            NewerOrEqual = 1,
+            All          = 2
+        }
+
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -315,7 +323,7 @@ namespace IBE.SQL
         /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public object BaseTableIDToName(String Tablename, int? id)
+        public object BaseTableIDToName(String Tablename, int? id, String column = "")
         {
             try
             {
@@ -323,7 +331,13 @@ namespace IBE.SQL
                 if (id == null)
                     return null;
                 else
-                    return (String)(m_BaseData.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("id = {0}", id))[0][Tablename]);
+                {
+                    if(String.IsNullOrEmpty(column))
+                        return (String)(m_BaseData.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("id = {0}", id))[0][Tablename]);
+                    else
+                        return (String)(m_BaseData.Tables[String.Format("tb{0}", Tablename)].Select(String.Format("id = {0}", id))[0][column]);
+                }
+                    
 
             }
             catch (Exception ex)
@@ -2143,11 +2157,12 @@ namespace IBE.SQL
         /// firstly to import the stations from the same file.
         /// </summary>
         /// <param name="Stations"></param>
-        private void ImportPrices(List<EDStation> Stations)
+        private void ImportPrices(List<EDStation> Stations, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer)
         {
             try
             { 
                 StringBuilder sqlStringB = new StringBuilder();
+                String timeFilter = "";
                 Int32 Counter;
 
                 // for the prices is no transaction necessary, because we're changing
@@ -2183,11 +2198,29 @@ namespace IBE.SQL
                             getLevels(ref DemandLevel, ref SupplyLevel, Levels, StationListing);
 
                             // add only, if not existing or newer !!
-                            sqlStringB.Append(String.Format("( select if(SC1.cnt = 0, 0, SC1.id),{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}" +
+                                
+                            
+
+                            switch (importBehaviour)
+	                        {
+                                case enImportBehaviour.OnlyNewer:
+                                    timeFilter = String.Format("SC1.timestamp < {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
+                                    break;
+
+                                case enImportBehaviour.NewerOrEqual:
+                                    timeFilter = String.Format("SC1.timestamp <= {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
+                                    break;
+
+                                case enImportBehaviour.All:
+                                    timeFilter = String.Format("SC1.timestamp = SC1.timestamp", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
+                                    break;
+	                        }
+
+                            sqlStringB.Append(String.Format("(select if(SC1.cnt = 0, 0, SC1.id),{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}" +
                                                             "         from (select ID, station_id, commodity_id, Count(*) As cnt, timestamp from tbCommodityData" +
                                                             "              where station_id   = {0}" +
                                                             "              and   commodity_id = {1}) SC1" +
-                                                            "  where (SC1.timestamp < {9}) or (SC1.timestamp is null))",
+                                                            "  where ({10})",
                                                             Station.Id,
                                                             StationListing.CommodityId,
                                                             StationListing.SellPrice,
@@ -2197,8 +2230,8 @@ namespace IBE.SQL
                                                             StationListing.Supply,
                                                             SupplyLevel.ToNString("null"),
                                                             SourceID,
-                                                            DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime)
-                                                            ));
+                                                            DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime), 
+                                                            timeFilter));
 
                             AddComma = true;
                         }
@@ -2230,14 +2263,9 @@ namespace IBE.SQL
         /// <summary>
         /// Imports the prices from a file with csv-strings (e.g. the old autosave-file)
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="timeStampIsLocal">true: timestamps are handled as local time, otherwise utc is assumed</param>
         /// <returns></returns>
-        public Int32 ImportPricesFromCSVFile(String filename, Boolean timeStampIsLocal = false)
+        public Int32 ImportPricesFromCSVFile(String filename, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer)
         {
-            String currentLanguage;
-            DataTable newData;
-
             try
             {
                 String[] CSV_Strings    = new String[0];
@@ -2253,6 +2281,32 @@ namespace IBE.SQL
                 reader.Close();
 
 
+                ImportPricesFromCSVStrings(CSV_Strings, importBehaviour);
+
+                return CSV_Strings.Count();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing self collected price data", ex);
+            }
+        }
+
+        /// <summary>
+        /// Imports the prices from a list of csv-strings
+        /// </summary>
+        /// <param name="Stations"></param>
+        public void ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer)
+        {
+            Boolean MissingSystem   = false;
+            Boolean MissingStation  = false;
+            String currentLanguage;
+            DataTable newData;
+            List<EDStation> StationData;
+            List<EDSystem> SystemData = null;
+
+
+            try
+            {
                 // *****************************************************************
                 // START :section for automatically add unknown commodities
 
@@ -2301,30 +2355,6 @@ namespace IBE.SQL
                 // END : section for automatically add unknown commodities
                 // *****************************************************************
 
-                ImportPricesFromCSVStrings(CSV_Strings);
-
-                return CSV_Strings.Count();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while importing self collected price data", ex);
-            }
-        }
-
-        /// <summary>
-        /// Imports the prices from a list of csv-strings
-        /// </summary>
-        /// <param name="Stations"></param>
-        public void ImportPricesFromCSVStrings(String[] CSV_Strings)
-        {
-            Boolean MissingSystem   = false;
-            Boolean MissingStation  = false;
-
-            try
-            {
-                List<EDStation> StationData;
-                List<EDSystem> SystemData = null;
-
                 // convert csv-strings to EDStation-objects
                 StationData = fromCSV(CSV_Strings, ref SystemData);
 
@@ -2365,7 +2395,7 @@ namespace IBE.SQL
                 }
 
                 // now import the prices
-                ImportPrices(StationData);
+                ImportPrices(StationData, importBehaviour);
 
                 if (MissingSystem)
                 {
@@ -2700,7 +2730,6 @@ namespace IBE.SQL
         	    }
                 
 
-
                 sendProgressEvent("clearing database...<done>", 1, 1);
 
             }
@@ -2974,8 +3003,8 @@ namespace IBE.SQL
                 if (inCurrentLanguage)
                 {
                     // export names in user language
-                    sqlString = "select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.supply, D.timestamp" +
-                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
+                    sqlString = "select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
+                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C, tbeconomylevel E" +
                                 " where Sy.id           = St.system_id" + 
                                 " and   St.id           = D.station_id" +
                                 " and   D.commodity_id  = C.id" +
@@ -2984,7 +3013,7 @@ namespace IBE.SQL
                 else
                 {
                     // export names in default language (english)
-                    sqlString = "select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.supply, D.timestamp" +
+                    sqlString = "select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
                                 " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
                                 " where Sy.id           = St.system_id" + 
                                 " and   St.id           = D.station_id" +
@@ -3008,15 +3037,29 @@ namespace IBE.SQL
 
                 foreach (DataRow row in data.Rows)
                 {
+                    String Demand = "";
+                    String Supply = "";
+
+                    if (inCurrentLanguage)
+                    {
+                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "loclevel")).NToString("");
+                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "loclevel")).NToString("");
+                    }
+                    else
+                    {
+                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "level")).NToString("");
+                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "level")).NToString("");
+                    }
+
                     writer.WriteLine(row["systemname"] + ";" + 
                                      row["stationname"] + ";" + 
                                      row["commodity"] + ";" + 
                                      row["sell"] + ";" + 
                                      row["buy"] + ";" + 
                                      row["demand"] + ";" + 
-                                     ";" + 
+                                     Demand + ";" + 
                                      row["supply"] + ";" + 
-                                     ";" + 
+                                     Supply + ";" + 
                                      row["timestamp"]);
                     Counter++;
                     sendProgressEvent("export prices...", Counter, data.Rows.Count);
