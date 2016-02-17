@@ -140,10 +140,9 @@ namespace IBE
                 string FormName = this.GetType().Name;
                 Program.SplashScreen.setPosition(this.GetWindowData());
 
-                Boolean retry;
+                Boolean retry = false;
                 do
                 {
-                    retry = false;
                     try
                     {
                         Program.SplashScreen.InfoAdd("load settings...");
@@ -159,9 +158,13 @@ namespace IBE
                         Program.Logger.Log("  - loaded game settings");
                         Program.SplashScreen.InfoAppendLast("<OK>");
 
+                        retry = false;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        if (retry)
+                            throw new Exception("could't verify productpath and/or gamepath", ex);
+
                         Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ProductsPath", "");
                         Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GamePath", "");
                         retry = true;

@@ -641,5 +641,30 @@ namespace IBE
                 cErr.showError(ex, "Error while importing the existing RN-data");
             }
         }
+
+        private void cmdExportCSV_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+                saveFileDialog1.Filter              = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                saveFileDialog1.DefaultExt          = "csv";
+                saveFileDialog1.Title               = "Export market data";
+                saveFileDialog1.OverwritePrompt     = true;
+                saveFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+
+	            DialogResult result = saveFileDialog1.ShowDialog();
+
+		        if (result == DialogResult.OK)
+                {
+                    Program.Data.ExportToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked);
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while exporting to csv");
+            }
+        }
     }
 }

@@ -1058,7 +1058,7 @@ namespace IBE.SQL
         /// <returns></returns>
         public static string DTEscape(string str)
         {
-            return System.Text.RegularExpressions.Regex.Replace(str, @"[\x00'""\b\n\r\t\cZ\\%_]",
+            return System.Text.RegularExpressions.Regex.Replace(str, @"[\x00'""\b\n\r\t\cZ\\%]",
                 delegate(System.Text.RegularExpressions.Match match)
                 {
                     string v = match.Value;

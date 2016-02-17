@@ -96,6 +96,13 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+SQL 0.1.0 beta 3
+   * improved behaviour when Appconfig is not accessible on start
+   * improved behaviour when gamepath or product path not accessible on start
+   * problem with missing system id when importing "own_stations" or "commanders log" solved
+   * fixed update strings to current language after import of new data
+   * added market data export to csv
+-------------------------------------------------------------------------------------         
 SQL 0.1.0 beta 2
    * small fixess on data import
 -------------------------------------------------------------------------------------         

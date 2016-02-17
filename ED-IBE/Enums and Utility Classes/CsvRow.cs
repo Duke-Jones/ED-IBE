@@ -83,7 +83,7 @@ namespace IBE.Enums_and_Utility_Classes
                     DemandLevel         = Parts[6];
                     Supply              = Parts[7] == "" ? 0 : Decimal.Parse(Parts[7]);
                     SupplyLevel         = Parts[8];
-                    SampleDate          = DateTime.Parse(Parts[9], CultureInfo.CurrentUICulture);
+                    SampleDate          = DateTime.Parse(Parts[9], CultureInfo.CurrentUICulture, DateTimeStyles.AssumeUniversal);
 
                     if(Parts.Count() >= 10)
                         SourceFileName  = Parts[10];

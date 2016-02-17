@@ -114,7 +114,8 @@ namespace IBE
                     if (AppConfig == null)
                     {
                         // ignore if it was loaded before
-                        cErr.processError(ex, String.Format("Error while loading ED-Appconfig from file <{0}>", configFile));
+                        throw new Exception(String.Format("Error while loading ED-Appconfig from file <{0}>", configFile), ex);
+                        //cErr.processError(ex, String.Format("Error while loading ED-Appconfig from file <{0}>", configFile));
                     }
 
                 }

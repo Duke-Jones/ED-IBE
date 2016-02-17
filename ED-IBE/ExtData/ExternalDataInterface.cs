@@ -105,6 +105,36 @@ namespace IBE.ExtData
         String m_RetrievedSystem    = "";
         String m_RetrievedStation   = "";
         
+        public ExternalDataInterface()
+        {
+            //var profileExists = EliteCompanion.Instance.LoadProfile("test@email.com");
+            //if (!profileExists)
+            //{
+            //    EliteCompanion.Instance.CreateProfile("test@email.com", "password");
+            //}
+
+            
+
+
+            //var response = await EliteCompanion.Instance.GetProfileData();
+            //var json = "";
+            //if (response.LoginStatus == ZNS.EliteCompanionAPI.Models.LoginStatus.PendingVerification)
+            //{
+            //    Console.WriteLine("Enter verification code sent as email:");
+            //    string code = Console.ReadLine();
+            //    var verificationResponse = EliteCompanion.Instance.SubmitVerification(code);
+            //    if (verificationResponse.Success)
+            //    {
+            //        response = EliteCompanion.Instance.GetProfileData();
+            //        json = response.Json ?? "";
+            //    }
+            //}
+            //Console.Write(response.Json);
+            //Console.ReadLine();
+        
+        }
+
+
         /// <summary>
         /// gets the current location and saves market data to a file
         /// </summary>

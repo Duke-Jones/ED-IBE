@@ -1448,6 +1448,7 @@ namespace IBE.SQL
         {
             String sqlString;
             dsEliteDB.tbstationsRow[] FoundRows;
+            dsEliteDB.tbsystemsRow[] FoundSysRows;
             DateTime Timestamp_new, Timestamp_old;
             Int32 ImportCounter = 0;
             Int32 currentSelfCreatedIndex = -1;
@@ -1491,12 +1492,24 @@ namespace IBE.SQL
                     if(Station.Name == "Glass City")
                         Debug.Print("stop");
 
+                    // is the system id changed ? --> get the new system id, otherwise the original
+                    if (changedSystemIDs.TryGetValue(Station.SystemId, out SystemID))
+                        Station.SystemId = SystemID;
+
+                    // if there are missing system ids, try to get them
+                    if ((Station.SystemId == 0) && (!String.IsNullOrEmpty(Station.SystemName)))
+                    {
+                        FoundSysRows = (dsEliteDB.tbsystemsRow[])Data.tbsystems.Select("systemname=" + DBConnector.SQLAString(DBConnector.DTEscape(Station.SystemName)));
+
+                        if((FoundSysRows != null) && (FoundSysRows.Count() > 0))
+                        {
+                            // got it - set the id
+                            Station.SystemId = FoundSysRows[0].id;
+                        }
+                    }
+
                     if (!String.IsNullOrEmpty(Station.Name.Trim()) && (Station.SystemId != 0))
                     {
-                        // is the system id changed ? --> get the new system id, otherwise the original
-                        if (changedSystemIDs.TryGetValue(Station.SystemId, out SystemID))
-                            Station.SystemId = SystemID;
-
                         // self-created stations don't have the correct id so they must be identified by name    
                         FoundRows = (dsEliteDB.tbstationsRow[])Data.tbstations.Select("stationname=" + DBConnector.SQLAString(DBConnector.DTEscape(Station.Name)) + " and " +
                                                                      "system_id =  " + Station.SystemId);
@@ -1573,6 +1586,8 @@ namespace IBE.SQL
                             Program.DBCon.TableUpdate(Data.tbstationeconomy);
                         }
                     }
+                    else
+                        Debug.Print("why");
 
 
                     Counter++;
@@ -1982,6 +1997,7 @@ namespace IBE.SQL
             List<EDStation> Stations = new List<EDStation>();
             Int32 currentIndex = 0;
             Int32 Counter = 0;
+            Dictionary<int, int> changedSystemIDs;
 
             try
             {
@@ -2000,7 +2016,7 @@ namespace IBE.SQL
                         String   System    = Event["System"].ToString().Trim();
                         Systems.Add(new EDSystem{Name = System});
                     }
-                    ImportSystems_Own(ref Systems, true);
+                    changedSystemIDs = ImportSystems_Own(ref Systems, true);
 
                     foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
                     {
@@ -2008,11 +2024,11 @@ namespace IBE.SQL
                         Stations.Add(new EDStation{Name = Station, SystemId = Systems[currentIndex].Id});
                         currentIndex++;
                     }
-                    ImportStations_Own(Stations, new Dictionary<Int32, Int32>(), true);
+                    ImportStations_Own(Stations, changedSystemIDs, true);
 
                     foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
                     {
-                        DateTime EventTime = DateTime.Parse((String)Event["EventDate"], CultureInfo.CurrentUICulture , DateTimeStyles.None);
+                        DateTime EventTime = DateTime.Parse((String)Event["EventDate"], CultureInfo.CurrentUICulture , DateTimeStyles.AssumeUniversal);
                         String   System    = Event["System"].ToString().Trim();
                         String   Station   = StructureHelper.CombinedNameToStationName((String)Event["Station"]).Trim();
                         String   EventType = Event["EventType"].ToString().Trim().Length == 0 ? "Other" : Event["EventType"].ToString().Trim();
@@ -2240,7 +2256,7 @@ namespace IBE.SQL
                 // *****************************************************************
                 // START :section for automatically add unknown commodities
 
-                currentLanguage     = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "Language");
+                currentLanguage     = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
                 newData             = new DataTable();
                 newData.TableName   = "Names";
                 newData.Columns.Add(Program.BASE_LANGUAGE, typeof(String));
@@ -2330,6 +2346,21 @@ namespace IBE.SQL
                 if (MissingSystem || MissingStation)
                 {
                     // add unknown stations
+                    foreach (EDStation Station in StationData)
+                    {
+                        // first get all missing system ids
+                        if (Station.SystemId == 0)
+                        {
+                            EDSystem thisSystem = SystemData.FirstOrDefault(x => x.Name == Station.SystemName);
+
+                            if(thisSystem != null)
+                            {
+                                // got it - set the id
+                                Station.SystemId = thisSystem.Id;
+                            }
+                        }
+                    }
+
                     ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
                 }
 
@@ -2535,7 +2566,7 @@ namespace IBE.SQL
             try
             {
 
-                String currentLanguage = Program.DBCon.getIniValue("Localization", "currentLanguage", "eng", false);
+                String currentLanguage = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
 
                 switchLanguage(currentLanguage);
 
@@ -2926,6 +2957,81 @@ namespace IBE.SQL
             }
         }
 #endregion
+
+        /// <summary>
+        /// exports the market data to a file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void ExportToCSV(string fileName, Boolean inCurrentLanguage)
+        {
+            String sqlString;
+            DataTable data;
+            Int32 Counter;
+
+            try
+            {
+
+                if (inCurrentLanguage)
+                {
+                    // export names in user language
+                    sqlString = "select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.supply, D.timestamp" +
+                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
+                                " where Sy.id           = St.system_id" + 
+                                " and   St.id           = D.station_id" +
+                                " and   D.commodity_id  = C.id" +
+                                " order by Sy.systemname, St.stationname, C.loccommodity"; 
+                }
+                else
+                {
+                    // export names in default language (english)
+                    sqlString = "select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.supply, D.timestamp" +
+                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
+                                " where Sy.id           = St.system_id" + 
+                                " and   St.id           = D.station_id" +
+                                " and   D.commodity_id  = C.id" +
+                                " order by Sy.systemname, St.stationname, C.commodity"; 
+                }
+
+                if(System.IO.File.Exists(fileName))
+                    System.IO.File.Delete(fileName);
+
+                data        = new DataTable();
+                Counter     = 0;
+
+                Program.DBCon.Execute(sqlString, data);
+
+                sendProgressEvent("export prices...", 0, 0);
+
+                var writer = new StreamWriter(File.OpenWrite(fileName));
+                writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
+                
+
+                foreach (DataRow row in data.Rows)
+                {
+                    writer.WriteLine(row["systemname"] + ";" + 
+                                     row["stationname"] + ";" + 
+                                     row["commodity"] + ";" + 
+                                     row["sell"] + ";" + 
+                                     row["buy"] + ";" + 
+                                     row["demand"] + ";" + 
+                                     ";" + 
+                                     row["supply"] + ";" + 
+                                     ";" + 
+                                     row["timestamp"]);
+                    Counter++;
+                    sendProgressEvent("export prices...", Counter, data.Rows.Count);
+                }
+
+                sendProgressEvent("export prices...", 1, 1);
+
+                writer.Close();
+                writer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while exporting to csv file", ex);
+            }
+        }
 
     }
 

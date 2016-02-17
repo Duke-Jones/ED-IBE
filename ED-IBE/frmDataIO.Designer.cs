@@ -37,15 +37,20 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.cmdClearAll = new System.Windows.Forms.Button();
             this.cmdImportCommandersLog = new System.Windows.Forms.Button();
+            this.cmdExportCSV = new System.Windows.Forms.Button();
             this.fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.lbProgess = new System.Windows.Forms.ListBox();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
             this.gbRepeat = new System.Windows.Forms.GroupBox();
             this.cbClear = new System.Windows.Forms.GroupBox();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbDefaultLanguage = new System.Windows.Forms.RadioButton();
+            this.rbUserLanguage = new System.Windows.Forms.RadioButton();
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.cbClear.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmdImportOldData
@@ -119,6 +124,17 @@
             this.cmdImportCommandersLog.UseVisualStyleBackColor = true;
             this.cmdImportCommandersLog.Click += new System.EventHandler(this.cmdImportCommandersLog_Click);
             // 
+            // cmdExportCSV
+            // 
+            this.cmdExportCSV.Location = new System.Drawing.Point(12, 19);
+            this.cmdExportCSV.Name = "cmdExportCSV";
+            this.cmdExportCSV.Size = new System.Drawing.Size(276, 34);
+            this.cmdExportCSV.TabIndex = 0;
+            this.cmdExportCSV.Text = "Export Marketdata to CSV";
+            this.ttToolTip.SetToolTip(this.cmdExportCSV, "Exports all marketdata into a csv-file");
+            this.cmdExportCSV.UseVisualStyleBackColor = true;
+            this.cmdExportCSV.Click += new System.EventHandler(this.cmdExportCSV_Click);
+            // 
             // lbProgess
             // 
             this.lbProgess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -167,10 +183,45 @@
             // 
             this.ofdFileDialog.FileName = "openFileDialog1";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rbUserLanguage);
+            this.groupBox1.Controls.Add(this.rbDefaultLanguage);
+            this.groupBox1.Controls.Add(this.cmdExportCSV);
+            this.groupBox1.Location = new System.Drawing.Point(714, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(345, 283);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "CVS";
+            // 
+            // rbDefaultLanguage
+            // 
+            this.rbDefaultLanguage.AutoSize = true;
+            this.rbDefaultLanguage.Checked = true;
+            this.rbDefaultLanguage.Location = new System.Drawing.Point(12, 54);
+            this.rbDefaultLanguage.Name = "rbDefaultLanguage";
+            this.rbDefaultLanguage.Size = new System.Drawing.Size(214, 17);
+            this.rbDefaultLanguage.TabIndex = 1;
+            this.rbDefaultLanguage.TabStop = true;
+            this.rbDefaultLanguage.Text = "export names in base language (english)";
+            this.rbDefaultLanguage.UseVisualStyleBackColor = true;
+            // 
+            // rbUserLanguage
+            // 
+            this.rbUserLanguage.AutoSize = true;
+            this.rbUserLanguage.Location = new System.Drawing.Point(12, 71);
+            this.rbUserLanguage.Name = "rbUserLanguage";
+            this.rbUserLanguage.Size = new System.Drawing.Size(282, 17);
+            this.rbUserLanguage.TabIndex = 2;
+            this.rbUserLanguage.Text = "export names in user preferred language (from settings)";
+            this.rbUserLanguage.UseVisualStyleBackColor = true;
+            // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1107, 664);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cbClear);
             this.Controls.Add(this.gbRepeat);
             this.Controls.Add(this.gbFirstTime);
@@ -182,6 +233,8 @@
             this.gbRepeat.ResumeLayout(false);
             this.gbRepeat.PerformLayout();
             this.cbClear.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -201,5 +254,9 @@
         private System.Windows.Forms.Button cmdClearAll;
         private System.Windows.Forms.OpenFileDialog ofdFileDialog;
         private System.Windows.Forms.Button cmdImportCommandersLog;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button cmdExportCSV;
+        private System.Windows.Forms.RadioButton rbUserLanguage;
+        private System.Windows.Forms.RadioButton rbDefaultLanguage;
     }
 }
