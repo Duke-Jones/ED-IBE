@@ -25,6 +25,7 @@ The database runs as a normal process (not as a service on you pc)
 * Commanders Log
 * getting market data by EDMC (fully integrated by EDMC commandline version, but has to be installed manually)
 * overtaking existing data from the old RegulatedNoise
+* re-usable import and export of market data (csv-files -> for exchange with friends)
 
 **improvements:**
 * getting market data by EDMC (fully integrated by EDMC commandline version, but has to be installed manually)
@@ -41,7 +42,6 @@ The database runs as a normal process (not as a service on you pc)
 * ocr (take EDMC instead)
 * webserver
 * EDDN interface
-* no re-usable import and export of market data at the moment (for exchange with friends)
 
 **Installation:**  
 Get the latest release from  
