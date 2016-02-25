@@ -227,7 +227,7 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in saveSetting");
+                cErr.processError(ex, "Error in saveSetting");
             }
 
             return retValue;
@@ -537,7 +537,7 @@ namespace IBE.SQL
             {
                 m_inloadSetting--;
                 m_currentLoadingObject = null;
-                cErr.showError(ex, "Error in loadSetting");
+                cErr.processError(ex, "Error in loadSetting");
             }
         }
 

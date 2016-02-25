@@ -231,6 +231,7 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
+            this.editLocalizationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -421,7 +422,8 @@
             // dataToolStripMenuItem
             // 
             this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importToolStripMenuItem});
+            this.importToolStripMenuItem,
+            this.editLocalizationsToolStripMenuItem});
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
             this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.dataToolStripMenuItem.Text = "&Data";
@@ -429,7 +431,7 @@
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.importToolStripMenuItem.Text = "&Import && Export";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
@@ -2457,6 +2459,13 @@
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
+            // editLocalizationsToolStripMenuItem
+            // 
+            this.editLocalizationsToolStripMenuItem.Name = "editLocalizationsToolStripMenuItem";
+            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
+            this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2721,6 +2730,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtExtInfo2;
+        private System.Windows.Forms.ToolStripMenuItem editLocalizationsToolStripMenuItem;
     }
 }
 

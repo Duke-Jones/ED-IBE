@@ -148,6 +148,12 @@
     </Compile>
     <Compile Include="FileScanner\EDLogfileScanner.cs" />
     <Compile Include="GUIColors.cs" />
+    <Compile Include="LanguageEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LanguageEdit.Designer.cs">
+      <DependentUpon>LanguageEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainTabs\Settings.cs" />
     <Compile Include="MainTabs\tabCommandersLog.cs">
       <SubType>UserControl</SubType>
@@ -370,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\DataGridViewSettings.resx">
       <DependentUpon>DataGridViewSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LanguageEdit.resx">
+      <DependentUpon>LanguageEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainTabs\tabCommandersLog.resx">
       <DependentUpon>tabCommandersLog.cs</DependentUpon>

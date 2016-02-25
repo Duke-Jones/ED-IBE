@@ -56,32 +56,32 @@ namespace IBE
             }
         }
 
-        static public void showError(Exception ex, string Infotext, Boolean ForceEnd = false)
-        {
-            string Info;
+        //static public void processError(Exception ex, string Infotext, Boolean ForceEnd = false)
+        //{
+        //    string Info;
 
-            // first log the complete exception 
-            _logger.Log(Infotext, true);
-            _logger.Log(ex.ToString(), true);
-            _logger.Log(ex.Message, true);
-            _logger.Log(ex.StackTrace, true);
-            if (ex.InnerException != null)
-                _logger.Log(ex.InnerException.ToString(), true);
+        //    // first log the complete exception 
+        //    _logger.Log(Infotext, true);
+        //    _logger.Log(ex.ToString(), true);
+        //    _logger.Log(ex.Message, true);
+        //    _logger.Log(ex.StackTrace, true);
+        //    if (ex.InnerException != null)
+        //        _logger.Log(ex.InnerException.ToString(), true);
 
-            if (Infotext.Trim().Length > 0) 
-                Info = Infotext + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine;
-            else
-                Info = ex.Message + Environment.NewLine;
+        //    if (Infotext.Trim().Length > 0) 
+        //        Info = Infotext + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine;
+        //    else
+        //        Info = ex.Message + Environment.NewLine;
             
-            if (ex.InnerException != null)
-                Info += Environment.NewLine + ex.GetBaseException().Message;
+        //    if (ex.InnerException != null)
+        //        Info += Environment.NewLine + ex.GetBaseException().Message;
 
-            Info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
-            Info += "Create a dump file ?";
+        //    Info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
+        //    Info += "Create a dump file ?";
 
-            if (MessageBox.Show(Info, "Exception occured",MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-               Program.CreateMiniDump("RegulatedNoiseDump.dmp");
+        //    if (MessageBox.Show(Info, "Exception occured",MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+        //       Program.CreateMiniDump("RegulatedNoiseDump.dmp");
 
-        }
+        //}
     }
 }

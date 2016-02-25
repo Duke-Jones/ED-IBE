@@ -47,7 +47,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in Load-Event");
+                cErr.processError(ex, "Error in Load-Event");
             }
         }
 
@@ -158,7 +158,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while reporting progress");
+                cErr.processError(ex, "Error while reporting progress");
             }
         }
 
@@ -202,7 +202,7 @@ namespace IBE
             {
                 Cursor = Cursors.Default;
 
-                cErr.showError(ex, "Error in cmdClearAll_Click");
+                cErr.processError(ex, "Error in cmdClearAll_Click");
             }
         }
 
@@ -536,6 +536,11 @@ namespace IBE
                         Program.Data.updateVisitedFlagsFromBase();
                         Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 1, Total = 1 });
 
+                        // insert missing localization entries
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities", Index = 0, Total = 0 });
+                        Program.Data.AddMissingLocalizationEntries();
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities...", Index = 1, Total = 1 });
+
                         // update localization of all commodities
                         Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating translation of commodities", Index = 0, Total = 0 });
                         Program.Data.updateTranslation();
@@ -649,7 +654,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.showError(ex, "Error while importing the existing RN-data");
+                cErr.processError(ex, "Error while importing the existing RN-data");
             }
         }
 
@@ -746,6 +751,18 @@ namespace IBE
                 Cursor = Cursors.Default;
                 cErr.processError(ex, "Error while importing from csv");
             }       
+        }
+
+        private void cmdTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.Data.AddMissingLocalizationEntries();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex);
+            }
         }
     }
 }

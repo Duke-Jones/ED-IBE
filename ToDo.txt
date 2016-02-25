@@ -97,6 +97,9 @@ todo:
 *************************************************************************************
 
 
+SQL 0.1.1 
+   * added support to edit translations of commodities etc.
+-------------------------------------------------------------------------------------         
 SQL 0.1.0 beta 4
    * fixed error in csvrow class
    * added a switch for hiding ToDo messageboxes while debugging

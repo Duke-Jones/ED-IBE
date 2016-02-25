@@ -201,7 +201,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while loading displaysettigns from event");
+                cErr.processError(ex, "Error while loading displaysettigns from event");
             }
         }
 

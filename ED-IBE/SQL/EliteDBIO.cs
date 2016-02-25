@@ -170,12 +170,14 @@ namespace IBE.SQL
                                                             "visystemsandstations", 
                                                             "tbcommoditylocalization", 
                                                             "tblevellocalization", 
+                                                            "tbcategorylocalization", 
                                                             "tbcategory", 
                                                             "tbeconomylevel", 
                                                             "tbvisitedsystems", 
                                                             "tbvisitedstations", 
                                                             "tbpower",
-                                                            "tbpowerstate"};
+                                                            "tbpowerstate", 
+                                                            "tblanguage"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -786,6 +788,60 @@ namespace IBE.SQL
             }
         }
 
+        /// <summary>
+        /// adds for all items (commodities, levels, categories) the missing entries in the localization tables
+        /// </summary>
+        internal void AddMissingLocalizationEntries()
+        {
+            string sqlString;
+            dsEliteDB.tblanguageDataTable data;
+
+            try
+            {
+                data = new dsEliteDB.tblanguageDataTable();
+
+                sqlString = "select * from tbLanguage order by id";
+                
+                Program.DBCon.Execute(sqlString, data);
+
+                foreach (dsEliteDB.tblanguageRow dRow in data.Rows)
+	            {
+                    /* add missing entrys for commodities */
+                    sqlString = String.Format("insert into tbcommoditylocalization (commodity_id, language_id, locname)" + 
+                                              "   select C.id as commodity_id, {0} as language_id, C.commodity from tbcommodity C" +
+                                              "                    left join" +
+                                              "                 (select * from tbcommoditylocalization where language_id = {0}) L" +
+                                              "                    on C.ID = L.commodity_id" +
+                                              "      where L.commodity_id is null;", 
+                                              dRow.id);
+                    Program.DBCon.Execute(sqlString);  
+
+                    /* add missing entrys for categories */
+                    sqlString = String.Format("insert into tbcategorylocalization (category_id, language_id, locname)" + 
+                                              "   select C.id as category_id, {0} as language_id, C.category from tbcategory C" +
+                                              "                    left join" +
+                                              "                 (select * from tbcategorylocalization where language_id = {0}) L" +
+                                              "                    on C.ID = L.category_id" +
+                                              "      where L.category_id is null;", 
+                                              dRow.id);
+                    Program.DBCon.Execute(sqlString);  
+
+                    /* add missing entrys for economylevels */
+                    sqlString = String.Format("insert into tblevellocalization (economylevel_id, language_id, locname)" + 
+                                              "   select C.id as economylevel_id, {0} as language_id, C.level from tbeconomylevel C" +
+                                              "                    left join" +
+                                              "                 (select * from tblevellocalization where language_id = {0}) L" +
+                                              "                    on C.ID = L.economylevel_id" +
+                                              "      where L.economylevel_id is null;", 
+                                              dRow.id);
+                    Program.DBCon.Execute(sqlString);  
+	            }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding missing localization entrys", ex);
+            }        
+        }
 
 #endregion
 
@@ -2504,6 +2560,51 @@ namespace IBE.SQL
             }
         }
 
+        /// <summary>
+        /// function deletes all exept the newest price for a commodity
+        /// on a station, if there exists more than one
+        /// </summary>
+        public void DeleteMultiplePrices()
+        {
+            String sqlString;
+            DataTable data = new DataTable();
+
+            try 
+	        {	        
+		        sqlString = "select id from tbCommodityData C1" +
+                            "	where exists(" +
+                            "		select C2.station_id, C2.commodity_id, count(*) as cnt" +
+                            "		from tbCommodityData C2" +
+                            "		where C2.station_id   = C1.station_id" +
+                            "		 and  C2.commodity_id = C1.commodity_id" +
+                            "		group by C2.station_id, C2.commodity_id" +
+                            "		having cnt > 1)" +
+                            "	order by timestamp asc" +
+                            "	limit 1";
+
+                if (Program.DBCon.Execute(sqlString, data) > 0)
+                {
+                    sqlString = "";
+                    foreach (DataRow deleteID in data.Rows)
+                    {
+                        if(sqlString.Length > 0)
+                            sqlString += " or ";
+
+                        sqlString += String.Format("id = {0}", deleteID[0].ToString());
+                    }
+
+                    sqlString = "delete from tbCommodityData where " + sqlString;
+
+                    Program.DBCon.Execute(sqlString, data);
+                }
+	        }
+	        catch (Exception ex)
+	        {
+		        throw new Exception("Error while deleting mulitple prices", ex);
+	        }
+
+        
+        }
 #endregion
 
 #region general

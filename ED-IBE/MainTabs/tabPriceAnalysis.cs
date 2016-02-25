@@ -111,7 +111,7 @@ namespace IBE.MTPriceAnalysis
                 m_DGVTables.Add(cmbStation1.Name,               Data);
                 m_DGVTables.Add(cmbStation2.Name,               Data);
                 m_DGVTables.Add(cmbByStation.Name,              Data);
-                m_DGVTables.Add(cmbByCommodity.Name,            new DataTable());
+                m_DGVTables.Add(cmbByCommodity.Name,            Program.Data.BaseData.tbcommodity);
                 m_DGVTables.Add(cmbSystemBase.Name,             new DataTable());
 
 
@@ -203,7 +203,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in m_DataSource_DataChanged");
+                cErr.processError(ex, "Error in m_DataSource_DataChanged");
             }
         }
 
@@ -266,7 +266,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while starting the filter");
+                cErr.processError(ex, "Error while starting the filter");
             }
         }
 
@@ -283,7 +283,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while filtering stations");
+                cErr.processError(ex, "Error while filtering stations");
             }
         }
 
@@ -374,7 +374,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error after changing active tabindex");
+                cErr.processError(ex, "Error after changing active tabindex");
             }
         }
 
@@ -396,7 +396,7 @@ namespace IBE.MTPriceAnalysis
 	                }
 	                catch (Exception ex)
 	                {
-		                cErr.showError(ex, "Error while refresing data (inline)");
+		                cErr.processError(ex, "Error while refresing data (inline)");
 	                }
                 }
             }
@@ -551,7 +551,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while saving new splitter position");
+                cErr.processError(ex, "Error while saving new splitter position");
             }
         }
 
@@ -610,7 +610,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cbMaxDistanceToStar_CheckedChanged");
+                cErr.processError(ex, "Error in cbMaxDistanceToStar_CheckedChanged");
             }
         }
 
@@ -626,7 +626,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in rbOrderByStation_CheckedChanged");
+                cErr.processError(ex, "Error in rbOrderByStation_CheckedChanged");
             }
         }
 
@@ -644,7 +644,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cbOrderByAmount_CheckedChanged");
+                cErr.processError(ex, "Error in cbOrderByAmount_CheckedChanged");
             }
         }
 
@@ -663,7 +663,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtOrderByAmount_KeyDown");
+                cErr.processError(ex, "Error in txtOrderByAmount_KeyDown");
             }
         }
 
@@ -682,7 +682,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbSystemLightYears_KeyDown");
+                cErr.processError(ex, "Error in cmbSystemLightYears_KeyDown");
             }
         }
 
@@ -700,7 +700,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbSystemLightYears_SelectedIndexChanged");
+                cErr.processError(ex, "Error in cmbSystemLightYears_SelectedIndexChanged");
             }
         }
 
@@ -718,7 +718,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbSystemLightYears_Leave");
+                cErr.processError(ex, "Error in cmbSystemLightYears_Leave");
             }
         }
 
@@ -736,7 +736,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmdStationLightSeconds_SelectedIndexChanged");
+                cErr.processError(ex, "Error in cmdStationLightSeconds_SelectedIndexChanged");
             }
         }
 
@@ -754,7 +754,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmdStationLightSeconds_Leave");
+                cErr.processError(ex, "Error in cmdStationLightSeconds_Leave");
             }
         }
 
@@ -773,7 +773,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmdStationLightSeconds_KeyDown");
+                cErr.processError(ex, "Error in cmdStationLightSeconds_KeyDown");
             }
         }
 
@@ -789,7 +789,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbMinLandingPadSize_KeyDown");
+                cErr.processError(ex, "Error in cmbMinLandingPadSize_KeyDown");
             }
         }
 
@@ -804,7 +804,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbMinLandingPadSize_Leave");
+                cErr.processError(ex, "Error in cmbMinLandingPadSize_Leave");
             }
         }
 
@@ -819,7 +819,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbMinLandingPadSize_SelectedIndexChanged");
+                cErr.processError(ex, "Error in cmbMinLandingPadSize_SelectedIndexChanged");
             }
         }
 
@@ -838,7 +838,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbMaxTripDistance_KeyDown");
+                cErr.processError(ex, "Error in cmbMaxTripDistance_KeyDown");
             }
         }
 
@@ -857,7 +857,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbMaxTripDistance_SelectedIndexChanged");
+                cErr.processError(ex, "Error in cmbMaxTripDistance_SelectedIndexChanged");
             }
         }
 
@@ -875,7 +875,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbMaxTripDistance_Leave");
+                cErr.processError(ex, "Error in cmbMaxTripDistance_Leave");
             }
         }
 
@@ -893,7 +893,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while switching diagram view (all commodities)");
+                cErr.processError(ex, "Error while switching diagram view (all commodities)");
             }
         }
 
@@ -908,7 +908,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cbMinLandingPadSize_CheckedChanged");
+                cErr.processError(ex, "Error in cbMinLandingPadSize_CheckedChanged");
             }
         }
 
@@ -932,7 +932,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while changing the sort order (all commodities)");
+                cErr.processError(ex, "Error while changing the sort order (all commodities)");
             }
         }
 
@@ -1029,7 +1029,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while starting recalculation of the best profit route");
+                cErr.processError(ex, "Error while starting recalculation of the best profit route");
             }
         }
 
@@ -1047,7 +1047,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in dgvStationToStationRoutes_RowEnter");
+                cErr.processError(ex, "Error in dgvStationToStationRoutes_RowEnter");
             }
         }
 
@@ -1157,7 +1157,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while selecting a new combobox value");
+                cErr.processError(ex, "Error while selecting a new combobox value");
             }
         }
 
@@ -1222,7 +1222,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while switching both combobox values");
+                cErr.processError(ex, "Error while switching both combobox values");
             }
         }
 
@@ -1243,7 +1243,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbByStation_SelectedValueChanged");
+                cErr.processError(ex, "Error in cmbByStation_SelectedValueChanged");
             }                
         }
 
@@ -1286,7 +1286,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while changing selected index");
+                cErr.processError(ex, "Error while changing selected index");
             }
         }
 
@@ -1318,15 +1318,15 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
-                m_DataSource.loadCommodities(m_DGVTables[cmbByCommodity.Name]);
+                //m_DataSource.loadCommodities(m_DGVTables[cmbByCommodity.Name]);
 
                 if(cmbByCommodity.ValueMember == "")
                 {
                     cmbByCommodity.ValueMember      = "id";
-                    cmbByCommodity.DisplayMember    = "Commodity";
+                    cmbByCommodity.DisplayMember    = "loccommodity";
                 }
 
-                m_BindingSources[cmbByCommodity.Name].Sort = "Commodity";
+                m_BindingSources[cmbByCommodity.Name].Sort = "loccommodity";
             }
             catch (Exception ex)
             {
@@ -1377,7 +1377,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in SplitContainer_Resize");
+                cErr.processError(ex, "Error in SplitContainer_Resize");
             }
         }
 

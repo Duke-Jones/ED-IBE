@@ -122,7 +122,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in m_DataSource_DataChanged");
+                cErr.processError(ex, "Error in m_DataSource_DataChanged");
             }
         }
 
@@ -255,7 +255,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while showing warnlevels from settingstab");
+                cErr.processError(ex, "Error while showing warnlevels from settingstab");
             }
         }
 
@@ -317,7 +317,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in ComboBox_CheckedChanged");
+                cErr.processError(ex, "Error in ComboBox_CheckedChanged");
             }
         }
 
@@ -336,7 +336,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtOCRPixelThreshold_KeyDown");
+                cErr.processError(ex, "Error in txtOCRPixelThreshold_KeyDown");
             }
         }
 
@@ -354,7 +354,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtOCRPixelThreshold_Leave");
+                cErr.processError(ex, "Error in txtOCRPixelThreshold_Leave");
             }
         }
 
@@ -373,7 +373,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtOCRPixelAmount_KeyDown");
+                cErr.processError(ex, "Error in txtOCRPixelAmount_KeyDown");
             }
         }
 
@@ -391,7 +391,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtOCRPixelAmount_Leave");
+                cErr.processError(ex, "Error in txtOCRPixelAmount_Leave");
             }
         }
 
@@ -410,7 +410,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtGUIColorCutoffLevel_KeyDown");
+                cErr.processError(ex, "Error in txtGUIColorCutoffLevel_KeyDown");
             }
         }
 
@@ -428,7 +428,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in txtGUIColorCutoffLevel_Leave");
+                cErr.processError(ex, "Error in txtGUIColorCutoffLevel_Leave");
             }
         }
 
@@ -444,7 +444,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in nudPurgeOldDataDays_KeyDown");
+                cErr.processError(ex, "Error in nudPurgeOldDataDays_KeyDown");
             }
         }
 
@@ -459,7 +459,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in nudPurgeOldDataDays_Leave");
+                cErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
             }
         }
 
@@ -475,7 +475,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmbLanguage_SelectedIndexChanged");
+                cErr.processError(ex, "Error in cmbLanguage_SelectedIndexChanged");
             }
         }
 
@@ -549,7 +549,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in rbOrderByStation_CheckedChanged");
+                cErr.processError(ex, "Error in rbOrderByStation_CheckedChanged");
             }
         }
 
@@ -566,7 +566,7 @@ namespace IBE.MTSettings
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in cmdGamePath_Click");
+                cErr.processError(ex, "Error in cmdGamePath_Click");
             }
         }
 

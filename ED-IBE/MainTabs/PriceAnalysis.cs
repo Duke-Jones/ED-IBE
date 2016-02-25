@@ -1020,7 +1020,7 @@ namespace IBE.MTPriceAnalysis
         }
         
         /// <summary>
-        /// loadds the list of all known commodities into the table
+        /// loads the list of all known commodities into the table
         /// </summary>
         /// <param name="Data"></param>
         internal void loadCommodities(DataTable Data)

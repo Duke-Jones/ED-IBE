@@ -115,6 +115,7 @@ namespace IBE
         {
             if (ex == null)
                 return;
+            cErr.processError(ex, "Unhandled Exception", true);
             // ExceptionPolicy.HandleException(ex, "Default Policy");
             CreateMiniDump("RegulatedNoiseDump.dmp");
             MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"RegulatedNoiseDump.dmp\" has been created in your RegulatedNoise directory.  \r\n\r\nPlease place this in a file-sharing service such as Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");

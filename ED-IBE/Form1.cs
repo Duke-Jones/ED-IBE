@@ -1004,7 +1004,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error when selecting a new tab on main tabcontrol");
+                cErr.processError(ex, "Error when selecting a new tab on main tabcontrol");
             }
         }
 
@@ -1900,7 +1900,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error in Form_Shown");
+                cErr.processError(ex, "Error in Form_Shown");
             }
         }
 
@@ -3365,7 +3365,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error when starting station edit");
+                cErr.processError(ex, "Error when starting station edit");
             }
         }
 
@@ -3395,7 +3395,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error when starting station edit");
+                cErr.processError(ex, "Error when starting station edit");
             }
         }
 
@@ -3623,9 +3623,8 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.showError(ex, "Error while opening import tool");
+                cErr.processError(ex, "Error while opening import tool");
             }
-
         }
 
       
@@ -3984,6 +3983,22 @@ namespace IBE
         }
 
 #endregion
+
+        private void editLocalizationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var newForm = new LanguageEdit();
+
+                newForm.ShowDialog(this);
+
+                newForm.Dispose();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while opening localization editing tool");
+            }
+        }
 
 
     }

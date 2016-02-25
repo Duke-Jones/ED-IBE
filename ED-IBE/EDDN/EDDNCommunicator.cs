@@ -262,7 +262,7 @@ namespace IBE.EDDN
                 if (ex.InnerException != null)
                     _logger.Log(ex.InnerException.ToString(), true);
 
-                cErr.showError(ex, "Error in EDDN-Sending-Thread (v2)");
+                cErr.processError(ex, "Error in EDDN-Sending-Thread (v2)");
             }
 	         
         }
@@ -299,7 +299,7 @@ namespace IBE.EDDN
                 _Spool2EDDN.Start();
                 
             }catch (Exception ex){
-                cErr.showError(ex, "Error while sending EDDN data");
+                cErr.processError(ex, "Error while sending EDDN data");
             }
         }
     }

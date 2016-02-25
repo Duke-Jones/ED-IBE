@@ -48,16 +48,19 @@
             this.cbClear = new System.Windows.Forms.GroupBox();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.rbUserLanguage = new System.Windows.Forms.RadioButton();
             this.rbDefaultLanguage = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmdTest = new System.Windows.Forms.Button();
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.cbClear.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmdImportOldData
@@ -160,9 +163,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbProgess.FormattingEnabled = true;
-            this.lbProgess.Location = new System.Drawing.Point(12, 332);
+            this.lbProgess.Location = new System.Drawing.Point(12, 384);
             this.lbProgess.Name = "lbProgess";
-            this.lbProgess.Size = new System.Drawing.Size(1047, 290);
+            this.lbProgess.Size = new System.Drawing.Size(524, 238);
             this.lbProgess.TabIndex = 1;
             // 
             // gbFirstTime
@@ -213,7 +216,7 @@
             // cbClear
             // 
             this.cbClear.Controls.Add(this.cmdClearAll);
-            this.cbClear.Location = new System.Drawing.Point(12, 223);
+            this.cbClear.Location = new System.Drawing.Point(12, 182);
             this.cbClear.Name = "cbClear";
             this.cbClear.Size = new System.Drawing.Size(345, 72);
             this.cbClear.TabIndex = 5;
@@ -234,6 +237,16 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Market Data (CSV)";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.rbUserLanguage);
+            this.panel2.Controls.Add(this.cmdExportCSV);
+            this.panel2.Controls.Add(this.rbDefaultLanguage);
+            this.panel2.Location = new System.Drawing.Point(10, 19);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(313, 102);
+            this.panel2.TabIndex = 8;
             // 
             // rbUserLanguage
             // 
@@ -267,20 +280,31 @@
             this.panel1.Size = new System.Drawing.Size(313, 96);
             this.panel1.TabIndex = 7;
             // 
-            // panel2
+            // groupBox2
             // 
-            this.panel2.Controls.Add(this.rbUserLanguage);
-            this.panel2.Controls.Add(this.cmdExportCSV);
-            this.panel2.Controls.Add(this.rbDefaultLanguage);
-            this.panel2.Location = new System.Drawing.Point(10, 19);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(313, 102);
-            this.panel2.TabIndex = 8;
+            this.groupBox2.Controls.Add(this.cmdTest);
+            this.groupBox2.Location = new System.Drawing.Point(714, 256);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(345, 72);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Other";
+            // 
+            // cmdTest
+            // 
+            this.cmdTest.Location = new System.Drawing.Point(33, 19);
+            this.cmdTest.Name = "cmdTest";
+            this.cmdTest.Size = new System.Drawing.Size(82, 34);
+            this.cmdTest.TabIndex = 0;
+            this.cmdTest.Text = "Test";
+            this.cmdTest.UseVisualStyleBackColor = true;
+            this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
             // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1075, 641);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cbClear);
             this.Controls.Add(this.gbRepeat);
@@ -294,10 +318,11 @@
             this.gbRepeat.PerformLayout();
             this.cbClear.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -326,5 +351,7 @@
         private System.Windows.Forms.RadioButton rbImportNewer;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button cmdTest;
     }
 }

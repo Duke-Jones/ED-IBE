@@ -236,7 +236,7 @@ namespace IBE.FileScanner
             {
                 m_stateTimer.Dispose();
                 m_stateTimer = null;
-                cErr.showError(ex, "Error while pushing logfile scan");
+                cErr.processError(ex, "Error while pushing logfile scan");
             }
             
         }
