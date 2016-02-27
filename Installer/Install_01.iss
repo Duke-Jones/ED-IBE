@@ -133,6 +133,9 @@ existing_form_Info2=If you want to re-create the database (all contained data wi
 existing_form_CheckBoxLabel=Delete all existing data and re-create the database
 
 [Code]
+type 
+  TVersionArray = array[0..2] of Integer;
+
 var
   
   Page_DataPath:         TInputDirWizardPage;
@@ -298,6 +301,127 @@ begin
     DataPath_Page(wpSelectComponents);
 end;
 
+(*********************************************************************************)
+(* compares 2 version structures - return: 0=equal,1=first higher, 2=second higher *)
+(*********************************************************************************)
+function CompareVersions(version1 TVersionArray, version2 TVersionArray): Integer;
+var
+    retValue: Integer;
+
+begin
+    if version1[0] > version2[0] then
+      retValue = 1;
+    else if version1[0] < version2[0] then
+      retValue = 2;
+    else if version1[1] > version2[1] then
+      retValue = 1;
+    else if version1[1] < version2[1] then
+      retValue = 2;
+    else if version1[2] > version2[2] then
+      retValue = 1;
+    else if version1[2] < version2[2] then
+      retValue = 2;
+    else
+      retValue = 0;
+    end;
+
+    Return retValue;
+ end;
+
+(*****************************************************************************)
+(* gets the last running version from  file 'version.dat' *)
+(*****************************************************************************)
+function LastVersionRun: : TVersionArray;
+var
+   testPath: String;   
+   existing: Boolean;
+   Lines: TArrayOfString;
+   LineCount: Integer;
+   SectionLine: Integer;    
+   versionString: String;
+   versionIntArr: TVersionArray;
+
+begin
+
+    testPath := ExpandConstant(GetDataBasepath('') + 'version.dat');
+    existing := FileExists(testPath);
+    
+    versionIntArr := StringToVersion('0.0.0');
+
+    if existing then
+    begin
+       if LoadStringsFromFile(testPath, Lines) then
+       begin
+        LineCount := GetArrayLength(Lines);
+        for SectionLine := 0 to LineCount - 1 do
+          versionString := Trim(Lines[SectionLine]);
+          if LeftStr(versionString,8) = 'version:' then
+          begin
+            versionString := Copy(Trim(Lines[SectionLine], 8, Length(versionString) - 7);
+            versionIntArr := StringToVersion(versionString);
+          end;
+       end;
+    end;
+
+    Return versionIntArr;
+
+ end;
+
+(*****************************************************************************)
+(* converts a string into a version strucure with 3 parts                    *)
+(*****************************************************************************)
+function StringToVersion(versionString: String): TVersionArray;
+var
+   tempDigit: Integer;
+   positionCounter: Integer;
+   versionStrArr: array[0..2] of string;
+   versionIntArr: TVersionArray;
+
+begin
+
+   versionStrArr[0] = '0';
+   versionStrArr[1] = '0';
+   versionStrArr[2] = '0';
+
+   for charPosition := 0 to Length(versionString) - 1 do
+   begin
+      if versionString[charPosition] = '.' then
+      begin
+         positionCounter = positionCounter + 1;
+
+         if positionCounter > 2 then
+            Break;
+
+      end else
+      begin
+        tempDigit := StrToIntDef(versionString[charPosition], -1)
+      
+        if tempDigit >= 0 then
+           versionStrArr[positionCounter] = versionStrArr[positionCounter] + versionString[charPosition];
+   
+      end;
+   end;
+
+   versionIntArr[0] = StrToIntDef(versionStrArr[0], 0);
+   versionIntArr[1] = StrToIntDef(versionStrArr[1], 0);
+   versionIntArr[2] = StrToIntDef(versionStrArr[2], 0);
+
+   Return versionIntArr;
+ end;
+
+(*****************************************************************************)
+(* converts a string into a version strucure with 3 parts                    *)
+(*****************************************************************************)
+function DBUpdateTill_0.0.1(): Boolean;
+var
+
+begin
+
+
+   Return true;
+ end;
+
+
 (*****************************************************************************)
 (* event : CurStepChanged, used for starting the database script *)
 (*****************************************************************************)
@@ -306,26 +430,40 @@ var
   ResultCode: Integer;
   BasePath: String;
   CommandLine: String;
+  lastV: TVersionArray;
 
 begin
 
     if CurStep=ssPostInstall then 
     begin
+
+      BasePath := ExpandConstant(GetDataBasepath('') + '\Database');
+
       if (not DBIsExisting()) or (cbDeleteOldData.Checked) then
-         begin
-            BasePath := ExpandConstant(GetDataBasepath('') + '\Database');
-            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
-            Log('CommandLine : <' + CommandLine + '>');
+      begin
+         CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
+         Log('CommandLine : <' + CommandLine + '>');
+      
+         Exec('cmd.exe', 
+               CommandLine, 
+               BasePath, 
+               SW_HIDE, 
+               ewWaitUntilTerminated, 
+               ResultCode);
+      end else
+      begin
+        lastV = LastVersionRun();
+        thisV = StringToVersion({#MyAppVersion_s});
+        
+        if CompareVersions(lastV, '0.0.1') <= 0 then
+        begin
+              
 
-            Exec('cmd.exe', 
-                  CommandLine, 
-                  BasePath, 
-                  SW_HIDE, 
-                  ewWaitUntilTerminated, 
-                  ResultCode);
+
+        end;
       end;
-    end;
-
+ 
+   end;
 end;
 
 

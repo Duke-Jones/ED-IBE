@@ -481,6 +481,36 @@ namespace IBE
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     }
 
+                    //if (dbVersion < (testVersion = new Version(0,1,1)))
+                    //{
+                    //    String sqlString = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                       " +
+                    //                       "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;        " +
+                    //                       "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';      " +
+                    //                       "                                                                               " +
+                    //                       "ALTER TABLE `elite_db`.`tbLevelLocalization`                                   " +
+                    //                       "DROP FOREIGN KEY `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`,           " +
+                    //                       "DROP FOREIGN KEY `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`;               " +
+                    //                       "                                                                               " +
+                    //                       "ALTER TABLE `elite_db`.`tbLevelLocalization`                                   " +
+                    //                       "ADD CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`              " +
+                    //                       "  FOREIGN KEY (`economylevel_id`)                                              " +
+                    //                       "  REFERENCES `elite_db`.`tbEconomyLevel` (`id`)                                " +
+                    //                       "  ON DELETE CASCADE                                                            " +
+                    //                       "  ON UPDATE CASCADE,                                                           " +
+                    //                       "ADD CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`                  " +
+                    //                       "  FOREIGN KEY (`language_id`)                                                  " +
+                    //                       "  REFERENCES `elite_db`.`tbLanguage` (`id`)                                    " +
+                    //                       "  ON DELETE CASCADE                                                            " +
+                    //                       "  ON UPDATE CASCADE;                                                           " +
+                    //                       "                                                                               " +
+                    //                       "                                                                               " +
+                    //                       "SET SQL_MODE=@OLD_SQL_MODE;                                                    " +
+                    //                       "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                " +
+                    //                       "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                          ";
+   
+                    //    DBCon.Execute(sqlString);
+                    //}
+
                     Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                 }
 

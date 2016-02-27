@@ -49,15 +49,16 @@ namespace IBE
         public void Init()
         {
             Cursor oldCursor = Cursor;
-
+            String currentLanguage;
             try
             {
                 m_ChangedIDs = new Dictionary<Int32, Int32>();
 
+                currentLanguage = Program.DBCon.getIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "Language");
                 clbLanguageFilter.Items.Clear();
                 foreach (SQL.Datasets.dsEliteDB.tblanguageRow langRow in Program.Data.BaseData.tblanguage.Rows)
                 {
-                    clbLanguageFilter.Items.Add(langRow.language, Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, langRow.language, true.ToString(), false));
+                    clbLanguageFilter.Items.Add(langRow.language, langRow.language.Equals(currentLanguage) ? true : false);
                 } 
                 clbLanguageFilter.ItemCheck += clbLanguageFilter_ItemCheck;
     
@@ -113,6 +114,9 @@ namespace IBE
                 LoadData();
                 FilterData();
 
+                m_BindingSources[dgvData].Sort      = "name";
+                m_BindingSources[dgvDataOwn].Sort   = "name";
+
                 Cursor = oldCursor;
             }
             catch (Exception ex)
@@ -145,7 +149,7 @@ namespace IBE
                 m_MainDataset.Clear();
 
                 parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
-                activeSetting = Program.DBCon.getIniValue(DB_GROUPNAME, parameterName);
+                activeSetting = Program.DBCon.getIniValue(DB_GROUPNAME, parameterName, "Commodity", false);
 
                 if (clbLanguageFilter.CheckedItems.Count > 0)
                 {
@@ -220,6 +224,9 @@ namespace IBE
         private void SaveData()
         {
             String sqlString;
+            String parameterName;
+            EliteDBIO.enLocalizationType activeSetting;
+            List<Int32> collectorID = new List<Int32>();
 
             try
             {
@@ -230,27 +237,109 @@ namespace IBE
 
                 foreach (var changedValuePair in m_ChangedIDs)
                 {
-                    // change the collected data to the new id
-                    sqlString = String.Format("update tbCommodityData" +
-                                              " set   commodity_id = {1}" +
-                                              " where commodity_id = {0}", 
-                                              changedValuePair.Key, 
-                                              changedValuePair.Value);
-                    Program.DBCon.Execute(sqlString);
+                    parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
+                    activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
 
-                    // delete entry from tbCommodity, the ForeigenKeys will delete the 
-                    // entries from the other affected tables
-                    sqlString = String.Format("delete from tbCommodity" +
-                                              " where id = {0}", 
-                                              changedValuePair.Key);
-                    Program.DBCon.Execute(sqlString);
+                    switch (activeSetting)
+                    {
+                        case EliteDBIO.enLocalizationType.Commodity:
+                            // change the collected data to the new id
+                            sqlString = String.Format("update tbCommodityData" +
+                                                      " set   commodity_id = {1}" +
+                                                      " where commodity_id = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                      " set   commodity_id = {1}" +
+                                                      " where commodity_id = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            // delete entry from tbCommodity, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            // entries in table "tbCommodityClassification" can be deleted
+                            sqlString = String.Format("delete from tbCommodity" +
+                                                      " where id = {0}", 
+                                                      changedValuePair.Key);
+                            Program.DBCon.Execute(sqlString);
+
+                            break;
+
+                        case EliteDBIO.enLocalizationType.Category:
+                            // change the commodities to the new id
+                            sqlString = String.Format("update tbCommodity" +
+                                                      " set   category_id = {1}" +
+                                                      " where category_id = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            // delete entry from tbCategory, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            sqlString = String.Format("delete from tbCategory" +
+                                                      " where id = {0}", 
+                                                      changedValuePair.Key);
+                            Program.DBCon.Execute(sqlString);
+
+                            break;
+                        case EliteDBIO.enLocalizationType.Economylevel:
+                            // change the commodities to the new id
+                            sqlString = String.Format("update tbCommodityData" +
+                                                      " set   DemandLevel = {1}" +
+                                                      " where DemandLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbCommodityData" +
+                                                      " set   SupplyLevel = {1}" +
+                                                      " where SupplyLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                      " set   DemandLevel = {1}" +
+                                                      " where DemandLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                      " set   SupplyLevel = {1}" +
+                                                      " where SupplyLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                        // delete entry from tbCategory, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            sqlString = String.Format("delete from tbEconomyLevel" +
+                                                      " where id = {0}", 
+                                                      changedValuePair.Key);
+                            Program.DBCon.Execute(sqlString);
+
+                            break;
+                        default:
+                            throw new Exception("unknown setting :  " + activeSetting);
+                    }
+
+                    collectorID.Add(changedValuePair.Value);
                 }
 
                 Program.DBCon.TransCommit();
 
                 cmdSave.Enabled  = m_MainDataset.HasChanges();
 
-                Program.Data.DeleteMultiplePrices();
+                if (collectorID.Count > 0)
+                {
+                    // check for multiple prices
+                    Program.Data.DeleteMultiplePrices(collectorID);
+                }
+
                 Program.Data.AddMissingLocalizationEntries();
                 Program.Data.updateTranslation();
             }
@@ -550,6 +639,113 @@ namespace IBE
             }
         }
 
+        /// <summary>
+        /// exports the market data to a csv file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdExportCSV_Click(object sender, EventArgs e)
+        {
+            EliteDBIO.enLocalizationType activeSetting;
+            String infoString;
+            String parameterName;
 
+            try
+            {
+                parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
+                activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
+
+                switch (activeSetting)
+                {
+                    case EliteDBIO.enLocalizationType.Commodity:
+                        infoString = "Export commodity localisation data";
+                        break;
+                    case EliteDBIO.enLocalizationType.Category:
+                        infoString = "Export category localisation data";
+                        break;
+                    case EliteDBIO.enLocalizationType.Economylevel:
+                        infoString = "Export economy localisation data";
+                        break;
+                    default:
+                        throw new Exception("unknown setting :  " + activeSetting);
+                }
+
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+                saveFileDialog1.Filter              = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                saveFileDialog1.DefaultExt          = "csv";
+                saveFileDialog1.Title               = infoString;
+                saveFileDialog1.OverwritePrompt     = true;
+                saveFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+
+	            DialogResult result = saveFileDialog1.ShowDialog();
+
+		        if (result == DialogResult.OK)
+                {
+                    Cursor = Cursors.WaitCursor;
+
+                    Program.Data.ExportLocalizationDataToCSV(saveFileDialog1.FileName, activeSetting);
+
+                    Cursor = Cursors.Default;
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                cErr.processError(ex, "Error while exporting to csv");
+            }
+        }
+
+        /// <summary>
+        /// imports the market data from a csv file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdImportFromCSV_Click(object sender, EventArgs e)
+        {
+            String sourcePath;
+            OpenFileDialog fbFileDialog;
+            try
+            {
+                //sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+
+                //fbFileDialog = new OpenFileDialog();
+                //fbFileDialog.InitialDirectory = sourcePath;
+                //fbFileDialog.Title = "Select the csv-file with market data to import...";
+                //fbFileDialog.CheckFileExists    = true;
+                //fbFileDialog.Filter             = "CVS files (*.csv)|*.csv|Text documents (*.txt)|*.txt|All files (*.*)|*.*";
+                //fbFileDialog.FilterIndex = 3;
+
+
+                //fbFileDialog.ShowDialog(this);
+
+                //if ((!String.IsNullOrEmpty(fbFileDialog.FileName)) && System.IO.File.Exists(fbFileDialog.FileName))
+                //{
+                //    Program.Data.Progress += Data_Progress;
+                //    Cursor = Cursors.WaitCursor;
+                //    lbProgess.Items.Clear();
+
+                //    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 0, Total = 0 });
+
+                //    SQL.EliteDBIO.enImportBehaviour importBehaviour = SQL.EliteDBIO.enImportBehaviour.OnlyNewer;
+                //    if(rbImportSame.Checked)
+                //        importBehaviour = SQL.EliteDBIO.enImportBehaviour.NewerOrEqual;
+
+                //    Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour);
+                //    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
+                //    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
+                //    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 1, Total = 1 });
+
+                //    Cursor = Cursors.Default;
+                //    Program.Data.Progress -= Data_Progress;
+                //}
+
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                cErr.processError(ex, "Error while importing from csv");
+            }       
+        }
     }
 }

@@ -289,6 +289,7 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Other";
+            this.groupBox2.Visible = false;
             // 
             // cmdTest
             // 

@@ -97,8 +97,11 @@ todo:
 *************************************************************************************
 
 
-SQL 0.1.1 
+
    * added support to edit translations of commodities etc.
+   * export of translations possible
+   * fixes 
+   * fixed issue with multiple prices on a station while import pricedata
 -------------------------------------------------------------------------------------         
 SQL 0.1.0 beta 4
    * fixed error in csvrow class

@@ -17,6 +17,9 @@ namespace IBE.SQL
 {
     public class EliteDBIO
     {
+
+#region "enums"
+
         private enum enCommodityTypes
         {
             import,
@@ -37,6 +40,14 @@ namespace IBE.SQL
             All          = 2
         }
 
+        public enum enLocalizationType
+        {
+            Commodity       = 0,
+            Category        = 1,
+            Economylevel    = 2
+        }
+
+#endregion
 
         /// <summary>
         /// constructor
@@ -2220,7 +2231,10 @@ namespace IBE.SQL
                 StringBuilder sqlStringB = new StringBuilder();
                 String timeFilter = "";
                 Int32 Counter;
-
+                List<Int32> commodityIDs = new List<Int32>();
+                List<Listing> missedListings = new List<Listing>();
+                Listing[] currentListing;
+                Boolean currentListingDone;
                 // for the prices is no transaction necessary, because we're changing
                 // only a single table
 
@@ -2239,75 +2253,102 @@ namespace IBE.SQL
                 // now add the commodities and prices
                 foreach (EDStation Station in Stations)
                 {
-                    if ((Station.Id != 0) && (Station.Listings.Count() > 0))
+                    currentListingDone = false;
+                    missedListings.Clear();
+                    currentListing = Station.Listings;
+
+                    do
                     {
-                        sqlStringB.Clear();
-                        sqlStringB.Append("insert into tbCommodityData(id, station_id, commodity_id, Sell, Buy," +
-                                          "Demand, DemandLevel, Supply, SupplyLevel, Sources_id, timestamp) ");
+                        commodityIDs.Clear();
+                        currentListingDone = true;
 
-                        foreach (Listing StationListing in Station.Listings)
+                        if ((Station.Id != 0) && (currentListing.Count() > 0))
                         {
-                            if (AddComma)
-                                sqlStringB.Append(" union all ");
+                            sqlStringB.Clear();
+                            sqlStringB.Append("insert into tbCommodityData(id, station_id, commodity_id, Sell, Buy," +
+                                              "Demand, DemandLevel, Supply, SupplyLevel, Sources_id, timestamp) ");
 
-                            // cache level-ids
-                            getLevels(ref DemandLevel, ref SupplyLevel, Levels, StationListing);
+                            foreach (Listing StationListing in currentListing)
+                            {
+                                // is this commodity already added in this round ? .... 
+                                if (!commodityIDs.Contains(StationListing.CommodityId))
+                                {
+                                    // ... no
 
-                            // add only, if not existing or newer !!
-                                
+                                    if (AddComma)
+                                        sqlStringB.Append(" union all ");
+
+                                    // cache level-ids
+                                    getLevels(ref DemandLevel, ref SupplyLevel, Levels, StationListing);
                             
+                                    if ((StationListing.CommodityId == 75) && (Station.Id == 18991))
+                                        Debug.Print("hier");
 
-                            switch (importBehaviour)
-	                        {
-                                case enImportBehaviour.OnlyNewer:
-                                    timeFilter = String.Format("SC1.timestamp < {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
-                                    break;
+                                    switch (importBehaviour)
+	                                {
+                                        case enImportBehaviour.OnlyNewer:
+                                            timeFilter = String.Format("SC1.timestamp < {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
+                                            break;
 
-                                case enImportBehaviour.NewerOrEqual:
-                                    timeFilter = String.Format("SC1.timestamp <= {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
-                                    break;
+                                        case enImportBehaviour.NewerOrEqual:
+                                            timeFilter = String.Format("SC1.timestamp <= {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
+                                            break;
 
-                                case enImportBehaviour.All:
-                                    timeFilter = String.Format("SC1.timestamp = SC1.timestamp", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
-                                    break;
-	                        }
+                                        case enImportBehaviour.All:
+                                            timeFilter = String.Format("SC1.timestamp = SC1.timestamp", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
+                                            break;
+	                                }
 
-                            sqlStringB.Append(String.Format("(select if(SC1.cnt = 0, 0, SC1.id),{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}" +
-                                                            "         from (select ID, station_id, commodity_id, Count(*) As cnt, timestamp from tbCommodityData" +
-                                                            "              where station_id   = {0}" +
-                                                            "              and   commodity_id = {1}) SC1" +
-                                                            "  where ({10})",
-                                                            Station.Id,
-                                                            StationListing.CommodityId,
-                                                            StationListing.SellPrice,
-                                                            StationListing.BuyPrice,
-                                                            StationListing.Demand,
-                                                            DemandLevel.ToNString("null"),
-                                                            StationListing.Supply,
-                                                            SupplyLevel.ToNString("null"),
-                                                            SourceID,
-                                                            DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime), 
-                                                            timeFilter));
+                                    sqlStringB.Append(String.Format("(select if(SC1.cnt = 0, 0, SC1.id),{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}" +
+                                                                    "         from (select ID, station_id, commodity_id, Count(*) As cnt, timestamp from tbCommodityData" +
+                                                                    "              where station_id   = {0}" +
+                                                                    "              and   commodity_id = {1}) SC1" +
+                                                                    "  where ({10})",
+                                                                    Station.Id,
+                                                                    StationListing.CommodityId,
+                                                                    StationListing.SellPrice,
+                                                                    StationListing.BuyPrice,
+                                                                    StationListing.Demand,
+                                                                    DemandLevel.ToNString("null"),
+                                                                    StationListing.Supply,
+                                                                    SupplyLevel.ToNString("null"),
+                                                                    SourceID,
+                                                                    DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime), 
+                                                                    timeFilter));
 
-                            AddComma = true;
+                                    AddComma = true;
+                                    commodityIDs.Add(StationListing.CommodityId);
+                                }
+                                else
+                                {
+                                    // If we add the same commodity multiple times in one command the database will not recognize
+                                    // the doubled price and add both. So we add multiple prices step by step- only the newest 
+                                    // price will remain by this way.
+                                    currentListingDone = false;
+                                    missedListings.Add(StationListing);
+                                }
+                            }
+
+                            sqlStringB.Append(" on duplicate key update " +
+                                              "  Sell        = Values(Sell)" +
+                                              ", Buy         = Values(Buy)" +
+                                              ", Demand      = Values(Demand)" +
+                                              ", DemandLevel = Values(DemandLevel)" +
+                                              ", Supply      = Values(Supply)" +
+                                              ", SupplyLevel = Values(SupplyLevel)" +
+                                              ", Sources_id  = Values(Sources_id)" +
+                                              ", timestamp   = Values(timestamp)");
+
+                            Program.DBCon.Execute(sqlStringB.ToString());
                         }
 
-                        sqlStringB.Append(" on duplicate key update " +
-                                          "  Sell        = Values(Sell)" +
-                                          ", Buy         = Values(Buy)" +
-                                          ", Demand      = Values(Demand)" +
-                                          ", DemandLevel = Values(DemandLevel)" +
-                                          ", Supply      = Values(Supply)" +
-                                          ", SupplyLevel = Values(SupplyLevel)" +
-                                          ", Sources_id  = Values(Sources_id)" +
-                                          ", timestamp   = Values(timestamp)");
+                        AddComma = false;
+                        Counter++;
+                        sendProgressEvent("updating prices", Counter, Stations.Count);
 
-                        Program.DBCon.Execute(sqlStringB.ToString());
-                    }
+                        currentListing = missedListings.ToArray();
 
-                    AddComma = false;
-                    Counter++;
-                    sendProgressEvent("updating prices", Counter, Stations.Count);
+                    } while (!currentListingDone);
                 }
             }
             catch (Exception ex)
@@ -2562,49 +2603,169 @@ namespace IBE.SQL
 
         /// <summary>
         /// function deletes all exept the newest price for a commodity
-        /// on a station, if there exists more than one
+        /// on a station, if there exists more than one.
         /// </summary>
-        public void DeleteMultiplePrices()
+        /// <param name="idList">if not null the function only examines the given commodity-ids
+        /// (for improving performance)</param>
+        public void DeleteMultiplePrices(List<Int32> idList = null)
         {
             String sqlString;
-            DataTable data = new DataTable();
+            DataSet data = new DataSet();
+            Int32 deletedPricesByCommodities = 0;
+            Int32 deletedPrices = 0;
+            String idString = "";
 
             try 
 	        {	        
-		        sqlString = "select id from tbCommodityData C1" +
-                            "	where exists(" +
-                            "		select C2.station_id, C2.commodity_id, count(*) as cnt" +
-                            "		from tbCommodityData C2" +
-                            "		where C2.station_id   = C1.station_id" +
-                            "		 and  C2.commodity_id = C1.commodity_id" +
-                            "		group by C2.station_id, C2.commodity_id" +
-                            "		having cnt > 1)" +
-                            "	order by timestamp asc" +
-                            "	limit 1";
-
-                if (Program.DBCon.Execute(sqlString, data) > 0)
+                if ((idList!= null) && (idList.Count > 0))
                 {
-                    sqlString = "";
-                    foreach (DataRow deleteID in data.Rows)
+                    foreach (Int32 id in idList)
                     {
-                        if(sqlString.Length > 0)
-                            sqlString += " or ";
+                        if(idString.Length > 0)    
+                            idString += " or ";
 
-                        sqlString += String.Format("id = {0}", deleteID[0].ToString());
+                        idString += String.Format("commodity_id = {0}", 
+                                                     id.ToString());
                     }
 
-                    sqlString = "delete from tbCommodityData where " + sqlString;
+                    idString = " where (" + idString + ")";
+                }
 
-                    Program.DBCon.Execute(sqlString, data);
+		        sqlString = "select C2.station_id, C2.commodity_id, count(*) as cnt" +
+		                    " from tbCommodityData C2" +
+                            idString +
+		                    " group by C2.station_id, C2.commodity_id" +
+		                    " having cnt > 1";
+                Program.DBCon.Execute(sqlString, "tbFoundData", data);
+
+                if (data.Tables["tbFoundData"].Rows.Count > 0)
+                {
+                    sqlString = "";
+                    foreach (DataRow foundData in data.Tables["tbFoundData"].Rows)
+                    {
+                        Int32 counter = 0;
+                        sqlString = String.Format("select id from tbCommodityData" +
+                                                  " where station_id   = {0}" + 
+                                                  " and   commodity_id = {1}" + 
+                                                  " order by timestamp desc",
+                                                  foundData[0].ToString(), foundData[1].ToString());
+
+                        Program.DBCon.Execute(sqlString, "tbDeleteData", data);
+                        
+                        foreach (DataRow deleteItem in data.Tables["tbDeleteData"].Rows)
+	                    {
+                            // all but the first (=newest) price
+		                    if (counter > 0)
+                            {
+                                sqlString = String.Format("delete from tbCommodityData" +
+                                                          " where id = {0}", 
+                                                          deleteItem["id"].ToString());
+                        
+                                Program.DBCon.Execute(sqlString, "tbDeleteData", data);
+                                deletedPrices++;
+                            }
+                            counter++;
+	                    }
+
+                        deletedPricesByCommodities++;
+                    }
                 }
 	        }
 	        catch (Exception ex)
 	        {
 		        throw new Exception("Error while deleting mulitple prices", ex);
 	        }
-
-        
         }
+
+        /// <summary>
+        /// exports the market data to a file
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void ExportMarketDataToCSV(string fileName, Boolean inCurrentLanguage)
+        {
+            String sqlString;
+            DataTable data;
+            Int32 Counter;
+
+            try
+            {
+
+                if (inCurrentLanguage)
+                {
+                    // export names in user language
+                    sqlString = "select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
+                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C, tbeconomylevel E" +
+                                " where Sy.id           = St.system_id" + 
+                                " and   St.id           = D.station_id" +
+                                " and   D.commodity_id  = C.id" +
+                                " order by Sy.systemname, St.stationname, C.loccommodity"; 
+                }
+                else
+                {
+                    // export names in default language (english)
+                    sqlString = "select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
+                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
+                                " where Sy.id           = St.system_id" + 
+                                " and   St.id           = D.station_id" +
+                                " and   D.commodity_id  = C.id" +
+                                " order by Sy.systemname, St.stationname, C.commodity"; 
+                }
+
+                if(System.IO.File.Exists(fileName))
+                    System.IO.File.Delete(fileName);
+
+                data        = new DataTable();
+                Counter     = 0;
+
+                Program.DBCon.Execute(sqlString, data);
+
+                sendProgressEvent("export prices...", 0, 0);
+
+                var writer = new StreamWriter(File.OpenWrite(fileName));
+                writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
+                
+
+                foreach (DataRow row in data.Rows)
+                {
+                    String Demand = "";
+                    String Supply = "";
+
+                    if (inCurrentLanguage)
+                    {
+                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "loclevel")).NToString("");
+                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "loclevel")).NToString("");
+                    }
+                    else
+                    {
+                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "level")).NToString("");
+                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "level")).NToString("");
+                    }
+
+                    writer.WriteLine(row["systemname"] + ";" + 
+                                     row["stationname"] + ";" + 
+                                     row["commodity"] + ";" + 
+                                     row["sell"] + ";" + 
+                                     row["buy"] + ";" + 
+                                     row["demand"] + ";" + 
+                                     Demand + ";" + 
+                                     row["supply"] + ";" + 
+                                     Supply + ";" + 
+                                     row["timestamp"]);
+                    Counter++;
+                    sendProgressEvent("export prices...", Counter, data.Rows.Count);
+                }
+
+                sendProgressEvent("export prices...", 1, 1);
+
+                writer.Close();
+                writer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while exporting to csv file", ex);
+            }
+        }
+
 #endregion
 
 #region general
@@ -3088,82 +3249,63 @@ namespace IBE.SQL
         }
 #endregion
 
-        /// <summary>
-        /// exports the market data to a file
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void ExportToCSV(string fileName, Boolean inCurrentLanguage)
+        public void ExportLocalizationDataToCSV(string fileName, enLocalizationType activeSetting)
         {
-            String sqlString;
+            String sqlString = "";
             DataTable data;
-            Int32 Counter;
+            Int32 counter;
+            String infoString = "";
 
             try
             {
-
-                if (inCurrentLanguage)
+                switch (activeSetting)
                 {
-                    // export names in user language
-                    sqlString = "select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
-                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C, tbeconomylevel E" +
-                                " where Sy.id           = St.system_id" + 
-                                " and   St.id           = D.station_id" +
-                                " and   D.commodity_id  = C.id" +
-                                " order by Sy.systemname, St.stationname, C.loccommodity"; 
-                }
-                else
-                {
-                    // export names in default language (english)
-                    sqlString = "select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
-                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
-                                " where Sy.id           = St.system_id" + 
-                                " and   St.id           = D.station_id" +
-                                " and   D.commodity_id  = C.id" +
-                                " order by Sy.systemname, St.stationname, C.commodity"; 
+                    case enLocalizationType.Commodity:
+                        sqlString = "select Lo.commodity_id As id, La.language, Lo.locname" + 
+                                    "   from tbCommodityLocalization Lo, tbLanguage La" +
+                                    "   where Lo.language_id = La.id" +
+                                    " order by Lo.commodity_id, La.id";
+                        infoString = "export commodity localization...";
+                        break;
+                    case enLocalizationType.Category:
+                        sqlString = "select Lo.category_id As id, La.language, Lo.locname" + 
+                                    "   from tbCategoryLocalization Lo, tbLanguage La" +
+                                    "   where Lo.language_id = La.id" +
+                                    " order by Lo.category_id, La.id";
+                        infoString = "export category localization...";
+                        break;
+                    case enLocalizationType.Economylevel:
+                        sqlString = "select Lo.economylevel_id As id, La.language, Lo.locname" + 
+                                    "   from tbLevelLocalization Lo, tbLanguage La" +
+                                    "   where Lo.language_id = La.id" +
+                                    " order by Lo.economylevel_id, La.id";
+                        infoString = "export economylevel localization...";
+                        break;
+                    default:
+                        throw new Exception("unknown setting :  " + activeSetting);
                 }
 
                 if(System.IO.File.Exists(fileName))
                     System.IO.File.Delete(fileName);
 
                 data        = new DataTable();
-                Counter     = 0;
+                counter     = 0;
 
                 Program.DBCon.Execute(sqlString, data);
 
                 sendProgressEvent("export prices...", 0, 0);
 
                 var writer = new StreamWriter(File.OpenWrite(fileName));
-                writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
+                writer.WriteLine("Commodity_ID;Language;Name");
                 
 
                 foreach (DataRow row in data.Rows)
                 {
-                    String Demand = "";
-                    String Supply = "";
-
-                    if (inCurrentLanguage)
-                    {
-                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "loclevel")).NToString("");
-                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "loclevel")).NToString("");
-                    }
-                    else
-                    {
-                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "level")).NToString("");
-                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "level")).NToString("");
-                    }
-
-                    writer.WriteLine(row["systemname"] + ";" + 
-                                     row["stationname"] + ";" + 
-                                     row["commodity"] + ";" + 
-                                     row["sell"] + ";" + 
-                                     row["buy"] + ";" + 
-                                     row["demand"] + ";" + 
-                                     Demand + ";" + 
-                                     row["supply"] + ";" + 
-                                     Supply + ";" + 
-                                     row["timestamp"]);
-                    Counter++;
-                    sendProgressEvent("export prices...", Counter, data.Rows.Count);
+                    writer.WriteLine(row["id"] + ";" + 
+                                     row["language"] + ";" + 
+                                     row["locname"] );
+                    counter++;
+                    sendProgressEvent("export prices...", counter, data.Rows.Count);
                 }
 
                 sendProgressEvent("export prices...", 1, 1);
@@ -3173,7 +3315,7 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while exporting to csv file", ex);
+                throw new Exception("Error while exporting localization data to csv", ex);
             }
         }
 

@@ -135,4 +135,15 @@
   <metadata name="column_name2.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="groupbox3.ToolTip" xml:space="preserve">
+    <value>If ED-IBE has collected unknown or not yet translated items
+you can assign it to the correct EDDN item, if it is existing.
+Select one row from each list to enable the "Confirm Translation"-button.
+After confirmation, all data from the self added item is assigned to the
+EDDB item.
+</value>
+  </data>
 </root>

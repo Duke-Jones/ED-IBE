@@ -889,6 +889,11 @@ namespace IBE.SQL
                     else
                         functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
                 }
+                else if(typeof(T).BaseType.Name.Equals("Enum"))
+                {
+                    String value    = getIniValue(Group, Key, DefaultValue, AllowEmptyValue);
+                    functionReturnValue = (T)Enum.Parse(typeof(T), value, true);
+                }
                 else
                     functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
 

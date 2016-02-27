@@ -32,6 +32,7 @@ namespace IBE
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LanguageEdit));
             this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.column_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.column_language_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,9 +56,12 @@ namespace IBE
             this.groupbox3 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.cbRemoveAfter = new System.Windows.Forms.CheckBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.rbOnlyUserlanguage = new System.Windows.Forms.RadioButton();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmdExportCSV = new System.Windows.Forms.Button();
+            this.cmdImportFromCSV = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataOwn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -67,6 +71,7 @@ namespace IBE
             this.gbType.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupbox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvData
@@ -82,10 +87,10 @@ namespace IBE
             this.column_id,
             this.column_language_id,
             this.column_name});
-            this.dgvData.DoubleBuffer = false;
+            this.dgvData.DoubleBuffer = true;
             this.dgvData.Location = new System.Drawing.Point(3, 17);
             this.dgvData.Name = "dgvData";
-            this.dgvData.Size = new System.Drawing.Size(459, 476);
+            this.dgvData.Size = new System.Drawing.Size(619, 476);
             this.dgvData.TabIndex = 0;
             this.dgvData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvData.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -109,6 +114,7 @@ namespace IBE
             this.column_language_id.DataPropertyName = "id2";
             this.column_language_id.HeaderText = "Language";
             this.column_language_id.Name = "column_language_id";
+            this.column_language_id.ReadOnly = true;
             // 
             // column_name
             // 
@@ -129,10 +135,10 @@ namespace IBE
             this.column_id2,
             this.column_language_id2,
             this.column_name2});
-            this.dgvDataOwn.DoubleBuffer = false;
+            this.dgvDataOwn.DoubleBuffer = true;
             this.dgvDataOwn.Location = new System.Drawing.Point(3, 17);
             this.dgvDataOwn.Name = "dgvDataOwn";
-            this.dgvDataOwn.Size = new System.Drawing.Size(455, 476);
+            this.dgvDataOwn.Size = new System.Drawing.Size(616, 476);
             this.dgvDataOwn.TabIndex = 1;
             this.dgvDataOwn.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvDataOwn.SelectionChanged += new System.EventHandler(this.dgvData_SelectionChanged);
@@ -154,6 +160,7 @@ namespace IBE
             this.column_language_id2.DataPropertyName = "id2";
             this.column_language_id2.HeaderText = "Language ID";
             this.column_language_id2.Name = "column_language_id2";
+            this.column_language_id2.ReadOnly = true;
             // 
             // column_name2
             // 
@@ -199,8 +206,8 @@ namespace IBE
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.dgvDataOwn);
-            this.splitContainer1.Size = new System.Drawing.Size(931, 497);
-            this.splitContainer1.SplitterDistance = 465;
+            this.splitContainer1.Size = new System.Drawing.Size(1252, 497);
+            this.splitContainer1.SplitterDistance = 625;
             this.splitContainer1.TabIndex = 4;
             // 
             // rbCommodities
@@ -222,7 +229,7 @@ namespace IBE
             this.gbType.Controls.Add(this.rbCommodities);
             this.gbType.Location = new System.Drawing.Point(12, 12);
             this.gbType.Name = "gbType";
-            this.gbType.Size = new System.Drawing.Size(132, 112);
+            this.gbType.Size = new System.Drawing.Size(132, 109);
             this.gbType.TabIndex = 6;
             this.gbType.TabStop = false;
             this.gbType.Tag = "Type;Commodity";
@@ -273,7 +280,8 @@ namespace IBE
             // 
             // cmdSave
             // 
-            this.cmdSave.Location = new System.Drawing.Point(826, 25);
+            this.cmdSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdSave.Location = new System.Drawing.Point(1151, 12);
             this.cmdSave.Name = "cmdSave";
             this.cmdSave.Size = new System.Drawing.Size(113, 23);
             this.cmdSave.TabIndex = 9;
@@ -283,7 +291,8 @@ namespace IBE
             // 
             // cmdExit
             // 
-            this.cmdExit.Location = new System.Drawing.Point(826, 54);
+            this.cmdExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdExit.Location = new System.Drawing.Point(1151, 41);
             this.cmdExit.Name = "cmdExit";
             this.cmdExit.Size = new System.Drawing.Size(113, 23);
             this.cmdExit.TabIndex = 10;
@@ -293,11 +302,12 @@ namespace IBE
             // 
             // cmdConfirm
             // 
-            this.cmdConfirm.Location = new System.Drawing.Point(214, 49);
+            this.cmdConfirm.Location = new System.Drawing.Point(219, 19);
             this.cmdConfirm.Name = "cmdConfirm";
             this.cmdConfirm.Size = new System.Drawing.Size(183, 51);
             this.cmdConfirm.TabIndex = 11;
             this.cmdConfirm.Text = "Confirm Translation";
+            this.toolTip1.SetToolTip(this.cmdConfirm, "If ED-IBE has collected unknown or not yet translated items");
             this.cmdConfirm.UseVisualStyleBackColor = true;
             this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
             // 
@@ -305,15 +315,16 @@ namespace IBE
             // 
             this.groupbox3.Controls.Add(this.label4);
             this.groupbox3.Controls.Add(this.label3);
-            this.groupbox3.Controls.Add(this.cbRemoveAfter);
             this.groupbox3.Controls.Add(this.radioButton1);
             this.groupbox3.Controls.Add(this.rbOnlyUserlanguage);
             this.groupbox3.Controls.Add(this.cmdConfirm);
             this.groupbox3.Location = new System.Drawing.Point(309, 15);
             this.groupbox3.Name = "groupbox3";
-            this.groupbox3.Size = new System.Drawing.Size(408, 109);
+            this.groupbox3.Size = new System.Drawing.Size(408, 106);
             this.groupbox3.TabIndex = 12;
             this.groupbox3.TabStop = false;
+            this.groupbox3.Text = "Assign self-added items to EDDB items";
+            this.toolTip1.SetToolTip(this.groupbox3, resources.GetString("groupbox3.ToolTip"));
             // 
             // label4
             // 
@@ -331,18 +342,7 @@ namespace IBE
             this.label3.Size = new System.Drawing.Size(176, 13);
             this.label3.TabIndex = 15;
             this.label3.Text = "Confirmation of translation applies to";
-            // 
-            // cbRemoveAfter
-            // 
-            this.cbRemoveAfter.AutoSize = true;
-            this.cbRemoveAfter.Checked = true;
-            this.cbRemoveAfter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbRemoveAfter.Location = new System.Drawing.Point(214, 13);
-            this.cbRemoveAfter.Name = "cbRemoveAfter";
-            this.cbRemoveAfter.Size = new System.Drawing.Size(160, 30);
-            this.cbRemoveAfter.TabIndex = 14;
-            this.cbRemoveAfter.Text = "remove from selfadded items\r\nafter confirmation";
-            this.cbRemoveAfter.UseVisualStyleBackColor = true;
+            this.toolTip1.SetToolTip(this.label3, "If ED-IBE has collected unknown or not yet translated items");
             // 
             // radioButton1
             // 
@@ -352,6 +352,7 @@ namespace IBE
             this.radioButton1.Size = new System.Drawing.Size(183, 17);
             this.radioButton1.TabIndex = 13;
             this.radioButton1.Text = "for all but base language (english)";
+            this.toolTip1.SetToolTip(this.radioButton1, "If ED-IBE has collected unknown or not yet translated items");
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
             // rbOnlyUserlanguage
@@ -364,12 +365,45 @@ namespace IBE
             this.rbOnlyUserlanguage.TabIndex = 12;
             this.rbOnlyUserlanguage.TabStop = true;
             this.rbOnlyUserlanguage.Text = "only for user language";
+            this.toolTip1.SetToolTip(this.rbOnlyUserlanguage, "If ED-IBE has collected unknown or not yet translated items");
             this.rbOnlyUserlanguage.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.cmdExportCSV);
+            this.groupBox2.Controls.Add(this.cmdImportFromCSV);
+            this.groupBox2.Location = new System.Drawing.Point(723, 15);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(183, 106);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Import/Export (CSV)";
+            // 
+            // cmdExportCSV
+            // 
+            this.cmdExportCSV.Location = new System.Drawing.Point(10, 19);
+            this.cmdExportCSV.Name = "cmdExportCSV";
+            this.cmdExportCSV.Size = new System.Drawing.Size(156, 34);
+            this.cmdExportCSV.TabIndex = 0;
+            this.cmdExportCSV.Text = "Export data to CSV";
+            this.cmdExportCSV.UseVisualStyleBackColor = true;
+            this.cmdExportCSV.Click += new System.EventHandler(this.cmdExportCSV_Click);
+            // 
+            // cmdImportFromCSV
+            // 
+            this.cmdImportFromCSV.Location = new System.Drawing.Point(10, 59);
+            this.cmdImportFromCSV.Name = "cmdImportFromCSV";
+            this.cmdImportFromCSV.Size = new System.Drawing.Size(156, 34);
+            this.cmdImportFromCSV.TabIndex = 3;
+            this.cmdImportFromCSV.Text = "Import data from CSV";
+            this.cmdImportFromCSV.UseVisualStyleBackColor = true;
+            this.cmdImportFromCSV.Click += new System.EventHandler(this.cmdImportFromCSV_Click);
             // 
             // LanguageEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(955, 643);
+            this.ClientSize = new System.Drawing.Size(1276, 643);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupbox3);
             this.Controls.Add(this.cmdExit);
             this.Controls.Add(this.cmdSave);
@@ -393,6 +427,7 @@ namespace IBE
             this.groupBox1.ResumeLayout(false);
             this.groupbox3.ResumeLayout(false);
             this.groupbox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -412,18 +447,21 @@ namespace IBE
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button cmdSave;
         private System.Windows.Forms.Button cmdExit;
+        private System.Windows.Forms.Button cmdConfirm;
+        private System.Windows.Forms.GroupBox groupbox3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton rbOnlyUserlanguage;
         private System.Windows.Forms.DataGridViewTextBoxColumn column_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn column_language_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn column_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn column_id2;
         private System.Windows.Forms.DataGridViewTextBoxColumn column_language_id2;
         private System.Windows.Forms.DataGridViewTextBoxColumn column_name2;
-        private System.Windows.Forms.Button cmdConfirm;
-        private System.Windows.Forms.GroupBox groupbox3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox cbRemoveAfter;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton rbOnlyUserlanguage;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button cmdExportCSV;
+        private System.Windows.Forms.Button cmdImportFromCSV;
     }
 }

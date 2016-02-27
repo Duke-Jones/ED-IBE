@@ -687,7 +687,7 @@ namespace IBE
 
                     Application.DoEvents();
 
-                    Program.Data.ExportToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked);
+                    Program.Data.ExportMarketDataToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked);
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 1, Total = 1 });
                     Program.Data.Progress -= Data_Progress;
