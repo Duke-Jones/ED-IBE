@@ -57,3 +57,10 @@ RegulatedNoise/Data/stations_own.json
 /ED-IBE/Data/procmon.exe
 /ED-IBE/Data/stations.json
 /ED-IBE/Data/systems.json
+/ED-IBE/Data/category.csv
+/ED-IBE/Data/commodities.csv
+/ED-IBE/Data/levels.csv
+/ED-IBE/Data/test.csv
+/Installer/Install_01_new.iss
+/RNDatabase/Database/script/getDBVersion.cmd
+/RNDatabase/Database/script/update_till_0.0.1.sql

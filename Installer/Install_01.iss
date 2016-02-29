@@ -314,7 +314,8 @@ begin
       if (not DBIsExisting()) or (cbDeleteOldData.Checked) then
          begin
             BasePath := ExpandConstant(GetDataBasepath('') + '\Database');
-            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" > ' + BasePath + '\install.log 2>&1');
+            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" {#MyAppVersion} > ' + BasePath + '\install.log 2>&1');
+
             Log('CommandLine : <' + CommandLine + '>');
 
             Exec('cmd.exe', 

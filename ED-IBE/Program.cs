@@ -453,9 +453,11 @@ namespace IBE
             Version dbVersion;
             Version appVersion;
             Version testVersion = new Version();
-
+            Boolean foundError = false;
+    
             try
             {
+                Program.SplashScreen.InfoAdd("check for required structure updates...");
                 dbVersion   = Program.DBCon.getIniValue<Version>("Database", "Version", new Version(0,0,0,0).ToString(), false);
                 appVersion  = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -463,6 +465,7 @@ namespace IBE
                 {
                     if (dbVersion < (testVersion = new Version(0,1,0)))
                     {
+                        Program.SplashScreen.InfoAdd("...updating to v0.1.0...");
                         // here it's required to import all master data 
                         var DataIO = new frmDataIO();
 
@@ -477,43 +480,64 @@ namespace IBE
                         DataIO.Close();
                         DataIO.Dispose();
                         
-
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+                        Program.SplashScreen.InfoAppendLast("<OK>");
                     }
 
-                    //if (dbVersion < (testVersion = new Version(0,1,1)))
-                    //{
-                    //    String sqlString = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                       " +
-                    //                       "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;        " +
-                    //                       "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';      " +
-                    //                       "                                                                               " +
-                    //                       "ALTER TABLE `elite_db`.`tbLevelLocalization`                                   " +
-                    //                       "DROP FOREIGN KEY `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`,           " +
-                    //                       "DROP FOREIGN KEY `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`;               " +
-                    //                       "                                                                               " +
-                    //                       "ALTER TABLE `elite_db`.`tbLevelLocalization`                                   " +
-                    //                       "ADD CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`              " +
-                    //                       "  FOREIGN KEY (`economylevel_id`)                                              " +
-                    //                       "  REFERENCES `elite_db`.`tbEconomyLevel` (`id`)                                " +
-                    //                       "  ON DELETE CASCADE                                                            " +
-                    //                       "  ON UPDATE CASCADE,                                                           " +
-                    //                       "ADD CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`                  " +
-                    //                       "  FOREIGN KEY (`language_id`)                                                  " +
-                    //                       "  REFERENCES `elite_db`.`tbLanguage` (`id`)                                    " +
-                    //                       "  ON DELETE CASCADE                                                            " +
-                    //                       "  ON UPDATE CASCADE;                                                           " +
-                    //                       "                                                                               " +
-                    //                       "                                                                               " +
-                    //                       "SET SQL_MODE=@OLD_SQL_MODE;                                                    " +
-                    //                       "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                " +
-                    //                       "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                          ";
-   
-                    //    DBCon.Execute(sqlString);
-                    //}
+                    if (dbVersion < (testVersion = new Version(0,1,1)))
+                    {
+                        String sqlString;
 
-                    Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+                        Program.SplashScreen.InfoAdd("...updating to v0.1.1...");
+
+                        sqlString = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                       " +
+                                    "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;        " +
+                                    "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';      " +
+                                    "                                                                               " +
+                                    "ALTER TABLE `elite_db`.`tbLevelLocalization`                                   " +
+                                    "DROP FOREIGN KEY `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`,           " +
+                                    "DROP FOREIGN KEY `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`;               " +
+                                    "                                                                               " +
+                                    "ALTER TABLE `elite_db`.`tbLevelLocalization`                                   " +
+                                    "ADD CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`              " +
+                                    "  FOREIGN KEY (`economylevel_id`)                                              " +
+                                    "  REFERENCES `elite_db`.`tbEconomyLevel` (`id`)                                " +
+                                    "  ON DELETE CASCADE                                                            " +
+                                    "  ON UPDATE CASCADE,                                                           " +
+                                    "ADD CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`                  " +
+                                    "  FOREIGN KEY (`language_id`)                                                  " +
+                                    "  REFERENCES `elite_db`.`tbLanguage` (`id`)                                    " +
+                                    "  ON DELETE CASCADE                                                            " +
+                                    "  ON UPDATE CASCADE;                                                           " +
+                                    "                                                                               " +
+                                    "                                                                               " +
+                                    "SET SQL_MODE=@OLD_SQL_MODE;                                                    " +
+                                    "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                " +
+                                    "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                          ";
+
+                        try
+                        {
+                            DBCon.Execute(sqlString);
+
+                            Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+                            Program.SplashScreen.InfoAppendLast("<OK>");
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.SplashScreen.InfoAppendLast("<failed>");
+                            foundError = true;
+                            MessageBox.Show("Error: could not update database to v0.1.1");   
+                        }
+                    }
+
+                    if (!foundError) 
+                        Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+
                 }
-
+                else
+                {
+                    Program.SplashScreen.InfoAppendLast("<OK>");
+                }
             }
             catch (Exception ex)
             {

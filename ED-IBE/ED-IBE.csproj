@@ -373,6 +373,7 @@
     </Content>
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\DataGridViewSettings.resx">
       <DependentUpon>DataGridViewSettings.cs</DependentUpon>
@@ -385,6 +386,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EDDB_Data\EDCommodityListView.resx">
       <DependentUpon>EDCommodityListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EDDB_Data\EDCommodityView.resx">
       <DependentUpon>EDCommodityView.cs</DependentUpon>
@@ -419,6 +421,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Brainerous Pixeltest\Picturedata.resx">
       <DependentUpon>Picturedata.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainTabs\tabSettings.resx">
       <DependentUpon>tabSettings.cs</DependentUpon>

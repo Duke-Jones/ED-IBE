@@ -78,6 +78,7 @@ namespace IBE
             // 
             this.dgvData.AllowDrop = true;
             this.dgvData.AllowUserToAddRows = false;
+            this.dgvData.AllowUserToDeleteRows = false;
             this.dgvData.AllowUserToOrderColumns = true;
             this.dgvData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -141,7 +142,10 @@ namespace IBE
             this.dgvDataOwn.Size = new System.Drawing.Size(616, 476);
             this.dgvDataOwn.TabIndex = 1;
             this.dgvDataOwn.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
+            this.dgvDataOwn.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
+            this.dgvDataOwn.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvDataOwn_RowsRemoved);
             this.dgvDataOwn.SelectionChanged += new System.EventHandler(this.dgvData_SelectionChanged);
+            this.dgvDataOwn.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvDataOwn_UserDeletingRow);
             this.dgvDataOwn.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dgvDataOwn_MouseMove);
             // 
             // column_id2

@@ -96,8 +96,11 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
-
-
+   * updated in installation script for insert version number
+   * updated DB-structure to v0.1.1
+   * added all right to RN_User for future maintenance
+   * removing of self-added commodities is working now
+-------------------------------------------------------------------------------------         
    * added support to edit translations of commodities etc.
    * export of translations possible
    * fixes 

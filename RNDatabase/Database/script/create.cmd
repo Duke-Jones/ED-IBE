@@ -15,11 +15,11 @@ set EliteDBName=Elite_DB
 set ROOT_PW=EliteAdmin
 set RN_USER=RN_User
 set RN_USER_PW=Elite
-set RN_USER_PRIV=Insert, Select, Update, Delete, Create Temporary Tables, Create View, Drop
+set RN_USER_PRIV=All
 set SQL_HOSTS=localhost 127.0.0.1 ::1 %computername% ASTERISK
 
 REM "super" permission is needed for performance reasons while inserting big data plenties
-set RN_USER_PRIV_GLOB=Super, Shutdown	
+set RN_USER_PRIV_GLOB=Super, Shutdown
 
 SET SOURCE_DIR=%~dp0
 
@@ -117,6 +117,11 @@ for %%h in (%SQL_HOSTS%) do (
 
 REM create the Elite database itself
 "%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% < "%DESTINATION_DIR%\script\create_Elite_DB.sql"
+
+if not [%4] EQU [] (
+    rem write installed version into database
+	"%MYSQL_PATH%\bin\mysql.exe" -u root --password=%ROOT_PW% --execute="insert ignore into elite_db.tbInitValue values ('Database', 'Version', '%4');"
+)
 
 REM go back into script directory
 cd script

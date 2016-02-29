@@ -644,13 +644,13 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLevelLocalization` (
   CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`
     FOREIGN KEY (`economylevel_id`)
     REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`
     FOREIGN KEY (`language_id`)
     REFERENCES `Elite_DB`.`tbLanguage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 

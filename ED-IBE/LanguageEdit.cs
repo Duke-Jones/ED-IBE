@@ -24,6 +24,8 @@ namespace IBE
         private DBGuiInterface                          m_GUIInterface;
         private Boolean                                 m_DataChanged = false;        
         private Dictionary<Int32, Int32>                m_ChangedIDs;
+        private List<Int32>                             m_DeletedIDs;
+
 
         public LanguageEdit()
         {
@@ -53,6 +55,7 @@ namespace IBE
             try
             {
                 m_ChangedIDs = new Dictionary<Int32, Int32>();
+                m_DeletedIDs = new List<Int32>();
 
                 currentLanguage = Program.DBCon.getIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "Language");
                 clbLanguageFilter.Items.Clear();
@@ -227,13 +230,27 @@ namespace IBE
             String parameterName;
             EliteDBIO.enLocalizationType activeSetting;
             List<Int32> collectorID = new List<Int32>();
+            List<Int32> deletedIDs = new List<Int32>();
 
             try
             {
                 Program.DBCon.TransBegin();
-
+                
                 Program.DBCon.TableUpdate(dgvData.Name, m_MainDataset, m_DataAdapter[dgvData]);
+
                 Program.DBCon.TableUpdate(dgvDataOwn.Name, m_MainDataset, m_DataAdapter[dgvDataOwn]);
+
+                foreach (Int32 delID in m_DeletedIDs)
+                {
+                    if(!deletedIDs.Contains(delID))
+                    {
+                        sqlString = String.Format("delete from tbCommodity" +
+                                                    " where id = {0}", 
+                                                    delID);
+                        Program.DBCon.Execute(sqlString);
+                        deletedIDs.Add(delID);
+                    }
+                }
 
                 foreach (var changedValuePair in m_ChangedIDs)
                 {
@@ -342,6 +359,8 @@ namespace IBE
 
                 Program.Data.AddMissingLocalizationEntries();
                 Program.Data.updateTranslation();
+
+                LoadData();
             }
             catch (Exception ex)
             {
@@ -436,6 +455,21 @@ namespace IBE
             {
                 cErr.processError(ex, "Error in dgvData_CellValueChanged");   
             }
+        }
+
+        private void dgvDataOwn_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            try
+            {
+                if (m_BindingSources != null)
+                    m_BindingSources[((DataGridViewExt)sender)].EndEdit();
+
+                cmdSave.Enabled  = m_MainDataset.HasChanges();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in dgvDataOwn_RowsRemoved");
+            }       
         }
 
         private void cmdSave_Click(object sender, EventArgs e)
@@ -747,5 +781,18 @@ namespace IBE
                 cErr.processError(ex, "Error while importing from csv");
             }       
         }
+
+        private void dgvDataOwn_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            try
+            {
+                m_DeletedIDs.Add((Int32)e.Row.Cells["column_id2"].Value);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in dgvDataOwn_UserDeletingRow");
+            }
+        }
+
     }
 }
