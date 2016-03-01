@@ -195,68 +195,107 @@ namespace IBE.MTCommandersLog
                 if(theCombobox.Name.Equals(m_GUI.cbLogEventType.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     DataTable selectedDT = m_BaseData.tbeventtype;
-                    currentBS.DataSource = selectedDT.Copy();
 
                     if(initial)
-                       theCombobox.DisplayMember    = "eventtype";
+                    {
+                        currentBS.DataSource = selectedDT.Clone();
+
+                        theCombobox.DisplayMember    = "eventtype";
+                        theCombobox.ValueMember      = "id";
+                    }
+
+                    currentBS.DataSource = selectedDT.Copy();
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogSystemName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    DataTable selectedDT = m_BaseData.tbsystems;
-                    currentBS.DataSource = selectedDT.Copy();
+                    DataTable selectedDT = m_BaseData.tbsystems.Clone();
 
                     if(initial)
-                        theCombobox.DisplayMember    = "systemname";
+                    {
+                        currentBS.DataSource = selectedDT;
+                        theCombobox.DisplayMember   = "systemname";
+                        theCombobox.ValueMember     = "id";
+                    }
+
+                    if ((GUI.dgvCommandersLog.RowCount > 0) && (GUI.dgvCommandersLog.CurrentCell != null))
+                    {
+                        var systemName = GUI.dgvCommandersLog.Rows[GUI.dgvCommandersLog.CurrentCell.RowIndex].Cells["systemname"].Value.ToString();
+
+                        String sqlString = "select * from tbSystems where systemName = " + DBConnector.SQLAString(systemName);
+                        Program.DBCon.Execute(sqlString, selectedDT);
+                    }
+
+                    currentBS.DataSource = selectedDT;
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogStationName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if((theReferenceCombobox == null) || (theReferenceCombobox.SelectedItem == null))
-                    { 
-                    DataTable selectedDT = m_BaseData.tbstations;
-                    currentBS.DataSource = selectedDT.Copy();
-
-                        theCombobox.DataSource       = m_BaseData.tbstations;
-                    }
-                    else
-                    {
-                        Int32 SytemID                = (Int32)((System.Data.DataRowView)theReferenceCombobox.SelectedItem).Row["id"];
-
-                        // small performance improvement -> only reload if necessary
-                        if((theCombobox.Tag == null) || (((Int32)theCombobox.Tag) != SytemID))
-                        { 
-                            DataTable selectedDT = m_BaseData.tbstations.Clone();
-                            m_BaseData.tbstations.Select("system_id = " + SytemID).CopyToDataTable(selectedDT,LoadOption.OverwriteChanges);
-                            currentBS.DataSource = selectedDT;
-
-                            theCombobox.Tag = SytemID;
-                        }
-                    }
-
                     if(initial)
+                    {
+                        currentBS.DataSource         = m_BaseData.tbstations.Clone();
                         theCombobox.DisplayMember    = "stationname";
+                        theCombobox.ValueMember      = "id";
+                    }
 
+                    String system = theReferenceCombobox.Text;
+
+                    // small performance improvement -> only reload if necessary
+                    if((theCombobox.Tag == null) || (((String)theCombobox.Tag) != system))
+                    { 
+                        var systemdata = m_BaseData.tbsystems.Select("systemname = '" +  system + "'");
+
+                        if(systemdata.Count() > 0)
+                        {
+                            DataTable selectedDT = m_BaseData.tbstations.Clone();
+                            selectedDT.Clear();
+                            m_BaseData.tbstations.Select("system_id = " + systemdata[0]["id"]).CopyToDataTable(selectedDT,LoadOption.OverwriteChanges);
+
+                            // add a empty row, if we don't wan't to select a station
+                            dsEliteDB.tbstationsRow emptyRow = (dsEliteDB.tbstationsRow)selectedDT.NewRow();
+                            emptyRow.stationname = "";
+                            emptyRow.id         = 0;
+                            emptyRow.updated_at = DateTime.UtcNow;
+                            emptyRow.system_id  = 0;
+
+                            selectedDT.Rows.InsertAt(emptyRow, 0);
+
+                            currentBS.DataSource = selectedDT;
+                        }
+                        else
+                        {
+                            ((DataTable)currentBS.DataSource).Clear();
+                        }
+
+                        theCombobox.Tag = system;
+                    }
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoName.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     DataTable selectedDT = m_BaseData.tbcommodity;
-                    currentBS.DataSource = selectedDT.Copy();
 
                     if(initial)
-                       theCombobox.DisplayMember    = "loccommodity";
+                    {
+                        currentBS.DataSource         = selectedDT.Clone();
+                        theCombobox.DisplayMember    = "loccommodity";
+                        theCombobox.ValueMember      = "id";
+                    }
+
+                    currentBS.DataSource = selectedDT.Copy();
 
                 }
                 else if(theCombobox.Name.Equals(m_GUI.cbLogCargoAction.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     DataTable selectedDT = m_BaseData.tbcargoaction;
-                    currentBS.DataSource = selectedDT.Copy();
 
                     if(initial)
-                       theCombobox.DisplayMember    = "cargoaction";
+                    {
+                        currentBS.DataSource         = selectedDT.Clone();
+                        theCombobox.DisplayMember    = "cargoaction";
+                        theCombobox.ValueMember      = "id";
+                    }
+
+                    currentBS.DataSource = selectedDT.Copy();
 
                 }
-
-                if(initial)
-                    theCombobox.ValueMember      = "id";
 
             }
             catch (Exception ex)
@@ -791,6 +830,38 @@ namespace IBE.MTCommandersLog
                 }
 
                 Program.DBCon.Execute(sqlString.ToString());
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting rows", ex);
+            }
+        }
+
+        /// <summary>
+        /// loads only the systems matching the current input
+        /// </summary>
+        /// <param name="systemString"></param>
+        /// <param name="cBox"></param>
+        public void LoadSystemComboBoxData(string systemString, ComboBox cBox)
+        {
+            BindingSource currentBS = null;
+            DataTable currentDt = null;
+
+            try
+            {
+                currentBS = m_BindingSources[cBox];
+                currentDt = (DataTable)currentBS.DataSource;
+
+                if (systemString != "")
+                {
+                    String sqlString = "select * from tbSystems where systemName like " + DBConnector.SQLAString(systemString + "%") ;
+                    Program.DBCon.Execute(sqlString, currentDt);
+                }
+                else
+                {
+                    currentDt.Clear();
+                }
 
             }
             catch (Exception ex)

@@ -87,6 +87,18 @@ namespace IBE.SQL
             }
         }
 
+        public Boolean InitImportDone
+        {
+            get
+            {
+                return Program.DBCon.getIniValue<Boolean>("Database", "InitImportDone", "false", false, false);
+            }
+            set
+            {
+                Program.DBCon.setIniValue("Database", "InitImportDone", value.ToString());
+            }
+        }
+
         public event EventHandler<ProgressEventArgs> Progress;
 
         protected virtual void OnProgress(ProgressEventArgs e)

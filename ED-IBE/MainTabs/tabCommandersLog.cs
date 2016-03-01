@@ -90,11 +90,11 @@ namespace IBE.MTCommandersLog
 
                 //preparing the combo boxes
                 m_DataSource.prepareCmb_EventTypes(ref cbLogEventType);
+
                 m_DataSource.prepareCmb_EventTypes(ref cbLogSystemName);
                 m_DataSource.prepareCmb_EventTypes(ref cbLogStationName, cbLogSystemName);
                 m_DataSource.prepareCmb_EventTypes(ref cbLogCargoName);
                 m_DataSource.prepareCmb_EventTypes(ref cbLogCargoAction);
-
 
                 dtpLogEventDate.CustomFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern + " " + 
                                                System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern;
@@ -215,7 +215,7 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                m_DataSource.prepareCmb_EventTypes(ref cbLogStationName, cbLogSystemName);   
+                RefreshStationComboBoxData();
             }
             catch (Exception ex)
             {
@@ -282,8 +282,12 @@ namespace IBE.MTCommandersLog
         {
             try
             {
+                RefreshSystemComboBoxData();
+                RefreshStationComboBoxData();
+
                 m_CL_State = enCLAction.Edit;
                 setCLFieldsEditable(true);
+
             }
             catch (Exception ex)
             {
@@ -375,11 +379,7 @@ namespace IBE.MTCommandersLog
                 currentRow.Cells["action"].Value              = cbLogCargoAction.Text;
                 currentRow.Cells["cargovolume"].Value         = nbLogQuantity.Value;
                 currentRow.Cells["notes"].Value               = tbLogNotes.Text;
-
-                if(Double.TryParse(txtLogDistance.Text, out Distance))
-                    currentRow.Cells["distance"].Value        =  Distance;
-                else
-                    currentRow.Cells["distance"].Value        =  null;
+                currentRow.Cells["distance"].Value            =  txtLogDistance.Value.ToString().ToNString();
 
                 dgvCommandersLog.ReadOnly = true;
 
@@ -435,10 +435,11 @@ namespace IBE.MTCommandersLog
                 {
                     var currentRow = dgvCommandersLog.Rows[e.RowIndex];
 
-                    cbLogEventType.Text         = (String)currentRow.Cells["eevent"].Value.ToString();
-                    dtpLogEventDate.Value       = (DateTime)currentRow.Cells["time"].Value;
-                    cbLogSystemName.Text        = (String)currentRow.Cells["systemname"].Value.ToString();
-
+                    cbLogEventType.Text             = (String)currentRow.Cells["eevent"].Value.ToString();
+                    dtpLogEventDate.Value           = (DateTime)currentRow.Cells["time"].Value;
+                    cbLogSystemName.Text            = (String)currentRow.Cells["systemname"].Value.ToString();
+                    cbLogSystemName.TextBox_ro.Text = (String)currentRow.Cells["systemname"].Value.ToString();
+                    
                     // force reloading of the stations-ComboBox-data to avoid internal exceptions
                     //m_DataSource.prepareCmb_EventTypes(ref cbLogStationName, cbLogSystemName);   
 
@@ -450,7 +451,8 @@ namespace IBE.MTCommandersLog
                     cbLogCargoAction.Text       = (String)currentRow.Cells["action"].Value.ToString();
                     nbLogQuantity.Value         = (Int32)currentRow.Cells["cargovolume"].Value;
                     tbLogNotes.Text             = (String)currentRow.Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
-                    txtLogDistance.Text         = (String)currentRow.Cells["distance"].Value.ToString();
+                    txtLogDistance.Value        =  currentRow.Cells["distance"].Value;
+                    
                 }
                 else
                 {
@@ -486,8 +488,8 @@ namespace IBE.MTCommandersLog
                 }
                 else
                 {
-                    cbLogSystemName.DropDownStyle  = ComboBoxStyle.DropDownList;
-                    cbLogStationName.DropDownStyle = ComboBoxStyle.DropDownList;
+                    cbLogSystemName.DropDownStyle  = ComboBoxStyle.Simple;
+                    cbLogStationName.DropDownStyle = ComboBoxStyle.Simple;
                 }
 
                 cbLogEventType.ReadOnly           = !Enabled;
@@ -647,6 +649,7 @@ namespace IBE.MTCommandersLog
         /// <param name="e"></param>
         private void dgvCommandersLog_SelectionChanged(object sender, EventArgs e)
         {
+
             try
             {
                 cmdCL_DeleteEntry.Enabled = (dgvCommandersLog.SelectedRows.Count > 0);
@@ -680,14 +683,61 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while deleting rows from the commanders log", ex);
+                cErr.processError(ex, "Error while deleting rows from the commanders log");
+            }
+        }
+        
+        /// <summary>
+        /// when editing we try to load the matching systems into the Combobox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbLogSystemName_TextUpdate(object sender, EventArgs e)
+        {
+            try
+            {
+                RefreshSystemComboBoxData();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cbLogSystemName_TextChanged");
             }
         }
 
-        private void dgvCommandersLog_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        private void RefreshSystemComboBoxData()
         {
-            Debug.Print("dgvCommandersLog_ColumnWidthChanged");
+            try
+            {
+                String cText = cbLogSystemName.Text;
+
+                cbLogSystemName.SuspendLayout();
+                cbLogSystemName.BeginUpdate();
+
+                m_DataSource.LoadSystemComboBoxData(cText, cbLogSystemName);
+                cbLogSystemName.DroppedDown = true;
+
+                cbLogSystemName.Text = cText;
+                cbLogSystemName.SelectionStart = cText.Length;
+
+                cbLogSystemName.ResumeLayout();
+                cbLogSystemName.EndUpdate();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing combobox-data for systems-combobox", ex);
+            }
         }
 
+        private void RefreshStationComboBoxData()
+        {
+            try
+            {
+                m_DataSource.prepareCmb_EventTypes(ref cbLogStationName, cbLogSystemName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing combobox-data for stations-combobox", ex);
+            }
+        }
     }
 }

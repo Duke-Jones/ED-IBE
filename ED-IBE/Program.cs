@@ -463,27 +463,6 @@ namespace IBE
 
                 if (dbVersion < appVersion)
                 {
-                    if (dbVersion < (testVersion = new Version(0,1,0)))
-                    {
-                        Program.SplashScreen.InfoAdd("...updating to v0.1.0...");
-                        // here it's required to import all master data 
-                        var DataIO = new frmDataIO();
-
-                        Program.SplashScreen.InfoAdd("Importing master data...");
-                        Thread.Sleep(3000);
-
-                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
-                        DataIO.ReUseLine  = true;
-
-                        DataIO.StartMasterImport(GetDataPath("Data"));
-
-                        DataIO.Close();
-                        DataIO.Dispose();
-                        
-                        Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
-                        Program.SplashScreen.InfoAppendLast("<OK>");
-                    }
-
                     if (dbVersion < (testVersion = new Version(0,1,1)))
                     {
                         String sqlString;
@@ -538,6 +517,28 @@ namespace IBE
                 {
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
+
+                if (!Program.Data.InitImportDone)
+                {
+                    // here it's required to import all master data 
+                    var DataIO = new frmDataIO();
+
+                    Program.SplashScreen.InfoAdd("Importing master data...");
+                    Thread.Sleep(1500);
+
+                    DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                    DataIO.ReUseLine  = true;
+
+                    DataIO.StartMasterImport(GetDataPath("Data"));
+
+                    DataIO.Close();
+                    DataIO.Dispose();
+                        
+                    Program.SplashScreen.InfoAdd("Importing master data...<OK>");
+
+                    Program.Data.InitImportDone = true;
+                }
+
             }
             catch (Exception ex)
             {

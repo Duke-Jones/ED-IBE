@@ -38,7 +38,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbCL_LogEdit = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtLogDistance = new System.Windows.Forms.TextBox();
+            this.txtLogDistance = new System.Windows.Forms.TextBoxDoubleB();
             this.label2 = new System.Windows.Forms.Label();
             this.cmdCL_DeleteEntry = new System.Windows.Forms.Button();
             this.cmdCL_Cancel = new System.Windows.Forms.Button();
@@ -135,11 +135,16 @@
             // 
             // txtLogDistance
             // 
+            this.txtLogDistance.DefaultValue = "";
+            this.txtLogDistance.Digits = null;
+            this.txtLogDistance.Format = "#,##0.0";
             this.txtLogDistance.Location = new System.Drawing.Point(69, 121);
             this.txtLogDistance.Name = "txtLogDistance";
             this.txtLogDistance.Size = new System.Drawing.Size(105, 20);
             this.txtLogDistance.TabIndex = 46;
             this.txtLogDistance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtLogDistance.Value = "";
+
             // 
             // label2
             // 
@@ -216,6 +221,7 @@
             // cbLogSystemName
             // 
             this.cbLogSystemName.BackColor_ro = System.Drawing.SystemColors.Control;
+            this.cbLogSystemName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.cbLogSystemName.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.cbLogSystemName.FormattingEnabled = true;
             this.cbLogSystemName.Location = new System.Drawing.Point(69, 41);
@@ -223,6 +229,7 @@
             this.cbLogSystemName.ReadOnly = false;
             this.cbLogSystemName.Size = new System.Drawing.Size(367, 21);
             this.cbLogSystemName.TabIndex = 9;
+            this.cbLogSystemName.TextUpdate += new System.EventHandler(this.cbLogSystemName_TextUpdate);
             // 
             // dtpLogEventDate
             // 
@@ -474,7 +481,6 @@
             this.dgvCommandersLog.TabIndex = 44;
             this.dgvCommandersLog.Tag = "CommandersLog;1";
             this.dgvCommandersLog.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.dgvCommandersLog_ColumnSorted);
-            this.dgvCommandersLog.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgvCommandersLog_ColumnWidthChanged);
             this.dgvCommandersLog.SelectionChanged += new System.EventHandler(this.dgvCommandersLog_SelectionChanged);
             this.dgvCommandersLog.Click += new System.EventHandler(this.dgvCommandersLog_Click);
             // 
@@ -612,9 +618,7 @@
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.NumericUpDown_ro nbCurrentCredits;
-        private Enums_and_Utility_Classes.DataGridViewExt dgvCommandersLog;
         private System.Windows.Forms.CheckBox cb_ShowEditField;
-        internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
         internal System.Windows.Forms.DateTimePicker_ro dtpLogEventDate;
         internal System.Windows.Forms.ComboBox_ro cbLogEventType;
         internal System.Windows.Forms.ComboBox_ro cbLogCargoAction;
@@ -623,7 +627,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button cmdCL_DeleteEntry;
         private System.Windows.Forms.Label label3;
-        internal System.Windows.Forms.TextBox txtLogDistance;
+        internal System.Windows.Forms.TextBoxDoubleB txtLogDistance;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridViewTextBoxColumn time;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemname;
@@ -636,5 +640,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn distance;
         private System.Windows.Forms.DataGridViewTextBoxColumn notes;
+        internal Enums_and_Utility_Classes.DataGridViewExt dgvCommandersLog;
+        internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
     }
 }

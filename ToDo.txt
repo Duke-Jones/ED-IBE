@@ -96,6 +96,11 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+
+   * improved speed when loading gui of "Commanders Log"
+   * round value of jump distance for view (underlying is still full double)
+   * deactivated global log for sql-db
+-------------------------------------------------------------------------------------         
    * updated in installation script for insert version number
    * updated DB-structure to v0.1.1
    * added all right to RN_User for future maintenance

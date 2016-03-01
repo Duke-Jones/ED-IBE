@@ -51,6 +51,12 @@ namespace System.Windows.Forms
             }
         }
 
+        protected override void OnTextChanged(EventArgs e)
+        {
+ 	        base.OnTextChanged(e);
+            TextBox_ro.Text = this.Text;
+        }
+
         private bool Visible_ro
         {
             get { return this.Visible; }
@@ -329,6 +335,81 @@ namespace System.Windows.Forms
 
 
     }
+
+    public class TextBoxDoubleB : TextBox
+    {
+        [System.ComponentModel.Browsable(true)]
+        public int? Digits { get; set; }
+
+        [System.ComponentModel.Browsable(true)]
+        public String Format { get; set; }
+
+        [System.ComponentModel.Browsable(true)]
+        public Object DefaultValue { get; set; }
+
+        private Boolean TextIsChanged { get; set; }
+
+        private Object m_Value;
+        [System.ComponentModel.Browsable(true)]
+        public Object Value { 
+            get{ 
+                return m_Value;
+            }
+            set
+            {
+                ParseValue(value.ToString());
+
+                TextIsChanged = false;
+            } 
+        }
+
+        protected override void OnTextChanged(EventArgs e)
+        {
+            TextIsChanged = true;
+            base.OnTextChanged(e);
+        }
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            if(TextIsChanged)
+                ParseValue(this.Text);
+
+            base.OnLostFocus(e);
+        }
+
+        private void ParseValue(String txtValue)
+        {
+            Double tmpValue = 0;
+
+            if(Double.TryParse(txtValue, out tmpValue))
+            {
+                if(Digits != null)
+                {
+                    tmpValue = Math.Round(tmpValue, (Int32)Digits);
+                }
+
+                m_Value = tmpValue;
+
+                if (!String.IsNullOrEmpty(Format))
+                {
+                    this.Text = tmpValue.ToString(Format);
+                }
+                else if(Digits != null)
+                {
+                    this.Text = tmpValue.ToString(String.Format("F{0}", Digits));
+                }
+                else
+                    this.Text = tmpValue.ToString();
+            }
+            else
+            {
+                m_Value   = DefaultValue;
+                this.Text = DefaultValue.ToString();
+            }
+                
+        }
+    }
+    
 
     public class ComboBoxInt32 : ComboBox
     {
