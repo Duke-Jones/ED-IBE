@@ -74,6 +74,26 @@ namespace IBE.Enums_and_Utility_Classes
             }
         }
 
+        static public void CloneSettings(ref DataGridView EditedDataGridView1, ref DataGridView EditedDataGridView2)
+        {
+            try
+            {
+                foreach (DataGridViewColumn CurrentColumn in EditedDataGridView1.Columns)
+                { 
+                    EditedDataGridView2.Columns[CurrentColumn.Index].DisplayIndex    = CurrentColumn.DisplayIndex;
+                    EditedDataGridView2.Columns[CurrentColumn.Index].Visible         = CurrentColumn.Visible;
+                    EditedDataGridView2.Columns[CurrentColumn.Index].AutoSizeMode    = CurrentColumn.AutoSizeMode;
+                    EditedDataGridView2.Columns[CurrentColumn.Index].Width           = CurrentColumn.Width;
+                    EditedDataGridView2.Columns[CurrentColumn.Index].FillWeight      = CurrentColumn.FillWeight;
+                    EditedDataGridView2.Columns[CurrentColumn.Index].MinimumWidth    = CurrentColumn.MinimumWidth;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while cloning settings", ex);
+            }
+        }
+
         private void cmdCancel_Click(object sender, EventArgs e)
         {
             try

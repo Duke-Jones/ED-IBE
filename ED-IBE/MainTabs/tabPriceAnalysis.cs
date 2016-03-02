@@ -262,7 +262,10 @@ namespace IBE.MTPriceAnalysis
                 if (Program.actualCondition.System == "")
                     MessageBox.Show("Current system is unknown.", "Can't calculate...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
+                {
+                    setFilterHasChanged(true);
                     ActivateFilterSettings();
+                }
             }
             catch (Exception ex)
             {
@@ -379,7 +382,7 @@ namespace IBE.MTPriceAnalysis
         }
 
         /// <summary>
-        /// external call to signal this tab "data has changed"
+        /// external call to force refresh all data
         /// </summary>
         public void RefreshData()
         {
@@ -403,6 +406,33 @@ namespace IBE.MTPriceAnalysis
             catch (Exception ex)
             {
                 throw new Exception("Error while refreshing data (outline)", ex);
+            }
+        }
+
+        /// <summary>
+        /// external call to signal this tab "data has changed"
+        /// </summary>
+        public void SignalizeChangedData()
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(SignalizeChangedData));
+                else
+                {
+                    try 
+	                {	        
+                        setFilterHasChanged(true);                
+	                }
+	                catch (Exception ex)
+	                {
+		                cErr.processError(ex, "Error while signalizing changed data (inline)");
+	                }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while signalizing changed data (outline)", ex);
             }
         }
 
@@ -1339,7 +1369,8 @@ namespace IBE.MTPriceAnalysis
         private void DataGridView_Click(object sender, EventArgs e)
         {
             MouseEventArgs args;
-            DataGridView dgv;
+            DataGridView dgv1;
+            DataGridView dgv2;
             DataGridView.HitTestInfo hit;
 
             try
@@ -1348,23 +1379,30 @@ namespace IBE.MTPriceAnalysis
 
                 if(args.Button == System.Windows.Forms.MouseButtons.Right)
                 { 
-                    dgv   = (DataGridView)sender;
-                    hit   = dgv.HitTest(args.X, args.Y);
+                    dgv1   = (DataGridView)sender;
+                    hit   = dgv1.HitTest(args.X, args.Y);
 
                     if (hit.Type == DataGridViewHitTestType.TopLeftHeader)
                     {
                         DataGridViewSettings Tool = new DataGridViewSettings();
 
-                        if(Tool.setVisibility(dgv) == DialogResult.OK)
+                        if(dgv1.Equals(dgvStation1))
+                            dgv2 = dgvStation2;
+                        else
+                            dgv2 = dgvStation1;
+
+                        if(Tool.setVisibility(dgv1) == DialogResult.OK)
                         {
-                            m_GUIInterface.saveSetting(dgv);
+                            m_GUIInterface.saveSetting(dgv1);
+                            DataGridViewSettings.CloneSettings(ref dgv1, ref dgv2);
+                            m_GUIInterface.saveSetting(dgv2);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error in DataGridView_Click", ex);
+                cErr.processError(ex, "Error while changing DataGridView settings");
             }
         }
 
@@ -1381,5 +1419,28 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+        private void dgvStation_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            try
+            {
+                DataGridViewExt dGrid       = (DataGridViewExt)sender;
+                DataGridViewColumn dColumn  =  dGrid.Columns[e.ColumnIndex];
+
+                if (dColumn.DataPropertyName.Equals("Demandlevel", StringComparison.InvariantCultureIgnoreCase) || 
+                    dColumn.DataPropertyName.Equals("Supplylevel", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    DataGridViewRow dRow    =  dGrid.Rows[e.RowIndex];
+                    Int32 intValue;
+                    if (Int32.TryParse(dRow.Cells[dColumn.Name].Value.ToString(), out intValue))
+                        e.Value = (String)Program.Data.BaseTableIDToName("economylevel", intValue, "loclevel");
+                    
+
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in dgvStation_CellFormatting");
+            }
+        }
     }
 }

@@ -762,5 +762,38 @@ namespace IBE.FileScanner
                 throw new Exception("Error while processing location info", ex);
             }
         }
+
+        internal void RaiseTestEvent()
+        {
+
+            try
+            {
+                String newSystem;
+
+                if (Program.actualCondition.System == "Eravate")
+                    newSystem = "Pai Huldr";
+                else
+                    newSystem = "Eravate";
+
+                Program.actualCondition.System      = newSystem;
+                Program.actualCondition.Location    = "";
+
+                var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
+                                                       Location      = Program.actualCondition.Location};
+                LocationInfo.Raise(this, LI);
+
+
+                var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
+                                                          Location      = Program.actualCondition.Location,
+                                                          OldSystem     = Program.actualCondition.System,  
+                                                          OldLocation   = Program.actualCondition.Location,
+                                                          Changed       = enLogEvents.Jump | enLogEvents.System};
+                LocationChanged.Raise(this, EA);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in RaiseEvent", ex);
+            }
+        }
     }
 }

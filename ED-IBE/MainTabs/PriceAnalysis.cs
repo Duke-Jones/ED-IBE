@@ -349,31 +349,43 @@ namespace IBE.MTPriceAnalysis
                             
                 if(DistanceToStar != null)                            
                 {
-                    sqlString = sqlString + String.Format(
-                            "   and St.Distance_To_Star <= {0}",
-                            ((Int32)DistanceToStar).ToString());
-
+                    if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "NoDistanceToStar", "consider").Equals("consider"))
+                    {
+                        sqlString = sqlString + String.Format(
+                                "   and ((St.Distance_To_Star <= {0}) or (St.Distance_To_Star is null))",
+                                ((Int32)DistanceToStar).ToString());
+                    }
+                    else
+                    {
+                        sqlString = sqlString + String.Format(
+                                "   and St.Distance_To_Star <= {0}",
+                                ((Int32)DistanceToStar).ToString());
+                    }
                 }
 
                 if(minLandingPadSize != null)                            
                 {
                     String LandingPadString = "";
+                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "NoLandingPadSize", "consider").Equals("consider");
 
                     switch (((String)minLandingPadSize).ToUpper())
                     {
                         case "S":
-                            LandingPadString = "(St.max_landing_pad_size = 'S') or " +
-                                               "(St.max_landing_pad_size = 'M') or " +
-                                               "(St.max_landing_pad_size = 'L')";
+                            LandingPadString = "(St.max_landing_pad_size  = 'S') or " +
+                                                "(St.max_landing_pad_size = 'M') or " +
+                                                "(St.max_landing_pad_size = 'L')";
                             break;
                         case "M":
-                            LandingPadString = "(St.max_landing_pad_size = 'M') or " +
-                                               "(St.max_landing_pad_size = 'L')";
+                            LandingPadString = "(St.max_landing_pad_size  = 'M') or " +
+                                                "(St.max_landing_pad_size = 'L')";
                             break;
                         case "L":
-                            LandingPadString = "(St.max_landing_pad_size = 'L')";
+                            LandingPadString = "(St.max_landing_pad_size  = 'L')";
                             break;
                     }
+
+                    if(consider)
+                        LandingPadString += " or  (St.max_landing_pad_size is null)";
 
                     sqlString = sqlString + String.Format(
                             "   and ({0})",

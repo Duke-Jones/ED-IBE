@@ -97,6 +97,12 @@ todo:
 *************************************************************************************
 
 
+   * results of price analysis remain visible after jump
+   * optional ignore/consider stations without specified LandingPadSizes / Distance_To_Star
+   * detaildata on priceanalysis tab
+     - layout of table is cloned to it's sibling
+     - suppy/demandlevel is shown as text, not as number anymore
+-------------------------------------------------------------------------------------         
    * improved speed when loading gui of "Commanders Log"
    * round value of jump distance for view (underlying is still full double)
    * deactivated global log for sql-db

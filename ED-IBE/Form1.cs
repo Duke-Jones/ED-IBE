@@ -1908,6 +1908,7 @@ namespace IBE
         {
 
             Text += VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
+            testToolStripMenuItem.Visible = Debugger.IsAttached;
 
             doInit();
 
@@ -3942,7 +3943,7 @@ namespace IBE
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
                 {
                     // the location has changed -> the reference for all distances has changed  
-                    Program.PriceAnalysis.GUI.RefreshData();
+                    Program.PriceAnalysis.GUI.SignalizeChangedData();
 
                     Program.actualCondition.System   = e.System;
                     setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
@@ -4000,6 +4001,21 @@ namespace IBE
             }
         }
 
+#region "Test"
+
+        private void createJumpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.LogfileScanner.RaiseTestEvent();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex);
+            }
+        }
+
+#endregion
 
     }
 
