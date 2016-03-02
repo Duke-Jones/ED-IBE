@@ -14,11 +14,28 @@ using System.Globalization;
 using CodeProject.Dialog;
 using IBE.EDDB_Data;
 using System.IO;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE.MTSettings
 {
     public partial class tabSettings : UserControl
     {
+
+        #region event handler
+
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<EventArgs> SettingChangedEvent;
+
+        protected virtual void OnSettingChanged(EventArgs e)
+        {
+            EventHandler<EventArgs> myEvent = SettingChangedEvent;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        #endregion
 
         public const String        DB_GROUPNAME                    = "Settings";
 
@@ -100,6 +117,9 @@ namespace IBE.MTSettings
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
+
+                m_GUIInterface.DataSavedEvent += m_GUIInterface_DataSavedEvent;
+
                 Cursor = oldCursor;
             }
             catch (Exception ex)
@@ -107,6 +127,11 @@ namespace IBE.MTSettings
                 Cursor = oldCursor;
                 throw new Exception("Error during initialization the commanders log tab", ex);
             }
+        }
+
+        void m_GUIInterface_DataSavedEvent(object sender, EventArgs e)
+        {
+            SettingChangedEvent.Raise(this, e);
         }
 
         /// <summary>

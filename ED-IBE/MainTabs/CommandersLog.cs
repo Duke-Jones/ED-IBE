@@ -707,7 +707,7 @@ namespace IBE.MTCommandersLog
 
 
         /// <summary>
-        /// event-worker for ExternalDataEvent-event
+        /// event-worker for DataSavedEvent-event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

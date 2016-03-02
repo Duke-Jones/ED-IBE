@@ -120,11 +120,6 @@
   <metadata name="ttToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="cmdImportOldData.ToolTip" xml:space="preserve">
-    <value>Imports the whole data structure from the existing old RegulatedNoise version.
-You can start this function only one time. After this you have to import the 
-specific data through the single import function to avoid multiple data records.</value>
-  </data>
   <data name="cbImportPriceData.ToolTip" xml:space="preserve">
     <value>You can also accept the import of the price-data from the EDDB-file (stations.json).
 Be aware this can need long time, if you already have price data in your database.
@@ -134,11 +129,6 @@ It's only useful if you want to have all (also old) price information from the E
     <value>You can also accept the import of the price-data from the EDDB-file (stations.json).
 Be aware this can need long time, if you already have price data in your database.
 It's only useful if you want to have all (also old) price information from the EDDB.</value>
-  </data>
-  <data name="cmdImportCommandersLog.ToolTip" xml:space="preserve">
-    <value>Imports the whole data structure from the existing old RegulatedNoise version.
-You can start this function only one time. After this you have to import the 
-specific data through the single import function to avoid multiple data records.</value>
   </data>
   <metadata name="fbFolderDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>118, 17</value>

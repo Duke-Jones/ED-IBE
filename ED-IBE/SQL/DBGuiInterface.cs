@@ -13,11 +13,13 @@ namespace IBE.SQL
 {
     class DBGuiInterface
     {
-        String      m_InitGroup;
-        Object      m_currentLoadingObject   = null;        
-        Int32       m_inloadAllSettings      = 0;
-        Int32       m_inloadSetting          = 0;
-        DBConnector m_DBCon                  = null;
+        private String      m_InitGroup;
+        private Object      m_currentLoadingObject   = null;        
+        private Int32       m_inloadAllSettings      = 0;
+        private Int32       m_inloadSetting          = 0;
+        private DBConnector m_DBCon                  = null;
+        private Int32       m_SavingLevel            = 0;
+
 #region  TagParts
 
         private class TagParts
@@ -28,6 +30,22 @@ namespace IBE.SQL
 
 
 #endregion
+
+        #region event handler
+
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<EventArgs> DataSavedEvent;
+
+        protected virtual void OnDataSaved(EventArgs e)
+        {
+            EventHandler<EventArgs> myEvent = DataSavedEvent;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// constructor
@@ -53,6 +71,7 @@ namespace IBE.SQL
         public Boolean saveSetting(object sender, Object Param1 = null)
         {
             Boolean retValue = false;
+            m_SavingLevel +=1;
 
             try
             {
@@ -224,11 +243,18 @@ namespace IBE.SQL
                         }
                     }
                 }
+
+                m_SavingLevel -=1;
             }
             catch (Exception ex)
             {
+                m_SavingLevel -=1;
                 cErr.processError(ex, "Error in saveSetting");
             }
+
+            if (retValue && (m_SavingLevel ==0))
+                DataSavedEvent.Raise(this, new EventArgs());
+                
 
             return retValue;
         }

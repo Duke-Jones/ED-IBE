@@ -294,9 +294,10 @@ namespace IBE
 
                 // register events for getting new location-infos for the gui
                 Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
-
                 Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
 
+                // events to inform parts of the gui that something can be changed
+                Program.PriceAnalysis.registerSettings(newSControl);
 
                 // until this is working again 
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);

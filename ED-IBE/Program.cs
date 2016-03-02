@@ -355,9 +355,10 @@ namespace IBE
                     Program.LogfileScanner.LocationInfo += LogfileScanner_LocationInfo;
                     Program.ExternalData.LocationInfo   += ExternalData_LocationInfo;
 
-                    // register the LogfileScanner in the CommandersLog for the ExternalDataEvent-event
+                    // register the LogfileScanner in the CommandersLog for the DataSavedEvent-event
                     CommandersLog.registerLogFileScanner(LogfileScanner);
                     CommandersLog.registerExternalTool(ExternalData);
+                    
 
                     PriceAnalysis.registerLogFileScanner(LogfileScanner);
                     PriceAnalysis.registerExternalTool(ExternalData);

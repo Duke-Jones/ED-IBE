@@ -59,6 +59,7 @@ namespace IBE.MTPriceAnalysis
         private Boolean                             m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner        m_LogfileScanner;
         private ExternalDataInterface               m_ExternalDataInterface;
+        private IBE.MTSettings.tabSettings          m_Settings;
         private DBConnector                         m_lDBCon;
 
         /// <summary>
@@ -185,50 +186,44 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-
-        /// <summary>
-        /// unregister the LogfileScanner
-        /// </summary>
-        /// <param name="LogfileScanner"></param>
-        public void unregisterLogFileScanner()
+        public void registerSettings(IBE.MTSettings.tabSettings settingsTab)
         {
             try
             {
-                if(m_LogfileScanner != null)
+                if(m_Settings == null)
                 { 
-                    m_LogfileScanner.LocationChanged -= LogfileScanner_LocationChanged;
-                    m_LogfileScanner = null;
+                    m_Settings                          = settingsTab;
+                    m_Settings.SettingChangedEvent     += GUI_SettingChangedEvent;
                 }
+                else 
+                    throw new Exception("SettingTab already registered");
+
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while unregistering the LogfileScanner", ex);
+                throw new Exception("Error while registering the SettingTab", ex);
             }
         }
 
         /// <summary>
-        /// unregister the LogfileScanner
+        /// event-worker for settingschanged-event
         /// </summary>
-        /// <param name="LogfileScanner"></param>
-        public void unregisterExternalTool()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void GUI_SettingChangedEvent(object sender, EventArgs e)
         {
             try
             {
-                if(m_ExternalDataInterface != null)
-                { 
-                    m_ExternalDataInterface.ExternalDataEvent -= m_ExternalDataInterface_ExternalDataEvent;
-                    m_ExternalDataInterface = null;
-                }
+                GUI.setFilterHasChanged(true);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while unregistering the ExternalDataTool", ex);
+                throw new Exception("Error while processing the GUI_SettingChangedEvent-event", ex);
             }
         }
 
-
         /// <summary>
-        /// event-worker for ExternalDataEvent-event
+        /// event-worker for LocationChangedEvent-event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -239,7 +234,6 @@ namespace IBE.MTPriceAnalysis
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
                     GUI.setFilterHasChanged(true);
-                    //GUI.RefreshData();
                 }
             }
             catch (Exception ex)

@@ -12,7 +12,8 @@ namespace IBE
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
         public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
-        
+        private Boolean m_CommandersLogImportHappened = false; 
+                                 
         [Flags] enum enImportTypes
         {
             Undefiend                       = 0x0000,
@@ -483,6 +484,7 @@ namespace IBE
 
                                 Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
 
+                                m_CommandersLogImportHappened = true;              
                             }
                             else
                             {
@@ -639,7 +641,7 @@ namespace IBE
                             cmdImportOldData.Enabled = false;
                             cbImportPriceData.Enabled = false;
 
-                            MessageBox.Show("Import has finished. Please restart ED-IBE", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                             Program.Data.Progress -= Data_Progress;
                             Cursor = Cursors.Default;
@@ -763,6 +765,19 @@ namespace IBE
             {
                 cErr.processError(ex);
             }
+        }
+
+        private void frmDataIO_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try 
+	        {	
+                if (m_CommandersLogImportHappened)
+                    Program.CommandersLog.GUI.RefreshData();  		
+	        }
+	        catch (Exception ex)
+	        {
+		        cErr.processError(ex, "Error in frmDataIO_FormClosed");
+	        }
         }
     }
 }

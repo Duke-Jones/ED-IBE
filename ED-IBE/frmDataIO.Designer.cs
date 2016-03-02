@@ -70,7 +70,8 @@
             this.cmdImportOldData.Size = new System.Drawing.Size(276, 34);
             this.cmdImportOldData.TabIndex = 0;
             this.cmdImportOldData.Text = "Import Old Datafiles";
-            this.ttToolTip.SetToolTip(this.cmdImportOldData, resources.GetString("cmdImportOldData.ToolTip"));
+            this.ttToolTip.SetToolTip(this.cmdImportOldData, "Imports the whole data structure from the existing old RegulatedNoise version.\r\nY" +
+        "ou can start this function only one time. ");
             this.cmdImportOldData.UseVisualStyleBackColor = true;
             this.cmdImportOldData.Click += new System.EventHandler(this.cmdImportOldData_Click);
             // 
@@ -131,7 +132,8 @@
             this.cmdImportCommandersLog.Size = new System.Drawing.Size(276, 34);
             this.cmdImportCommandersLog.TabIndex = 3;
             this.cmdImportCommandersLog.Text = "Import RN-CommandersLog-files";
-            this.ttToolTip.SetToolTip(this.cmdImportCommandersLog, resources.GetString("cmdImportCommandersLog.ToolTip"));
+            this.ttToolTip.SetToolTip(this.cmdImportCommandersLog, "The old RN had perfomance problems with too big Commander\'s Logs\r\nIf you have spl" +
+        "itted the old log in multiple files you can import the with this function.\r\n");
             this.cmdImportCommandersLog.UseVisualStyleBackColor = true;
             this.cmdImportCommandersLog.Click += new System.EventHandler(this.cmdImportCommandersLog_Click);
             // 
@@ -313,6 +315,7 @@
             this.Controls.Add(this.lbProgess);
             this.Name = "frmDataIO";
             this.Text = "Data Interface";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDataIO_FormClosed);
             this.gbFirstTime.ResumeLayout(false);
             this.gbFirstTime.PerformLayout();
             this.gbRepeat.ResumeLayout(false);
