@@ -59,9 +59,14 @@ namespace IBE
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.rbOnlyUserlanguage = new System.Windows.Forms.RadioButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmdExportCSV = new System.Windows.Forms.Button();
             this.cmdImportFromCSV = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.rbImportOverwriteAll = new System.Windows.Forms.RadioButton();
+            this.rbImportOverwriteButBase = new System.Windows.Forms.RadioButton();
+            this.rbImportOnlyNew = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataOwn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -71,7 +76,9 @@ namespace IBE
             this.gbType.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupbox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvData
@@ -91,7 +98,7 @@ namespace IBE
             this.dgvData.DoubleBuffer = true;
             this.dgvData.Location = new System.Drawing.Point(3, 17);
             this.dgvData.Name = "dgvData";
-            this.dgvData.Size = new System.Drawing.Size(619, 476);
+            this.dgvData.Size = new System.Drawing.Size(373, 427);
             this.dgvData.TabIndex = 0;
             this.dgvData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvData.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -139,7 +146,7 @@ namespace IBE
             this.dgvDataOwn.DoubleBuffer = true;
             this.dgvDataOwn.Location = new System.Drawing.Point(3, 17);
             this.dgvDataOwn.Name = "dgvDataOwn";
-            this.dgvDataOwn.Size = new System.Drawing.Size(616, 476);
+            this.dgvDataOwn.Size = new System.Drawing.Size(370, 427);
             this.dgvDataOwn.TabIndex = 1;
             this.dgvDataOwn.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvDataOwn.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -198,7 +205,7 @@ namespace IBE
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 134);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 211);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -210,14 +217,14 @@ namespace IBE
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.dgvDataOwn);
-            this.splitContainer1.Size = new System.Drawing.Size(1252, 497);
-            this.splitContainer1.SplitterDistance = 625;
+            this.splitContainer1.Size = new System.Drawing.Size(760, 448);
+            this.splitContainer1.SplitterDistance = 379;
             this.splitContainer1.TabIndex = 4;
             // 
             // rbCommodities
             // 
             this.rbCommodities.AutoSize = true;
-            this.rbCommodities.Location = new System.Drawing.Point(16, 19);
+            this.rbCommodities.Location = new System.Drawing.Point(33, 24);
             this.rbCommodities.Name = "rbCommodities";
             this.rbCommodities.Size = new System.Drawing.Size(76, 17);
             this.rbCommodities.TabIndex = 5;
@@ -233,7 +240,7 @@ namespace IBE
             this.gbType.Controls.Add(this.rbCommodities);
             this.gbType.Location = new System.Drawing.Point(12, 12);
             this.gbType.Name = "gbType";
-            this.gbType.Size = new System.Drawing.Size(132, 109);
+            this.gbType.Size = new System.Drawing.Size(150, 109);
             this.gbType.TabIndex = 6;
             this.gbType.TabStop = false;
             this.gbType.Tag = "Type;Commodity";
@@ -242,7 +249,7 @@ namespace IBE
             // rbEconomyLevels
             // 
             this.rbEconomyLevels.AutoSize = true;
-            this.rbEconomyLevels.Location = new System.Drawing.Point(16, 65);
+            this.rbEconomyLevels.Location = new System.Drawing.Point(33, 70);
             this.rbEconomyLevels.Name = "rbEconomyLevels";
             this.rbEconomyLevels.Size = new System.Drawing.Size(91, 17);
             this.rbEconomyLevels.TabIndex = 7;
@@ -254,7 +261,7 @@ namespace IBE
             // rbCategories
             // 
             this.rbCategories.AutoSize = true;
-            this.rbCategories.Location = new System.Drawing.Point(16, 42);
+            this.rbCategories.Location = new System.Drawing.Point(33, 47);
             this.rbCategories.Name = "rbCategories";
             this.rbCategories.Size = new System.Drawing.Size(67, 17);
             this.rbCategories.TabIndex = 6;
@@ -275,7 +282,7 @@ namespace IBE
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.clbLanguageFilter);
-            this.groupBox1.Location = new System.Drawing.Point(150, 12);
+            this.groupBox1.Location = new System.Drawing.Point(165, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(153, 112);
             this.groupBox1.TabIndex = 8;
@@ -284,10 +291,9 @@ namespace IBE
             // 
             // cmdSave
             // 
-            this.cmdSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdSave.Location = new System.Drawing.Point(1151, 12);
+            this.cmdSave.Location = new System.Drawing.Point(11, 19);
             this.cmdSave.Name = "cmdSave";
-            this.cmdSave.Size = new System.Drawing.Size(113, 23);
+            this.cmdSave.Size = new System.Drawing.Size(156, 34);
             this.cmdSave.TabIndex = 9;
             this.cmdSave.Text = "&Save Changes";
             this.cmdSave.UseVisualStyleBackColor = true;
@@ -295,10 +301,9 @@ namespace IBE
             // 
             // cmdExit
             // 
-            this.cmdExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdExit.Location = new System.Drawing.Point(1151, 41);
+            this.cmdExit.Location = new System.Drawing.Point(11, 59);
             this.cmdExit.Name = "cmdExit";
-            this.cmdExit.Size = new System.Drawing.Size(113, 23);
+            this.cmdExit.Size = new System.Drawing.Size(156, 34);
             this.cmdExit.TabIndex = 10;
             this.cmdExit.Text = "&Close";
             this.cmdExit.UseVisualStyleBackColor = true;
@@ -306,12 +311,12 @@ namespace IBE
             // 
             // cmdConfirm
             // 
-            this.cmdConfirm.Location = new System.Drawing.Point(219, 19);
+            this.cmdConfirm.Location = new System.Drawing.Point(216, 24);
             this.cmdConfirm.Name = "cmdConfirm";
-            this.cmdConfirm.Size = new System.Drawing.Size(183, 51);
+            this.cmdConfirm.Size = new System.Drawing.Size(156, 34);
             this.cmdConfirm.TabIndex = 11;
             this.cmdConfirm.Text = "Confirm Translation";
-            this.toolTip1.SetToolTip(this.cmdConfirm, "If ED-IBE has collected unknown or not yet translated items");
+            this.toolTip1.SetToolTip(this.cmdConfirm, resources.GetString("cmdConfirm.ToolTip"));
             this.cmdConfirm.UseVisualStyleBackColor = true;
             this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
             // 
@@ -322,9 +327,9 @@ namespace IBE
             this.groupbox3.Controls.Add(this.radioButton1);
             this.groupbox3.Controls.Add(this.rbOnlyUserlanguage);
             this.groupbox3.Controls.Add(this.cmdConfirm);
-            this.groupbox3.Location = new System.Drawing.Point(309, 15);
+            this.groupbox3.Location = new System.Drawing.Point(12, 126);
             this.groupbox3.Name = "groupbox3";
-            this.groupbox3.Size = new System.Drawing.Size(408, 106);
+            this.groupbox3.Size = new System.Drawing.Size(390, 79);
             this.groupbox3.TabIndex = 12;
             this.groupbox3.TabStop = false;
             this.groupbox3.Text = "Assign self-added items to EDDB items";
@@ -346,7 +351,7 @@ namespace IBE
             this.label3.Size = new System.Drawing.Size(176, 13);
             this.label3.TabIndex = 15;
             this.label3.Text = "Confirmation of translation applies to";
-            this.toolTip1.SetToolTip(this.label3, "If ED-IBE has collected unknown or not yet translated items");
+            this.toolTip1.SetToolTip(this.label3, resources.GetString("label3.ToolTip"));
             // 
             // radioButton1
             // 
@@ -356,7 +361,8 @@ namespace IBE
             this.radioButton1.Size = new System.Drawing.Size(183, 17);
             this.radioButton1.TabIndex = 13;
             this.radioButton1.Text = "for all but base language (english)";
-            this.toolTip1.SetToolTip(this.radioButton1, "If ED-IBE has collected unknown or not yet translated items");
+            this.toolTip1.SetToolTip(this.radioButton1, "Concatenate all but the base name (=english name)\r\nto the selected \"known name\" o" +
+        "n the left side.\r\n");
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
             // rbOnlyUserlanguage
@@ -369,19 +375,16 @@ namespace IBE
             this.rbOnlyUserlanguage.TabIndex = 12;
             this.rbOnlyUserlanguage.TabStop = true;
             this.rbOnlyUserlanguage.Text = "only for user language";
-            this.toolTip1.SetToolTip(this.rbOnlyUserlanguage, "If ED-IBE has collected unknown or not yet translated items");
+            this.toolTip1.SetToolTip(this.rbOnlyUserlanguage, "Concatenate only the userdefined string *in your selected language*\r\nto the selec" +
+        "ted \"known name\" on the left side.\r\nThe strings in other languages will be left " +
+        "unchanged.");
             this.rbOnlyUserlanguage.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // toolTip1
             // 
-            this.groupBox2.Controls.Add(this.cmdExportCSV);
-            this.groupBox2.Controls.Add(this.cmdImportFromCSV);
-            this.groupBox2.Location = new System.Drawing.Point(723, 15);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(183, 106);
-            this.groupBox2.TabIndex = 13;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Import/Export (CSV)";
+            this.toolTip1.AutoPopDelay = 20000;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.ReshowDelay = 100;
             // 
             // cmdExportCSV
             // 
@@ -390,6 +393,7 @@ namespace IBE
             this.cmdExportCSV.Size = new System.Drawing.Size(156, 34);
             this.cmdExportCSV.TabIndex = 0;
             this.cmdExportCSV.Text = "Export data to CSV";
+            this.toolTip1.SetToolTip(this.cmdExportCSV, "Exports the localization strings into a csv-file.");
             this.cmdExportCSV.UseVisualStyleBackColor = true;
             this.cmdExportCSV.Click += new System.EventHandler(this.cmdExportCSV_Click);
             // 
@@ -400,22 +404,99 @@ namespace IBE
             this.cmdImportFromCSV.Size = new System.Drawing.Size(156, 34);
             this.cmdImportFromCSV.TabIndex = 3;
             this.cmdImportFromCSV.Text = "Import data from CSV";
+            this.toolTip1.SetToolTip(this.cmdImportFromCSV, resources.GetString("cmdImportFromCSV.ToolTip"));
             this.cmdImportFromCSV.UseVisualStyleBackColor = true;
             this.cmdImportFromCSV.Click += new System.EventHandler(this.cmdImportFromCSV_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.rbImportOverwriteAll);
+            this.groupBox4.Controls.Add(this.rbImportOverwriteButBase);
+            this.groupBox4.Controls.Add(this.rbImportOnlyNew);
+            this.groupBox4.Location = new System.Drawing.Point(10, 99);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(156, 76);
+            this.groupBox4.TabIndex = 8;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Tag = "";
+            this.groupBox4.Text = "Import Type";
+            this.toolTip1.SetToolTip(this.groupBox4, "Handling of already existing names.");
+            // 
+            // rbImportOverwriteAll
+            // 
+            this.rbImportOverwriteAll.AutoSize = true;
+            this.rbImportOverwriteAll.Location = new System.Drawing.Point(9, 51);
+            this.rbImportOverwriteAll.Name = "rbImportOverwriteAll";
+            this.rbImportOverwriteAll.Size = new System.Drawing.Size(84, 17);
+            this.rbImportOverwriteAll.TabIndex = 7;
+            this.rbImportOverwriteAll.Tag = "";
+            this.rbImportOverwriteAll.Text = "Overwrite All";
+            this.toolTip1.SetToolTip(this.rbImportOverwriteAll, resources.GetString("rbImportOverwriteAll.ToolTip"));
+            this.rbImportOverwriteAll.UseVisualStyleBackColor = true;
+            // 
+            // rbImportOverwriteButBase
+            // 
+            this.rbImportOverwriteButBase.AutoSize = true;
+            this.rbImportOverwriteButBase.Checked = true;
+            this.rbImportOverwriteButBase.Location = new System.Drawing.Point(9, 34);
+            this.rbImportOverwriteButBase.Name = "rbImportOverwriteButBase";
+            this.rbImportOverwriteButBase.Size = new System.Drawing.Size(140, 17);
+            this.rbImportOverwriteButBase.TabIndex = 6;
+            this.rbImportOverwriteButBase.TabStop = true;
+            this.rbImportOverwriteButBase.Tag = "";
+            this.rbImportOverwriteButBase.Text = "Overwrite All But English";
+            this.toolTip1.SetToolTip(this.rbImportOverwriteButBase, resources.GetString("rbImportOverwriteButBase.ToolTip"));
+            this.rbImportOverwriteButBase.UseVisualStyleBackColor = true;
+            // 
+            // rbImportOnlyNew
+            // 
+            this.rbImportOnlyNew.AutoSize = true;
+            this.rbImportOnlyNew.Location = new System.Drawing.Point(9, 17);
+            this.rbImportOnlyNew.Name = "rbImportOnlyNew";
+            this.rbImportOnlyNew.Size = new System.Drawing.Size(103, 17);
+            this.rbImportOnlyNew.TabIndex = 5;
+            this.rbImportOnlyNew.Tag = "";
+            this.rbImportOnlyNew.Text = "Import Only New";
+            this.toolTip1.SetToolTip(this.rbImportOnlyNew, "Handling of already existing names: \r\nImport only, if not existing yet.");
+            this.rbImportOnlyNew.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.groupBox4);
+            this.groupBox2.Controls.Add(this.cmdExportCSV);
+            this.groupBox2.Controls.Add(this.cmdImportFromCSV);
+            this.groupBox2.Location = new System.Drawing.Point(406, 15);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(183, 190);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Import/Export (CSV)";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.cmdExit);
+            this.groupBox5.Controls.Add(this.cmdSave);
+            this.groupBox5.Location = new System.Drawing.Point(595, 15);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(173, 190);
+            this.groupBox5.TabIndex = 14;
+            this.groupBox5.TabStop = false;
             // 
             // LanguageEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1276, 643);
+            this.ClientSize = new System.Drawing.Size(784, 671);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupbox3);
-            this.Controls.Add(this.cmdExit);
-            this.Controls.Add(this.cmdSave);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbType);
             this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(800, 672);
             this.Name = "LanguageEdit";
-            this.Text = "Language-Edit";
+            this.Text = "Localization-Edit";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LanguageEdit_FormClosing);
             this.Load += new System.EventHandler(this.LanguageEdit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).EndInit();
@@ -431,7 +512,10 @@ namespace IBE
             this.groupBox1.ResumeLayout(false);
             this.groupbox3.ResumeLayout(false);
             this.groupbox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -467,5 +551,10 @@ namespace IBE
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button cmdExportCSV;
         private System.Windows.Forms.Button cmdImportFromCSV;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton rbImportOverwriteAll;
+        private System.Windows.Forms.RadioButton rbImportOverwriteButBase;
+        private System.Windows.Forms.RadioButton rbImportOnlyNew;
+        private System.Windows.Forms.GroupBox groupBox5;
     }
 }

@@ -264,6 +264,12 @@
             this.openFileDialog1.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
             this.openFileDialog1.Title = "select Tesseract Traineddata-File";
             // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 20000;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.ReshowDelay = 100;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -315,6 +321,7 @@
             this.cmdLoadCurrentSystem.TabIndex = 60;
             this.cmdLoadCurrentSystem.Text = "Show Current System Data";
             this.cmdLoadCurrentSystem.UseVisualStyleBackColor = true;
+            this.cmdLoadCurrentSystem.Visible = false;
             this.cmdLoadCurrentSystem.Click += new System.EventHandler(this.cmdLoadCurrentSystem_Click);
             // 
             // label53
@@ -456,7 +463,7 @@
             // createJumpToolStripMenuItem
             // 
             this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
-            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.createJumpToolStripMenuItem.Text = "create Jump";
             this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
             // 

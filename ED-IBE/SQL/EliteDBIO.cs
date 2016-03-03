@@ -47,6 +47,13 @@ namespace IBE.SQL
             Economylevel    = 2
         }
 
+        public enum enLocalisationImportType
+        {
+            onlyNew             = 0,
+            overwriteNonBase    = 1,
+            overWriteAll        = 2
+        }
+
 #endregion
 
         /// <summary>
@@ -491,17 +498,21 @@ namespace IBE.SQL
 
         }
 
+
         /// <summary>
         /// loads the localized commodity names and check if 
         /// the self added names now included in the official dictionary
         /// </summary>
-        internal void ImportCommodityLocalizations(DataSet DataNames)
+        internal void ImportCommodityLocalizations(DataSet DataNames, enLocalisationImportType importType = enLocalisationImportType.onlyNew)
         {
             dsEliteDB                 Data;
             Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
             String                    sqlString;
             Int32                     currentSelfCreatedIndex;
-            Int32 Counter = 0;
+            Int32                     Counter = 0;
+            Boolean                   idColumnFound = false;
+            String                    BaseName;
+            DataRow[]                 Commodity;
 
             Data      = new dsEliteDB();
 
@@ -530,26 +541,32 @@ namespace IBE.SQL
                     // first check if there's a new language
                     foreach (DataColumn LanguageFromFile in DataNames.Tables["Names"].Columns)
                     {
-                        DataRow[] LanguageName  = Data.tblanguage.Select("language  = " + DBConnector.SQLAString(LanguageFromFile.ColumnName));
-
-                        if(LanguageName.Count() == 0)
+                        if(!LanguageFromFile.ColumnName.Equals("id", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            // add a non existing language
-                            DataRow newRow  = Data.tblanguage.NewRow();
-                            int?    Wert    = DBConvert.To<int?>(Data.tblanguage.Compute("max(id)", ""));
+                            DataRow[] LanguageName  = Data.tblanguage.Select("language  = " + DBConnector.SQLAString(LanguageFromFile.ColumnName));
 
-                            if(Wert == null)
-                                Wert = 0;
+                            if(LanguageName.Count() == 0)
+                            {
+                                // add a non existing language
+                                DataRow newRow  = Data.tblanguage.NewRow();
+                                int?    Wert    = DBConvert.To<int?>(Data.tblanguage.Compute("max(id)", ""));
 
-                            newRow["id"]        = Wert;
-                            newRow["language"]  = LanguageFromFile.ColumnName;
+                                if(Wert == null)
+                                    Wert = 0;
 
-                            Data.tblanguage.Rows.Add(newRow);
+                                Wert += 1;
+                                newRow["id"]        = Wert;
+                                newRow["language"]  = LanguageFromFile.ColumnName;
 
-                            foundLanguagesFromFile.Add(LanguageFromFile.ColumnName, (Int32)Wert);
+                                Data.tblanguage.Rows.Add(newRow);
+
+                                foundLanguagesFromFile.Add(LanguageFromFile.ColumnName, (Int32)Wert);
+                            }
+                            else
+                                foundLanguagesFromFile.Add((String)LanguageName[0]["language"], (Int32)LanguageName[0]["id"]);
                         }
                         else
-                            foundLanguagesFromFile.Add((String)LanguageName[0]["language"], (Int32)LanguageName[0]["id"]);
+                            idColumnFound = true;
                     
                     }
                 
@@ -559,8 +576,27 @@ namespace IBE.SQL
                     // compare and add the localized names
                     foreach (DataRow LocalizationFromFile in DataNames.Tables["Names"].AsEnumerable())
                     {
-                        String    BaseName              = (String)LocalizationFromFile[Program.BASE_LANGUAGE];
-                        DataRow[] Commodity             = Data.tbcommodity.Select("commodity = " + DBConnector.SQLAString(DBConnector.DTEscape(BaseName)));
+                        int? commodityID = null;
+
+                        if (idColumnFound)
+                            commodityID  = DBConvert.To<int?>(LocalizationFromFile["id"]);
+
+                        if (commodityID == 1)
+                            Debug.Print("Stop");
+
+                        BaseName  = (String)LocalizationFromFile[Program.BASE_LANGUAGE];
+
+                        if ((commodityID == null) || (commodityID < 0))
+                        {
+                            // no id or selfcreated
+                            Commodity = Data.tbcommodity.Select("commodity = " + DBConnector.SQLAString(DBConnector.DTEscape(BaseName)));
+                        }
+                        else
+                        { 
+                            // confirmed commodity with id    
+                            Commodity = Data.tbcommodity.Select("id = " + commodityID);
+                        }
+                            
 
                         if (Commodity.Count() == 0)
                         { 
@@ -592,11 +628,21 @@ namespace IBE.SQL
                                 DataRow newRow = Data.tbcommoditylocalization.NewRow();
 
                                 newRow["commodity_id"]  = Commodity[0]["id"];
-                                newRow["language_id"]   = LanguageFormFile.Value;
-                                newRow["locname"]       = (String)LocalizationFromFile[LanguageFormFile.Key];
+                                newRow["language_id"] = LanguageFormFile.Value;
+                                if((String)LocalizationFromFile[LanguageFormFile.Key] == "")
+                                    newRow["locname"] = BaseName;
+                                else
+                                    newRow["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
 
                                 Data.tbcommoditylocalization.Rows.Add(newRow);
                             }
+                            else if((importType == enLocalisationImportType.overWriteAll) || 
+                                   ((importType == enLocalisationImportType.overwriteNonBase) && (LanguageFormFile.Key != Program.BASE_LANGUAGE)))
+                            {
+                                if((String)LocalizationFromFile[LanguageFormFile.Key] != "")
+                                    currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
+                            }
+
                         }
 
                         Counter++;
@@ -3267,6 +3313,7 @@ namespace IBE.SQL
             DataTable data;
             Int32 counter;
             String infoString = "";
+            String idString = "";
 
             try
             {
@@ -3278,6 +3325,7 @@ namespace IBE.SQL
                                     "   where Lo.language_id = La.id" +
                                     " order by Lo.commodity_id, La.id";
                         infoString = "export commodity localization...";
+                        idString = "Commodity_ID;Language;Name";
                         break;
                     case enLocalizationType.Category:
                         sqlString = "select Lo.category_id As id, La.language, Lo.locname" + 
@@ -3285,6 +3333,7 @@ namespace IBE.SQL
                                     "   where Lo.language_id = La.id" +
                                     " order by Lo.category_id, La.id";
                         infoString = "export category localization...";
+                        idString = "Category_ID;Language;Name";
                         break;
                     case enLocalizationType.Economylevel:
                         sqlString = "select Lo.economylevel_id As id, La.language, Lo.locname" + 
@@ -3292,6 +3341,7 @@ namespace IBE.SQL
                                     "   where Lo.language_id = La.id" +
                                     " order by Lo.economylevel_id, La.id";
                         infoString = "export economylevel localization...";
+                        idString = "EconomyLevel_ID;Language;Name";
                         break;
                     default:
                         throw new Exception("unknown setting :  " + activeSetting);
@@ -3308,7 +3358,7 @@ namespace IBE.SQL
                 sendProgressEvent("export prices...", 0, 0);
 
                 var writer = new StreamWriter(File.OpenWrite(fileName));
-                writer.WriteLine("Commodity_ID;Language;Name");
+                writer.WriteLine(idString);
                 
 
                 foreach (DataRow row in data.Rows)
@@ -3331,6 +3381,135 @@ namespace IBE.SQL
             }
         }
 
+        public void ImportLocalizationDataFromCSV(string fileName, EliteDBIO.enLocalizationType activeSetting)
+        {
+            String sqlString = "";
+            Int32 counter = 0;
+            String infoString = "";
+            String idString = "";
+            String dataLine;
+            DataSet importData;
+            DataTable importTable;
+
+            try
+            {
+                switch (activeSetting)
+                {
+                    case enLocalizationType.Commodity:
+                        infoString = "import commodity localization...";
+                        idString = "Commodity_ID;Language;Name";
+                        break;
+                    case enLocalizationType.Category:
+                        infoString = "import category localization...";
+                        idString = "Category_ID;Language;Name";
+                        break;
+                    case enLocalizationType.Economylevel:
+                        infoString = "import economylevel localization...";
+                        idString = "EconomyLevel_ID;Language;Name";
+                        break;
+                    default:
+                        throw new Exception("unknown setting :  " + activeSetting);
+                }
+
+                sendProgressEvent(infoString, 0, 0);
+
+                List<string> dataLines = File.ReadAllLines(fileName).ToList();
+                
+                if(dataLines[0].Equals(idString, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    importData  = new DataSet();
+                    importTable = new DataTable("Names");
+                    importData.Tables.Add(importTable);
+                    DataColumn column;
+
+                    column = new DataColumn("id", Type.GetType("System.Int32"));
+                    column.AllowDBNull = false;
+                    column.Unique       = true;
+                    importTable.Columns.Add(column);
+
+                    for (int i = 1; i < dataLines.Count; i++)
+        			{
+                        if(!String.IsNullOrEmpty(dataLines[i]))
+                        {
+                            switch (activeSetting)
+                            {
+                                case enLocalizationType.Commodity:
+                                    List<String> data = dataLines[i].Split(new char[] {';'}).ToList();
+                                    Int32 currentID = Int32.Parse(data[0]);
+
+                                    if (!importTable.Columns.Contains(data[1]))
+                                    {
+
+                                        Debug.Print(Type.GetType("System.String").ToString());
+                                        // add a new language in table
+                                        column = new DataColumn(data[1], Type.GetType("System.String"));
+                                        column.DefaultValue = "";
+                                        importTable.Columns.Add(column);
+                                    }
+
+                                    DataRow currentrow;
+
+                                    var rowForID = importTable.Select("id = " + currentID);
+                                    
+                                    if (rowForID.Count() == 0)
+                                    {
+                                        // add a new row
+                                        currentrow        = importTable.NewRow();
+                                        currentrow["id"]  = currentID;
+                                        importTable.Rows.Add(currentrow);
+                                    }
+                                    else
+                                        currentrow = rowForID[0];
+
+                                    currentrow[data[1]] = data[2].Trim();
+
+                                    break;
+                                case enLocalizationType.Category:
+                                    break;
+                                case enLocalizationType.Economylevel:
+                                    break;
+                                default:
+                                    throw new Exception("unknown setting :  " + activeSetting);
+                            }
+                        }
+
+                        counter++;
+                        sendProgressEvent(infoString, counter, dataLines.Count);
+
+                    }
+                
+                    sendProgressEvent(infoString, 1, 1);
+
+                    switch (activeSetting)
+                    {
+                        case enLocalizationType.Commodity:
+                            ImportCommodityLocalizations(importData);
+                            break;
+                        case enLocalizationType.Category:
+                            infoString = "import category localization...";
+                            idString = "Category_ID;Language;Name";
+                            break;
+                        case enLocalizationType.Economylevel:
+                            infoString = "import economylevel localization...";
+                            idString = "EconomyLevel_ID;Language;Name";
+                            break;
+                        default:
+                            throw new Exception("unknown setting :  " + activeSetting);
+                    }
+
+                }
+                else
+                {
+                    sendProgressEvent("abort: file has wrong header", 1, 1);
+                }
+
+                dataLines.Clear();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing localization data from csv", ex);
+            }
+        }
     }
 
 }

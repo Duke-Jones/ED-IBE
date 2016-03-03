@@ -521,23 +521,27 @@ namespace IBE
 
                 if (!Program.Data.InitImportDone)
                 {
-                    // here it's required to import all master data 
-                    var DataIO = new frmDataIO();
+                    if (dbVersion != new Version(0,1,0))
+                    { 
+                        // here it's required to import all master data 
+                        var DataIO = new frmDataIO();
 
-                    Program.SplashScreen.InfoAdd("Importing master data...");
-                    Thread.Sleep(1500);
+                        Program.SplashScreen.InfoAdd("Importing master data...");
+                        Thread.Sleep(1500);
 
-                    DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
-                    DataIO.ReUseLine  = true;
+                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.ReUseLine  = true;
 
-                    DataIO.StartMasterImport(GetDataPath("Data"));
+                        DataIO.StartMasterImport(GetDataPath("Data"));
 
-                    DataIO.Close();
-                    DataIO.Dispose();
+                        DataIO.Close();
+                        DataIO.Dispose();
                         
-                    Program.SplashScreen.InfoAdd("Importing master data...<OK>");
+                        Program.SplashScreen.InfoAdd("Importing master data...<OK>");
+                    }
 
                     Program.Data.InitImportDone = true;
+
                 }
 
             }

@@ -96,7 +96,10 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
-
+   * added functionality to imform other parts of changed settings from settings tab
+   * Commander's Log is now self-refreshing after importing log logfiles
+   * import of commodity localizations
+-------------------------------------------------------------------------------------         
    * results of price analysis remain visible after jump
    * optional ignore/consider stations without specified LandingPadSizes / Distance_To_Star
    * detaildata on priceanalysis tab

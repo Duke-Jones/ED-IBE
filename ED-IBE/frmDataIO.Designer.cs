@@ -63,6 +63,12 @@
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
+            // ttToolTip
+            // 
+            this.ttToolTip.AutoPopDelay = 20000;
+            this.ttToolTip.InitialDelay = 500;
+            this.ttToolTip.ReshowDelay = 100;
+            // 
             // cmdImportOldData
             // 
             this.cmdImportOldData.Location = new System.Drawing.Point(33, 23);

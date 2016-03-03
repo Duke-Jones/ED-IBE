@@ -187,6 +187,8 @@ namespace IBE
                 }
 
                 Cursor = Cursors.Default;
+
+                cmdImportFromCSV.Enabled = rbCommodities.Checked;
             }
             catch (Exception ex)
             {
@@ -737,49 +739,55 @@ namespace IBE
         /// <param name="e"></param>
         private void cmdImportFromCSV_Click(object sender, EventArgs e)
         {
-            String sourcePath;
-            OpenFileDialog fbFileDialog;
+            EliteDBIO.enLocalizationType activeSetting;
+            String infoString;
+            String parameterName;
+
             try
             {
-                //sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
+                activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
 
-                //fbFileDialog = new OpenFileDialog();
-                //fbFileDialog.InitialDirectory = sourcePath;
-                //fbFileDialog.Title = "Select the csv-file with market data to import...";
-                //fbFileDialog.CheckFileExists    = true;
-                //fbFileDialog.Filter             = "CVS files (*.csv)|*.csv|Text documents (*.txt)|*.txt|All files (*.*)|*.*";
-                //fbFileDialog.FilterIndex = 3;
+                switch (activeSetting)
+                {
+                    case EliteDBIO.enLocalizationType.Commodity:
+                        infoString = "Import commodity localisation data";
+                        break;
+                    case EliteDBIO.enLocalizationType.Category:
+                        infoString = "Import category localisation data";
+                        break;
+                    case EliteDBIO.enLocalizationType.Economylevel:
+                        infoString = "Import economy localisation data";
+                        break;
+                    default:
+                        throw new Exception("unknown setting :  " + activeSetting);
+                }
 
+                OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-                //fbFileDialog.ShowDialog(this);
+                openFileDialog1.Filter              = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                openFileDialog1.DefaultExt          = "csv";
+                openFileDialog1.Title               = infoString;
+                openFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
 
-                //if ((!String.IsNullOrEmpty(fbFileDialog.FileName)) && System.IO.File.Exists(fbFileDialog.FileName))
-                //{
-                //    Program.Data.Progress += Data_Progress;
-                //    Cursor = Cursors.WaitCursor;
-                //    lbProgess.Items.Clear();
+	            DialogResult result = openFileDialog1.ShowDialog();
 
-                //    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 0, Total = 0 });
+		        if (result == DialogResult.OK)
+                {
+                    Cursor = Cursors.WaitCursor;
 
-                //    SQL.EliteDBIO.enImportBehaviour importBehaviour = SQL.EliteDBIO.enImportBehaviour.OnlyNewer;
-                //    if(rbImportSame.Checked)
-                //        importBehaviour = SQL.EliteDBIO.enImportBehaviour.NewerOrEqual;
+                    Program.Data.ImportLocalizationDataFromCSV(openFileDialog1.FileName, activeSetting);
 
-                //    Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour);
-                //    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                //    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                //    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 1, Total = 1 });
+                    Cursor = Cursors.Default;
+                }
 
-                //    Cursor = Cursors.Default;
-                //    Program.Data.Progress -= Data_Progress;
-                //}
-
+                LoadData();
             }
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
                 cErr.processError(ex, "Error while importing from csv");
-            }       
+            }
         }
 
         private void dgvDataOwn_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
