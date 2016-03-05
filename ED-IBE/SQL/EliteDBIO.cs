@@ -263,9 +263,15 @@ namespace IBE.SQL
                         Runtime.startMeasuring();
                         m_BaseData.Tables[BaseTable].Clear();
 
+                        if (!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.InfoAdd("...loading basetable '" + BaseTable + "'...");                            
+
                         // preload all tables with base data
                         currentDBCon.TableRead(String.Format("select * from {0}", BaseTable), BaseTable, m_BaseData);
                         
+                        if (!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.InfoAppendLast("<OK>");                            
+
                         Runtime.PrintAndReset("loading full table '" + BaseTable + "':");
                     }
                 }
@@ -3381,7 +3387,7 @@ namespace IBE.SQL
             }
         }
 
-        public void ImportLocalizationDataFromCSV(string fileName, EliteDBIO.enLocalizationType activeSetting)
+        public void ImportLocalizationDataFromCSV(string fileName, EliteDBIO.enLocalizationType activeSetting, enLocalisationImportType importType = enLocalisationImportType.onlyNew)
         {
             String sqlString = "";
             Int32 counter = 0;
@@ -3483,7 +3489,7 @@ namespace IBE.SQL
                     switch (activeSetting)
                     {
                         case enLocalizationType.Commodity:
-                            ImportCommodityLocalizations(importData);
+                            ImportCommodityLocalizations(importData, importType);
                             break;
                         case enLocalizationType.Category:
                             infoString = "import category localization...";

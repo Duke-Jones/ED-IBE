@@ -615,7 +615,7 @@ namespace IBE.MTPriceAnalysis
                                  " join tbSystems Sy on St.System_ID  = Sy.ID" +
                                  " having  BS.Station_ID <> FS.Station_ID;";
 
-                PV = new ProgressView();
+                PV = new ProgressView(this.GUI);
                 Current = 0;
 
                 if(maxTradingDistance >= 0)
@@ -716,7 +716,7 @@ namespace IBE.MTPriceAnalysis
                                 " order by Station_ID_From";
                     m_lDBCon.Execute(sqlString, "StartStations", Data);
 
-                    PV = new ProgressView();
+                    PV = new ProgressView(this.GUI);
 
                     if(maxTradingDistance >= 0)
                         PV.progressStart("Processing market data of " + StationCount + " stations from " + SystemCount + " systems\n" +
@@ -1046,43 +1046,99 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+        ///// <summary>
+        ///// loads as list of all systems
+        ///// </summary>
+        ///// <param name="Data"></param>
+        //internal void loadSystems(DataTable Data, Program.enVisitedFilter VisitedFilter)
+        //{
+        //    String sqlString;
+
+        //    try
+        //    {
+
+        //        if(VisitedFilter != Program.enVisitedFilter.showAll)
+        //        {
+        //            // only visited systems
+        //            sqlString = " select 0 As SystemID, '" + tabPriceAnalysis.CURRENT_SYSTEM + "' As SystemName" +
+        //                        " union " +
+        //                        " (select Sy.ID As SystemID, Sy.SystemName" +
+        //                        " from tbSystems Sy" +
+        //                        " where Sy.Visited   = 1" +
+        //                        " order by SystemName)" ;
+        //        }
+        //        else
+        //        {
+        //            // all systems
+        //            sqlString = " select 0 As SystemID, '" + tabPriceAnalysis.CURRENT_SYSTEM + "' As SystemName" +
+        //                        " union " +
+        //                        " (select Sy.ID As SystemID, Sy.SystemName" +
+        //                        " from tbSystems Sy" +
+        //                        " order by SystemName)" ;
+        //        }
+
+        //        m_lDBCon.Execute(sqlString, Data);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while loading systems", ex);
+        //    }
+        //}
+
+        
         /// <summary>
-        /// loads as list of all systems
+        /// loads only the systems matching the current input
         /// </summary>
-        /// <param name="Data"></param>
-        internal void loadSystems(DataTable Data, Program.enVisitedFilter VisitedFilter)
+        /// <param name="systemString"></param>
+        /// <param name="cBox"></param>
+        internal void LoadSystemsForBaseComboBox(string systemString, DataTable currentDt, Program.enVisitedFilter vFilter)
         {
-            String sqlString;
+            String sqlString = "";
 
             try
             {
-
-                if(VisitedFilter != Program.enVisitedFilter.showAll)
+                if (systemString != "")
                 {
-                    // only visited systems
-                    sqlString = " select 0 As SystemID, '" + tabPriceAnalysis.CURRENT_SYSTEM + "' As SystemName" +
-                                " union " +
-                                " (select Sy.ID As SystemID, Sy.SystemName" +
-                                " from tbSystems Sy" +
-                                " where Sy.Visited   = 1" +
-                                " order by SystemName)" ;
+                    if(vFilter != Program.enVisitedFilter.showAll)
+                    {
+                        // only visited systems
+                        sqlString = " (select 0 As SystemID, '<current system>' As Systemname)" +
+                                    "  union " +
+                                    " (select Sy.ID As SystemID, Sy.SystemName" +
+                                    "  from tbSystems Sy" +
+                                    "  where Sy.Visited   = 1" +
+                                    "  and   Sy.SystemName like " + DBConnector.SQLAString(DBConnector.SQLEscape(systemString) + "%") +
+                                    "  order by SystemName)" ;
+                    }
+                    else
+                    {
+                        // all systems
+                        sqlString = "(select 0 As SystemID, '<current system>' As Systemname)" +
+                                    " union " +
+                                    "(select Sy.ID As SystemID, Sy.SystemName" +
+                                    " from tbSystems Sy" +
+                                    " where Sy.SystemName like " + DBConnector.SQLAString(DBConnector.SQLEscape(systemString) + "%") +
+                                    " order by SystemName)" ;
+                    }
+
+                    Program.DBCon.Execute(sqlString, currentDt);
+                }
+                else if(currentDt.Columns.Count == 0)
+                {
+                    // init datatable to be able to set ValueMember and DisplayMember in the Combobox
+                    sqlString = " select 0 As SystemID, '<current system>' As Systemname";
+                    Program.DBCon.Execute(sqlString, currentDt);
                 }
                 else
                 {
-                    // all systems
-                    sqlString = " select 0 As SystemID, '" + tabPriceAnalysis.CURRENT_SYSTEM + "' As SystemName" +
-                                " union " +
-                                " (select Sy.ID As SystemID, Sy.SystemName" +
-                                " from tbSystems Sy" +
-                                " order by SystemName)" ;
+                    currentDt.Clear();
                 }
-
-                m_lDBCon.Execute(sqlString, Data);
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while loading systems", ex);
+                throw new Exception("Error while loading specific stationdata for basetable", ex);
             }
         }
     }

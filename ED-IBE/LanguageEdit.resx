@@ -145,13 +145,6 @@ Select one row from each list to enable the "Confirm Translation"-button.
 After confirmation, all data from the self added item is assigned to the
 EDDB item.</value>
   </data>
-  <data name="label3.ToolTip" xml:space="preserve">
-    <value>If ED-IBE has collected unknown or not yet translated items (located on the right side with 
-negative ids) you can assign it to the correct EDDN item, if it is existing.
-Select one row from each list to enable the "Confirm Translation"-button.
-After confirmation, all data from the self added item is assigned to the
-EDDB item.</value>
-  </data>
   <data name="groupbox3.ToolTip" xml:space="preserve">
     <value>If ED-IBE has collected unknown or not yet translated items (located on the right side with 
 negative ids) you can assign it to the correct EDDN item, if it is existing.
@@ -159,6 +152,13 @@ Select one row from each list to enable the "Confirm Translation"-button.
 After confirmation, all data from the self added item is assigned to the
 EDDB item.
 </value>
+  </data>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value>If ED-IBE has collected unknown or not yet translated items (located on the right side with 
+negative ids) you can assign it to the correct EDDN item, if it is existing.
+Select one row from each list to enable the "Confirm Translation"-button.
+After confirmation, all data from the self added item is assigned to the
+EDDB item.</value>
   </data>
   <data name="cmdImportFromCSV.ToolTip" xml:space="preserve">
     <value>Imports the localization strings from a csv-file.
@@ -191,5 +191,13 @@ interfaces like EDDN or EDMC.
 Import only, if not existing yet or the string is from a non-base language.
 ("base languge" is english as global identifier)
 Recommend for adding new translations.</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>If you have added or corrected some names I would be glad if you export the list of commodity translations
+and send it to duke.jones@gmx.de
+I will add your changes then to the next release. Thank you :-)
+Tip: you can also add complete new languages - see tooltip of button "Import data from CSV"
+
+</value>
   </data>
 </root>

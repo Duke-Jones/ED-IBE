@@ -115,6 +115,10 @@ namespace IBE
         {
             if (ex == null)
                 return;
+
+            if(!Program.SplashScreen.IsDisposed)
+                Program.SplashScreen.TopMost = false;
+
             cErr.processError(ex, "Unhandled Exception", true);
             // ExceptionPolicy.HandleException(ex, "Default Policy");
             CreateMiniDump("RegulatedNoiseDump.dmp");

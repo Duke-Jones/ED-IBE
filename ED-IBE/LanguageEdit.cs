@@ -740,6 +740,8 @@ namespace IBE
         private void cmdImportFromCSV_Click(object sender, EventArgs e)
         {
             EliteDBIO.enLocalizationType activeSetting;
+            EliteDBIO.enLocalisationImportType importType;
+
             String infoString;
             String parameterName;
 
@@ -747,6 +749,14 @@ namespace IBE
             {
                 parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
                 activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
+
+                if(rbImportOnlyNew.Checked)
+                    importType = EliteDBIO.enLocalisationImportType.onlyNew;
+                else if(rbImportOverwriteButBase.Checked)
+                    importType = EliteDBIO.enLocalisationImportType.overwriteNonBase;
+                else
+                    importType = EliteDBIO.enLocalisationImportType.overWriteAll;
+                
 
                 switch (activeSetting)
                 {
@@ -776,7 +786,7 @@ namespace IBE
                 {
                     Cursor = Cursors.WaitCursor;
 
-                    Program.Data.ImportLocalizationDataFromCSV(openFileDialog1.FileName, activeSetting);
+                    Program.Data.ImportLocalizationDataFromCSV(openFileDialog1.FileName, activeSetting, importType);
 
                     Cursor = Cursors.Default;
                 }
@@ -800,6 +810,11 @@ namespace IBE
             {
                 cErr.processError(ex, "Error in dgvDataOwn_UserDeletingRow");
             }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

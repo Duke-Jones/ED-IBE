@@ -102,7 +102,7 @@ namespace IBE.MTCommandersLog
             {
                 retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DBConnector.SQLSortOrder.desc, new dsEliteDB.vilogDataTable());
 
-                return retriever.RowCount;
+                return retriever.RowCount(true);
             }
             catch (Exception ex)
             {
@@ -855,7 +855,7 @@ namespace IBE.MTCommandersLog
 
                 if (systemString != "")
                 {
-                    String sqlString = "select * from tbSystems where systemName like " + DBConnector.SQLAString(systemString + "%") ;
+                    String sqlString = "select * from tbSystems where systemName like " + DBConnector.SQLAString(DBConnector.SQLEscape(systemString) + "%");
                     Program.DBCon.Execute(sqlString, currentDt);
                 }
                 else
@@ -866,7 +866,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while deleting rows", ex);
+                throw new Exception("Error while loading specific stationdata", ex);
             }
         }
     }

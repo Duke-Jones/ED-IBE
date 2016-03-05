@@ -17,8 +17,13 @@ namespace IBE.Enums_and_Utility_Classes
         private bool               m_LoadingDone       = false;
         private WindowData         m_Buffer            = new WindowData();
 
+        public bool                DoPositioning { get; set; }
+        public Control             ParentControl   { get; set; }
+
         public RNBaseForm()
         {
+            DoPositioning = true;
+            ParentControl = null;
             InitializeComponent();
         }
 
@@ -29,12 +34,17 @@ namespace IBE.Enums_and_Utility_Classes
 
             string Classname            = this.GetType().Name;
 
-            if(Program.DBCon.getIniValue(Classname, "Location") != "")
+            if(DoPositioning  && (Program.DBCon.getIniValue(Classname, "Location") != ""))
             {
                 m_Buffer.LocationString = Program.DBCon.getIniValue(Classname, "Location",    m_Buffer.LocationString, false);
                 m_Buffer.StateString    = Program.DBCon.getIniValue(Classname, "WindowState", m_Buffer.StateString,    false);
 
                 m_Buffer.SetValuesToForm(this);
+            }
+            else if(ParentControl != null)
+            {
+                Point center = ParentControl.PointToScreen(new Point(ParentControl.Width / 2, ParentControl.Height / 2));
+                this.Location = new Point(center.X - (this.Width / 2), (Int32)Math.Round(center.Y * 0.75 - (this.Height / 2), 0));
             }
             
             m_LoadingDone = true;

@@ -420,7 +420,9 @@ namespace IBE
 
             while (true)
             {
+                Program.SplashScreen.Visible = false;
                 var dialogResult = dialog.ShowDialog();
+                Program.SplashScreen.Visible = true;
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -443,10 +445,15 @@ namespace IBE
                 else
                     return null;
 
+                Program.SplashScreen.Visible = false;
+
                 var MBResult = MsgBox.Show(
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel);
+
+                Program.SplashScreen.Visible = true;
+                
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Environment.Exit(-1);
@@ -463,7 +470,9 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
+                Program.SplashScreen.Visible = false;
                 var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.OKCancel);
+                Program.SplashScreen.Visible = true;
 
                 if (MBResult != System.Windows.Forms.DialogResult.Cancel)
                     path = getProductPathManually();
@@ -538,7 +547,9 @@ namespace IBE
 
                     }
 
+                    Program.SplashScreen.Visible = false;
                     var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
+                    Program.SplashScreen.Visible = true;
 
                     if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                         Environment.Exit(-1);
@@ -564,7 +575,9 @@ namespace IBE
 
             while (true)
             {
+                Program.SplashScreen.Visible = false;
                 var dialogResult = dialog.ShowDialog();
+                Program.SplashScreen.Visible = true;
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -595,7 +608,9 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
+                Program.SplashScreen.Visible = false;
                 var MBResult = MsgBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
+                Program.SplashScreen.Visible = true;
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -1827,8 +1842,13 @@ namespace IBE
         {
             try
             {
+                Stopwatch st = new Stopwatch();
+                st.Start();
                 Version newVersion;
                 String newInfo;
+
+                Debug.Print("Zeit (1) : " + st.ElapsedMilliseconds);
+                st.Start();
 
                 Program.SplashScreen.InfoAdd("checking for updates");
                 Updater updater = new Updater();
@@ -1851,26 +1871,44 @@ namespace IBE
                 }
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Debug.Print("Zeit (2) : " + st.ElapsedMilliseconds);
+                st.Start();
+
                 Program.SplashScreen.InfoAdd("load system data...");
                 loadSystemData(Program.actualCondition.System);
                 loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Debug.Print("Zeit (3) : " + st.ElapsedMilliseconds);
+                st.Start();
+
                 Program.SplashScreen.InfoAdd("init settings gui...");
                 Program.Settings.GUI.Init();
                 Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Debug.Print("Zeit (4) : " + st.ElapsedMilliseconds);
+                st.Start();
 
                 Program.SplashScreen.InfoAdd("init price analysis gui");
                 Program.PriceAnalysis.GUI.Init();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Debug.Print("Zeit (5) : " + st.ElapsedMilliseconds);
+                st.Start();
+
                 Program.SplashScreen.InfoAdd("init commanders log gui");
                 Program.CommandersLog.GUI.Init();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Debug.Print("Zeit (6) : " + st.ElapsedMilliseconds);
+                st.Start();
+
                 Program.SplashScreen.InfoAdd("init system numbers");
                 showSystemNumbers();
                 Program.SplashScreen.InfoAppendLast("<OK>");
+
+                Debug.Print("Zeit (7) : " + st.ElapsedMilliseconds);
+                st.Start();
 
                 Program.SplashScreen.InfoAdd("init main gui");
                 SetupGui();
@@ -1879,23 +1917,37 @@ namespace IBE
                 this.tbCurrentStationinfoFromLogs.Text  = Program.actualCondition.Location;
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Debug.Print("Zeit (8) : " + st.ElapsedMilliseconds);
+                st.Start();
+
                 Program.SplashScreen.InfoAdd("starting logfile scanner");
                 Program.LogfileScanner.Start();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
+                Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
+                st.Start();
                 
                 Program.DoSpecial();
 
                 if(cbEDDNAutoListen.Checked)
                 {
+                    Debug.Print("Zeit (10) : " + st.ElapsedMilliseconds);
+                    st.Start();
+
                     Program.SplashScreen.InfoAdd("starting eddn listening");
                     startEDDNListening();
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
+                Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
+                st.Start();
+
 
                 Program.SplashScreen.InfoAdd("init sequence finished");
                 Program.SplashScreen.CloseDelayed();
+
+                Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);
+                st.Start();
 
                 
             }

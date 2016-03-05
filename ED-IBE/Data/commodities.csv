@@ -1,0 +1,805 @@
+Commodity_ID;Language;Name
+1;eng;Explosives
+1;ger;Sprengstoffe
+1;fra;Explosifs
+2;eng;Hydrogen Fuel
+2;ger;Wasserstoff-Treibstoff
+2;fra;Carburant à Base d'Hydrogène
+3;eng;Mineral Oil
+3;ger;Mineralöl
+3;fra;Huile Minérale
+4;eng;Pesticides
+4;ger;Pestizide
+4;fra;Pesticides
+5;eng;Clothing
+5;ger;Kleidung
+5;fra;Maquillage
+6;eng;Consumer Technology
+6;ger;Unterhaltungselektronik
+6;fra;Vêtements
+7;eng;Domestic Appliances
+7;ger;Haushaltsgeräte
+7;fra;Équipement de Loisir
+8;eng;Beer
+8;ger;Bier
+8;fra;Bière
+9;eng;Liquor
+9;ger;Spirituosen
+9;fra;Spiritueux
+10;eng;Narcotics
+10;ger;Drogen
+10;fra;Narcotiques
+11;eng;Tobacco
+11;ger;Tabak
+11;fra;Tabac
+12;eng;Wine
+12;ger;Wein
+12;fra;Vin
+13;eng;Algae
+13;ger;Algen
+13;fra;Algues
+14;eng;Animal Meat
+14;ger;Tierfleisch
+14;fra;Viande
+15;eng;Coffee
+15;ger;Kaffee
+15;fra;Café
+16;eng;Fish
+16;ger;Fisch
+16;fra;Poisson
+17;eng;Food Cartridges
+17;ger;Nahrungskartuschen
+17;fra;Cartouches Alimentaires
+18;eng;Fruit And Vegetables
+18;ger;Obst Und Gemüse
+18;fra;Fruits et Légumes
+19;eng;Grain
+19;ger;Getreide
+19;fra;Céréales
+20;eng;Synthetic Meat
+20;ger;Künstliches Fleisch
+20;fra;Viande Synthétique
+21;eng;Tea
+21;ger;Tee
+21;fra;Thé
+22;eng;Polymers
+22;ger;Polymere
+22;fra;Polymères
+23;eng;Semiconductors
+23;ger;Halbleiter
+23;fra;Semi-Conducteurs
+24;eng;Superconductors
+24;ger;Supraleiter
+24;fra;Supraconducteurs
+25;eng;Atmospheric Processors
+25;ger;Atmosphärenprozessoren
+25;fra;Processeurs Atmosphériques
+26;eng;Crop Harvesters
+26;ger;Erntemaschinen
+26;fra;Moissonneuses
+27;eng;Marine Equipment
+27;ger;Maritimausstattung
+27;fra;Équipement Aquamarin
+28;eng;Microbial Furnaces
+28;ger;Mikrobielle Öfen
+28;fra;Hauts Fourneaux Microbiens
+29;eng;Mineral Extractors
+29;ger;Mineralextraktoren
+29;fra;Extracteurs de Minerai
+30;eng;Power Generators
+30;ger;Stromerzeuger
+30;fra;Générateurs
+31;eng;Water Purifiers
+31;ger;Wasserreiniger
+31;fra;Purificateurs d'eau
+32;eng;Agri-Medicines
+32;ger;Agrar-Medikamente
+32;fra;Agri-Médicaments
+33;eng;Basic Medicines
+33;ger;Allgemeine Medikamente
+33;fra;Médicaments Simples
+34;eng;Combat Stabilisers
+34;ger;Kampfstabilisatoren
+34;fra;Stabilisateurs de Combat
+35;eng;Performance Enhancers
+35;ger;Leistungssteigerer
+35;fra;Produits Dopants
+36;eng;Progenitor Cells
+36;ger;Vorläuferzellen
+36;fra;Cellules Souches
+37;eng;Aluminium
+37;ger;Aluminium
+37;fra;Aluminium
+38;eng;Beryllium
+38;ger;Beryllium
+38;fra;Béryllium
+39;eng;Cobalt
+39;ger;Cobalt
+39;fra;Cobalt
+40;eng;Copper
+40;ger;Kupfer
+40;fra;Cuivre
+41;eng;Gallium
+41;ger;Gallium
+41;fra;Gallium
+42;eng;Gold
+42;ger;Gold
+42;fra;Or
+43;eng;Indium
+43;ger;Indium
+43;fra;Indium
+44;eng;Lithium
+44;ger;Lithium
+44;fra;Lithium
+45;eng;Palladium
+45;ger;Palladium
+45;fra;Palladium
+46;eng;Platinum
+46;ger;Platin
+46;fra;Platine
+47;eng;Silver
+47;ger;Silber
+47;fra;Argent
+48;eng;Tantalum
+48;ger;Tantal
+48;fra;Tantale
+49;eng;Titanium
+49;ger;Titan
+49;fra;Titane
+50;eng;Uranium
+50;ger;Uran
+50;fra;Uranium
+51;eng;Bauxite
+51;ger;Bauxit
+51;fra;Bauxite
+52;eng;Bertrandite
+52;ger;Bertrandit
+52;fra;Bertrandite
+53;eng;Coltan
+53;ger;Coltan
+53;fra;Coltan
+54;eng;Gallite
+54;ger;Gallit
+54;fra;Gallite
+55;eng;Indite
+55;ger;Indit
+55;fra;Indite
+56;eng;Lepidolite
+56;ger;Lepidolith
+56;fra;Lépidolite
+57;eng;Rutile
+57;ger;Rutil
+57;fra;Rutile
+58;eng;Uraninite
+58;ger;Uraninit
+58;fra;Uraninite
+59;eng;Imperial Slaves
+59;ger;Imperiale Sklaven
+59;fra;Empire Esclaves
+60;eng;Slaves
+60;ger;Sklaven
+60;fra;Esclaves
+61;eng;Advanced Catalysers
+61;ger;Fortschr. Katalysatoren
+61;fra;Catalyseurs Complexes
+62;eng;Animal Monitors
+62;ger;Tierüberwachung
+62;fra;Systèmes de Surveillance
+63;eng;Aquaponic Systems
+63;ger;Aquaponiksysteme
+63;fra;Systèmes Aquaponiques
+64;eng;Auto-Fabricators
+64;ger;Fabrikatoren
+64;fra;Dispositifs d'Autofabrication
+65;eng;Bioreducing Lichen
+65;ger;Bioreduzierende Flechten
+65;fra;Lichen Bioréducteur
+66;eng;Computer Components
+66;ger;Computerteile
+66;fra;Combinaisons Hazmat
+67;eng;H.E. Suits
+67;ger;Schutzanzüge
+67;fra;Combinaisons de Protection
+68;eng;Land Enrichment Systems
+68;ger;Landanreicherungssysteme
+68;fra;Systèmes d'Enrichissement Des
+69;eng;Resonating Separators
+69;ger;Resonanzabgrenzer
+69;fra;Séparateurs à Résonance
+70;eng;Robotics
+70;ger;Roboter
+70;fra;Robots
+72;eng;Leather
+72;ger;Leder
+72;fra;Cuir
+73;eng;Natural Fabrics
+73;ger;Naturfasern
+73;fra;Fibre Textile Naturelle
+74;eng;Synthetic Fabrics
+74;ger;Chemiefasern
+74;fra;Tissu Synthétique
+75;eng;Biowaste
+75;ger;Biomüll
+75;fra;Déchets Organiques
+76;eng;Chemical Waste
+76;ger;Chemiemüll
+76;fra;Matériaux Radioactifs
+77;eng;Scrap
+77;ger;Schrott
+77;fra;Ferraille
+78;eng;Non-Lethal Weapons
+78;ger;Nichtletale Waffen
+78;fra;Armes Incapacitantes
+79;eng;Personal Weapons
+79;ger;Persönliche Waffen
+79;fra;Armes de Poing
+80;eng;Reactive Armour
+80;ger;Reaktivrüstung
+80;fra;Protection Réactive
+81;eng;Battle Weapons
+81;ger;Kriegswaffen
+81;fra;Armes Militaires
+82;eng;Toxic Waste
+82;ger;Toxic Waste
+82;fra;Toxic Waste
+83;eng;Painite
+83;ger;Painit
+83;fra;Painite
+84;eng;Limpet
+84;ger;Limpet
+84;fra;Limpet
+85;eng;Eranin Pearl Whiskey
+85;ger;Eranin Pearl Whiskey
+85;fra;Eranin Pearl Whiskey
+86;eng;Kamorin Historic Weapons
+86;ger;Kamorin Historic Weapons
+86;fra;Kamorin Historic Weapons
+87;eng;Lucan Onion Head
+87;ger;Lucan Onion Head
+87;fra;Lucan Onion Head
+88;eng;Motrona Experience Jelly
+88;ger;Motrona Experience Jelly
+88;fra;Motrona Experience Jelly
+89;eng;Onion Head
+89;ger;Onion Head
+89;fra;Onion Head
+90;eng;Rusani Old Smokey
+90;ger;Rusani Old Smokey
+90;fra;Rusani Old Smokey
+91;eng;Tarach Spice
+91;ger;Tarach Spice
+91;fra;Tarach Spice
+92;eng;Terra Mater Blood Bores
+92;ger;Terra Mater Blood Bores
+92;fra;Terra Mater Blood Bores
+93;eng;Wolf Fesh
+93;ger;Wolf Fesh
+93;fra;Wolf Fesh
+94;eng;Wuthielo Ku Froth
+94;ger;Wuthielo Ku Froth
+94;fra;Wuthielo Ku Froth
+95;eng;AI Relics
+95;ger;AI Relics
+95;fra;Ai Relics
+96;eng;Antiquities
+96;ger;Antiquities
+96;fra;Antiquities
+97;eng;Osmium
+97;ger;Osmium
+97;fra;Osmium
+98;eng;SAP 8 CORE CONTAINER
+98;ger;Container Mit Sap 8-Kern
+98;fra;SAP 8 CORE CONTAINER
+99;eng;Trinkets Of Hidden Fortune
+99;ger;Trinkets Of Fortune
+99;fra;Trinkets Of Hidden Fortune
+100;eng;Trade Data
+100;ger;Trade Data
+100;fra;Trade Data
+101;eng;Thermal Cooling Units
+101;ger;Thermal-Kühleinheiten
+101;fra;Thermal Cooling Units
+102;eng;Skimmer Components
+102;ger;Schöpfdrohnenkomponenten
+102;fra;Skimmer Components
+103;eng;Geological Equipment
+103;ger;Geologie-Ausrüstung
+103;fra;Geological Equipment
+104;eng;Structural Regulators
+104;ger;Strukturregulatoren
+104;fra;Structural Regulators
+105;eng;Pyrophyllite
+105;ger;Pyrophyllit
+105;fra;Pyrophyllite
+106;eng;Moissanite
+106;ger;Moissanite
+106;fra;Moissanite
+107;eng;Goslarite
+107;ger;Goslarit
+107;fra;Goslarite
+108;eng;Cryolite
+108;ger;Kriolyth
+108;fra;Cryolite
+109;eng;Thorium
+109;ger;Thorium
+109;fra;Thorium
+110;eng;Thallium
+110;ger;Thallium
+110;fra;Thallium
+111;eng;Lanthanum
+111;ger;Lanthanum
+111;fra;Lanthanum
+112;eng;Bismuth
+112;ger;Bismuth
+112;fra;Bismuth
+113;eng;Bootleg Liquor
+113;ger;Schmuggelschnaps
+113;fra;Bootleg Liquor
+114;eng;Meta-Alloys
+114;ger;Meta-Legierungen
+114;fra;Meta-Alloys
+115;eng;Ceramic Composites
+115;ger;Keramische Verbundwerkstoffe
+115;fra;Ceramic Composites
+116;eng;Evacuation Shelter
+116;ger;Evakuierungsschutz
+116;fra;Evacuation Shelter
+117;eng;Synthetic Reagents
+117;ger;Synthetische Reagenzstoffe
+117;fra;Synthetic Reagents
+118;eng;Surface Stabilisers
+118;ger;Oberflächenstabilisierer
+118;fra;Surface Stabilisers
+119;eng;Building Fabricators
+119;ger;Baufabrikatoren
+119;fra;Building Fabricators
+121;eng;Landmines
+121;ger;Landminen
+121;fra;Landmines
+122;eng;Nerve Agents
+122;ger;Nervengas
+122;fra;Nerve Agents
+123;eng;Occupied CryoPod
+123;ger;Occupied CryoPod
+123;fra;Occupied CryoPod
+124;eng;Muon Imager
+124;ger;Muon Imager
+124;fra;Muon Imager
+125;eng;Lavian Brandy
+125;ger;Lavian Brandy
+125;fra;Lavian Brandy
+126;eng;Black Box
+126;ger;Black Box
+126;fra;Black Box
+127;eng;Military Plans
+127;ger;Military Plans
+127;fra;Military Plans
+128;eng;Ancient Artefact
+128;ger;Ancient Artefact
+128;fra;Ancient Artefact
+129;eng;Rare Artwork
+129;ger;Rare Artwork
+129;fra;Rare Artwork
+130;eng;Experimental Chemicals
+130;ger;Experimental Chemicals
+130;fra;Experimental Chemicals
+131;eng;Rebel Transmissions
+131;ger;Rebel Transmissions
+131;fra;Rebel Transmissions
+132;eng;Prototype Tech
+132;ger;Prototype Tech
+132;fra;Prototype Tech
+133;eng;Technical Blueprints
+133;ger;Technical Blueprints
+133;fra;Technical Blueprints
+134;eng;HIP 10175 Bush Meat
+134;ger;HIP 10175 Bush Meat
+134;fra;HIP 10175 Bush Meat
+135;eng;Albino Quechua Mammoth
+135;ger;Albino Quechua Mammoth
+135;fra;Albino Quechua Mammoth
+136;eng;Utgaroar Millennial Eggs
+136;ger;Utgaroar Millennial Eggs
+136;fra;Utgaroar Millennial Eggs
+137;eng;Witchhaul Kobe Beef
+137;ger;Witchhaul Kobe Beef
+137;fra;Witchhaul Kobe Beef
+138;eng;Karsuki Locusts
+138;ger;Karsuki Locusts
+138;fra;Karsuki Locusts
+139;eng;Giant Irukama Snails
+139;ger;Giant Irukama Snails
+139;fra;Giant Irukama Snails
+140;eng;Baltah Sine Vacuum Krill
+140;ger;Baltah Sine Vacuum Krill
+140;fra;Baltah Sine Vacuum Krill
+141;eng;Ceti Rabbits
+141;ger;Ceti Rabbits
+141;fra;Ceti Rabbits
+142;eng;Kachirigin Filter Leeches
+142;ger;Kachirigin Filter Leeches
+142;fra;Kachirigin Filter Leeches
+143;eng;Lyrae Weed
+143;ger;Lyrae Weed
+143;fra;Lyrae Weed
+144;eng;Borasetani Pathogenetics
+144;ger;Borasetani Pathogenetics
+144;fra;Borasetani Pathogenetics
+145;eng;HIP 118311 Swarm
+145;ger;HIP 118311 Swarm
+145;fra;HIP 118311 Swarm
+146;eng;Kongga Ale
+146;ger;Kongga Ale
+146;fra;Kongga Ale
+147;eng;Alacarakmo Skin Art
+147;ger;Alacarakmo Skin Art
+147;fra;Alacarakmo Skin Art
+148;eng;Eleu Thermals
+148;ger;Eleu Thermals
+148;fra;Eleu Thermals
+149;eng;Eshu Umbrellas
+149;ger;Eshu Umbrellas
+149;fra;Eshu Umbrellas
+150;eng;Karetii Couture
+150;ger;Karetii Couture
+150;fra;Karetii Couture
+151;eng;Njangari Saddles
+151;ger;Njangari Saddles
+151;fra;Njangari Saddles
+152;eng;Any Na Coffee
+152;ger;Any Na Coffee
+152;fra;Any Na Coffee
+153;eng;CD-75 Kitten Brand Coffee
+153;ger;CD-75 Kitten Brand Coffee
+153;fra;CD-75 Kitten Brand Coffee
+154;eng;Goman Yaupon Coffee
+154;ger;Goman Yaupon Coffee
+154;fra;Goman Yaupon Coffee
+155;eng;Volkhab Bee Drones
+155;ger;Volkhab Bee Drones
+155;fra;Volkhab Bee Drones
+156;eng;Kinago Violins
+156;ger;Kinago Violins
+156;fra;Kinago Violins
+157;eng;Nguna Modern Antiques
+157;ger;Nguna Modern Antiques
+157;fra;Nguna Modern Antiques
+158;eng;Rajukru Multi-Stoves
+158;ger;Rajukru Multi-Stoves
+158;fra;Rajukru Multi-Stoves
+159;eng;Tiolce Waste2Paste Units
+159;ger;Tiolce Waste2Paste Units
+159;fra;Tiolce Waste2Paste Units
+160;eng;Chi Eridani Marine Paste
+160;ger;Chi Eridani Marine Paste
+160;fra;Chi Eridani Marine Paste
+161;eng;Esuseku Caviar
+161;ger;Esuseku Caviar
+161;fra;Esuseku Caviar
+162;eng;Live Hecate Sea Worms
+162;ger;Live Hecate Sea Worms
+162;fra;Live Hecate Sea Worms
+163;eng;Helvetitj Pearls
+163;ger;Helvetitj Pearls
+163;fra;Helvetitj Pearls
+164;eng;HIP Proto-Squid
+164;ger;HIP Proto-Squid
+164;fra;HIP Proto-Squid
+165;eng;Coquim Spongiform Victuals
+165;ger;Coquim Spongiform Victuals
+165;fra;Coquim Spongiform Victuals
+166;eng;Eden Apples Of Aerial
+166;ger;Eden Apples Of Aerial
+166;fra;Eden Apples Of Aerial
+167;eng;Neritus Berries
+167;ger;Neritus Berries
+167;fra;Neritus Berries
+168;eng;Ochoeng Chillies
+168;ger;Ochoeng Chillies
+168;fra;Ochoeng Chillies
+169;eng;Deuringas Truffles
+169;ger;Deuringas Truffles
+169;fra;Deuringas Truffles
+170;eng;HR 7221 Wheat
+170;ger;HR 7221 Wheat
+170;fra;HR 7221 Wheat
+171;eng;Jaroua Rice
+171;ger;Jaroua Rice
+171;fra;Jaroua Rice
+172;eng;Belalans Ray Leather
+172;ger;Belalans Ray Leather
+172;fra;Belalans Ray Leather
+173;eng;Damna Carapaces
+173;ger;Damna Carapaces
+173;fra;Damna Carapaces
+174;eng;Rapa Bao Snake Skins
+174;ger;Rapa Bao Snake Skins
+174;fra;Rapa Bao Snake Skins
+175;eng;Vanayequi Ceratomorpha Fur
+175;ger;Vanayequi Ceratomorpha Fur
+175;fra;Vanayequi Ceratomorpha Fur
+176;eng;Bast Snake Gin
+176;ger;Bast Snake Gin
+176;fra;Bast Snake Gin
+177;eng;Thrutis Cream
+177;ger;Thrutis Cream
+177;fra;Thrutis Cream
+178;eng;Wulpa Hyperbore Systems
+178;ger;Wulpa Hyperbore Systems
+178;fra;Wulpa Hyperbore Systems
+179;eng;Aganippe Rush
+179;ger;Aganippe Rush
+179;fra;Aganippe Rush
+180;eng;Holva Duelling Blades
+180;ger;Holva Duelling Blades
+180;fra;Holva Duelling Blades
+181;eng;Gilya Signature Weapons
+181;ger;Gilya Signature Weapons
+181;fra;Gilya Signature Weapons
+182;eng;Delta Phoenicis Palms
+182;ger;Delta Phoenicis Palms
+182;fra;Delta Phoenicis Palms
+183;eng;Toxandji Virocide
+183;ger;Toxandji Virocide
+183;fra;Toxandji Virocide
+184;eng;Xihe Biomorphic Companions
+184;ger;Xihe Biomorphic Companions
+184;fra;Xihe Biomorphic Companions
+185;eng;Sanuma Decorative Meat
+185;ger;Sanuma Decorative Meat
+185;fra;Sanuma Decorative Meat
+186;eng;Ethgreze Tea Buds
+186;ger;Ethgreze Tea Buds
+186;fra;Ethgreze Tea Buds
+187;eng;Ceremonial Heike Tea
+187;ger;Ceremonial Heike Tea
+187;fra;Ceremonial Heike Tea
+188;eng;Tanmark Tranquil Tea
+188;ger;Tanmark Tranquil Tea
+188;fra;Tanmark Tranquil Tea
+189;eng;Az Cancri Formula 42
+189;ger;Az Cancri Formula 42
+189;fra;Az Cancri Formula 42
+190;eng;Kamitra Cigars
+190;ger;Kamitra Cigars
+190;fra;Kamitra Cigars
+191;eng;Yaso Kondi Leaf
+191;ger;Yaso Kondi Leaf
+191;fra;Yaso Kondi Leaf
+192;eng;Chateau De Aegaeon
+192;ger;Chateau De Aegaeon
+192;fra;Chateau De Aegaeon
+193;eng;Waters Of Shintara
+193;ger;Waters Of Shintara
+193;fra;Waters Of Shintara
+194;eng;Ophiuch Exino Artefacts
+194;ger;Ophiuch Exino Artefacts
+194;fra;Ophiuch Exino Artefacts
+195;eng;Aepyornis Egg
+195;ger;Aepyornis Egg
+195;fra;Aepyornis Egg
+196;eng;Saxon Wine
+196;ger;Saxon Wine
+196;fra;Saxon Wine
+197;eng;Centauri Mega Gin
+197;ger;Centauri Mega Gin
+197;fra;Centauri Mega Gin
+198;eng;Anduliga Fire Works
+198;ger;Anduliga Fire Works
+198;fra;Anduliga Fire Works
+199;eng;Banki Amphibious Leather
+199;ger;Banki Amphibious Leather
+199;fra;Banki Amphibious Leather
+200;eng;Cherbones Blood Crystals
+200;ger;Cherbones Blood Crystals
+200;fra;Cherbones Blood Crystals
+201;eng;Geawen Dance Dust
+201;ger;Geawen Dance Dust
+201;fra;Geawen Dance Dust
+202;eng;Gerasian Gueuze Beer
+202;ger;Gerasian Gueuze Beer
+202;fra;Gerasian Gueuze Beer
+203;eng;Haidne Black Brew
+203;ger;Haidne Black Brew
+203;fra;Haidne Black Brew
+204;eng;Havasupai Dream Catcher
+204;ger;Havasupai Dream Catcher
+204;fra;Havasupai Dream Catcher
+205;eng;Burnham Bile Distillate
+205;ger;Burnham Bile Distillate
+205;fra;Burnham Bile Distillate
+206;eng;HIP Organophosphates
+206;ger;HIP Organophosphates
+206;fra;HIP Organophosphates
+207;eng;Jaradharre Puzzle Box
+207;ger;Jaradharre Puzzle Box
+207;fra;Jaradharre Puzzle Box
+208;eng;Koro Kung Pellets
+208;ger;Koro Kung Pellets
+208;fra;Koro Kung Pellets
+209;eng;L F T Void Extract Coffee
+209;ger;L F T Void Extract Coffee
+209;fra;L F T Void Extract Coffee
+210;eng;Honesty Pills
+210;ger;Honesty Pills
+210;fra;Honesty Pills
+211;eng;Non Euclidian Exotanks
+211;ger;Non Euclidian Exotanks
+211;fra;Non Euclidian Exotanks
+212;eng;LTT Hypersweet
+212;ger;LTT Hypersweet
+212;fra;LTT Hypersweet
+213;eng;Mechucos High Tea
+213;ger;Mechucos High Tea
+213;fra;Mechucos High Tea
+214;eng;Medb Starlube
+214;ger;Medb Starlube
+214;fra;Medb Starlube
+215;eng;Mokojing Beast Feast
+215;ger;Mokojing Beast Feast
+215;fra;Mokojing Beast Feast
+216;eng;Mukusubii Chitin-Os
+216;ger;Mukusubii Chitin-Os
+216;fra;Mukusubii Chitin-Os
+217;eng;Mulachi Giant Fungus
+217;ger;Mulachi Giant Fungus
+217;fra;Mulachi Giant Fungus
+218;eng;Ngadandari Fire Opals
+218;ger;Ngadandari Fire Opals
+218;fra;Ngadandari Fire Opals
+219;eng;Tiegfries Synth Silk
+219;ger;Tiegfries Synth Silk
+219;fra;Tiegfries Synth Silk
+220;eng;Uzumoku Low-G Wings
+220;ger;Uzumoku Low-G Wings
+220;fra;Uzumoku Low-G Wings
+221;eng;V Herculis Body Rub
+221;ger;V Herculis Body Rub
+221;fra;V Herculis Body Rub
+222;eng;Wheemete Wheat Cakes
+222;ger;Wheemete Wheat Cakes
+222;fra;Wheemete Wheat Cakes
+223;eng;Vega Slimweed
+223;ger;Vega Slimweed
+223;fra;Vega Slimweed
+224;eng;Altairian Skin
+224;ger;Altairian Skin
+224;fra;Altairian Skin
+225;eng;Pavonis Ear Grubs
+225;ger;Pavonis Ear Grubs
+225;fra;Pavonis Ear Grubs
+226;eng;Jotun Mookah
+226;ger;Jotun Mookah
+226;fra;Jotun Mookah
+227;eng;Giant Verrix
+227;ger;Giant Verrix
+227;fra;Giant Verrix
+228;eng;Indi Bourbon
+228;ger;Indi Bourbon
+228;fra;Indi Bourbon
+229;eng;Arouca Conventual Sweets
+229;ger;Arouca Conventual Sweets
+229;fra;Arouca Conventual Sweets
+230;eng;Tauri Chimes
+230;ger;Tauri-Glockenspiel
+230;fra;Tauri Chimes
+231;eng;Zeessze Ant Grub Glue
+231;ger;Zeessze-Ameisenkleber
+231;fra;Zeessze Ant Grub Glue
+232;eng;Pantaa Prayer Sticks
+232;ger;Pantaa Prayer Sticks
+232;fra;Pantaa Prayer Sticks
+233;eng;Fujin Tea
+233;ger;Fujin Tea
+233;fra;Fujin Tea
+234;eng;Chameleon Cloth
+234;ger;Chameleon Cloth
+234;fra;Chameleon Cloth
+235;eng;Orrerian Vicious Brew
+235;ger;Orrerian Vicious Brew
+235;fra;Orrerian Vicious Brew
+236;eng;Uszaian Tree Grub
+236;ger;Uszaian Tree Grub
+236;fra;Uszaian Tree Grub
+237;eng;Momus Bog Spaniel
+237;ger;Momus Bog Spaniel
+237;fra;Momus Bog Spaniel
+238;eng;Diso Ma Corn
+238;ger;Diso Ma Corn
+238;fra;Diso Ma Corn
+239;eng;Leestian Evil Juice
+239;ger;Leestian Evil Juice
+239;fra;Leestian Evil Juice
+240;eng;Azure Milk
+240;ger;Azure Milk
+240;fra;Azure Milk
+241;eng;Leathery Eggs
+241;ger;Leathery Eggs
+241;fra;Leathery Eggs
+242;eng;Alya Body Soap
+242;ger;Alya Body Soap
+242;fra;Alya Body Soap
+243;eng;Vidavantian Lace
+243;ger;Vidavantian Lace
+243;fra;Vidavantian Lace
+244;eng;Jaques Quinentian Still
+244;ger;Jaques Quinentian Still
+244;fra;Jaques Quinentian Still
+245;eng;Soontill Relics
+245;ger;Soontill Relics
+245;fra;Soontill Relics
+246;eng;Unknown Artefact
+246;ger;Unknown Artefact
+246;fra;Unknown Artefact
+247;eng;Hafnium 178
+247;ger;Hafnium178
+247;fra;Hafnium 178
+248;eng;Military Intelligence
+248;ger;Military Intelligence
+248;fra;Military Intelligence
+249;eng;The Hutton Mug
+249;ger;The Hutton Mug
+249;fra;The Hutton Mug
+250;eng;Sothis Crystalline Gold
+250;ger;Sothis Crystalline Gold
+250;fra;Sothis Crystalline Gold
+251;eng;Salvageable Wreckage
+251;ger;Salvageable Wreckage
+251;fra;Salvageable Wreckage
+252;eng;Encrypted Data Storage
+252;ger;Encrypted Data Storage
+252;fra;Encrypted Data Storage
+253;eng;Personal Effects
+253;ger;Personal Effects
+253;fra;Personal Effects
+254;eng;Commercial Samples
+254;ger;Commercial Samples
+254;fra;Commercial Samples
+255;eng;Tactical Data
+255;ger;Tactical Data
+255;fra;Tactical Data
+256;eng;Assault Plans
+256;ger;Assault Plans
+256;fra;Assault Plans
+257;eng;Encrypted Correspondence
+257;ger;Encrypted Correspondence
+257;fra;Encrypted Correspondence
+258;eng;Diplomatic Bag
+258;ger;Diplomatic Bag
+258;fra;Diplomatic Bag
+259;eng;Scientific Research
+259;ger;Scientific Research
+259;fra;Scientific Research
+260;eng;Scientific Samples
+260;ger;Scientific Samples
+260;fra;Scientific Samples
+261;eng;Political Prisoner
+261;ger;Political Prisoner
+261;fra;Political Prisoner
+262;eng;Hostage
+262;ger;Hostage
+262;fra;Hostage
+263;eng;Geological Samples
+263;ger;Geological Samples
+263;fra;Geological Samples
+264;eng;Master Chefs
+264;ger;Master Chefs
+264;fra;Master Chefs
+265;eng;Crystalline Spheres
+265;ger;Crystalline Spheres
+265;fra;Crystalline Spheres
+266;eng;Taaffeite
+266;ger;Taaffeite
+266;fra;Taaffeite
+267;eng;Jadeite
+267;ger;Jadeite
+267;fra;Jadeite
+268;eng;Unstable Data Core
+268;ger;Unstable Data Core
+268;fra;Unstable Data Core
+269;eng;Onionhead Alpha Strain
+269;ger;Onionhead Alpha Strain
+269;fra;Onionhead Alpha Strain
+270;eng;Occupied Escape Pod
+270;ger;Occupied Escape Pod
+270;fra;Occupied Escape Pod

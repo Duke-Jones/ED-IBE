@@ -1050,6 +1050,8 @@ namespace IBE.SQL
                             return "\\t";
                         case "\u001A":          // Ctrl-Z
                             return "\\Z";
+                        case "'":          
+                            return "''";
                         default:
                             return "\\" + v;
                     }

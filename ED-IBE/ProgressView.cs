@@ -5,27 +5,29 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace IBE
 {
     public partial class ProgressView : IBE.Enums_and_Utility_Classes.RNBaseForm
     {
+
+
         PerformanceTimer m_PTimer = new PerformanceTimer();
         //string THISOBJECTNAME = "FormProgressView";
         public delegate void del_Sub_PInt32(Int32 Value);
         public delegate void del_Sub_PString(string Text);
         bool m_Cancelled;           //  True: Abbruch wurde angefordert
 
-        public ProgressView()
+        public ProgressView(Control parent = null)
         {
             InitializeComponent();
-
+            ParentControl = parent;
             m_Cancelled = false;
             m_PTimer.startMeasuring();
+            DoPositioning = false;
         }
 
-
-    
     // <summary>
     // shows the progress view
     // </summary>
@@ -162,6 +164,7 @@ namespace IBE
     private void cmdCancel_Click(object sender, System.EventArgs e) {
         m_Cancelled = true;
     }
+
 
 }
 }

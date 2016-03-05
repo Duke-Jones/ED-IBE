@@ -778,6 +778,9 @@
     </EmbeddedResource>
     <None Include="Brainerous\scipy.linalg._cblas.pyd" />
     <None Include="Brainerous\scipy.linalg._clapack.pyd" />
+    <None Include="Data\commodities.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\commodities.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

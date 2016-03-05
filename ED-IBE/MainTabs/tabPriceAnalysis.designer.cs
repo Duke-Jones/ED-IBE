@@ -315,14 +315,12 @@
             // 
             // cmbSystemBase
             // 
-            this.cmbSystemBase.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cmbSystemBase.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cmbSystemBase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSystemBase.FormattingEnabled = true;
             this.cmbSystemBase.Location = new System.Drawing.Point(299, 14);
             this.cmbSystemBase.Name = "cmbSystemBase";
             this.cmbSystemBase.Size = new System.Drawing.Size(200, 21);
             this.cmbSystemBase.TabIndex = 14;
+            this.cmbSystemBase.TextUpdate += new System.EventHandler(this.cmbSystemBase_TextUpdate);
             // 
             // cbMaxDistanceToStar
             // 

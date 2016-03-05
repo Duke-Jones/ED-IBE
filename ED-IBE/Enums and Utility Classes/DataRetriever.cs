@@ -34,6 +34,9 @@ namespace IBE.Enums_and_Utility_Classes
         private DataColumnCollection        m_ColumnsValue;
         private DataTable                   m_TableType = null;
         private SQL.DBConnector             m_DBCon;
+        private PerformanceTimer            m_Pt = new PerformanceTimer();
+        private Int32                       m_rowCountCache = 0;
+
 
         /// <summary>
         /// constructor for the DataRetriever (used for loading and caching data in DGV VirtualMode)
@@ -134,20 +137,21 @@ namespace IBE.Enums_and_Utility_Classes
             return table;
         }
 
-        public int RowCount
+        public int RowCount(Boolean refresh = false)
         {
-            get
+            Object result = -1;
+            if ((m_Pt.currentMeasuring() >= 60000) || (!m_Pt.isStarted) || refresh)
             {
-
-                Object result = -1;
                 // Retrieve the row count from the database.
                 m_Command.CommandText = "SELECT COUNT(*) FROM " + m_BaseTableName;
                 result = m_Command.ExecuteScalar();
                 if (result != null)
-                    m_RowCountValue = Convert.ToInt32(result);
+                    m_rowCountCache = Convert.ToInt32(result);
 
-                return m_RowCountValue;
+                m_Pt.startMeasuring();
             }
+
+            return m_rowCountCache;
         }
 
         private string CommaSeparatedListOfColumnNames(String Prefix = "")

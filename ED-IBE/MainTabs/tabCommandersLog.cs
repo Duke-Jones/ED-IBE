@@ -198,7 +198,27 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                e.Value = m_DataSource.Retriever.MemoryCache.RetrieveElement(e.RowIndex, e.ColumnIndex);
+                Int32 firstRow = dgvCommandersLog.FirstDisplayedScrollingRowIndex - 50;
+                if (firstRow < 0)
+                    firstRow = 0;
+                Int32 minPageStart = (firstRow / 50) * 50;
+
+                Int32 lastRow = dgvCommandersLog.FirstDisplayedScrollingRowIndex + 50;
+                Int32 maxPageEnd   = ((lastRow / 50) + 1) * 50 - 1;
+                if (maxPageEnd >= m_DataSource.Retriever.RowCount())
+                    maxPageEnd = m_DataSource.Retriever.RowCount() -1;
+                
+                //if(e.RowIndex == 650)
+                //    Debug.Print("Stop");
+
+                if ((e.RowIndex >= minPageStart) && (e.RowIndex <= maxPageEnd))
+                {
+                    //Debug.Print("Erste Zeile : " + dgvCommandersLog.FirstDisplayedScrollingRowIndex + ", Zeilendaten angefragt: " + e.RowIndex + ", erste sinnvolle Zeile : " + minPageStart + ", letzte sinnvolle Zeile : " + maxPageEnd);
+                    e.Value = m_DataSource.Retriever.MemoryCache.RetrieveElement(e.RowIndex, e.ColumnIndex);
+                }
+                //else
+                //    Debug.Print("Erste Zeile : " + dgvCommandersLog.FirstDisplayedScrollingRowIndex + ", Zeilendaten angefragt: " + e.RowIndex + ", erste sinnvolle Zeile : " + minPageStart + ", letzte sinnvolle Zeile : " + maxPageEnd + " verweigert");
+
             }
             catch (Exception ex)
             {
@@ -257,7 +277,7 @@ namespace IBE.MTCommandersLog
                 {
                     // force refresh
                     m_DataSource.Retriever.MemoryCache.Clear();
-                    dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount;
+                    dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount(true);
                     dgvCommandersLog.Invalidate();
                     
 
@@ -738,6 +758,11 @@ namespace IBE.MTCommandersLog
             {
                 throw new Exception("Error while refreshing combobox-data for stations-combobox", ex);
             }
+        }
+
+        private void dgvCommandersLog_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            dgvCommandersLog.CellValueNeeded          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValueNeeded);
         }
     }
 }

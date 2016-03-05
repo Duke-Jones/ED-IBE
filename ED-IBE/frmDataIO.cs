@@ -29,6 +29,7 @@ namespace IBE
             RN_CommandersLog                = 0x0200,           /* default is "CommandersLogAutoSave.xml" */  
             RN_StationHistory               = 0x0400,           /* default is "StationHistory.json" */  
             RN_MarketData                   = 0x0800,           /* default is "AutoSave.csv" */  
+            IBE_Localizations_Commodities   = 0x1000,           /* default is "commodities.csv"  */
         }
 
         public frmDataIO()
@@ -70,7 +71,7 @@ namespace IBE
                     enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
                                                 enImportTypes.EDDB_Systems | 
                                                 enImportTypes.EDDB_Stations |
-                                                enImportTypes.RN_Localizations_Commodities |
+                                                enImportTypes.IBE_Localizations_Commodities |
                                                 enImportTypes.RN_Localizations_EcoLevels;
 
                     ImportData(null, importFlags, null, path);
@@ -295,6 +296,28 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (importFlags.HasFlag(enImportTypes.IBE_Localizations_Commodities))
+                        {
+                            // import the new localizations (commodities) from csv-fileName
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations (IBE)...", Index = 0, Total = 0 });
+                            FileName = "commodities.csv";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportLocalizationDataFromCSV(Path.Combine(sourcePath, FileName), SQL.EliteDBIO.enLocalizationType.Commodity, SQL.EliteDBIO.enLocalisationImportType.overwriteNonBase);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations (IBE)...", Index = 1, Total = 1 });
                             }
                             else
                             {

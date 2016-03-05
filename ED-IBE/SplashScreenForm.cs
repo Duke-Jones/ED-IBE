@@ -14,10 +14,14 @@ namespace IBE
     public partial class SplashScreenForm : Form
     {
         System.Windows.Forms.Timer _CloseTimer;
+
+        static SplashScreenForm SplashObject = null;
+
         public SplashScreenForm()
         {
             InitializeComponent();
             SplashInfo.Items.Add("");
+            SplashObject = this;
         }
 
         public void InfoAdd(string Info)

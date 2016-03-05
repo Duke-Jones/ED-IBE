@@ -175,11 +175,14 @@ namespace IBE.MTPriceAnalysis
                 m_GUIInterface.loadAllSettings(this);
 
                 loadCommoditiesForByCommodity();
-                loadSystemsForBaseSystem();
+                //loadSystemsForBaseSystem();
 
                 createNewBaseView();
 
                 SetComboBoxEventsActive(true);
+
+                cmbSystemBase.Text = CURRENT_SYSTEM;
+                                              
 
                 Cursor = oldCursor;
             }
@@ -504,12 +507,23 @@ namespace IBE.MTPriceAnalysis
                     minLandingPadSize = cmbMinLandingPadSize.Text;
                 
                 // get the id of the selected "base system"
-                if(cmbSystemBase.SelectedIndex <= 0)
+                if(cmbSystemBase.Text.Equals(CURRENT_SYSTEM, StringComparison.InvariantCultureIgnoreCase))
                     sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
                 else
                     sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(cmbSystemBase.Text);
+
                 Data = new DataTable();
                 Program.DBCon.Execute(sqlString, Data);
+
+                if ((Data.Rows.Count > 0) && (cmbSystemBase.Text.Equals(CURRENT_SYSTEM, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    this.cmbSystemBase.TextUpdate -=  cmbSystemBase_TextUpdate;
+                    cmbSystemBase.Text             = CURRENT_SYSTEM;
+                    this.cmbSystemBase.TextUpdate +=  cmbSystemBase_TextUpdate;
+
+                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
+                    Program.DBCon.Execute(sqlString, Data);
+                }
 
                 if (Data.Rows.Count > 0)
                 {
@@ -591,21 +605,37 @@ namespace IBE.MTPriceAnalysis
         private void loadSystemsForBaseSystem()
         {
             Program.enVisitedFilter VFilter;
-
+            String cText;
             try
             {
+                cText = cmbSystemBase.Text;
                 VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, 
                                                                                     "VisitedFilter", 
                                                                                     ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                     false);
 
-                m_DataSource.loadSystems(m_DGVTables[cmbSystemBase.Name], VFilter);
+                //m_DataSource.loadSystems(m_DGVTables[cmbSystemBase.Name], VFilter);/
+
+                cmbSystemBase.SuspendLayout();
+                cmbSystemBase.BeginUpdate();
+
+                m_DataSource.LoadSystemsForBaseComboBox(cText, m_DGVTables[cmbSystemBase.Name], VFilter);
 
                 if(cmbSystemBase.ValueMember == "")
                 {
                     cmbSystemBase.DisplayMember     = "SystemName";
                     cmbSystemBase.ValueMember       = "SystemID";
                 }
+
+                cmbSystemBase.DroppedDown = true;
+
+                cmbSystemBase.Text = cText;
+                cmbSystemBase.SelectionStart = cText.Length;
+
+                cmbSystemBase.ResumeLayout();
+                cmbSystemBase.EndUpdate();
+
+
 
                 //m_BindingSources[cmbSystemBase.Name].Sort = "SystemName";
             }
@@ -615,6 +645,23 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+        /// <summary>
+        /// when editing we try to load the matching systems into the Combobox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmbSystemBase_TextUpdate(object sender, EventArgs e)
+        {
+            try
+            {
+                loadSystemsForBaseSystem();
+                SignalizeChangedData();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmbSystemBase_TextChanged");
+            }
+        }
 
         /// <summary>
         /// "Location to Star Distance" enabled/disabled
@@ -1370,7 +1417,7 @@ namespace IBE.MTPriceAnalysis
         {
             MouseEventArgs args;
             DataGridView dgv1;
-            DataGridView dgv2;
+            DataGridView dgv2 = null;
             DataGridView.HitTestInfo hit;
 
             try
@@ -1388,14 +1435,18 @@ namespace IBE.MTPriceAnalysis
 
                         if(dgv1.Equals(dgvStation1))
                             dgv2 = dgvStation2;
-                        else
+                        else if(dgv1.Equals(dgvStation2))
                             dgv2 = dgvStation1;
 
                         if(Tool.setVisibility(dgv1) == DialogResult.OK)
                         {
                             m_GUIInterface.saveSetting(dgv1);
-                            DataGridViewSettings.CloneSettings(ref dgv1, ref dgv2);
-                            m_GUIInterface.saveSetting(dgv2);
+
+                            if(dgv2 != null)
+                            { 
+                                DataGridViewSettings.CloneSettings(ref dgv1, ref dgv2);
+                                m_GUIInterface.saveSetting(dgv2);
+                            }
                         }
                     }
                 }
@@ -1442,5 +1493,6 @@ namespace IBE.MTPriceAnalysis
                 cErr.processError(ex, "Error in dgvStation_CellFormatting");
             }
         }
+
     }
 }

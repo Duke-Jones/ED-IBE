@@ -144,7 +144,6 @@
             this.txtLogDistance.TabIndex = 46;
             this.txtLogDistance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtLogDistance.Value = "";
-
             // 
             // label2
             // 

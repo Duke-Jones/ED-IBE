@@ -96,6 +96,13 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+   
+   * Progressbar always on parent positioned
+   * supress full reload of CmdrsLog on changing columns width
+   * Splashscreen is hidden if a messagebox or inputbox appears on start 
+   * fixed a few errors on importing commodity localizations
+   * improved behavior of list of systems in the "lightyears of"-combobox on price analysis-tab
+-------------------------------------------------------------------------------------         
    * added functionality to imform other parts of changed settings from settings tab
    * Commander's Log is now self-refreshing after importing log logfiles
    * import of commodity localizations

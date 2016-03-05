@@ -30,8 +30,8 @@ namespace IBE
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LanguageEdit));
             this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.column_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,6 +67,7 @@ namespace IBE
             this.rbImportOnlyNew = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataOwn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -98,7 +99,7 @@ namespace IBE
             this.dgvData.DoubleBuffer = true;
             this.dgvData.Location = new System.Drawing.Point(3, 17);
             this.dgvData.Name = "dgvData";
-            this.dgvData.Size = new System.Drawing.Size(373, 427);
+            this.dgvData.Size = new System.Drawing.Size(373, 426);
             this.dgvData.TabIndex = 0;
             this.dgvData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvData.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -109,9 +110,9 @@ namespace IBE
             // column_id
             // 
             this.column_id.DataPropertyName = "id1";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle1.NullValue = null;
-            this.column_id.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle3.NullValue = null;
+            this.column_id.DefaultCellStyle = dataGridViewCellStyle3;
             this.column_id.HeaderText = "ID";
             this.column_id.Name = "column_id";
             this.column_id.ReadOnly = true;
@@ -146,7 +147,7 @@ namespace IBE
             this.dgvDataOwn.DoubleBuffer = true;
             this.dgvDataOwn.Location = new System.Drawing.Point(3, 17);
             this.dgvDataOwn.Name = "dgvDataOwn";
-            this.dgvDataOwn.Size = new System.Drawing.Size(370, 427);
+            this.dgvDataOwn.Size = new System.Drawing.Size(370, 426);
             this.dgvDataOwn.TabIndex = 1;
             this.dgvDataOwn.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvDataOwn.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -158,9 +159,9 @@ namespace IBE
             // column_id2
             // 
             this.column_id2.DataPropertyName = "id1";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle2.NullValue = null;
-            this.column_id2.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle4.NullValue = null;
+            this.column_id2.DefaultCellStyle = dataGridViewCellStyle4;
             this.column_id2.HeaderText = "ID";
             this.column_id2.Name = "column_id2";
             this.column_id2.ReadOnly = true;
@@ -205,7 +206,7 @@ namespace IBE
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 211);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 276);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -217,7 +218,7 @@ namespace IBE
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.dgvDataOwn);
-            this.splitContainer1.Size = new System.Drawing.Size(760, 448);
+            this.splitContainer1.Size = new System.Drawing.Size(760, 447);
             this.splitContainer1.SplitterDistance = 379;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -484,10 +485,22 @@ namespace IBE
             this.groupBox5.TabIndex = 14;
             this.groupBox5.TabStop = false;
             // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(138, 209);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(504, 65);
+            this.label5.TabIndex = 15;
+            this.label5.Text = resources.GetString("label5.Text");
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
             // LanguageEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(784, 671);
+            this.ClientSize = new System.Drawing.Size(784, 735);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupbox3);
@@ -517,6 +530,7 @@ namespace IBE
             this.groupBox2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -556,5 +570,6 @@ namespace IBE
         private System.Windows.Forms.RadioButton rbImportOverwriteButBase;
         private System.Windows.Forms.RadioButton rbImportOnlyNew;
         private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label5;
     }
 }
