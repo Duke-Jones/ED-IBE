@@ -31,6 +31,7 @@ schon vor dem Start von ED-IBE vorhanden.)
 
 Beim ersten Start werden auch die derzeit bekannten Waren, Systeme und Stationen aus den mitgelieferten
 EDDN-Dumpfiles importiert und weitere benötigte Stammdaten angelegt. 
+Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
 
 3. Import bestehender Daten aus dem alten RegulatedNoise.
 ED-IBE besitz ein Menüpunkt "Data"->"Import". Dort können über "Import Old Datafiles" 
@@ -46,11 +47,18 @@ Mit "Import RN-CommandersLog Files" können gesplittete Logfiles von RN wieder e
 Vorraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.
 Mehrfachimport wird durch Abgleich des Zeitstempels verhindert.
 
-3. Tabellenansichten
+4. Übersetzungen
+Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportiren.
+Auch das Hinzufügen einer weiteren Sprache ist möglich (Übersetzungen exportieren, neuen Sprache hinzufügen 
+und wieder importieren - nicht vorhandenen Übersetzungen werden mit der englischen Bezeichnung ergänzt und 
+können später korrigiert werden)
+
+5. Tabellenansichten
 Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
 öffnet sich ein Dialog, mit dem die Tabellenansicht angepasst werden kann.
 Die breiten der Spalten können auch per Drag'n'Drop angepasst werden.
 Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen auch übernommen.
+(bekannter Bug: die Tabelle darf beim Einstellen nicht leer sein)
 
 
 
