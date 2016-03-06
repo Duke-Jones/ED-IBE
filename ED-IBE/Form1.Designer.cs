@@ -2508,6 +2508,7 @@
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.tabCtrlMain);
+            this.Enabled = false;
             this.KeyPreview = true;
             this.MainMenuStrip = this.msMainMenu;
             this.Name = "Form1";

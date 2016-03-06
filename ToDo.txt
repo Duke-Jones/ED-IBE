@@ -96,7 +96,11 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
-   * v0.1.1
+v0.1.2
+   * quickfix: optimized behavior of Splashscreen on start to avoid errors when 
+               initializing the DB for the first time
+-------------------------------------------------------------------------------------         
+* v0.1.1
 -------------------------------------------------------------------------------------         
    * Progressbar always on parent positioned
    * supress full reload of CmdrsLog on changing columns width

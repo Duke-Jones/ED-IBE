@@ -420,9 +420,13 @@ namespace IBE
 
             while (true)
             {
-                Program.SplashScreen.Visible = false;
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
+
                 var dialogResult = dialog.ShowDialog();
-                Program.SplashScreen.Visible = true;
+
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = true;
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -445,15 +449,16 @@ namespace IBE
                 else
                     return null;
 
-                Program.SplashScreen.Visible = false;
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
 
                 var MBResult = MsgBox.Show(
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel);
 
-                Program.SplashScreen.Visible = true;
-                
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = true;
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Environment.Exit(-1);
@@ -470,9 +475,13 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                Program.SplashScreen.Visible = false;
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
+
                 var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.OKCancel);
-                Program.SplashScreen.Visible = true;
+
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = true;
 
                 if (MBResult != System.Windows.Forms.DialogResult.Cancel)
                     path = getProductPathManually();
@@ -547,9 +556,13 @@ namespace IBE
 
                     }
 
-                    Program.SplashScreen.Visible = false;
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = false;
+
                     var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
-                    Program.SplashScreen.Visible = true;
+
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = true;
 
                     if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                         Environment.Exit(-1);
@@ -575,9 +588,13 @@ namespace IBE
 
             while (true)
             {
-                Program.SplashScreen.Visible = false;
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
+
                 var dialogResult = dialog.ShowDialog();
-                Program.SplashScreen.Visible = true;
+
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = true;
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -588,9 +605,15 @@ namespace IBE
                     }
                 }
 
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
+
                 var MBResult = MsgBox.Show(
                     "Hm, that doesn't seem right, " + dialog.SelectedPath +
                     " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
+
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = true;
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -608,9 +631,13 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                Program.SplashScreen.Visible = false;
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
+
                 var MBResult = MsgBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
-                Program.SplashScreen.Visible = true;
+
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = true;
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -1842,6 +1869,14 @@ namespace IBE
         {
             try
             {
+                //if(!Program.SplashScreen.IsDisposed)
+                //    Program.SplashScreen.TopMost = false;
+
+                //MessageBox.Show("Test");
+
+                //if(!Program.SplashScreen.IsDisposed)
+                //    Program.SplashScreen.TopMost = true;
+
                 Stopwatch st = new Stopwatch();
                 st.Start();
                 Version newVersion;
@@ -1949,10 +1984,12 @@ namespace IBE
                 Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);
                 st.Start();
 
+                this.Enabled = true;
                 
             }
             catch (Exception ex)
             {
+                this.Enabled = true;
                 cErr.processError(ex, "Error in Form_Shown");
             }
         }
