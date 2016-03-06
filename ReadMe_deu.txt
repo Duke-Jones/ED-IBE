@@ -1,6 +1,6 @@
 ED - Intelligent Boardcomputer Extension
 
-Vorraussetzungen:
+Voraussetzungen:
 - Win7 oder höher, x64
 - Microsoft dotNet 4.6
 - Microsoft Visual Studio 2013 C++ Runtimes (https://www.microsoft.com/en-gb/download/details.aspx?id=40784)
@@ -45,27 +45,28 @@ die Datenbestände aus dem alten RN übernommen werden.
 neuere Dumpfiles (die zunächst von der EDDB-Seite heruntergeladen werden müssen)
 zu importieren. Hierdurch werden die Stations- und Systemdaten aktualisiert oder
 neue Waren hinzugefügt. Dieser Import kann beliebig oft wiederholt werden macht
-(Empfehlung : alle 1 bis 4 Wochen reicht vollkommen - oder wenn bestimmte Daten fehlen, 
+(Empfehlung: alle 1 bis 4 Wochen reicht vollkommen - oder wenn bestimmte Daten fehlen, 
 die inzwischen in der EDDB angelegt worden sind)
 ->Bei ersten Start von ED-IBE wird dieser Import automatisch mit den mitgelieferten EDDB-Dumps ausgeführt. 
 
 Mit "Import RN-CommandersLog Files" können gesplittete Logfiles von RN wieder eingelesen werden.
-Vorraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.
+Voraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.
 Mehrfachimport wird durch Abgleich des Zeitstempels verhindert.
 
 4. Übersetzungen
-Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportiren.
-Auch das Hinzufügen einer weiteren Sprache ist möglich (Übersetzungen exportieren, neuen Sprache hinzufügen 
-und wieder importieren - nicht vorhandenen Übersetzungen werden mit der englischen Bezeichnung ergänzt und 
-können später korrigiert werden)
+Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportieren.
+Auch das Hinzufügen einer weiteren Sprache ist möglich. Hierzu die Übersetzungen exportieren, dann in der csv-Datei die neuen Spracheinträge hinzufügenund danach die geänderte csv-Datei wieder importieren. Nicht vorhandenen Übersetzungen einer neuen Sprache werden mit der englischen Bezeichnung ergänzt und können dann später korrigiert werden)
 
 5. Tabellenansichten
 Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
 öffnet sich ein Dialog, mit dem die Tabellenansicht angepasst werden kann.
-Die breiten der Spalten können auch per Drag'n'Drop angepasst werden.
-Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen auch übernommen.
+Die Breite der Spalten können auch per Drag'n'Drop angepasst werden.
+Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen dann auch übernommen.
 (bekannter Bug: die Tabelle darf beim Einstellen nicht leer sein)
 
+6. Comboboxen
+Die ComboBoxen habe zwar feste Einträge. In vielen Fällen hat man aber die Möglichkeit 
+beliebige eigene Werte einzutragen (z.B. bei "Max. Trip Distance")
 
 
 
