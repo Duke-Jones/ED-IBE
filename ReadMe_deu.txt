@@ -15,9 +15,10 @@ verzeichnis (C:\Program Files\ED-IBE) und zur Hälfte in das Data-Verzeichnis
 angepasst werden. Es kann auch für beide Teile das gleiche Verzeichnis (z. B. "F:\ED-IBE") angegeben werden.
 
 Am Ende der Installation sollte für ein paar Augenblicke ein cmd-Fenster aufgehen.
-Während dieser Zeit wird die Datenbankstruktur erstellt. 
+Während dieser Zeit wird die Datenbankstruktur erstellt. Wenn dieses Fenster nicht erscheint, 
+stimmt etwas nicht. Evtl. die Installation in einem anderen Zielverzeichnis erneut versuchen.
 Ein Log hiervon ist im Data-Verzeichnis zu finden, falls hierbei Probleme auftreten.
-(ED-IBE\Database\install.log)
+(ED-IBE\Database\install.log). 
 
 Sollte eine erneute Installation durchgeführt werden (z. B. bei einem Update) erkennt 
 die Installationsroutine eine bestehende Datenbank anhand der Existenz der Datei "\ED-IBE\Database\data\ibdata1".
@@ -31,17 +32,22 @@ schon vor dem Start von ED-IBE vorhanden.)
 
 Beim ersten Start werden auch die derzeit bekannten Waren, Systeme und Stationen aus den mitgelieferten
 EDDN-Dumpfiles importiert und weitere benötigte Stammdaten angelegt. 
+(siehe hierzu auch unter 3. : "Import data of systems/stations/commodities from EDDB-Files") 
 Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
 
 3. Import bestehender Daten aus dem alten RegulatedNoise.
-ED-IBE besitz ein Menüpunkt "Data"->"Import". Dort können über "Import Old Datafiles" 
+ED-IBE besitzt ein Menüpunkt "Data"->"Import". Dort können über "Import Old Datafiles" 
 die Datenbestände aus dem alten RN übernommen werden.
 
 "Reset Database" löscht den gesamten Datenbestand aus der Datenbank.
 
 "Import data of systems/stations/commodities from EDDB-Files" bietet die Möglichkeit
 neuere Dumpfiles (die zunächst von der EDDB-Seite heruntergeladen werden müssen)
-zu importieren. Dieser Import kann beliebig oft wiederholt werden.
+zu importieren. Hierdurch werden die Stations- und Systemdaten aktualisiert oder
+neue Waren hinzugefügt. Dieser Import kann beliebig oft wiederholt werden macht
+(Empfehlung : alle 1 bis 4 Wochen reicht vollkommen - oder wenn bestimmte Daten fehlen, 
+die inzwischen in der EDDB angelegt worden sind)
+->Bei ersten Start von ED-IBE wird dieser Import automatisch mit den mitgelieferten EDDB-Dumps ausgeführt. 
 
 Mit "Import RN-CommandersLog Files" können gesplittete Logfiles von RN wieder eingelesen werden.
 Vorraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.
