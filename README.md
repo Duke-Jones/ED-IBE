@@ -36,6 +36,7 @@ The database runs as a normal process (not as a service on you pc)
 * adjustable data tables
 * much quicker
 * autoevents for "Visited" and "Market data Collected" working again (with EDMC)
+* supports multiple languages for commodities (also adding of new languages possible)
 
 **not working yet:**
 * view of systems and stations
