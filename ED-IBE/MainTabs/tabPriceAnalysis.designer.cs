@@ -785,6 +785,7 @@
             this.button2.TabIndex = 17;
             this.button2.Text = "Delete Row(s)";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
             // 
             // button3
             // 
@@ -795,6 +796,7 @@
             this.button3.TabIndex = 16;
             this.button3.Text = "Edit Row";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Visible = false;
             // 
             // button5
             // 
@@ -1012,6 +1014,7 @@
             this.button6.TabIndex = 25;
             this.button6.Text = "Delete Row(s)";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Visible = false;
             // 
             // button7
             // 
@@ -1022,6 +1025,7 @@
             this.button7.TabIndex = 24;
             this.button7.Text = "Edit Row";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             // 
             // button8
             // 
@@ -1032,6 +1036,7 @@
             this.button8.TabIndex = 23;
             this.button8.Text = "...";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Visible = false;
             // 
             // button9
             // 
@@ -1042,6 +1047,7 @@
             this.button9.TabIndex = 22;
             this.button9.Text = "...";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
             // 
             // button10
             // 
@@ -1052,6 +1058,7 @@
             this.button10.TabIndex = 21;
             this.button10.Text = "...";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Visible = false;
             // 
             // button11
             // 
@@ -1062,6 +1069,7 @@
             this.button11.TabIndex = 5;
             this.button11.Text = "...";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Visible = false;
             // 
             // label7
             // 

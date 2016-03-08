@@ -212,6 +212,19 @@ namespace IBE.MTPriceAnalysis
 
 #region global handling of the price tab
 
+        private void SetButtons(Boolean setEnabled)
+        {
+            try
+            {
+                cmdRoundTripCaclulation.Enabled         = setEnabled;
+                cmdFilter.Enabled                       = setEnabled;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while dis/enabling buttons", ex);
+            }
+        }
+
         /// <summary>
         /// sets the buttons as marked or not
         /// </summary>
@@ -262,6 +275,8 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
+                SetButtons(false);
+
                 if (Program.actualCondition.System == "")
                     MessageBox.Show("Current system is unknown.", "Can't calculate...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
@@ -269,9 +284,12 @@ namespace IBE.MTPriceAnalysis
                     setFilterHasChanged(true);
                     ActivateFilterSettings();
                 }
+
+                SetButtons(true);
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 cErr.processError(ex, "Error while starting the filter");
             }
         }
@@ -1068,6 +1086,8 @@ namespace IBE.MTPriceAnalysis
 
             try
             {
+                SetButtons(false);
+
                 if (Program.actualCondition.System == "")
                     MessageBox.Show("Current system is unknown.", "Can't calculate...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
@@ -1103,9 +1123,12 @@ namespace IBE.MTPriceAnalysis
                     sortDataGridView(dgvStationToStationRoutes);
                 }
 
+                SetButtons(true);
+
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 cErr.processError(ex, "Error while starting recalculation of the best profit route");
             }
         }

@@ -22,6 +22,7 @@ namespace IBE
             InitializeComponent();
             SplashInfo.Items.Add("");
             SplashObject = this;
+            lblVersion.Text = "v" + VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
         }
 
         public void InfoAdd(string Info)
@@ -72,5 +73,6 @@ namespace IBE
                 this.Location = new Point((Int32)(rec_WA.X + ((rec_WA.Width - this.Width) / 2)), (Int32)(rec_WA.Y + ((rec_WA.Height - this.Height) / 2)));
             }
         }
+
     }
 }

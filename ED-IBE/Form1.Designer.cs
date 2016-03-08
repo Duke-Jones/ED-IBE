@@ -463,7 +463,7 @@
             // createJumpToolStripMenuItem
             // 
             this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
-            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.createJumpToolStripMenuItem.Text = "create Jump";
             this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
             // 
@@ -2442,6 +2442,7 @@
             this.button23.TabIndex = 7;
             this.button23.Text = "How can I analyse price data?";
             this.button23.UseVisualStyleBackColor = true;
+            this.button23.Visible = false;
             this.button23.Click += new System.EventHandler(this.ShowCommodityHelpClick);
             // 
             // button22
@@ -2452,6 +2453,7 @@
             this.button22.TabIndex = 4;
             this.button22.Text = "How does the OCR work?";
             this.button22.UseVisualStyleBackColor = true;
+            this.button22.Visible = false;
             this.button22.Click += new System.EventHandler(this.ShowOcrHelpClick);
             // 
             // lblSubtitle

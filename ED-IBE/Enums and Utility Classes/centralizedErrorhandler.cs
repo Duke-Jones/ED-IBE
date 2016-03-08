@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE
 {
@@ -24,6 +23,8 @@ namespace IBE
 
         static public void processError(Exception ex, string Infotext, bool noAsking)
         {
+            String FileName = String.Format("ed-ibe-dump-v{0}.dmp", VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3).Replace(".", "_"));
+
             string Info;
             Boolean oldValue = true;
 
@@ -44,12 +45,12 @@ namespace IBE
                 Info += Environment.NewLine + ex.GetBaseException().Message;
                                                                                                                                     
 
-            Info += string.Format("{0}{0}(see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
+            Info += string.Format("{0}{0}(dumpfile " + FileName + " created, see detailed info in logfile \"{1}\")", Environment.NewLine, _logger.logPathName);
 
             Info += string.Format("{0}{0}Suppress exception ? (App can be unstable!)", Environment.NewLine);
 
-            Program.CreateMiniDump("RegulatedNoiseDump_handled.dmp");
 
+            Program.CreateMiniDump(FileName);
 
             if(!Program.SplashScreen.IsDisposed)
             {
@@ -60,7 +61,7 @@ namespace IBE
             // ask user what to do
             if (noAsking || (MessageBox.Show(Info, "Exception occured",MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2, MessageBoxOptions.ServiceNotification) == DialogResult.No))
             {
-                MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"RegulatedNoiseDump_handled.dmp\" has been created in your RegulatedNoise directory.  \r\n\r\nPlease place this in a file-sharing service such as Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
+                MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"" + FileName + "\" has been created in your data directory.  \r\n\r\nPlease place this in a file-sharing service such as SendSpace, Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive or send e mail to Duke.Jones@gmx.de.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
                 Environment.Exit(-1);
             }
 

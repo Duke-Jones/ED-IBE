@@ -23,7 +23,9 @@ Ein Log hiervon ist im Data-Verzeichnis zu finden, falls hierbei Probleme auftre
 Sollte eine erneute Installation durchgeführt werden (z. B. bei einem Update) erkennt 
 die Installationsroutine eine bestehende Datenbank anhand der Existenz der Datei "\ED-IBE\Database\data\ibdata1".
 Die Datenbank wird dann unverändert beibehalten, solange bei der Installation nicht explizit 
-das Löschen und Neuerstellen ausgewählt wird. 
+das "Löschen und Neuerstellen" ausgewählt wird. 
+Fall etwas schiefgeht und man die Datenbank einmal löschen möchte, mus man 
+die Installation erneut durchführen und die Checkbox zum "Löschen und Neuerstellen" markieren.
 
 2. Starten
 Wenn ED-IBE gestartet wird, wird automatisch der Datenbankprozess mitgestartet ("mysqld.exe" im Taskmanager).
@@ -38,8 +40,6 @@ Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
 3. Import bestehender Daten aus dem alten RegulatedNoise.
 ED-IBE besitzt ein Menüpunkt "Data"->"Import". Dort können über "Import Old Datafiles" 
 die Datenbestände aus dem alten RN übernommen werden.
-
-"Reset Database" löscht den gesamten Datenbestand aus der Datenbank.
 
 "Import data of systems/stations/commodities from EDDB-Files" bietet die Möglichkeit
 neuere Dumpfiles (die zunächst von der EDDB-Seite heruntergeladen werden müssen)

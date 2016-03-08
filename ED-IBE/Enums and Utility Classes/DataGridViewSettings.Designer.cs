@@ -178,6 +178,7 @@
             this.Controls.Add(this.dgvColumns);
             this.Name = "DataGridViewSettings";
             this.Text = "Select columns";
+            this.Load += new System.EventHandler(this.DataGridViewSettings_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvColumns)).EndInit();
             this.ResumeLayout(false);
 

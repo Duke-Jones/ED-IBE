@@ -53,6 +53,30 @@ namespace IBE
             }
         }
 
+        private void SetButtons(Boolean setEnabled)
+        {
+            try
+            {
+                cmdImportOldData.Enabled                = setEnabled;
+                cbImportPriceData.Enabled               = setEnabled;
+                cmdImportCommandersLog.Enabled          = setEnabled;
+                cmdClearAll.Enabled                     = setEnabled;
+                cmdImportSystemsAndStations.Enabled     = setEnabled;
+                checkBox1.Enabled                       = setEnabled;
+                cmdExportCSV.Enabled                    = setEnabled;
+                rbDefaultLanguage.Enabled               = setEnabled;
+                rbUserLanguage.Enabled                  = setEnabled;
+                cmdImportFromCSV.Enabled                = setEnabled;
+                rbImportNewer.Enabled                   = setEnabled;
+                rbImportSame.Enabled                    = setEnabled;
+                cmdTest.Enabled                         = setEnabled;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while dis/enabling buttons", ex);
+            }
+        }
+
         /// <summary>
         /// start the master import (master data for systems/station/commoditynames ...)
         /// </summary>
@@ -161,50 +185,6 @@ namespace IBE
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error while reporting progress");
-            }
-        }
-
-        /// <summary>
-        /// clears all data from the database
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cmdClearAll_Click(object sender, EventArgs e)
-        {
-            String retString = "";
-
-            try
-            {
-                if (InputBox.Show("Clear database", "This will delete all your data. Are you sure ? Type 'yes' to proceed.", ref retString) == System.Windows.Forms.DialogResult.OK)
-                {
-                    if (retString == "yes")
-                    {
-                        Program.Data.Progress += Data_Progress;
-                        Cursor = Cursors.WaitCursor;
-                        lbProgess.Items.Clear();
-                        Application.DoEvents();
-                        ReUseLine = false;
-
-                        Program.Data.ClearAll();
-
-                        Program.DBCon.setIniValue("Database", "Version", new Version(0, 0, 0, 0).ToString());
-                        Program.Data.OldDataImportDone  = false;
-
-                        cmdImportOldData.Enabled        = true;
-                        cbImportPriceData.Enabled       = true;
-
-                        System.Threading.Thread.Sleep(50);
-                        Cursor = Cursors.Default;
-                        ReUseLine = true;
-                        Program.Data.Progress -= Data_Progress;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Cursor = Cursors.Default;
-
-                cErr.processError(ex, "Error in cmdClearAll_Click");
             }
         }
 
@@ -594,14 +574,19 @@ namespace IBE
         {
             try
             {
+                SetButtons(false);
+
                 enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
                                   enImportTypes.EDDB_Systems | 
                                   enImportTypes.EDDB_Stations;
 
                 ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags);
+
+                SetButtons(true);
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 cErr.processError(ex, "Error while importing system/station data from EDDN");
             }
         }
@@ -610,11 +595,17 @@ namespace IBE
         {
             try
             {
+                SetButtons(false);
+
                 enImportTypes importFlags = enImportTypes.RN_CommandersLog;
                 ImportData("Select folder with your old Commander's Log data (accepted file pattern : CommandersLog*.xml)", importFlags, "CommandersLog*.xml");
+
+                SetButtons(true);
+
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 cErr.processError(ex, "Error while importing system/station data from EDDN");
             }
         }
@@ -627,9 +618,11 @@ namespace IBE
         private void cmdImportOldData_Click(object sender, EventArgs e)
         {
             String RNPath;
-
+            
             try
             {
+                SetButtons(false);
+
                 
                 enImportTypes importFlags = enImportTypes.RN_SelfAddedLocalizations |  
                                             enImportTypes.RN_Pricewarnlevels | 
@@ -675,9 +668,12 @@ namespace IBE
                         }
                     }
                 }
+
+                SetButtons(true);
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 Cursor = Cursors.Default;
                 cErr.processError(ex, "Error while importing the existing RN-data");
             }
@@ -692,6 +688,8 @@ namespace IBE
         {
             try
             {
+                SetButtons(false);
+
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
                 saveFileDialog1.Filter              = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
@@ -718,9 +716,12 @@ namespace IBE
                     Program.Data.Progress -= Data_Progress;
                     Cursor = Cursors.Default;
                 }
+
+                SetButtons(true);
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 Cursor = Cursors.Default;
                 cErr.processError(ex, "Error while exporting to csv");
             }
@@ -737,6 +738,8 @@ namespace IBE
             OpenFileDialog fbFileDialog;
             try
             {
+                SetButtons(false);
+
                 sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
 
                 fbFileDialog = new OpenFileDialog();
@@ -770,9 +773,12 @@ namespace IBE
                     Program.Data.Progress -= Data_Progress;
                 }
 
+                SetButtons(true);
+
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 Cursor = Cursors.Default;
                 cErr.processError(ex, "Error while importing from csv");
             }       
@@ -782,10 +788,15 @@ namespace IBE
         {
             try
             {
+                SetButtons(false);
+
                 Program.Data.AddMissingLocalizationEntries();
+
+                SetButtons(true);
             }
             catch (Exception ex)
             {
+                SetButtons(true);
                 cErr.processError(ex);
             }
         }
@@ -802,5 +813,8 @@ namespace IBE
 		        cErr.processError(ex, "Error in frmDataIO_FormClosed");
 	        }
         }
+
     }
+
+
 }

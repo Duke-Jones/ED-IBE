@@ -12,24 +12,23 @@ namespace IBE.Enums_and_Utility_Classes
 {
     public partial class DataGridViewSettings : Form
     {
+        public DataGridView HandledDGV { get; set; }
+
         public DataGridViewSettings()
         {
             InitializeComponent();
+
+
         }
 
-        public DialogResult setVisibility(DataGridView EditedDataGridView)
+        public DialogResult setVisibility(DataGridView editedDataGridView)
         {
             try
             {
 
-                
+                HandledDGV = editedDataGridView;
 
-                System.Drawing.Rectangle CellRectangle1 = EditedDataGridView.GetCellDisplayRectangle(2, 2, true);
-
-
-                this.Location = EditedDataGridView.PointToClient(new Point(EditedDataGridView.Left +  2 * EditedDataGridView.RowHeadersWidth, EditedDataGridView.Top + 2 * EditedDataGridView.ColumnHeadersHeight));
-
-                foreach (DataGridViewColumn CurrentColumn in EditedDataGridView.Columns)
+                foreach (DataGridViewColumn CurrentColumn in editedDataGridView.Columns)
                 { 
                     dgvColumns.Rows.Add(CurrentColumn.Name, 
                                         CurrentColumn.HeaderText, 
@@ -42,13 +41,13 @@ namespace IBE.Enums_and_Utility_Classes
                 }
 
 
-                this.ShowDialog(EditedDataGridView);
+                this.ShowDialog(editedDataGridView);
 
                 if(this.DialogResult == System.Windows.Forms.DialogResult.OK)
                 { 
                     Int32 ColumnIndex=0;
 
-                    foreach (DataGridViewColumn CurrentColumn in EditedDataGridView.Columns)
+                    foreach (DataGridViewColumn CurrentColumn in editedDataGridView.Columns)
                     {
                         CurrentColumn.DisplayIndex   = Int32.Parse(dgvColumns.Rows[ColumnIndex].Cells["colDisplayIndex"].Value.ToString());
                         CurrentColumn.Visible        = (Boolean)dgvColumns.Rows[ColumnIndex].Cells["colVisible"].Value;
@@ -116,6 +115,20 @@ namespace IBE.Enums_and_Utility_Classes
             {
                 throw new Exception("Error in cmdOk_Click", ex);
             }
+        }
+
+        private void DataGridViewSettings_Load(object sender, EventArgs e)
+        {
+            try
+            {   
+                // set the position relative to the edited grid
+                this.Location = HandledDGV.PointToScreen(new Point(60,120));
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in DataGridViewSettings_Load");
+            }
+
         }
     }
 }

@@ -54,6 +54,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmdTest = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.cmdExit = new System.Windows.Forms.Button();
+            this.cmdSave = new System.Windows.Forms.Button();
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.cbClear.SuspendLayout();
@@ -61,6 +64,7 @@
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // ttToolTip
@@ -127,9 +131,8 @@
             this.cmdClearAll.TabIndex = 0;
             this.cmdClearAll.Text = "Clear all !";
             this.ttToolTip.SetToolTip(this.cmdClearAll, "Clears the whole database to allow the \"First time import\" again.\r\nBe carful - al" +
-        "l data from the database will be lost.");
+        "l data from the database will be lost.\r\n");
             this.cmdClearAll.UseVisualStyleBackColor = false;
-            this.cmdClearAll.Click += new System.EventHandler(this.cmdClearAll_Click);
             // 
             // cmdImportCommandersLog
             // 
@@ -171,9 +174,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbProgess.FormattingEnabled = true;
-            this.lbProgess.Location = new System.Drawing.Point(12, 384);
+            this.lbProgess.Location = new System.Drawing.Point(12, 260);
             this.lbProgess.Name = "lbProgess";
-            this.lbProgess.Size = new System.Drawing.Size(524, 238);
+            this.lbProgess.Size = new System.Drawing.Size(687, 186);
             this.lbProgess.TabIndex = 1;
             // 
             // gbFirstTime
@@ -290,10 +293,11 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.cmdTest);
-            this.groupBox2.Location = new System.Drawing.Point(714, 256);
+            this.groupBox2.Location = new System.Drawing.Point(894, 384);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(345, 72);
+            this.groupBox2.Size = new System.Drawing.Size(332, 72);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Other";
@@ -309,10 +313,40 @@
             this.cmdTest.UseVisualStyleBackColor = true;
             this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.cmdExit);
+            this.groupBox5.Controls.Add(this.cmdSave);
+            this.groupBox5.Location = new System.Drawing.Point(1053, 12);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(173, 238);
+            this.groupBox5.TabIndex = 15;
+            this.groupBox5.TabStop = false;
+            // 
+            // cmdExit
+            // 
+            this.cmdExit.Location = new System.Drawing.Point(11, 59);
+            this.cmdExit.Name = "cmdExit";
+            this.cmdExit.Size = new System.Drawing.Size(156, 34);
+            this.cmdExit.TabIndex = 10;
+            this.cmdExit.Text = "&Close";
+            this.cmdExit.UseVisualStyleBackColor = true;
+            // 
+            // cmdSave
+            // 
+            this.cmdSave.Location = new System.Drawing.Point(11, 19);
+            this.cmdSave.Name = "cmdSave";
+            this.cmdSave.Size = new System.Drawing.Size(156, 34);
+            this.cmdSave.TabIndex = 9;
+            this.cmdSave.Text = "&Save Changes";
+            this.cmdSave.UseVisualStyleBackColor = true;
+            // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1075, 641);
+            this.ClientSize = new System.Drawing.Size(1238, 468);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cbClear);
@@ -333,6 +367,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -363,5 +398,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button cmdTest;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button cmdExit;
+        private System.Windows.Forms.Button cmdSave;
     }
 }

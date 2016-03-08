@@ -1,4 +1,7 @@
 @echo off
+
+echo started %date% %time%
+
 set DEBUG = 0
 
 if [%1] EQU [/forceinstall] (
@@ -137,5 +140,5 @@ if [%1] EQU [/forceinstall] (
 :end
 
 echo. 
-echo finished !
+echo finished %date% %time%
 echo. 

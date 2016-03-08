@@ -288,10 +288,25 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while refreshing the tab (RefreshTab)", ex);
+                throw new Exception("Error while refreshing the tab (RefreshTab), RowCount = " + m_DataSource.Retriever.RowCount() + ", currentRow = " + currentRow, ex);
             }
         }
 
+        /// <summary>
+        /// things todo, if another tab has become the active tab
+        /// </summary>
+        public void Unselected()
+        {
+            try
+            {
+                if (m_CL_State == enCLAction.Edit) 
+                    cmdCL_Cancel_Click(cmdCL_Cancel, new EventArgs());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while doing cleanups because tab is unselected", ex);
+            }
+        }
 
         /// <summary>
         /// initates editing of the editable fields
@@ -764,5 +779,6 @@ namespace IBE.MTCommandersLog
         {
             dgvCommandersLog.CellValueNeeded          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValueNeeded);
         }
+
     }
 }

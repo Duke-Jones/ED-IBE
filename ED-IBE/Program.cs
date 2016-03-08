@@ -113,6 +113,7 @@ namespace IBE
 
         private static void HandleException(Exception ex)
         {
+            String FileName = String.Format("ed-ibe-dump-v{0}.dmp", VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3)).Replace(".", "_");
             if (ex == null)
                 return;
 
@@ -121,8 +122,8 @@ namespace IBE
 
             cErr.processError(ex, "Unhandled Exception", true);
             // ExceptionPolicy.HandleException(ex, "Default Policy");
-            CreateMiniDump("RegulatedNoiseDump.dmp");
-            MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"RegulatedNoiseDump.dmp\" has been created in your RegulatedNoise directory.  \r\n\r\nPlease place this in a file-sharing service such as Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
+            CreateMiniDump(FileName);
+            MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"" + FileName + "\" has been created in your data directory.  \r\n\r\nPlease place this in a file-sharing service such as SendSpace, Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive or send e mail to Duke.Jones@gmx.de.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
             Application.Exit();
         }
 

@@ -30,6 +30,7 @@
         {
             this.SplashInfo = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // SplashInfo
@@ -55,12 +56,25 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "label1";
             // 
+            // lblVersion
+            // 
+            this.lblVersion.BackColor = System.Drawing.Color.Transparent;
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(152)))), ((int)(((byte)(77)))));
+            this.lblVersion.Location = new System.Drawing.Point(607, 27);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(67, 13);
+            this.lblVersion.TabIndex = 8;
+            this.lblVersion.Text = "v0.0.0";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // SplashScreenForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::IBE.Properties.Resources.RNSplash;
             this.ClientSize = new System.Drawing.Size(700, 340);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.SplashInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -79,5 +93,6 @@
 
         private System.Windows.Forms.Label label1;
         internal System.Windows.Forms.ListBox SplashInfo;
+        private System.Windows.Forms.Label lblVersion;
     }
 }

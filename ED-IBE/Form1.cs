@@ -41,6 +41,7 @@ namespace IBE
  // new stuff
 
         private Dictionary<String, Boolean> m_IsRefreshed;
+        private TabPage                     m_PreviousTab = null;
 
 /* ************************************************ */
 
@@ -1042,12 +1043,43 @@ namespace IBE
                 if (_tooltip != null) _tooltip.RemoveAll();
                 if (_tooltip2 != null) _tooltip2.RemoveAll();
 
+                CleanPreviousTab();
                 RefreshCurrentTab();
 
+                m_PreviousTab = e.TabPage;
             }
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error when selecting a new tab on main tabcontrol");
+            }
+        }
+
+        /// <summary>
+        /// start cleanups on last tab if necessary
+        /// </summary>
+        private void CleanPreviousTab()
+        {
+            try
+            {
+                if(m_PreviousTab != null)
+                {
+                    switch (m_PreviousTab.Name)
+                    {
+                        case "tabCommandersLog":
+                            Program.CommandersLog.GUI.Unselected();
+                            break;
+                    }
+                    MethodInfo RefreshMethod = tabCtrlMain.SelectedTab.GetType().GetMethod("RefreshData");
+
+                    if(RefreshMethod != null)
+                        RefreshMethod.Invoke(tabCtrlMain.SelectedTab, null);
+
+                    m_IsRefreshed[tabCtrlMain.SelectedTab.Name] = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while initiate cleanup on last tab", ex);
             }
         }
 
