@@ -458,7 +458,6 @@ namespace IBE
         {
             Version dbVersion;
             Version appVersion;
-            Version testVersion = new Version();
             Boolean foundError = false;
     
             try
@@ -469,11 +468,11 @@ namespace IBE
 
                 if (dbVersion < appVersion)
                 {
-                    if (dbVersion < (testVersion = new Version(0,1,1)))
+                    if (dbVersion < new Version(0,1,1))
                     {
                         String sqlString;
 
-                        Program.SplashScreen.InfoAdd("...updating to v0.1.1...");
+                        Program.SplashScreen.InfoAdd("...updating from v0.1.0...");
 
                         sqlString = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                       " +
                                     "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;        " +
@@ -513,6 +512,12 @@ namespace IBE
                             foundError = true;
                             MessageBox.Show("Error: could not update database to v0.1.1");   
                         }
+                    }
+
+                    if (dbVersion < new Version(0,1,3))
+                    {
+                        // there was a bug while writing default files with special characters like '\'
+                        Program.DBCon.setIniValue("General", "Path_Import", Program.GetDataPath("data"));
                     }
 
                     if (!foundError) 

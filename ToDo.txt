@@ -96,6 +96,13 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+v0.1.3
+   * fixed a 'path' bug which produces exceptions during im- and export of data
+   * import of prices is now counting prices, not stations
+   * added sql-window for debug and service purposes
+   * improvements/bugfixes on startup sequence
+   * manual importing informs gui about changed data
+-------------------------------------------------------------------------------------         
    * edit of entries in CmdrsLog will automatically end if another tab is selected
    * position of form for edit gridviews is now correct relative to the edited grid
    * no exception on try edit empty grid

@@ -56,7 +56,6 @@
             this.cmdTest = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cmdExit = new System.Windows.Forms.Button();
-            this.cmdSave = new System.Windows.Forms.Button();
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.cbClear.SuspendLayout();
@@ -317,7 +316,6 @@
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.cmdExit);
-            this.groupBox5.Controls.Add(this.cmdSave);
             this.groupBox5.Location = new System.Drawing.Point(1053, 12);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(173, 238);
@@ -326,21 +324,13 @@
             // 
             // cmdExit
             // 
-            this.cmdExit.Location = new System.Drawing.Point(11, 59);
+            this.cmdExit.Location = new System.Drawing.Point(11, 36);
             this.cmdExit.Name = "cmdExit";
             this.cmdExit.Size = new System.Drawing.Size(156, 34);
             this.cmdExit.TabIndex = 10;
             this.cmdExit.Text = "&Close";
             this.cmdExit.UseVisualStyleBackColor = true;
-            // 
-            // cmdSave
-            // 
-            this.cmdSave.Location = new System.Drawing.Point(11, 19);
-            this.cmdSave.Name = "cmdSave";
-            this.cmdSave.Size = new System.Drawing.Size(156, 34);
-            this.cmdSave.TabIndex = 9;
-            this.cmdSave.Text = "&Save Changes";
-            this.cmdSave.UseVisualStyleBackColor = true;
+            this.cmdExit.Click += new System.EventHandler(this.cmdExit_Click);
             // 
             // frmDataIO
             // 
@@ -400,6 +390,5 @@
         private System.Windows.Forms.Button cmdTest;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button cmdExit;
-        private System.Windows.Forms.Button cmdSave;
     }
 }

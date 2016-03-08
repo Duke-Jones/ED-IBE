@@ -347,7 +347,8 @@ namespace IBE
             string[] autoSearchdir = { Environment.GetEnvironmentVariable("ProgramW6432"), 
                                        Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"), 
                                        Path.Combine(Environment.GetEnvironmentVariable("ProgramW6432"), @"Steam\steamapps\common"), 
-                                       Path.Combine(Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"), @"Steam\steamapps\common") };
+                                       Path.Combine(Environment.GetEnvironmentVariable("PROGRAMFILES(X86)"), @"Steam\steamapps\common"), 
+                                       @"F:\" };
 
             string returnValue = null;
             foreach (var directory in autoSearchdir)
@@ -4138,6 +4139,19 @@ namespace IBE
         }
 
 #endregion
+
+        private void directDBAccessToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var newForm = new DirectSQL(Program.DBCon);
+                newForm.Show(this);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while opening direct data-access tool");
+            }
+        }
 
     }
 

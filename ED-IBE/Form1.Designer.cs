@@ -234,6 +234,8 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
+            this.directDBAccessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -433,6 +435,8 @@
             this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.importToolStripMenuItem,
             this.editLocalizationsToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.directDBAccessToolStripMenuItem,
             this.testToolStripMenuItem});
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
             this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
@@ -463,7 +467,7 @@
             // createJumpToolStripMenuItem
             // 
             this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
-            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.createJumpToolStripMenuItem.Text = "create Jump";
             this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
             // 
@@ -2493,6 +2497,18 @@
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
+            // directDBAccessToolStripMenuItem
+            // 
+            this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
+            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
+            this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 6);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2761,6 +2777,8 @@
         private System.Windows.Forms.ToolStripMenuItem editLocalizationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createJumpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem directDBAccessToolStripMenuItem;
     }
 }
 

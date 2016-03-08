@@ -957,7 +957,7 @@ namespace IBE.SQL
                 else if(!AllowEmptyValue)
                 {
 		            // Defaultwert eintragen
-		            sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(DefaultValue) + ")";
+		            sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAEscape(DefaultValue) + ")";
 		            Execute(sqlString);
                 }
 
@@ -970,7 +970,7 @@ namespace IBE.SQL
 			        throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (2): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")");
 		        }
 
-		        sqlString = "update tbInitValue" + " set InitValue = " + SQLAString(DefaultValue);
+		        sqlString = "update tbInitValue" + " set InitValue = " + SQLAEscape(DefaultValue);
 		        Execute(sqlString);
 
 		        Result = DefaultValue;
@@ -1003,12 +1003,12 @@ namespace IBE.SQL
 		        // Wert gar nicht vorhanden
 
 		        // Wert eintragen
-		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAString(SQLEscape(Value)) + ")";
+		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAEscape(Value) + ")";
 		        retValue = (Execute(sqlString) != 0);
 
 	        } else {
 		        // Wert bereits vorhanden
-		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAString(SQLEscape(Value)) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAEscape(Value) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 		        retValue = (Execute(sqlString) != 0);
 	        }
 

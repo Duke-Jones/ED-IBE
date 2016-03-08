@@ -252,7 +252,7 @@ namespace IBE.SQL
                         {
                             // each basetable gets it's own DBConnector, because 
                             // the contained DataReaders will be hold open for possible 
-                            // changes (MySQL doesn't support MARS "Multiple Active Result Sets")
+                            // changes (MySQL doesn't support MARS "Multiple Active result Sets")
 
                             currentDBCon = new DBConnector(Program.DBCon.ConfigData);
                             m_BaseData_Connector.Add(m_BaseData.Tables[BaseTable], currentDBCon);
@@ -524,6 +524,9 @@ namespace IBE.SQL
 
             try
             {
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
                 sqlString = "select min(id) As min_id from tbCommodity";
                 Program.DBCon.Execute(sqlString, "minID", DataNames);
 
@@ -653,6 +656,9 @@ namespace IBE.SQL
 
                         Counter++;
                         sendProgressEvent("import commodity localization", Counter, DataNames.Tables["Names"].Rows.Count);
+
+                        //if((Counter % 50) == 0)
+                        //    Program.DBCon.TableUpdate(Data.tbcommoditylocalization);
                     }
                 }
                 // submit changes
@@ -662,9 +668,19 @@ namespace IBE.SQL
                 Program.DBCon.TableReadRemove(Data.tbcommoditylocalization);
                 Program.DBCon.TableReadRemove(Data.tbcommodity);
 
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
             }
             catch (Exception ex)
             {
+                try
+                {
+                    // reset freaky performance
+                    Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                }
+                catch (Exception) { }
+
                 Program.DBCon.TableReadRemove(Data.tblanguage);
                 Program.DBCon.TableReadRemove(Data.tbcommoditylocalization);
                 Program.DBCon.TableReadRemove(Data.tbcommodity);
@@ -2299,11 +2315,18 @@ namespace IBE.SQL
                 List<Listing> missedListings = new List<Listing>();
                 Listing[] currentListing;
                 Boolean currentListingDone;
+                Int32 priceCountTotal = 0;
+                Int32 priceCount = 0;
+
                 // for the prices is no transaction necessary, because we're changing
                 // only a single table
 
+                // count the prices for messages
+                foreach (EDStation Station in Stations)
+                    priceCountTotal += Station.Listings.Count();
+
                 Counter = 0;
-                sendProgressEvent("updating prices", Counter, Stations.Count);
+                sendProgressEvent("updating prices", priceCount, priceCountTotal);
 
                 //Int32 SourceID = ((dsEliteDB.tbsourceRow[])Data.tbsource.Select("source = " + DBConnector.SQLAString("EDDN")))[0].id;
                 Int32 SourceID = (Int32)BaseTableNameToID("source", "EDDN");
@@ -2391,6 +2414,8 @@ namespace IBE.SQL
                                     currentListingDone = false;
                                     missedListings.Add(StationListing);
                                 }
+
+                                priceCount++;
                             }
 
                             sqlStringB.Append(" on duplicate key update " +
@@ -2408,7 +2433,7 @@ namespace IBE.SQL
 
                         AddComma = false;
                         Counter++;
-                        sendProgressEvent("updating prices", Counter, Stations.Count);
+                        sendProgressEvent("updating prices", priceCount, priceCountTotal);
 
                         currentListing = missedListings.ToArray();
 
@@ -3417,8 +3442,6 @@ namespace IBE.SQL
                         throw new Exception("unknown setting :  " + activeSetting);
                 }
 
-                sendProgressEvent(infoString, 0, 0);
-
                 List<string> dataLines = File.ReadAllLines(fileName).ToList();
                 
                 if(dataLines[0].Equals(idString, StringComparison.InvariantCultureIgnoreCase))
@@ -3480,12 +3503,8 @@ namespace IBE.SQL
                         }
 
                         counter++;
-                        sendProgressEvent(infoString, counter, dataLines.Count);
-
                     }
                 
-                    sendProgressEvent(infoString, 1, 1);
-
                     switch (activeSetting)
                     {
                         case enLocalizationType.Commodity:

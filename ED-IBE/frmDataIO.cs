@@ -12,7 +12,8 @@ namespace IBE
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
         public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
-        private Boolean m_CommandersLogImportHappened = false; 
+        private Boolean m_DataImportHappened = false; 
+
                                  
         [Flags] enum enImportTypes
         {
@@ -57,8 +58,8 @@ namespace IBE
         {
             try
             {
-                cmdImportOldData.Enabled                = setEnabled;
-                cbImportPriceData.Enabled               = setEnabled;
+                cmdImportOldData.Enabled                = (!Program.Data.OldDataImportDone) && setEnabled;
+                cbImportPriceData.Enabled               = (!Program.Data.OldDataImportDone) && setEnabled;
                 cmdImportCommandersLog.Enabled          = setEnabled;
                 cmdClearAll.Enabled                     = setEnabled;
                 cmdImportSystemsAndStations.Enabled     = setEnabled;
@@ -286,7 +287,7 @@ namespace IBE
                         if (importFlags.HasFlag(enImportTypes.IBE_Localizations_Commodities))
                         {
                             // import the new localizations (commodities) from csv-fileName
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations (IBE)...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 0, Total = 0 });
                             FileName = "commodities.csv";
 
                             if(RNData)
@@ -297,7 +298,7 @@ namespace IBE
                                 Program.Data.ImportLocalizationDataFromCSV(Path.Combine(sourcePath, FileName), SQL.EliteDBIO.enLocalizationType.Commodity, SQL.EliteDBIO.enLocalisationImportType.overwriteNonBase);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations (IBE)...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
                             }
                             else
                             {
@@ -487,7 +488,7 @@ namespace IBE
 
                                 Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
 
-                                m_CommandersLogImportHappened = true;              
+                                m_DataImportHappened = true;              
                             }
                             else
                             {
@@ -583,6 +584,8 @@ namespace IBE
                 ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags);
 
                 SetButtons(true);
+
+                m_DataImportHappened = true;
             }
             catch (Exception ex)
             {
@@ -601,6 +604,8 @@ namespace IBE
                 ImportData("Select folder with your old Commander's Log data (accepted file pattern : CommandersLog*.xml)", importFlags, "CommandersLog*.xml");
 
                 SetButtons(true);
+
+                m_DataImportHappened = true;
 
             }
             catch (Exception ex)
@@ -775,6 +780,7 @@ namespace IBE
 
                 SetButtons(true);
 
+                m_DataImportHappened = true;
             }
             catch (Exception ex)
             {
@@ -805,8 +811,11 @@ namespace IBE
         {
             try 
 	        {	
-                if (m_CommandersLogImportHappened)
-                    Program.CommandersLog.GUI.RefreshData();  		
+                if (m_DataImportHappened)
+                { 
+                    Program.PriceAnalysis.GUI.setFilterHasChanged(true);
+                    Program.CommandersLog.GUI.RefreshData();
+                }
 	        }
 	        catch (Exception ex)
 	        {
@@ -814,7 +823,16 @@ namespace IBE
 	        }
         }
 
+        private void cmdExit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdExit_Click");   
+            }
+        }
     }
-
-
 }

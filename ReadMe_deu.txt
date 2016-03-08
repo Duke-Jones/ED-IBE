@@ -55,7 +55,10 @@ Mehrfachimport wird durch Abgleich des Zeitstempels verhindert.
 
 4. Übersetzungen
 Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportieren.
-Auch das Hinzufügen einer weiteren Sprache ist möglich. Hierzu die Übersetzungen exportieren, dann in der csv-Datei die neuen Spracheinträge hinzufügenund danach die geänderte csv-Datei wieder importieren. Nicht vorhandenen Übersetzungen einer neuen Sprache werden mit der englischen Bezeichnung ergänzt und können dann später korrigiert werden)
+Auch das Hinzufügen einer weiteren Sprache ist möglich. Hierzu die Übersetzungen exportieren, dann in der csv-Datei 
+die neuen Spracheinträge hinzufügenund danach die geänderte csv-Datei wieder importieren. 
+Nicht vorhandenen Übersetzungen einer neuen Sprache werden mit der englischen Bezeichnung ergänzt 
+und können dann später korrigiert werden.
 
 5. Tabellenansichten
 Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
@@ -67,6 +70,14 @@ Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen dann auch
 6. Comboboxen
 Die ComboBoxen habe zwar feste Einträge. In vielen Fällen hat man aber die Möglichkeit 
 beliebige eigene Werte einzutragen (z.B. bei "Max. Trip Distance")
+
+7. Service-Formular SQL
+Unter gibt es die Möglichkeit direkt Sql-Befehle abzusetzen.
+Diese Möglichkeit wurde zur Fehlersuche und für Service-Tätigkeiten geschaffen.
+Wenn man sich nicht sicher ist, dann lieber die Finger davon lassen.
+Es besteht die Möglichkeit, interne Daten zu zerstören.
+Wenn mehrere Befehle eingetragen sind, kann man diese durch Selektion gezielt
+zum Ausführen auswählen.
 
 
 
