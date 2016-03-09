@@ -45,7 +45,7 @@ The database runs as a normal process (not as a service on you pc)
 * EDDN interface
 
 **known problems:**
-* don't install the program with a space in the data path (solution is in progress)
+* don't install the program in a directory with spaces in it (solution is in progress)
 
 **Installation:**  
 Get the latest release from  
