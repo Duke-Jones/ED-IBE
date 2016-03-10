@@ -312,7 +312,7 @@ namespace IBE
                     newConnectionParams.Pass                    = IniFile.GetValue("DB_Connection",          "Pass",           "Elite");    
                     newConnectionParams.ConnectTimeout          = IniFile.GetValue<Int16>("DB_Connection",   "ConnectTimeout", "60");   
                     newConnectionParams.StayAlive               = IniFile.GetValue<Boolean>("DB_Connection", "StayAlive",      "false");    
-                    newConnectionParams.TimeOut                 = IniFile.GetValue<Int16>("DB_Connection",   "TimeOut",        "60");
+                    newConnectionParams.TimeOut                 = IniFile.GetValue<Int16>("DB_Connection",   "TimeOut",        "10000");
 
                     DBCon                                       = new DBConnector(newConnectionParams);
 
@@ -519,6 +519,21 @@ namespace IBE
                         // there was a bug while writing default files with special characters like '\'
                         Program.DBCon.setIniValue("General", "Path_Import", Program.GetDataPath("data"));
                     }
+
+                    if (dbVersion < new Version(0,1,4) && (Program.DBCon.ConfigData.TimeOut < 1000))
+                    {
+                        // there was a bug while writing default files with special characters like '\'
+                        IniFile.SetValue("DB_Connection",   "TimeOut",        "10000");
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = false;
+
+                        MessageBox.Show("DB-Timeoutsetting changed. Please restart ED-IBE", "Restart required",  MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = false;
+                    }
+
+                    
 
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());

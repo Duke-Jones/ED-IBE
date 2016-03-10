@@ -30,8 +30,8 @@ namespace IBE
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LanguageEdit));
             this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.column_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -99,7 +99,7 @@ namespace IBE
             this.dgvData.DoubleBuffer = true;
             this.dgvData.Location = new System.Drawing.Point(3, 17);
             this.dgvData.Name = "dgvData";
-            this.dgvData.Size = new System.Drawing.Size(373, 426);
+            this.dgvData.Size = new System.Drawing.Size(373, 325);
             this.dgvData.TabIndex = 0;
             this.dgvData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvData.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -110,9 +110,9 @@ namespace IBE
             // column_id
             // 
             this.column_id.DataPropertyName = "id1";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle3.NullValue = null;
-            this.column_id.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle1.NullValue = null;
+            this.column_id.DefaultCellStyle = dataGridViewCellStyle1;
             this.column_id.HeaderText = "ID";
             this.column_id.Name = "column_id";
             this.column_id.ReadOnly = true;
@@ -147,7 +147,7 @@ namespace IBE
             this.dgvDataOwn.DoubleBuffer = true;
             this.dgvDataOwn.Location = new System.Drawing.Point(3, 17);
             this.dgvDataOwn.Name = "dgvDataOwn";
-            this.dgvDataOwn.Size = new System.Drawing.Size(370, 426);
+            this.dgvDataOwn.Size = new System.Drawing.Size(370, 325);
             this.dgvDataOwn.TabIndex = 1;
             this.dgvDataOwn.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
             this.dgvDataOwn.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValueChanged);
@@ -159,9 +159,9 @@ namespace IBE
             // column_id2
             // 
             this.column_id2.DataPropertyName = "id1";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle4.NullValue = null;
-            this.column_id2.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle2.NullValue = null;
+            this.column_id2.DefaultCellStyle = dataGridViewCellStyle2;
             this.column_id2.HeaderText = "ID";
             this.column_id2.Name = "column_id2";
             this.column_id2.ReadOnly = true;
@@ -218,7 +218,7 @@ namespace IBE
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.dgvDataOwn);
-            this.splitContainer1.Size = new System.Drawing.Size(760, 447);
+            this.splitContainer1.Size = new System.Drawing.Size(760, 346);
             this.splitContainer1.SplitterDistance = 379;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -499,7 +499,7 @@ namespace IBE
             // LanguageEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(784, 735);
+            this.ClientSize = new System.Drawing.Size(784, 634);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox2);

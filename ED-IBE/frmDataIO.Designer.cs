@@ -35,7 +35,6 @@
             this.cbImportPriceData = new System.Windows.Forms.CheckBox();
             this.cmdImportSystemsAndStations = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.cmdClearAll = new System.Windows.Forms.Button();
             this.cmdImportCommandersLog = new System.Windows.Forms.Button();
             this.cmdExportCSV = new System.Windows.Forms.Button();
             this.cmdImportFromCSV = new System.Windows.Forms.Button();
@@ -45,7 +44,6 @@
             this.gbRepeat = new System.Windows.Forms.GroupBox();
             this.rbImportSame = new System.Windows.Forms.RadioButton();
             this.rbImportNewer = new System.Windows.Forms.RadioButton();
-            this.cbClear = new System.Windows.Forms.GroupBox();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -58,7 +56,6 @@
             this.cmdExit = new System.Windows.Forms.Button();
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
-            this.cbClear.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -121,18 +118,6 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.Visible = false;
             // 
-            // cmdClearAll
-            // 
-            this.cmdClearAll.BackColor = System.Drawing.Color.Salmon;
-            this.cmdClearAll.Location = new System.Drawing.Point(33, 19);
-            this.cmdClearAll.Name = "cmdClearAll";
-            this.cmdClearAll.Size = new System.Drawing.Size(276, 34);
-            this.cmdClearAll.TabIndex = 0;
-            this.cmdClearAll.Text = "Clear all !";
-            this.ttToolTip.SetToolTip(this.cmdClearAll, "Clears the whole database to allow the \"First time import\" again.\r\nBe carful - al" +
-        "l data from the database will be lost.\r\n");
-            this.cmdClearAll.UseVisualStyleBackColor = false;
-            // 
             // cmdImportCommandersLog
             // 
             this.cmdImportCommandersLog.Location = new System.Drawing.Point(33, 106);
@@ -175,7 +160,7 @@
             this.lbProgess.FormattingEnabled = true;
             this.lbProgess.Location = new System.Drawing.Point(12, 260);
             this.lbProgess.Name = "lbProgess";
-            this.lbProgess.Size = new System.Drawing.Size(687, 186);
+            this.lbProgess.Size = new System.Drawing.Size(696, 186);
             this.lbProgess.TabIndex = 1;
             // 
             // gbFirstTime
@@ -222,16 +207,6 @@
             this.rbImportNewer.TabStop = true;
             this.rbImportNewer.Text = "only import data if timestamp is newer";
             this.rbImportNewer.UseVisualStyleBackColor = true;
-            // 
-            // cbClear
-            // 
-            this.cbClear.Controls.Add(this.cmdClearAll);
-            this.cbClear.Location = new System.Drawing.Point(12, 182);
-            this.cbClear.Name = "cbClear";
-            this.cbClear.Size = new System.Drawing.Size(345, 72);
-            this.cbClear.TabIndex = 5;
-            this.cbClear.TabStop = false;
-            this.cbClear.Text = "Reset Database";
             // 
             // ofdFileDialog
             // 
@@ -339,10 +314,11 @@
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.cbClear);
             this.Controls.Add(this.gbRepeat);
             this.Controls.Add(this.gbFirstTime);
             this.Controls.Add(this.lbProgess);
+            this.MaximumSize = new System.Drawing.Size(1254, 506);
+            this.MinimumSize = new System.Drawing.Size(1254, 506);
             this.Name = "frmDataIO";
             this.Text = "Data Interface";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDataIO_FormClosed);
@@ -350,7 +326,6 @@
             this.gbFirstTime.PerformLayout();
             this.gbRepeat.ResumeLayout(false);
             this.gbRepeat.PerformLayout();
-            this.cbClear.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -373,8 +348,6 @@
         private System.Windows.Forms.GroupBox gbRepeat;
         private System.Windows.Forms.Button cmdImportSystemsAndStations;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.GroupBox cbClear;
-        private System.Windows.Forms.Button cmdClearAll;
         private System.Windows.Forms.OpenFileDialog ofdFileDialog;
         private System.Windows.Forms.Button cmdImportCommandersLog;
         private System.Windows.Forms.GroupBox groupBox1;

@@ -75,12 +75,12 @@ REM shut down the server if runnin'
 timeout /t 5
 
 REM delete old data dir if existing and (re)create
-if exist %DESTINATION_DIR%\data del /s /f /q %DESTINATION_DIR%\data & rd /s /q %DESTINATION_DIR%\data
+if exist "%DESTINATION_DIR%\data" del /s /f /q "%DESTINATION_DIR%\data" & rd /s /q "%DESTINATION_DIR%\data"
 timeout /t 1
-mkdir %DESTINATION_DIR%\data
+mkdir "%DESTINATION_DIR%\data"
 
 REM create script for creating the database
-if exist %DESTINATION_DIR%\all.sql del %DESTINATION_DIR%\all.sql 
+if exist "%DESTINATION_DIR%\all.sql" del "%DESTINATION_DIR%\all.sql"
 type "%MYSQL_PATH%\share\mysql_system_tables.sql" "%MYSQL_PATH%\share\mysql_system_tables_data.sql" "%MYSQL_PATH%\share\fill_help_tables.sql" > "%DESTINATION_DIR%\all.sql"
 
 REM create the database

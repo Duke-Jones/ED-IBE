@@ -145,6 +145,13 @@ Select one row from each list to enable the "Confirm Translation"-button.
 After confirmation, all data from the self added item is assigned to the
 EDDB item.</value>
   </data>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value>If ED-IBE has collected unknown or not yet translated items (located on the right side with 
+negative ids) you can assign it to the correct EDDN item, if it is existing.
+Select one row from each list to enable the "Confirm Translation"-button.
+After confirmation, all data from the self added item is assigned to the
+EDDB item.</value>
+  </data>
   <data name="groupbox3.ToolTip" xml:space="preserve">
     <value>If ED-IBE has collected unknown or not yet translated items (located on the right side with 
 negative ids) you can assign it to the correct EDDN item, if it is existing.
@@ -152,13 +159,6 @@ Select one row from each list to enable the "Confirm Translation"-button.
 After confirmation, all data from the self added item is assigned to the
 EDDB item.
 </value>
-  </data>
-  <data name="label3.ToolTip" xml:space="preserve">
-    <value>If ED-IBE has collected unknown or not yet translated items (located on the right side with 
-negative ids) you can assign it to the correct EDDN item, if it is existing.
-Select one row from each list to enable the "Confirm Translation"-button.
-After confirmation, all data from the self added item is assigned to the
-EDDB item.</value>
   </data>
   <data name="cmdImportFromCSV.ToolTip" xml:space="preserve">
     <value>Imports the localization strings from a csv-file.

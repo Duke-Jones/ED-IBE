@@ -127,33 +127,37 @@ namespace IBE.SQL
         public void StopServer(String user, String pass)
         {
             ProcessStartInfo psi=null;
+            String commandLine;
+            String commandArgs;
 
             try
             {
 
-                String CommandArgs = String.Format("-u {0} --password={1} shutdown", user, pass);
-                String fullPath = Path.GetDirectoryName(Path.GetFullPath(m_Params.Workingdirectory));
-
-
-                psi                         = new ProcessStartInfo(@"bin\mysqladmin.exe", CommandArgs);
-                psi.WorkingDirectory        = m_Params.Workingdirectory;
-                psi.RedirectStandardOutput  = false;
+                commandLine = m_Params.Commandline.Replace("mysqld.exe", "mysqladmin.exe");
+                commandArgs = String.Format("-u {0} --password={1} shutdown", user, pass);
 
                 // start the process for stopping the server
                 if(Debugger.IsAttached)
                 { 
+                    psi                         = new ProcessStartInfo(commandLine, commandArgs);
+                    psi.WorkingDirectory        = m_Params.Workingdirectory;
                     psi.WindowStyle             = ProcessWindowStyle.Normal;
                     psi.CreateNoWindow          = false;
+                    psi.RedirectStandardOutput  = false;
                     psi.UseShellExecute         = true;
                 }
                 else
                 { 
+                    psi                         = new ProcessStartInfo(commandLine, commandArgs);
+                    psi.WorkingDirectory        = m_Params.Workingdirectory;
                     psi.WindowStyle             = ProcessWindowStyle.Hidden;
                     psi.CreateNoWindow          = true;
+                    psi.RedirectStandardOutput  = false;
                     psi.UseShellExecute         = true;
                 }
 
                 System.Diagnostics.Process.Start(psi);
+
             }
             catch (Exception ex)
             {

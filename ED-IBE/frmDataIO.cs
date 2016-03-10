@@ -61,7 +61,6 @@ namespace IBE
                 cmdImportOldData.Enabled                = (!Program.Data.OldDataImportDone) && setEnabled;
                 cbImportPriceData.Enabled               = (!Program.Data.OldDataImportDone) && setEnabled;
                 cmdImportCommandersLog.Enabled          = setEnabled;
-                cmdClearAll.Enabled                     = setEnabled;
                 cmdImportSystemsAndStations.Enabled     = setEnabled;
                 checkBox1.Enabled                       = setEnabled;
                 cmdExportCSV.Enabled                    = setEnabled;

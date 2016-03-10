@@ -107,14 +107,14 @@ Root: "HKLM"; Subkey: "Software\ED-IBE\"; ValueType: expandsz; ValueName: "Data"
 
 [INI]
 ;Database
-Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: "{code:ToUnixPath|{app}\Database\}"
-Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "datadir"; String: "{code:ToUnixPath|{code:GetDataBasepath}\Database\data\}"
-Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: "{code:ToUnixPath|{app}\Database\share}"
+Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "basedir"; String: """{code:ToUnixPath|{app}\Database\}"""
+Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "datadir"; String: """{code:ToUnixPath|{code:GetDataBasepath}\Database\data\}"""
+Filename: "{code:GetDataBasepath}\Database\Elite.ini"; Section: "mysqld"; Key: "lc-messages-dir"; String: """{code:ToUnixPath|{app}\Database\share}"""
 
 ;ProgramSettings
-Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: "{app}\Database\bin\mysqld.exe"
-Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file={code:GetDataBasepath}\Database\Elite.ini --console"
-Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: "{app}\Database"
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "Commandline"; String: """{app}\Database\bin\mysqld.exe"""
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "CommandArgs"; String: "--defaults-file=""{code:GetDataBasepath}\Database\Elite.ini"" --console"
+Filename: "{code:GetDataBasepath}\ED-IBE.ini"; Section: "DB_Server"; Key: "WorkingDirectory"; String: """{app}\Database"""
 
 [Types]
 Name: "EmptyList"; Description: "EmptyList"; Flags: iscustom
@@ -314,7 +314,7 @@ begin
       if (not DBIsExisting()) or (cbDeleteOldData.Checked) then
          begin
             BasePath := ExpandConstant(GetDataBasepath('') + '\Database');
-            CommandLine := '/C ' + BasePath + '\script\create.cmd' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" {#MyAppVersion} > ' + BasePath + '\install.log 2>&1');
+            CommandLine := '/C ""' + BasePath + '\script\create.cmd"' + ExpandConstant(' /forceinstall "' + BasePath + '" "{app}\Database" {#MyAppVersion} > "' + BasePath + '\install.log" 2>&1"');
 
             Log('CommandLine : <' + CommandLine + '>');
 

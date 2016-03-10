@@ -260,12 +260,12 @@ namespace IBE.MTCommandersLog
             }
         }
 
-        private delegate void delInt32(Int32 currentRow);
+        private delegate void delInt32(int? currentRow);
 
         /// <summary>
         /// forces refreshing this tab
         /// </summary>
-        private void RefreshTab(Int32 currentRow)
+        private void RefreshTab(int? currentRow)
         {
             try
             {
@@ -282,8 +282,12 @@ namespace IBE.MTCommandersLog
                     
 
                     // jump to the new row
-                    if (dgvCommandersLog.RowCount > currentRow)
-                        dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow];
+                    if ((currentRow != null) && (dgvCommandersLog.RowCount > currentRow))
+                    try
+                    {
+                        dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow.Value];
+                    }
+                    catch{}
                 }
             }
             catch (Exception ex)
@@ -603,7 +607,12 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                RefreshTab(dgvCommandersLog.CurrentCell.RowIndex);
+                int? rowIdx = null;
+
+                if (dgvCommandersLog.CurrentCell != null)
+                    rowIdx = dgvCommandersLog.CurrentCell.RowIndex;
+
+                RefreshTab(rowIdx);
             }
             catch (Exception ex)
             {

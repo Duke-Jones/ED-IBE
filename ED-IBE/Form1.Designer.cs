@@ -54,6 +54,8 @@
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editLocalizationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.directDBAccessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createJumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabEDDN = new System.Windows.Forms.TabPage();
@@ -234,8 +236,6 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
-            this.directDBAccessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -455,6 +455,18 @@
             this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
             this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 6);
+            // 
+            // directDBAccessToolStripMenuItem
+            // 
+            this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
+            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
+            this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
             // 
             // testToolStripMenuItem
             // 
@@ -2476,9 +2488,9 @@
             this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 49);
             this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(726, 50);
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(746, 50);
             this.lblRegulatedNoise.TabIndex = 2;
-            this.lblRegulatedNoise.Text = "ED - Intelligent Bordcomputer Extension";
+            this.lblRegulatedNoise.Text = "ED - Intelligent Boardcomputer Extension";
             // 
             // tabCtrlMain
             // 
@@ -2496,18 +2508,6 @@
             this.tabCtrlMain.Size = new System.Drawing.Size(1112, 632);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
-            // 
-            // directDBAccessToolStripMenuItem
-            // 
-            this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
-            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
-            this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 6);
             // 
             // Form1
             // 
@@ -2531,7 +2531,7 @@
             this.MainMenuStrip = this.msMainMenu;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "ED - Intelligent Bordcomputer Extension v";
+            this.Text = "ED - Intelligent Boardcomputer Extension v";
             this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.contextMenuStrip1.ResumeLayout(false);
