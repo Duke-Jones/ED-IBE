@@ -44,6 +44,9 @@ The database runs as a normal process (not as a service on you pc)
 * webserver
 * EDDN interface
 
+**known problems:**
+* don't install the program in a directory with spaces in it (solution is in progress)
+
 **Installation:**  
 Get the latest release from  
 	https://github.com/Duke-Jones/ED-IBE/releases.  
