@@ -96,6 +96,10 @@ todo:
 *************************************************************************************
 *************************************************************************************
 
+
+   * colorization get now most objects
+   * fixed: more problems with spaces in installation path
+-------------------------------------------------------------------------------------         
    * fixed: problems with spaces in installation path
    * updated default timeout time for DB answers from 60ms to 10000ms
    * fixed cause of exception when refreshing previous empty CmdrsLog

@@ -137,6 +137,12 @@
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\Settings\STA_INIFile.cs" />
+    <Compile Include="Enums and Utility Classes\TabControlExt.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\TabControlExt.Designer.cs">
+      <DependentUpon>TabControlExt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums and Utility Classes\VersionExt.cs" />
     <Compile Include="Enums and Utility Classes\WindowData.cs" />
     <Compile Include="ExtData\ExternalDataInterface.cs" />

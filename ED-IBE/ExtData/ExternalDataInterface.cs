@@ -205,7 +205,12 @@ namespace IBE.ExtData
                                                                                         Program.GetDataPath("temp"), 
                                                                                         String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow)));
                     
-                    
+                        // for a commandline parameter it is neccessary to surround 
+                        // it with quotes, if there are spaces in the path
+                        if (ProcessObject.StartInfo.Arguments.Contains(" "))
+                           ProcessObject.StartInfo.Arguments = "\"" + ProcessObject.StartInfo.Arguments + "\"";
+
+
                         //// Set our event handler to asynchronously read the output.
                         ProcessObject.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
 

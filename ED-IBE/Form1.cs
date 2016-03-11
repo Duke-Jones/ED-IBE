@@ -245,8 +245,6 @@ namespace IBE
                     _timer.Start();
                 }
 
-                Retheme();
-
                 Clock = new System.Windows.Forms.Timer();
                 Clock.Interval = 1000;
                 Clock.Start();
@@ -304,6 +302,8 @@ namespace IBE
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabEDDN"]);
+
+                Retheme();
 
                 Cursor = Cursors.Default;
                 _InitDone = true;
@@ -1887,15 +1887,6 @@ namespace IBE
         }
         #endregion
 
-        // Recurse controls on form
-        public IEnumerable<Control> GetAll(Control control)
-        {
-            var controls = control.Controls.Cast<Control>();
-
-            return controls.SelectMany(ctrl => GetAll(ctrl))
-                                      .Concat(controls);
-        }
-
         System.Windows.Forms.Timer _timer;
 
         private void Form_Shown(object sender, System.EventArgs e)
@@ -2053,70 +2044,7 @@ namespace IBE
             }
         }
 
-        private void Retheme()
-        {
-            bool noBackColor = false;
 
-            if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour", "") == "" || 
-                Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour", "") == "") return;
-
-            var x = GetAll(this);
-
-            int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
-            var f = Color.FromArgb(redF, greenF, blueF);
-            int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
-            var b = Color.FromArgb(redB, greenB, blueB);
-            foreach (Control c in x)
-            {
-                var props = c.GetType().GetProperties().Select(y => y.Name);
-
-                noBackColor = false;
-
-                if(!(c.Name == "lblUpdateInfo" && lblUpdateInfo.BackColor == Color.Yellow))
-                { 
-                    c.BackColor = b;
-                    c.ForeColor = f;
-                    if (props.Contains("FlatStyle"))
-                    {
-                        var prop = c.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                        prop.SetValue(c, FlatStyle.Flat);
-                    }
-                    if (props.Contains("BorderStyle") && c.GetType() != typeof(Label))
-                    {
-                        var prop = c.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                        prop.SetValue(c, BorderStyle.FixedSingle);
-                    }
-                    if (props.Contains("LinkColor"))
-                    {
-                        var prop = c.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
-
-                        prop.SetValue(c, f);
-                    }
-                    if (props.Contains("BackColor_ro"))
-                    {
-                        var prop = c.GetType().GetProperty("BackColor_ro", BindingFlags.Public | BindingFlags.Instance);
-                        prop.SetValue(c, b);
-                    }
-                    if (props.Contains("ForeColor_ro"))
-                    {
-                        var prop = c.GetType().GetProperty("ForeColor_ro", BindingFlags.Public | BindingFlags.Instance);
-                        prop.SetValue(c, f);
-                    }
-                    
-                }
-                else 
-                    noBackColor = true;
-            }
-
-            if(!noBackColor)
-                BackColor = b;
-        }
 
         int animPhase;
         int phaseCtr;

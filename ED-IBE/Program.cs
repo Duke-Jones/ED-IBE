@@ -185,55 +185,63 @@ namespace IBE
         public static String GetDataPath(String subPath = "")
         {
             String path;
-
             try
             {
-                if (System.Diagnostics.Debugger.IsAttached)
-                    path = ".";
-                else
+                try
                 {
-                    if (System.Diagnostics.Debugger.IsAttached)
-                    {
-                        // special to find on x64-systems the value while debugging
-                        using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64))
-                        {   // key now points to the 64-bit key
-                            using (var myKey = hklm.OpenSubKey(@"SOFTWARE\ED-IBE", false))
-                            {
-                                path = (String)myKey.GetValue("Data").ToString().Trim();
-                            }
-                        }
+                    subPath = subPath.Replace("\"", "");
 
-                        if (String.IsNullOrEmpty(path))
-                            path = ".";
-                    }
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        path = ".";
                     else
                     {
-                        Microsoft.Win32.RegistryKey myKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ED-IBE", false);
+                        if (System.Diagnostics.Debugger.IsAttached)
+                        {
+                            // special to find on x64-systems the value while debugging
+                            using (var hklm = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64))
+                            {   // key now points to the 64-bit key
+                                using (var myKey = hklm.OpenSubKey(@"SOFTWARE\ED-IBE", false))
+                                {
+                                    path = (String)myKey.GetValue("Data").ToString().Trim().Replace("\"", "");
+                                }
+                            }
 
-                        path = (String)myKey.GetValue("Data");
+                            if (String.IsNullOrEmpty(path))
+                                path = ".";
+                        }
+                        else
+                        {
+                            Microsoft.Win32.RegistryKey myKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ED-IBE", false);
+
+                            path = (String)myKey.GetValue("Data").ToString().Replace("\"", "");
+                        }
                     }
                 }
+                catch (Exception)
+                {
+                    path = ".";
+                }
+
+                if(!String.IsNullOrEmpty(subPath))
+                    path = Path.Combine(path, subPath);
+
+                Boolean isFile = Path.GetFileName(path).Contains('.');
+                String fullPath;
+
+                if(isFile)
+                    fullPath = Path.GetDirectoryName(Path.GetFullPath(path));
+                else
+                    fullPath = Path.GetFullPath(path);
+
+                if(!Directory.Exists(fullPath))
+                    Directory.CreateDirectory(fullPath);
+
+                return Path.GetFullPath(path);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                path = ".";
+                throw new Exception("Error while retrieving a data path", ex);
             }
-
-            if(!String.IsNullOrEmpty(subPath))
-                path = Path.Combine(path, subPath);
-
-            Boolean isFile = Path.GetFileName(path).Contains('.');
-            String fullPath;
-
-            if(isFile)
-                fullPath = Path.GetDirectoryName(Path.GetFullPath(path));
-            else
-                fullPath = Path.GetFullPath(path);
-
-            if(!Directory.Exists(fullPath))
-                Directory.CreateDirectory(fullPath);
-
-            return Path.GetFullPath(path);
         }
 
     #endregion// Exception Handling
