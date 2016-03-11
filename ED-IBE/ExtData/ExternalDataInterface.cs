@@ -166,6 +166,7 @@ namespace IBE.ExtData
         {
             Process ProcessObject;
             Boolean retValue = false;
+            String pathString;
 
             try
             {
@@ -199,18 +200,17 @@ namespace IBE.ExtData
                             ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, 
                                                                                                     "txtExtTool_ParamMarket").Trim();
 
-                        ProcessObject.StartInfo.Arguments               = ProcessObject.StartInfo.Arguments.Replace(
-                                                                                "!OUTPUTFILE!", 
-                                                                                Path.Combine(
-                                                                                        Program.GetDataPath("temp"), 
-                                                                                        String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow)));
-                    
+
+                        pathString = Path.Combine(Program.GetDataPath("temp"), 
+                                                  String.Format("marketdata_utc{0:yyyyMMdd_HHmmss}.csv", DateTime.UtcNow));
+
                         // for a commandline parameter it is neccessary to surround 
                         // it with quotes, if there are spaces in the path
-                        if (ProcessObject.StartInfo.Arguments.Contains(" "))
-                           ProcessObject.StartInfo.Arguments = "\"" + ProcessObject.StartInfo.Arguments + "\"";
+                        if (pathString.Contains(" "))
+                           pathString = "\"" + pathString + "\"";
 
-
+                        ProcessObject.StartInfo.Arguments               = ProcessObject.StartInfo.Arguments.Replace("!OUTPUTFILE!", pathString);
+                    
                         //// Set our event handler to asynchronously read the output.
                         ProcessObject.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
 
