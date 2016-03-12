@@ -18,6 +18,7 @@ namespace IBE.SQL
         {
             public String                               Name;                  
             public String                               Server;                  
+            public Int32                                Port;                  
             public String                               Database;
             public String                               User;
             public String                               Pass;
@@ -176,6 +177,14 @@ namespace IBE.SQL
 
                     tempConnString.Append("server=");
                     tempConnString.Append(m_ConfigData.Server);
+                }
+                if (m_ConfigData.Port > 0) 
+                {
+                    if (tempConnString.Length > 0)
+                        tempConnString.Append(";");
+
+                    tempConnString.Append("Port=");
+                    tempConnString.Append(m_ConfigData.Port);
                 }
                 if (!string.IsNullOrEmpty(m_ConfigData.User)) 
                 {

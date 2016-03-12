@@ -293,11 +293,11 @@ namespace IBE
 
                     // starT database process (if not running)
                     DBProcess.DBProcessParams newProcessParams  = new DBProcess.DBProcessParams() { };
-                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",        "Commandline",      @"bin\mysqld.exe");    
-                    newProcessParams.Commandargs                = IniFile.GetValue("DB_Server",        "CommandArgs",      @"--defaults-file=Elite.ini --console");
-                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",        "WorkingDirectory", @"..\..\..\RNDatabase\Database");
-                    newProcessParams.Port                       = IniFile.GetValue<Int16>("DB_Server", "Port",             "3306");
-                    newProcessParams.DBStartTimeout             = IniFile.GetValue<Int16>("DB_Server", "DBStartTimeout",   "60");
+                    newProcessParams.Commandline                = IniFile.GetValue("DB_Server",         "Commandline",      @"bin\mysqld.exe");    
+                    newProcessParams.Commandargs                = IniFile.GetValue("DB_Server",         "CommandArgs",      @"--defaults-file=Elite.ini --console");
+                    newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",         "WorkingDirectory", @"..\..\..\RNDatabase\Database");
+                    newProcessParams.Port                       = IniFile.GetValue<UInt16>("DB_Server", "Port",             "3306");
+                    newProcessParams.DBStartTimeout             = IniFile.GetValue<Int16>("DB_Server",  "DBStartTimeout",   "60");
                 
                     EliteDBProcess                              = new DBProcess(newProcessParams);
 
@@ -315,6 +315,7 @@ namespace IBE
 
                     newConnectionParams.Name                    = IniFile.GetValue("DB_Connection",          "Name",           "master");   
                     newConnectionParams.Server                  = IniFile.GetValue("DB_Connection",          "Server",         "localhost");
+                    newConnectionParams.Port                    = IniFile.GetValue<UInt16>("DB_Server",      "Port",           "3306");
                     newConnectionParams.Database                = IniFile.GetValue("DB_Connection",          "Database",       "Elite_DB"); 
                     newConnectionParams.User                    = IniFile.GetValue("DB_Connection",          "User",           "RN_User");  
                     newConnectionParams.Pass                    = IniFile.GetValue("DB_Connection",          "Pass",           "Elite");    
