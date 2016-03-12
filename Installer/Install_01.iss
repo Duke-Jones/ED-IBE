@@ -74,8 +74,8 @@ Source: "..\RNDatabase\Database\script\create.cmd"; DestDir: "{code:GetDataBasep
 Source: "..\RNDatabase\Database\script\create_Elite_DB.sql"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{code:GetDataBasepath}\Database\script\"; Flags: ignoreversion
 ;ini files
-Source: "..\ED-IBE\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion
-Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{code:GetDataBasepath}\Database\"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion onlyifdoesntexist
+Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{code:GetDataBasepath}\Database\"; Flags: ignoreversion onlyifdoesntexist
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

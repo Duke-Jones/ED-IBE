@@ -298,7 +298,9 @@ namespace IBE
                     newProcessParams.Workingdirectory           = IniFile.GetValue("DB_Server",         "WorkingDirectory", @"..\..\..\RNDatabase\Database");
                     newProcessParams.Port                       = IniFile.GetValue<UInt16>("DB_Server", "Port",             "3306");
                     newProcessParams.DBStartTimeout             = IniFile.GetValue<Int16>("DB_Server",  "DBStartTimeout",   "60");
-                
+
+                    Program.SplashScreen.InfoAppendLast("on port " + newProcessParams.Port + "...");
+
                     EliteDBProcess                              = new DBProcess(newProcessParams);
 
                     if (EliteDBProcess.WasRunning)

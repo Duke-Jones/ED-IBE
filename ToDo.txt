@@ -1,6 +1,8 @@
 
 
-
+   * if existing, the inifiles ".\ED-IBE-ini" and".\Database\Elite.ini" are not 
+     overwritten to keep up current configuration, if changed by user
+-------------------------------------------------------------------------------------         
    * connection to server is now using the server port from ED-IBE.ini
 -------------------------------------------------------------------------------------         
 v0.1.4
