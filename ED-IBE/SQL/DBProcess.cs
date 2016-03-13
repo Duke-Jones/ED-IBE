@@ -29,7 +29,7 @@ namespace IBE.SQL
 
         public class DBProcessParams
         {
-            public Int32            Port                = 0;
+            public UInt16           Port                = 0;
             public String           Commandline         = "";
             public String           Commandargs         = "";
             public String           Workingdirectory    = "";
@@ -42,22 +42,9 @@ namespace IBE.SQL
         /// <param name="Parameter"></param>
         public DBProcess(DBProcessParams Parameter)
         {
-            IPGlobalProperties      ipGlobalProperties;
-            IPEndPoint[]            tcpConnInfoArray;
-
             m_Params = Parameter;
 
-            ipGlobalProperties      = IPGlobalProperties.GetIPGlobalProperties();
-            tcpConnInfoArray        = ipGlobalProperties.GetActiveTcpListeners();
-
-
-            // check if the port is open - if open we assume the db is running
-            foreach (IPEndPoint tcpi in tcpConnInfoArray)
-                if (tcpi.Port == m_Params.Port)
-                {
-                    m_wasRunning = true;
-                    break;
-                }
+            m_wasRunning = IsListenerOnPort(m_Params.Port);
             
             if(!m_wasRunning)
             {
@@ -97,15 +84,8 @@ namespace IBE.SQL
                 {
                     do
                     {
-                        ipGlobalProperties      = IPGlobalProperties.GetIPGlobalProperties();
-                        tcpConnInfoArray        = ipGlobalProperties.GetActiveTcpListeners();
 
-                        foreach (IPEndPoint tcpi in tcpConnInfoArray)
-                            if (tcpi.Port == m_Params.Port)
-                            {
-                                isRunning = true;
-                                break;
-                            }
+                        isRunning = IsListenerOnPort(m_Params.Port);
 
                         if(!isRunning)
                             System.Threading.Thread.Sleep(1000);
@@ -170,6 +150,56 @@ namespace IBE.SQL
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// returns true, if this port has a active tcp listener
+        /// </summary>
+        /// <param name="port"></param>
+        /// <returns></returns>
+        public static Boolean IsListenerOnPort(UInt16 port)
+        {
+            Boolean retValue = false;
+
+            IPGlobalProperties      ipGlobalProperties;
+            IPEndPoint[]            tcpConnInfoArray;
+
+            ipGlobalProperties      = IPGlobalProperties.GetIPGlobalProperties();
+            tcpConnInfoArray        = ipGlobalProperties.GetActiveTcpListeners();
+
+            foreach (IPEndPoint tcpi in tcpConnInfoArray)
+                if (tcpi.Port == port)
+                {
+                    retValue = true;
+                    break;
+                }
+
+            return retValue;
+        }
+
+        /// <summary>
+        /// returns true, if this port has a active tcp connection
+        /// </summary>
+        /// <param name="port"></param>
+        /// <returns></returns>
+        public static Boolean IsConnectionOnPort(UInt16 port)
+        {
+            Boolean retValue = false;
+
+            IPGlobalProperties         ipGlobalProperties;
+            TcpConnectionInformation[] tcpConnInfoArray;
+
+            ipGlobalProperties      = IPGlobalProperties.GetIPGlobalProperties();
+            tcpConnInfoArray        = ipGlobalProperties.GetActiveTcpConnections();
+
+            foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
+                if (tcpi.LocalEndPoint.Port == port)
+                {
+                    retValue = true;
+                    break;
+                }
+
+            return retValue;
         }
 
         protected virtual void Dispose(bool disposing)

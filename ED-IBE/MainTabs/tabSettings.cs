@@ -117,8 +117,9 @@ namespace IBE.MTSettings
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
-
                 m_GUIInterface.DataSavedEvent += m_GUIInterface_DataSavedEvent;
+
+                txtSQLConnectionPort.Text = Program.IniFile.GetValue<UInt16>("DB_Server", "Port", "3306").ToString();
 
                 Cursor = oldCursor;
             }
@@ -629,6 +630,67 @@ namespace IBE.MTSettings
             }
 
             return result;
+        }
+
+        private void cmdChangeSQLPort_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UInt16 newPort;
+                UInt16 oldPort;
+
+                if (UInt16.TryParse(txtSQLConnectionPort.Text, out newPort))
+                {
+                    Boolean isOccupied = DBProcess.IsListenerOnPort(newPort) || DBProcess.IsConnectionOnPort(newPort);
+
+                    if (!isOccupied)
+                    { 
+                        oldPort = Program.IniFile.GetValue<UInt16>("DB_Server", "Port", "3306");
+
+                        if(MessageBox.Show(this, "Change db-port from " + oldPort + " to " + newPort + " ?", "Aborted", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+                        { 
+                            // switch off the general log for the database
+                            STA.Settings.INIFile dbIniFile;
+
+                            if(Debugger.IsAttached)
+                                dbIniFile = new STA.Settings.INIFile(Path.Combine(Program.IniFile.GetValue("DB_Server", "WorkingDirectory", @"..\..\..\RNDatabase\Database"), "Elite.ini"), false, true, true);
+                            else
+                                dbIniFile = new STA.Settings.INIFile(Program.GetDataPath(@"Database\Elite.ini"), false, true, true);
+
+                            Program.IniFile.SetValue("DB_Server", "Port", newPort.ToString());
+                            dbIniFile.SetValue("mysqld", "port", newPort.ToString());
+
+                            MessageBox.Show(this, "Port changed, restart required.", "Changed configuration", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            txtSQLConnectionPort.Text = Program.IniFile.GetValue<UInt16>("DB_Server", "Port", "3306").ToString();
+                        }
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "Selected port is already occupied", "Aborted", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        txtSQLConnectionPort.Text = Program.IniFile.GetValue<UInt16>("DB_Server", "Port", "3306").ToString();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(this, "Couldn't parse value as <UInt16>", "Aborted", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    txtSQLConnectionPort.Text = Program.IniFile.GetValue<UInt16>("DB_Server", "Port", "3306").ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while changing the tcp-port of the sql-server");
+            }
+        }
+
+        private void txtSQLConnectionPort_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == (char)13)
+                cmdChangeSQLPort_Click(sender, e);
         }
 
     }

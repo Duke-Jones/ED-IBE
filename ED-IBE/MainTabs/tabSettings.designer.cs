@@ -73,6 +73,7 @@
             this.cmdSelectExternalToolPath = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
+            this.txtSQLConnectionPort = new System.Windows.Forms.TextBoxInt32();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.rbNoDistanceToStarConsider = new System.Windows.Forms.RadioButton();
@@ -88,10 +89,12 @@
             this.tabOCRSettings = new System.Windows.Forms.TabPage();
             this.tabExternalToolSettings = new System.Windows.Forms.TabPage();
             this.gbDataInterface = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rbUseExternalTool = new System.Windows.Forms.RadioButton();
             this.rbUseOCR = new System.Windows.Forms.RadioButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cmdChangeSQLPort = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtGamePath = new System.Windows.Forms.TextBox();
             this.cmdGamePath = new System.Windows.Forms.Button();
@@ -112,6 +115,7 @@
             this.tabExternalToolSettings.SuspendLayout();
             this.gbDataInterface.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -311,7 +315,7 @@
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
             this.groupBox10.Location = new System.Drawing.Point(650, 3);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(529, 151);
+            this.groupBox10.Size = new System.Drawing.Size(527, 151);
             this.groupBox10.TabIndex = 12;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
@@ -381,7 +385,7 @@
             this.groupBox8.Controls.Add(this.cmbLanguage);
             this.groupBox8.Location = new System.Drawing.Point(650, 160);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(527, 45);
+            this.groupBox8.Size = new System.Drawing.Size(525, 45);
             this.groupBox8.TabIndex = 13;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Language";
@@ -419,7 +423,7 @@
             this.groupBox12.Controls.Add(this.button6);
             this.groupBox12.Location = new System.Drawing.Point(650, 418);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(529, 292);
+            this.groupBox12.Size = new System.Drawing.Size(527, 179);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -428,7 +432,7 @@
             // 
             this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(203, 209);
+            this.label89.Location = new System.Drawing.Point(203, 96);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(29, 13);
             this.label89.TabIndex = 19;
@@ -437,7 +441,7 @@
             // nudPurgeOldDataDays
             // 
             this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 206);
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 93);
             this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
             365,
             0,
@@ -459,7 +463,7 @@
             // cmdPurgeOldData
             // 
             this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 204);
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 91);
             this.cmdPurgeOldData.Name = "cmdPurgeOldData";
             this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
             this.cmdPurgeOldData.TabIndex = 8;
@@ -494,7 +498,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 240);
+            this.button6.Location = new System.Drawing.Point(32, 127);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -609,6 +613,18 @@
         " only stations you\'ve directly visted");
             this.cmbVisitedFilter.SelectedIndexChanged += new System.EventHandler(this.Combobox_SelectedIndexChanged);
             // 
+            // txtSQLConnectionPort
+            // 
+            this.txtSQLConnectionPort.Location = new System.Drawing.Point(70, 24);
+            this.txtSQLConnectionPort.MaxValue = null;
+            this.txtSQLConnectionPort.MinValue = null;
+            this.txtSQLConnectionPort.Name = "txtSQLConnectionPort";
+            this.txtSQLConnectionPort.Size = new System.Drawing.Size(63, 20);
+            this.txtSQLConnectionPort.TabIndex = 17;
+            this.txtSQLConnectionPort.Tag = "OCRPixelAmountValue;22";
+            this.toolTip1.SetToolTip(this.txtSQLConnectionPort, "connection port for the mysql-server (restart required)");
+            this.txtSQLConnectionPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSQLConnectionPort_KeyPress);
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -620,7 +636,7 @@
             this.groupBox1.Controls.Add(this.label25);
             this.groupBox1.Location = new System.Drawing.Point(650, 211);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(527, 133);
+            this.groupBox1.Size = new System.Drawing.Size(525, 133);
             this.groupBox1.TabIndex = 65;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datafilter";
@@ -781,24 +797,14 @@
             // 
             // gbDataInterface
             // 
-            this.gbDataInterface.Controls.Add(this.groupBox4);
             this.gbDataInterface.Controls.Add(this.groupBox2);
             this.gbDataInterface.Controls.Add(this.tcDataInterface);
             this.gbDataInterface.Location = new System.Drawing.Point(3, 3);
             this.gbDataInterface.Name = "gbDataInterface";
-            this.gbDataInterface.Size = new System.Drawing.Size(641, 629);
+            this.gbDataInterface.Size = new System.Drawing.Size(641, 525);
             this.gbDataInterface.TabIndex = 68;
             this.gbDataInterface.TabStop = false;
             this.gbDataInterface.Text = "Data Interface";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Location = new System.Drawing.Point(5, 518);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(200, 100);
-            this.groupBox4.TabIndex = 71;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "groupBox4";
             // 
             // groupBox2
             // 
@@ -838,6 +844,39 @@
             this.rbUseOCR.UseVisualStyleBackColor = true;
             this.rbUseOCR.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox4.Controls.Add(this.cmdChangeSQLPort);
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
+            this.groupBox4.Location = new System.Drawing.Point(3, 534);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(641, 63);
+            this.groupBox4.TabIndex = 71;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "SQL-Server";
+            // 
+            // cmdChangeSQLPort
+            // 
+            this.cmdChangeSQLPort.Location = new System.Drawing.Point(139, 22);
+            this.cmdChangeSQLPort.Name = "cmdChangeSQLPort";
+            this.cmdChangeSQLPort.Size = new System.Drawing.Size(55, 23);
+            this.cmdChangeSQLPort.TabIndex = 19;
+            this.cmdChangeSQLPort.Text = "Set";
+            this.cmdChangeSQLPort.UseVisualStyleBackColor = true;
+            this.cmdChangeSQLPort.Click += new System.EventHandler(this.cmdChangeSQLPort_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(34, 27);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(32, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Port :";
+            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -846,7 +885,7 @@
             this.groupBox3.Controls.Add(this.cmdGamePath);
             this.groupBox3.Location = new System.Drawing.Point(652, 350);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(525, 62);
+            this.groupBox3.Size = new System.Drawing.Size(523, 62);
             this.groupBox3.TabIndex = 69;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Active Game Path (for analysing ED-logfiles)";
@@ -854,7 +893,7 @@
             // txtGamePath
             // 
             this.txtGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGamePath.Location = new System.Drawing.Point(13, 14);
+            this.txtGamePath.Location = new System.Drawing.Point(11, 14);
             this.txtGamePath.Name = "txtGamePath";
             this.txtGamePath.ReadOnly = true;
             this.txtGamePath.Size = new System.Drawing.Size(498, 20);
@@ -864,7 +903,7 @@
             // cmdGamePath
             // 
             this.cmdGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdGamePath.Location = new System.Drawing.Point(409, 36);
+            this.cmdGamePath.Location = new System.Drawing.Point(407, 36);
             this.cmdGamePath.Name = "cmdGamePath";
             this.cmdGamePath.Size = new System.Drawing.Size(102, 23);
             this.cmdGamePath.TabIndex = 67;
@@ -874,6 +913,7 @@
             // 
             // tabSettings
             // 
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);
             this.Controls.Add(this.groupBox1);
@@ -881,7 +921,7 @@
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
             this.Name = "tabSettings";
-            this.Size = new System.Drawing.Size(1182, 724);
+            this.Size = new System.Drawing.Size(1180, 611);
             this.groupBox6.ResumeLayout(false);
             this.gbTesseract.ResumeLayout(false);
             this.gbTesseract.PerformLayout();
@@ -910,6 +950,8 @@
             this.gbDataInterface.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -983,6 +1025,9 @@
         private System.Windows.Forms.RadioButton rbNoLandingPadSizeConsider;
         private System.Windows.Forms.RadioButton rbNoLandingPadSizeIgnore;
         private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button cmdChangeSQLPort;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBoxInt32 txtSQLConnectionPort;
 
 
     }

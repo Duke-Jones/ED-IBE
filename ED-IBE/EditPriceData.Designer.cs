@@ -58,7 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nEditSupply)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // cmdChangeSQLPort
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Location = new System.Drawing.Point(190, 299);
