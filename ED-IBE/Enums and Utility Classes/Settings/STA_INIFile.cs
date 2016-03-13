@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 namespace STA.Settings
 {
@@ -19,6 +20,7 @@ namespace STA.Settings
 
 		// *** Lock for thread-safe access to file and local cache ***
 		private object m_Lock = new object();
+        public Boolean NoEqualitysignAllowed { get; set; }
 
 		// *** File name ***
 		private string m_FileName = null;
@@ -39,6 +41,7 @@ namespace STA.Settings
 		// *** Local cache ***
         private Dictionary<string, Dictionary<string, string>> m_Sections = new Dictionary<string, Dictionary<string, string>>();
         private Dictionary<string, Dictionary<string, string>> m_Modified = new Dictionary<string, Dictionary<string, string>>(); 
+        private Dictionary<string, Dictionary<string, string>> m_Removed  = new Dictionary<string, Dictionary<string, string>>(); 
 
 		// *** Local cache modified flag ***
 		private bool m_CacheModified = false;
@@ -53,15 +56,16 @@ namespace STA.Settings
 			Initialize(FileName, false, false);
 		}
 
-		public INIFile(string FileName, bool Lazy, bool AutoFlush)
+		public INIFile(string FileName, bool Lazy, bool AutoFlush, bool noEqualitysignIsAllowed = false)
 		{
-            Initialize(FileName, Lazy, AutoFlush);
+            Initialize(FileName, Lazy, AutoFlush, noEqualitysignIsAllowed);
 		}
 
 		// *** Initialization ***
-        private void Initialize(string FileName, bool Lazy, bool AutoFlush)
+        private void Initialize(string FileName, bool Lazy, bool AutoFlush, bool noEqualitysignIsAllowed = false)
 		{
 			m_FileName = FileName;
+            NoEqualitysignAllowed = noEqualitysignIsAllowed;
 			m_Lazy = Lazy;
             m_AutoFlush = AutoFlush;
 			if (!m_Lazy) Refresh();
@@ -81,13 +85,27 @@ namespace STA.Settings
         {
             // *** Check for key+value pair ***
             int i;
-            if ((i = Line.IndexOf('=')) <= 0) return false;
-            
-            int j = Line.Length - i - 1;
-            Key = Line.Substring(0, i).Trim();
-            if (Key.Length <= 0) return false;
 
-            Value = (j > 0) ? (Line.Substring(i + 1, j).Trim()) : ("");
+            i = Line.IndexOf('=');
+
+            if ((!NoEqualitysignAllowed) && (i <= 0)) return false;
+            
+            
+            if (i <= 0)
+            {
+                if(i==0) return false;
+
+                Key = Line.Trim();
+                Value = "";
+            }
+            else
+            {
+                int j = Line.Length - i - 1;
+                Key = Line.Substring(0, i).Trim();
+                if (Key.Length <= 0) return false;
+
+                Value = (j > 0) ? (Line.Substring(i + 1, j).Trim()) : ("");
+            }
             return true;
         }
 
@@ -172,6 +190,7 @@ namespace STA.Settings
 
         private void PerformFlush()
         {
+            Boolean isRemoveSection = false;
             // *** If local cache was not modified, exit ***
             if (!m_CacheModified) return;
             m_CacheModified = false;
@@ -243,6 +262,7 @@ namespace STA.Settings
                                         }
                                         sw.WriteLine();
                                         CurrentSection.Clear();
+                                        isRemoveSection = false;
                                     }
                                 }
 
@@ -251,8 +271,16 @@ namespace STA.Settings
                                     // *** Check if current section is in local modified cache ***
                                     if (!m_Modified.TryGetValue(SectionName, out CurrentSection))
                                     {
-                                        CurrentSection = null;
+                                        if (!m_Removed.TryGetValue(SectionName, out CurrentSection))
+                                        {
+                                            CurrentSection = null;
+                                            isRemoveSection = false;
+                                        }
+                                        else
+                                            isRemoveSection = true;
                                     }
+                                    else
+                                        isRemoveSection = false;
                                 }
                             }
                             else if (CurrentSection != null)
@@ -262,13 +290,17 @@ namespace STA.Settings
                                 {
                                     if (CurrentSection.TryGetValue(Key, out Value))
                                     {
-                                        // *** Write modified value to temporary file ***
+                                        // *** delete value from temporary file ***
                                         Unmodified = false;
                                         CurrentSection.Remove(Key);
 
-                                        sw.Write(Key);
-                                        sw.Write('=');
-                                        sw.WriteLine(Value);
+                                        if (!isRemoveSection)
+                                        { 
+                                            // *** Write modified value to temporary file ***
+                                            sw.Write(Key);
+                                            sw.Write('=');
+                                            sw.WriteLine(Value);
+                                        }
                                     }
                                 }
                             }
@@ -314,6 +346,7 @@ namespace STA.Settings
                             sw.WriteLine(ValuePair.Value);
                         }
                         CurrentSection.Clear();
+                        isRemoveSection = false;
                     }
                 }
                 m_Modified.Clear();
@@ -412,6 +445,46 @@ namespace STA.Settings
 
                 if (Section.ContainsKey(Key)) Section.Remove(Key);
                 Section.Add(Key, Value);
+
+                // *** Automatic flushing : immediately write any modification to the file ***
+                if (m_AutoFlush) PerformFlush();
+			}
+		}
+
+        // *** Removes a value from local cache ***
+		internal void RemoveValue(string SectionName, string Key)
+		{
+			// *** Lazy loading ***
+			if (m_Lazy)
+			{
+				m_Lazy = false;
+				Refresh();
+			}
+
+			lock (m_Lock)
+			{
+				// *** Flag local cache modification ***
+				m_CacheModified = true;
+
+				// *** Check if the section exists ***
+				Dictionary<string, string> Section;
+				if (m_Sections.TryGetValue(SectionName, out Section))
+				{
+				    // *** Modify the value ***
+				    if (Section.ContainsKey(Key))
+                    { 
+
+                        // *** Add the modified value to local modified values cache ***
+                        if (!m_Removed.TryGetValue(SectionName, out Section))
+                        {
+                            Section = new Dictionary<string, string>();
+                            m_Removed.Add(SectionName, Section);
+                        }
+
+                        if (!Section.ContainsKey(Key)) 
+                            Section.Add(Key, "");
+                    }
+                }
 
                 // *** Automatic flushing : immediately write any modification to the file ***
                 if (m_AutoFlush) PerformFlush();

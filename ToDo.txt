@@ -1,5 +1,6 @@
 
-
+   * added function for delete ini-entries and removed entry for "general-log" of MySQL server
+-------------------------------------------------------------------------------------         
    * if existing, the inifiles ".\ED-IBE-ini" and".\Database\Elite.ini" are not 
      overwritten to keep up current configuration, if changed by user
 -------------------------------------------------------------------------------------         

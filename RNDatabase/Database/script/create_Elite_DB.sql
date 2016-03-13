@@ -1122,7 +1122,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.1.4.0');
+INSERT INTO `Elite_DB`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.1.5.0');
 
 COMMIT;
 

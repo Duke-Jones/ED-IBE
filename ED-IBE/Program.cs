@@ -544,6 +544,18 @@ namespace IBE
                             Program.SplashScreen.TopMost = false;
                     }
 
+                    if (dbVersion < new Version(0,1,5))
+                    {
+                        // switch off the general log for the database
+                        STA.Settings.INIFile dbIniFile;
+
+                        if(Debugger.IsAttached)
+                           dbIniFile = new STA.Settings.INIFile(Path.Combine(IniFile.GetValue("DB_Server", "WorkingDirectory", @"..\..\..\RNDatabase\Database"), "Elite.ini"), false, true, true);
+                        else
+                           dbIniFile = new STA.Settings.INIFile(GetDataPath(@"Database\Elite.ini"), false, true, true);
+
+                        dbIniFile.RemoveValue("mysqld",   "general-log");
+                    }
                     
 
                     if (!foundError) 

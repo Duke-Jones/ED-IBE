@@ -134,7 +134,7 @@ namespace IBE.SQL
             {
 
                 commandLine = m_Params.Commandline.Replace("mysqld.exe", "mysqladmin.exe");
-                commandArgs = String.Format("-u {0} --password={1} shutdown", user, pass);
+                commandArgs = String.Format("-u {0} --password={1} --port={2} shutdown", user, pass, m_Params.Port);
 
                 // start the process for stopping the server
                 if(Debugger.IsAttached)
