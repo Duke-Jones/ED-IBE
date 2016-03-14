@@ -1,6 +1,8 @@
 
-   
-   
+
+   * added latest version of mysql v5.6 binaries (v5.6.29)   
+   * added license information
+-------------------------------------------------------------------------------------         
    * added field for change port on settings-tab
 -------------------------------------------------------------------------------------         
    * added function for delete ini-entries and removed entry for "general-log" of MySQL server

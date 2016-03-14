@@ -1,5 +1,5 @@
-mysqld.exe  Ver 5.6.24 for Win32 on x86 (MySQL Community Server (GPL))
-Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+mysqld  Ver 5.6.29 for Win64 on x86_64 (MySQL Community Server (GPL))
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
 
 Oracle is a registered trademark of Oracle Corporation and/or its
 affiliates. Other names may be trademarks of their respective
@@ -7,7 +7,7 @@ owners.
 
 Starts the MySQL database server.
 
-Usage: mysqld.exe [OPTIONS]
+Usage: mysqld [OPTIONS]
 NT and Win32 specific options:
   --install                     Install the default service (NT).
   --install-manual              Install the default service started manually (NT).
@@ -20,7 +20,7 @@ NT and Win32 specific options:
 
 
 Default options are read from the following files in the given order:
-C:\Windows\my.ini C:\Windows\my.cnf C:\my.ini C:\my.cnf K:\RegulatedNoise_db\RegulatedNoise\MySQL\my.ini K:\RegulatedNoise_db\RegulatedNoise\MySQL\my.cnf 
+C:\Windows\my.ini C:\Windows\my.cnf C:\my.ini C:\my.cnf H:\RN\ED-IBE\RNDatabase\Database\my.ini H:\RN\ED-IBE\RNDatabase\Database\my.cnf 
 The following groups are read: mysqld server mysqld-5.6
 The following options may be given as the first argument:
 --print-defaults        Print the program argument list and exit.
@@ -105,18 +105,20 @@ The following options may be given as the first argument:
                       and back implicitly per each query accessing an
                       NDBCLUSTER table
   --binlog-gtid-simple-recovery 
-                      If this option is enabled, the server does not scan more
-                      than one binary log for every iteration when initializing
-                      GTID sets on server restart. Enabling this option is very
-                      useful when restarting a server which has already
-                      generated lots of binary logs without GTID events. Note:
-                      If this option is enabled, GLOBAL.GTID_EXECUTED and
-                      GLOBAL.GTID_PURGED cannot be initialized correctly if
-                      binary log(s) with GTID events were generated before
-                      binary log(s) without GTID events, for example if
-                      gtid_mode is disabled when the server has already
-                      generated binary log(s) with GTID events and not purged
-                      them.
+                      If this option is enabled, the server does not open more
+                      than two binary logs when initializing GTID_PURGED and
+                      GTID_EXECUTED, either during server restart or when
+                      binary logs are being purged. Enabling this option is
+                      useful when the server has already generated many binary
+                      logs without GTID events (e.g., having GTID_MODE = OFF).
+                      Note: If this option is enabled, GLOBAL.GTID_EXECUTED and
+                      GLOBAL.GTID_PURGED may be initialized wrongly in two
+                      cases: (1) GTID_MODE was ON for some binary logs but OFF
+                      for the newest binary log. (2) SET GTID_PURGED was issued
+                      after the oldest existing binary log was generated. If a
+                      wrong set is computed in one of case (1) or case (2), it
+                      will remain wrong even if the server is later restarted
+                      with this option disabled.
   --binlog-ignore-db=name 
                       Tells the master that updates to the given database
                       should not be logged to the binary log.
@@ -765,6 +767,8 @@ The following options may be given as the first argument:
   --innodb-thread-sleep-delay=# 
                       Time of innodb thread sleeping before joining InnoDB
                       queue (usec). Value 0 disable a sleep
+  --innodb-tmpdir[=name] 
+                      Directory for temporary non-tablespace files.
   --innodb-trx[=name] Enable or disable INNODB_TRX plugin. Possible values are
                       ON, OFF, FORCE (don't start if the plugin fails to load).
   --innodb-undo-directory=name 
@@ -1136,6 +1140,9 @@ The following options may be given as the first argument:
   --performance-schema-max-cond-instances=# 
                       Maximum number of instrumented condition objects. Use 0
                       to disable, -1 for automated sizing.
+  --performance-schema-max-digest-length=# 
+                      Maximum length considered for digest text, when stored in
+                      performance_schema tables.
   --performance-schema-max-file-classes=# 
                       Maximum number of file instruments.
   --performance-schema-max-file-handles=# 
@@ -1571,7 +1578,7 @@ autocommit                                                 TRUE
 automatic-sp-privileges                                    TRUE
 avoid-temporal-upgrade                                     FALSE
 back-log                                                   80
-basedir                                                    K:\RegulatedNoise_db\RegulatedNoise\MySQL\
+basedir                                                    H:\RN\ED-IBE\RNDatabase\Database\
 big-tables                                                 FALSE
 bind-address                                               *
 binlog-cache-size                                          32768
@@ -1593,14 +1600,14 @@ bulk-insert-buffer-size                                    8388608
 character-set-client-handshake                             TRUE
 character-set-filesystem                                   binary
 character-set-server                                       latin1
-character-sets-dir                                         K:\RegulatedNoise_db\RegulatedNoise\MySQL\share\charsets\
+character-sets-dir                                         H:\RN\ED-IBE\RNDatabase\Database\share\charsets\
 chroot                                                     (No default value)
 collation-server                                           latin1_swedish_ci
 completion-type                                            NO_CHAIN
 concurrent-insert                                          AUTO
 connect-timeout                                            10
 console                                                    FALSE
-datadir                                                    K:\RegulatedNoise_db\RegulatedNoise\MySQL\data\
+datadir                                                    H:\RN\ED-IBE\RNDatabase\Database\data\
 date-format                                                %Y-%m-%d
 datetime-format                                            %Y-%m-%d %H:%i:%s
 default-storage-engine                                     InnoDB
@@ -1632,7 +1639,7 @@ ft-query-expansion-limit                                   20
 ft-stopword-file                                           (No default value)
 gdb                                                        FALSE
 general-log                                                FALSE
-general-log-file                                           K:\RegulatedNoise_db\RegulatedNoise\MySQL\data\Ripley.log
+general-log-file                                           H:\RN\ED-IBE\RNDatabase\Database\data\Bishop.log
 group-concat-max-len                                       1024
 gtid-mode                                                  OFF
 help                                                       TRUE
@@ -1783,6 +1790,7 @@ innodb-sys-tablestats                                      ON
 innodb-table-locks                                         TRUE
 innodb-thread-concurrency                                  0
 innodb-thread-sleep-delay                                  10000
+innodb-tmpdir                                              (No default value)
 innodb-trx                                                 ON
 innodb-undo-directory                                      .
 innodb-undo-logs                                           128
@@ -1797,9 +1805,9 @@ key-buffer-size                                            8388608
 key-cache-age-threshold                                    300
 key-cache-block-size                                       1024
 key-cache-division-limit                                   100
-language                                                   K:\RegulatedNoise_db\RegulatedNoise\MySQL\share\
+language                                                   H:\RN\ED-IBE\RNDatabase\Database\share\
 lc-messages                                                en_US
-lc-messages-dir                                            K:\RegulatedNoise_db\RegulatedNoise\MySQL\share\
+lc-messages-dir                                            H:\RN\ED-IBE\RNDatabase\Database\share\
 lc-time-names                                              en_US
 local-infile                                               TRUE
 lock-wait-timeout                                          31536000
@@ -1856,7 +1864,7 @@ multi-range-count                                          256
 myisam-block-size                                          1024
 myisam-data-pointer-size                                   6
 myisam-max-sort-file-size                                  2146435072
-myisam-mmap-size                                           4294967295
+myisam-mmap-size                                           18446744073709551615
 myisam-recover-options                                     OFF
 myisam-repair-threads                                      1
 myisam-sort-buffer-size                                    8388608
@@ -1907,6 +1915,7 @@ performance-schema-hosts-size                              -1
 performance-schema-instrument                              
 performance-schema-max-cond-classes                        80
 performance-schema-max-cond-instances                      -1
+performance-schema-max-digest-length                       1024
 performance-schema-max-file-classes                        50
 performance-schema-max-file-handles                        32768
 performance-schema-max-file-instances                      -1
@@ -1926,8 +1935,8 @@ performance-schema-session-connect-attrs-size              -1
 performance-schema-setup-actors-size                       100
 performance-schema-setup-objects-size                      100
 performance-schema-users-size                              -1
-pid-file                                                   K:\RegulatedNoise_db\RegulatedNoise\MySQL\data\Ripley.pid
-plugin-dir                                                 K:\RegulatedNoise_db\RegulatedNoise\MySQL\lib\plugin\
+pid-file                                                   H:\RN\ED-IBE\RNDatabase\Database\data\Bishop.pid
+plugin-dir                                                 H:\RN\ED-IBE\RNDatabase\Database\lib\plugin\
 port                                                       3306
 port-open-timeout                                          0
 preload-buffer-size                                        32768
@@ -1988,7 +1997,7 @@ slave-transaction-retries                                  10
 slave-type-conversions                                     
 slow-launch-time                                           2
 slow-query-log                                             FALSE
-slow-query-log-file                                        K:\RegulatedNoise_db\RegulatedNoise\MySQL\data\Ripley-slow.log
+slow-query-log-file                                        H:\RN\ED-IBE\RNDatabase\Database\data\Bishop-slow.log
 slow-start-timeout                                         15000
 socket                                                     MySQL
 sort-buffer-size                                           262144
@@ -2018,7 +2027,7 @@ temp-pool                                                  FALSE
 thread-cache-size                                          9
 thread-concurrency                                         10
 thread-handling                                            one-thread-per-connection
-thread-stack                                               196608
+thread-stack                                               262144
 time-format                                                %H:%i:%s
 timed-mutexes                                              FALSE
 tmp-table-size                                             16777216
