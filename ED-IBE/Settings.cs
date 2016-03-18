@@ -14,7 +14,7 @@ using IBE.SQL.Datasets;
 using System.Collections.Generic;
 using CodeProject.Dialog;
 
-namespace IBE.MTSettings
+namespace IBE
 {
     public class Settings
     {
@@ -51,7 +51,7 @@ namespace IBE.MTSettings
 #endregion
 
         private dsEliteDB           m_BaseData;
-        public tabSettings          m_GUI;
+        public IBESettings          m_GUI;
         private BindingSource       m_BindingSource;
         private DataTable           m_Datatable;
         private DataRetriever       retriever;
@@ -93,7 +93,7 @@ namespace IBE.MTSettings
         /// <summary>
         /// access to the belonging gui object
         /// </summary>
-        public tabSettings GUI
+        public IBESettings GUI
         {
             get
             {

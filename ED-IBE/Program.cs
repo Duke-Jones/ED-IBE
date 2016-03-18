@@ -14,7 +14,6 @@ using IBE.Web;
 using IBE.SQL;
 using IBE.MTCommandersLog;
 using IBE.MTPriceAnalysis;
-using IBE.MTSettings;
 using IBE.ExtData;
 using IBE.FileScanner;
 using IBE.Enums_and_Utility_Classes;
@@ -258,7 +257,7 @@ namespace IBE
         //public static RegulatedNoiseSettings            Settings_old;
         public static STA.Settings.INIFile              IniFile;
         private static DBProcess                        EliteDBProcess;
-        public static Settings                          Settings;
+//        public static Settings                          Settings;
         public static CommandersLog                     CommandersLog;
         public static PriceAnalysis                     PriceAnalysis;
         public static EliteDBIO                         Data;
@@ -346,8 +345,8 @@ namespace IBE
                     //Paths                                       = new ProgramPaths();
 
                     // prepare settings
-                    Settings                                    = new Settings();
-                    Settings.BaseData                           = Data.BaseData;
+//                    Settings                                    = new Settings();
+//                    Settings.BaseData                           = Data.BaseData;
 
                     // prepare commanders log 
                     CommandersLog                               = new CommandersLog();

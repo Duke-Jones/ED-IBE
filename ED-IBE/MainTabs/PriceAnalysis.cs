@@ -59,7 +59,7 @@ namespace IBE.MTPriceAnalysis
         private Boolean                             m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner        m_LogfileScanner;
         private ExternalDataInterface               m_ExternalDataInterface;
-        private IBE.MTSettings.tabSettings          m_Settings;
+        private IBE.IBESettings          m_Settings;
         private DBConnector                         m_lDBCon;
 
         /// <summary>
@@ -186,42 +186,6 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-        public void registerSettings(IBE.MTSettings.tabSettings settingsTab)
-        {
-            try
-            {
-                if(m_Settings == null)
-                { 
-                    m_Settings                          = settingsTab;
-                    m_Settings.SettingChangedEvent     += GUI_SettingChangedEvent;
-                }
-                else 
-                    throw new Exception("SettingTab already registered");
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while registering the SettingTab", ex);
-            }
-        }
-
-        /// <summary>
-        /// event-worker for settingschanged-event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void GUI_SettingChangedEvent(object sender, EventArgs e)
-        {
-            try
-            {
-                GUI.setFilterHasChanged(true);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while processing the GUI_SettingChangedEvent-event", ex);
-            }
-        }
-
         /// <summary>
         /// event-worker for LocationChangedEvent-event
         /// </summary>
@@ -343,7 +307,7 @@ namespace IBE.MTPriceAnalysis
                             
                 if(DistanceToStar != null)                            
                 {
-                    if (Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "NoDistanceToStar", "consider").Equals("consider"))
+                    if (Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "NoDistanceToStar", "consider").Equals("consider"))
                     {
                         sqlString = sqlString + String.Format(
                                 "   and ((St.Distance_To_Star <= {0}) or (St.Distance_To_Star is null))",
@@ -360,7 +324,7 @@ namespace IBE.MTPriceAnalysis
                 if(minLandingPadSize != null)                            
                 {
                     String LandingPadString = "";
-                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "NoLandingPadSize", "consider").Equals("consider");
+                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "NoLandingPadSize", "consider").Equals("consider");
 
                     switch (((String)minLandingPadSize).ToUpper())
                     {

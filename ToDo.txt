@@ -1,5 +1,8 @@
 
 
+   * shift settings-tab from a tab to an extra window
+-------------------------------------------------------------------------------------         
+v0.1.5
    * added latest version of mysql v5.6 binaries (v5.6.29)   
    * added license information
 -------------------------------------------------------------------------------------         

@@ -2496,7 +2496,7 @@ namespace IBE.SQL
                 // *****************************************************************
                 // START :section for automatically add unknown commodities
 
-                currentLanguage     = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
+                currentLanguage     = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
                 newData             = new DataTable();
                 newData.TableName   = "Names";
                 newData.Columns.Add(Program.BASE_LANGUAGE, typeof(String));
@@ -2947,7 +2947,7 @@ namespace IBE.SQL
             try
             {
 
-                String currentLanguage = Program.DBCon.getIniValue(MTSettings.tabSettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
+                String currentLanguage = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
 
                 switchLanguage(currentLanguage);
 

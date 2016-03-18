@@ -160,7 +160,6 @@
     <Compile Include="LanguageEdit.Designer.cs">
       <DependentUpon>LanguageEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainTabs\Settings.cs" />
     <Compile Include="MainTabs\tabCommandersLog.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -248,12 +247,6 @@
     <Compile Include="frmDataIO.Designer.cs">
       <DependentUpon>frmDataIO.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainTabs\tabSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MainTabs\tabSettings.designer.cs">
-      <DependentUpon>tabSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
     <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
@@ -339,6 +332,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="IBESettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IBESettings.Designer.cs">
+      <DependentUpon>IBESettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="SplashScreenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -433,10 +433,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Brainerous Pixeltest\Picturedata.resx">
       <DependentUpon>Picturedata.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainTabs\tabSettings.resx">
-      <DependentUpon>tabSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Ocr\Calibration\FilterTest.resx">
@@ -785,6 +781,9 @@
     <Content Include="Data\Commodities.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="IBESettings.resx">
+      <DependentUpon>IBESettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SplashScreenForm.resx">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </EmbeddedResource>

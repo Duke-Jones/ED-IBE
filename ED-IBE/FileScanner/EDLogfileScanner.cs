@@ -246,7 +246,7 @@ namespace IBE.FileScanner
         private void UpdateSystemNameFromLogFile_worker()
         {
             SingleThreadLogger logger           = new SingleThreadLogger(ThreadLoggerType.FileScanner);
-            Regex RegExTest_FindBestIsland      = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PilotsName"))), RegexOptions.IgnoreCase);
+            Regex RegExTest_FindBestIsland      = new Regex(String.Format("FindBestIsland:.+:.+:.+:.+", Regex.Escape(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "PilotsName"))), RegexOptions.IgnoreCase);
             Regex RegExTest_Island_Claimed      = new Regex(String.Format("vvv------------ ISLAND .+ CLAIMED ------------vvv"), RegexOptions.IgnoreCase);
 
             do

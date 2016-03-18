@@ -487,7 +487,7 @@ namespace IBE.MTCommandersLog
         //            if(_LoggedSystem != ID_NOT_SET)
         //            { 
         //                // it's not the first run, create a event if wanted
-        //                if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true))
+        //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true))
         //                {
         //                    // create event is enabled
         //                    CommandersLog_CreateJumpedToEvent(Systemname);
@@ -517,7 +517,7 @@ namespace IBE.MTCommandersLog
         //            List<EDStation> SystemStations = null; // _Milkyway.getStations(Systemname);
 
         //            if((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(Locationname, StringComparison.InvariantCultureIgnoreCase)) != null))
-        //                if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true))
+        //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true))
         //                {
         //                    // create event is enabled
         //                    CommandersLog_StationVisitedEvent(Systemname, Locationname);
@@ -538,7 +538,7 @@ namespace IBE.MTCommandersLog
         //        loadSystemData(_LoggedSystem);
         //        loadStationData(_LoggedSystem, _LoggedLocation);
 
-        //        if(Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true))
+        //        if(Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true))
         //            tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
         //    }
 
@@ -561,7 +561,7 @@ namespace IBE.MTCommandersLog
 
         //            _LoggedVisited = Systemname + "|" + StationName;
 
-        //            if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
+        //            if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
         //            {
         //                Program.CommandersLog.SaveEvent(DateTime.UtcNow, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
         //            }
@@ -583,9 +583,9 @@ namespace IBE.MTCommandersLog
         //            {
         //                _LoggedMarketData = Systemname + "|" + StationName;
 
-        //                if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
+        //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
         //                {
-        //                    if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
+        //                    if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
         //                    {
         //                        //object logEvent = Program.CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
 
@@ -755,9 +755,9 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
+                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
                 {
-                    if (Program.DBCon.getIniValue<Boolean>(MTSettings.tabSettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
+                    if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
                     {
 
                         String sqlString                = "select * from tbLog" +

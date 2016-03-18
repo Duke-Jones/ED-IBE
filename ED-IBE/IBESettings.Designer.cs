@@ -1,16 +1,16 @@
-﻿namespace IBE.MTSettings
+﻿namespace IBE
 {
-    partial class tabSettings
+    partial class IBESettings
     {
         /// <summary>
-        /// Erforderliche Designervariable.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Verwendete Ressourcen bereinigen.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(tabSettings));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IBESettings));
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.gbTesseract = new System.Windows.Forms.GroupBox();
             this.txtOCRTraineddataFile = new System.Windows.Forms.TextBox();
@@ -911,8 +911,10 @@
             this.cmdGamePath.UseVisualStyleBackColor = true;
             this.cmdGamePath.Click += new System.EventHandler(this.cmdGamePath_Click);
             // 
-            // tabSettings
+            // IBESettings
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.ClientSize = new System.Drawing.Size(1164, 573);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);
@@ -920,8 +922,8 @@
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
-            this.Name = "tabSettings";
-            this.Size = new System.Drawing.Size(1180, 611);
+            this.Name = "IBESettings";
+            this.Load += new System.EventHandler(this.IBESettings_Load);
             this.groupBox6.ResumeLayout(false);
             this.gbTesseract.ResumeLayout(false);
             this.gbTesseract.PerformLayout();
@@ -1028,7 +1030,6 @@
         private System.Windows.Forms.Button cmdChangeSQLPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBoxInt32 txtSQLConnectionPort;
-
 
     }
 }

@@ -16,11 +16,10 @@ using IBE.EDDB_Data;
 using System.IO;
 using IBE.Enums_and_Utility_Classes;
 
-namespace IBE.MTSettings
+namespace IBE
 {
-    public partial class tabSettings : UserControl
+    public partial class IBESettings : RNBaseForm 
     {
-
         #region event handler
 
         [System.ComponentModel.Browsable(true)]
@@ -51,7 +50,7 @@ namespace IBE.MTSettings
         /// <summary>
         /// Constructor
         /// </summary>
-        public tabSettings()
+        public IBESettings()
         {
             InitializeComponent();
             Dock = DockStyle.Fill;
@@ -84,6 +83,23 @@ namespace IBE.MTSettings
         }
 
         /// <summary>
+        /// IBESettings_Load event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void IBESettings_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                Init();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while loading settings");
+            }
+        }
+
+        /// <summary>
         /// initialization of the whole log
         /// </summary>
         public void Init()
@@ -94,6 +110,10 @@ namespace IBE.MTSettings
             try
             {
                 Cursor = Cursors.WaitCursor;
+
+                this.DataSource            = new Settings();
+                Program.SplashScreen.InfoAppendLast("<OK>");
+
 
                 // loading languages to combobox
                 Data = new DataTable();
@@ -132,7 +152,15 @@ namespace IBE.MTSettings
 
         void m_GUIInterface_DataSavedEvent(object sender, EventArgs e)
         {
-            SettingChangedEvent.Raise(this, e);
+            try
+            {
+                Program.PriceAnalysis.GUI.setFilterHasChanged(true);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in m_GUIInterface_DataSavedEvent");
+            }
+            
         }
 
         /// <summary>
@@ -190,7 +218,7 @@ namespace IBE.MTSettings
             OpenFileDialog OCRFile = new OpenFileDialog();
 
             OCRFile.Filter = "Tesseract-Files|*.traineddata|All Files|*.*";
-            OCRFile.FileName = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "TraineddataFile");
+            OCRFile.FileName = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "TraineddataFile");
             OCRFile.InitialDirectory = Program.GetDataPath("tessdata");  
             OCRFile.Title = "select Tesseract Traineddata-File...";
 
@@ -208,11 +236,11 @@ namespace IBE.MTSettings
 
             if (int.TryParse(txtOCRPixelAmount.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
                 if (newValue >= 0 && newValue <= 99)
-                    Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount", newValue.ToString());
+                    Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "EBPixelAmount", newValue.ToString());
                 else
-                    txtOCRPixelAmount.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount");
+                    txtOCRPixelAmount.Text = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "EBPixelAmount");
             else
-                txtOCRPixelAmount.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "EBPixelAmount");
+                txtOCRPixelAmount.Text = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "EBPixelAmount");
         }
 
         private void txtGUIColorCutoffLevel_LostFocus(object sender, EventArgs e)
@@ -221,11 +249,11 @@ namespace IBE.MTSettings
 
             if (int.TryParse(txtGUIColorCutoffLevel.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out newValue))
                 if (newValue >= 0 && newValue <= 255)
-                    Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel", newValue.ToString());
+                    Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "GUIColorCutoffLevel", newValue.ToString());
                 else
-                    txtGUIColorCutoffLevel.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel");
+                    txtGUIColorCutoffLevel.Text = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "GUIColorCutoffLevel");
             else
-                txtGUIColorCutoffLevel.Text = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel");
+                txtGUIColorCutoffLevel.Text = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "GUIColorCutoffLevel");
         }     
     
         private void loadToolTips()
@@ -257,7 +285,7 @@ namespace IBE.MTSettings
 
             FilterTest FTest = new FilterTest();
 
-            FTest.CutoffLevel = Program.DBCon.getIniValue<Int32>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel");
+            FTest.CutoffLevel = Program.DBCon.getIniValue<Int32>(IBE.IBESettings.DB_GROUPNAME, "GUIColorCutoffLevel");
             FTest.TestBitmap = _refbmp;
 
             FTest.ShowDialog(this);
@@ -265,7 +293,7 @@ namespace IBE.MTSettings
             if (FTest.DialogResult == System.Windows.Forms.DialogResult.OK)
             { 
                 txtGUIColorCutoffLevel.Text = FTest.CutoffLevel.ToString();
-                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "GUIColorCutoffLevel", FTest.CutoffLevel.ToString());
+                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "GUIColorCutoffLevel", FTest.CutoffLevel.ToString());
             }
         }
 

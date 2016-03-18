@@ -169,10 +169,10 @@ namespace IBE.EDDN
 
                 TimeStamp = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
 
-                UserID = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserName", Guid.NewGuid().ToString(), false, true);
+                UserID = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserName", Guid.NewGuid().ToString(), false, true);
 
                 // test or real ?
-                if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), true))
+                if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), true))
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
                 else
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";

@@ -86,23 +86,23 @@ namespace IBE.Ocr
         }
         private void selectEDDN_ID()
         {
-            if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "usePilotsName"))
+            if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "usePilotsName"))
             {
-                if (!String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PilotsName")))
+                if (!String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "PilotsName")))
                 {
                     rbCmdrsName.Checked = true;
                 }
                 else
                 {
                     rbUserID.Checked = true;
-                    Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "usePilotsName", false.ToString());
+                    Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "usePilotsName", false.ToString());
                     rbCmdrsName.Enabled = false;
                 }
             }
             else
                 rbUserID.Checked = true;
 
-            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PilotsName"));
+            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "PilotsName"));
         }
 
         public void startOcrOnload(bool doStart)
@@ -110,12 +110,12 @@ namespace IBE.Ocr
 
             ocr = new Ocr(_parent);
             cbStartOCROnLoad.Checked = true;
-            //ocr.StartMonitoring(Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder);
+            //ocr.StartMonitoring(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder);
 
             if (_fileSystemWatcher == null)
                 _fileSystemWatcher = new FileSystemWatcher();
 
-            _fileSystemWatcher.Path = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder");
+            _fileSystemWatcher.Path = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder");
 
             _fileSystemWatcher.Filter = "*.bmp";
 
@@ -766,7 +766,7 @@ namespace IBE.Ocr
                     UpdateOriginalImage(null);
                     UpdateTrimmedImage(null, null);
 
-                    if (Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "DeleteScreenshotOnImport"))
+                    if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "DeleteScreenshotOnImport"))
                         File.Delete(_screenshotName);
 
                     Acquisition();
@@ -807,7 +807,7 @@ namespace IBE.Ocr
                     {
                         tbFinalOcrOutput.Enabled = true;
 
-                        if ((!noAutoImport) && Program.DBCon.getIniValue<Boolean>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "AutoImport"))
+                        if ((!noAutoImport) && Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "AutoImport"))
                         {
                             tbCommoditiesOcrOutput.Text = "Imported!";
                             ImportFinalOcrOutput();
@@ -968,10 +968,10 @@ namespace IBE.Ocr
             }
 
             var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder");
+            dialog.SelectedPath = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder");
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder", dialog.SelectedPath);
+                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder", dialog.SelectedPath);
 
                 if (_fileSystemWatcher == null)
                     _fileSystemWatcher = new FileSystemWatcher();
@@ -1003,7 +1003,7 @@ namespace IBE.Ocr
                 return;
             }
             var dialog = new OpenFileDialog();
-            dialog.InitialDirectory = Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder");
+            dialog.InitialDirectory = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder");
             dialog.Filter = "BMP Files|*.bmp";
             dialog.CheckFileExists = true;
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -1155,21 +1155,21 @@ namespace IBE.Ocr
 
         private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbStartOCROnLoad.Checked && Program.DBCon.getIniValue<String>(IBE.MTSettings.tabSettings.DB_GROUPNAME, "MostRecentOCRFolder") == "")
+            if (cbStartOCROnLoad.Checked && Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder") == "")
             {
                 MessageBox.Show("You need to pick a directory first, using the Monitor Directory button.  Once you've done that, you can enable Start OCR On Load.");
-                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartOCROnLoad", false.ToString());
+                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "StartOCROnLoad", false.ToString());
                 cbStartOCROnLoad.Checked = false;
             }
             else
             {
-                Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "StartOCROnLoad", cbStartOCROnLoad.Checked.ToString());
+                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "StartOCROnLoad", cbStartOCROnLoad.Checked.ToString());
             }
         }
 
         private void cbAutoImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "AutoImport", cbAutoImport.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "AutoImport", cbAutoImport.Checked.ToString());
         }
 
         private void rbCmdrsName_CheckedChanged(object sender, EventArgs e)
@@ -1177,27 +1177,27 @@ namespace IBE.Ocr
             tbUsername.Enabled = rbUserID.Checked;
             txtCmdrsName.Enabled = rbCmdrsName.Checked;
 
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "usePilotsName", rbCmdrsName.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "usePilotsName", rbCmdrsName.Checked.ToString());
         }
         private void tbUsername_TextChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UserName", tbUsername.Text);
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "UserName", tbUsername.Text);
         }
 
         private void cbExtendedInfoInCSV_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "IncludeExtendedCSVInfo", cbExtendedInfoInCSV.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "IncludeExtendedCSVInfo", cbExtendedInfoInCSV.Checked.ToString());
         }
 
         private void cbPostOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "PostToEddnOnImport", cbPostOnImport.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "PostToEddnOnImport", cbPostOnImport.Checked.ToString());
         }
 
 
         private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "DeleteScreenshotOnImport", cbDeleteScreenshotOnImport.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "DeleteScreenshotOnImport", cbDeleteScreenshotOnImport.Checked.ToString());
         }
 
         private void cmdHint_Click(object sender, EventArgs e)
@@ -1209,7 +1209,7 @@ namespace IBE.Ocr
 
         private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.MTSettings.tabSettings.DB_GROUPNAME, "UseEddnTestSchema", cbUseEddnTestSchema.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", cbUseEddnTestSchema.Checked.ToString());
         }
     }
 
