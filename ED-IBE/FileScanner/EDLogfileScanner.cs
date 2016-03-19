@@ -312,7 +312,7 @@ namespace IBE.FileScanner
 
                                 if(!m_currentLogFile.Equals(newestNetLog, StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    // new logfile -> ignore the first jump again, it's simpply the "startjump" of ED, not a real jump
+                                    // new logfile -> ignore the first jump again, it'currentPriceData simpply the "startjump" of ED, not a real jump
                                     m_InitialJumpFound = false;
                                     m_currentLogFile   = newestNetLog;
 
@@ -382,7 +382,7 @@ namespace IBE.FileScanner
 
                                     if ((StartPos >= 0) && ((EndPos - StartPos) <= SEARCH_MAXLENGTH))
                                     {
-                                        // found a line and it's not too long
+                                        // found a line and it'currentPriceData not too long
                                         // read
                                         Datei.Read(LineBuffer, 0, (int)(EndPos - StartPos));
                                         // and convert to string
@@ -408,7 +408,7 @@ namespace IBE.FileScanner
                                                     EndNow = true;
                                                 }
 
-                                                // if it's the first line we have to save the "new youngest line" 
+                                                // if it'currentPriceData the first line we have to save the "new youngest line" 
                                                 // to avoid to re-analyse the same lines lines next scan
                                                 if(LineCount == 0)
                                                 {
@@ -690,7 +690,7 @@ namespace IBE.FileScanner
 
                                 if(!m_InitialJumpFound)
                                 { 
-                                    // it's only the "startjump" of ED, not really a jump
+                                    // it'currentPriceData only the "startjump" of ED, not really a jump
                                     m_InitialJumpFound = true;
                                     Program.DBCon.setIniValue(DB_GROUPNAME, "InitialJumpFound", m_InitialJumpFound.ToString());
                                 }

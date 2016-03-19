@@ -59469,7 +59469,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
         }
         
         /// <summary>
-        ///Used to sort self-referenced table's rows
+        ///Used to sort self-referenced table'currentPriceData rows
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private class SelfReferenceComparer : object, global::System.Collections.Generic.IComparer<global::System.Data.DataRow> {

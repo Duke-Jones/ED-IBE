@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace IBE.EDDN
 {
 
-    internal partial class Schema_v1
+    internal partial class EDDNSchema_v1
     {
         internal class Header_Class
         {
@@ -28,7 +28,7 @@ namespace IBE.EDDN
         }
     }
 
-    internal partial class Schema_v1
+    internal partial class EDDNSchema_v1
     {
         internal class Message_Class
         {
@@ -59,7 +59,7 @@ namespace IBE.EDDN
         }
     }
 
-    internal partial class Schema_v1
+    internal partial class EDDNSchema_v1
     {
 
         [JsonProperty("header")]

@@ -2,32 +2,24 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Globalization;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.Xml;
-using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Reflection;
 using EdClasses.ClassDefinitions;
 using IBE.Enums_and_Utility_Classes;
 using Microsoft.Win32;
-using System.ComponentModel;
 using IBE.EDDB_Data;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using CodeProject.Dialog;
 using IBE.SQL;
 using IBE.MTCommandersLog;
 using IBE.MTPriceAnalysis;
-using System.Text.RegularExpressions;
 using IBE.ExtData;
 using IBE.Ocr;
 
@@ -60,7 +52,6 @@ namespace IBE
 
         public static Form1 InstanceObject;
         
-        public IBE.EDDN.EDDNCommunicator EDDNComm;
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
@@ -69,7 +60,6 @@ namespace IBE
         //public Dictionary<byte, string> CommodityLevel = new Dictionary<byte, string>();
         private Ocr.Ocr ocr; //TODO is this needed here?
         private ListViewColumnSorter _stationColumnSorter, _commodityColumnSorter, _allCommodityColumnSorter, _stationToStationColumnSorter, _stationToStationReturnColumnSorter, _commandersLogColumnSorter;
-        private Thread _eddnSubscriberThread;
         
         public TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
         public Levenshtein _levenshtein = new Levenshtein();
@@ -111,8 +101,6 @@ namespace IBE
         private String _AppPath                                         = string.Empty;
         private String _oldSystemName                                   = null;
         private String _oldStationName                                  = null;
-        private DateTime m_lastEDDNAutoImport                           = DateTime.MinValue;
-        private System.Timers.Timer _AutoImportDelayTimer;
 
         public tabOCR cOcrCaptureAndCorrect               =  new tabOCR();
 
@@ -208,11 +196,6 @@ namespace IBE
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
-                Program.SplashScreen.InfoAdd("prepare EDDN interface...");
-                EDDNComm = new IBE.EDDN.EDDNCommunicator(this);
-                Program.Logger.Log("  - created EDDN object");
-                Program.SplashScreen.InfoAppendLast("<OK>");
-
                 Program.SplashScreen.InfoAdd("apply settings...");
                 ApplySettings();
                 Program.SplashScreen.InfoAppendLast("<OK>");
@@ -245,14 +228,11 @@ namespace IBE
                     _timer.Start();
                 }
 
+                // start clock on form
                 Clock = new System.Windows.Forms.Timer();
                 Clock.Interval = 1000;
                 Clock.Start();
                 Clock.Tick += Clock_Tick;
-
-                _AutoImportDelayTimer            = new System.Timers.Timer(10000);
-                _AutoImportDelayTimer.AutoReset  = false;
-                _AutoImportDelayTimer.Elapsed   += AutoImportDelayTimer_Elapsed;
 
                 Program.SplashScreen.InfoAdd("initialize Priceanalysis tab...");
                 // Price Analysis
@@ -265,7 +245,7 @@ namespace IBE
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Program.SplashScreen.InfoAdd("initialize Commander's Log tab...");
-                // Commander's Log
+                // Commander'currentPriceData Log
                 tabCommandersLog newCLControl     = new tabCommandersLog();
                 newCLControl.DataSource           = Program.CommandersLog;
                 newTab                            = new TabPage("Commander's Log");
@@ -287,7 +267,6 @@ namespace IBE
                 // until this is working again 
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
-                tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabEDDN"]);
 
                 Retheme();
 
@@ -657,11 +636,6 @@ namespace IBE
                 bStart_Click(null, null);
             }
    
-
-            cbSpoolEddnToFile.Checked               = Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "SpoolEddnToFile", false.ToString(), false, true);
-            cbSpoolImplausibleToFile.Checked        = Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "SpoolImplausibleToFile", false.ToString(), false, true);
-            cbEDDNAutoListen.Checked                = Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "EDDNAutoListen", false.ToString(), false, true);
-            checkboxImportEDDN.Checked              = Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "EDDNAutoImport", false.ToString(), false, true);
         }
 
        
@@ -691,7 +665,6 @@ namespace IBE
         void Application_ApplicationExit(object sender, EventArgs e)
         {
 
-            if (_eddnSubscriberThread != null) _eddnSubscriberThread.Abort();
 
             if (sws.Running)
                 sws.Stop();
@@ -1172,141 +1145,6 @@ namespace IBE
                 Process.Start(lblURL.Text);
         }
 
-
-
-        public bool checkPricePlausibility(string[] DataRows, bool simpleEDDNCheck = false)
-        {
-            bool implausible = false;
-            SQL.Datasets.dsEliteDB.tbcommodityRow[] CommodityData;
-
-            foreach (string s in DataRows)
-            {
-                if (s.Contains(";"))
-                {
-                    string[] values = s.Split(';');
-                    CsvRow currentRow = new CsvRow();
-
-                    currentRow.SellPrice    = -1;
-                    currentRow.BuyPrice     = -1;
-                    currentRow.Demand       = -1;
-                    currentRow.Supply       = -1;
-
-                    currentRow.SystemName       = values[0];
-                    currentRow.StationName      = _textInfo.ToTitleCase(values[1].ToLower());
-                    currentRow.StationID        = _textInfo.ToTitleCase(values[1].ToLower()) + " [" + currentRow.SystemName + "]";
-                    currentRow.CommodityName    = _textInfo.ToTitleCase(values[2].ToLower());
-
-                    if (!String.IsNullOrEmpty(values[3]))
-                        Decimal.TryParse(values[3], out currentRow.SellPrice);
-                    if (!String.IsNullOrEmpty(values[4]))
-                        Decimal.TryParse(values[4], out currentRow.BuyPrice);
-                    if (!String.IsNullOrEmpty(values[5]))
-                        Decimal.TryParse(values[5], out currentRow.Demand);
-                    if (!String.IsNullOrEmpty(values[7]))
-                        Decimal.TryParse(values[7], out currentRow.Supply);
-
-                    currentRow.DemandLevel      = _textInfo.ToTitleCase(values[6].ToLower());
-                    currentRow.SupplyLevel      = _textInfo.ToTitleCase(values[8].ToLower());
-
-                    DateTime.TryParse(values[9], out currentRow.SampleDate);
-
-                    CommodityData = (SQL.Datasets.dsEliteDB.tbcommodityRow[])
-                                    Program.Data.BaseData.tbcommodity.Select("commodity    = " + DBConnector.SQLAString(currentRow.CommodityName) + 
-                                                                             " or " +
-                                                                             "loccommodity = " + DBConnector.SQLAString(currentRow.CommodityName));
-                    
-
-                    if (currentRow.CommodityName == "Panik")
-                        Debug.Print("STOP");
-                            
-                    if ((CommodityData != null) && (CommodityData.GetUpperBound(0) >= 0))
-                    { 
-                        if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) && (!String.IsNullOrEmpty(currentRow.DemandLevel)))
-                        {
-                            // demand AND supply !?
-                            implausible = true;
-                        }
-                        else if ((!String.IsNullOrEmpty(currentRow.SupplyLevel)) || (simpleEDDNCheck && (currentRow.Supply > 0)))
-                        { 
-                            // check supply data             
-
-                            if ((currentRow.SellPrice <= 0) || (currentRow.BuyPrice <= 0))
-                            { 
-                                // both on 0 is not plausible
-                                implausible = true;
-                            }
-
-                            if (((CommodityData[0].pwl_supply_sell_low  >= 0) && (currentRow.SellPrice < CommodityData[0].pwl_supply_sell_low)) ||
-                                ((CommodityData[0].pwl_supply_sell_high >= 0) && (currentRow.SellPrice > CommodityData[0].pwl_supply_sell_high)))
-                            {
-                                // sell price is out of range
-                                implausible = true;
-                            }
-
-                            if (((CommodityData[0].pwl_supply_buy_low  >= 0) && (currentRow.BuyPrice  < CommodityData[0].pwl_supply_buy_low)) ||
-                                ((CommodityData[0].pwl_supply_buy_high >= 0) && (currentRow.SellPrice > CommodityData[0].pwl_supply_buy_high)))
-                            {
-                                // buy price is out of range
-                                implausible = true;
-                            }
-
-                            if (currentRow.Supply.Equals(-1))
-                            {   
-                                // no supply quantity
-                                implausible = true;
-                            }
-
-                        }
-                        else if ((!String.IsNullOrEmpty(currentRow.DemandLevel)) || (simpleEDDNCheck && (currentRow.Demand > 0)))
-                        { 
-                            // check demand data
-
-                            if (currentRow.SellPrice <= 0)
-                            {
-                                // at least the sell price must be present
-                                implausible = true;
-                            }
-
-                            if (((CommodityData[0].pwl_demand_sell_low  >= 0) && (currentRow.SellPrice < CommodityData[0].pwl_demand_sell_low)) ||
-                                ((CommodityData[0].pwl_demand_sell_high >= 0) && (currentRow.SellPrice > CommodityData[0].pwl_demand_sell_high)))
-                            {
-                                // buy price is out of range
-                                implausible = true;
-                            }
-
-                            if (currentRow.BuyPrice >= 0) 
-                                if (((CommodityData[0].pwl_demand_buy_low  >= 0) && (currentRow.BuyPrice < CommodityData[0].pwl_demand_buy_low)) ||
-                                    ((CommodityData[0].pwl_demand_buy_high >= 0) && (currentRow.BuyPrice > CommodityData[0].pwl_demand_buy_high)))
-                                {
-                                    // buy price is out of range
-                                    implausible = true;
-                                }
-
-                            if (currentRow.Demand.Equals(-1))
-                            {
-                                // no supply quantity
-                                implausible = true;
-                            }
-                        }
-                        else
-                        { 
-                            // nothing ?!
-                            implausible = true;
-                        }
-                    }
-                }
-
-                if (implausible)
-                    break;
-            }
-
-            return implausible;
-        }
-
-   
-
-       
-
         private void cbColourScheme_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (((ComboBox)(sender)).Text)
@@ -1343,431 +1181,6 @@ namespace IBE
             Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "WebserverBackgroundColor", tbBackgroundColour.Text);
         }
 
-        private void button15_Click(object sender, EventArgs e)
-        {
-            startEDDNListening();
-        }
-
-        private void startEDDNListening()
-        {
-            _eddnSubscriberThread = new Thread(() => EDDNComm.Subscribe());
-            _eddnSubscriberThread.IsBackground = true;
-            _eddnSubscriberThread.Start();
-
-            EDDNComm.DataRecieved += RecievedEDDNData;
-
-        }
-
-        private void RecievedEDDNData(object sender, EDDN.RecievedEDDNArgs e)
-        {
-            String[] DataRows           = new String[0];
-            String   nameAndVersion     = String.Empty;
-            String   name               = String.Empty;
-            String   uploaderID         = String.Empty; 
-            Boolean  SimpleEDDNCheck    = false;
-
-            try{
-                setText(tbEDDNOutput, String.Format("{0}\n{1}", e.Message, e.RawData));
-
-                if (cbSpoolEddnToFile.Checked){
-                    if (_eddnSpooler == null){
-                        if (!File.Exists(Program.GetDataPath("EddnOutput.txt")))
-                            _eddnSpooler = File.CreateText(Program.GetDataPath("EddnOutput.txt"));
-                        else
-                            _eddnSpooler = File.AppendText(Program.GetDataPath("EddnOutput.txt"));
-                    }
-                    _eddnSpooler.WriteLine(e.RawData);
-                }
-
-                switch (e.InfoType){
-
-                	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v1_Recieved:
-                        
-                        // process only if it's the correct schema
-                        if(!(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.Schema_v1)e.Data).isTest()))
-                        {
-                            Debug.Print("handle v1 message");
-                            EDDN.Schema_v1 DataObject   = (EDDN.Schema_v1)e.Data;
-
-                            // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserID")) 
-                            { 
-                                DataRows                    = new String[1] {DataObject.getEDDNCSVImportString()};
-                                nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                name                        = String.Format("{0}", DataObject.Header.SoftwareName);
-                                uploaderID                  = DataObject.Header.UploaderID;
-                                SimpleEDDNCheck             = true;
-                            }
-                            else
-                                Debug.Print("handle v1 rejected (it's our own message)");
-                            
-                        }else 
-                            Debug.Print("handle v1 rejected (wrong schema)");
-
-                		break;
-
-                	case EDDN.RecievedEDDNArgs.enMessageInfo.Commodity_v2_Recieved:
-
-                        // process only if it's the correct schema
-                        if(!(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.Schema_v2)e.Data).isTest()))
-                        {
-                            Debug.Print("handle v2 message");
-
-                                
-                            EDDN.Schema_v2 DataObject   = (EDDN.Schema_v2)e.Data;
-
-                            // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserID")) 
-                            { 
-                                DataRows                    = DataObject.getEDDNCSVImportStrings();
-                                nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                name                        = String.Format("{0}", DataObject.Header.SoftwareName);
-                                uploaderID                  = DataObject.Header.UploaderID;
-                            }
-                            else
-                                Debug.Print("handle v2 rejected (it's our own message)");
-
-                        }else  
-                            Debug.Print("handle v2 rejected (wrong schema)");
-
-                		break;
-
-                	case EDDN.RecievedEDDNArgs.enMessageInfo.UnknownData:
-                        setText(tbEDDNOutput, "Recieved a unknown EDDN message:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
-                		Debug.Print("handle unkown message");
-                		break;
-
-                	case EDDN.RecievedEDDNArgs.enMessageInfo.ParseError:
-                		Debug.Print("handle error message");
-                        setText(tbEDDNOutput, "Error while processing recieved EDDN data:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
-
-                		break;
-
-                } 
-
-                if(DataRows != null && DataRows.GetUpperBound(0) >= 0)
-                {
-                    updatePublisherStats(nameAndVersion, DataRows.GetUpperBound(0)+1);
-
-                    List<String> trustedSenders = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "trustedSenders", "").Split(new char[] {'|'}).ToList();
-
-                    bool isTrusty = trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-
-                    foreach (String DataRow in DataRows){
-
-                        // data is plausible ?
-                        if(isTrusty || (!checkPricePlausibility(new string[] {DataRow}, SimpleEDDNCheck))){
-
-                            // import is wanted ?
-                            if(checkboxImportEDDN.Checked)
-                            {
-                                Debug.Print("import :" + DataRow);
-                                throw new NotImplementedException();
-                                //ImportCsvString(DataRow);
-                            }
-
-                        }else{
-                            Debug.Print("implausible :" + DataRow);
-                            // data is implausible
-                            string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
-
-                            addTextLine(lbEddnImplausible, InfoString);
-
-                            if(cbSpoolImplausibleToFile.Checked){
-
-                                FileStream LogFileStream = null;
-                                string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
-
-                                if(File.Exists(FileName))
-                                    LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                                else
-                                    LogFileStream = File.Create(FileName);
-
-                                LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n"), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
-                                LogFileStream.Close();
-                            }
-                        }
-                    }  
- 
-
-                    if(!_AutoImportDelayTimer.Enabled)
-                        _AutoImportDelayTimer.Start();
-
-                }
-            }catch (Exception ex){
-                setText(tbEDDNOutput, "Error while processing recieved EDDN data:" + Environment.NewLine + ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
-            }      
-        }
-
-        private void AutoImportDelayTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e){
-            SetupGui();   
-        }
-
-        /// <summary>
-        /// refreshes the info about software versions and recieved messages
-        /// </summary>
-        /// <param name="SoftwareID"></param>
-        /// <param name="MessageCount"></param>
-        private void updatePublisherStats(string SoftwareID,int MessageCount)
-        {
-            if (!_eddnPublisherStats.ContainsKey(SoftwareID))
-                _eddnPublisherStats.Add(SoftwareID, new EddnPublisherVersionStats());
-
-            _eddnPublisherStats[SoftwareID].MessagesReceived += MessageCount;
-
-            
-
-            System.Text.StringBuilder output = new System.Text.StringBuilder();
-            foreach (var appVersion in _eddnPublisherStats.OrderByDescending(x => x.Value.MessagesReceived))
-            {
-                output.Append(appVersion.Key + " : " + appVersion.Value.MessagesReceived + " messages\r\n");
-            }
-
-            setText(tbEddnStats, output.ToString());
-        }
-
-        #region EDDNCommunicator Delegates
-        private DateTime _lastGuiUpdate;
-
-        private delegate void SetTextCallback(object text);
-
-        private StreamWriter _eddnSpooler = null;
-
-        //public void OutputEddnRawData(object text)
-        //{
-        //    if (InvokeRequired)
-        //    {
-        //        SetTextCallback d = OutputEddnRawData;
-        //        BeginInvoke(d, new { text });
-        //    }
-        //    else
-        //    {
-        //        tbEDDNOutput.Text = text.ToString();
-
-        //        if (cbSpoolEddnToFile.Checked)
-        //        {
-        //            if (_eddnSpooler == null)
-        //            {
-        //                if (!File.Exists(".//EddnOutput.txt"))
-        //                    _eddnSpooler = File.CreateText(".//EddnOutput.txt");
-        //                else
-        //                    _eddnSpooler = File.AppendText(".//EddnOutput.txt");
-        //            }
-
-        //            _eddnSpooler.WriteLine(text);
-        //        }
-
-        //        var headerDictionary    = new Dictionary<string, string>();
-        //        var messageDictionary   = new Dictionary<string, string>();
-
-        //        ParseEddnJson(text, headerDictionary, messageDictionary, checkboxImportEDDN.Checked);
-
-        //    }
-        //}
-
-        private Dictionary<string, EddnPublisherVersionStats> _eddnPublisherStats = new Dictionary<string, EddnPublisherVersionStats>();
-        private EDSystem  cachedSystem;
-        private EDStation cachedStation;
-
-        private void ParseEddnJson(object text, Dictionary<string, string> headerDictionary, IDictionary<string, string> messageDictionary, bool import)
-        {
-            string txt = text.ToString();
-            // .. we're here because we've received some data from EDDNCommunicator
-
-            if (txt != "")
-                try
-                {
-                    // ReSharper disable StringIndexOfIsCultureSpecific.1
-                    var headerRawStart = txt.IndexOf(@"""header""") + 12;
-                    var headerRawLength = txt.Substring(headerRawStart).IndexOf("}");
-                    var headerRawData = txt.Substring(headerRawStart, headerRawLength);
-
-                    var schemaRawStart = txt.IndexOf(@"""$schemaRef""") + 14;
-                    var schemaRawLength = txt.Substring(schemaRawStart).IndexOf(@"""message"":");
-                    var schemaRawData = txt.Substring(schemaRawStart, schemaRawLength);
-
-                    var messageRawStart = txt.IndexOf(@"""message"":") + 12;
-                    var messageRawLength = txt.Substring(messageRawStart).IndexOf("}");
-                    var messageRawData = txt.Substring(messageRawStart, messageRawLength);
-                    // ReSharper restore StringIndexOfIsCultureSpecific.1
-
-                    schemaRawData = schemaRawData.Replace(@"""", "").Replace(",","");
-                    var headerRawPairs = headerRawData.Replace(@"""", "").Split(',');
-                    var messageRawPairs = messageRawData.Replace(@"""", "").Split(',');
-
-
-                    if((Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true)  && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase) >= 0)) ||
-                       (!Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) && (schemaRawData.IndexOf("Test", StringComparison.InvariantCultureIgnoreCase)  < 0)))
-                    {
-                        foreach (var rawHeaderPair in headerRawPairs)
-                        {
-                            var splitPair = new string[2];
-                            splitPair[0] = rawHeaderPair.Substring(0, rawHeaderPair.IndexOf(':'));
-                            splitPair[1] = rawHeaderPair.Substring(splitPair[0].Length + 1);
-                            if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
-                            if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
-                            headerDictionary.Add(splitPair[0], splitPair[1]);
-                        }
-
-                        foreach (var rawMessagePair in messageRawPairs)
-                        {
-                            var splitPair = new string[2];
-                            splitPair[0] = rawMessagePair.Substring(0, rawMessagePair.IndexOf(':'));
-                            splitPair[1] = rawMessagePair.Substring(splitPair[0].Length + 1);
-                            if (splitPair[0].StartsWith(" ")) splitPair[0] = splitPair[0].Substring(1);
-                            if (splitPair[1].StartsWith(" ")) splitPair[1] = splitPair[1].Substring(1);
-                            messageDictionary.Add(splitPair[0], splitPair[1]);
-                        }
-
-                        var nameAndVersion = (headerDictionary["softwareName"] + " / " + headerDictionary["softwareVersion"]);
-                        if (!_eddnPublisherStats.ContainsKey(nameAndVersion))
-                            _eddnPublisherStats.Add(nameAndVersion, new EddnPublisherVersionStats());
-
-                        _eddnPublisherStats[nameAndVersion].MessagesReceived++;
-
-                        var output = "";
-                        foreach (var appVersion in _eddnPublisherStats)
-                        {
-                            output = output + appVersion.Key + " : " + appVersion.Value.MessagesReceived + " messages\r\n";
-                        }
-                        tbEddnStats.Text = output;
-
-                        if (Debugger.IsAttached && Program.showToDo)
-                            MessageBox.Show("TODO");
-                        string commodity = ""; //' getLocalizedCommodity(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "Language, messageDictionary["itemName"]);
-
-                        if((cachedSystem == null) || (!messageDictionary["systemName"].Equals(cachedSystem.Name, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            throw new NotImplementedException();
-                            //cachedSystem = _Milkyway.getSystem(messageDictionary["Systemname"]);
-                        }
-                        if(cachedSystem == null)
-                        {
-                            cachedSystem = new EDSystem();
-                            cachedSystem.Name = messageDictionary["systemName"];
-                        }
-
-                        if((cachedSystem != null) && ((cachedStation == null) || (!messageDictionary["stationName"].Equals(cachedStation.Name, StringComparison.InvariantCultureIgnoreCase))))
-                        {
-                            throw new NotImplementedException();
-                            //cachedStation = _Milkyway.getLocation(messageDictionary["Systemname"], messageDictionary["Locationname"]);
-                        }
-                        if(cachedStation == null)
-                        {
-                            cachedStation = new EDStation();
-                            cachedStation.Name = messageDictionary["stationName"];
-                        }
-
-                        if(!String.IsNullOrEmpty(commodity))
-                        {
-
-                            //System;Location;Commodity_Class;Sell;Buy;Demand;;Supply;;Date;
-                            if (headerDictionary["uploaderID"] != Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserName")) // Don't import our own uploads...
-                            {
-                                string csvFormatted = cachedSystem.Name + ";" +
-                                                      cachedStation.Name + ";" +
-                                                      commodity + ";" +
-                                                      (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
-                                                      (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
-                                                      messageDictionary["demand"] + ";" +
-                                                      ";" +
-                                                      messageDictionary["stationStock"] + ";" +
-                                                      ";" +
-                                                      messageDictionary["timestamp"] + ";"
-                                                      +
-                                                      "<From EDDN>" + ";";
-
-                                if(!checkPricePlausibility(new string[] {csvFormatted}, true))
-                                {
-                                    if(import)
-                                        throw new NotImplementedException();
-                                        //ImportCsvString(csvFormatted);
-
-                                }else{
-
-                                    string InfoString = string.Format("IMPLAUSIBLE DATA : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted );
-
-                                    lbEddnImplausible.Items.Add(InfoString);
-                                    lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
-                                    lbEddnImplausible.SelectedIndex = -1;
-
-                                    if(cbSpoolImplausibleToFile.Checked)
-                                    {
-                                        FileStream LogFileStream = null;
-                                        string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
-
-                                        if(File.Exists(FileName))
-                                        { 
-                                            LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                                        }
-                                        else
-                                        {
-                                            LogFileStream = File.Create(FileName);
-                                        }
-
-                                       LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n"), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
-                                       LogFileStream.Close();
-                                    }
-
-                                    Debug.Print("Implausible EDDN Data: " + csvFormatted);
-                                }
-                            }
-                        
-
-                            if ((DateTime.Now - _lastGuiUpdate) > TimeSpan.FromSeconds(10))
-                            {
-                                SetupGui();
-                                _lastGuiUpdate = DateTime.Now;
-                            }
-                        }
-                        else 
-                        { 
-                            string csvFormatted = messageDictionary["systemName"] + ";" +
-                                                    messageDictionary["stationName"] + ";" +
-                                                    messageDictionary["itemName"] + ";" +
-                                                    (messageDictionary["sellPrice"] == "0" ? "" : messageDictionary["sellPrice"]) + ";" +
-                                                    (messageDictionary["buyPrice"] == "0" ? "" : messageDictionary["buyPrice"]) + ";" +
-                                                    messageDictionary["demand"] + ";" +
-                                                    ";" +
-                                                    messageDictionary["stationStock"] + ";" +
-                                                    ";" +
-                                                    messageDictionary["timestamp"] + ";"
-                                                    +
-                                                    "<From EDDN>" + ";";
-                            string InfoString = string.Format("UNKNOWN COMMODITY : \"{3}\" from {0}/{1}/ID=[{2}]", headerDictionary["softwareName"], headerDictionary["softwareVersion"], headerDictionary["uploaderID"], csvFormatted );
-
-                            lbEddnImplausible.Items.Add(InfoString);
-                            lbEddnImplausible.SelectedIndex = lbEddnImplausible.Items.Count-1;
-                            lbEddnImplausible.SelectedIndex = -1;
-
-                            if(cbSpoolImplausibleToFile.Checked)
-                            {
-
-                                FileStream LogFileStream = null;
-                                string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
-
-                                if(File.Exists(FileName))
-                                { 
-                                    LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                                }
-                                else
-                                {
-                                    LogFileStream = File.Create(FileName);
-                                }
-
-                                LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n" ), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
-                                LogFileStream.Close();
-                            }
-
-                        }
-                    }
-                }
-                catch
-                {
-                    tbEDDNOutput.Text = "Couldn't parse JSON!\r\n\r\n" + tbEDDNOutput.Text;
-                }
-        }
-
         private delegate void del_setText(Control Destination, String newText);
 
         public void setText(Control Destination, String newText)
@@ -1777,87 +1190,6 @@ namespace IBE
             else
                 Destination.Text = newText;
         }
-
-        private delegate void del_addText(ListBox Destination, String newLine);
-
-        public void addTextLine(ListBox Destination, String newLine)
-        {
-            if(Destination.InvokeRequired)
-                Destination.Invoke(new del_addText(addTextLine), Destination, newLine);
-            else
-            {
-                Destination.Items.Add(newLine);
-                Destination.SelectedIndex = lbEddnImplausible.Items.Count-1;
-                Destination.SelectedIndex = -1;
-            }
-        }
-
-        #endregion
-
-        private void cmdStopEDDNListening_Click(object sender, EventArgs e)
-        {
-            if (_eddnSubscriberThread != null && _eddnSubscriberThread.IsAlive)
-                _eddnSubscriberThread.Abort();
-        }
-   
-
-        private void button17_Click(object sender, EventArgs e)
-        {
-            //SetupGui();
-        }
-
-   
-        private void button19_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog openFile = new FolderBrowserDialog();
-            openFile.SelectedPath = Environment.GetFolderPath((Environment.SpecialFolder.MyDocuments));
-            openFile.ShowDialog();
-
-
-            _filesFound = new List<string>();
-
-            if (openFile.SelectedPath != "")
-            {
-                _filesFound = new List<string>();
-
-                DirSearch(openFile.SelectedPath);
-                
-                throw new NotImplementedException();
-                //ImportListOfCsvs(_filesFound.ToArray());
-
-            }
-
-            SetupGui();
-        }
-
-        private List<string> _filesFound;
-
-        private void DirSearch(string sDir)
-        {
-
-            try
-            {
-                foreach (string d in Directory.GetDirectories(sDir))
-                {
-                    foreach (string f in Directory.GetFiles(d, "*.csv"))
-                    {
-                        _filesFound.Add(f);
-                    }
-                    DirSearch(d);
-                }
-            }
-            catch (Exception ex)
-            {
-                Program.Logger.Log("Error recursing directories:", true);
-                Program.Logger.Log(ex.ToString(), true);
-                Program.Logger.Log(ex.Message, true);
-                Program.Logger.Log(ex.StackTrace, true);
-                if (ex.InnerException != null)
-                    Program.Logger.Log(ex.InnerException.ToString(), true);
-                Console.WriteLine(ex.Message);
-            }
-        }
-
 
         #region Help button handlers
         private void ShowOcrHelpClick(object sender, EventArgs e)
@@ -1879,14 +1211,6 @@ namespace IBE
         {
             try
             {
-                //if(!Program.SplashScreen.IsDisposed)
-                //    Program.SplashScreen.TopMost = false;
-
-                //MessageBox.Show("Test");
-
-                //if(!Program.SplashScreen.IsDisposed)
-                //    Program.SplashScreen.TopMost = true;
-
                 Stopwatch st = new Stopwatch();
                 st.Start();
                 Version newVersion;
@@ -1970,13 +1294,13 @@ namespace IBE
                 
                 Program.DoSpecial();
 
-                if(cbEDDNAutoListen.Checked)
+                if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
                 {
                     Debug.Print("Zeit (10) : " + st.ElapsedMilliseconds);
                     st.Start();
 
                     Program.SplashScreen.InfoAdd("starting eddn listening");
-                    startEDDNListening();
+                    Program.EDDNComm.StartEDDNListening();
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
@@ -3508,34 +2832,11 @@ namespace IBE
             System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
         }
 
-        private void cbSpoolEddnToFile_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "SpoolEddnToFile", cbSpoolEddnToFile.Checked.ToString());
-        }
-
-        private void cbSpoolImplausibleToFile_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "SpoolImplausibleToFile", cbSpoolImplausibleToFile.Checked.ToString());
-        }
-
-        private void cbEDDNAutoListen_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "EDDNAutoListen", cbEDDNAutoListen.Checked.ToString());
-        }
-
-        private void checkboxImportEDDN_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "EDDNAutoImport", checkboxImportEDDN.Checked.ToString());
-        }
-
         private void cbStartWebserverOnLoad_CheckedChanged(object sender, EventArgs e)
         {
             Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "StartWebserverOnLoad", cbStartWebserverOnLoad.Checked.ToString());
         }
 
-     
-
-        
 
         #region Theming
         private void pbForegroundColour_Click(object sender, EventArgs e)
@@ -3736,27 +3037,27 @@ namespace IBE
             //    "<A style=\"font-size: 14pt\" HREF=\"#lbCommodities\">Classification - </A>" +
             //        "<A style=\"font-size: 14pt\" HREF=\"#lvStationToStation\">Location-to-Location</A><BR>";
 
-            //s.Append(links);
+            //currentPriceData.Append(links);
 
-            //s.Append("<A name=\"lvAllComms\"><P>All newCommodityClassification</P>");
-            //s.Append(GetHTMLForListView(lvAllComms));
+            //currentPriceData.Append("<A name=\"lvAllComms\"><P>All newCommodityClassification</P>");
+            //currentPriceData.Append(GetHTMLForListView(lvAllComms));
 
-            //s.Append(links);
+            //currentPriceData.Append(links);
 
-            //s.Append("<A name=\"lbPrices\"><P>Location: " + getCmbItemKey(cmbStation.SelectedItem) + "</P>");
-            //s.Append(GetHTMLForListView(lbPrices));
+            //currentPriceData.Append("<A name=\"lbPrices\"><P>Location: " + getCmbItemKey(cmbStation.SelectedItem) + "</P>");
+            //currentPriceData.Append(GetHTMLForListView(lbPrices));
 
-            //s.Append(links);
+            //currentPriceData.Append(links);
 
-            //s.Append("<A name=\"lbCommodities\"><P>Classification: " + cbCommodity.SelectedItem + "</P>");
-            //s.Append(GetHTMLForListView(lbCommodities));
+            //currentPriceData.Append("<A name=\"lbCommodities\"><P>Classification: " + cbCommodity.SelectedItem + "</P>");
+            //currentPriceData.Append(GetHTMLForListView(lbCommodities));
 
-            //s.Append(links);
+            //currentPriceData.Append(links);
 
-            //s.Append("<A name=\"lvStationToStation\"><P>Location-to-Location: " + getCmbItemKey(cmbStationToStationFrom.SelectedItem) + " => " + getCmbItemKey(cmbStationToStationTo.SelectedItem) + "</P>");
-            //s.Append(GetHTMLForListView(lvStationToStation));
+            //currentPriceData.Append("<A name=\"lvStationToStation\"><P>Location-to-Location: " + getCmbItemKey(cmbStationToStationFrom.SelectedItem) + " => " + getCmbItemKey(cmbStationToStationTo.SelectedItem) + "</P>");
+            //currentPriceData.Append(GetHTMLForListView(lvStationToStation));
 
-            //s.Append(links);
+            //currentPriceData.Append(links);
 
             return s.ToString();
         }
@@ -4074,6 +3375,19 @@ namespace IBE
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error while opening direct data-access tool");
+            }
+        }
+
+        private void eDDNInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var newForm = new EDDN.EDDNView(Program.EDDNComm);
+                newForm.Show(this);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while opening EDDN interface");
             }
         }
 

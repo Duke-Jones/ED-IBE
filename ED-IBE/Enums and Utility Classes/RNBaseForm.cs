@@ -110,7 +110,7 @@ namespace IBE.Enums_and_Utility_Classes
         }
 
         /// <summary>
-        /// shows the form, also if it's minimized or in the background
+        /// shows the form, also if it'currentPriceData minimized or in the background
         /// </summary>
         public void ShowEx()
         {
@@ -134,115 +134,122 @@ namespace IBE.Enums_and_Utility_Classes
         {
             bool noBackColor = false;
 
-            if (Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour", "") == "" || 
-                Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour", "") == "") return;
-
-            var x = GetAll(this);
-
-            int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
-            var f = Color.FromArgb(redF, greenF, blueF);
-            int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-            int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-            int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
-            var b = Color.FromArgb(redB, greenB, blueB);
-
-            foreach (Control c in x)
+            try
             {
-                var props = c.GetType().GetProperties().Select(y => y.Name);
+                if (Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour", "") == "" || 
+                    Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour", "") == "") return;
 
-                noBackColor = false;
+                var x = GetAll(this);
 
-                c.BackColor = b;
-                c.ForeColor = f;
-                if (props.Contains("FlatStyle"))
-                {
-                    var prop = c.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
+                int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                var f = Color.FromArgb(redF, greenF, blueF);
+                int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                var b = Color.FromArgb(redB, greenB, blueB);
 
-                    prop.SetValue(c, FlatStyle.Flat);
-                }
-                if (props.Contains("BorderStyle") && c.GetType() != typeof(Label))
+                foreach (Control c in x)
                 {
-                    var prop = c.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
+                    var props = c.GetType().GetProperties().Select(y => y.Name);
 
-                    prop.SetValue(c, BorderStyle.FixedSingle);
-                }
-                if (props.Contains("LinkColor"))
-                {
-                    var prop = c.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
+                    noBackColor = false;
 
-                    prop.SetValue(c, f);
-                }
-                if (props.Contains("BackColor_ro"))
-                {
-                    var prop = c.GetType().GetProperty("BackColor_ro", BindingFlags.Public | BindingFlags.Instance);
-                    prop.SetValue(c, b);
-                }
-                if (props.Contains("ForeColor_ro"))
-                {
-                    var prop = c.GetType().GetProperty("ForeColor_ro", BindingFlags.Public | BindingFlags.Instance);
-                    prop.SetValue(c, f);
-                }
-                if (props.Contains("BackgroundColor"))
-                {
-                    var prop = c.GetType().GetProperty("BackgroundColor", BindingFlags.Public | BindingFlags.Instance);
-                    prop.SetValue(c, b);
-                }
-                if (props.Contains("GridColor"))
-                {
-                    var prop = c.GetType().GetProperty("GridColor", BindingFlags.Public | BindingFlags.Instance);
-                    prop.SetValue(c, f);
-                }
-                if (props.Contains("DefaultCellStyle"))
-                {
-                    // DataGridView
-                    var prop = c.GetType().GetProperty("DefaultCellStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                    var propsCellStyle = prop.GetType().GetProperties().Select(y => y.Name);
-
-                    if (propsCellStyle.Contains("BackColor"))
+                    c.BackColor = b;
+                    c.ForeColor = f;
+                    if (props.Contains("FlatStyle"))
                     {
-                        var prop2 = propsCellStyle.GetType().GetProperty("BackColor", BindingFlags.Public | BindingFlags.Instance);
-                        prop2.SetValue(c, b);
+                        var prop = c.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                        prop.SetValue(c, FlatStyle.Flat);
                     }
-                    if (propsCellStyle.Contains("ForeColor"))
+                    if (props.Contains("BorderStyle") && c.GetType() != typeof(Label))
                     {
-                        var prop2 = propsCellStyle.GetType().GetProperty("ForeColor", BindingFlags.Public | BindingFlags.Instance);
-                        prop2.SetValue(c, f);
+                        var prop = c.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                        prop.SetValue(c, BorderStyle.FixedSingle);
+                    }
+                    if (props.Contains("LinkColor"))
+                    {
+                        var prop = c.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
+
+                        prop.SetValue(c, f);
+                    }
+                    if (props.Contains("BackColor_ro"))
+                    {
+                        var prop = c.GetType().GetProperty("BackColor_ro", BindingFlags.Public | BindingFlags.Instance);
+                        prop.SetValue(c, b);
+                    }
+                    if (props.Contains("ForeColor_ro"))
+                    {
+                        var prop = c.GetType().GetProperty("ForeColor_ro", BindingFlags.Public | BindingFlags.Instance);
+                        prop.SetValue(c, f);
+                    }
+                    if (props.Contains("BackgroundColor"))
+                    {
+                        var prop = c.GetType().GetProperty("BackgroundColor", BindingFlags.Public | BindingFlags.Instance);
+                        prop.SetValue(c, b);
+                    }
+                    if (props.Contains("GridColor"))
+                    {
+                        var prop = c.GetType().GetProperty("GridColor", BindingFlags.Public | BindingFlags.Instance);
+                        prop.SetValue(c, f);
+                    }
+                    if (props.Contains("DefaultCellStyle"))
+                    {
+                        // DataGridView
+                        var prop = c.GetType().GetProperty("DefaultCellStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                        var propsCellStyle = prop.GetType().GetProperties().Select(y => y.Name);
+
+                        if (propsCellStyle.Contains("BackColor"))
+                        {
+                            var prop2 = propsCellStyle.GetType().GetProperty("BackColor", BindingFlags.Public | BindingFlags.Instance);
+                            prop2.SetValue(c, b);
+                        }
+                        if (propsCellStyle.Contains("ForeColor"))
+                        {
+                            var prop2 = propsCellStyle.GetType().GetProperty("ForeColor", BindingFlags.Public | BindingFlags.Instance);
+                            prop2.SetValue(c, f);
+                        }
+                    }
+                    if (props.Contains("Columns") && c.GetType() == typeof(DataGridViewExt))
+                    {
+
+                        DataGridViewExt dgv = (DataGridViewExt)c;
+
+                        dgv.EnableHeadersVisualStyles = false;
+
+                        dgv.RowHeadersDefaultCellStyle.BackColor = f;
+                        dgv.RowHeadersDefaultCellStyle.ForeColor = b;
+
+                        dgv.ColumnHeadersDefaultCellStyle.BackColor = f;
+                        dgv.ColumnHeadersDefaultCellStyle.ForeColor = b;
+
+
+                        // DataGridView
+                        var prop = c.GetType().GetProperty("Columns", BindingFlags.Public | BindingFlags.Instance);
+
+                        var propValues = (DataGridViewColumnCollection)prop.GetValue(c, null);
+
+                        foreach (DataGridViewColumn propValue in propValues)
+                        {
+                            propValue.DefaultCellStyle.ForeColor = f;
+                            propValue.DefaultCellStyle.BackColor = b;
+                            propValue.HeaderCell.Style.BackColor = f;
+                            propValue.HeaderCell.Style.ForeColor = b;
+                        }
                     }
                 }
-                if (props.Contains("Columns") && c.GetType() == typeof(DataGridViewExt))
-                {
 
-                    DataGridViewExt dgv = (DataGridViewExt)c;
-
-                    dgv.EnableHeadersVisualStyles = false;
-
-                    dgv.RowHeadersDefaultCellStyle.BackColor = f;
-                    dgv.RowHeadersDefaultCellStyle.ForeColor = b;
-
-                    dgv.ColumnHeadersDefaultCellStyle.BackColor = f;
-                    dgv.ColumnHeadersDefaultCellStyle.ForeColor = b;
-
-
-                    // DataGridView
-                    var prop = c.GetType().GetProperty("Columns", BindingFlags.Public | BindingFlags.Instance);
-
-                    var propValues = (DataGridViewColumnCollection)prop.GetValue(c, null);
-
-                    foreach (DataGridViewColumn propValue in propValues)
-                    {
-                        propValue.DefaultCellStyle.ForeColor = f;
-                        propValue.DefaultCellStyle.BackColor = b;
-                        propValue.HeaderCell.Style.BackColor = f;
-                        propValue.HeaderCell.Style.ForeColor = b;
-                    }
-                }
+                //if(!noBackColor)
+                    BackColor = b;
             }
-
-            //if(!noBackColor)
-                BackColor = b;
+            catch (Exception ex)
+            {
+                throw new Exception("Error in retheming-function", ex);
+            }
         }
     }
 }

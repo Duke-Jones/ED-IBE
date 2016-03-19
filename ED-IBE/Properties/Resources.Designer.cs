@@ -63,6 +63,26 @@ namespace IBE.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap green_led_off_md {
+            get {
+                object obj = ResourceManager.GetObject("green_led_off_md", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap green_led_on_md {
+            get {
+                object obj = ResourceManager.GetObject("green_led_on_md", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PayPalDonate {
             get {
                 object obj = ResourceManager.GetObject("PayPalDonate", resourceCulture);

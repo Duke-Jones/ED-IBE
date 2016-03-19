@@ -126,7 +126,7 @@
             this.groupBox6.Controls.Add(this.groupBox11);
             this.groupBox6.Location = new System.Drawing.Point(6, 6);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(619, 428);
+            this.groupBox6.Size = new System.Drawing.Size(600, 428);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "OCR-Settings";
@@ -138,7 +138,7 @@
             this.gbTesseract.Controls.Add(this.label12);
             this.gbTesseract.Location = new System.Drawing.Point(11, 16);
             this.gbTesseract.Name = "gbTesseract";
-            this.gbTesseract.Size = new System.Drawing.Size(597, 68);
+            this.gbTesseract.Size = new System.Drawing.Size(583, 68);
             this.gbTesseract.TabIndex = 16;
             this.gbTesseract.TabStop = false;
             this.gbTesseract.Text = "Tesseract Setting";
@@ -179,7 +179,7 @@
             this.groupBox9.Controls.Add(this.txtGUIColorCutoffLevel);
             this.groupBox9.Location = new System.Drawing.Point(11, 237);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(597, 150);
+            this.groupBox9.Size = new System.Drawing.Size(583, 150);
             this.groupBox9.TabIndex = 15;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "UI Color Cutoff Level";
@@ -234,7 +234,7 @@
             this.groupBox11.Controls.Add(this.txtOCRPixelThreshold);
             this.groupBox11.Location = new System.Drawing.Point(11, 90);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(597, 141);
+            this.groupBox11.Size = new System.Drawing.Size(583, 141);
             this.groupBox11.TabIndex = 14;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "OCR Performance Improvement";
@@ -313,9 +313,9 @@
             this.groupBox10.Controls.Add(this.cbAutoAdd_Visited);
             this.groupBox10.Controls.Add(this.label49);
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
-            this.groupBox10.Location = new System.Drawing.Point(650, 3);
+            this.groupBox10.Location = new System.Drawing.Point(650, 12);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(527, 151);
+            this.groupBox10.Size = new System.Drawing.Size(502, 142);
             this.groupBox10.TabIndex = 12;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
@@ -385,7 +385,7 @@
             this.groupBox8.Controls.Add(this.cmbLanguage);
             this.groupBox8.Location = new System.Drawing.Point(650, 160);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(525, 45);
+            this.groupBox8.Size = new System.Drawing.Size(502, 45);
             this.groupBox8.TabIndex = 13;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Language";
@@ -423,7 +423,7 @@
             this.groupBox12.Controls.Add(this.button6);
             this.groupBox12.Location = new System.Drawing.Point(650, 418);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(527, 179);
+            this.groupBox12.Size = new System.Drawing.Size(502, 259);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -432,7 +432,7 @@
             // 
             this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(203, 96);
+            this.label89.Location = new System.Drawing.Point(203, 176);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(29, 13);
             this.label89.TabIndex = 19;
@@ -441,7 +441,7 @@
             // nudPurgeOldDataDays
             // 
             this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 93);
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 173);
             this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
             365,
             0,
@@ -463,7 +463,7 @@
             // cmdPurgeOldData
             // 
             this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 91);
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 171);
             this.cmdPurgeOldData.Name = "cmdPurgeOldData";
             this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
             this.cmdPurgeOldData.TabIndex = 8;
@@ -498,7 +498,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 127);
+            this.button6.Location = new System.Drawing.Point(32, 207);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -636,7 +636,7 @@
             this.groupBox1.Controls.Add(this.label25);
             this.groupBox1.Location = new System.Drawing.Point(650, 211);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(525, 133);
+            this.groupBox1.Size = new System.Drawing.Size(502, 133);
             this.groupBox1.TabIndex = 65;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datafilter";
@@ -647,7 +647,7 @@
             this.groupBox7.Controls.Add(this.rbNoDistanceToStarIgnore);
             this.groupBox7.Location = new System.Drawing.Point(312, 65);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(203, 45);
+            this.groupBox7.Size = new System.Drawing.Size(184, 45);
             this.groupBox7.TabIndex = 67;
             this.groupBox7.TabStop = false;
             this.groupBox7.Tag = "NoDistanceToStar;consider";
@@ -685,7 +685,7 @@
             this.groupBox5.Controls.Add(this.rbNoLandingPadSizeIgnore);
             this.groupBox5.Location = new System.Drawing.Point(312, 14);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(203, 45);
+            this.groupBox5.Size = new System.Drawing.Size(184, 45);
             this.groupBox5.TabIndex = 66;
             this.groupBox5.TabStop = false;
             this.groupBox5.Tag = "NoLandingPadSize;consider";
@@ -770,7 +770,7 @@
             this.tcDataInterface.Location = new System.Drawing.Point(6, 90);
             this.tcDataInterface.Name = "tcDataInterface";
             this.tcDataInterface.SelectedIndex = 0;
-            this.tcDataInterface.Size = new System.Drawing.Size(629, 426);
+            this.tcDataInterface.Size = new System.Drawing.Size(620, 426);
             this.tcDataInterface.TabIndex = 67;
             // 
             // tabOCRSettings
@@ -779,7 +779,7 @@
             this.tabOCRSettings.Location = new System.Drawing.Point(4, 22);
             this.tabOCRSettings.Name = "tabOCRSettings";
             this.tabOCRSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabOCRSettings.Size = new System.Drawing.Size(621, 400);
+            this.tabOCRSettings.Size = new System.Drawing.Size(612, 400);
             this.tabOCRSettings.TabIndex = 0;
             this.tabOCRSettings.Text = "OCR";
             this.tabOCRSettings.UseVisualStyleBackColor = true;
@@ -799,9 +799,9 @@
             // 
             this.gbDataInterface.Controls.Add(this.groupBox2);
             this.gbDataInterface.Controls.Add(this.tcDataInterface);
-            this.gbDataInterface.Location = new System.Drawing.Point(3, 3);
+            this.gbDataInterface.Location = new System.Drawing.Point(12, 12);
             this.gbDataInterface.Name = "gbDataInterface";
-            this.gbDataInterface.Size = new System.Drawing.Size(641, 525);
+            this.gbDataInterface.Size = new System.Drawing.Size(632, 524);
             this.gbDataInterface.TabIndex = 68;
             this.gbDataInterface.TabStop = false;
             this.gbDataInterface.Text = "Data Interface";
@@ -812,7 +812,7 @@
             this.groupBox2.Controls.Add(this.rbUseOCR);
             this.groupBox2.Location = new System.Drawing.Point(6, 19);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(629, 65);
+            this.groupBox2.Size = new System.Drawing.Size(618, 65);
             this.groupBox2.TabIndex = 70;
             this.groupBox2.TabStop = false;
             this.groupBox2.Tag = "SelectedInterface;OCR";
@@ -851,9 +851,9 @@
             this.groupBox4.Controls.Add(this.cmdChangeSQLPort);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
-            this.groupBox4.Location = new System.Drawing.Point(3, 534);
+            this.groupBox4.Location = new System.Drawing.Point(9, 542);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(641, 63);
+            this.groupBox4.Size = new System.Drawing.Size(635, 135);
             this.groupBox4.TabIndex = 71;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "SQL-Server";
@@ -885,7 +885,7 @@
             this.groupBox3.Controls.Add(this.cmdGamePath);
             this.groupBox3.Location = new System.Drawing.Point(652, 350);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(523, 62);
+            this.groupBox3.Size = new System.Drawing.Size(500, 62);
             this.groupBox3.TabIndex = 69;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Active Game Path (for analysing ED-logfiles)";
@@ -893,7 +893,7 @@
             // txtGamePath
             // 
             this.txtGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGamePath.Location = new System.Drawing.Point(11, 14);
+            this.txtGamePath.Location = new System.Drawing.Point(-12, 14);
             this.txtGamePath.Name = "txtGamePath";
             this.txtGamePath.ReadOnly = true;
             this.txtGamePath.Size = new System.Drawing.Size(498, 20);
@@ -903,7 +903,7 @@
             // cmdGamePath
             // 
             this.cmdGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdGamePath.Location = new System.Drawing.Point(407, 36);
+            this.cmdGamePath.Location = new System.Drawing.Point(384, 36);
             this.cmdGamePath.Name = "cmdGamePath";
             this.cmdGamePath.Size = new System.Drawing.Size(102, 23);
             this.cmdGamePath.TabIndex = 67;
@@ -914,7 +914,7 @@
             // IBESettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1164, 573);
+            this.ClientSize = new System.Drawing.Size(1164, 689);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);

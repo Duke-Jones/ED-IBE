@@ -249,15 +249,12 @@ namespace IBE
 
         private static Boolean                          m_initDone                  = false;
 
-//        public static ProgramPaths                      Paths;
         public static GUIColors                         Colors;
         public static CompanionInterface                CompanionIO;
         public static ExternalDataInterface             ExternalData;
         public static DBConnector                       DBCon;
-        //public static RegulatedNoiseSettings            Settings_old;
         public static STA.Settings.INIFile              IniFile;
         private static DBProcess                        EliteDBProcess;
-//        public static Settings                          Settings;
         public static CommandersLog                     CommandersLog;
         public static PriceAnalysis                     PriceAnalysis;
         public static EliteDBIO                         Data;
@@ -265,6 +262,9 @@ namespace IBE
         public static EDLogfileScanner                  LogfileScanner;
         public static SplashScreenForm                  SplashScreen;
         public static SingleThreadLogger                Logger;
+        public static EDDN.EDDNCommunicator             EDDNComm;
+        public static PlausibiltyChecker                PlausibiltyCheck;
+
 
 
         /// <summary>
@@ -374,9 +374,12 @@ namespace IBE
                     CommandersLog.registerLogFileScanner(LogfileScanner);
                     CommandersLog.registerExternalTool(ExternalData);
                     
-
                     PriceAnalysis.registerLogFileScanner(LogfileScanner);
                     PriceAnalysis.registerExternalTool(ExternalData);
+
+                    PlausibiltyCheck = new PlausibiltyChecker();
+
+                    EDDNComm = new IBE.EDDN.EDDNCommunicator();
 
                     Program.SplashScreen.InfoAppendLast("<OK>");
 
@@ -395,6 +398,12 @@ namespace IBE
         {
             try
             {
+                if(EDDNComm != null)
+                {
+                    EDDNComm.Dispose();
+                    EDDNComm = null;
+                }
+
                 if(LogfileScanner != null)
                 {
                     LogfileScanner.Dispose();
@@ -570,7 +579,7 @@ namespace IBE
                 {
                     if (dbVersion != new Version(0,1,0))
                     { 
-                        // here it's required to import all master data 
+                        // here it'currentPriceData required to import all master data 
                         var DataIO = new frmDataIO();
 
                         Program.SplashScreen.InfoAdd("Importing master data...");

@@ -145,7 +145,7 @@ public class ListViewColumnSorter : IComparer
                     break;
             }
 
-        // Commander's Log
+        // Commander'currentPriceData Log
         if (ListNumber == 4)
             switch (ColumnToSort)
             {

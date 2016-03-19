@@ -194,7 +194,7 @@ namespace IBE
         /// <param name="importInfo">if this is set a FolderDialog will ask with this text for a import directory.
         /// If this is not set, the path from "General"->"Path_Import" or from "optionalPath" will be taken</param>
         /// <param name="importFlags">flags what to import</param>
-        /// <param name="optionalFilter">filefilter (only for importing Commander's Log multiple times)</param>
+        /// <param name="optionalFilter">filefilter (only for importing Commander'currentPriceData Log multiple times)</param>
         /// <param name="optionalPath">preset for the import path. Also taken by the FolderDialog if importInfo is set</param>
         /// <param name="RNData">causes to look for some files in the "/data/" subdirectory (for importing old RN data) </param>
         /// <returns></returns>
@@ -459,7 +459,7 @@ namespace IBE
 
                         if (importFlags.HasFlag(enImportTypes.RN_CommandersLog))
                         {
-                            // import the Commander's Log from the old RN files
+                            // import the Commander'currentPriceData Log from the old RN files
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 0, Total = 0 });
                             string[] files;
                             string Filter;

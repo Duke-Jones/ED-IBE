@@ -66,7 +66,7 @@ namespace CodeProject.Win32API.Hook
 			this.wParam = wParam;
 			this.lParam = lParam;
 
-			// cache the window's class name
+			// cache the window'currentPriceData class name
 			StringBuilder sb = new StringBuilder();
 			sb.Capacity = 256;
 			USER32.GetClassName(wParam, sb, 256);

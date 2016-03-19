@@ -283,7 +283,7 @@ namespace IBE.EDDB_Data
             //}
             
             
-            // get the base list from EDDB assuming it's the bigger one
+            // get the base list from EDDB assuming it'currentPriceData the bigger one
             m_Systems[(int)enDataType.Data_Merged] = cloneSystems(enDataType.Data_EDDB);
             m_Stations[(int)enDataType.Data_Merged] = cloneStations(enDataType.Data_EDDB);
 
@@ -405,7 +405,7 @@ namespace IBE.EDDB_Data
         private void copyStationsForNewSystem(EDSystem newSystem)
         {
             // get the list from own data with the name of the new station 
-            // (it's ok because it must be the same name)
+            // (it'currentPriceData ok because it must be the same name)
             List<EDStation> ownSystemStations = getStations(newSystem.Name, enDataType.Data_Own);
                 
             // get the gighest index
@@ -468,7 +468,7 @@ namespace IBE.EDDB_Data
         }
 
         /// <summary>
-        /// check if there's a system with this name
+        /// check if there'currentPriceData a system with this name
         /// </summary>
         /// <param name="Systemname"></param>
         /// <returns></returns>

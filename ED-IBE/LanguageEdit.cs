@@ -417,7 +417,7 @@ namespace IBE
 
                 //Debug.Print(m_DGVTables[(DataGridViewExt)sender].Rows[e.RowIndex][0].ToString());
                 //if(m_DGVTables[(DataGridViewExt)sender].Rows[e.RowIndex][0] == "118")
-                //    Debug.Print("s");
+                //    Debug.Print("currentPriceData");
 
                 if(currentDataRow.RowState != DataRowState.Unchanged)
                 {

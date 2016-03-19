@@ -136,6 +136,13 @@
     <Compile Include="Brainerous Pixeltest\EBPixeltest.Designer.cs">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
     </Compile>
+    <Compile Include="EDDN\EDDNView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EDDN\EDDNView.Designer.cs">
+      <DependentUpon>EDDNView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EDDN\EDDNRecievedArgs.cs" />
     <Compile Include="Enums and Utility Classes\Settings\STA_INIFile.cs" />
     <Compile Include="Enums and Utility Classes\TabControlExt.cs">
       <SubType>Component</SubType>
@@ -203,8 +210,8 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
-    <Compile Include="EDDN\Schema_v1.cs" />
-    <Compile Include="EDDN\Schema_v2.cs" />
+    <Compile Include="EDDN\EDDNSchema_v1.cs" />
+    <Compile Include="EDDN\EDDNSchema_v2.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -220,7 +227,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dsCommodities.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Enums and Utility Classes\EddnPublisherVersionStats.cs" />
+    <Compile Include="EDDN\EDDNPublisherVersionStats.cs" />
     <Compile Include="Enums and Utility Classes\FileSaver.cs" />
     <Compile Include="Enums and Utility Classes\InputBox.cs" />
     <Compile Include="Enums and Utility Classes\ObjectCompare.cs" />
@@ -318,6 +325,7 @@
     <Compile Include="MainTabs\tabPriceAnalysis.designer.cs">
       <DependentUpon>tabPriceAnalysis.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlausibiltyChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressView.cs">
       <SubType>Form</SubType>
@@ -371,6 +379,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Content Include="Data\_readme_ifmissing.txt" />
+    <Content Include="Resources\green-led-off-md.png" />
+    <Content Include="Resources\green-led-on-md.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -386,6 +396,9 @@
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EDDN\EDDNView.resx">
+      <DependentUpon>EDDNView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\DataGridViewSettings.resx">
       <DependentUpon>DataGridViewSettings.cs</DependentUpon>

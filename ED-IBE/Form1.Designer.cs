@@ -58,24 +58,8 @@
             this.directDBAccessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createJumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabEDDN = new System.Windows.Forms.TabPage();
-            this.label83 = new System.Windows.Forms.Label();
-            this.lbEddnImplausible = new System.Windows.Forms.ListBox();
-            this.tbEddnStats = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cbEDDNAutoListen = new System.Windows.Forms.CheckBox();
-            this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
-            this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
-            this.bPurgeAllEddnData = new System.Windows.Forms.Button();
-            this.button17 = new System.Windows.Forms.Button();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.checkboxImportEDDN = new System.Windows.Forms.CheckBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.cmdStopEDDNListening = new System.Windows.Forms.Button();
-            this.tbEDDNOutput = new System.Windows.Forms.TextBox();
-            this.button15 = new System.Windows.Forms.Button();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabWebserver = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtWebserverPort = new System.Windows.Forms.TextBox();
@@ -236,15 +220,12 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.eDDNInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.msMainMenu.SuspendLayout();
-            this.tabEDDN.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabOCRGroup.SuspendLayout();
@@ -319,7 +300,7 @@
             // cmdLoadCurrentSystem
             // 
             this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(963, 69);
+            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(1000, 69);
             this.cmdLoadCurrentSystem.Name = "cmdLoadCurrentSystem";
             this.cmdLoadCurrentSystem.Size = new System.Drawing.Size(148, 21);
             this.cmdLoadCurrentSystem.TabIndex = 60;
@@ -372,7 +353,7 @@
             // 
             this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(759, 52);
+            this.label45.Location = new System.Drawing.Point(796, 52);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(91, 13);
             this.label45.TabIndex = 10;
@@ -381,7 +362,7 @@
             // tbCurrentStationinfoFromLogs
             // 
             this.tbCurrentStationinfoFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(856, 49);
+            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(893, 49);
             this.tbCurrentStationinfoFromLogs.Name = "tbCurrentStationinfoFromLogs";
             this.tbCurrentStationinfoFromLogs.ReadOnly = true;
             this.tbCurrentStationinfoFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -391,7 +372,7 @@
             // 
             this.label37.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(769, 31);
+            this.label37.Location = new System.Drawing.Point(806, 31);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(81, 13);
             this.label37.TabIndex = 8;
@@ -400,7 +381,7 @@
             // tbCurrentSystemFromLogs
             // 
             this.tbCurrentSystemFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(856, 28);
+            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(893, 28);
             this.tbCurrentSystemFromLogs.Name = "tbCurrentSystemFromLogs";
             this.tbCurrentSystemFromLogs.ReadOnly = true;
             this.tbCurrentSystemFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -415,7 +396,7 @@
             this.settingsToolStripMenuItem});
             this.msMainMenu.Location = new System.Drawing.Point(0, 0);
             this.msMainMenu.Name = "msMainMenu";
-            this.msMainMenu.Size = new System.Drawing.Size(1117, 24);
+            this.msMainMenu.Size = new System.Drawing.Size(1154, 24);
             this.msMainMenu.TabIndex = 61;
             this.msMainMenu.Text = "menuStrip1";
             // 
@@ -430,7 +411,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // dataToolStripMenuItem
@@ -486,213 +467,28 @@
             this.createJumpToolStripMenuItem.Text = "create Jump";
             this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
             // 
-            // tabEDDN
+            // settingsToolStripMenuItem
             // 
-            this.tabEDDN.Controls.Add(this.label83);
-            this.tabEDDN.Controls.Add(this.lbEddnImplausible);
-            this.tabEDDN.Controls.Add(this.tbEddnStats);
-            this.tabEDDN.Controls.Add(this.groupBox2);
-            this.tabEDDN.Location = new System.Drawing.Point(4, 22);
-            this.tabEDDN.Name = "tabEDDN";
-            this.tabEDDN.Size = new System.Drawing.Size(1104, 606);
-            this.tabEDDN.TabIndex = 7;
-            this.tabEDDN.Text = "EDDN";
-            this.tabEDDN.UseVisualStyleBackColor = true;
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem1,
+            this.eDDNInterfaceToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
             // 
-            // label83
+            // settingsToolStripMenuItem1
             // 
-            this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(6, 385);
-            this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(76, 13);
-            this.label83.TabIndex = 6;
-            this.label83.Text = "Rejected Data";
-            // 
-            // lbEddnImplausible
-            // 
-            this.lbEddnImplausible.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbEddnImplausible.FormattingEnabled = true;
-            this.lbEddnImplausible.HorizontalScrollbar = true;
-            this.lbEddnImplausible.Location = new System.Drawing.Point(3, 401);
-            this.lbEddnImplausible.Name = "lbEddnImplausible";
-            this.lbEddnImplausible.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbEddnImplausible.Size = new System.Drawing.Size(1073, 186);
-            this.lbEddnImplausible.TabIndex = 2;
-            // 
-            // tbEddnStats
-            // 
-            this.tbEddnStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbEddnStats.Location = new System.Drawing.Point(459, 3);
-            this.tbEddnStats.Multiline = true;
-            this.tbEddnStats.Name = "tbEddnStats";
-            this.tbEddnStats.Size = new System.Drawing.Size(617, 379);
-            this.tbEddnStats.TabIndex = 1;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.cbEDDNAutoListen);
-            this.groupBox2.Controls.Add(this.cbSpoolImplausibleToFile);
-            this.groupBox2.Controls.Add(this.cbSpoolEddnToFile);
-            this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
-            this.groupBox2.Controls.Add(this.button17);
-            this.groupBox2.Controls.Add(this.label28);
-            this.groupBox2.Controls.Add(this.label27);
-            this.groupBox2.Controls.Add(this.label25);
-            this.groupBox2.Controls.Add(this.checkboxImportEDDN);
-            this.groupBox2.Controls.Add(this.label24);
-            this.groupBox2.Controls.Add(this.cmdStopEDDNListening);
-            this.groupBox2.Controls.Add(this.tbEDDNOutput);
-            this.groupBox2.Controls.Add(this.button15);
-            this.groupBox2.Location = new System.Drawing.Point(3, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(450, 379);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Listen for EDDN Events";
-            // 
-            // cbEDDNAutoListen
-            // 
-            this.cbEDDNAutoListen.AutoSize = true;
-            this.cbEDDNAutoListen.Location = new System.Drawing.Point(10, 67);
-            this.cbEDDNAutoListen.Name = "cbEDDNAutoListen";
-            this.cbEDDNAutoListen.Size = new System.Drawing.Size(187, 17);
-            this.cbEDDNAutoListen.TabIndex = 15;
-            this.cbEDDNAutoListen.Text = "autostart listening on program start";
-            this.cbEDDNAutoListen.UseVisualStyleBackColor = true;
-            this.cbEDDNAutoListen.CheckedChanged += new System.EventHandler(this.cbEDDNAutoListen_CheckedChanged);
-            // 
-            // cbSpoolImplausibleToFile
-            // 
-            this.cbSpoolImplausibleToFile.AutoSize = true;
-            this.cbSpoolImplausibleToFile.Location = new System.Drawing.Point(10, 50);
-            this.cbSpoolImplausibleToFile.Name = "cbSpoolImplausibleToFile";
-            this.cbSpoolImplausibleToFile.Size = new System.Drawing.Size(208, 17);
-            this.cbSpoolImplausibleToFile.TabIndex = 14;
-            this.cbSpoolImplausibleToFile.Text = "spool implausible to EddnImpOutput.txt";
-            this.cbSpoolImplausibleToFile.UseVisualStyleBackColor = true;
-            this.cbSpoolImplausibleToFile.CheckedChanged += new System.EventHandler(this.cbSpoolImplausibleToFile_CheckedChanged);
-            // 
-            // cbSpoolEddnToFile
-            // 
-            this.cbSpoolEddnToFile.AutoSize = true;
-            this.cbSpoolEddnToFile.Location = new System.Drawing.Point(10, 34);
-            this.cbSpoolEddnToFile.Name = "cbSpoolEddnToFile";
-            this.cbSpoolEddnToFile.Size = new System.Drawing.Size(137, 17);
-            this.cbSpoolEddnToFile.TabIndex = 13;
-            this.cbSpoolEddnToFile.Text = "spool to EddnOutput.txt";
-            this.cbSpoolEddnToFile.UseVisualStyleBackColor = true;
-            this.cbSpoolEddnToFile.CheckedChanged += new System.EventHandler(this.cbSpoolEddnToFile_CheckedChanged);
-            // 
-            // bPurgeAllEddnData
-            // 
-            this.bPurgeAllEddnData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 348);
-            this.bPurgeAllEddnData.Name = "bPurgeAllEddnData";
-            this.bPurgeAllEddnData.Size = new System.Drawing.Size(129, 23);
-            this.bPurgeAllEddnData.TabIndex = 12;
-            this.bPurgeAllEddnData.Text = "Purge all EDDN data";
-            this.bPurgeAllEddnData.UseVisualStyleBackColor = true;
-            this.bPurgeAllEddnData.Click += new System.EventHandler(this.cmdPurgeEDDNData);
-            // 
-            // button17
-            // 
-            this.button17.Location = new System.Drawing.Point(283, 161);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(161, 23);
-            this.button17.TabIndex = 11;
-            this.button17.Text = "Flush all EDDN data to UI";
-            this.button17.UseVisualStyleBackColor = true;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(7, 142);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(280, 13);
-            this.label28.TabIndex = 10;
-            this.label28.Text = "No idea how much data this can collect before collapsing.";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(7, 124);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(241, 13);
-            this.label27.TabIndex = 9;
-            this.label27.Text = "Obsolete Information checking will be suspended;";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(7, 107);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(271, 13);
-            this.label25.TabIndex = 7;
-            this.label25.Text = "The UI will be updated once every ten seconds at most;";
-            // 
-            // checkboxImportEDDN
-            // 
-            this.checkboxImportEDDN.AutoSize = true;
-            this.checkboxImportEDDN.Checked = true;
-            this.checkboxImportEDDN.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxImportEDDN.Location = new System.Drawing.Point(10, 18);
-            this.checkboxImportEDDN.Name = "checkboxImportEDDN";
-            this.checkboxImportEDDN.Size = new System.Drawing.Size(221, 17);
-            this.checkboxImportEDDN.TabIndex = 6;
-            this.checkboxImportEDDN.Text = "import received data into RegulatedNoise";
-            this.checkboxImportEDDN.UseVisualStyleBackColor = true;
-            this.checkboxImportEDDN.CheckedChanged += new System.EventHandler(this.checkboxImportEDDN_CheckedChanged);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 174);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(64, 13);
-            this.label24.TabIndex = 5;
-            this.label24.Text = "Raw Output";
-            // 
-            // cmdStopEDDNListening
-            // 
-            this.cmdStopEDDNListening.Location = new System.Drawing.Point(351, 127);
-            this.cmdStopEDDNListening.Name = "cmdStopEDDNListening";
-            this.cmdStopEDDNListening.Size = new System.Drawing.Size(93, 23);
-            this.cmdStopEDDNListening.TabIndex = 4;
-            this.cmdStopEDDNListening.Text = "Stop Listening";
-            this.cmdStopEDDNListening.UseVisualStyleBackColor = true;
-            this.cmdStopEDDNListening.Click += new System.EventHandler(this.cmdStopEDDNListening_Click);
-            // 
-            // tbEDDNOutput
-            // 
-            this.tbEDDNOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbEDDNOutput.Location = new System.Drawing.Point(6, 190);
-            this.tbEDDNOutput.Multiline = true;
-            this.tbEDDNOutput.Name = "tbEDDNOutput";
-            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 152);
-            this.tbEDDNOutput.TabIndex = 3;
-            // 
-            // button15
-            // 
-            this.button15.Location = new System.Drawing.Point(351, 65);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(93, 23);
-            this.button15.TabIndex = 2;
-            this.button15.Text = "Start Listening";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
+            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.settingsToolStripMenuItem1.Text = "Settings";
+            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
             // 
             // tabWebserver
             // 
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1104, 606);
+            this.tabWebserver.Size = new System.Drawing.Size(1141, 638);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -873,7 +669,7 @@
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1104, 606);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 638);
             this.tabOCRGroup.TabIndex = 11;
             this.tabOCRGroup.Text = "Market Data Interface";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
@@ -1040,7 +836,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1104, 606);
+            this.tabSystemData.Size = new System.Drawing.Size(1141, 638);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -2123,7 +1919,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1104, 606);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 638);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -2218,7 +2014,7 @@
             this.lblUpdateDetail.Multiline = true;
             this.lblUpdateDetail.Name = "lblUpdateDetail";
             this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lblUpdateDetail.Size = new System.Drawing.Size(692, 209);
+            this.lblUpdateDetail.Size = new System.Drawing.Size(729, 241);
             this.lblUpdateDetail.TabIndex = 39;
             // 
             // cmdDonate
@@ -2227,7 +2023,7 @@
             this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(838, 366);
+            this.cmdDonate.Location = new System.Drawing.Point(875, 366);
             this.cmdDonate.Name = "cmdDonate";
             this.cmdDonate.Size = new System.Drawing.Size(161, 43);
             this.cmdDonate.TabIndex = 37;
@@ -2239,7 +2035,7 @@
             this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label42.ForeColor = System.Drawing.Color.Green;
-            this.label42.Location = new System.Drawing.Point(749, 245);
+            this.label42.Location = new System.Drawing.Point(786, 245);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(352, 139);
             this.label42.TabIndex = 38;
@@ -2260,7 +2056,7 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(10, 523);
+            this.panel2.Location = new System.Drawing.Point(28, 555);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1079, 77);
             this.panel2.TabIndex = 33;
@@ -2381,7 +2177,7 @@
             this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BackgroundSet.AutoSize = true;
             this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackgroundSet.Location = new System.Drawing.Point(1064, 69);
+            this.BackgroundSet.Location = new System.Drawing.Point(1101, 69);
             this.BackgroundSet.Name = "BackgroundSet";
             this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
             this.BackgroundSet.TabIndex = 30;
@@ -2393,7 +2189,7 @@
             this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ForegroundSet.AutoSize = true;
             this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForegroundSet.Location = new System.Drawing.Point(1064, 31);
+            this.ForegroundSet.Location = new System.Drawing.Point(1101, 31);
             this.ForegroundSet.Name = "ForegroundSet";
             this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
             this.ForegroundSet.TabIndex = 29;
@@ -2403,7 +2199,7 @@
             // button20
             // 
             this.button20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button20.Location = new System.Drawing.Point(941, 101);
+            this.button20.Location = new System.Drawing.Point(978, 101);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(148, 44);
             this.button20.TabIndex = 28;
@@ -2415,7 +2211,7 @@
             // 
             this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(957, 71);
+            this.label47.Location = new System.Drawing.Point(994, 71);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(98, 13);
             this.label47.TabIndex = 27;
@@ -2425,7 +2221,7 @@
             // 
             this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(957, 32);
+            this.label46.Location = new System.Drawing.Point(994, 32);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(94, 13);
             this.label46.TabIndex = 26;
@@ -2435,7 +2231,7 @@
             // 
             this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbBackgroundColour.Location = new System.Drawing.Point(1057, 63);
+            this.pbBackgroundColour.Location = new System.Drawing.Point(1094, 63);
             this.pbBackgroundColour.Name = "pbBackgroundColour";
             this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbBackgroundColour.TabIndex = 25;
@@ -2446,7 +2242,7 @@
             // 
             this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbForegroundColour.Location = new System.Drawing.Point(1057, 25);
+            this.pbForegroundColour.Location = new System.Drawing.Point(1094, 25);
             this.pbForegroundColour.Name = "pbForegroundColour";
             this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbForegroundColour.TabIndex = 24;
@@ -2504,35 +2300,26 @@
             this.tabCtrlMain.Controls.Add(this.tabSystemData);
             this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
             this.tabCtrlMain.Controls.Add(this.tabWebserver);
-            this.tabCtrlMain.Controls.Add(this.tabEDDN);
             this.tabCtrlMain.Location = new System.Drawing.Point(3, 72);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1112, 632);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 664);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
-            // settingsToolStripMenuItem
+            // eDDNInterfaceToolStripMenuItem
             // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem1});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
-            // settingsToolStripMenuItem1
-            // 
-            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.settingsToolStripMenuItem1.Text = "Settings";
-            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
+            this.eDDNInterfaceToolStripMenuItem.Name = "eDDNInterfaceToolStripMenuItem";
+            this.eDDNInterfaceToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.eDDNInterfaceToolStripMenuItem.Text = "EDDN-Interface";
+            this.eDDNInterfaceToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1117, 705);
+            this.ClientSize = new System.Drawing.Size(1154, 737);
             this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
             this.Controls.Add(this.label53);
@@ -2558,10 +2345,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
-            this.tabEDDN.ResumeLayout(false);
-            this.tabEDDN.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -2614,24 +2397,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
-        private System.Windows.Forms.TabPage tabEDDN;
-        private System.Windows.Forms.Label label83;
-        private System.Windows.Forms.ListBox lbEddnImplausible;
-        private System.Windows.Forms.TextBox tbEddnStats;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox cbEDDNAutoListen;
-        private System.Windows.Forms.CheckBox cbSpoolImplausibleToFile;
-        private System.Windows.Forms.CheckBox cbSpoolEddnToFile;
-        private System.Windows.Forms.Button bPurgeAllEddnData;
-        private System.Windows.Forms.Button button17;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.CheckBox checkboxImportEDDN;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Button cmdStopEDDNListening;
-        public System.Windows.Forms.TextBox tbEDDNOutput;
-        private System.Windows.Forms.Button button15;
         private System.Windows.Forms.TabPage tabWebserver;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtWebserverPort;
@@ -2799,6 +2564,7 @@
         private System.Windows.Forms.ToolStripMenuItem directDBAccessToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem eDDNInterfaceToolStripMenuItem;
     }
 }
 

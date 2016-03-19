@@ -37,7 +37,7 @@ namespace IBE.SQL
         }
 
         /// <summary>
-        /// starts the database process if it's not running
+        /// starts the database process if it'currentPriceData not running
         /// </summary>
         /// <param name="Parameter"></param>
         public DBProcess(DBProcessParams Parameter)

@@ -3,7 +3,7 @@
 // Handling DBNulls
 // 
 // Reading and writing values to the DB has always been a bit cumbersome when you had to take care of nullable types and 
-// DBNull values. Here’s a way to make it easy. Based on this post by Peter Johnson and this post by Adam Anderson I 
+// DBNull values. Here’currentPriceData a way to make it easy. Based on this post by Peter Johnson and this post by Adam Anderson I 
 // gathered a couple of ideas and combined them to make a completely generic class that will handle DBNulls for both 
 // reads and writes, as well as handling nullable types. Let me present the code, I’ll go over it afterwards:
 using System;

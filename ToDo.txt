@@ -1,5 +1,8 @@
 
 
+
+   * first version of a reactivated EDDN interface (needs still more testing)
+-------------------------------------------------------------------------------------         
    * shift settings-tab from a tab to an extra window
 -------------------------------------------------------------------------------------         
 v0.1.5
