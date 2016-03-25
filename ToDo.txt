@@ -1,4 +1,10 @@
-
+* im und export muss source berücksichtigen
+* anzeige der quelle in den preisdaten
+* filter für die quelle der preisdaten
+* filter für das alter der preise
+* purge data
+* purge history data
+* senden von eddn-daten
 
 
    * fixed a problem in VS designer when showing derived forms
