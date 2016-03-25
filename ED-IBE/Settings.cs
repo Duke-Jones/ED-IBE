@@ -107,27 +107,6 @@ namespace IBE
             }
         }
 
-        private static ObjectDirectory PurgeOldDataFromDirectory(ObjectDirectory directory, DateTime deadline)
-        {
-            ObjectDirectory newDirectory;
-            
-            if(directory.GetType() == typeof(StationDirectory))
-                newDirectory = new StationDirectory();
-            else
-                newDirectory = new CommodityDirectory();
-
-            foreach (var x in directory)
-            {
-                var newList = new List<CsvRow>();
-                foreach (var y in x.Value)
-                    if (y.SampleDate >= deadline)
-                        newList.Add(y);
-
-                if(newList.Count > 0)
-                    newDirectory.Add(x.Key, newList);
-            }
-            return newDirectory;
-        }
     }
 }
 

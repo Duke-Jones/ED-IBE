@@ -253,7 +253,7 @@ namespace IBE
         public static GUIColors                         Colors;
         public static CompanionInterface                CompanionIO;
         public static ExternalDataInterface             ExternalData;
-        public static DBConnector                       DBCon;
+        public static DBConnector                       DBCon = null;
         public static STA.Settings.INIFile              IniFile;
         private static DBProcess                        EliteDBProcess;
         public static CommandersLog                     CommandersLog;

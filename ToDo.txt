@@ -1,4 +1,9 @@
 
+
+
+   * fixed a problem in VS designer when showing derived forms
+   * removed a few unused classes
+-------------------------------------------------------------------------------------         
    * fixed screen order for messagebox "change AppConfig.xml ?"
    * push all splash infos to global log
    * removed GUID from logfile names

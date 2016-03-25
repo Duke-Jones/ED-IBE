@@ -12,7 +12,6 @@ using System.Globalization;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
 using System.Reflection;
-using EdClasses.ClassDefinitions;
 using IBE.Enums_and_Utility_Classes;
 using Microsoft.Win32;
 using IBE.EDDB_Data;
@@ -70,9 +69,6 @@ namespace IBE
         private string _LoggedLocation      = ID_NOT_SET;
         private string _LoggedVisited       = ID_NOT_SET;
         private string _LoggedMarketData    = ID_NOT_SET;
-
-        //Implementation of the new classlibrary
-        public EdSystem CurrentSystem;
 
         private BindingSource _bs_Stations                              = new BindingSource();
         private BindingSource _bs_StationsFrom                          = new BindingSource();

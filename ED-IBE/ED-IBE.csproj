@@ -130,7 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfig.cs" />
+    <Compile Include="Elite Dangerous Specifics\AppConfig.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,7 +256,6 @@
       <DependentUpon>frmDataIO.cs</DependentUpon>
     </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
-    <Compile Include="CommodityDirectory.cs" />
     <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN\EDDNCommunicator.cs" />
     <Compile Include="MainTabs\CommandersLog.cs" />
@@ -370,9 +369,6 @@
     </Compile>
     <Compile Include="SQL\EliteDBIO.cs" />
     <Compile Include="SQL\DBProcess.cs" />
-    <Compile Include="Station.cs" />
-    <Compile Include="ObjectDirectory.cs" />
-    <Compile Include="StationDirectory.cs" />
     <Compile Include="Updater.cs" />
     <Compile Include="Webserver.cs" />
     <Compile Include="Web\CompanionInterface.cs" />
@@ -978,12 +974,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EdClasses\EdClasses.csproj">
-      <Project>{236a934b-5543-4751-baa2-018dfa825271}</Project>
-      <Name>EdClasses</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
