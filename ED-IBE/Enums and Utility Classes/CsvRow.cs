@@ -22,6 +22,7 @@ namespace IBE.Enums_and_Utility_Classes
         public String       SupplyLevel;
         public DateTime     SampleDate;
         public String       SourceFileName;
+        public String       DataSource;
 
         /// <summary>
         /// default constructor
@@ -57,7 +58,8 @@ namespace IBE.Enums_and_Utility_Classes
                         (Supply != 0 ? Supply.ToString(CultureInfo.InvariantCulture) : "") + ";" +
                         SupplyLevel + ";" +
                         SampleDate.ToString("s", CultureInfo.CurrentCulture).Substring(0, 16) + ";" +
-                        SourceFileName;
+                        SourceFileName + ";" +
+                        DataSource;
         }
 
         /// <summary>
@@ -89,6 +91,12 @@ namespace IBE.Enums_and_Utility_Classes
                         SourceFileName  = Parts[10];
                     else
                         SourceFileName  = "";
+
+                    if(Parts.Count() > 11)
+                        DataSource  = Parts[10];
+                    else
+                        DataSource  = "";
+                    
                 }
             }
             catch (Exception ex)

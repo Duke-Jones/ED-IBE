@@ -5,20 +5,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema Elite_DB
+-- Schema elite_db
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `Elite_DB` ;
+DROP SCHEMA IF EXISTS `elite_db` ;
 
 -- -----------------------------------------------------
--- Schema Elite_DB
+-- Schema elite_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `Elite_DB` DEFAULT CHARACTER SET utf8 ;
-USE `Elite_DB` ;
+CREATE SCHEMA IF NOT EXISTS `elite_db` DEFAULT CHARACTER SET utf8 ;
+USE `elite_db` ;
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbAllegiance`
+-- Table `elite_db`.`tbAllegiance`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbAllegiance` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbAllegiance` (
   `id` INT NOT NULL,
   `allegiance` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -26,9 +26,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbEconomy`
+-- Table `elite_db`.`tbEconomy`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEconomy` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbEconomy` (
   `id` INT NOT NULL,
   `economy` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -36,9 +36,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbGovernment`
+-- Table `elite_db`.`tbGovernment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbGovernment` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbGovernment` (
   `id` INT NOT NULL,
   `government` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -46,9 +46,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbState`
+-- Table `elite_db`.`tbState`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbState` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbState` (
   `id` INT NOT NULL,
   `state` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -56,9 +56,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbSecurity`
+-- Table `elite_db`.`tbSecurity`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSecurity` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbSecurity` (
   `id` INT NOT NULL,
   `security` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -66,9 +66,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbPower`
+-- Table `elite_db`.`tbPower`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPower` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbPower` (
   `id` INT NOT NULL,
   `power` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -76,9 +76,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbPowerState`
+-- Table `elite_db`.`tbPowerState`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPowerState` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbPowerState` (
   `id` INT NOT NULL,
   `powerstate` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -86,9 +86,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbSystems`
+-- Table `elite_db`.`tbSystems`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbSystems` (
   `id` INT NOT NULL,
   `systemname` VARCHAR(80) NOT NULL,
   `x` DOUBLE NULL,
@@ -121,46 +121,46 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems` (
   INDEX `fk_tbSystems_tbPowerState1_idx` (`PowerState_id` ASC),
   CONSTRAINT `fk_tbSystems_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
-    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
+    REFERENCES `elite_db`.`tbAllegiance` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbEconomy1`
     FOREIGN KEY (`primary_economy_id`)
-    REFERENCES `Elite_DB`.`tbEconomy` (`id`)
+    REFERENCES `elite_db`.`tbEconomy` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbGovernment1`
     FOREIGN KEY (`government_id`)
-    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
+    REFERENCES `elite_db`.`tbGovernment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbState1`
     FOREIGN KEY (`state_id`)
-    REFERENCES `Elite_DB`.`tbState` (`id`)
+    REFERENCES `elite_db`.`tbState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbSecurity1`
     FOREIGN KEY (`security_id`)
-    REFERENCES `Elite_DB`.`tbSecurity` (`id`)
+    REFERENCES `elite_db`.`tbSecurity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbPower1`
     FOREIGN KEY (`Power_id`)
-    REFERENCES `Elite_DB`.`tbPower` (`id`)
+    REFERENCES `elite_db`.`tbPower` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbPowerState1`
     FOREIGN KEY (`PowerState_id`)
-    REFERENCES `Elite_DB`.`tbPowerState` (`id`)
+    REFERENCES `elite_db`.`tbPowerState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbStationType`
+-- Table `elite_db`.`tbStationType`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStationType` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbStationType` (
   `id` INT NOT NULL,
   `stationtype` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -168,9 +168,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbStations`
+-- Table `elite_db`.`tbStations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbStations` (
   `id` INT NOT NULL,
   `stationname` VARCHAR(80) NOT NULL,
   `system_id` INT NOT NULL,
@@ -206,36 +206,36 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations` (
   INDEX `idx_tbStations_Stationname` (`stationname` ASC),
   CONSTRAINT `fk_tbStations_tbSystems`
     FOREIGN KEY (`system_id`)
-    REFERENCES `Elite_DB`.`tbSystems` (`id`)
+    REFERENCES `elite_db`.`tbSystems` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
-    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
+    REFERENCES `elite_db`.`tbAllegiance` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbGovernment1`
     FOREIGN KEY (`government_id`)
-    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
+    REFERENCES `elite_db`.`tbGovernment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbState1`
     FOREIGN KEY (`state_id`)
-    REFERENCES `Elite_DB`.`tbState` (`id`)
+    REFERENCES `elite_db`.`tbState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbStationType1`
     FOREIGN KEY (`stationtype_id`)
-    REFERENCES `Elite_DB`.`tbStationType` (`id`)
+    REFERENCES `elite_db`.`tbStationType` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCategory`
+-- Table `elite_db`.`tbCategory`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCategory` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCategory` (
   `id` INT NOT NULL,
   `category` VARCHAR(80) NOT NULL,
   `loccategory` VARCHAR(80) NOT NULL,
@@ -244,9 +244,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCommodity`
+-- Table `elite_db`.`tbCommodity`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodity` (
   `id` INT NOT NULL,
   `commodity` VARCHAR(80) NOT NULL,
   `loccommodity` VARCHAR(80) NULL,
@@ -265,16 +265,16 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity` (
   INDEX `fk_tbCommodities_tbCategoriy1_idx` (`category_id` ASC),
   CONSTRAINT `fk_tbCommodities_tbCategoriy1`
     FOREIGN KEY (`category_id`)
-    REFERENCES `Elite_DB`.`tbCategory` (`id`)
+    REFERENCES `elite_db`.`tbCategory` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbSource`
+-- Table `elite_db`.`tbSource`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSource` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbSource` (
   `id` INT NOT NULL,
   `source` VARCHAR(80) NULL,
   PRIMARY KEY (`id`))
@@ -282,9 +282,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbEconomyLevel`
+-- Table `elite_db`.`tbEconomyLevel`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEconomyLevel` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbEconomyLevel` (
   `id` INT NOT NULL,
   `level` VARCHAR(80) NOT NULL,
   `loclevel` VARCHAR(80) NULL,
@@ -293,10 +293,10 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCommodityData`
+-- Table `elite_db`.`tbCommodityData`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityData` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityData` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `station_id` INT NOT NULL,
   `commodity_id` INT NOT NULL,
   `Sell` INT NULL,
@@ -315,37 +315,37 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityData` (
   INDEX `fk_tbStationCommodity_tbEconomyLevel2_idx` (`SupplyLevel` ASC),
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbStations1`
     FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
+    REFERENCES `elite_db`.`tbCommodity` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStationCommodity_tbSources1`
     FOREIGN KEY (`Sources_id`)
-    REFERENCES `Elite_DB`.`tbSource` (`id`)
+    REFERENCES `elite_db`.`tbSource` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStationCommodity_tbEconomyLevel1`
     FOREIGN KEY (`DemandLevel`)
-    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    REFERENCES `elite_db`.`tbEconomyLevel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStationCommodity_tbEconomyLevel2`
     FOREIGN KEY (`SupplyLevel`)
-    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    REFERENCES `elite_db`.`tbEconomyLevel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbPriceHistory`
+-- Table `elite_db`.`tbPriceHistory`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPriceHistory` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbPriceHistory` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `station_id` INT NOT NULL,
   `commodity_id` INT NOT NULL,
   `Sell` INT NULL,
@@ -354,46 +354,46 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbPriceHistory` (
   `DemandLevel` INT NULL,
   `Supply` INT NULL,
   `SupplyLevel` INT NULL,
-  `Source_id` INT NOT NULL,
-  `timestamp` INT NULL,
+  `Sources_id` INT NOT NULL,
+  `timestamp` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_tbStations_has_tbCommodities1_tbCommodities1_idx` (`commodity_id` ASC),
   INDEX `fk_tbStations_has_tbCommodities1_tbStations1_idx` (`station_id` ASC),
-  INDEX `fk_tbPriceHistory_tbSources1_idx` (`Source_id` ASC),
+  INDEX `fk_tbPriceHistory_tbSources1_idx` (`Sources_id` ASC),
   INDEX `fk_tbPriceHistory_tbEconomyLevel1_idx` (`DemandLevel` ASC),
   INDEX `fk_tbPriceHistory_tbEconomyLevel2_idx` (`SupplyLevel` ASC),
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbStations1`
     FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbCommodities1_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
+    REFERENCES `elite_db`.`tbCommodity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbPriceHistory_tbSources1`
-    FOREIGN KEY (`Source_id`)
-    REFERENCES `Elite_DB`.`tbSource` (`id`)
+    FOREIGN KEY (`Sources_id`)
+    REFERENCES `elite_db`.`tbSource` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbPriceHistory_tbEconomyLevel1`
     FOREIGN KEY (`DemandLevel`)
-    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    REFERENCES `elite_db`.`tbEconomyLevel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbPriceHistory_tbEconomyLevel2`
     FOREIGN KEY (`SupplyLevel`)
-    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    REFERENCES `elite_db`.`tbEconomyLevel` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbStationEconomy`
+-- Table `elite_db`.`tbStationEconomy`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStationEconomy` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbStationEconomy` (
   `station_id` INT NOT NULL,
   `economy_id` INT NOT NULL,
   PRIMARY KEY (`station_id`, `economy_id`),
@@ -401,21 +401,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStationEconomy` (
   INDEX `fk_tbStations_has_tbEconomy_tbStations1_idx` (`station_id` ASC),
   CONSTRAINT `fk_tbStations_has_tbEconomy_tbStations1`
     FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_has_tbEconomy_tbEconomy1`
     FOREIGN KEY (`economy_id`)
-    REFERENCES `Elite_DB`.`tbEconomy` (`id`)
+    REFERENCES `elite_db`.`tbEconomy` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbLanguage`
+-- Table `elite_db`.`tbLanguage`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLanguage` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbLanguage` (
   `id` INT NOT NULL,
   `language` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -423,9 +423,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCommodityLocalization`
+-- Table `elite_db`.`tbCommodityLocalization`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityLocalization` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityLocalization` (
   `commodity_id` INT NOT NULL,
   `language_id` INT NOT NULL,
   `locname` VARCHAR(80) NOT NULL,
@@ -433,21 +433,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityLocalization` (
   INDEX `fk_tbLocalization_tbLanguage1_idx` (`language_id` ASC),
   CONSTRAINT `fk_tbLocalization_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
+    REFERENCES `elite_db`.`tbCommodity` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLocalization_tbLanguage1`
     FOREIGN KEY (`language_id`)
-    REFERENCES `Elite_DB`.`tbLanguage` (`id`)
+    REFERENCES `elite_db`.`tbLanguage` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCategoryLocalization`
+-- Table `elite_db`.`tbCategoryLocalization`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCategoryLocalization` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCategoryLocalization` (
   `category_id` INT NOT NULL,
   `language_id` INT NOT NULL,
   `locname` VARCHAR(80) NOT NULL,
@@ -455,21 +455,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCategoryLocalization` (
   INDEX `fk_tbLocalization_tbLanguage1_idx` (`language_id` ASC),
   CONSTRAINT `fk_tbLocalization_tbLanguage10`
     FOREIGN KEY (`language_id`)
-    REFERENCES `Elite_DB`.`tbLanguage` (`id`)
+    REFERENCES `elite_db`.`tbLanguage` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbCategoryLocalization_tbCategory1`
     FOREIGN KEY (`category_id`)
-    REFERENCES `Elite_DB`.`tbCategory` (`id`)
+    REFERENCES `elite_db`.`tbCategory` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbInitValue`
+-- Table `elite_db`.`tbInitValue`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbInitValue` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbInitValue` (
   `InitGroup` VARCHAR(80) NOT NULL,
   `InitKey` VARCHAR(80) NOT NULL,
   `InitValue` VARCHAR(1000) NULL,
@@ -478,9 +478,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbEventType`
+-- Table `elite_db`.`tbEventType`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbEventType` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbEventType` (
   `id` INT NOT NULL,
   `eventtype` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -488,9 +488,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCargoAction`
+-- Table `elite_db`.`tbCargoAction`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCargoAction` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCargoAction` (
   `id` INT NOT NULL,
   `cargoaction` VARCHAR(80) NOT NULL,
   PRIMARY KEY (`id`))
@@ -498,9 +498,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbLog`
+-- Table `elite_db`.`tbLog`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLog` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbLog` (
   `time` DATETIME NOT NULL,
   `system_id` INT NULL,
   `station_id` INT NULL,
@@ -520,66 +520,66 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLog` (
   PRIMARY KEY (`time`),
   CONSTRAINT `fk_tbLog_tbCommodities1`
     FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
+    REFERENCES `elite_db`.`tbCommodity` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbSystems1`
     FOREIGN KEY (`system_id`)
-    REFERENCES `Elite_DB`.`tbSystems` (`id`)
+    REFERENCES `elite_db`.`tbSystems` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbStations1`
     FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbLog_tbEventType1`
     FOREIGN KEY (`event_id`)
-    REFERENCES `Elite_DB`.`tbEventType` (`id`)
+    REFERENCES `elite_db`.`tbEventType` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbLog_tbCargoAction1`
     FOREIGN KEY (`cargoaction_id`)
-    REFERENCES `Elite_DB`.`tbCargoAction` (`id`)
+    REFERENCES `elite_db`.`tbCargoAction` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbVisitedSystems`
+-- Table `elite_db`.`tbVisitedSystems`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedSystems` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbVisitedSystems` (
   `system_id` INT NOT NULL,
   `time` DATETIME NOT NULL,
   PRIMARY KEY (`system_id`),
   CONSTRAINT `fk_tbSystems_tbVisitedSystems`
     FOREIGN KEY (`system_id`)
-    REFERENCES `Elite_DB`.`tbSystems` (`id`)
+    REFERENCES `elite_db`.`tbSystems` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbVisitedStations`
+-- Table `elite_db`.`tbVisitedStations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbVisitedStations` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbVisitedStations` (
   `station_id` INT NOT NULL,
   `time` DATETIME NOT NULL,
   PRIMARY KEY (`station_id`),
   CONSTRAINT `fk_tbStations_tbVisitedStations`
     FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbAttribute`
+-- Table `elite_db`.`tbAttribute`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbAttribute` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbAttribute` (
   `id` INT NOT NULL,
   `Attribute` VARCHAR(80) NULL,
   PRIMARY KEY (`id`))
@@ -587,9 +587,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCommodityClassification`
+-- Table `elite_db`.`tbCommodityClassification`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityClassification` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityClassification` (
   `id` INT UNSIGNED NOT NULL,
   `station_id` INT NOT NULL,
   `commodity_id` INT NOT NULL,
@@ -598,21 +598,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodityClassification` (
   INDEX `fk_tbCommodityClassification_tbCommodity1_idx` (`commodity_id` ASC),
   CONSTRAINT `fk_tbCommodityClassification_tbStations1`
     FOREIGN KEY (`station_id`)
-    REFERENCES `Elite_DB`.`tbStations` (`id`)
+    REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbCommodityClassification_tbCommodity1`
     FOREIGN KEY (`commodity_id`)
-    REFERENCES `Elite_DB`.`tbCommodity` (`id`)
+    REFERENCES `elite_db`.`tbCommodity` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbCommodity_has_Attribute`
+-- Table `elite_db`.`tbCommodity_has_Attribute`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity_has_Attribute` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodity_has_Attribute` (
   `tbAttribute_id` INT NOT NULL,
   `tbCommodityClassification_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`tbAttribute_id`, `tbCommodityClassification_id`),
@@ -620,21 +620,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbCommodity_has_Attribute` (
   INDEX `fk_tbCommodity_has_Attribute_tbCommodityClassification1_idx` (`tbCommodityClassification_id` ASC),
   CONSTRAINT `fk_tbCommodityAttribute_has_tbStationCommodity_tbCommodityAtt1`
     FOREIGN KEY (`tbAttribute_id`)
-    REFERENCES `Elite_DB`.`tbAttribute` (`id`)
+    REFERENCES `elite_db`.`tbAttribute` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbCommodity_has_Attribute_tbCommodityClassification1`
     FOREIGN KEY (`tbCommodityClassification_id`)
-    REFERENCES `Elite_DB`.`tbCommodityClassification` (`id`)
+    REFERENCES `elite_db`.`tbCommodityClassification` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbLevelLocalization`
+-- Table `elite_db`.`tbLevelLocalization`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLevelLocalization` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbLevelLocalization` (
   `economylevel_id` INT NOT NULL,
   `language_id` INT NOT NULL,
   `locname` VARCHAR(80) NOT NULL,
@@ -643,21 +643,21 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbLevelLocalization` (
   INDEX `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1_idx` (`economylevel_id` ASC),
   CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1`
     FOREIGN KEY (`economylevel_id`)
-    REFERENCES `Elite_DB`.`tbEconomyLevel` (`id`)
+    REFERENCES `elite_db`.`tbEconomyLevel` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbEconomyLevel_has_tbLanguage_tbLanguage1`
     FOREIGN KEY (`language_id`)
-    REFERENCES `Elite_DB`.`tbLanguage` (`id`)
+    REFERENCES `elite_db`.`tbLanguage` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmFilteredStations`
+-- Table `elite_db`.`tmFilteredStations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmFilteredStations` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmFilteredStations` (
   `System_id` INT NOT NULL,
   `Station_id` INT NOT NULL,
   `Distance` DOUBLE NULL,
@@ -669,9 +669,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmPA_AllCommodities`
+-- Table `elite_db`.`tmPA_AllCommodities`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_AllCommodities` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_AllCommodities` (
   `CommodityID` INT NOT NULL,
   `Commodity` VARCHAR(80) NULL,
   `Buy_SystemID` INT NULL,
@@ -694,9 +694,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmNeighbourStations`
+-- Table `elite_db`.`tmNeighbourStations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmNeighbourStations` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmNeighbourStations` (
   `System_ID_From` INT NULL,
   `Station_ID_From` INT NOT NULL,
   `Distance_From` DOUBLE NULL,
@@ -709,9 +709,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmPA_S2S_StationData`
+-- Table `elite_db`.`tmPA_S2S_StationData`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_S2S_StationData` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_StationData` (
   `Commodity_ID` INT NOT NULL,
   `Commodity` VARCHAR(80) NULL,
   `Buy` INT NULL,
@@ -728,9 +728,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmPA_S2S_BestTrips`
+-- Table `elite_db`.`tmPA_S2S_BestTrips`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_S2S_BestTrips` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_BestTrips` (
   `System_ID_1` INT NULL,
   `SystemName_1` VARCHAR(80) NULL,
   `Station_ID_1` INT NOT NULL,
@@ -750,9 +750,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmBestProfits`
+-- Table `elite_db`.`tmBestProfits`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmBestProfits` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmBestProfits` (
   `Station_Id_From` INT NOT NULL,
   `Station_Id_To` INT NOT NULL,
   `Max_Profit` INT NULL,
@@ -761,9 +761,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmPA_ByStation`
+-- Table `elite_db`.`tmPA_ByStation`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_ByStation` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_ByStation` (
   `Commodity_ID` INT NOT NULL,
   `Commodity` VARCHAR(80) NULL,
   `Buy` INT NULL,
@@ -782,9 +782,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tmPA_ByCommodity`
+-- Table `elite_db`.`tmPA_ByCommodity`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tmPA_ByCommodity` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_ByCommodity` (
   `System_ID` INT NULL,
   `System` VARCHAR(80) NULL,
   `Station_ID` INT NOT NULL,
@@ -802,9 +802,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbSystems_org`
+-- Table `elite_db`.`tbSystems_org`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems_org` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbSystems_org` (
   `id` INT NOT NULL,
   `systemname` VARCHAR(80) NOT NULL,
   `x` DOUBLE NULL,
@@ -837,46 +837,46 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbSystems_org` (
   INDEX `fk_tbSystems_tbPowerState1_idx` (`PowerState_id` ASC),
   CONSTRAINT `fk_tbSystems_tbAllegiance10`
     FOREIGN KEY (`allegiance_id`)
-    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
+    REFERENCES `elite_db`.`tbAllegiance` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbEconomy10`
     FOREIGN KEY (`primary_economy_id`)
-    REFERENCES `Elite_DB`.`tbEconomy` (`id`)
+    REFERENCES `elite_db`.`tbEconomy` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbGovernment10`
     FOREIGN KEY (`government_id`)
-    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
+    REFERENCES `elite_db`.`tbGovernment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbState10`
     FOREIGN KEY (`state_id`)
-    REFERENCES `Elite_DB`.`tbState` (`id`)
+    REFERENCES `elite_db`.`tbState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbSecurity10`
     FOREIGN KEY (`security_id`)
-    REFERENCES `Elite_DB`.`tbSecurity` (`id`)
+    REFERENCES `elite_db`.`tbSecurity` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbPower10`
     FOREIGN KEY (`Power_id`)
-    REFERENCES `Elite_DB`.`tbPower` (`id`)
+    REFERENCES `elite_db`.`tbPower` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbSystems_tbPowerState10`
     FOREIGN KEY (`PowerState_id`)
-    REFERENCES `Elite_DB`.`tbPowerState` (`id`)
+    REFERENCES `elite_db`.`tbPowerState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Elite_DB`.`tbStations_org`
+-- Table `elite_db`.`tbStations_org`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbStations_org` (
   `id` INT NOT NULL,
   `stationname` VARCHAR(80) NOT NULL,
   `system_id` INT NOT NULL,
@@ -912,48 +912,48 @@ CREATE TABLE IF NOT EXISTS `Elite_DB`.`tbStations_org` (
   INDEX `idx_tbStations_Stationname` (`stationname` ASC),
   CONSTRAINT `fk_tbStations_tbSystems0`
     FOREIGN KEY (`system_id`)
-    REFERENCES `Elite_DB`.`tbSystems` (`id`)
+    REFERENCES `elite_db`.`tbSystems` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_tbStations_tbAllegiance10`
     FOREIGN KEY (`allegiance_id`)
-    REFERENCES `Elite_DB`.`tbAllegiance` (`id`)
+    REFERENCES `elite_db`.`tbAllegiance` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbGovernment10`
     FOREIGN KEY (`government_id`)
-    REFERENCES `Elite_DB`.`tbGovernment` (`id`)
+    REFERENCES `elite_db`.`tbGovernment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbState10`
     FOREIGN KEY (`state_id`)
-    REFERENCES `Elite_DB`.`tbState` (`id`)
+    REFERENCES `elite_db`.`tbState` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbStations_tbStationType10`
     FOREIGN KEY (`stationtype_id`)
-    REFERENCES `Elite_DB`.`tbStationType` (`id`)
+    REFERENCES `elite_db`.`tbStationType` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-USE `Elite_DB` ;
+USE `elite_db` ;
 
 -- -----------------------------------------------------
--- Placeholder table for view `Elite_DB`.`vilog`
+-- Placeholder table for view `elite_db`.`vilog`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eevent` INT, `action` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `distance` INT, `notes` INT);
+CREATE TABLE IF NOT EXISTS `elite_db`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eevent` INT, `action` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `distance` INT, `notes` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `Elite_DB`.`viSystemsAndStations`
+-- Placeholder table for view `elite_db`.`viSystemsAndStations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Elite_DB`.`viSystemsAndStations` (`SystemID` INT, `SystemName` INT, `StationID` INT, `StationName` INT);
+CREATE TABLE IF NOT EXISTS `elite_db`.`viSystemsAndStations` (`SystemID` INT, `SystemName` INT, `StationID` INT, `StationName` INT);
 
 -- -----------------------------------------------------
--- View `Elite_DB`.`vilog`
+-- View `elite_db`.`vilog`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Elite_DB`.`vilog`;
-USE `Elite_DB`;
+DROP TABLE IF EXISTS `elite_db`.`vilog`;
+USE `elite_db`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS 
 select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eevent`,`c`.`cargoaction` 
 AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` 
@@ -963,213 +963,266 @@ left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstation
 left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
 
 -- -----------------------------------------------------
--- View `Elite_DB`.`viSystemsAndStations`
+-- View `elite_db`.`viSystemsAndStations`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Elite_DB`.`viSystemsAndStations`;
-USE `Elite_DB`;
+DROP TABLE IF EXISTS `elite_db`.`viSystemsAndStations`;
+USE `elite_db`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `visystemsandstations` AS select `sy`.`id` AS `SystemID`,`sy`.`systemname` AS `SystemName`,`s`.`id` AS `StationID`,`s`.`stationname` AS `StationName` from (`tbstations` `s` join `tbsystems` `sy`) where (`s`.`system_id` = `sy`.`id`);
+USE `elite_db`;
+
+DELIMITER $$
+USE `elite_db`$$
+CREATE
+DEFINER=`RN_User`@`::1`
+TRIGGER `elite_db`.`tbCommodityData_AFTER_INSERT`
+AFTER INSERT ON `elite_db`.`tbcommoditydata`
+FOR EACH ROW
+BEGIN                                                                                                                                                                         
+	DECLARE isActive BOOLEAN;                                                                                                                                                  
+                                                                                                                                                                              
+    SELECT ((InitValue <> '0') and (InitValue <> 'False')) INTO isActive                                                                                                      
+    FROM tbInitValue                                                                                                                                                          
+    WHERE InitGroup = 'Database'                                                                                                                                              
+    AND   InitKey   = 'CollectPriceHistory';                                                                                                                                  
+                                                                                                                                                                              
+    IF isActive THEN                                                                                                                                                          
+		INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                                
+		(`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                             
+		VALUES                                                                                                                                                                 
+		(NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);	   
+	END IF;                                                                                                                                                                    
+END$$
+
+USE `elite_db`$$
+CREATE
+DEFINER=`RN_User`@`::1`
+TRIGGER `elite_db`.`tbCommodityData_AFTER_UPDATE`
+AFTER UPDATE ON `elite_db`.`tbcommoditydata`
+FOR EACH ROW
+BEGIN                                                                                                                                                                         
+	DECLARE isActive BOOLEAN;                                                                                                                                                  
+                                                                                                                                                                              
+    SELECT ((InitValue <> '0') and (InitValue <> 'False')) INTO isActive                                                                                                      
+    FROM tbInitValue                                                                                                                                                          
+    WHERE InitGroup = 'Database'                                                                                                                                              
+    AND   InitKey   = 'CollectPriceHistory';                                                                                                                                  
+                                                                                                                                                                              
+    IF isActive THEN                                                                                                                                                          
+		IF (NEW.Sell <> OLD.Sell) OR (NEW.Buy <> OLD.Buy) OR (NEW.Sources_id <> OLD.Sources_id) OR                                                                             
+		   (TIMESTAMPDIFF(hour, OLD.timestamp, NEW.timestamp) > 24) THEN                                                                                                       
+			INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                            
+			(`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                         
+			VALUES                                                                                                                                                             
+			(NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);
+		END IF;                                                                                                                                                                
+	END IF;                                                                                                                                                                    
+END$$
+
+
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbAllegiance`
+-- Data for table `elite_db`.`tbAllegiance`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbAllegiance` (`id`, `allegiance`) VALUES (0, 'Alliance');
-INSERT INTO `Elite_DB`.`tbAllegiance` (`id`, `allegiance`) VALUES (1, 'Anarchy');
-INSERT INTO `Elite_DB`.`tbAllegiance` (`id`, `allegiance`) VALUES (2, 'Empire');
-INSERT INTO `Elite_DB`.`tbAllegiance` (`id`, `allegiance`) VALUES (3, 'Federation');
-INSERT INTO `Elite_DB`.`tbAllegiance` (`id`, `allegiance`) VALUES (4, 'Independent');
-INSERT INTO `Elite_DB`.`tbAllegiance` (`id`, `allegiance`) VALUES (5, 'None');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbAllegiance` (`id`, `allegiance`) VALUES (0, 'Alliance');
+INSERT INTO `elite_db`.`tbAllegiance` (`id`, `allegiance`) VALUES (1, 'Anarchy');
+INSERT INTO `elite_db`.`tbAllegiance` (`id`, `allegiance`) VALUES (2, 'Empire');
+INSERT INTO `elite_db`.`tbAllegiance` (`id`, `allegiance`) VALUES (3, 'Federation');
+INSERT INTO `elite_db`.`tbAllegiance` (`id`, `allegiance`) VALUES (4, 'Independent');
+INSERT INTO `elite_db`.`tbAllegiance` (`id`, `allegiance`) VALUES (5, 'None');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbEconomy`
+-- Data for table `elite_db`.`tbEconomy`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (0, 'Agriculture');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (1, 'Extraction');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (2, 'High Tech');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (3, 'Industrial');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (4, 'Military');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (5, 'Refinery');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (6, 'Service');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (7, 'Terraforming');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (8, 'Tourism');
-INSERT INTO `Elite_DB`.`tbEconomy` (`id`, `economy`) VALUES (9, 'None');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (0, 'Agriculture');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (1, 'Extraction');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (2, 'High Tech');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (3, 'Industrial');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (4, 'Military');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (5, 'Refinery');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (6, 'Service');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (7, 'Terraforming');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (8, 'Tourism');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (9, 'None');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbGovernment`
+-- Data for table `elite_db`.`tbGovernment`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (0, 'None');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (1, 'Anarchy');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (2, 'Communism');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (3, 'Confederacy');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (4, 'Corporate');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (5, 'Cooperative');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (6, 'Democracy');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (7, 'Dictatorship');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (8, 'Feudal');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (9, 'Imperial');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (10, 'Patronage');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (11, 'Colony');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (12, 'Prison Colony');
-INSERT INTO `Elite_DB`.`tbGovernment` (`id`, `government`) VALUES (13, 'Theocracy');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (0, 'None');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (1, 'Anarchy');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (2, 'Communism');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (3, 'Confederacy');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (4, 'Corporate');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (5, 'Cooperative');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (6, 'Democracy');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (7, 'Dictatorship');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (8, 'Feudal');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (9, 'Imperial');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (10, 'Patronage');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (11, 'Colony');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (12, 'Prison Colony');
+INSERT INTO `elite_db`.`tbGovernment` (`id`, `government`) VALUES (13, 'Theocracy');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbState`
+-- Data for table `elite_db`.`tbState`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (0, 'Boom');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (1, 'Bust');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (2, 'Civil Unrest');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (3, 'Civil War');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (4, 'Expansion');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (5, 'Lockdown');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (6, 'Outbreak');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (7, 'War');
-INSERT INTO `Elite_DB`.`tbState` (`id`, `state`) VALUES (8, 'None');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (0, 'Boom');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (1, 'Bust');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (2, 'Civil Unrest');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (3, 'Civil War');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (4, 'Expansion');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (5, 'Lockdown');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (6, 'Outbreak');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (7, 'War');
+INSERT INTO `elite_db`.`tbState` (`id`, `state`) VALUES (8, 'None');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbSecurity`
+-- Data for table `elite_db`.`tbSecurity`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbSecurity` (`id`, `security`) VALUES (0, 'Low');
-INSERT INTO `Elite_DB`.`tbSecurity` (`id`, `security`) VALUES (1, 'Medium');
-INSERT INTO `Elite_DB`.`tbSecurity` (`id`, `security`) VALUES (2, 'High');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbSecurity` (`id`, `security`) VALUES (0, 'Low');
+INSERT INTO `elite_db`.`tbSecurity` (`id`, `security`) VALUES (1, 'Medium');
+INSERT INTO `elite_db`.`tbSecurity` (`id`, `security`) VALUES (2, 'High');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbStationType`
+-- Data for table `elite_db`.`tbStationType`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (0, 'Civilian Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (1, 'Commercial Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (2, 'Coriolis Starport');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (3, 'Industrial Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (4, 'Military Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (5, 'Mining Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (6, 'Ocellus Starport');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (7, 'Orbis Starport');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (8, 'Scientific Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (9, 'Unsanctioned Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (10, 'Unknown Outpost');
-INSERT INTO `Elite_DB`.`tbStationType` (`id`, `stationtype`) VALUES (11, 'Unknown Starport');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (0, 'Civilian Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (1, 'Commercial Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (2, 'Coriolis Starport');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (3, 'Industrial Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (4, 'Military Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (5, 'Mining Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (6, 'Ocellus Starport');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (7, 'Orbis Starport');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (8, 'Scientific Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (9, 'Unsanctioned Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (10, 'Unknown Outpost');
+INSERT INTO `elite_db`.`tbStationType` (`id`, `stationtype`) VALUES (11, 'Unknown Starport');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbSource`
+-- Data for table `elite_db`.`tbSource`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbSource` (`id`, `source`) VALUES (0, 'RN');
-INSERT INTO `Elite_DB`.`tbSource` (`id`, `source`) VALUES (1, 'EDDN');
-INSERT INTO `Elite_DB`.`tbSource` (`id`, `source`) VALUES (2, 'File');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (0, 'IBE');
+INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (1, 'EDDN');
+INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (2, 'FILE');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbEconomyLevel`
+-- Data for table `elite_db`.`tbEconomyLevel`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (0, 'low', '');
-INSERT INTO `Elite_DB`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (1, 'med', '');
-INSERT INTO `Elite_DB`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (2, 'high', '');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (0, 'low', '');
+INSERT INTO `elite_db`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (1, 'med', '');
+INSERT INTO `elite_db`.`tbEconomyLevel` (`id`, `level`, `loclevel`) VALUES (2, 'high', '');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbLanguage`
+-- Data for table `elite_db`.`tbLanguage`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (0, 'eng');
-INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (1, 'ger');
-INSERT INTO `Elite_DB`.`tbLanguage` (`id`, `language`) VALUES (2, 'fra');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbLanguage` (`id`, `language`) VALUES (0, 'eng');
+INSERT INTO `elite_db`.`tbLanguage` (`id`, `language`) VALUES (1, 'ger');
+INSERT INTO `elite_db`.`tbLanguage` (`id`, `language`) VALUES (2, 'fra');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbInitValue`
+-- Data for table `elite_db`.`tbInitValue`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.1.5.0');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.2.0.0');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbEventType`
+-- Data for table `elite_db`.`tbEventType`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (1, 'Jumped To');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (2, 'Visited');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (3, 'Market Data Collected');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (4, 'Cargo');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (5, 'Fight');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (6, 'Docked');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (7, 'Took Off');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (8, 'Saved Game');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (9, 'Loaded Game');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (10, 'Accepted Mission');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (11, 'Completed Mission');
-INSERT INTO `Elite_DB`.`tbEventType` (`id`, `eventtype`) VALUES (12, 'Other');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (1, 'Jumped To');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (2, 'Visited');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (3, 'Market Data Collected');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (4, 'Cargo');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (5, 'Fight');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (6, 'Docked');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (7, 'Took Off');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (8, 'Saved Game');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (9, 'Loaded Game');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (10, 'Accepted Mission');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (11, 'Completed Mission');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (12, 'Other');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbCargoAction`
+-- Data for table `elite_db`.`tbCargoAction`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (1, 'Bought');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (2, 'Sold');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (3, 'Mined');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (4, 'Stolen');
-INSERT INTO `Elite_DB`.`tbCargoAction` (`id`, `cargoaction`) VALUES (5, 'Found');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbCargoAction` (`id`, `cargoaction`) VALUES (1, 'Bought');
+INSERT INTO `elite_db`.`tbCargoAction` (`id`, `cargoaction`) VALUES (2, 'Sold');
+INSERT INTO `elite_db`.`tbCargoAction` (`id`, `cargoaction`) VALUES (3, 'Mined');
+INSERT INTO `elite_db`.`tbCargoAction` (`id`, `cargoaction`) VALUES (4, 'Stolen');
+INSERT INTO `elite_db`.`tbCargoAction` (`id`, `cargoaction`) VALUES (5, 'Found');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `Elite_DB`.`tbAttribute`
+-- Data for table `elite_db`.`tbAttribute`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `Elite_DB`;
-INSERT INTO `Elite_DB`.`tbAttribute` (`id`, `Attribute`) VALUES (0, 'import');
-INSERT INTO `Elite_DB`.`tbAttribute` (`id`, `Attribute`) VALUES (1, 'export');
-INSERT INTO `Elite_DB`.`tbAttribute` (`id`, `Attribute`) VALUES (2, 'prohibited');
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbAttribute` (`id`, `Attribute`) VALUES (0, 'import');
+INSERT INTO `elite_db`.`tbAttribute` (`id`, `Attribute`) VALUES (1, 'export');
+INSERT INTO `elite_db`.`tbAttribute` (`id`, `Attribute`) VALUES (2, 'prohibited');
 
 COMMIT;
 

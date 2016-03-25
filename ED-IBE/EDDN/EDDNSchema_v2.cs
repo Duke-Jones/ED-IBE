@@ -115,7 +115,7 @@ namespace IBE.EDDN
                                   Commodity.SupplyLevel + ";" +
                                   this.Message.Timestamp.ToString() + ";"
                                   +
-                                  "<From EDDN>" + ";";		 
+                                  "EDDN" + ";";		 
             }
 
             return csvFormatted;

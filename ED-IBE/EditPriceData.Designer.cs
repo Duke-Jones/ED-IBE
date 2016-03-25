@@ -52,16 +52,18 @@
             this.tbEditFilename = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.cbEditCommodityName = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.tbEditDatasource = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nEditSell)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nEditBuy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nEditDemand)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nEditSupply)).BeginInit();
             this.SuspendLayout();
             // 
-            // cmdChangeSQLPort
+            // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(190, 299);
+            this.button1.Location = new System.Drawing.Point(190, 352);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -149,7 +151,7 @@
             // 
             this.dtpEditSampleDate.CustomFormat = "yyyy-MM-dd HH:mm:ss";
             this.dtpEditSampleDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpEditSampleDate.Location = new System.Drawing.Point(109, 272);
+            this.dtpEditSampleDate.Location = new System.Drawing.Point(109, 299);
             this.dtpEditSampleDate.Name = "dtpEditSampleDate";
             this.dtpEditSampleDate.Size = new System.Drawing.Size(156, 20);
             this.dtpEditSampleDate.TabIndex = 10;
@@ -238,7 +240,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 275);
+            this.label10.Location = new System.Drawing.Point(12, 302);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(68, 13);
             this.label10.TabIndex = 20;
@@ -247,7 +249,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(109, 299);
+            this.button2.Location = new System.Drawing.Point(109, 352);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 21;
@@ -279,11 +281,29 @@
             this.cbEditCommodityName.Size = new System.Drawing.Size(156, 21);
             this.cbEditCommodityName.TabIndex = 24;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(12, 276);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(62, 13);
+            this.label12.TabIndex = 26;
+            this.label12.Text = "Datasource";
+            // 
+            // tbEditDatasource
+            // 
+            this.tbEditDatasource.Location = new System.Drawing.Point(109, 273);
+            this.tbEditDatasource.Name = "tbEditDatasource";
+            this.tbEditDatasource.Size = new System.Drawing.Size(156, 20);
+            this.tbEditDatasource.TabIndex = 25;
+            // 
             // EditPriceData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(277, 335);
+            this.ClientSize = new System.Drawing.Size(277, 388);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.tbEditDatasource);
             this.Controls.Add(this.cbEditCommodityName);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.tbEditFilename);
@@ -309,7 +329,6 @@
             this.Controls.Add(this.tbEditSystem);
             this.Controls.Add(this.button1);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(293, 373);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(293, 373);
             this.Name = "EditPriceData";
@@ -349,5 +368,7 @@
         private System.Windows.Forms.TextBox tbEditFilename;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox cbEditCommodityName;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox tbEditDatasource;
     }
 }

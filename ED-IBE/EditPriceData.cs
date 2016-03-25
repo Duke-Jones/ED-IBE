@@ -34,6 +34,7 @@ namespace IBE
             tbEditSupplyLevel.Text   = RowToEdit.SupplyLevel;
             dtpEditSampleDate.Value  = RowToEdit.SampleDate;
             tbEditFilename.Text      = RowToEdit.SourceFileName;
+            tbEditDatasource.Text    = RowToEdit.DataSource;
 
             foreach (var x in commodities.OrderBy(y => y))
                 cbEditCommodityName.Items.Add(x);
@@ -55,7 +56,8 @@ namespace IBE
                 DemandLevel = tbEditDemandLevel.Text,
                 SupplyLevel = tbEditSupplyLevel.Text,
                 SampleDate = dtpEditSampleDate.Value,
-                SourceFileName = tbEditFilename.Text
+                SourceFileName = tbEditFilename.Text,
+                DataSource = tbEditDatasource.Text
             };
 
             RowToEdit = returnValue;

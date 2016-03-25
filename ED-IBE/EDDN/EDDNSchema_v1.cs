@@ -90,7 +90,7 @@ namespace IBE.EDDN
                                   ";" +
                                   this.Message.Timestamp.ToString() + ";"
                                   +
-                                  "<From EDDN>" + ";";
+                                  "EDDN" + ";";
 
             return csvFormatted;
         }

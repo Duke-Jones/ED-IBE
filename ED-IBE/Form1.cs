@@ -260,9 +260,11 @@ namespace IBE
                 foreach (TabPage MainTabPage in tabCtrlMain.TabPages)
                     m_IsRefreshed.Add(MainTabPage.Name, false);
 
-                // register events for getting new location-infos for the gui
+                // register events for getting new location- and data infos for the gui
                 Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
                 Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
+                Program.EDDNComm.DataChangedEvent      += EDDNComm_DataChangedEvent;
+
 
                 // until this is working again 
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
@@ -1416,37 +1418,6 @@ namespace IBE
             return retValue;
 
         }
-
-        private void cmdPurgeEDDNData(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static ObjectDirectory PurgeEddnFromDirectory(ObjectDirectory directory)
-        {
-            ObjectDirectory newDirectory;
-            
-            if(directory.GetType() == typeof(StationDirectory))
-                newDirectory = new StationDirectory();
-            else
-                newDirectory = new CommodityDirectory();
-
-            foreach (var x in directory)
-            {
-                var newList = new List<CsvRow>();
-                foreach (var y in x.Value)
-                    if (y.SourceFileName != "<From EDDN>")
-                        newList.Add(y);
-
-                if(newList.Count > 0)
-                    newDirectory.Add(x.Key, newList);
-            }
-            return newDirectory;
-        }
-
-      
-
-        
 
         public void setOCRTabsVisibility()
         {
@@ -3308,6 +3279,22 @@ namespace IBE
                     
                     setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
                     setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the LocationChanged-event", ex);
+            }
+        }
+
+        void EDDNComm_DataChangedEvent(object sender, EDDN.EDDNCommunicator.DataChangedEventArgs e)
+        {
+            try
+            {
+                if(e.DataType == EDDN.EDDNCommunicator.enDataTypes.DataImported)
+                {
+                    Program.PriceAnalysis.GUI.setFilterHasChanged(true);
                 }
 
             }

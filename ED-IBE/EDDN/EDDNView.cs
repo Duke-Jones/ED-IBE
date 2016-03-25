@@ -9,7 +9,7 @@ namespace IBE.EDDN
     public partial class EDDNView : Form
     {
 
-        public const String        DB_GROUPNAME                    = "Settings";
+        public const String        DB_GROUPNAME                    = "EDDN";
 
         private DBGuiInterface                  m_GUIInterface;
         private EDDNCommunicator                m_Communicator;

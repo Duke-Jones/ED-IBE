@@ -33,6 +33,9 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.tbEddnStats = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblListenerStatus = new System.Windows.Forms.Label();
+            this.pbListenerStatus = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.cbEDDNAutoListen = new System.Windows.Forms.CheckBox();
             this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
             this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
@@ -43,9 +46,6 @@
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.cmdStartListening = new System.Windows.Forms.Button();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.pbListenerStatus = new System.Windows.Forms.PictureBox();
-            this.lblListenerStatus = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).BeginInit();
             this.SuspendLayout();
@@ -103,6 +103,36 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
             // 
+            // lblListenerStatus
+            // 
+            this.lblListenerStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblListenerStatus.Location = new System.Drawing.Point(315, 162);
+            this.lblListenerStatus.Name = "lblListenerStatus";
+            this.lblListenerStatus.Size = new System.Drawing.Size(111, 13);
+            this.lblListenerStatus.TabIndex = 18;
+            this.lblListenerStatus.Text = "Disabled";
+            this.lblListenerStatus.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pbListenerStatus
+            // 
+            this.pbListenerStatus.Image = global::IBE.Properties.Resources.green_led_off_md;
+            this.pbListenerStatus.InitialImage = global::IBE.Properties.Resources.green_led_off_md;
+            this.pbListenerStatus.Location = new System.Drawing.Point(351, 119);
+            this.pbListenerStatus.Name = "pbListenerStatus";
+            this.pbListenerStatus.Size = new System.Drawing.Size(40, 40);
+            this.pbListenerStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbListenerStatus.TabIndex = 17;
+            this.pbListenerStatus.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(319, 103);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(111, 13);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "EDDN-Listener Status";
+            // 
             // cbEDDNAutoListen
             // 
             this.cbEDDNAutoListen.AutoSize = true;
@@ -158,7 +188,7 @@
             this.cbImportEDDN.Name = "cbImportEDDN";
             this.cbImportEDDN.Size = new System.Drawing.Size(221, 17);
             this.cbImportEDDN.TabIndex = 6;
-            this.cbImportEDDN.Tag = "AutoImport;true";
+            this.cbImportEDDN.Tag = "ImportEDDN;true";
             this.cbImportEDDN.Text = "import received data into RegulatedNoise";
             this.cbImportEDDN.UseVisualStyleBackColor = true;
             this.cbImportEDDN.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
@@ -206,36 +236,6 @@
             // tmrRefresh
             // 
             this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(319, 103);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(111, 13);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "EDDN-Listener Status";
-            // 
-            // pbListenerStatus
-            // 
-            this.pbListenerStatus.Image = global::IBE.Properties.Resources.green_led_off_md;
-            this.pbListenerStatus.InitialImage = global::IBE.Properties.Resources.green_led_off_md;
-            this.pbListenerStatus.Location = new System.Drawing.Point(351, 119);
-            this.pbListenerStatus.Name = "pbListenerStatus";
-            this.pbListenerStatus.Size = new System.Drawing.Size(40, 40);
-            this.pbListenerStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbListenerStatus.TabIndex = 17;
-            this.pbListenerStatus.TabStop = false;
-            // 
-            // lblListenerStatus
-            // 
-            this.lblListenerStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblListenerStatus.Location = new System.Drawing.Point(315, 162);
-            this.lblListenerStatus.Name = "lblListenerStatus";
-            this.lblListenerStatus.Size = new System.Drawing.Size(111, 13);
-            this.lblListenerStatus.TabIndex = 18;
-            this.lblListenerStatus.Text = "Disabled";
-            this.lblListenerStatus.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // EDDNView
             // 

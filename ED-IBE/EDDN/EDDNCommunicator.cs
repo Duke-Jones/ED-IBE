@@ -85,7 +85,8 @@ namespace IBE.EDDN
             NoChanges           =  0,
             RecieveData         =  1,
             ImplausibleData     =  2,
-            Statistics          =  3
+            Statistics          =  3,
+            DataImported        =  4    
         }
  #endregion
 
@@ -98,7 +99,6 @@ namespace IBE.EDDN
         private Queue                               _SendItems = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer;
-        private System.Timers.Timer                 _AutoImportDelayTimer;
         private Thread                              m_EDDNSubscriberThread;
         private StreamWriter                        m_EDDNSpooler = null;
         private Dictionary<String, EDDNStatistics>  m_StatisticData = new Dictionary<String, EDDNStatistics>();
@@ -221,11 +221,12 @@ namespace IBE.EDDN
         /// <param name="e"></param>
         private void RecievedEDDNData(object sender, EDDN.EDDNRecievedArgs e)
         {
-            String[] DataRows           = new String[0];
-            String   nameAndVersion     = String.Empty;
-            String   name               = String.Empty;
-            String   uploaderID         = String.Empty; 
-            Boolean  SimpleEDDNCheck    = false;
+            String[]        DataRows           = new String[0];
+            String          nameAndVersion     = String.Empty;
+            String          name               = String.Empty;
+            String          uploaderID         = String.Empty; 
+            Boolean         SimpleEDDNCheck    = false;
+            List<String>    importData         = new List<String>();
 
             try{
                 
@@ -321,7 +322,7 @@ namespace IBE.EDDN
                 {
                     UpdateStatisticData(nameAndVersion, DataRows.GetUpperBound(0)+1);
 
-                    List<String> trustedSenders = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "trustedSenders", "").Split(new char[] {'|'}).ToList();
+                    List<String> trustedSenders = Program.DBCon.getIniValue<String>("EDDN", "TrustedSenders", "").Split(new char[] {'|'}).ToList();
 
                     bool isTrusty = trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
@@ -333,9 +334,9 @@ namespace IBE.EDDN
                             // import is wanted ?
                             if(Program.DBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
                             {
+                                // collect importable data
                                 Debug.Print("import :" + DataRow);
-                                throw new NotImplementedException();
-                                //ImportCsvString(DataRow);
+                                importData.Add(DataRow);
                             }
 
                         }else{
@@ -360,10 +361,13 @@ namespace IBE.EDDN
                             }
                         }
                     }  
- 
-
-                    if(!_AutoImportDelayTimer.Enabled)
-                        _AutoImportDelayTimer.Start();
+                        
+                    // have we collected importable data -> then import now
+                    if (importData.Count() > 0)
+                    { 
+                        Program.Data.ImportPricesFromCSVStrings(importData.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromEDDN);
+                        DataChangedEvent.Raise(this, new DataChangedEventArgs(enDataTypes.DataImported));
+                    }
 
                 }
             }catch (Exception ex){
@@ -517,7 +521,7 @@ namespace IBE.EDDN
                 m_RejectedData.Add(info);
 
                 if (m_RejectedData.Count() > maxSize)
-                    m_RejectedData.RemoveRange(0, m_RawData.Count()-maxSize);
+                    m_RejectedData.RemoveRange(0, m_RejectedData.Count()-maxSize);
 
                 DataChangedEvent.Raise(this, new DataChangedEventArgs(enDataTypes.ImplausibleData));
             }

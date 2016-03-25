@@ -1395,19 +1395,24 @@ namespace IBE.MTPriceAnalysis
         /// </summary>
         private void Refresh_ByCommodity()
         {
-            try
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(Refresh_ByCommodity));
+            else
             {
-                if (cmbByCommodity.SelectedValue != null)
-                    m_DataSource.loadStationsByCommodity(m_DGVTables[dgvByCommodity.Name], (int?)cmbByCommodity.SelectedValue);
-                else
-                    m_DGVTables[dgvByCommodity.Name].Clear();
+                try
+                {
+                    if (cmbByCommodity.SelectedValue != null)
+                        m_DataSource.loadStationsByCommodity(m_DGVTables[dgvByCommodity.Name], (int?)cmbByCommodity.SelectedValue);
+                    else
+                        m_DGVTables[dgvByCommodity.Name].Clear();
 
-                sortDataGridView(dgvByCommodity);
+                    sortDataGridView(dgvByCommodity);
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while refreshing 'ByCommodity'", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error while refreshing 'ByCommodity'", ex);
+                }
             }
         }
 

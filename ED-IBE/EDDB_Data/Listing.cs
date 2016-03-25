@@ -42,6 +42,8 @@ namespace IBE.EDDB_Data
 
         [JsonProperty("update_count")]
         public int UpdateCount { get; set; }
+
+        public String DataSource { get; set; }
     }
 
 }

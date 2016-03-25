@@ -54,6 +54,14 @@ namespace IBE.SQL
             overWriteAll        = 2
         }
 
+        public enum enDataSource
+        {
+            undefined           = 0,
+            fromIBE             = 1,
+            fromEDDN            = 2,
+            fromFILE            = 3
+        }
+
 #endregion
 
         /// <summary>
@@ -2304,7 +2312,7 @@ namespace IBE.SQL
         /// firstly to import the stations from the same file.
         /// </summary>
         /// <param name="Stations"></param>
-        private void ImportPrices(List<EDStation> Stations, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer)
+        private void ImportPrices(List<EDStation> Stations, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer, enDataSource dataSource = enDataSource.fromIBE)
         {
             try
             { 
@@ -2317,6 +2325,7 @@ namespace IBE.SQL
                 Boolean currentListingDone;
                 Int32 priceCountTotal = 0;
                 Int32 priceCount = 0;
+                Int32 SourceID;
 
                 // for the prices is no transaction necessary, because we're changing
                 // only a single table
@@ -2327,9 +2336,6 @@ namespace IBE.SQL
 
                 Counter = 0;
                 sendProgressEvent("updating prices", priceCount, priceCountTotal);
-
-                //Int32 SourceID = ((dsEliteDB.tbsourceRow[])Data.tbsource.Select("source = " + DBConnector.SQLAString("EDDN")))[0].id;
-                Int32 SourceID = (Int32)BaseTableNameToID("source", "EDDN");
 
                 Boolean AddComma = false;
                 int?  DemandLevel = null;
@@ -2362,15 +2368,17 @@ namespace IBE.SQL
                                 {
                                     // ... no
 
+                                    if (StationListing.DataSource  != "")
+                                        SourceID = (Int32)BaseTableNameToID("source", StationListing.DataSource);
+                                    else
+                                        SourceID = (Int32)dataSource;
+
                                     if (AddComma)
                                         sqlStringB.Append(" union all ");
 
                                     // cache level-ids
                                     getLevels(ref DemandLevel, ref SupplyLevel, Levels, StationListing);
                             
-                                    if ((StationListing.CommodityId == 75) && (Station.Id == 18991))
-                                        Debug.Print("hier");
-
                                     switch (importBehaviour)
 	                                {
                                         case enImportBehaviour.OnlyNewer:
@@ -2480,8 +2488,10 @@ namespace IBE.SQL
         /// <summary>
         /// Imports the prices from a list of csv-strings
         /// </summary>
-        /// <param name="Stations"></param>
-        public void ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer)
+        /// <param name="CSV_Strings">data to import</param>
+        /// <param name="importBehaviour">filter, which prices to import</param>
+        /// <param name="dataSource">if data has no information about the datasource, this setting will count</param>
+        public void ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer, enDataSource dataSource = enDataSource.fromIBE)
         {
             Boolean MissingSystem   = false;
             Boolean MissingStation  = false;
@@ -2489,7 +2499,6 @@ namespace IBE.SQL
             DataTable newData;
             List<EDStation> StationData;
             List<EDSystem> SystemData = null;
-
 
             try
             {
@@ -2581,7 +2590,7 @@ namespace IBE.SQL
                 }
 
                 // now import the prices
-                ImportPrices(StationData, importBehaviour);
+                ImportPrices(StationData, importBehaviour, dataSource);
 
                 if (MissingSystem)
                 {

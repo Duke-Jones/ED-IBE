@@ -31,7 +31,6 @@ namespace IBE
         public const String COMMODITY_NOT_SET       = "???";
         public const String BASE_LANGUAGE           = "eng";
 
-
 #region enums
 
         public enum enVisitedFilter
@@ -247,6 +246,8 @@ namespace IBE
 
     #region global objects
 
+        public static SingleThreadLogger                MainLog = new SingleThreadLogger(ThreadLoggerType.App);
+
         private static Boolean                          m_initDone                  = false;
 
         public static GUIColors                         Colors;
@@ -265,6 +266,8 @@ namespace IBE
         public static EDDN.EDDNCommunicator             EDDNComm;
         public static PlausibiltyChecker                PlausibiltyCheck;
 
+        private static ManualResetEvent                 m_MREvent;                      // for updating the database with scripts
+        private static Boolean                          m_gotScriptErrors = false;      // for updating the database with scripts
 
 
         /// <summary>
@@ -564,10 +567,166 @@ namespace IBE
 
                         dbIniFile.RemoveValue("mysqld",   "general-log");
                     }
+
+                    if (dbVersion < new Version(0,2,0))
+                    {
+                        String sqlString;
+
+                        Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.0...");
+                        Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                        Program.SplashScreen.InfoAdd("...");
+
+                        // add changes to the database
+                        sqlString = "-- MySQL Workbench Synchronization                                                                                                                                            \n" +
+                                    "-- Generated: 2016-03-25 20:24                                                                                                                                                \n" +
+                                    "-- Model: New Model                                                                                                                                                           \n" +
+                                    "-- Version: 1.0                                                                                                                                                               \n" +
+                                    "-- Project: Name of the project                                                                                                                                               \n" +
+                                    "-- Author: Duke                                                                                                                                                               \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                                                      \n" +
+                                    "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                                                       \n" +
+                                    "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                                                     \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "ALTER TABLE `elite_db`.`tbCommodityData`                                                                                                                                      \n" +
+                                    "CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT;                                                                                                                   \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "ALTER TABLE `elite_db`.`tbPriceHistory`                                                                                                                                       \n" +
+                                    "DROP FOREIGN KEY `fk_tbPriceHistory_tbSources1`;                                                                                                                              \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "ALTER TABLE `elite_db`.`tbPriceHistory`                                                                                                                                       \n" +
+                                    "DROP INDEX `fk_tbPriceHistory_tbSources1_idx`;                                                                                                                                \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "ALTER TABLE `elite_db`.`tbPriceHistory`                                                                                                                                       \n" +
+                                    "DROP COLUMN `Source_id`,                                                                                                                                                      \n" +
+                                    "CHANGE COLUMN `id` `id`  BIGINT(20) NOT NULL AUTO_INCREMENT ,                                                                                                                 \n" +
+                                    "CHANGE COLUMN `timestamp` `timestamp` DATETIME NOT NULL ,                                                                                                                     \n" +
+                                    "ADD COLUMN `Sources_id` INT(11) NOT NULL AFTER `SupplyLevel`;                                                                                                                 \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "ALTER TABLE `elite_db`.`tbPriceHistory`                                                                                                                                       \n" +
+                                    "ADD INDEX `fk_tbPriceHistory_tbSources1_idx` (`Sources_id` ASC);                                                                                                              \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "ALTER TABLE `elite_db`.`tbPriceHistory` ADD CONSTRAINT `fk_tbPriceHistory_tbSources1`                                                                                         \n" +
+                                    "  FOREIGN KEY (`Sources_id`)                                                                                                                                                  \n" +
+                                    "  REFERENCES `elite_db`.`tbSource` (`id`)                                                                                                                                     \n" +
+                                    "  ON DELETE NO ACTION                                                                                                                                                         \n" +
+                                    "  ON UPDATE NO ACTION;                                                                                                                                                        \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "INSERT INTO `Elite_DB`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');                                                \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "DELIMITER $$                                                                                                                                                                  \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "USE `elite_db`$$                                                                                                                                                              \n" +
+                                    "CREATE DEFINER = CURRENT_USER TRIGGER `elite_db`.`tbCommodityData_AFTER_INSERT` AFTER INSERT ON `tbCommodityData` FOR EACH ROW                                                \n" +
+                                    "BEGIN                                                                                                                                                                         \n" +
+                                    "	DECLARE isActive BOOLEAN;                                                                                                                                                  \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "    SELECT ((InitValue <> '0') and (InitValue <> 'False')) INTO isActive                                                                                                      \n" +
+                                    "    FROM tbInitValue                                                                                                                                                          \n" +
+                                    "    WHERE InitGroup = 'Database'                                                                                                                                              \n" +
+                                    "    AND   InitKey   = 'CollectPriceHistory';                                                                                                                                  \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "    IF isActive THEN                                                                                                                                                          \n" +
+                                    "		INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                                \n" +
+                                    "		(`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                             \n" +
+                                    "		VALUES                                                                                                                                                                 \n" +
+                                    "		(NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);	   \n" +
+                                    "	END IF;                                                                                                                                                                    \n" +
+                                    "END$$                                                                                                                                                                         \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "USE `elite_db`$$                                                                                                                                                              \n" +
+                                    "CREATE DEFINER = CURRENT_USER TRIGGER `elite_db`.`tbCommodityData_AFTER_UPDATE` AFTER UPDATE ON `tbCommodityData` FOR EACH ROW                                                \n" +
+                                    "BEGIN                                                                                                                                                                         \n" +
+                                    "	DECLARE isActive BOOLEAN;                                                                                                                                                  \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "    SELECT ((InitValue <> '0') and (InitValue <> 'False')) INTO isActive                                                                                                      \n" +
+                                    "    FROM tbInitValue                                                                                                                                                          \n" +
+                                    "    WHERE InitGroup = 'Database'                                                                                                                                              \n" +
+                                    "    AND   InitKey   = 'CollectPriceHistory';                                                                                                                                  \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "    IF isActive THEN                                                                                                                                                          \n" +
+                                    "		IF (NEW.Sell <> OLD.Sell) OR (NEW.Buy <> OLD.Buy) OR (NEW.Sources_id <> OLD.Sources_id) OR                                                                             \n" +
+                                    "		   (TIMESTAMPDIFF(hour, OLD.timestamp, NEW.timestamp) > 24) THEN                                                                                                       \n" +
+                                    "			INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                            \n" +
+                                    "			(`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                         \n" +
+                                    "			VALUES                                                                                                                                                             \n" +
+                                    "			(NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);\n" +
+                                    "		END IF;                                                                                                                                                                \n" +
+                                    "	END IF;                                                                                                                                                                    \n" +
+                                    "END$$                                                                                                                                                                         \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "DELIMITER ;                                                                                                                                                                   \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "-- shift id-values to right, because we need 0 as undefined data                                                                                                              \n" +
+                                    "update tbSource set source = 'IBE' where id = 1;                                                                                                                              \n" +
+                                    "update tbSource set source = 'EDDN' where id = 2;                                                                                                                             \n" +
+                                    "insert into tbSource(id, source) values (3, 'FILE');                                                                                                                          \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "update tbCommodityData set Sources_id = 1;                                                                                                                                    \n" +
+                                    "update tbPriceHistory set Sources_id = 1;                                                                                                                                     \n" +
+                                    "delete from tbSource where id = 0;                                                                                                                                            \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "INSERT ignore INTO `Elite_DB`.`tbPriceHistory`                                                                                                                                \n" + 
+	                                " (`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                                   \n" + 
+	                                " select `station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp` from tbcommoditydata;                        \n" +
+                                    "                                                                                                                                                                              \n" +
+                                    "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                                                   \n" +
+                                    "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                                               \n" +
+                                    "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                                         \n";
+
+                        var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                        sqlScript.Query = sqlString;
+
+                        sqlScript.Error             += sqlScript_Error;
+                        sqlScript.ScriptCompleted   += sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                        m_MREvent = new ManualResetEvent(false);
+
+                        sqlScript.ExecuteAsync();
+
+                        sqlScript.Error             -= sqlScript_Error;
+                        sqlScript.ScriptCompleted   -= sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                        if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else if (m_gotScriptErrors)
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else
+                            Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.0...<OK>");
+                        
+                    }
                     
 
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
+                    else
+                    {
+                        Boolean oldValue = false;
+                        if(!Program.SplashScreen.IsDisposed)
+                        {
+                            oldValue = Program.SplashScreen.TopMost;
+                            Program.SplashScreen.TopMost = false;
+                        }
+                        MessageBox.Show("Critical : There was errors during updating the database to the current version.\n" +
+                                        "Please save current logs form the <Logs> subdirectory and send them to the developer !", 
+                                        "Updating Database",  MessageBoxButtons.OK, MessageBoxIcon.Error) ;
+
+                        if(!Program.SplashScreen.IsDisposed)
+                        {
+                            Program.SplashScreen.TopMost = oldValue;
+                        }
+                    }
 
                 }
                 else
@@ -605,6 +764,30 @@ namespace IBE
             {
                 throw new Exception("Error while doing special things", ex);
             }
+        }
+
+        
+
+        static void sqlScript_ScriptCompleted(object sender, EventArgs e)
+        {
+            m_MREvent.Set();   
+            Debug.Print("RE");
+        }
+
+        static void sqlScript_StatementExecuted(object sender, MySql.Data.MySqlClient.MySqlScriptEventArgs args)
+        {
+            Program.MainLog.Log(String.Format("...executed : pos={0},  line={1}, command=<{2}>", args.Position, args.Line, args.StatementText));
+            Program.SplashScreen.InfoAppendLast("√");
+            Debug.Print("executed");
+        }
+
+        static void sqlScript_Error(object sender, MySql.Data.MySqlClient.MySqlScriptErrorEventArgs args)
+        {
+            Program.MainLog.Log(String.Format("...executed : pos={0},  line={1},\n - command=<{2}>,\n - error=<{3}>", args.Position, args.Line, args.StatementText, args.Exception));
+            Program.SplashScreen.InfoAppendLast("X");
+            args.Ignore = false;
+            m_gotScriptErrors = true;
+            Debug.Print("error");
         }
 
     #endregion //global objects

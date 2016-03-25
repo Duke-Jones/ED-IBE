@@ -1,6 +1,12 @@
 
 
-
+   * added sqltrigger for collecting a price history
+   * added datasource to internal structures
+   * bugfixing on EDDN function
+   * fixed invoke-problem on PriceAnalysis tab
+   * added a global logger to main structure
+   * added update-script to v0.2.0
+-------------------------------------------------------------------------------------         
    * first version of a reactivated EDDN interface (needs still more testing)
 -------------------------------------------------------------------------------------         
    * shift settings-tab from a tab to an extra window

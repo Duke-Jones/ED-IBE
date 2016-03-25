@@ -370,7 +370,8 @@ namespace IBE.EDDB_Data
                     newListing.Demand       = (Int32)Csv_Row.Demand;
                     newListing.DemandLevel  = Csv_Row.DemandLevel.Trim() == "" ? null : Csv_Row.DemandLevel;
                     newListing.CollectedAt  =  new System.DateTimeOffset(Csv_Row.SampleDate).ToUnixTimeSeconds();
-                    
+                    newListing.DataSource   = Csv_Row.DataSource;
+
                     newListing.UpdateCount  = -1;
 
                     Listings[currentIndex+1] = newListing;
