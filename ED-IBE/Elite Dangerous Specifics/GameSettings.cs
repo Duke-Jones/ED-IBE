@@ -46,10 +46,16 @@ namespace IBE
         {
             if (AppConfig.Network.VerboseLogging != 1)
             {
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
+
                 var setLog =
                     MessageBox.Show(
                         "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
                         "Set verbose logging?", MessageBoxButtons.YesNo);
+
+                if(!Program.SplashScreen.IsDisposed)
+                    Program.SplashScreen.TopMost = false;
 
                 if (setLog == DialogResult.Yes)
                 {
@@ -80,8 +86,15 @@ namespace IBE
 
                     doc.Save(appconfig);
 
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = false;
+
                     MessageBox.Show(
                         "AppConfig.xml updated.  You'll need to restart Elite Dangerous if it's already running.");
+
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = false;
+
                 }
 
                 //Update config
@@ -169,8 +182,15 @@ namespace IBE
                             delta = DateTime.Now - lastTry_Displaydata;
                             if (delta.TotalMilliseconds > 1000)
                             {
+                                if(!Program.SplashScreen.IsDisposed)
+                                    Program.SplashScreen.TopMost = false;
+
                                 // ignore this if it was asked before
                                 MBResult = MessageBox.Show(String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
+
+                                if(!Program.SplashScreen.IsDisposed)
+                                    Program.SplashScreen.TopMost = false;
+
                                 if (MBResult == DialogResult.Abort)
                                 {
                                     cErr.processError(ex, "Error in AppData_Changed()", true);

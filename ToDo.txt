@@ -1,5 +1,8 @@
 
-
+   * fixed screen order for messagebox "change AppConfig.xml ?"
+   * push all splash infos to global log
+   * removed GUID from logfile names
+-------------------------------------------------------------------------------------         
    * added sqltrigger for collecting a price history
    * added datasource to internal structures
    * bugfixing on EDDN function

@@ -262,13 +262,11 @@ namespace IBE
         public static Condition                         actualCondition;
         public static EDLogfileScanner                  LogfileScanner;
         public static SplashScreenForm                  SplashScreen;
-        public static SingleThreadLogger                Logger;
         public static EDDN.EDDNCommunicator             EDDNComm;
         public static PlausibiltyChecker                PlausibiltyCheck;
 
         private static ManualResetEvent                 m_MREvent;                      // for updating the database with scripts
         private static Boolean                          m_gotScriptErrors = false;      // for updating the database with scripts
-
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -283,9 +281,10 @@ namespace IBE
                     Program.SplashScreen = new SplashScreenForm();
                     Program.SplashScreen.Show();
 
+                    Program.SplashScreen.Logger = MainLog;
+
                     Program.SplashScreen.InfoAdd("initializing logger...");
-                    Program.Logger = new SingleThreadLogger(ThreadLoggerType.Form);
-                    Program.Logger.Log("Initialising...\n");
+                    Program.MainLog.Log("Initialising...\n");
                     Program.SplashScreen.InfoAppendLast("<OK>");
 
                     Program.SplashScreen.InfoAdd("starting sql server...");

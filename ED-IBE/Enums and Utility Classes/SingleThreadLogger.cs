@@ -13,7 +13,7 @@ namespace IBE
             if (!Directory.Exists(destPath))
                 Directory.CreateDirectory(destPath);
 
-            _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}{2}.log", threadLoggerType, DateTime.Now, Guid.NewGuid()));
+            _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}.log", threadLoggerType, DateTime.Now));
         }
 
         public void Log(string logMessage, bool error = false)

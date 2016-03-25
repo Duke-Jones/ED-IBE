@@ -109,7 +109,7 @@ namespace IBE
         {
             Program.SplashScreen.InfoAdd("initialize components...");
             InitializeComponent();
-            Program.Logger.Log("  - initialised component");
+            Program.MainLog.Log("  - initialised component");
             Program.SplashScreen.InfoAppendLast("<OK>");
         }
 
@@ -136,15 +136,15 @@ namespace IBE
                     {
                         Program.SplashScreen.InfoAdd("load settings...");
                         SetProductPath();
-                        Program.Logger.Log("  - product path set");
+                        Program.MainLog.Log("  - product path set");
                         Program.SplashScreen.InfoAppendLast("<OK>");
 
                         SetProductAppDataPath();
-                        Program.Logger.Log("  - product appdata set");
+                        Program.MainLog.Log("  - product appdata set");
 
                         Program.SplashScreen.InfoAdd("load game settings...");
                         GameSettings = new GameSettings(this);
-                        Program.Logger.Log("  - loaded game settings");
+                        Program.MainLog.Log("  - loaded game settings");
                         Program.SplashScreen.InfoAppendLast("<OK>");
 
                         retry = false;
@@ -162,16 +162,16 @@ namespace IBE
 
                 Program.SplashScreen.InfoAdd("prepare network interfaces...");
                 PopulateNetworkInterfaces();
-                Program.Logger.Log("  - populated network interfaces");
+                Program.MainLog.Log("  - populated network interfaces");
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 /*Program.SplashScreen.InfoAdd("create OCR object...");
                // ocr = new Ocr.Ocr(this); //moved to ocrcaptureandcorrect
-                Program.Logger.Log("  - created OCR object");
+                Program.MainLog.Log("  - created OCR object");
                 Program.SplashScreen.InfoChange("create OCR object...<OK>"); */
 
                 Application.ApplicationExit += Application_ApplicationExit;
-                Program.Logger.Log("  - set application exit handler");
+                Program.MainLog.Log("  - set application exit handler");
 
                 Program.SplashScreen.InfoAdd("initiate ocr...");
                 var OcrCapAndCorrectTabPage = new TabPage("Capture And Correct");
@@ -183,7 +183,7 @@ namespace IBE
                 {
                     OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
                     tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
-                    Program.Logger.Log("  - initialised Ocr ");
+                    Program.MainLog.Log("  - initialised Ocr ");
                     Program.SplashScreen.InfoAppendLast("<OK>");
 
                     Program.SplashScreen.InfoAdd("create ocr calibrator...");
@@ -192,7 +192,7 @@ namespace IBE
                     var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
                     OcrCalibratorTabPage.Controls.Add(oct);
                     tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
-                    Program.Logger.Log("  - initialised Ocr Calibrator");
+                    Program.MainLog.Log("  - initialised Ocr Calibrator");
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
@@ -200,7 +200,7 @@ namespace IBE
                 ApplySettings();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
-                Program.Logger.Log("  - applied settings");
+                Program.MainLog.Log("  - applied settings");
 
                 if (!Directory.Exists(Program.GetDataPath("OCR Correction Images")))
                     Directory.CreateDirectory(Program.GetDataPath("OCR Correction Images"));
@@ -2980,12 +2980,12 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                Program.Logger.Log("Error starting webserver", true);
-                Program.Logger.Log(ex.ToString(), true);
-                Program.Logger.Log(ex.Message, true);
-                Program.Logger.Log(ex.StackTrace, true);
+                Program.MainLog.Log("Error starting webserver", true);
+                Program.MainLog.Log(ex.ToString(), true);
+                Program.MainLog.Log(ex.Message, true);
+                Program.MainLog.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
-                    Program.Logger.Log(ex.InnerException.ToString(), true);
+                    Program.MainLog.Log(ex.InnerException.ToString(), true);
                 MsgBox.Show(
                     "Couldn't start webserver.  Maybe something is already using port 8080...?");
             }
