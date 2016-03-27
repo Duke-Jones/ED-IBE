@@ -385,7 +385,7 @@ namespace IBE.MTPriceAnalysis
                     sqlString = "select Sy.ID As SystemID, Sy.Systemname, ST.id As StationID, ST.Stationname," +
                                 "       FS.Distance," +
                                 "       C.ID as CommodityID, C.Commodity, C.LocCommodity," +
-                                "       nullif(CD.Buy, 0) As Buy, nullif(CD.Sell, 0) As Sell, CD.timestamp, " +
+                                "       nullif(CD.Buy, 0) As Buy, nullif(CD.Sell, 0) As Sell, CD.timestamp, CD.Sources_id, " +
                                 "       nullif(xp.min_buy, 0) As min_buy, nullif(xp.max_sell, 0) As max_sell" +
                                 "  from" +
                                 "			tbCommodity C inner join (tbCommodityData CD, tmFilteredStations FS, tbStations St, tbSystems Sy," +
@@ -410,7 +410,7 @@ namespace IBE.MTPriceAnalysis
                     sqlString = "select Sy.ID As SystemID, Sy.Systemname, ST.id As StationID, ST.Stationname," +
                                 "       FS.Distance," +
                                 "       C.ID as CommodityID, C.Commodity, C.LocCommodity," +
-                                "       nullif(CD.Buy, 0) As Buy, nullif(CD.Sell, 0) As Sell, CD.timestamp, " +
+                                "       nullif(CD.Buy, 0) As Buy, nullif(CD.Sell, 0) As Sell, CD.timestamp, CD.Sources_id, " +
                                 "       nullif(xp.min_buy, 0) As min_buy, nullif(xp.max_sell, 0) As max_sell" +
                                 "  from" +
                                 "			tbCommodity C left join (tbCommodityData CD, tmFilteredStations FS, tbStations St, tbSystems Sy," +
@@ -460,6 +460,7 @@ namespace IBE.MTPriceAnalysis
                             newRow.Buy_Min          = (Int32)(Int64)BuyMin["Buy"];
                             newRow.Buy_Distance     = (Double)BuyMin["Distance"];
                             newRow.Buy_Timestamp    = (DateTime)BuyMin["timestamp"];
+                            newRow.Buy_Sources_id   = (Int32)BuyMin["Sources_id"];
                         }
 
                         if (SellMax != null)
@@ -471,6 +472,7 @@ namespace IBE.MTPriceAnalysis
                             newRow.Sell_Max         = (Int32)(Int64)SellMax["Sell"];
                             newRow.Sell_Distance    = (Double)SellMax["Distance"];
                             newRow.Sell_Timestamp   = (DateTime)SellMax["timestamp"];
+                            newRow.Sell_Sources_id  = (Int32)SellMax["Sources_id"];
                         }
 
                         if ((BuyMin != null) && (SellMax != null))
@@ -525,6 +527,7 @@ namespace IBE.MTPriceAnalysis
         public DataTable calculateTradingRoutes()
         {
             String sqlBaseString;
+            String sqlBaseString2;
             String sqlString;
             DataSet Data            = new DataSet();
             var tmNeighbourstations  = new dsEliteDB.tmneighbourstationsDataTable();
@@ -735,8 +738,6 @@ namespace IBE.MTPriceAnalysis
 
                     Result = new dsEliteDB.tmpa_s2s_besttripsDataTable();
 
-
-
                     PV.progressStop();
 
                 }
@@ -816,6 +817,11 @@ namespace IBE.MTPriceAnalysis
                                 "    " +
                                 "    ) Pr2" +
                                 "    order by Profit desc {2}";
+                
+                sqlBaseString2 = "select distance from tmFilteredStations" +
+                                 " where (Station_id = {0}" +
+                                 "    or  Station_id = {1})" +
+                                 " order by distance limit 1";
 
                 // now get the timestamps of the best-profit commodities
                 foreach (dsEliteDB.tmpa_s2s_besttripsRow CurrentRow in Result)
@@ -823,13 +829,22 @@ namespace IBE.MTPriceAnalysis
                     sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1");
                     m_lDBCon.Execute(sqlString, "Timestamps", Data);
 
+                    sqlString = String.Format(sqlBaseString2, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2);
+                    m_lDBCon.Execute(sqlString, "Distance", Data);
+
                     if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"]))
                         CurrentRow.TimeStamp_1 = (DateTime)Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"];
 
                     if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["BkTimeStamp"]))
                         CurrentRow.TimeStamp_2 = (DateTime)Data.Tables["Timestamps"].Rows[0]["BkTimeStamp"];
+                    
+                    if((Data.Tables["Distance"].Rows.Count > 0) && (!DBNull.Value.Equals(Data.Tables["Distance"].Rows[0]["distance"])))
+                        CurrentRow.DistanceToRoute = (Double)Data.Tables["Distance"].Rows[0]["distance"];
+                    else
+                        CurrentRow.DistanceToRoute = double.NaN;
 
                     Data.Tables["Timestamps"].Clear();
+                    Data.Tables["Distance"].Clear();
                 }
                 
                 Debug.Print("Ende :" + DateTime.Now.ToShortTimeString());
@@ -895,7 +910,7 @@ namespace IBE.MTPriceAnalysis
                                 "select Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
                                 "       Sd1.Buy, Sd1.Supply, Sd1.SupplyLevel, Sd1.timestamp As Timestamp1, " +
                                 "       Sd2.Sell, Sd2.Demand, Sd2.DemandLevel, Sd2.timestamp As Timestamp2, " +
-                                "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit from " +
+                                "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit, Sd1.Sources_ID from " +
                                 " (select * from tbCommodityData " +
                                 "   where Station_ID   = {0}) Sd1 " +
                                 " join" +
@@ -934,7 +949,7 @@ namespace IBE.MTPriceAnalysis
                                           "        Cd.Buy, Cd.Supply, Cd.SupplyLevel, " +
                                           "        Cd.Sell, Cd.Demand, Cd.DemandLevel, " +
                                           "        Cd.Timestamp, BB.Best_Buy, BS.Best_Sell, " +
-                                          "        (BS.Best_Sell - BB.Best_Buy) As MaxProfit " +
+                                          "        (BS.Best_Sell - BB.Best_Buy) As MaxProfit, Cd.Sources_id " +
                                           " from tbStations St, tbCommodity Co, tbCommodityData Cd  " +
                                           "   join  " +
                                           " 	   (select Cd.Commodity_ID, Min(nullif(Cd.Buy, 0)) As Best_Buy  " +
@@ -973,7 +988,7 @@ namespace IBE.MTPriceAnalysis
             {
                 sqlString = String.Format("select Sy.ID As System_ID, Sy.Systemname As System, St.ID As Station_ID, St.Stationname As Station, Fi.Distance," +
                                           "        nullif(Cd.Buy,0) As Buy, nullif(Cd.Supply,0) As Supply, Cd.SupplyLevel, " +
-                                          "        nullif(Cd.Sell,0) As Sell, nullif(Cd.Demand,0) As Demand, CD.DemandLevel, CD.Timestamp" +
+                                          "        nullif(Cd.Sell,0) As Sell, nullif(Cd.Demand,0) As Demand, CD.DemandLevel, CD.Timestamp, Cd.Sources_id" +
                                           " from tbCommodityData Cd, tbSystems Sy, tbStations St, tmfilteredstations Fi" +
                                           " where Cd.Station_ID   = St.ID" +
                                           " and   St.System_ID    = Sy.ID" +

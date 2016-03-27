@@ -2043,7 +2043,7 @@
     "m and you want to support furthermore development, \r\nI was very happy about a sm" +
     "all donation. \r\n\r\nThank you, Duke Jones";
             // 
-            // panel2
+            // groupbox_Import
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.panel2.Controls.Add(this.label44);

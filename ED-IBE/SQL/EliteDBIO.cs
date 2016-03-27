@@ -2319,7 +2319,7 @@ namespace IBE.SQL
                 StringBuilder sqlStringB = new StringBuilder();
                 String timeFilter = "";
                 Int32 Counter;
-                List<Int32> commodityIDs = new List<Int32>();
+                Dictionary<Int32, Int32> commodityIDs = new Dictionary<Int32, Int32>();
                 List<Listing> missedListings = new List<Listing>();
                 Listing[] currentListing;
                 Boolean currentListingDone;
@@ -2335,13 +2335,16 @@ namespace IBE.SQL
                     priceCountTotal += Station.Listings.Count();
 
                 Counter = 0;
-                sendProgressEvent("updating prices", priceCount, priceCountTotal);
+                sendProgressEvent("updating prices", 0, 0);
 
                 Boolean AddComma = false;
                 int?  DemandLevel = null;
                 int?  SupplyLevel = null;
 
                 Dictionary<String, int?> Levels = new Dictionary<String, int?>();
+
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
                 // now add the commodities and prices
                 foreach (EDStation Station in Stations)
@@ -2364,7 +2367,7 @@ namespace IBE.SQL
                             foreach (Listing StationListing in currentListing)
                             {
                                 // is this commodity already added in this round ? .... 
-                                if (!commodityIDs.Contains(StationListing.CommodityId))
+                                if (!commodityIDs.ContainsKey(StationListing.CommodityId))
                                 {
                                     // ... no
 
@@ -2412,7 +2415,7 @@ namespace IBE.SQL
                                                                     timeFilter));
 
                                     AddComma = true;
-                                    commodityIDs.Add(StationListing.CommodityId);
+                                    commodityIDs.Add(StationListing.CommodityId, 0);
                                 }
                                 else
                                 {
@@ -2447,9 +2450,20 @@ namespace IBE.SQL
 
                     } while (!currentListingDone);
                 }
+
+                sendProgressEvent("updating prices", 1, 1);
+
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
             }
             catch (Exception ex)
             {
+                try{
+                    // gettin' some freaky performance
+                    Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+                }catch (Exception) { }
+
                 throw new Exception("Error while importing prices", ex);
             }
         }
@@ -2462,20 +2476,32 @@ namespace IBE.SQL
         {
             try
             {
-                String[] CSV_Strings    = new String[0];
-                var reader              = new StreamReader(File.OpenRead(filename));
+                List<String> CSV_Strings    = new List<string>();
 
+                var reader              = new StreamReader(File.OpenRead(filename));
+                Int32 counter           = 0;
 
                 string header = reader.ReadLine();
 
+                sendProgressEvent("reading data from file ...", 0, 0);
+
+              
                 if(header.StartsWith("System;Station"))
                 {
-                    CSV_Strings = reader.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                    do
+                    {
+                        CSV_Strings.Add(reader.ReadLine());
+                        counter ++;
+                        sendProgressEvent("reading data from file ...", counter, 0);
+                    } while (!reader.EndOfStream);
                 }
+
+                sendProgressEvent("reading data from file ...", counter, counter);
+                sendProgressEvent("reading data from file ...", 1, 1);
+
                 reader.Close();
 
-
-                ImportPricesFromCSVStrings(CSV_Strings, importBehaviour);
+                ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour);
 
                 return CSV_Strings.Count();
             }
@@ -2499,6 +2525,8 @@ namespace IBE.SQL
             DataTable newData;
             List<EDStation> StationData;
             List<EDSystem> SystemData = null;
+            Int32 counter = 0;
+            Dictionary<String, String> foundNames = new Dictionary<string,string>();            // quick cache for finding commodity names
 
             try
             {
@@ -2512,6 +2540,8 @@ namespace IBE.SQL
                 if(currentLanguage != Program.BASE_LANGUAGE)
                     newData.Columns.Add(currentLanguage, typeof(String));
 
+                sendProgressEvent("analysing data...", 0, 0);
+
                 foreach (String DataLine in CSV_Strings)
 	            {
                     String currentName;
@@ -2520,17 +2550,30 @@ namespace IBE.SQL
                     if(DataLine.Trim().Length > 0)
                     {
                         currentName         = new CsvRow(DataLine).CommodityName;
-                        currentCommodity    = Program.Data.BaseData.tbcommoditylocalization.Where(x => x.locname.Equals(currentName, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
-                        if((currentCommodity.Count == 0) && (!String.IsNullOrEmpty(currentName)))
+                        if(!String.IsNullOrEmpty(currentName))
                         {
-                            if(currentLanguage == Program.BASE_LANGUAGE)
-                                newData.Rows.Add(currentName);
-                            else
-                                newData.Rows.Add(currentName, currentName);
+                            if(!foundNames.ContainsKey(currentName))
+                            {
+                                currentCommodity    = Program.Data.BaseData.tbcommoditylocalization.Where(x => x.locname.Equals(currentName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+                                if(currentCommodity.Count == 0)
+                                {
+                                    if(currentLanguage == Program.BASE_LANGUAGE)
+                                        newData.Rows.Add(currentName);
+                                    else
+                                        newData.Rows.Add(currentName, currentName);
+                                }
+
+                                foundNames.Add(currentName, "");
+                            }
                         }
                     }
+                    counter++;
+                    sendProgressEvent("analysing data...", counter, CSV_Strings.GetUpperBound(0)+1);
 	            }
+
+                sendProgressEvent("analysing data...", 1, 1);
 
                 if(newData.Rows.Count > 0)
                 {
@@ -2550,8 +2593,10 @@ namespace IBE.SQL
                 // END : section for automatically add unknown commodities
                 // *****************************************************************
 
+                sendProgressEvent("converting data...", 0, 0);
                 // convert csv-strings to EDStation-objects
                 StationData = fromCSV(CSV_Strings, ref SystemData);
+                sendProgressEvent("converting data...", 1, 1);
 
                 // check if we've unknown systems or stations
                 foreach (EDStation Station in StationData)
@@ -2627,6 +2672,7 @@ namespace IBE.SQL
             String currentID                                = "";
             EDStation currentStation                        = null;
             Int32 Index                                     = 0;
+            Dictionary<String, Int32> commodityIDCache      = new Dictionary<string,Int32>();            // quick cache for finding commodity names
 
             try
             {
@@ -2683,7 +2729,7 @@ namespace IBE.SQL
                             }
                         }
 
-                        currentStation.addListing(currentRow);
+                        currentStation.addListing(currentRow, ref commodityIDCache);
                     }
 	            }
 
@@ -2779,78 +2825,113 @@ namespace IBE.SQL
         /// exports the market data to a file
         /// </summary>
         /// <param name="fileName"></param>
-        public void ExportMarketDataToCSV(string fileName, Boolean inCurrentLanguage)
+        public void ExportMarketDataToCSV(string fileName, Boolean inCurrentLanguage, Boolean extendedFormat)
         {
             String sqlString;
             DataTable data;
             Int32 Counter;
+            StringBuilder sBuilder = new StringBuilder();
+            Char filterCharacter;
+            Int32 totalDataCount = 0;
 
             try
             {
 
-                if (inCurrentLanguage)
-                {
-                    // export names in user language
-                    sqlString = "select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
-                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C, tbeconomylevel E" +
-                                " where Sy.id           = St.system_id" + 
-                                " and   St.id           = D.station_id" +
-                                " and   D.commodity_id  = C.id" +
-                                " order by Sy.systemname, St.stationname, C.loccommodity"; 
-                }
-                else
-                {
-                    // export names in default language (english)
-                    sqlString = "select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp" +
-                                " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C" +
-                                " where Sy.id           = St.system_id" + 
-                                " and   St.id           = D.station_id" +
-                                " and   D.commodity_id  = C.id" +
-                                " order by Sy.systemname, St.stationname, C.commodity"; 
-                }
-
                 if(System.IO.File.Exists(fileName))
                     System.IO.File.Delete(fileName);
 
+                var writer = new StreamWriter(File.OpenWrite(fileName));
+
+                if(extendedFormat)
+                    writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;SourceFileName;Source");
+                else
+                    writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
+
                 data        = new DataTable();
                 Counter     = 0;
+                    
+                totalDataCount = Program.DBCon.Execute<Int32>("select count(*) from tbCommodityData;");
 
-                Program.DBCon.Execute(sqlString, data);
-
-                sendProgressEvent("export prices...", 0, 0);
-
-                var writer = new StreamWriter(File.OpenWrite(fileName));
-                writer.WriteLine("System;Station;Commodity;Sell;Buy;Demand;;Supply;;Date;");
-                
-
-                foreach (DataRow row in data.Rows)
+                for (int i = 0; i < 36; i++)
                 {
-                    String Demand = "";
-                    String Supply = "";
+                    if(i < 10)
+                        filterCharacter = (char)(48 + i);
+                    else
+                        filterCharacter = (char)(65 + i - 10);
 
                     if (inCurrentLanguage)
                     {
-                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "loclevel")).NToString("");
-                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "loclevel")).NToString("");
+                        // export names in user language
+                        sqlString = String.Format("select Sy.systemname, St.stationname, C.loccommodity as commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp, S.source" +
+                                                  " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C, tbeconomylevel E, tbSource S" +
+                                                  " where Sy.id           = St.system_id" + 
+                                                  " and   St.id           = D.station_id" +
+                                                  " and   D.commodity_id  = C.id" +
+                                                  " and   D.sources_id    = S.id" +
+                                                  " and   Sy.systemname like '{0}%'" +
+                                                  " order by Sy.systemname, St.stationname, C.loccommodity",
+                                                  filterCharacter); 
                     }
                     else
                     {
-                        Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "level")).NToString("");
-                        Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "level")).NToString("");
+                        // export names in default language (english)
+                        sqlString = String.Format("select Sy.systemname, St.stationname, C.commodity, D.sell, D.buy, D.demand, D.demandlevel, D.supply, D.supplylevel, D.timestamp, S.source" +
+                                                  " from tbSystems Sy, tbStations St, tbCommodityData D, tbCommodity C, tbSource S" +
+                                                  " where Sy.id           = St.system_id" + 
+                                                  " and   St.id           = D.station_id" +
+                                                  " and   D.commodity_id  = C.id" +
+                                                  " and   D.sources_id    = S.id" +
+                                                  " and   Sy.systemname like '{0}%'" +
+                                                  " order by Sy.systemname, St.stationname, C.commodity",
+                                                  filterCharacter); 
                     }
 
-                    writer.WriteLine(row["systemname"] + ";" + 
-                                     row["stationname"] + ";" + 
-                                     row["commodity"] + ";" + 
-                                     row["sell"] + ";" + 
-                                     row["buy"] + ";" + 
-                                     row["demand"] + ";" + 
-                                     Demand + ";" + 
-                                     row["supply"] + ";" + 
-                                     Supply + ";" + 
-                                     row["timestamp"]);
-                    Counter++;
-                    sendProgressEvent("export prices...", Counter, data.Rows.Count);
+                    sendProgressEvent(String.Format("collecting data '{0}'...", filterCharacter), Counter, totalDataCount);
+                    Program.DBCon.Execute(sqlString, data);
+
+                    sendProgressEvent(String.Format("export prices '{0}'...", filterCharacter), Counter, totalDataCount);
+
+                    foreach (DataRow row in data.Rows)
+                    {
+                        String Demand = "";
+                        String Supply = "";
+
+                        if (inCurrentLanguage)
+                        {
+                            Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "loclevel")).NToString("");
+                            Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "loclevel")).NToString("");
+                        }
+                        else
+                        {
+                            Demand =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["demandlevel"]), "level")).NToString("");
+                            Supply =  ((String)BaseTableIDToName("economylevel", SQL.DBConvert.To<int?>(row["supplylevel"]), "level")).NToString("");
+                        }
+
+                        sBuilder.Append(row["systemname"] + ";" + 
+                                        row["stationname"] + ";" + 
+                                        row["commodity"] + ";" + 
+                                        row["sell"] + ";" + 
+                                        row["buy"] + ";" + 
+                                        row["demand"] + ";" + 
+                                        Demand + ";" + 
+                                        row["supply"] + ";" + 
+                                        Supply + ";" + 
+                                        row["timestamp"]);
+
+                        if(extendedFormat)
+                        {
+
+                            sBuilder.Append(";;" +              //sourceFileName, no more in use but for compatibility
+                                           row["source"]);      //source
+                        }
+
+                        writer.WriteLine(sBuilder.ToString());
+
+                        sBuilder.Clear();
+
+                        Counter++;
+                        sendProgressEvent(String.Format("export prices '{0}'...", filterCharacter), Counter, totalDataCount);
+                    }
                 }
 
                 sendProgressEvent("export prices...", 1, 1);

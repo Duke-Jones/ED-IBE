@@ -1500,6 +1500,9 @@ namespace IBE.MTPriceAnalysis
 
         private void dgvStation_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
+            DataGridViewRow dRow;
+            Int32 intValue;
+
             try
             {
                 DataGridViewExt dGrid       = (DataGridViewExt)sender;
@@ -1508,13 +1511,20 @@ namespace IBE.MTPriceAnalysis
                 if (dColumn.DataPropertyName.Equals("Demandlevel", StringComparison.InvariantCultureIgnoreCase) || 
                     dColumn.DataPropertyName.Equals("Supplylevel", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    DataGridViewRow dRow    =  dGrid.Rows[e.RowIndex];
-                    Int32 intValue;
+                    dRow    =  dGrid.Rows[e.RowIndex];
                     if (Int32.TryParse(dRow.Cells[dColumn.Name].Value.ToString(), out intValue))
                         e.Value = (String)Program.Data.BaseTableIDToName("economylevel", intValue, "loclevel");
-                    
-
                 }
+                else if (dColumn.DataPropertyName.StartsWith("Sources_id", StringComparison.InvariantCultureIgnoreCase)  || 
+                         dColumn.DataPropertyName.StartsWith("Buy_Sources_id", StringComparison.InvariantCultureIgnoreCase) || 
+                         dColumn.DataPropertyName.StartsWith("Sell_Sources_id", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    dRow    =  dGrid.Rows[e.RowIndex];
+                    
+                    if (Int32.TryParse(dRow.Cells[dColumn.Name].Value.ToString(), out intValue))
+                        e.Value = (String)Program.Data.BaseTableIDToName("source", intValue);
+                }
+
             }
             catch (Exception ex)
             {

@@ -347,22 +347,53 @@ namespace IBE.EDDB_Data
         /// adds a record to the pricelistings of this station
         /// </summary>
         /// <param name="CSV_String"></param>
-        public void addListing(CsvRow Csv_Row)
+        public void addListing(CsvRow Csv_Row, ref Dictionary<string,Int32> foundCommodityCache)
         {
             SQL.Datasets.dsEliteDB.tbcommoditylocalizationRow[] CommodityRow;
+            Int32 CommodityID = 0;
+            Boolean known = false;
 
             try
             {
-                CommodityRow = (SQL.Datasets.dsEliteDB.tbcommoditylocalizationRow[])Program.Data.BaseData.tbcommoditylocalization.Select(
-                                    String.Format("locname = '{0}'", SQL.DBConnector.DTEscape(Csv_Row.CommodityName)));
+                if(foundCommodityCache != null)
+                {
+                    if (!foundCommodityCache.TryGetValue(Csv_Row.CommodityName, out CommodityID)) 
+                    {
+                        CommodityRow = (SQL.Datasets.dsEliteDB.tbcommoditylocalizationRow[])Program.Data.BaseData.tbcommoditylocalization.Select(
+                                            String.Format("locname = '{0}'", SQL.DBConnector.DTEscape(Csv_Row.CommodityName)));
+
+                        if(CommodityRow.GetUpperBound(0) >= 0)
+                        { 
+                            CommodityID = (Int32)CommodityRow[0].commodity_id;
+
+                            foundCommodityCache.Add(Csv_Row.CommodityName, CommodityID);
+
+                            known = true;
+                        }
+                    }
+                    else
+                        known = true;
+                }
+                else
+                { 
+                    CommodityRow = (SQL.Datasets.dsEliteDB.tbcommoditylocalizationRow[])Program.Data.BaseData.tbcommoditylocalization.Select(
+                                        String.Format("locname = '{0}'", SQL.DBConnector.DTEscape(Csv_Row.CommodityName)));
+
+                    if(CommodityRow.GetUpperBound(0) >= 0)
+                    { 
+                        CommodityID = (Int32)CommodityRow[0].commodity_id;
+                        known = true;
+                    }
+
+                }
                 
-                if(CommodityRow.GetUpperBound(0) >= 0)
+                if(known)
                 { 
                     ListingExtendMode       = true;
                     Listing newListing      = new Listing();
 
                     newListing.StationId    = this.Id;
-                    newListing.CommodityId  = (Int32)CommodityRow[0].commodity_id;
+                    newListing.CommodityId  = CommodityID;
                     newListing.Supply       = (Int32)Csv_Row.Supply;
                     newListing.SupplyLevel  = Csv_Row.SupplyLevel.Trim() == "" ? null : Csv_Row.SupplyLevel;
                     newListing.BuyPrice     = (Int32)Csv_Row.BuyPrice;

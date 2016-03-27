@@ -426,6 +426,43 @@ namespace IBE.SQL
             return retValue;
         }
 
+        public T Execute <T>(string CommandText) 
+        {
+            T retValue = Activator.CreateInstance<T>(); 
+
+            Object DataObject = null;
+
+            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
+                throw new Exception("Timeout while waiting for Monitor-Lock");
+            }
+            // LogFile.Write("Execute 7, <" & CommandText & ">") 
+            try {
+                DbCommand Command = new MySqlCommand();
+                Command.CommandText = CommandText;
+                Command.Connection = m_Connection;
+                if (m_Transaction != null) 
+                {
+                    Command.Transaction = m_Transaction;
+                }
+
+                DataObject = Command.ExecuteScalar();
+
+                if(DataObject != null)
+                {
+                    retValue = (T)Convert.ChangeType(DataObject, typeof(T));
+                }
+                
+                return retValue;
+            }
+            catch (Exception ex) {
+                MonitorExit(this);
+                throw new Exception(("Error in \'ExecuteScalar\', SQLString = <" 
+                                + (CommandText + (">" + ("(" 
+                                + (m_ConfigData.Name + ")"))))), ex);
+            }
+            MonitorExit(this);
+        }
+
         /// <summary>
         /// refreshes a with "TableRead" already loaded table out of the database
         /// </summary>
@@ -1921,37 +1958,7 @@ namespace IBE.SQL
             MonitorExit(this);
         }
     
-        // '' <summary>
-        // '' F�hrt einen SQL-Kommando aus und gibt einen Skalarwert zur�ck
-        // '' </summary>
-        // '' <param name="CommandText">auszuf�hrendes SQL-Kommando</param>
-        // '' <param name="DataObject">(out) gibt ein Datum zur�ck</param>
-        // '' <returns></returns>
-        // '' <remarks></remarks>
-        public Int32 Execute(string CommandText, ref object DataObject) {
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
-                throw new Exception("Zeit�berschreitung beim warten auf Monitor-Sperre f�r Execute()");
-            }
-            // LogFile.Write("Execute 7, <" & CommandText & ">") 
-            try {
-                DbCommand Command = new MySqlCommand();
-                Command.CommandText = CommandText;
-                Command.Connection = m_Connection;
-                if (m_Transaction != null) 
-                {
-                    Command.Transaction = m_Transaction;
-                }
-                DataObject = Command.ExecuteScalar();
-                Execute = ( (DataObject == null) ? 0 : 1 );
-            }
-            catch (Exception ex) {
-                MonitorExit(this);
-                throw new Exception(("Fehler bei \'ExecuteScalar\', SQLString = <" 
-                                + (CommandText + (">" + ("(" 
-                                + (m_ConfigData.Name + ")"))))), ex);
-            }
-            MonitorExit(this);
-        }
+
     
         // '' <summary>
         // '' Erm�glicht Zugriff auf das Mysql-Verbindungsobjekt

@@ -152,7 +152,7 @@
             this.pbTrimmed.TabIndex = 7;
             this.pbTrimmed.TabStop = false;
             // 
-            // panel2
+            // groupbox_Import
             // 
             this.panel2.AutoScroll = true;
             this.panel2.Controls.Add(this.pbOriginalImage);

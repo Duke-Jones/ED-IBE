@@ -31,13 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(tabPriceAnalysis));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
@@ -69,13 +62,21 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cbOnlyStationsWithin = new System.Windows.Forms.CheckBox();
             this.cmbShowSystem = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -93,23 +94,6 @@
             this.cbShowDiagramAllCommodities = new System.Windows.Forms.CheckBox();
             this.cbOnlyTradedCommodities = new System.Windows.Forms.CheckBox();
             this.dgvAllCommodities = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
-            this.commodityIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.commodityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Max_Profit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buySystemIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buySystemDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buyStationIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buyStationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buyMinDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buyDistanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buyTimestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellSystemIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellSystemDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellStationIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellStationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellMaxDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellDistanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sellTimestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.scAllCommodities_2 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -135,7 +119,7 @@
             this.bestBuyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bestSellDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.maxProfitDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sourceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Source_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tmpabystationBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
             this.button6 = new System.Windows.Forms.Button();
@@ -171,6 +155,7 @@
             this.demandDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.demandLevelDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timestampDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tmpabycommodityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.scStationToStation_2 = new System.Windows.Forms.SplitContainer();
             this.dgvStation1 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
@@ -185,6 +170,7 @@
             this.demandlevelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.profitDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvStationToStationCommodities1 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.dgvStation2 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -198,6 +184,7 @@
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Source2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvStationToStationCommodities2 = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.label19 = new System.Windows.Forms.Label();
             this.cbMaxTripDistance = new System.Windows.Forms.CheckBox();
@@ -218,6 +205,7 @@
             this.timeStamp1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.profitDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.distanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DistanceToRoute = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cmbMaxTripDistance = new System.Windows.Forms.ComboBoxInt32();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -243,6 +231,25 @@
             this.tmpa_bycommodityTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tmpa_bycommodityTableAdapter();
             this.cmbStationLightSeconds = new System.Windows.Forms.ComboBoxInt32();
             this.cmbSystemLightYears = new System.Windows.Forms.ComboBoxInt32();
+            this.commodityIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commodityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Max_Profit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buySystemIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buySystemDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buyStationIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buyStationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buyMinDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buyDistanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buyTimestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Source_id1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellSystemIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellSystemDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellStationIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellStationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellMaxDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellDistanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sellTimestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Source_id2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.tpAllCommodities.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scAllCommodities_1)).BeginInit();
@@ -510,13 +517,15 @@
             this.buyMinDataGridViewTextBoxColumn,
             this.buyDistanceDataGridViewTextBoxColumn,
             this.buyTimestampDataGridViewTextBoxColumn,
+            this.Source_id1,
             this.sellSystemIDDataGridViewTextBoxColumn,
             this.sellSystemDataGridViewTextBoxColumn,
             this.sellStationIDDataGridViewTextBoxColumn,
             this.sellStationDataGridViewTextBoxColumn,
             this.sellMaxDataGridViewTextBoxColumn,
             this.sellDistanceDataGridViewTextBoxColumn,
-            this.sellTimestampDataGridViewTextBoxColumn});
+            this.sellTimestampDataGridViewTextBoxColumn,
+            this.Source_id2});
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -535,173 +544,8 @@
             this.dgvAllCommodities.TabIndex = 45;
             this.dgvAllCommodities.Tag = "AllCommodities;1";
             this.dgvAllCommodities.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvAllCommodities.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvStation_CellFormatting);
             this.dgvAllCommodities.Click += new System.EventHandler(this.DataGridView_Click);
-            // 
-            // commodityIDDataGridViewTextBoxColumn
-            // 
-            this.commodityIDDataGridViewTextBoxColumn.DataPropertyName = "CommodityID";
-            this.commodityIDDataGridViewTextBoxColumn.HeaderText = "CommodityID";
-            this.commodityIDDataGridViewTextBoxColumn.Name = "commodityIDDataGridViewTextBoxColumn";
-            this.commodityIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.commodityIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // commodityDataGridViewTextBoxColumn
-            // 
-            this.commodityDataGridViewTextBoxColumn.DataPropertyName = "Commodity";
-            this.commodityDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.commodityDataGridViewTextBoxColumn.HeaderText = "Commodity";
-            this.commodityDataGridViewTextBoxColumn.Name = "commodityDataGridViewTextBoxColumn";
-            this.commodityDataGridViewTextBoxColumn.ReadOnly = true;
-            this.commodityDataGridViewTextBoxColumn.Width = 64;
-            // 
-            // Max_Profit
-            // 
-            this.Max_Profit.DataPropertyName = "Max_Profit";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.Max_Profit.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Max_Profit.FillWeight = 70F;
-            this.Max_Profit.HeaderText = "Max. Profit";
-            this.Max_Profit.Name = "Max_Profit";
-            this.Max_Profit.ReadOnly = true;
-            this.Max_Profit.Width = 75;
-            // 
-            // buySystemIDDataGridViewTextBoxColumn
-            // 
-            this.buySystemIDDataGridViewTextBoxColumn.DataPropertyName = "Buy_SystemID";
-            this.buySystemIDDataGridViewTextBoxColumn.HeaderText = "Buy_SystemID";
-            this.buySystemIDDataGridViewTextBoxColumn.Name = "buySystemIDDataGridViewTextBoxColumn";
-            this.buySystemIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buySystemIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // buySystemDataGridViewTextBoxColumn
-            // 
-            this.buySystemDataGridViewTextBoxColumn.DataPropertyName = "Buy_System";
-            this.buySystemDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.buySystemDataGridViewTextBoxColumn.HeaderText = "System (buy)";
-            this.buySystemDataGridViewTextBoxColumn.Name = "buySystemDataGridViewTextBoxColumn";
-            this.buySystemDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buySystemDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // buyStationIDDataGridViewTextBoxColumn
-            // 
-            this.buyStationIDDataGridViewTextBoxColumn.DataPropertyName = "Buy_StationID";
-            this.buyStationIDDataGridViewTextBoxColumn.HeaderText = "Buy_StationID";
-            this.buyStationIDDataGridViewTextBoxColumn.Name = "buyStationIDDataGridViewTextBoxColumn";
-            this.buyStationIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buyStationIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // buyStationDataGridViewTextBoxColumn
-            // 
-            this.buyStationDataGridViewTextBoxColumn.DataPropertyName = "Buy_Station";
-            this.buyStationDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.buyStationDataGridViewTextBoxColumn.HeaderText = "Station (buy)";
-            this.buyStationDataGridViewTextBoxColumn.Name = "buyStationDataGridViewTextBoxColumn";
-            this.buyStationDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buyStationDataGridViewTextBoxColumn.Width = 64;
-            // 
-            // buyMinDataGridViewTextBoxColumn
-            // 
-            this.buyMinDataGridViewTextBoxColumn.DataPropertyName = "Buy_Min";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.buyMinDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.buyMinDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.buyMinDataGridViewTextBoxColumn.HeaderText = "Price (buy)";
-            this.buyMinDataGridViewTextBoxColumn.Name = "buyMinDataGridViewTextBoxColumn";
-            this.buyMinDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buyMinDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // buyDistanceDataGridViewTextBoxColumn
-            // 
-            this.buyDistanceDataGridViewTextBoxColumn.DataPropertyName = "Buy_Distance";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle3.Format = "N1";
-            dataGridViewCellStyle3.NullValue = null;
-            this.buyDistanceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.buyDistanceDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.buyDistanceDataGridViewTextBoxColumn.HeaderText = "Distance";
-            this.buyDistanceDataGridViewTextBoxColumn.Name = "buyDistanceDataGridViewTextBoxColumn";
-            this.buyDistanceDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buyDistanceDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // buyTimestampDataGridViewTextBoxColumn
-            // 
-            this.buyTimestampDataGridViewTextBoxColumn.DataPropertyName = "Buy_Timestamp";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.buyTimestampDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
-            this.buyTimestampDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.buyTimestampDataGridViewTextBoxColumn.HeaderText = "Updated";
-            this.buyTimestampDataGridViewTextBoxColumn.Name = "buyTimestampDataGridViewTextBoxColumn";
-            this.buyTimestampDataGridViewTextBoxColumn.ReadOnly = true;
-            this.buyTimestampDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // sellSystemIDDataGridViewTextBoxColumn
-            // 
-            this.sellSystemIDDataGridViewTextBoxColumn.DataPropertyName = "Sell_SystemID";
-            this.sellSystemIDDataGridViewTextBoxColumn.HeaderText = "Sell_SystemID";
-            this.sellSystemIDDataGridViewTextBoxColumn.Name = "sellSystemIDDataGridViewTextBoxColumn";
-            this.sellSystemIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellSystemIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // sellSystemDataGridViewTextBoxColumn
-            // 
-            this.sellSystemDataGridViewTextBoxColumn.DataPropertyName = "Sell_System";
-            this.sellSystemDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.sellSystemDataGridViewTextBoxColumn.HeaderText = "System (sell)";
-            this.sellSystemDataGridViewTextBoxColumn.Name = "sellSystemDataGridViewTextBoxColumn";
-            this.sellSystemDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellSystemDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // sellStationIDDataGridViewTextBoxColumn
-            // 
-            this.sellStationIDDataGridViewTextBoxColumn.DataPropertyName = "Sell_StationID";
-            this.sellStationIDDataGridViewTextBoxColumn.HeaderText = "Sell_StationID";
-            this.sellStationIDDataGridViewTextBoxColumn.Name = "sellStationIDDataGridViewTextBoxColumn";
-            this.sellStationIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellStationIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // sellStationDataGridViewTextBoxColumn
-            // 
-            this.sellStationDataGridViewTextBoxColumn.DataPropertyName = "Sell_Station";
-            this.sellStationDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.sellStationDataGridViewTextBoxColumn.HeaderText = "Station (sell)";
-            this.sellStationDataGridViewTextBoxColumn.Name = "sellStationDataGridViewTextBoxColumn";
-            this.sellStationDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellStationDataGridViewTextBoxColumn.Width = 64;
-            // 
-            // sellMaxDataGridViewTextBoxColumn
-            // 
-            this.sellMaxDataGridViewTextBoxColumn.DataPropertyName = "Sell_Max";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.sellMaxDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
-            this.sellMaxDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.sellMaxDataGridViewTextBoxColumn.HeaderText = "Price (sell)";
-            this.sellMaxDataGridViewTextBoxColumn.Name = "sellMaxDataGridViewTextBoxColumn";
-            this.sellMaxDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellMaxDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // sellDistanceDataGridViewTextBoxColumn
-            // 
-            this.sellDistanceDataGridViewTextBoxColumn.DataPropertyName = "Sell_Distance";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle6.Format = "N1";
-            dataGridViewCellStyle6.NullValue = null;
-            this.sellDistanceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
-            this.sellDistanceDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.sellDistanceDataGridViewTextBoxColumn.HeaderText = "Distance";
-            this.sellDistanceDataGridViewTextBoxColumn.Name = "sellDistanceDataGridViewTextBoxColumn";
-            this.sellDistanceDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellDistanceDataGridViewTextBoxColumn.Width = 64;
-            // 
-            // sellTimestampDataGridViewTextBoxColumn
-            // 
-            this.sellTimestampDataGridViewTextBoxColumn.DataPropertyName = "Sell_Timestamp";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.sellTimestampDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
-            this.sellTimestampDataGridViewTextBoxColumn.FillWeight = 59.17297F;
-            this.sellTimestampDataGridViewTextBoxColumn.HeaderText = "Updated";
-            this.sellTimestampDataGridViewTextBoxColumn.Name = "sellTimestampDataGridViewTextBoxColumn";
-            this.sellTimestampDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sellTimestampDataGridViewTextBoxColumn.Width = 62;
             // 
             // scAllCommodities_2
             // 
@@ -877,7 +721,7 @@
             this.bestBuyDataGridViewTextBoxColumn,
             this.bestSellDataGridViewTextBoxColumn,
             this.maxProfitDataGridViewTextBoxColumn,
-            this.sourceDataGridViewTextBoxColumn});
+            this.Source_id});
             this.dgvByStation.DataSource = this.tmpabystationBindingSource;
             this.dgvByStation.DoubleBuffer = true;
             this.dgvByStation.Location = new System.Drawing.Point(4, 45);
@@ -886,6 +730,7 @@
             this.dgvByStation.TabIndex = 18;
             this.dgvByStation.Tag = "byStation;1";
             this.dgvByStation.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvByStation.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvStation_CellFormatting);
             this.dgvByStation.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // commodityIDDataGridViewTextBoxColumn2
@@ -988,12 +833,12 @@
             this.maxProfitDataGridViewTextBoxColumn.Name = "maxProfitDataGridViewTextBoxColumn";
             this.maxProfitDataGridViewTextBoxColumn.Width = 95;
             // 
-            // sourceDataGridViewTextBoxColumn
+            // Source_id
             // 
-            this.sourceDataGridViewTextBoxColumn.DataPropertyName = "Source";
-            this.sourceDataGridViewTextBoxColumn.HeaderText = "Source";
-            this.sourceDataGridViewTextBoxColumn.Name = "sourceDataGridViewTextBoxColumn";
-            this.sourceDataGridViewTextBoxColumn.Width = 95;
+            this.Source_id.DataPropertyName = "Sources_id";
+            this.Source_id.HeaderText = "Source";
+            this.Source_id.Name = "Source_id";
+            this.Source_id.ReadOnly = true;
             // 
             // tmpabystationBindingSource
             // 
@@ -1250,7 +1095,8 @@
             this.sellDataGridViewTextBoxColumn2,
             this.demandDataGridViewTextBoxColumn2,
             this.demandLevelDataGridViewTextBoxColumn2,
-            this.timestampDataGridViewTextBoxColumn2});
+            this.timestampDataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn12});
             this.dgvByCommodity.DataSource = this.tmpabycommodityBindingSource;
             this.dgvByCommodity.DoubleBuffer = true;
             this.dgvByCommodity.Location = new System.Drawing.Point(4, 41);
@@ -1259,6 +1105,7 @@
             this.dgvByCommodity.TabIndex = 26;
             this.dgvByCommodity.Tag = "byCcommodity;stationDataGridViewTextBoxColumn";
             this.dgvByCommodity.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
+            this.dgvByCommodity.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvStation_CellFormatting);
             this.dgvByCommodity.Click += new System.EventHandler(this.DataGridView_Click);
             // 
             // systemIDDataGridViewTextBoxColumn
@@ -1349,6 +1196,13 @@
             this.timestampDataGridViewTextBoxColumn2.Name = "timestampDataGridViewTextBoxColumn2";
             this.timestampDataGridViewTextBoxColumn2.Width = 114;
             // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.DataPropertyName = "Sources_id";
+            this.dataGridViewTextBoxColumn12.HeaderText = "Source";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.ReadOnly = true;
+            // 
             // tmpabycommodityBindingSource
             // 
             this.tmpabycommodityBindingSource.DataMember = "tmpa_bycommodity";
@@ -1399,7 +1253,8 @@
             this.demandDataGridViewTextBoxColumn,
             this.demandlevelDataGridViewTextBoxColumn,
             this.Column1,
-            this.profitDataGridViewTextBoxColumn});
+            this.profitDataGridViewTextBoxColumn,
+            this.Source});
             dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1523,6 +1378,13 @@
             this.profitDataGridViewTextBoxColumn.ReadOnly = true;
             this.profitDataGridViewTextBoxColumn.Width = 53;
             // 
+            // Source
+            // 
+            this.Source.DataPropertyName = "Sources_id";
+            this.Source.HeaderText = "Source";
+            this.Source.Name = "Source";
+            this.Source.ReadOnly = true;
+            // 
             // dgvStationToStationCommodities1
             // 
             this.dgvStationToStationCommodities1.AllowUserToAddRows = false;
@@ -1571,7 +1433,8 @@
             this.dataGridViewTextBoxColumn8,
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10,
-            this.dataGridViewTextBoxColumn11});
+            this.dataGridViewTextBoxColumn11,
+            this.Source2});
             dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1695,6 +1558,13 @@
             this.dataGridViewTextBoxColumn11.ReadOnly = true;
             this.dataGridViewTextBoxColumn11.Width = 53;
             // 
+            // Source2
+            // 
+            this.Source2.DataPropertyName = "Sources_id";
+            this.Source2.HeaderText = "Source";
+            this.Source2.Name = "Source2";
+            this.Source2.ReadOnly = true;
+            // 
             // dgvStationToStationCommodities2
             // 
             this.dgvStationToStationCommodities2.AllowUserToAddRows = false;
@@ -1795,15 +1665,16 @@
             this.distanceToStar2DataGridViewTextBoxColumn,
             this.timeStamp1DataGridViewTextBoxColumn,
             this.profitDataGridViewTextBoxColumn1,
-            this.distanceDataGridViewTextBoxColumn});
-            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle42.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvStationToStationRoutes.DefaultCellStyle = dataGridViewCellStyle42;
+            this.distanceDataGridViewTextBoxColumn,
+            this.DistanceToRoute});
+            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle43.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvStationToStationRoutes.DefaultCellStyle = dataGridViewCellStyle43;
             this.dgvStationToStationRoutes.DoubleBuffer = true;
             this.dgvStationToStationRoutes.Location = new System.Drawing.Point(6, 52);
             this.dgvStationToStationRoutes.Name = "dgvStationToStationRoutes";
@@ -1935,13 +1806,24 @@
             // 
             this.distanceDataGridViewTextBoxColumn.DataPropertyName = "Distance";
             dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle41.Format = "N1";
+            dataGridViewCellStyle41.Format = "N2";
             dataGridViewCellStyle41.NullValue = null;
             this.distanceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle41;
             this.distanceDataGridViewTextBoxColumn.HeaderText = "Trip Length [ly]";
             this.distanceDataGridViewTextBoxColumn.Name = "distanceDataGridViewTextBoxColumn";
             this.distanceDataGridViewTextBoxColumn.ReadOnly = true;
             this.distanceDataGridViewTextBoxColumn.Width = 53;
+            // 
+            // DistanceToRoute
+            // 
+            this.DistanceToRoute.DataPropertyName = "DistanceToRoute";
+            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle42.Format = "N1";
+            dataGridViewCellStyle42.NullValue = null;
+            this.DistanceToRoute.DefaultCellStyle = dataGridViewCellStyle42;
+            this.DistanceToRoute.HeaderText = "Distance To Route [ly]";
+            this.DistanceToRoute.Name = "DistanceToRoute";
+            this.DistanceToRoute.ReadOnly = true;
             // 
             // cmbMaxTripDistance
             // 
@@ -2228,6 +2110,186 @@
             this.cmbSystemLightYears.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbSystemLightYears_KeyDown);
             this.cmbSystemLightYears.Leave += new System.EventHandler(this.cmbSystemLightYears_Leave);
             // 
+            // commodityIDDataGridViewTextBoxColumn
+            // 
+            this.commodityIDDataGridViewTextBoxColumn.DataPropertyName = "CommodityID";
+            this.commodityIDDataGridViewTextBoxColumn.HeaderText = "CommodityID";
+            this.commodityIDDataGridViewTextBoxColumn.Name = "commodityIDDataGridViewTextBoxColumn";
+            this.commodityIDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.commodityIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // commodityDataGridViewTextBoxColumn
+            // 
+            this.commodityDataGridViewTextBoxColumn.DataPropertyName = "Commodity";
+            this.commodityDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.commodityDataGridViewTextBoxColumn.HeaderText = "Commodity";
+            this.commodityDataGridViewTextBoxColumn.Name = "commodityDataGridViewTextBoxColumn";
+            this.commodityDataGridViewTextBoxColumn.ReadOnly = true;
+            this.commodityDataGridViewTextBoxColumn.Width = 64;
+            // 
+            // Max_Profit
+            // 
+            this.Max_Profit.DataPropertyName = "Max_Profit";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.Max_Profit.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Max_Profit.FillWeight = 70F;
+            this.Max_Profit.HeaderText = "Max. Profit";
+            this.Max_Profit.Name = "Max_Profit";
+            this.Max_Profit.ReadOnly = true;
+            this.Max_Profit.Width = 75;
+            // 
+            // buySystemIDDataGridViewTextBoxColumn
+            // 
+            this.buySystemIDDataGridViewTextBoxColumn.DataPropertyName = "Buy_SystemID";
+            this.buySystemIDDataGridViewTextBoxColumn.HeaderText = "Buy_SystemID";
+            this.buySystemIDDataGridViewTextBoxColumn.Name = "buySystemIDDataGridViewTextBoxColumn";
+            this.buySystemIDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buySystemIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // buySystemDataGridViewTextBoxColumn
+            // 
+            this.buySystemDataGridViewTextBoxColumn.DataPropertyName = "Buy_System";
+            this.buySystemDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.buySystemDataGridViewTextBoxColumn.HeaderText = "System (buy)";
+            this.buySystemDataGridViewTextBoxColumn.Name = "buySystemDataGridViewTextBoxColumn";
+            this.buySystemDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buySystemDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // buyStationIDDataGridViewTextBoxColumn
+            // 
+            this.buyStationIDDataGridViewTextBoxColumn.DataPropertyName = "Buy_StationID";
+            this.buyStationIDDataGridViewTextBoxColumn.HeaderText = "Buy_StationID";
+            this.buyStationIDDataGridViewTextBoxColumn.Name = "buyStationIDDataGridViewTextBoxColumn";
+            this.buyStationIDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buyStationIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // buyStationDataGridViewTextBoxColumn
+            // 
+            this.buyStationDataGridViewTextBoxColumn.DataPropertyName = "Buy_Station";
+            this.buyStationDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.buyStationDataGridViewTextBoxColumn.HeaderText = "Station (buy)";
+            this.buyStationDataGridViewTextBoxColumn.Name = "buyStationDataGridViewTextBoxColumn";
+            this.buyStationDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buyStationDataGridViewTextBoxColumn.Width = 64;
+            // 
+            // buyMinDataGridViewTextBoxColumn
+            // 
+            this.buyMinDataGridViewTextBoxColumn.DataPropertyName = "Buy_Min";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.buyMinDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.buyMinDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.buyMinDataGridViewTextBoxColumn.HeaderText = "Price (buy)";
+            this.buyMinDataGridViewTextBoxColumn.Name = "buyMinDataGridViewTextBoxColumn";
+            this.buyMinDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buyMinDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // buyDistanceDataGridViewTextBoxColumn
+            // 
+            this.buyDistanceDataGridViewTextBoxColumn.DataPropertyName = "Buy_Distance";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle3.Format = "N1";
+            dataGridViewCellStyle3.NullValue = null;
+            this.buyDistanceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.buyDistanceDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.buyDistanceDataGridViewTextBoxColumn.HeaderText = "Distance";
+            this.buyDistanceDataGridViewTextBoxColumn.Name = "buyDistanceDataGridViewTextBoxColumn";
+            this.buyDistanceDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buyDistanceDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // buyTimestampDataGridViewTextBoxColumn
+            // 
+            this.buyTimestampDataGridViewTextBoxColumn.DataPropertyName = "Buy_Timestamp";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.buyTimestampDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
+            this.buyTimestampDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.buyTimestampDataGridViewTextBoxColumn.HeaderText = "Updated";
+            this.buyTimestampDataGridViewTextBoxColumn.Name = "buyTimestampDataGridViewTextBoxColumn";
+            this.buyTimestampDataGridViewTextBoxColumn.ReadOnly = true;
+            this.buyTimestampDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // Source_id1
+            // 
+            this.Source_id1.DataPropertyName = "Buy_Sources_id";
+            this.Source_id1.HeaderText = "Source";
+            this.Source_id1.Name = "Source_id1";
+            this.Source_id1.ReadOnly = true;
+            // 
+            // sellSystemIDDataGridViewTextBoxColumn
+            // 
+            this.sellSystemIDDataGridViewTextBoxColumn.DataPropertyName = "Sell_SystemID";
+            this.sellSystemIDDataGridViewTextBoxColumn.HeaderText = "Sell_SystemID";
+            this.sellSystemIDDataGridViewTextBoxColumn.Name = "sellSystemIDDataGridViewTextBoxColumn";
+            this.sellSystemIDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellSystemIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // sellSystemDataGridViewTextBoxColumn
+            // 
+            this.sellSystemDataGridViewTextBoxColumn.DataPropertyName = "Sell_System";
+            this.sellSystemDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.sellSystemDataGridViewTextBoxColumn.HeaderText = "System (sell)";
+            this.sellSystemDataGridViewTextBoxColumn.Name = "sellSystemDataGridViewTextBoxColumn";
+            this.sellSystemDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellSystemDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // sellStationIDDataGridViewTextBoxColumn
+            // 
+            this.sellStationIDDataGridViewTextBoxColumn.DataPropertyName = "Sell_StationID";
+            this.sellStationIDDataGridViewTextBoxColumn.HeaderText = "Sell_StationID";
+            this.sellStationIDDataGridViewTextBoxColumn.Name = "sellStationIDDataGridViewTextBoxColumn";
+            this.sellStationIDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellStationIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // sellStationDataGridViewTextBoxColumn
+            // 
+            this.sellStationDataGridViewTextBoxColumn.DataPropertyName = "Sell_Station";
+            this.sellStationDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.sellStationDataGridViewTextBoxColumn.HeaderText = "Station (sell)";
+            this.sellStationDataGridViewTextBoxColumn.Name = "sellStationDataGridViewTextBoxColumn";
+            this.sellStationDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellStationDataGridViewTextBoxColumn.Width = 64;
+            // 
+            // sellMaxDataGridViewTextBoxColumn
+            // 
+            this.sellMaxDataGridViewTextBoxColumn.DataPropertyName = "Sell_Max";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.sellMaxDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+            this.sellMaxDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.sellMaxDataGridViewTextBoxColumn.HeaderText = "Price (sell)";
+            this.sellMaxDataGridViewTextBoxColumn.Name = "sellMaxDataGridViewTextBoxColumn";
+            this.sellMaxDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellMaxDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // sellDistanceDataGridViewTextBoxColumn
+            // 
+            this.sellDistanceDataGridViewTextBoxColumn.DataPropertyName = "Sell_Distance";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle6.Format = "N1";
+            dataGridViewCellStyle6.NullValue = null;
+            this.sellDistanceDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+            this.sellDistanceDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.sellDistanceDataGridViewTextBoxColumn.HeaderText = "Distance";
+            this.sellDistanceDataGridViewTextBoxColumn.Name = "sellDistanceDataGridViewTextBoxColumn";
+            this.sellDistanceDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellDistanceDataGridViewTextBoxColumn.Width = 64;
+            // 
+            // sellTimestampDataGridViewTextBoxColumn
+            // 
+            this.sellTimestampDataGridViewTextBoxColumn.DataPropertyName = "Sell_Timestamp";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.sellTimestampDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            this.sellTimestampDataGridViewTextBoxColumn.FillWeight = 59.17297F;
+            this.sellTimestampDataGridViewTextBoxColumn.HeaderText = "Updated";
+            this.sellTimestampDataGridViewTextBoxColumn.Name = "sellTimestampDataGridViewTextBoxColumn";
+            this.sellTimestampDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sellTimestampDataGridViewTextBoxColumn.Width = 62;
+            // 
+            // Source_id2
+            // 
+            this.Source_id2.DataPropertyName = "Sell_Sources_id";
+            this.Source_id2.HeaderText = "Source";
+            this.Source_id2.Name = "Source_id2";
+            this.Source_id2.ReadOnly = true;
+            // 
             // tabPriceAnalysis
             // 
             this.Controls.Add(this.cmdFilter);
@@ -2390,35 +2452,6 @@
         private System.Windows.Forms.BindingSource tmpabystationBindingSource1;
         private System.Windows.Forms.BindingSource tmpabycommodityBindingSource;
         private SQL.Datasets.dsEliteDBTableAdapters.tmpa_bycommodityTableAdapter tmpa_bycommodityTableAdapter;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commodityIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Max_Profit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buySystemIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buySystemDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyStationIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyStationDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyMinDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyDistanceDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyTimestampDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellSystemIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellSystemDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellStationIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellStationDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellMaxDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellDistanceDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellTimestampDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commodityIDDataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn demandDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn demandLevelDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn supplyDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn supplyLevelDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bestBuyDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bestSellDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn maxProfitDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn sourceDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemDataGridViewTextBoxColumn;
@@ -2432,6 +2465,31 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn demandDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn demandLevelDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commodityIDDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn supplyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn supplyLevelDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn demandDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn demandlevelDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn profitDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source2;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemID1DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemName1DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn stationID1DataGridViewTextBoxColumn;
@@ -2446,28 +2504,39 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn timeStamp1DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn profitDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn distanceDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commodityIDDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn buyDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn supplyDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn supplyLevelDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sellDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn demandDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn demandlevelDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn profitDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DistanceToRoute;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commodityIDDataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn demandDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn demandLevelDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn supplyDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn supplyLevelDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bestBuyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bestSellDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn maxProfitDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commodityIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Max_Profit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buySystemIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buySystemDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyStationIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyStationDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyMinDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyDistanceDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn buyTimestampDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source_id1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellSystemIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellSystemDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellStationIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellStationDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellMaxDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellDistanceDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sellTimestampDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source_id2;
 
 
     }

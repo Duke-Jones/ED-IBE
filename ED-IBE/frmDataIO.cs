@@ -168,7 +168,10 @@ namespace IBE
                     {
                         if (ReUseLine && (destination.Items.Count > 0))
                         {
-                            destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total);
+                            if(e.Total != 0)
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total);
+                            else
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : ?% ({2} of ?)", e.Tablename, 0, e.Index, 0);
                         }
                         else
                         {
@@ -693,6 +696,7 @@ namespace IBE
             try
             {
                 SetButtons(false);
+                Cursor = Cursors.WaitCursor;
 
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
@@ -707,21 +711,20 @@ namespace IBE
 		        if (result == DialogResult.OK)
                 {
                     Program.Data.Progress += Data_Progress;
-                    Cursor = Cursors.WaitCursor;
                     lbProgess.Items.Clear();
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 0, Total = 0 });
 
                     Application.DoEvents();
 
-                    Program.Data.ExportMarketDataToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked);
+                    Program.Data.ExportMarketDataToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked, rbFormatExtended.Checked);
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 1, Total = 1 });
                     Program.Data.Progress -= Data_Progress;
-                    Cursor = Cursors.Default;
                 }
 
                 SetButtons(true);
+                Cursor = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -742,6 +745,7 @@ namespace IBE
             OpenFileDialog fbFileDialog;
             try
             {
+                Cursor = Cursors.WaitCursor;
                 SetButtons(false);
 
                 sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
@@ -759,7 +763,6 @@ namespace IBE
                 if ((!String.IsNullOrEmpty(fbFileDialog.FileName)) && System.IO.File.Exists(fbFileDialog.FileName))
                 {
                     Program.Data.Progress += Data_Progress;
-                    Cursor = Cursors.WaitCursor;
                     lbProgess.Items.Clear();
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 0, Total = 0 });
@@ -773,11 +776,12 @@ namespace IBE
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 1, Total = 1 });
 
-                    Cursor = Cursors.Default;
                     Program.Data.Progress -= Data_Progress;
                 }
 
                 SetButtons(true);
+
+                Cursor = Cursors.Default;
 
                 m_DataImportHappened = true;
             }

@@ -38,6 +38,8 @@
             this.cmdImportCommandersLog = new System.Windows.Forms.Button();
             this.cmdExportCSV = new System.Windows.Forms.Button();
             this.cmdImportFromCSV = new System.Windows.Forms.Button();
+            this.rbFormatExtended = new System.Windows.Forms.RadioButton();
+            this.rbFormatSimple = new System.Windows.Forms.RadioButton();
             this.fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.lbProgess = new System.Windows.Forms.ListBox();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
@@ -46,10 +48,12 @@
             this.rbImportNewer = new System.Windows.Forms.RadioButton();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.groupboxExport = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rbUserLanguage = new System.Windows.Forms.RadioButton();
             this.rbDefaultLanguage = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.groupboxImport = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmdTest = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -57,8 +61,10 @@
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.groupboxExport.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupboxImport.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.SuspendLayout();
@@ -152,6 +158,33 @@
             this.cmdImportFromCSV.UseVisualStyleBackColor = true;
             this.cmdImportFromCSV.Click += new System.EventHandler(this.cmdImportFromCSV_Click);
             // 
+            // rbFormatExtended
+            // 
+            this.rbFormatExtended.AutoSize = true;
+            this.rbFormatExtended.Checked = true;
+            this.rbFormatExtended.Location = new System.Drawing.Point(9, 17);
+            this.rbFormatExtended.Name = "rbFormatExtended";
+            this.rbFormatExtended.Size = new System.Drawing.Size(109, 17);
+            this.rbFormatExtended.TabIndex = 0;
+            this.rbFormatExtended.TabStop = true;
+            this.rbFormatExtended.Text = "Full Export Format";
+            this.ttToolTip.SetToolTip(this.rbFormatExtended, "Export with all informations from ED-IBE, e.g. with datasource.\r\nUseful if you wa" +
+        "nt to re-import the data into ED-IBE. Otherwise \r\nyou will lose information like" +
+        " e.g. datasource.");
+            this.rbFormatExtended.UseVisualStyleBackColor = true;
+            // 
+            // rbFormatSimple
+            // 
+            this.rbFormatSimple.AutoSize = true;
+            this.rbFormatSimple.Location = new System.Drawing.Point(155, 17);
+            this.rbFormatSimple.Name = "rbFormatSimple";
+            this.rbFormatSimple.Size = new System.Drawing.Size(124, 17);
+            this.rbFormatSimple.TabIndex = 1;
+            this.rbFormatSimple.Text = "Simple Export Format";
+            this.ttToolTip.SetToolTip(this.rbFormatSimple, "Simple export format. Useful if you want to import the data to other tools\r\n(they" +
+        " don\'t know the extended data from ED-IBE)\r\n\r\n");
+            this.rbFormatSimple.UseVisualStyleBackColor = true;
+            // 
             // lbProgess
             // 
             this.lbProgess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -214,29 +247,52 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panel2);
-            this.groupBox1.Controls.Add(this.panel1);
+            this.groupBox1.Controls.Add(this.groupboxExport);
+            this.groupBox1.Controls.Add(this.groupboxImport);
             this.groupBox1.Location = new System.Drawing.Point(714, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(332, 238);
+            this.groupBox1.Size = new System.Drawing.Size(332, 308);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Market Data (CSV)";
             // 
-            // panel2
+            // groupboxExport
             // 
-            this.panel2.Controls.Add(this.rbUserLanguage);
-            this.panel2.Controls.Add(this.cmdExportCSV);
-            this.panel2.Controls.Add(this.rbDefaultLanguage);
-            this.panel2.Location = new System.Drawing.Point(10, 19);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(313, 102);
-            this.panel2.TabIndex = 8;
+            this.groupboxExport.Controls.Add(this.groupBox4);
+            this.groupboxExport.Controls.Add(this.groupBox3);
+            this.groupboxExport.Controls.Add(this.cmdExportCSV);
+            this.groupboxExport.Location = new System.Drawing.Point(10, 19);
+            this.groupboxExport.Name = "groupboxExport";
+            this.groupboxExport.Size = new System.Drawing.Size(313, 176);
+            this.groupboxExport.TabIndex = 8;
+            this.groupboxExport.TabStop = false;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.rbFormatSimple);
+            this.groupBox4.Controls.Add(this.rbFormatExtended);
+            this.groupBox4.Location = new System.Drawing.Point(7, 122);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(300, 42);
+            this.groupBox4.TabIndex = 10;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Format";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.rbUserLanguage);
+            this.groupBox3.Controls.Add(this.rbDefaultLanguage);
+            this.groupBox3.Location = new System.Drawing.Point(7, 56);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(300, 60);
+            this.groupBox3.TabIndex = 9;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Language";
             // 
             // rbUserLanguage
             // 
             this.rbUserLanguage.AutoSize = true;
-            this.rbUserLanguage.Location = new System.Drawing.Point(20, 69);
+            this.rbUserLanguage.Location = new System.Drawing.Point(9, 35);
             this.rbUserLanguage.Name = "rbUserLanguage";
             this.rbUserLanguage.Size = new System.Drawing.Size(282, 17);
             this.rbUserLanguage.TabIndex = 2;
@@ -247,7 +303,7 @@
             // 
             this.rbDefaultLanguage.AutoSize = true;
             this.rbDefaultLanguage.Checked = true;
-            this.rbDefaultLanguage.Location = new System.Drawing.Point(20, 52);
+            this.rbDefaultLanguage.Location = new System.Drawing.Point(9, 18);
             this.rbDefaultLanguage.Name = "rbDefaultLanguage";
             this.rbDefaultLanguage.Size = new System.Drawing.Size(214, 17);
             this.rbDefaultLanguage.TabIndex = 1;
@@ -255,15 +311,16 @@
             this.rbDefaultLanguage.Text = "export names in base language (english)";
             this.rbDefaultLanguage.UseVisualStyleBackColor = true;
             // 
-            // panel1
+            // groupboxImport
             // 
-            this.panel1.Controls.Add(this.rbImportSame);
-            this.panel1.Controls.Add(this.cmdImportFromCSV);
-            this.panel1.Controls.Add(this.rbImportNewer);
-            this.panel1.Location = new System.Drawing.Point(10, 127);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(313, 96);
-            this.panel1.TabIndex = 7;
+            this.groupboxImport.Controls.Add(this.rbImportSame);
+            this.groupboxImport.Controls.Add(this.cmdImportFromCSV);
+            this.groupboxImport.Controls.Add(this.rbImportNewer);
+            this.groupboxImport.Location = new System.Drawing.Point(10, 201);
+            this.groupboxImport.Name = "groupboxImport";
+            this.groupboxImport.Size = new System.Drawing.Size(313, 96);
+            this.groupboxImport.TabIndex = 7;
+            this.groupboxImport.TabStop = false;
             // 
             // groupBox2
             // 
@@ -317,6 +374,7 @@
             this.Controls.Add(this.gbRepeat);
             this.Controls.Add(this.gbFirstTime);
             this.Controls.Add(this.lbProgess);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(1254, 506);
             this.MinimumSize = new System.Drawing.Size(1254, 506);
             this.Name = "frmDataIO";
@@ -327,10 +385,13 @@
             this.gbRepeat.ResumeLayout(false);
             this.gbRepeat.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.groupboxExport.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupboxImport.ResumeLayout(false);
+            this.groupboxImport.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -357,11 +418,15 @@
         private System.Windows.Forms.Button cmdImportFromCSV;
         private System.Windows.Forms.RadioButton rbImportSame;
         private System.Windows.Forms.RadioButton rbImportNewer;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox groupboxExport;
+        private System.Windows.Forms.GroupBox groupboxImport;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button cmdTest;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button cmdExit;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton rbFormatSimple;
+        private System.Windows.Forms.RadioButton rbFormatExtended;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }
