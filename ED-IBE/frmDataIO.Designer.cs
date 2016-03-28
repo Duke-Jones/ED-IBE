@@ -48,6 +48,10 @@
             this.rbImportNewer = new System.Windows.Forms.RadioButton();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.cmdPurgeOldData = new System.Windows.Forms.Button();
+            this.label89 = new System.Windows.Forms.Label();
+            this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
             this.groupboxExport = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -61,6 +65,8 @@
             this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.groupboxExport.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -247,14 +253,75 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.groupBox6);
             this.groupBox1.Controls.Add(this.groupboxExport);
             this.groupBox1.Controls.Add(this.groupboxImport);
             this.groupBox1.Location = new System.Drawing.Point(714, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(332, 308);
+            this.groupBox1.Size = new System.Drawing.Size(332, 374);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Market Data (CSV)";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.cmdPurgeOldData);
+            this.groupBox6.Controls.Add(this.label89);
+            this.groupBox6.Controls.Add(this.nudPurgeOldDataDays);
+            this.groupBox6.Location = new System.Drawing.Point(10, 303);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(313, 59);
+            this.groupBox6.TabIndex = 66;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Delete Marketdata";
+            // 
+            // cmdPurgeOldData
+            // 
+            this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmdPurgeOldData.Location = new System.Drawing.Point(13, 19);
+            this.cmdPurgeOldData.Name = "cmdPurgeOldData";
+            this.cmdPurgeOldData.Size = new System.Drawing.Size(167, 23);
+            this.cmdPurgeOldData.TabIndex = 63;
+            this.cmdPurgeOldData.Text = "Delete Marketdata Older Than";
+            this.cmdPurgeOldData.UseVisualStyleBackColor = true;
+            this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
+            // 
+            // label89
+            // 
+            this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(235, 24);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(31, 13);
+            this.label89.TabIndex = 64;
+            this.label89.Text = "Days";
+            // 
+            // nudPurgeOldDataDays
+            // 
+            this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(186, 21);
+            this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
+            365,
+            0,
+            0,
+            0});
+            this.nudPurgeOldDataDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.nudPurgeOldDataDays.Name = "nudPurgeOldDataDays";
+            this.nudPurgeOldDataDays.Size = new System.Drawing.Size(44, 20);
+            this.nudPurgeOldDataDays.TabIndex = 65;
+            this.nudPurgeOldDataDays.Tag = "PurgeOldDataDays;30";
+            this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.nudPurgeOldDataDays.Value = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.nudPurgeOldDataDays.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nudPurgeOldDataDays_KeyDown);
+            this.nudPurgeOldDataDays.Leave += new System.EventHandler(this.nudPurgeOldDataDays_Leave);
             // 
             // groupboxExport
             // 
@@ -326,7 +393,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.cmdTest);
-            this.groupBox2.Location = new System.Drawing.Point(894, 384);
+            this.groupBox2.Location = new System.Drawing.Point(363, 122);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(332, 72);
             this.groupBox2.TabIndex = 6;
@@ -385,6 +452,9 @@
             this.gbRepeat.ResumeLayout(false);
             this.gbRepeat.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
             this.groupboxExport.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
@@ -428,5 +498,9 @@
         private System.Windows.Forms.RadioButton rbFormatSimple;
         private System.Windows.Forms.RadioButton rbFormatExtended;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.NumericUpDown nudPurgeOldDataDays;
+        private System.Windows.Forms.Button cmdPurgeOldData;
+        private System.Windows.Forms.GroupBox groupBox6;
     }
 }

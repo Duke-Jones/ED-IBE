@@ -755,7 +755,7 @@ namespace IBE
                 {
                     if (dbVersion != new Version(0,1,0))
                     { 
-                        // here it'currentPriceData required to import all master data 
+                        // here it's required to import all master data 
                         var DataIO = new frmDataIO();
 
                         Program.SplashScreen.InfoAdd("Importing master data...");

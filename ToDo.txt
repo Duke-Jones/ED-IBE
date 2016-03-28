@@ -1,4 +1,11 @@
 
+
+
+   * added option to delete old data
+   * added baseform as parentclass to all windows
+   * integrated retheme in shown-event of baseform 
+   * view of rejected data fixed
+-------------------------------------------------------------------------------------         
    * fixes on db structure 
 -------------------------------------------------------------------------------------         
    * showing source on PriceAnalysis tab

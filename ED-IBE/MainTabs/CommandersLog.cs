@@ -472,7 +472,7 @@ namespace IBE.MTCommandersLog
         //        // system info found
         //        if(!Program.actualCondition.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase))
         //        { 
-        //            // it'currentPriceData a new system
+        //            // it's a new system
         //            Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
         //            Program.actualCondition.System = Systemname;
         //            systemFirstTimeVisited = true;
@@ -483,10 +483,10 @@ namespace IBE.MTCommandersLog
         //        { 
         //            // system is not logged yet
 
-        //            // update Cmdr'currentPriceData Log ?
+        //            // update Cmdr's Log ?
         //            if(_LoggedSystem != ID_NOT_SET)
         //            { 
-        //                // it'currentPriceData not the first run, create a event if wanted
+        //                // it's not the first run, create a event if wanted
         //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true))
         //                {
         //                    // create event is enabled
@@ -509,7 +509,7 @@ namespace IBE.MTCommandersLog
         //        // system info found
         //        if(!Program.actualCondition.Location.Equals(Locationname, StringComparison.InvariantCultureIgnoreCase))
         //        { 
-        //            // it'currentPriceData a new location
+        //            // it's a new location
         //            Program.actualCondition.Location = Locationname;
         //            newLocation = true;
 

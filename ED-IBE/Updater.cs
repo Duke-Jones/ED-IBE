@@ -16,7 +16,7 @@ namespace IBE
     {
 
         /// <summary>
-        /// Checks if there'currentPriceData a new version available.
+        /// Checks if there's a new version available.
         /// If available, "versionFound" holds the new version and "versionInfo" holds the detail information
         /// </summary>
         /// <param name="versionFound"></param>

@@ -234,10 +234,10 @@ namespace IBE.EDDN
 
                 if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false)){
                     if (m_EDDNSpooler == null){
-                        if (!File.Exists(Program.GetDataPath("EddnOutput.txt")))
-                            m_EDDNSpooler = File.CreateText(Program.GetDataPath("EddnOutput.txt"));
+                        if (!File.Exists(Program.GetDataPath(@"Logs\EddnOutput.txt")))
+                            m_EDDNSpooler = File.CreateText(Program.GetDataPath(@"Logs\EddnOutput.txt"));
                         else
-                            m_EDDNSpooler = File.AppendText(Program.GetDataPath("EddnOutput.txt"));
+                            m_EDDNSpooler = File.AppendText(Program.GetDataPath(@"Logs\EddnOutput.txt"));
                     }
                     m_EDDNSpooler.WriteLine(e.RawData);
                 }
@@ -246,7 +246,7 @@ namespace IBE.EDDN
 
                 	case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
                         
-                        // process only if it'currentPriceData the correct schema
+                        // process only if it's the correct schema
                         if(!(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.EDDNSchema_v1)e.Data).isTest()))
                         {
                             Debug.Print("handle v1 message");
@@ -271,7 +271,7 @@ namespace IBE.EDDN
 
                 	case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
 
-                        // process only if it'currentPriceData the correct schema
+                        // process only if it's the correct schema
                         if(!(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.EDDNSchema_v2)e.Data).isTest()))
                         {
                             Debug.Print("handle v2 message");
@@ -342,14 +342,14 @@ namespace IBE.EDDN
                         }else{
                             Debug.Print("implausible :" + DataRow);
                             // data is implausible
-                            string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
+                             string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
 
                             UpdateRejectedData(InfoString);
 
                             if(Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false)){
 
                                 FileStream LogFileStream = null;
-                                string FileName = Program.GetDataPath("EddnImplausibleOutput.txt");
+                                string FileName = Program.GetDataPath(@"Logs\EddnImplausibleOutput.txt");
 
                                 if(File.Exists(FileName))
                                     LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
@@ -514,7 +514,7 @@ namespace IBE.EDDN
         /// <param name="info"></param>
         private void UpdateRejectedData(String info)
         {
-            Int32 maxSize = 10;
+            Int32 maxSize = 100;
 
             try
             {
@@ -629,7 +629,7 @@ namespace IBE.EDDN
 
                     commodity = Row.CommodityName;
 
-                    // if it'currentPriceData a user added commodity send it anyhow to see that there'currentPriceData a unknown commodity
+                    // if it's a user added commodity send it anyhow to see that there's a unknown commodity
                     if (commodity.Equals(Program.COMMODITY_NOT_SET))
                         commodity = Row.CommodityName;
 
@@ -728,7 +728,7 @@ namespace IBE.EDDN
             try
             {
 
-                // it'currentPriceData time to start the EDDN transmission
+                // it's time to start the EDDN transmission
                 _Spool2EDDN = new Thread(new ThreadStart(sendToEDDN));
                 _Spool2EDDN.Name = "Spool2EDDN";
                 _Spool2EDDN.IsBackground = true;

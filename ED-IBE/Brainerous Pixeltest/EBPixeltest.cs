@@ -52,7 +52,7 @@ namespace IBE
         }
          
         /// <summary>
-        /// starts the form modal with it'currentPriceData parent
+        /// starts the form modal with it's parent
         /// </summary>
         /// <param name="parent"></param>
         public void StartModal(IBE.Form1 parent)
@@ -69,7 +69,7 @@ namespace IBE
         }
 
         /// <summary>
-        /// Shown-event: window will be centered over it'currentPriceData parent
+        /// Shown-event: window will be centered over it's parent
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

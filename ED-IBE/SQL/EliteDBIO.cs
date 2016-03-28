@@ -258,7 +258,7 @@ namespace IBE.SQL
                     {
                         if (!m_BaseData_Connector.TryGetValue(m_BaseData.Tables[BaseTable], out currentDBCon))
                         {
-                            // each basetable gets it'currentPriceData own DBConnector, because 
+                            // each basetable gets it's own DBConnector, because 
                             // the contained DataReaders will be hold open for possible 
                             // changes (MySQL doesn't support MARS "Multiple Active result Sets")
 
@@ -555,7 +555,7 @@ namespace IBE.SQL
                 { 
                     sendProgressEvent("import commodity localization", Counter, DataNames.Tables["Names"].Rows.Count);
 
-                    // first check if there'currentPriceData a new language
+                    // first check if there's a new language
                     foreach (DataColumn LanguageFromFile in DataNames.Tables["Names"].Columns)
                     {
                         if(!LanguageFromFile.ColumnName.Equals("id", StringComparison.InvariantCultureIgnoreCase))
@@ -724,7 +724,7 @@ namespace IBE.SQL
                 { 
                     sendProgressEvent("import economy level localization", Counter, DataNames.Tables["Levels"].Rows.Count);
 
-                    // first check if there'currentPriceData a new language
+                    // first check if there's a new language
                     foreach (DataColumn LanguageFromFile in DataNames.Tables["Levels"].Columns)
                     {
                         if(!LanguageFromFile.ColumnName.Equals("ID", StringComparison.InvariantCultureIgnoreCase))
@@ -823,7 +823,7 @@ namespace IBE.SQL
 
                 sendProgressEvent("import warnlevels", Counter, WarnLevels.Count);
 
-                // first check if there'currentPriceData a new language
+                // first check if there's a new language
                 foreach (EDCommoditiesWarningLevels Warnlevel in WarnLevels)
                 {
                     DataRow[] Commodity = Data.tbcommodity.Select("commodity = " + DBConnector.SQLAString(DBConnector.DTEscape(Warnlevel.Name)));
@@ -1862,7 +1862,7 @@ namespace IBE.SQL
                                 where relevantEconomy.Field<Int32>("economy_id") == EconomyID
                                 select relevantEconomy;
  
-                    // if it'currentPriceData not existing, insert it
+                    // if it's not existing, insert it
                     if(Found.Count() == 0)
                     {
                         DataRow newRow = EconomyTable.NewRow();
@@ -1961,7 +1961,7 @@ namespace IBE.SQL
                                      && (relevantCommodity.commodity_id  == CommodityID))
                                 select relevantCommodity;
 
-                    // if it'currentPriceData not existing, insert commodity
+                    // if it's not existing, insert commodity
                     if(Found.Count() == 0)
                     {
                         var newRow = (dsEliteDB.tbcommodityclassificationRow)Data.tbcommodityclassification.NewRow();
@@ -1997,7 +1997,7 @@ namespace IBE.SQL
                                          && relevantCommodity.tbAttribute_id  == AttributeID
                                     select relevantCommodity;
 
-                        // if it'currentPriceData not existing, insert attribute
+                        // if it's not existing, insert attribute
                         if(FoundCC.Count() == 0)
                         {
                             var newRow = (dsEliteDB.tbcommodity_has_attributeRow)Data.tbcommodity_has_attribute.NewRow();
@@ -2151,10 +2151,10 @@ namespace IBE.SQL
 
 #endregion
 
-#region Commander'currentPriceData Log
+#region Commander's Log
 
         /// <summary>
-        /// imports the "Commander'currentPriceData Log" into the database
+        /// imports the "Commander's Log" into the database
         /// </summary>
         /// <param name="fileName"></param>
         public Int32 ImportCommandersLog(String Filename)
@@ -2308,7 +2308,7 @@ namespace IBE.SQL
         }
 
         /// <summary>
-        /// Imports the prices from the list of stations. It'currentPriceData clever
+        /// Imports the prices from the list of stations. It's clever
         /// firstly to import the stations from the same file.
         /// </summary>
         /// <param name="Stations"></param>
@@ -2945,13 +2945,41 @@ namespace IBE.SQL
             }
         }
 
+        /// <summary>
+        /// delete all market data older than x days
+        /// </summary>
+        /// <param name="value"></param>
+        public void DeleteMarketData(Int32 days)
+        {
+            String sqlString;
+            Int32 deletedRows = 0;
+            Int32 deletedRowsSum = 0;
+
+            sqlString = String.Format("delete from tbcommoditydata" + 
+                                      " where timestamp <= (NOW() - INTERVAL {0} DAY)" +
+                                      " limit 10000", 
+                                      days);
+            sendProgressEvent(String.Format("deleting prices older than {0} days from database...", days), 0, 0);
+
+            do
+            {
+                deletedRows = Program.DBCon.Execute(sqlString);    
+                deletedRowsSum += deletedRows;
+
+                sendProgressEvent(String.Format("deleting prices older than {0} days from database...", days), deletedRowsSum, 0);
+
+            } while (deletedRows > 0);
+
+            sendProgressEvent(String.Format("deleting prices older than {0} days from database...", days), 1, 1);
+        }
+
 #endregion
 
 #region general
 
         /// <summary>
-        /// Specifies all systems/stations from the Commander'currentPriceData Log as "visited".
-        /// Necessary/recommended after a import of old "Commander'currentPriceData Log" files.
+        /// Specifies all systems/stations from the Commander's Log as "visited".
+        /// Necessary/recommended after a import of old "Commander's Log" files.
         /// </summary>
         /// <param name="Refresh"></param>
         public void updateVisitedBaseFromLog(enVisitType Refresh)
@@ -3270,7 +3298,7 @@ namespace IBE.SQL
 
                     if(systemFirstTimeVisited || stationFirstTimeVisited)
                     {
-                        // if there'currentPriceData a new visitedflag set in the visited-tables
+                        // if there's a new visitedflag set in the visited-tables
                         // then update the maintables
                         Program.Data.updateVisitedFlagsFromBase(systemFirstTimeVisited, stationFirstTimeVisited);
 
@@ -3626,5 +3654,4 @@ namespace IBE.SQL
             }
         }
     }
-
 }

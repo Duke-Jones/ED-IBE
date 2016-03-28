@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace IBE.Enums_and_Utility_Classes
 {
-    public partial class DataGridViewSettings : Form
+    public partial class DataGridViewSettings : RNBaseForm
     {
         public DataGridView HandledDGV { get; set; }
 

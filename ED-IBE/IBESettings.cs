@@ -343,18 +343,6 @@ namespace IBE
             return null;
         }
 
-        private void cmdPurgeOldData_Click(object sender, EventArgs e)
-        {
-
-            if(MsgBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
-            {
-                throw new NotImplementedException();
-
-                DateTime deadline = DateTime.Now.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
-            }
-
-        }
-        
         /// <summary>
         /// Combobox changed
         /// </summary>
@@ -486,36 +474,7 @@ namespace IBE
             }
         }
 
-        private void nudPurgeOldDataDays_KeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if(e.KeyCode == Keys.Enter)
-                    if(m_GUIInterface.saveSetting(sender))
-                    {
 
-                    }
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in nudPurgeOldDataDays_KeyDown");
-            }
-        }
-
-        private void nudPurgeOldDataDays_Leave(object sender, EventArgs e)
-        {
-            try
-            {
-                if(m_GUIInterface.saveSetting(sender))
-                {
-
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
-            }
-        }
 
         private void Combobox_SelectedIndexChanged(object sender, EventArgs e)
         {

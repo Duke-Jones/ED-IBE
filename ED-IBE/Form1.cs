@@ -241,7 +241,7 @@ namespace IBE
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Program.SplashScreen.InfoAdd("initialize Commander's Log tab...");
-                // Commander'currentPriceData Log
+                // Commander's Log
                 tabCommandersLog newCLControl     = new tabCommandersLog();
                 newCLControl.DataSource           = Program.CommandersLog;
                 newTab                            = new TabPage("Commander's Log");

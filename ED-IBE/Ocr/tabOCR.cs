@@ -147,7 +147,7 @@ namespace IBE.Ocr
             }
 
             //MsgBox.Show("Good news! " + fileSystemEventArgs.FullPath +
-            //                " exists!  Let'currentPriceData pause for a moment before opening it...");
+            //                " exists!  Let's pause for a moment before opening it...");
 
             ScreenshotsQueued("(" + (_screenshotResultsBuffer.Count + ocr.ScreenshotBuffer.Count + _preOcrBuffer.Count) + " queued)");
             // if the textfield support auto-uppercase we must consider
@@ -417,7 +417,7 @@ namespace IBE.Ocr
 
                 if (Answer == System.Windows.Forms.DialogResult.OK)
                 {
-                    // yes, it'currentPriceData really new
+                    // yes, it's really new
                     //Program.Data.ImportCommodity(commodity);
 
                     throw new NotImplementedException();
@@ -647,7 +647,7 @@ namespace IBE.Ocr
                                     }
                                 }
 
-                                // it'currentPriceData better if this depends on the length of the word - this factor works pretty good
+                                // it's better if this depends on the length of the word - this factor works pretty good
                                 LevenshteinLimit = Math.Round((currentTextCamelCase.Length * 0.7), 0);
 
                                 if (lowestLevenshteinNumber <= LevenshteinLimit)
@@ -671,7 +671,7 @@ namespace IBE.Ocr
                             }
 
                             // If we're doing a batch of screenshots, don't keep doing the same commodity when we keep finding it
-                            // but only if it'currentPriceData sure - otherwise it will be registered later
+                            // but only if it's sure - otherwise it will be registered later
                             if (_originalBitmapConfidences[_correctionRow, _correctionColumn] == 1)
                             {
                                 _commoditiesSoFar.Add(_commodityTexts[_correctionRow, _correctionColumn].ToUpper());
@@ -738,7 +738,7 @@ namespace IBE.Ocr
 
                     for (int row = 0; row < _commodityTexts.GetLength(0); row++)
                     {
-                        if (_commodityTexts[row, 0] != "") // don't create CSV if there'currentPriceData no commodity name
+                        if (_commodityTexts[row, 0] != "") // don't create CSV if there's no commodity name
                         {
                             finalOutput += tbOcrSystemName.Text + ";" + tbOcrStationName.Text + ";";
 
@@ -1104,7 +1104,7 @@ namespace IBE.Ocr
         }
 
         /// <summary>
-        /// Perform an "ignoring" of the current value (it'currentPriceData cosier)
+        /// Perform an "ignoring" of the current value (it's cosier)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

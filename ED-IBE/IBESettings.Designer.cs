@@ -457,8 +457,6 @@
             this.nudPurgeOldDataDays.TabIndex = 62;
             this.nudPurgeOldDataDays.Tag = "PurgeOldDataDays;30";
             this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.nudPurgeOldDataDays.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nudPurgeOldDataDays_KeyDown);
-            this.nudPurgeOldDataDays.Leave += new System.EventHandler(this.nudPurgeOldDataDays_Leave);
             // 
             // cmdPurgeOldData
             // 
@@ -469,7 +467,6 @@
             this.cmdPurgeOldData.TabIndex = 8;
             this.cmdPurgeOldData.Text = "purge data older than";
             this.cmdPurgeOldData.UseVisualStyleBackColor = true;
-            this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
             // 
             // cbAutoActivateSystemTab
             // 
@@ -790,7 +787,7 @@
             this.tabExternalToolSettings.Location = new System.Drawing.Point(4, 22);
             this.tabExternalToolSettings.Name = "tabExternalToolSettings";
             this.tabExternalToolSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternalToolSettings.Size = new System.Drawing.Size(621, 400);
+            this.tabExternalToolSettings.Size = new System.Drawing.Size(612, 400);
             this.tabExternalToolSettings.TabIndex = 1;
             this.tabExternalToolSettings.Text = "ED Market Connector";
             this.tabExternalToolSettings.UseVisualStyleBackColor = true;
@@ -922,6 +919,7 @@
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "IBESettings";
             this.Load += new System.EventHandler(this.IBESettings_Load);
             this.groupBox6.ResumeLayout(false);

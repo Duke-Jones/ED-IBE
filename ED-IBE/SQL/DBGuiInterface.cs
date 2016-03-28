@@ -96,7 +96,7 @@ namespace IBE.SQL
 
                             if ((cbSender.ValueMember != null) && (!String.IsNullOrEmpty(cbSender.ValueMember)))
                             {
-                                // it'currentPriceData working with a ValueMember -> translate "Value" to "Item" and set ".SelectedItem"
+                                // it's working with a ValueMember -> translate "Value" to "Item" and set ".SelectedItem"
                                 var Props = cbSender.Items[0].GetType().GetProperties();
                                 System.Reflection.PropertyInfo FoundPropertyItem = null;
                                 Type FoundColumnType = null;
@@ -164,7 +164,7 @@ namespace IBE.SQL
 
                     else if(sender.GetType() == typeof(GroupBox))
                     {
-                        // a container will handle it'currentPriceData radiobuttons
+                        // a container will handle it's radiobuttons
                         var cbSender = (GroupBox)sender;
                         var Parts    = splitTag(cbSender.Tag);    
                     
@@ -298,7 +298,7 @@ namespace IBE.SQL
 
                         if ((cbSender.ValueMember != null) && (!String.IsNullOrEmpty(cbSender.ValueMember)))
                         {
-                            // it'currentPriceData working with a ValueMember -> translate "Value" to "Item" and set ".SelectedItem"
+                            // it's working with a ValueMember -> translate "Value" to "Item" and set ".SelectedItem"
                             var Props = cbSender.Items[0].GetType().GetProperties();
                             System.Reflection.PropertyInfo FoundPropertyItem = null;
                             Type FoundColumnType = null;
@@ -410,7 +410,7 @@ namespace IBE.SQL
 
                 else if(sender.GetType() == typeof(GroupBox))
                 {
-                    // a container will handle it'currentPriceData radiobuttons
+                    // a container will handle it's radiobuttons
                     var cbSender = (GroupBox)sender;
                     var Parts    = splitTag(cbSender.Tag);    
                     

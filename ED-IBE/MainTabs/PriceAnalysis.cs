@@ -617,7 +617,7 @@ namespace IBE.MTPriceAnalysis
 
                 PV.progressStop();
 
-                // get for one station and all of it'currentPriceData neighbours the tradings for all commodity combinations
+                // get for one station and all of it's neighbours the tradings for all commodity combinations
                 // result gives per "station to station" route only the one best profit for all combinations of commodities
                 sqlBaseString = "insert ignore into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
                                 " select Station_ID_From, Station_ID_To, max(Profit) As Max_Profit from " +

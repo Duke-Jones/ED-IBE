@@ -105,13 +105,16 @@ namespace IBE.Enums_and_Utility_Classes
         private void Form_Shown(object sender, System.EventArgs e)
         {
             if (!RNBaseForm.IsDesignMode(this))
+            { 
                 loadWindowPosition();
+                Retheme();
+            }
 
             this.Icon = Properties.Resources.RegulatedNoise;
         }
 
         /// <summary>
-        /// shows the form, also if it'currentPriceData minimized or in the background
+        /// shows the form, also if it's minimized or in the background
         /// </summary>
         public void ShowEx()
         {

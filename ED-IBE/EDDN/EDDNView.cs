@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using IBE.SQL;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE.EDDN
 {
-    public partial class EDDNView : Form
+    public partial class EDDNView : RNBaseForm
     {
 
         public const String        DB_GROUPNAME                    = "EDDN";
@@ -92,9 +93,13 @@ namespace IBE.EDDN
                     if(lChanged == EDDNCommunicator.enDataTypes.ImplausibleData)
                     {
                         if(m_Communicator.RawData.Count() > 0)
-                            lbEddnImplausible.Text = m_Communicator.RejectedData[m_Communicator.RejectedData.Count()-1];
-                        else
-                            lbEddnImplausible.Text = "";
+                        {
+                            do
+                            {
+                                lbEddnImplausible.Items.Add(m_Communicator.RejectedData[0]);    
+                                m_Communicator.RejectedData.RemoveAt(0);
+                            } while (m_Communicator.RejectedData.Count() > 0);
+                        }
 
                     }
 

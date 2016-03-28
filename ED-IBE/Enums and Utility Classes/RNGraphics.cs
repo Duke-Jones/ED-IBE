@@ -188,7 +188,7 @@ namespace IBE.Enums_and_Utility_Classes
             // Specify a pixel format.
             PixelFormat pxf = original.PixelFormat;
 
-            // Lock the bitmap'currentPriceData bits.
+            // Lock the bitmap's bits.
             Rectangle rect      = new Rectangle(0, 0, newBitmap.Width, newBitmap.Height);
             BitmapData bmpData  = newBitmap.LockBits(rect, ImageLockMode.ReadWrite, pxf);
 
@@ -263,7 +263,7 @@ namespace IBE.Enums_and_Utility_Classes
         internal static Bitmap PreprocessScreenshot(Bitmap b, int Preset, int GUIColorCutoffLevel)
         {
 			// tested with default ED gui setting
-            // it'currentPriceData much!! better than v1.82 and I think better than v1.84, too
+            // it's much!! better than v1.82 and I think better than v1.84, too
             switch (Preset)
             {
             	case 0:

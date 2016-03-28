@@ -180,7 +180,7 @@ namespace IBE.Ocr
 
             if (textRowLocations.Count > 0)
             {
-                // check if the last line is complete or RNGraphics.Cropped -> if it'currentPriceData RNGraphics.Cropped we delete it
+                // check if the last line is complete or RNGraphics.Cropped -> if it's RNGraphics.Cropped we delete it
                 var finalRowLocation = textRowLocations[textRowLocations.Count - 1];
 
                 foreach (var x in textRowLocations)
@@ -357,7 +357,7 @@ namespace IBE.Ocr
                         width -= 10;
 
                         if (columnCounter != 0 && columnCounter != 5 && columnCounter != 7)
-                        {   //If it'currentPriceData a numeric column write it out for Brainerous to process later
+                        {   //If it's a numeric column write it out for Brainerous to process later
                             var brainerousOut = RNGraphics.Crop(_bTrimmed_4_OCR, new Rectangle(left, startRow, width, heightRow));
 
                             if (Program.DBCon.getIniValue<Int32>(IBE.IBESettings.DB_GROUPNAME, "EBPixelAmount") > 0)
@@ -376,7 +376,7 @@ namespace IBE.Ocr
                             bitmapCtr++;
                         }
                         else
-                        {   // It'currentPriceData a text column, we'll use Tesseract
+                        {   // It's a text column, we'll use Tesseract
 
                             // Prepare some different versions of the bitmap, we will take the best result
                             var c = new Bitmap[7];

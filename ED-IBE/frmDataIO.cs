@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using IBE.Enums_and_Utility_Classes;
 using System.IO;
+using IBE.SQL;
 
 namespace IBE
 {
-    public partial class frmDataIO : IBE.Enums_and_Utility_Classes.RNBaseForm
+    public partial class frmDataIO : RNBaseForm
     {
+        public const String        DB_GROUPNAME                    = "DataIO";
+
         public delegate void DelTextParam(String text);
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
         public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
         private Boolean m_DataImportHappened = false; 
+
+        private DBGuiInterface      m_GUIInterface;
 
                                  
         [Flags] enum enImportTypes
@@ -47,6 +52,10 @@ namespace IBE
             {
                 cmdImportOldData.Enabled    = !Program.Data.OldDataImportDone;
                 cbImportPriceData.Enabled   = !Program.Data.OldDataImportDone;
+                m_GUIInterface              = new DBGuiInterface(DB_GROUPNAME, Program.DBCon);
+
+                m_GUIInterface.loadAllSettings(this);
+
             }
             catch (Exception ex)
             {
@@ -70,6 +79,11 @@ namespace IBE
                 rbImportNewer.Enabled                   = setEnabled;
                 rbImportSame.Enabled                    = setEnabled;
                 cmdTest.Enabled                         = setEnabled;
+                cmdPurgeOldData.Enabled                 = setEnabled;
+                rbFormatExtended.Enabled                = setEnabled;
+                rbFormatSimple.Enabled                  = setEnabled;
+                cmdExit.Enabled                         = setEnabled;    
+
             }
             catch (Exception ex)
             {
@@ -171,7 +185,7 @@ namespace IBE
                             if(e.Total != 0)
                                 destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total);
                             else
-                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : ?% ({2} of ?)", e.Tablename, 0, e.Index, 0);
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}", e.Tablename, 0, e.Index, 0);
                         }
                         else
                         {
@@ -197,7 +211,7 @@ namespace IBE
         /// <param name="importInfo">if this is set a FolderDialog will ask with this text for a import directory.
         /// If this is not set, the path from "General"->"Path_Import" or from "optionalPath" will be taken</param>
         /// <param name="importFlags">flags what to import</param>
-        /// <param name="optionalFilter">filefilter (only for importing Commander'currentPriceData Log multiple times)</param>
+        /// <param name="optionalFilter">filefilter (only for importing Commander's Log multiple times)</param>
         /// <param name="optionalPath">preset for the import path. Also taken by the FolderDialog if importInfo is set</param>
         /// <param name="RNData">causes to look for some files in the "/data/" subdirectory (for importing old RN data) </param>
         /// <returns></returns>
@@ -462,7 +476,7 @@ namespace IBE
 
                         if (importFlags.HasFlag(enImportTypes.RN_CommandersLog))
                         {
-                            // import the Commander'currentPriceData Log from the old RN files
+                            // import the Commander's Log from the old RN files
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 0, Total = 0 });
                             string[] files;
                             string Filter;
@@ -578,6 +592,7 @@ namespace IBE
             try
             {
                 SetButtons(false);
+                lbProgess.Items.Clear();
 
                 enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
                                   enImportTypes.EDDB_Systems | 
@@ -601,6 +616,8 @@ namespace IBE
             try
             {
                 SetButtons(false);
+
+                lbProgess.Items.Clear();
 
                 enImportTypes importFlags = enImportTypes.RN_CommandersLog;
                 ImportData("Select folder with your old Commander's Log data (accepted file pattern : CommandersLog*.xml)", importFlags, "CommandersLog*.xml");
@@ -651,10 +668,10 @@ namespace IBE
                     {
                         if (File.Exists(Path.Combine(RNPath, "RegulatedNoise.exe")))
                         {
+                            lbProgess.Items.Clear();
+
                             Program.Data.Progress += Data_Progress;
                             Cursor = Cursors.WaitCursor;
-
-                            lbProgess.Items.Clear();
 
                             Application.DoEvents();
 
@@ -710,8 +727,9 @@ namespace IBE
 
 		        if (result == DialogResult.OK)
                 {
-                    Program.Data.Progress += Data_Progress;
                     lbProgess.Items.Clear();
+
+                    Program.Data.Progress += Data_Progress;
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 0, Total = 0 });
 
@@ -762,8 +780,9 @@ namespace IBE
 
                 if ((!String.IsNullOrEmpty(fbFileDialog.FileName)) && System.IO.File.Exists(fbFileDialog.FileName))
                 {
-                    Program.Data.Progress += Data_Progress;
                     lbProgess.Items.Clear();
+
+                    Program.Data.Progress += Data_Progress;
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 0, Total = 0 });
 
@@ -835,6 +854,65 @@ namespace IBE
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in cmdExit_Click");   
+            }
+        }
+
+        private void cmdPurgeOldData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(MessageBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
+                {
+                    lbProgess.Items.Clear();
+
+                    SetButtons(false);
+
+                    DateTime deadline = DateTime.Now.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
+
+                    Program.Data.Progress += Data_Progress;
+
+                    Program.Data.DeleteMarketData((Int32)nudPurgeOldDataDays.Value);
+
+                    Program.Data.Progress -= Data_Progress;
+
+                    SetButtons(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetButtons(true);
+                cErr.processError(ex, "Error in cmdPurgeOldData_Click");
+            }
+        }
+
+        private void nudPurgeOldDataDays_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if(e.KeyCode == Keys.Enter)
+                    if(m_GUIInterface.saveSetting(sender))
+                    {
+
+                    }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in nudPurgeOldDataDays_KeyDown");
+            }
+        }
+
+        private void nudPurgeOldDataDays_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender))
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
             }
         }
     }

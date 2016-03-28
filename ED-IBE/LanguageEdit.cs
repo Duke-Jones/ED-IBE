@@ -13,7 +13,7 @@ using MySql.Data.MySqlClient;
 
 namespace IBE
 {
-    public partial class LanguageEdit : IBE.Enums_and_Utility_Classes.RNBaseForm
+    public partial class LanguageEdit : RNBaseForm
     {
         public const String                             DB_GROUPNAME                    = "LanguageEdit";
         
