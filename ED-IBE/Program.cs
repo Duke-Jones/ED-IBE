@@ -264,6 +264,7 @@ namespace IBE
         public static SplashScreenForm                  SplashScreen;
         public static EDDN.EDDNCommunicator             EDDNComm;
         public static PlausibiltyChecker                PlausibiltyCheck;
+        public static GameSettings                      GameSettings;
 
         private static ManualResetEvent                 m_MREvent;                      // for updating the database with scripts
         private static Boolean                          m_gotScriptErrors = false;      // for updating the database with scripts

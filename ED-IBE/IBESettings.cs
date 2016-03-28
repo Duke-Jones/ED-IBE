@@ -330,8 +330,8 @@ namespace IBE
             {
                 var bmp = new Bitmap(openFile.FileName);
 
-                if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
-                    bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
+                if (bmp.Height == Program.GameSettings.Display.Resolution.Y &&
+                    bmp.Width == Program.GameSettings.Display.Resolution.X) return bmp;
                 var wrongres = MsgBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
                 if (wrongres == DialogResult.Yes)
                 {

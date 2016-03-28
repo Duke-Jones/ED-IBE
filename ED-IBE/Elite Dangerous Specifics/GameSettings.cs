@@ -11,30 +11,32 @@ namespace IBE
     
     public class GameSettings
     {
-        public AppConfig AppConfig;
-        public EdDisplayConfig Display;
+        private AppConfig AppConfigGlobal;
+        private AppConfig AppConfigLocal;
+
+        private EdDisplayConfig m_Display;
         private DateTime lastTry_Displaydata = DateTime.Now - new TimeSpan(1,0,0);
 
-        public Form1 _parent;
-
-        public GameSettings(Form1 parent)
+        public GameSettings()
         {
             try
             {
-                _parent = parent;
-
                 //Load DisplaySettings from AppData
                 LoadDisplaySettings();
 
                 //Load AppConfig
-                LoadAppConfig();
+                AppConfigGlobal = LoadAppConfig("AppConfig.xml", false);
+                AppConfigLocal  = LoadAppConfig("AppConfigLocal.xml", true);
 
                 //Set up some filewatchers, If user changes config its reflected here
                 WatcherDisplaySettings();
                 WatcherAppDataSettings(); //Currently disabled as we only check Verbose logging and that cant be changed from the game
 
-                //Check and Request for Verbose Logging
-                CheckAndRequestVerboseLogging();
+                if((AppConfigGlobal.Network.VerboseLogging != 1) && ((AppConfigLocal == null) || (AppConfigLocal.Network.VerboseLogging != 1)))
+                { 
+                    //Check and Request for Verbose Logging
+                    AppConfigLocal = CheckAndRequestVerboseLogging("AppConfigLocal.xml", AppConfigLocal);
+                }
             }
             catch (Exception ex)
             {
@@ -42,105 +44,136 @@ namespace IBE
             }
         }
 
-        void CheckAndRequestVerboseLogging()
+        // access to the Display-object
+        public EdDisplayConfig Display
         {
-            if (AppConfig.Network.VerboseLogging != 1)
+            get
             {
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
-
-                var setLog =
-                    MessageBox.Show(
-                        "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
-                        "Set verbose logging?", MessageBoxButtons.YesNo);
-
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
-
-                if (setLog == DialogResult.Yes)
-                {
-                    var appconfig = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "GamePath"), "AppConfig.xml");
-
-                    //Make backup
-                    File.Copy(appconfig, appconfig+".bak", true);
-
-                    //Set werbose to one
-                    var doc = new XmlDocument();
-                    doc.Load(appconfig);
-                    var ie = doc.SelectNodes("/AppConfig/Network").GetEnumerator();
-
-                    while (ie.MoveNext())
-                    {
-                        if ((ie.Current as XmlNode).Attributes["VerboseLogging"] != null)
-                        {
-                            (ie.Current as XmlNode).Attributes["VerboseLogging"].Value = "1";
-                        }
-                        else
-                        {
-                            var verb = doc.CreateAttribute("VerboseLogging");
-                            verb.Value = "1";
-
-                            (ie.Current as XmlNode).Attributes.Append(verb);
-                        }
-                    }
-
-                    doc.Save(appconfig);
-
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = false;
-
-                    MessageBox.Show(
-                        "AppConfig.xml updated.  You'll need to restart Elite Dangerous if it's already running.");
-
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = false;
-
-                }
-
-                //Update config
-                LoadAppConfig();
+                return m_Display;
             }
         }
 
-        void LoadAppConfig()
+        AppConfig CheckAndRequestVerboseLogging(String fileName, AppConfig configuration)
         {
-            AppConfig locAppConfig;
+            try
+            {
+                if ((configuration == null) || (configuration.Network.VerboseLogging != 1))
+                {
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = false;
 
+                    var setLog =
+                        MessageBox.Show(
+                            "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
+                            "Set verbose logging?", MessageBoxButtons.YesNo);
+
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = false;
+
+                    if (setLog == DialogResult.Yes)
+                    {
+                        var appConfigFilePath = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "GamePath"), fileName);
+                        var doc = new XmlDocument();
+
+                        //Make backup
+                        if(File.Exists(appConfigFilePath))
+                        {
+                            File.Copy(appConfigFilePath, appConfigFilePath+".bak", true);
+                            doc.Load(appConfigFilePath);
+                        }
+                        else
+                        {
+                            doc.LoadXml("<AppConfig><Network></Network></AppConfig>");
+                        }
+
+                        var ie = doc.SelectNodes("/AppConfig/Network").GetEnumerator();
+
+                        while (ie.MoveNext())
+                        {
+                            if ((ie.Current as XmlNode).Attributes["VerboseLogging"] != null)
+                            {
+                                (ie.Current as XmlNode).Attributes["VerboseLogging"].Value = "1";
+                            }
+                            else
+                            {
+                                var verb = doc.CreateAttribute("VerboseLogging");
+                                verb.Value = "1";
+
+                                (ie.Current as XmlNode).Attributes.Append(verb);
+                            }
+                        }
+
+                        doc.Save(appConfigFilePath);
+
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = false;
+
+                        MessageBox.Show(
+                            fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.");
+
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = false;
+
+                    }
+
+                    //Update config
+                    configuration = LoadAppConfig(fileName, false);
+                }
+
+                return configuration;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking VerboseLogging", ex);
+            }
+        }
+
+        AppConfig LoadAppConfig(String fileName, Boolean ignoreMissing)
+        {
+            AppConfig locAppConfig = null;
             DialogResult MBResult = DialogResult.Ignore;
-            string configFile = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "GamePath"), "AppConfig.xml");
-            XmlSerializer serializer; 
 
-            do{
+            try
+            {
+                string configFile = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "GamePath"), fileName);
+                XmlSerializer serializer; 
 
-                try
-                {
-                    serializer = new XmlSerializer(typeof(AppConfig)); 
-                    using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                do{
+
+                    try
                     {
-                        locAppConfig = (AppConfig)serializer.Deserialize(myFileStream);
-                        AppConfig = locAppConfig;
+                        serializer = new XmlSerializer(typeof(AppConfig)); 
+                        using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        {
+                            locAppConfig = (AppConfig)serializer.Deserialize(myFileStream);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-
-                    if (AppConfig == null)
+                    catch (Exception ex)
                     {
-                        // ignore if it was loaded before
-                        throw new Exception(String.Format("Error while loading ED-Appconfig from file <{0}>", configFile), ex);
-                        //cErr.processError(ex, String.Format("Error while loading ED-Appconfig from file <{0}>", configFile));
-                    }
 
-                }
-            } while (MBResult == DialogResult.Retry);
-                
+                        if ((!ignoreMissing) && (locAppConfig == null))
+                        {
+                            // ignore if it was loaded before
+                            throw new Exception(String.Format("Error while loading ED-Appconfig from file <{0}>", configFile), ex);
+                            //cErr.processError(ex, String.Format("Error while loading ED-Appconfig from file <{0}>", configFile));
+                        }
+
+                    }
+                } while (MBResult == DialogResult.Retry);
+           
+                return locAppConfig;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading the appconfig-file", ex);
+            }
         }
 
         private void AppData_Changed(object sender, FileSystemEventArgs e)
         {
             try
             {
-                LoadAppConfig();
+                LoadAppConfig("App", true);
             }
             catch (Exception ex)
             {
@@ -171,12 +204,12 @@ namespace IBE
                         using (var myFileStream = new FileStream(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         {
                             locDisplay = (EdDisplayConfig)serializer.Deserialize(myFileStream);
-                            Display = locDisplay;
+                            m_Display = locDisplay;
                         }
                     }
                     catch (Exception ex)
                     {
-                        if (Display == null)
+                        if (m_Display == null)
                         {
                             // ignore this if it was loaded short before
                             delta = DateTime.Now - lastTry_Displaydata;

@@ -32,20 +32,20 @@ namespace IBE
 
         private void SetResolutionValues()
         {
-            if (Form1.GameSettings.Display == null)
+            if (Program.GameSettings.Display == null)
             {
                 tb_resolution.Text = "ERROR";
             }
             else
             {
-                tb_resolution.Text = Form1.GameSettings.Display.Resolution.X + "x" + Form1.GameSettings.Display.Resolution.Y;
+                tb_resolution.Text = Program.GameSettings.Display.Resolution.X + "x" + Program.GameSettings.Display.Resolution.Y;
             }
         }
         private void DoCalibration()
         {
-            if (Form1.GameSettings.Display != null && (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 1))
+            if (Program.GameSettings.Display != null && (OcrCalibrator.CalibrationBoxes == null || OcrCalibrator.CalibrationBoxes.Count < 1))
             {
-                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Program.GameSettings.Display.Resolution);
                 DrawCalibrationPoints(calibrations);
                 return;
             }
@@ -94,8 +94,8 @@ namespace IBE
             {
                 var bmp = new Bitmap(openFile.FileName);
 
-                if (bmp.Height == Form1.GameSettings.Display.Resolution.Y &&
-                    bmp.Width == Form1.GameSettings.Display.Resolution.X) return bmp;
+                if (bmp.Height == Program.GameSettings.Display.Resolution.Y &&
+                    bmp.Width == Program.GameSettings.Display.Resolution.X) return bmp;
                 var wrongres = MessageBox.Show("The selected image has a different resolution from your current game settings. Do you want to pick another image?", "Ooops...", MessageBoxButtons.YesNo);
                 if (wrongres == DialogResult.Yes)
                 {
@@ -103,10 +103,10 @@ namespace IBE
                 }
                 
                 // Force resolution from input bmp
-                Form1.GameSettings.Display.ScreenHeight = bmp.Height;
-                Form1.GameSettings.Display.ScreenWidth = bmp.Width;
+                Program.GameSettings.Display.ScreenHeight = bmp.Height;
+                Program.GameSettings.Display.ScreenWidth = bmp.Width;
                 SetResolutionValues();
-                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Program.GameSettings.Display.Resolution);
                 DrawCalibrationPoints(calibrations);
 
                 return bmp;
@@ -323,9 +323,9 @@ namespace IBE
 
         private void Btn_calibration_reset_Click(object sender, EventArgs e)
         {
-            if (Form1.GameSettings.Display != null)
+            if (Program.GameSettings.Display != null)
             {
-                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Form1.GameSettings.Display.Resolution);
+                var calibrations = OcrCalibrator.GetCalculatedCalibrationPoints(Program.GameSettings.Display.Resolution);
                 DrawCalibrationPoints(calibrations);
                 FillRawData();
                 pb_calibratorBox.Refresh();

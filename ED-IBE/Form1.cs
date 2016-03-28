@@ -54,7 +54,6 @@ namespace IBE
         public Random random = new Random();
         public Guid SessionGuid;
         public PropertyInfo[] LogEventProperties;
-        public static GameSettings GameSettings;
 
         //public Dictionary<byte, string> CommodityLevel = new Dictionary<byte, string>();
         private Ocr.Ocr ocr; //TODO is this needed here?
@@ -139,7 +138,7 @@ namespace IBE
                         Program.MainLog.Log("  - product appdata set");
 
                         Program.SplashScreen.InfoAdd("load game settings...");
-                        GameSettings = new GameSettings(this);
+                        Program.GameSettings = new GameSettings();
                         Program.MainLog.Log("  - loaded game settings");
                         Program.SplashScreen.InfoAppendLast("<OK>");
 
@@ -1425,19 +1424,19 @@ namespace IBE
                         this.Invoke(new MethodInvoker(setOCRTabsVisibility));
                     else
                     {
-                        if (GameSettings != null && tabCtrlOCR.TabPages["OCR_Calibration"] != null)
+                        if (Program.GameSettings != null && tabCtrlOCR.TabPages["OCR_Calibration"] != null)
                         {
                             var OCRTabPage = tabCtrlOCR.TabPages["OCR_Calibration"];
-                            OCRTabPage.Enabled = (GameSettings.Display != null);
+                            OCRTabPage.Enabled = (Program.GameSettings.Display != null);
                             var TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
-                
-                            TabControl.lblWarning.Visible = (GameSettings.Display == null); 
+
+                            TabControl.lblWarning.Visible = (Program.GameSettings.Display == null); 
                         }
 
-                        if (GameSettings != null && tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"] != null)
+                        if (Program.GameSettings != null && tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"] != null)
                         {
                             var OCRTabPage = tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"];
-                            OCRTabPage.Enabled = (GameSettings.Display != null);
+                            OCRTabPage.Enabled = (Program.GameSettings.Display != null);
                             var TabControl = (tabOCR)(OCRTabPage.Controls[0]);
                             TabControl.startOcrOnload(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "StartOCROnLoad", false.ToString(), false, true) && Directory.Exists(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder", "")));
                         }
