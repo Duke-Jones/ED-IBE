@@ -589,6 +589,8 @@ namespace IBE
                                     "                                                                                                                                                                              \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tbCommodityData`                                                                                                                                      \n" +
+                                    "DROP PRIMARY KEY,                                                                                                                                                             \n" +
+                                    "ADD PRIMARY KEY (`id`),                                                                                                                                                       \n" +
                                     "CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT;                                                                                                                   \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tbPriceHistory`                                                                                                                                       \n" +
@@ -611,7 +613,6 @@ namespace IBE
                                     "  REFERENCES `elite_db`.`tbSource` (`id`)                                                                                                                                     \n" +
                                     "  ON DELETE NO ACTION                                                                                                                                                         \n" +
                                     "  ON UPDATE NO ACTION;                                                                                                                                                        \n" +
-                                    "                                                                                                                                                                              \n" +
                                     "                                                                                                                                                                              \n" +
                                     "INSERT INTO `Elite_DB`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');                                                \n" +
                                     "                                                                                                                                                                              \n" +
@@ -673,16 +674,16 @@ namespace IBE
 	                                " select `station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp` from tbcommoditydata;                        \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tmPA_S2S_StationData`                                                                                                                                 \n" +
-                                    "ADD COLUMN `Source_id` INT(11) NULL DEFAULT NULL `Profit`;                                                                                                                    \n" +
+                                    "ADD COLUMN `Sources_id` INT(11) NULL DEFAULT NULL AFTER `Profit`;                                                                                                                    \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tmPA_ByCommodity`                                                                                                                                     \n" +
-                                    "ADD COLUMN `Source_id` INT(11) NULL DEFAULT NULL AFTER `Timestamp`;                                                                                                           \n" +
+                                    "ADD COLUMN `Sources_id` INT(11) NULL DEFAULT NULL AFTER `Timestamp`;                                                                                                           \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tmPA_S2S_BestTrips`                                                                                                                                   \n" +
                                     "ADD COLUMN `DistanceToRoute` DOUBLE NULL DEFAULT NULL AFTER `DistanceToStar_2`;                                                                                               \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tmPA_ByStation`                                                                                                                                       \n" +
-                                    "CHANGE COLUMN `Source` `Source_id` INT(11) NULL DEFAULT NULL ;                                                                                                                \n" +
+                                    "CHANGE COLUMN `Source` `Sources_id` INT(11) NULL DEFAULT NULL ;                                                                                                                \n" +
                                     "                                                                                                                                                                              \n" +
                                     "ALTER TABLE `elite_db`.`tmPA_AllCommodities`                                                                                                                                  \n" +
                                     "ADD COLUMN `Buy_Sources_id` INT(11) NULL DEFAULT NULL AFTER `Buy_Timestamp`,                                                                                                  \n" +
@@ -719,7 +720,8 @@ namespace IBE
                         }
                         else
                             Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.0...<OK>");
-                        
+
+                        Data.PrepareBaseTables("tbsource");
                     }
                     
 

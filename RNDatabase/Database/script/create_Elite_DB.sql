@@ -309,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityData` (
   `timestamp` DATETIME NOT NULL,
   INDEX `fk_tbStations_has_tbCommodities_tbCommodities1_idx` (`commodity_id` ASC),
   INDEX `fk_tbStations_has_tbCommodities_tbStations1_idx` (`station_id` ASC),
-  PRIMARY KEY (`id`, `Sources_id`),
+  PRIMARY KEY (`id`),
   INDEX `fk_tbStationCommodity_tbSources1_idx` (`Sources_id` ASC),
   INDEX `fk_tbStationCommodity_tbEconomyLevel1_idx` (`DemandLevel` ASC),
   INDEX `fk_tbStationCommodity_tbEconomyLevel2_idx` (`SupplyLevel` ASC),
@@ -681,6 +681,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_AllCommodities` (
   `Buy_Min` INT NULL,
   `Buy_Distance` DOUBLE NULL,
   `Buy_Timestamp` DATETIME NULL,
+  `Buy_Sources_id` INT NULL,
   `Sell_SystemID` INT NULL,
   `Sell_System` VARCHAR(80) NULL,
   `Sell_StationID` INT NULL,
@@ -688,6 +689,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_AllCommodities` (
   `Sell_Max` INT NULL,
   `Sell_Distance` DOUBLE NULL,
   `Sell_Timestamp` DATETIME NULL,
+  `Sell_Sources_id` INT NULL,
   `Max_Profit` INT NULL,
   PRIMARY KEY (`CommodityID`))
 ENGINE = InnoDB;
@@ -723,6 +725,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_StationData` (
   `Demandlevel` VARCHAR(10) NULL,
   `Timestamp2` DATETIME NULL,
   `Profit` INT NULL,
+  `Sources_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`Commodity_ID`))
 ENGINE = InnoDB;
 
@@ -745,6 +748,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_BestTrips` (
   `Distance` DOUBLE NULL,
   `DistanceToStar_1` DOUBLE NULL,
   `DistanceToStar_2` DOUBLE NULL,
+  `DistanceToRoute` DOUBLE NULL,
   PRIMARY KEY (`Station_ID_1`, `Station_ID_2`))
 ENGINE = InnoDB;
 
@@ -776,7 +780,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_ByStation` (
   `Best_Buy` INT NULL,
   `Best_Sell` INT NULL,
   `MaxProfit` INT NULL,
-  `Source` VARCHAR(80) NULL,
+  `Sources_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`Commodity_ID`))
 ENGINE = InnoDB;
 
@@ -797,6 +801,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_ByCommodity` (
   `Demand` INT NULL,
   `DemandLevel` VARCHAR(80) NULL,
   `Timestamp` DATETIME NULL,
+  `Sources_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`Station_ID`))
 ENGINE = InnoDB;
 

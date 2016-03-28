@@ -2388,7 +2388,7 @@ namespace IBE.SQL.Datasets {
             
             private global::System.Data.DataColumn columnProfit;
             
-            private global::System.Data.DataColumn columnSource_id;
+            private global::System.Data.DataColumn columnSources_id;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -2513,9 +2513,9 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Source_idColumn {
+            public global::System.Data.DataColumn Sources_idColumn {
                 get {
-                    return this.columnSource_id;
+                    return this.columnSources_id;
                 }
             }
             
@@ -2556,7 +2556,7 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmpa_s2s_stationdataRow Addtmpa_s2s_stationdataRow(int Commodity_ID, string Commodity, int Buy, int Supply, string SupplyLevel, System.DateTime Timestamp1, int Sell, int Demand, string Demandlevel, System.DateTime Timestamp2, int Profit, int Source_id) {
+            public tmpa_s2s_stationdataRow Addtmpa_s2s_stationdataRow(int Commodity_ID, string Commodity, int Buy, int Supply, string SupplyLevel, System.DateTime Timestamp1, int Sell, int Demand, string Demandlevel, System.DateTime Timestamp2, int Profit, int Sources_id) {
                 tmpa_s2s_stationdataRow rowtmpa_s2s_stationdataRow = ((tmpa_s2s_stationdataRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Commodity_ID,
@@ -2570,7 +2570,7 @@ namespace IBE.SQL.Datasets {
                         Demandlevel,
                         Timestamp2,
                         Profit,
-                        Source_id};
+                        Sources_id};
                 rowtmpa_s2s_stationdataRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowtmpa_s2s_stationdataRow);
                 return rowtmpa_s2s_stationdataRow;
@@ -2611,7 +2611,7 @@ namespace IBE.SQL.Datasets {
                 this.columnDemandlevel = base.Columns["Demandlevel"];
                 this.columnTimestamp2 = base.Columns["Timestamp2"];
                 this.columnProfit = base.Columns["Profit"];
-                this.columnSource_id = base.Columns["Source_id"];
+                this.columnSources_id = base.Columns["Sources_id"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2639,8 +2639,8 @@ namespace IBE.SQL.Datasets {
                 base.Columns.Add(this.columnTimestamp2);
                 this.columnProfit = new global::System.Data.DataColumn("Profit", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnProfit);
-                this.columnSource_id = new global::System.Data.DataColumn("Source_id", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSource_id);
+                this.columnSources_id = new global::System.Data.DataColumn("Sources_id", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSources_id);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnCommodity_ID}, true));
                 this.columnCommodity_ID.AllowDBNull = false;
@@ -5151,10 +5151,9 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tbcommoditydataRow FindByidSources_id(long id, int Sources_id) {
+            public tbcommoditydataRow FindByid(long id) {
                 return ((tbcommoditydataRow)(this.Rows.Find(new object[] {
-                            id,
-                            Sources_id})));
+                            id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5213,12 +5212,12 @@ namespace IBE.SQL.Datasets {
                 this.columntimestamp = new global::System.Data.DataColumn("timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columntimestamp);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnid,
-                                this.columnSources_id}, true));
+                                this.columnid}, true));
                 this.columnid.AutoIncrement = true;
                 this.columnid.AutoIncrementSeed = -1;
                 this.columnid.AutoIncrementStep = -1;
                 this.columnid.AllowDBNull = false;
+                this.columnid.Unique = true;
                 this.columnstation_id.AllowDBNull = false;
                 this.columncommodity_id.AllowDBNull = false;
                 this.columnSources_id.AllowDBNull = false;
@@ -14846,7 +14845,7 @@ namespace IBE.SQL.Datasets {
             
             private global::System.Data.DataColumn columnTimestamp;
             
-            private global::System.Data.DataColumn columnSource_id;
+            private global::System.Data.DataColumn columnSources_id;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -14979,9 +14978,9 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Source_idColumn {
+            public global::System.Data.DataColumn Sources_idColumn {
                 get {
-                    return this.columnSource_id;
+                    return this.columnSources_id;
                 }
             }
             
@@ -15022,7 +15021,7 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmpa_bycommodityRow Addtmpa_bycommodityRow(int System_ID, string System, int Station_ID, string Station, double Distance, int Buy, int Supply, string SupplyLevel, int Sell, int Demand, string DemandLevel, System.DateTime Timestamp, int Source_id) {
+            public tmpa_bycommodityRow Addtmpa_bycommodityRow(int System_ID, string System, int Station_ID, string Station, double Distance, int Buy, int Supply, string SupplyLevel, int Sell, int Demand, string DemandLevel, System.DateTime Timestamp, int Sources_id) {
                 tmpa_bycommodityRow rowtmpa_bycommodityRow = ((tmpa_bycommodityRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         System_ID,
@@ -15037,7 +15036,7 @@ namespace IBE.SQL.Datasets {
                         Demand,
                         DemandLevel,
                         Timestamp,
-                        Source_id};
+                        Sources_id};
                 rowtmpa_bycommodityRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowtmpa_bycommodityRow);
                 return rowtmpa_bycommodityRow;
@@ -15079,7 +15078,7 @@ namespace IBE.SQL.Datasets {
                 this.columnDemand = base.Columns["Demand"];
                 this.columnDemandLevel = base.Columns["DemandLevel"];
                 this.columnTimestamp = base.Columns["Timestamp"];
-                this.columnSource_id = base.Columns["Source_id"];
+                this.columnSources_id = base.Columns["Sources_id"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -15109,8 +15108,8 @@ namespace IBE.SQL.Datasets {
                 base.Columns.Add(this.columnDemandLevel);
                 this.columnTimestamp = new global::System.Data.DataColumn("Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTimestamp);
-                this.columnSource_id = new global::System.Data.DataColumn("Source_id", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSource_id);
+                this.columnSources_id = new global::System.Data.DataColumn("Sources_id", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSources_id);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnStation_ID}, true));
                 this.columnSystem.MaxLength = 80;
@@ -15276,7 +15275,7 @@ namespace IBE.SQL.Datasets {
             
             private global::System.Data.DataColumn columnMaxProfit;
             
-            private global::System.Data.DataColumn columnSource_id;
+            private global::System.Data.DataColumn columnSources_id;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -15409,9 +15408,9 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn Source_idColumn {
+            public global::System.Data.DataColumn Sources_idColumn {
                 get {
-                    return this.columnSource_id;
+                    return this.columnSources_id;
                 }
             }
             
@@ -15452,7 +15451,7 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmpa_bystationRow Addtmpa_bystationRow(int Commodity_ID, string Commodity, int Buy, int Supply, string SupplyLevel, int Sell, int Demand, string DemandLevel, System.DateTime Timestamp, int Best_Buy, int Best_Sell, int MaxProfit, int Source_id) {
+            public tmpa_bystationRow Addtmpa_bystationRow(int Commodity_ID, string Commodity, int Buy, int Supply, string SupplyLevel, int Sell, int Demand, string DemandLevel, System.DateTime Timestamp, int Best_Buy, int Best_Sell, int MaxProfit, int Sources_id) {
                 tmpa_bystationRow rowtmpa_bystationRow = ((tmpa_bystationRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Commodity_ID,
@@ -15467,7 +15466,7 @@ namespace IBE.SQL.Datasets {
                         Best_Buy,
                         Best_Sell,
                         MaxProfit,
-                        Source_id};
+                        Sources_id};
                 rowtmpa_bystationRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowtmpa_bystationRow);
                 return rowtmpa_bystationRow;
@@ -15509,7 +15508,7 @@ namespace IBE.SQL.Datasets {
                 this.columnBest_Buy = base.Columns["Best_Buy"];
                 this.columnBest_Sell = base.Columns["Best_Sell"];
                 this.columnMaxProfit = base.Columns["MaxProfit"];
-                this.columnSource_id = base.Columns["Source_id"];
+                this.columnSources_id = base.Columns["Sources_id"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -15539,8 +15538,8 @@ namespace IBE.SQL.Datasets {
                 base.Columns.Add(this.columnBest_Sell);
                 this.columnMaxProfit = new global::System.Data.DataColumn("MaxProfit", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMaxProfit);
-                this.columnSource_id = new global::System.Data.DataColumn("Source_id", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSource_id);
+                this.columnSources_id = new global::System.Data.DataColumn("Sources_id", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSources_id);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnCommodity_ID}, true));
                 this.columnCommodity_ID.AllowDBNull = false;
@@ -17113,17 +17112,17 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Source_id {
+            public int Sources_id {
                 get {
                     try {
-                        return ((int)(this[this.tabletmpa_s2s_stationdata.Source_idColumn]));
+                        return ((int)(this[this.tabletmpa_s2s_stationdata.Sources_idColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Source_id in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sources_id in Tabelle tmpa_s2s_stationdata ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmpa_s2s_stationdata.Source_idColumn] = value;
+                    this[this.tabletmpa_s2s_stationdata.Sources_idColumn] = value;
                 }
             }
             
@@ -17249,14 +17248,14 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSource_idNull() {
-                return this.IsNull(this.tabletmpa_s2s_stationdata.Source_idColumn);
+            public bool IsSources_idNull() {
+                return this.IsNull(this.tabletmpa_s2s_stationdata.Sources_idColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSource_idNull() {
-                this[this.tabletmpa_s2s_stationdata.Source_idColumn] = global::System.Convert.DBNull;
+            public void SetSources_idNull() {
+                this[this.tabletmpa_s2s_stationdata.Sources_idColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -23897,17 +23896,17 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Source_id {
+            public int Sources_id {
                 get {
                     try {
-                        return ((int)(this[this.tabletmpa_bycommodity.Source_idColumn]));
+                        return ((int)(this[this.tabletmpa_bycommodity.Sources_idColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Source_id in Tabelle tmpa_bycommodity ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sources_id in Tabelle tmpa_bycommodity ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmpa_bycommodity.Source_idColumn] = value;
+                    this[this.tabletmpa_bycommodity.Sources_idColumn] = value;
                 }
             }
             
@@ -24045,14 +24044,14 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSource_idNull() {
-                return this.IsNull(this.tabletmpa_bycommodity.Source_idColumn);
+            public bool IsSources_idNull() {
+                return this.IsNull(this.tabletmpa_bycommodity.Sources_idColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSource_idNull() {
-                this[this.tabletmpa_bycommodity.Source_idColumn] = global::System.Convert.DBNull;
+            public void SetSources_idNull() {
+                this[this.tabletmpa_bycommodity.Sources_idColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -24259,17 +24258,17 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Source_id {
+            public int Sources_id {
                 get {
                     try {
-                        return ((int)(this[this.tabletmpa_bystation.Source_idColumn]));
+                        return ((int)(this[this.tabletmpa_bystation.Sources_idColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Source_id in Tabelle tmpa_bystation ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Sources_id in Tabelle tmpa_bystation ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletmpa_bystation.Source_idColumn] = value;
+                    this[this.tabletmpa_bystation.Sources_idColumn] = value;
                 }
             }
             
@@ -24407,14 +24406,14 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSource_idNull() {
-                return this.IsNull(this.tabletmpa_bystation.Source_idColumn);
+            public bool IsSources_idNull() {
+                return this.IsNull(this.tabletmpa_bystation.Sources_idColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSource_idNull() {
-                this[this.tabletmpa_bystation.Source_idColumn] = global::System.Convert.DBNull;
+            public void SetSources_idNull() {
+                this[this.tabletmpa_bystation.Sources_idColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -27117,11 +27116,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             tableMapping.ColumnMappings.Add("Demandlevel", "Demandlevel");
             tableMapping.ColumnMappings.Add("Timestamp2", "Timestamp2");
             tableMapping.ColumnMappings.Add("Profit", "Profit");
-            tableMapping.ColumnMappings.Add("Source_id", "Source_id");
+            tableMapping.ColumnMappings.Add("Sources_id", "Sources_id");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_s2s_stationdata` WHERE ((`Commodity_ID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy` IS NULL) OR (`Buy` = @p5)) AND ((@p6 = 1 AND `Supply` IS NULL) OR (`Supply` = @p7)) AND ((@p8 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p9)) AND ((@p10 = 1 AND `Timestamp1` IS NULL) OR (`Timestamp1` = @p11)) AND ((@p12 = 1 AND `Sell` IS NULL) OR (`Sell` = @p13)) AND ((@p14 = 1 AND `Demand` IS NULL) OR (`Demand` = @p15)) AND ((@p16 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p17)) AND ((@p18 = 1 AND `Timestamp2` IS NULL) OR (`Timestamp2` = @p19)) AND ((@p20 = 1 AND `Profit` IS NULL) OR (`Profit` = @p21)) AND ((@p22 = 1 AND `Source_id` IS NULL) OR (`Source_id` = @p23)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_s2s_stationdata` WHERE ((`Commodity_ID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy` IS NULL) OR (`Buy` = @p5)) AND ((@p6 = 1 AND `Supply` IS NULL) OR (`Supply` = @p7)) AND ((@p8 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p9)) AND ((@p10 = 1 AND `Timestamp1` IS NULL) OR (`Timestamp1` = @p11)) AND ((@p12 = 1 AND `Sell` IS NULL) OR (`Sell` = @p13)) AND ((@p14 = 1 AND `Demand` IS NULL) OR (`Demand` = @p15)) AND ((@p16 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p17)) AND ((@p18 = 1 AND `Timestamp2` IS NULL) OR (`Timestamp2` = @p19)) AND ((@p20 = 1 AND `Profit` IS NULL) OR (`Profit` = @p21)) AND ((@p22 = 1 AND `Sources_id` IS NULL) OR (`Sources_id` = @p23)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -27306,7 +27305,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
@@ -27315,15 +27314,15 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
             this._adapter.InsertCommand.CommandText = "INSERT INTO `tmpa_s2s_stationdata` (`Commodity_ID`, `Commodity`, `Buy`, `Supply`," +
                 " `SupplyLevel`, `Timestamp1`, `Sell`, `Demand`, `Demandlevel`, `Timestamp2`, `Pr" +
-                "ofit`, `Source_id`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @" +
-                "p11, @p12)";
+                "ofit`, `Sources_id`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, " +
+                "@p11, @p12)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -27407,11 +27406,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_s2s_stationdata` SET `Commodity_ID` = @p1, `Commodity` = @p2, `Buy` = @p3, `Supply` = @p4, `SupplyLevel` = @p5, `Timestamp1` = @p6, `Sell` = @p7, `Demand` = @p8, `Demandlevel` = @p9, `Timestamp2` = @p10, `Profit` = @p11, `Source_id` = @p12 WHERE ((`Commodity_ID` = @p13) AND ((@p14 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p15)) AND ((@p16 = 1 AND `Buy` IS NULL) OR (`Buy` = @p17)) AND ((@p18 = 1 AND `Supply` IS NULL) OR (`Supply` = @p19)) AND ((@p20 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p21)) AND ((@p22 = 1 AND `Timestamp1` IS NULL) OR (`Timestamp1` = @p23)) AND ((@p24 = 1 AND `Sell` IS NULL) OR (`Sell` = @p25)) AND ((@p26 = 1 AND `Demand` IS NULL) OR (`Demand` = @p27)) AND ((@p28 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p29)) AND ((@p30 = 1 AND `Timestamp2` IS NULL) OR (`Timestamp2` = @p31)) AND ((@p32 = 1 AND `Profit` IS NULL) OR (`Profit` = @p33)) AND ((@p34 = 1 AND `Source_id` IS NULL) OR (`Source_id` = @p35)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_s2s_stationdata` SET `Commodity_ID` = @p1, `Commodity` = @p2, `Buy` = @p3, `Supply` = @p4, `SupplyLevel` = @p5, `Timestamp1` = @p6, `Sell` = @p7, `Demand` = @p8, `Demandlevel` = @p9, `Timestamp2` = @p10, `Profit` = @p11, `Sources_id` = @p12 WHERE ((`Commodity_ID` = @p13) AND ((@p14 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p15)) AND ((@p16 = 1 AND `Buy` IS NULL) OR (`Buy` = @p17)) AND ((@p18 = 1 AND `Supply` IS NULL) OR (`Supply` = @p19)) AND ((@p20 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p21)) AND ((@p22 = 1 AND `Timestamp1` IS NULL) OR (`Timestamp1` = @p23)) AND ((@p24 = 1 AND `Sell` IS NULL) OR (`Sell` = @p25)) AND ((@p26 = 1 AND `Demand` IS NULL) OR (`Demand` = @p27)) AND ((@p28 = 1 AND `Demandlevel` IS NULL) OR (`Demandlevel` = @p29)) AND ((@p30 = 1 AND `Timestamp2` IS NULL) OR (`Timestamp2` = @p31)) AND ((@p32 = 1 AND `Profit` IS NULL) OR (`Profit` = @p33)) AND ((@p34 = 1 AND `Sources_id` IS NULL) OR (`Sources_id` = @p35)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -27495,7 +27494,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p13";
@@ -27680,7 +27679,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
@@ -27689,7 +27688,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -27708,8 +27707,8 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT `Commodity_ID`, `Commodity`, `Buy`, `Supply`, `SupplyLevel`, `Timestamp1`," +
-                " `Sell`, `Demand`, `Demandlevel`, `Timestamp2`, `Profit`, `Source_id` FROM `tmpa" +
-                "_s2s_stationdata`";
+                " `Sell`, `Demand`, `Demandlevel`, `Timestamp2`, `Profit`, `Sources_id` FROM `tmp" +
+                "a_s2s_stationdata`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -32748,34 +32747,6 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     this.Adapter.UpdateCommand.Connection.Close();
                 }
             }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    int p1, 
-                    int p2, 
-                    global::System.Nullable<int> p3, 
-                    global::System.Nullable<int> p4, 
-                    global::System.Nullable<int> p5, 
-                    global::System.Nullable<int> p6, 
-                    global::System.Nullable<int> p7, 
-                    global::System.Nullable<int> p8, 
-                    System.DateTime p10, 
-                    long p11, 
-                    int p12, 
-                    int p13, 
-                    global::System.Nullable<int> p15, 
-                    global::System.Nullable<int> p17, 
-                    global::System.Nullable<int> p19, 
-                    global::System.Nullable<int> p21, 
-                    global::System.Nullable<int> p23, 
-                    global::System.Nullable<int> p25, 
-                    int p26, 
-                    System.DateTime p27) {
-            return this.Update(p1, p2, p3, p4, p5, p6, p7, p8, p26, p10, p11, p12, p13, p15, p17, p19, p21, p23, p25, p26, p27);
         }
     }
     
@@ -52878,11 +52849,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             tableMapping.ColumnMappings.Add("Demand", "Demand");
             tableMapping.ColumnMappings.Add("DemandLevel", "DemandLevel");
             tableMapping.ColumnMappings.Add("Timestamp", "Timestamp");
-            tableMapping.ColumnMappings.Add("Source_id", "Source_id");
+            tableMapping.ColumnMappings.Add("Sources_id", "Sources_id");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_bycommodity` WHERE (((@p1 = 1 AND `System_ID` IS NULL) OR (`System_ID` = @p2)) AND ((@p3 = 1 AND `System` IS NULL) OR (`System` = @p4)) AND (`Station_ID` = @p5) AND ((@p6 = 1 AND `Station` IS NULL) OR (`Station` = @p7)) AND ((@p8 = 1 AND `Distance` IS NULL) OR (`Distance` = @p9)) AND ((@p10 = 1 AND `Buy` IS NULL) OR (`Buy` = @p11)) AND ((@p12 = 1 AND `Supply` IS NULL) OR (`Supply` = @p13)) AND ((@p14 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p15)) AND ((@p16 = 1 AND `Sell` IS NULL) OR (`Sell` = @p17)) AND ((@p18 = 1 AND `Demand` IS NULL) OR (`Demand` = @p19)) AND ((@p20 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p21)) AND ((@p22 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p23)) AND ((@p24 = 1 AND `Source_id` IS NULL) OR (`Source_id` = @p25)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_bycommodity` WHERE (((@p1 = 1 AND `System_ID` IS NULL) OR (`System_ID` = @p2)) AND ((@p3 = 1 AND `System` IS NULL) OR (`System` = @p4)) AND (`Station_ID` = @p5) AND ((@p6 = 1 AND `Station` IS NULL) OR (`Station` = @p7)) AND ((@p8 = 1 AND `Distance` IS NULL) OR (`Distance` = @p9)) AND ((@p10 = 1 AND `Buy` IS NULL) OR (`Buy` = @p11)) AND ((@p12 = 1 AND `Supply` IS NULL) OR (`Supply` = @p13)) AND ((@p14 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p15)) AND ((@p16 = 1 AND `Sell` IS NULL) OR (`Sell` = @p17)) AND ((@p18 = 1 AND `Demand` IS NULL) OR (`Demand` = @p19)) AND ((@p20 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p21)) AND ((@p22 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p23)) AND ((@p24 = 1 AND `Sources_id` IS NULL) OR (`Sources_id` = @p25)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -53084,7 +53055,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
@@ -53093,12 +53064,12 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_bycommodity` (`System_ID`, `System`, `Station_ID`, `Station`, `Distance`, `Buy`, `Supply`, `SupplyLevel`, `Sell`, `Demand`, `DemandLevel`, `Timestamp`, `Source_id`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_bycommodity` (`System_ID`, `System`, `Station_ID`, `Station`, `Distance`, `Buy`, `Supply`, `SupplyLevel`, `Sell`, `Demand`, `DemandLevel`, `Timestamp`, `Sources_id`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -53189,11 +53160,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_bycommodity` SET `System_ID` = @p1, `System` = @p2, `Station_ID` = @p3, `Station` = @p4, `Distance` = @p5, `Buy` = @p6, `Supply` = @p7, `SupplyLevel` = @p8, `Sell` = @p9, `Demand` = @p10, `DemandLevel` = @p11, `Timestamp` = @p12, `Source_id` = @p13 WHERE (((@p14 = 1 AND `System_ID` IS NULL) OR (`System_ID` = @p15)) AND ((@p16 = 1 AND `System` IS NULL) OR (`System` = @p17)) AND (`Station_ID` = @p18) AND ((@p19 = 1 AND `Station` IS NULL) OR (`Station` = @p20)) AND ((@p21 = 1 AND `Distance` IS NULL) OR (`Distance` = @p22)) AND ((@p23 = 1 AND `Buy` IS NULL) OR (`Buy` = @p24)) AND ((@p25 = 1 AND `Supply` IS NULL) OR (`Supply` = @p26)) AND ((@p27 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p28)) AND ((@p29 = 1 AND `Sell` IS NULL) OR (`Sell` = @p30)) AND ((@p31 = 1 AND `Demand` IS NULL) OR (`Demand` = @p32)) AND ((@p33 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p34)) AND ((@p35 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p36)) AND ((@p37 = 1 AND `Source_id` IS NULL) OR (`Source_id` = @p38)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_bycommodity` SET `System_ID` = @p1, `System` = @p2, `Station_ID` = @p3, `Station` = @p4, `Distance` = @p5, `Buy` = @p6, `Supply` = @p7, `SupplyLevel` = @p8, `Sell` = @p9, `Demand` = @p10, `DemandLevel` = @p11, `Timestamp` = @p12, `Sources_id` = @p13 WHERE (((@p14 = 1 AND `System_ID` IS NULL) OR (`System_ID` = @p15)) AND ((@p16 = 1 AND `System` IS NULL) OR (`System` = @p17)) AND (`Station_ID` = @p18) AND ((@p19 = 1 AND `Station` IS NULL) OR (`Station` = @p20)) AND ((@p21 = 1 AND `Distance` IS NULL) OR (`Distance` = @p22)) AND ((@p23 = 1 AND `Buy` IS NULL) OR (`Buy` = @p24)) AND ((@p25 = 1 AND `Supply` IS NULL) OR (`Supply` = @p26)) AND ((@p27 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p28)) AND ((@p29 = 1 AND `Sell` IS NULL) OR (`Sell` = @p30)) AND ((@p31 = 1 AND `Demand` IS NULL) OR (`Demand` = @p32)) AND ((@p33 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p34)) AND ((@p35 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p36)) AND ((@p37 = 1 AND `Sources_id` IS NULL) OR (`Sources_id` = @p38)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -53284,7 +53255,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p14";
@@ -53486,7 +53457,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
@@ -53495,7 +53466,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -53514,8 +53485,8 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT `System_ID`, `System`, `Station_ID`, `Station`, `Distance`, `Buy`, `Supply" +
-                "`, `SupplyLevel`, `Sell`, `Demand`, `DemandLevel`, `Timestamp`, `Source_id` FROM" +
-                " `tmpa_bycommodity`";
+                "`, `SupplyLevel`, `Sell`, `Demand`, `DemandLevel`, `Timestamp`, `Sources_id` FRO" +
+                "M `tmpa_bycommodity`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -54168,11 +54139,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             tableMapping.ColumnMappings.Add("Best_Buy", "Best_Buy");
             tableMapping.ColumnMappings.Add("Best_Sell", "Best_Sell");
             tableMapping.ColumnMappings.Add("MaxProfit", "MaxProfit");
-            tableMapping.ColumnMappings.Add("Source_id", "Source_id");
+            tableMapping.ColumnMappings.Add("Sources_id", "Sources_id");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_bystation` WHERE ((`Commodity_ID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy` IS NULL) OR (`Buy` = @p5)) AND ((@p6 = 1 AND `Supply` IS NULL) OR (`Supply` = @p7)) AND ((@p8 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p9)) AND ((@p10 = 1 AND `Sell` IS NULL) OR (`Sell` = @p11)) AND ((@p12 = 1 AND `Demand` IS NULL) OR (`Demand` = @p13)) AND ((@p14 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p15)) AND ((@p16 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p17)) AND ((@p18 = 1 AND `Best_Buy` IS NULL) OR (`Best_Buy` = @p19)) AND ((@p20 = 1 AND `Best_Sell` IS NULL) OR (`Best_Sell` = @p21)) AND ((@p22 = 1 AND `MaxProfit` IS NULL) OR (`MaxProfit` = @p23)) AND ((@p24 = 1 AND `Source_id` IS NULL) OR (`Source_id` = @p25)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_bystation` WHERE ((`Commodity_ID` = @p1) AND ((@p2 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p3)) AND ((@p4 = 1 AND `Buy` IS NULL) OR (`Buy` = @p5)) AND ((@p6 = 1 AND `Supply` IS NULL) OR (`Supply` = @p7)) AND ((@p8 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p9)) AND ((@p10 = 1 AND `Sell` IS NULL) OR (`Sell` = @p11)) AND ((@p12 = 1 AND `Demand` IS NULL) OR (`Demand` = @p13)) AND ((@p14 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p15)) AND ((@p16 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p17)) AND ((@p18 = 1 AND `Best_Buy` IS NULL) OR (`Best_Buy` = @p19)) AND ((@p20 = 1 AND `Best_Sell` IS NULL) OR (`Best_Sell` = @p21)) AND ((@p22 = 1 AND `MaxProfit` IS NULL) OR (`MaxProfit` = @p23)) AND ((@p24 = 1 AND `Sources_id` IS NULL) OR (`Sources_id` = @p25)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -54374,7 +54345,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
@@ -54383,12 +54354,12 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_bystation` (`Commodity_ID`, `Commodity`, `Buy`, `Supply`, `SupplyLevel`, `Sell`, `Demand`, `DemandLevel`, `Timestamp`, `Best_Buy`, `Best_Sell`, `MaxProfit`, `Source_id`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_bystation` (`Commodity_ID`, `Commodity`, `Buy`, `Supply`, `SupplyLevel`, `Sell`, `Demand`, `DemandLevel`, `Timestamp`, `Best_Buy`, `Best_Sell`, `MaxProfit`, `Sources_id`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -54479,11 +54450,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_bystation` SET `Commodity_ID` = @p1, `Commodity` = @p2, `Buy` = @p3, `Supply` = @p4, `SupplyLevel` = @p5, `Sell` = @p6, `Demand` = @p7, `DemandLevel` = @p8, `Timestamp` = @p9, `Best_Buy` = @p10, `Best_Sell` = @p11, `MaxProfit` = @p12, `Source_id` = @p13 WHERE ((`Commodity_ID` = @p14) AND ((@p15 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p16)) AND ((@p17 = 1 AND `Buy` IS NULL) OR (`Buy` = @p18)) AND ((@p19 = 1 AND `Supply` IS NULL) OR (`Supply` = @p20)) AND ((@p21 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p22)) AND ((@p23 = 1 AND `Sell` IS NULL) OR (`Sell` = @p24)) AND ((@p25 = 1 AND `Demand` IS NULL) OR (`Demand` = @p26)) AND ((@p27 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p28)) AND ((@p29 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p30)) AND ((@p31 = 1 AND `Best_Buy` IS NULL) OR (`Best_Buy` = @p32)) AND ((@p33 = 1 AND `Best_Sell` IS NULL) OR (`Best_Sell` = @p34)) AND ((@p35 = 1 AND `MaxProfit` IS NULL) OR (`MaxProfit` = @p36)) AND ((@p37 = 1 AND `Source_id` IS NULL) OR (`Source_id` = @p38)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_bystation` SET `Commodity_ID` = @p1, `Commodity` = @p2, `Buy` = @p3, `Supply` = @p4, `SupplyLevel` = @p5, `Sell` = @p6, `Demand` = @p7, `DemandLevel` = @p8, `Timestamp` = @p9, `Best_Buy` = @p10, `Best_Sell` = @p11, `MaxProfit` = @p12, `Sources_id` = @p13 WHERE ((`Commodity_ID` = @p14) AND ((@p15 = 1 AND `Commodity` IS NULL) OR (`Commodity` = @p16)) AND ((@p17 = 1 AND `Buy` IS NULL) OR (`Buy` = @p18)) AND ((@p19 = 1 AND `Supply` IS NULL) OR (`Supply` = @p20)) AND ((@p21 = 1 AND `SupplyLevel` IS NULL) OR (`SupplyLevel` = @p22)) AND ((@p23 = 1 AND `Sell` IS NULL) OR (`Sell` = @p24)) AND ((@p25 = 1 AND `Demand` IS NULL) OR (`Demand` = @p26)) AND ((@p27 = 1 AND `DemandLevel` IS NULL) OR (`DemandLevel` = @p28)) AND ((@p29 = 1 AND `Timestamp` IS NULL) OR (`Timestamp` = @p30)) AND ((@p31 = 1 AND `Best_Buy` IS NULL) OR (`Best_Buy` = @p32)) AND ((@p33 = 1 AND `Best_Sell` IS NULL) OR (`Best_Sell` = @p34)) AND ((@p35 = 1 AND `MaxProfit` IS NULL) OR (`MaxProfit` = @p36)) AND ((@p37 = 1 AND `Sources_id` IS NULL) OR (`Sources_id` = @p38)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -54574,7 +54545,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p14";
@@ -54776,7 +54747,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
@@ -54785,7 +54756,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Source_id";
+            param.SourceColumn = "Sources_id";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -54804,8 +54775,8 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT `Commodity_ID`, `Commodity`, `Buy`, `Supply`, `SupplyLevel`, `Sell`, `Dema" +
-                "nd`, `DemandLevel`, `Timestamp`, `Best_Buy`, `Best_Sell`, `MaxProfit`, `Source_i" +
-                "d` FROM `tmpa_bystation`";
+                "nd`, `DemandLevel`, `Timestamp`, `Best_Buy`, `Best_Sell`, `MaxProfit`, `Sources_" +
+                "id` FROM `tmpa_bystation`";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         

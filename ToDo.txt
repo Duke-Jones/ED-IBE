@@ -1,9 +1,6 @@
-* filter für die quelle der preisdaten
-* filter für das alter der preise
-* purge data
-* purge history data
-* senden von eddn-daten
 
+   * fixes on db structure 
+-------------------------------------------------------------------------------------         
    * showing source on PriceAnalysis tab
    * price data: improved speed of import and export
 -------------------------------------------------------------------------------------         
