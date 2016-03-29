@@ -541,7 +541,7 @@ namespace IBE
                             FileName = "AutoSave.csv";
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
-                                Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName));
+                                Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName), EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromRN);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 1, Total = 1 });
@@ -790,7 +790,7 @@ namespace IBE
                     if(rbImportSame.Checked)
                         importBehaviour = SQL.EliteDBIO.enImportBehaviour.NewerOrEqual;
 
-                    Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour);
+                    Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour, EliteDBIO.enDataSource.fromFILE);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 1, Total = 1 });

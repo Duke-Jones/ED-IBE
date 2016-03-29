@@ -62,9 +62,6 @@ namespace IBE.Ocr
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
-                getEDDNUserid();
-                selectEDDN_ID();
-                
 #if DEBUG       // Debug spesific functionality
                 bManualLoadImage.Visible = true;
 #endif
@@ -76,33 +73,6 @@ namespace IBE.Ocr
                 Cursor = oldCursor;
                 throw new Exception("Error during initialization the commanders log tab", ex);
             }
-        }
-
-
-        private void getEDDNUserid()
-        {
-            tbUsername.Text     = Program.DBCon.getIniValue<String>(DB_GROUPNAME, "UserName", Guid.NewGuid().ToString(), false, true);
-            txtCmdrsName.Text   = Program.DBCon.getIniValue(DB_GROUPNAME, "PilotsName", "");
-        }
-        private void selectEDDN_ID()
-        {
-            if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "usePilotsName"))
-            {
-                if (!String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "PilotsName")))
-                {
-                    rbCmdrsName.Checked = true;
-                }
-                else
-                {
-                    rbUserID.Checked = true;
-                    Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "usePilotsName", false.ToString());
-                    rbCmdrsName.Enabled = false;
-                }
-            }
-            else
-                rbUserID.Checked = true;
-
-            rbCmdrsName.Enabled = !String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "PilotsName"));
         }
 
         public void startOcrOnload(bool doStart)
@@ -751,7 +721,7 @@ namespace IBE.Ocr
                             }
                             finalOutput += ocr.CurrentScreenshotDateTime.ToString("s").Substring(0, 16) + ";";
 
-                            if (cbExtendedInfoInCSV.Checked)
+                            //if (cbExtendedInfoInCSV.Checked)
                                 finalOutput += Path.GetFileName(_screenshotName) + ";";
 
                             finalOutput += _rowIds[row] + "\r\n";
@@ -944,7 +914,7 @@ namespace IBE.Ocr
                         CSVStrings[i] = currentSystem + CSVStrings[i];
                 }
 
-                Program.Data.ImportPricesFromCSVStrings(CSVStrings);
+                Program.Data.ImportPricesFromCSVStrings(CSVStrings, EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromIBE);
 
                 if (Program.actualCondition.Location.Equals("", StringComparison.InvariantCultureIgnoreCase))
                     Program.actualCondition.Location = tbOcrStationName.Text;
@@ -1147,12 +1117,6 @@ namespace IBE.Ocr
           /// </summary>
  
 
-        private void rbUserID_CheckedChanged(object sender, EventArgs e)
-        {
-            tbUsername.Enabled = rbUserID.Checked;
-            txtCmdrsName.Enabled = rbCmdrsName.Checked;
-        }
-
         private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
         {
             if (cbStartOCROnLoad.Checked && Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder") == "")
@@ -1172,29 +1136,6 @@ namespace IBE.Ocr
             Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "AutoImport", cbAutoImport.Checked.ToString());
         }
 
-        private void rbCmdrsName_CheckedChanged(object sender, EventArgs e)
-        {
-            tbUsername.Enabled = rbUserID.Checked;
-            txtCmdrsName.Enabled = rbCmdrsName.Checked;
-
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "usePilotsName", rbCmdrsName.Checked.ToString());
-        }
-        private void tbUsername_TextChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "UserName", tbUsername.Text);
-        }
-
-        private void cbExtendedInfoInCSV_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "IncludeExtendedCSVInfo", cbExtendedInfoInCSV.Checked.ToString());
-        }
-
-        private void cbPostOnImport_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "PostToEddnOnImport", cbPostOnImport.Checked.ToString());
-        }
-
-
         private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
         {
             Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "DeleteScreenshotOnImport", cbDeleteScreenshotOnImport.Checked.ToString());
@@ -1206,12 +1147,5 @@ namespace IBE.Ocr
                 "If you leave the Commodity Name blank in the UI or webpage, that entire row will be ignored on import (though it will still appear in the CSV). This is really useful when half a row has been OCR'ed and it's all gone horribly wrong :)",
                 "Really Useful Tip...");
         }
-
-        private void cbUseEddnTestSchema_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", cbUseEddnTestSchema.Checked.ToString());
-        }
     }
-
-
 }

@@ -1,5 +1,7 @@
 
 
+   * EDDN is working again (more testing needed)
+-------------------------------------------------------------------------------------         
    * relocated "VerboseLogging"-flag from AppConfig.xml to AppConfigLocal.xml
 -------------------------------------------------------------------------------------         
    * added option to delete old data

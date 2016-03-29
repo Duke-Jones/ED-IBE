@@ -20,5 +20,6 @@ namespace IBE.EDDN
         public string RawData;
         public enMessageInfo InfoType;
         public object Data;
+        public String Adress;
     }
 }

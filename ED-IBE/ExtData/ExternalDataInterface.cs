@@ -360,7 +360,7 @@ namespace IBE.ExtData
 
                 if(DataOk)
                 {
-                    DataCount = Program.Data.ImportPricesFromCSVFile(Datafile);
+                    DataCount = Program.Data.ImportPricesFromCSVFile(Datafile, SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
 
                     // something has changed -> fire event
                     var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  

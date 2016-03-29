@@ -22,10 +22,17 @@ namespace IBE.EDDN
     public class EDDNCommunicator : IDisposable
     {
 
+        enum enSchema
+        {
+            Real = 0,
+            Test = 1
+        }
+
 #region dispose region
 
         // Flag: Has Dispose already been called?
-        bool disposed = false;
+        private bool m_SenderIsActivated;
+bool disposed = false;
         // Instantiate a SafeHandle instance.
         SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
@@ -90,24 +97,25 @@ namespace IBE.EDDN
         }
  #endregion
 
-        // The delegate procedure we are assigning to our object
-        public delegate void RecievedEDDNHandler(object sender, EDDNRecievedArgs e);
-
-        private event RecievedEDDNHandler           DataRecieved;
-
         private Thread                              _Spool2EDDN;   
         private Queue                               _SendItems = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer;
-        private Thread                              m_EDDNSubscriberThread;
         private StreamWriter                        m_EDDNSpooler = null;
-        private Dictionary<String, EDDNStatistics>  m_StatisticData = new Dictionary<String, EDDNStatistics>();
+        private Dictionary<String, EDDNStatistics>  m_StatisticDataSW = new Dictionary<String, EDDNStatistics>();
+        private Dictionary<String, EDDNStatistics>  m_StatisticDataRL = new Dictionary<String, EDDNStatistics>();
+        private Dictionary<String, EDDNStatistics>  m_StatisticDataCM = new Dictionary<String, EDDNStatistics>();
         private List<String>                        m_RejectedData;
         private List<String>                        m_RawData;
-        private Boolean                             m_Active = false;
-        
+        private Dictionary<String, EDDNReciever>    m_Reciever;
+        private List<String>                        m_Relays    = new List<string>() { "tcp://eddn-relay.elite-markets.net:9500", 
+                                                                                       "tcp://eddn-relay.ed-td.space:9500"};
+
+
         public EDDNCommunicator()
-        { 
+        {
+
+            m_Reciever = new Dictionary<String, EDDNReciever>();
 
             _SendDelayTimer             = new System.Timers.Timer(2000);
             _SendDelayTimer.AutoReset   = false;
@@ -115,8 +123,10 @@ namespace IBE.EDDN
 
             _logger                     = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
 
-            m_RejectedData           = new List<String>();
-            m_RawData                = new List<String>();
+            m_RejectedData              = new List<String>();
+            m_RawData                   = new List<String>();
+
+            UserIdentification();
         }
 
 #region receive
@@ -130,11 +140,15 @@ namespace IBE.EDDN
             {
                 StopEDDNListening();
 
-                m_EDDNSubscriberThread = new Thread(() => this.Subscribe());
-                m_EDDNSubscriberThread.IsBackground = true;
-                m_EDDNSubscriberThread.Start();
+                foreach (String adress in m_Relays)
+                {
+                    var newReciever = new EDDNReciever(adress);
+                    newReciever.StartListen();
+                    newReciever.DataRecieved += RecievedEDDNData;
 
-                this.DataRecieved += RecievedEDDNData;
+                    m_Reciever.Add(adress, newReciever);
+                }
+
             }
             catch (Exception ex)
             {
@@ -149,68 +163,17 @@ namespace IBE.EDDN
         {
             try
             {
-                if (m_EDDNSubscriberThread != null)
-                {
-                    m_Active = false;
 
-                    if(!m_EDDNSubscriberThread.Join(10000))
-                        throw new Exception("Couldn't stop the EDDN-Listener !");
+                foreach (var recieverKVP in m_Reciever)
+                {
+                    recieverKVP.Value.Dispose();
                 }
+
+                m_Reciever.Clear();
             }
             catch (Exception ex)
             {
                 throw new Exception("Error while stopping the EDDN-Listener", ex);
-            }
-        }
-
-        /// <summary>
-        /// subscriberthread-worker
-        /// </summary>
-        public void Subscribe()
-        {
-
-            m_Active = true;
-
-            using (var ctx = ZmqContext.Create())
-            {
-                using (var socket = ctx.CreateSocket(SocketType.SUB))
-                {
-                    socket.SubscribeAll();
-
-                    socket.Connect("tcp://eddn-relay.elite-markets.net:9500");
-
-                    while (m_Active)
-                    {
-                        var byteArray = new byte[10240];
-
-                        int i = socket.Receive(byteArray, TimeSpan.FromTicks(50));
-
-                        var decompressedFileStream = new MemoryStream();
-                        if (i != -1)
-                            using (decompressedFileStream)
-                            {
-                                Stream stream = new MemoryStream(byteArray);
-
-                                // Don't forget to ignore the first two bytes of the stream (!)
-                                stream.ReadByte();
-                                stream.ReadByte();
-                                using (var decompressionStream = new DeflateStream(stream, CompressionMode.Decompress))
-                                {
-                                    decompressionStream.CopyTo(decompressedFileStream);
-                                }
-
-                                decompressedFileStream.Position = 0;
-                                var sr = new StreamReader(decompressedFileStream);
-                                var myStr = sr.ReadToEnd();
-
-                                //_caller.OutputEddnRawData(myStr);
-                                ParseEDDNRawData(myStr);
-
-                                decompressedFileStream.Close();
-                            }
-                        Thread.Sleep(10);
-                    }
-                }
             }
         }
 
@@ -221,19 +184,24 @@ namespace IBE.EDDN
         /// <param name="e"></param>
         private void RecievedEDDNData(object sender, EDDN.EDDNRecievedArgs e)
         {
-            String[]        DataRows           = new String[0];
-            String          nameAndVersion     = String.Empty;
-            String          name               = String.Empty;
-            String          uploaderID         = String.Empty; 
-            Boolean         SimpleEDDNCheck    = false;
-            List<String>    importData         = new List<String>();
+            String[] DataRows = new String[0];
+            String nameAndVersion = String.Empty;
+            String name = String.Empty;
+            String uploaderID = String.Empty;
+            Boolean SimpleEDDNCheck = false;
+            List<String> importData = new List<String>();
+            enSchema ownSchema;
+            enSchema dataSchema;
 
-            try{
-                
-                UpdateRawData(String.Format("{0}\n{1}", e.Message, e.RawData));
+            try
+            {
 
-                if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false)){
-                    if (m_EDDNSpooler == null){
+                UpdateRawData(String.Format("{0}\n(from {2})\n{1}", e.Message, e.RawData, e.Adress));
+
+                if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
+                {
+                    if (m_EDDNSpooler == null)
+                    {
                         if (!File.Exists(Program.GetDataPath(@"Logs\EddnOutput.txt")))
                             m_EDDNSpooler = File.CreateText(Program.GetDataPath(@"Logs\EddnOutput.txt"));
                         else
@@ -242,116 +210,131 @@ namespace IBE.EDDN
                     m_EDDNSpooler.WriteLine(e.RawData);
                 }
 
-                switch (e.InfoType){
+                ownSchema = Program.DBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
 
-                	case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
-                        
+                switch (e.InfoType)
+                {
+
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
+
                         // process only if it's the correct schema
-                        if(!(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.EDDNSchema_v1)e.Data).isTest()))
+
+                        dataSchema = ((EDDN.EDDNSchema_v1)e.Data).isTest() ? enSchema.Test : enSchema.Real;
+
+                        if (ownSchema == dataSchema)
                         {
                             Debug.Print("handle v1 message");
-                            EDDN.EDDNSchema_v1 DataObject   = (EDDN.EDDNSchema_v1)e.Data;
+                            EDDN.EDDNSchema_v1 DataObject = (EDDN.EDDNSchema_v1)e.Data;
 
                             // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserID")) 
-                            { 
-                                DataRows                    = new String[1] {DataObject.getEDDNCSVImportString()};
-                                nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                name                        = String.Format("{0}", DataObject.Header.SoftwareName);
-                                uploaderID                  = DataObject.Header.UploaderID;
-                                SimpleEDDNCheck             = true;
+                            if (DataObject.Header.UploaderID != UserIdentification())
+                            {
+                                DataRows = new String[1] { DataObject.getEDDNCSVImportString() };
+                                nameAndVersion = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
+                                name = String.Format("{0}", DataObject.Header.SoftwareName);
+                                uploaderID = DataObject.Header.UploaderID;
+                                SimpleEDDNCheck = true;
                             }
                             else
                                 Debug.Print("handle v1 rejected (it's our own message)");
-                            
-                        }else 
+
+                        }
+                        else
                             Debug.Print("handle v1 rejected (wrong schema)");
 
-                		break;
+                        break;
 
-                	case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
 
                         // process only if it's the correct schema
-                        if(!(Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), false, true) ^ ((EDDN.EDDNSchema_v2)e.Data).isTest()))
+                        dataSchema = ((EDDN.EDDNSchema_v2)e.Data).isTest() ? enSchema.Test : enSchema.Real;
+
+                        if (ownSchema == dataSchema)
                         {
                             Debug.Print("handle v2 message");
 
-                                
-                            EDDN.EDDNSchema_v2 DataObject   = (EDDN.EDDNSchema_v2)e.Data;
+
+                            EDDN.EDDNSchema_v2 DataObject = (EDDN.EDDNSchema_v2)e.Data;
 
                             // Don't import our own uploads...
-                            if(DataObject.Header.UploaderID != Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserID")) 
-                            { 
-                                DataRows                    = DataObject.getEDDNCSVImportStrings();
-                                nameAndVersion              = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                name                        = String.Format("{0}", DataObject.Header.SoftwareName);
-                                uploaderID                  = DataObject.Header.UploaderID;
+                            if (DataObject.Header.UploaderID != UserIdentification())
+                            {
+                                DataRows = DataObject.getEDDNCSVImportStrings();
+                                nameAndVersion = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
+                                name = String.Format("{0}", DataObject.Header.SoftwareName);
+                                uploaderID = DataObject.Header.UploaderID;
                             }
                             else
                                 Debug.Print("handle v2 rejected (it's our own message)");
 
-                        }else  
+                        }
+                        else
                             Debug.Print("handle v2 rejected (wrong schema)");
 
-                		break;
+                        break;
 
-                	case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
                         UpdateRawData("recieved outfitting message ignored (coming feature)");
-                		Debug.Print("recieved outfitting message ignored");
-                		break;
+                        Debug.Print("recieved outfitting message ignored");
+                        break;
 
-                	case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved:
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved:
                         UpdateRawData("recieved shipyard message ignored (coming feature)");
-                		Debug.Print("recieved shipyard message ignored");
-                		break;
+                        Debug.Print("recieved shipyard message ignored");
+                        break;
 
-                	case EDDN.EDDNRecievedArgs.enMessageInfo.UnknownData:
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.UnknownData:
                         UpdateRawData("Recieved a unknown EDDN message:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
-                		Debug.Print("handle unkown message");
-                		break;
+                        Debug.Print("handle unkown message");
+                        break;
 
-                	case EDDN.EDDNRecievedArgs.enMessageInfo.ParseError:
-                		Debug.Print("handle error message");
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.ParseError:
+                        Debug.Print("handle error message");
                         UpdateRawData("Error while processing recieved EDDN data:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
 
-                		break;
+                        break;
 
-                } 
+                }
 
-                if(DataRows != null && DataRows.GetUpperBound(0) >= 0)
+                if (DataRows != null && DataRows.GetUpperBound(0) >= 0)
                 {
-                    UpdateStatisticData(nameAndVersion, DataRows.GetUpperBound(0)+1);
+                    UpdateStatisticData(DataRows.GetUpperBound(0) + 1, nameAndVersion, e.Adress, uploaderID);
 
-                    List<String> trustedSenders = Program.DBCon.getIniValue<String>("EDDN", "TrustedSenders", "").Split(new char[] {'|'}).ToList();
+                    List<String> trustedSenders = Program.DBCon.getIniValue<String>("EDDN", "TrustedSenders", "").Split(new char[] { '|' }).ToList();
 
                     bool isTrusty = trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
-                    foreach (String DataRow in DataRows){
+                    foreach (String DataRow in DataRows)
+                    {
 
                         // data is plausible ?
-                        if(isTrusty || (!Program.PlausibiltyCheck.CheckPricePlausibility(new string[] {DataRow}, SimpleEDDNCheck))){
+                        if (isTrusty || (!Program.PlausibiltyCheck.CheckPricePlausibility(new string[] { DataRow }, SimpleEDDNCheck)))
+                        {
 
                             // import is wanted ?
-                            if(Program.DBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
+                            if (Program.DBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
                             {
                                 // collect importable data
                                 Debug.Print("import :" + DataRow);
                                 importData.Add(DataRow);
                             }
 
-                        }else{
+                        }
+                        else
+                        {
                             Debug.Print("implausible :" + DataRow);
                             // data is implausible
-                             string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
+                            string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
 
                             UpdateRejectedData(InfoString);
 
-                            if(Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false)){
+                            if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false))
+                            {
 
                                 FileStream LogFileStream = null;
                                 string FileName = Program.GetDataPath(@"Logs\EddnImplausibleOutput.txt");
 
-                                if(File.Exists(FileName))
+                                if (File.Exists(FileName))
                                     LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                                 else
                                     LogFileStream = File.Create(FileName);
@@ -360,128 +343,39 @@ namespace IBE.EDDN
                                 LogFileStream.Close();
                             }
                         }
-                    }  
-                        
+                    }
+
                     // have we collected importable data -> then import now
                     if (importData.Count() > 0)
-                    { 
+                    {
                         Program.Data.ImportPricesFromCSVStrings(importData.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromEDDN);
                         DataChangedEvent.Raise(this, new DataChangedEventArgs(enDataTypes.DataImported));
                     }
 
                 }
-            }catch (Exception ex){
-                UpdateRawData("Error while processing recieved EDDN data:" + Environment.NewLine + ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
-            }      
-        }
-
-        /// <summary>
-        /// parses the incoming eddn data
-        /// </summary>
-        /// <param name="RawData"></param>
-        private void ParseEDDNRawData(String RawData)
-        {
-            try
-            {
-                EDDNSchema_v1 V1_Data;
-                EDDNSchema_v2 V2_Data;
-                EDDNRecievedArgs ArgsObject;
-
-                if (RawData.Contains(@"commodity/1"))
-                {
-                    // old v1 schema
-
-                    Debug.Print("recieved v1 commodities message");
-                    V1_Data = JsonConvert.DeserializeObject<EDDNSchema_v1>(RawData);
-
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data commodities message (v1)",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved,
-                        RawData = RawData,
-                        Data = V1_Data
-                    };
-
-                }
-                else if (RawData.Contains(@"commodity/2"))
-                {
-                    // new v2 schema
-                    Debug.Print("recieved v2 commodities message");
-                    V2_Data = JsonConvert.DeserializeObject<EDDNSchema_v2>(RawData);
-
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data commodities message (v2)",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved,
-                        RawData = RawData,
-                        Data = V2_Data
-                    };
-                }
-                else if (RawData.Contains(@"outfitting/1"))
-                {
-                    // outfitting schema
-                    Debug.Print("recieved v1 outfitting message");
-                    //V2_Data = JsonConvert.DeserializeObject<Schema_v2>(RawData);
-
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data outfitting message (v1)",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved,
-                        RawData = RawData,
-                        Data = null
-                    };
-                }
-                else if (RawData.Contains(@"shipyard/1"))
-                {
-                    // outfitting schema
-                    Debug.Print("recieved v1 shipyard message");
-                    //V2_Data = JsonConvert.DeserializeObject<Schema_v2>(RawData);
-
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data shipyard message (v1)",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved,
-                        RawData = RawData,
-                        Data = null
-                    };
-                }
-                else
-                {
-                    // other unknown data
-
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved unknown data message",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.UnknownData,
-                        RawData = RawData,
-                        Data = null
-                    };
-                }
-
-                DataRecieved(this, ArgsObject);
-
             }
             catch (Exception ex)
             {
-
-                DataRecieved(this, new EDDNRecievedArgs()
-                {
-                    Message = "Error while parsing recieved EDDN data :" + Environment.NewLine + ex.GetBaseException().Message.ToString() + Environment.NewLine + ex.StackTrace,
-                    InfoType = EDDNRecievedArgs.enMessageInfo.ParseError,
-                    RawData = RawData,
-                    Data = null
-                });
+                UpdateRawData("Error while processing recieved EDDN data:" + Environment.NewLine + ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
             }
         }
 
         /// <summary>
         /// returns "true" if the listener is working
         /// </summary>
-        public Boolean ListenerIsRunning
+        public Int32 ListenersRunning
         {
             get
             {
-                return (m_EDDNSubscriberThread != null) && ((m_EDDNSubscriberThread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0);
+                Int32 count = 0;
+
+                foreach (var recieverKVP in m_Reciever)
+                {
+                    if(recieverKVP.Value.IsListening)
+                        count++;
+                }
+
+                return count;
             }
         }
 
@@ -534,17 +428,29 @@ namespace IBE.EDDN
         /// <summary>
         /// refreshes the info about software versions and recieved messages
         /// </summary>
-        /// <param name="SoftwareID"></param>
         /// <param name="dataCount"></param>
-        private void UpdateStatisticData(string SoftwareID,int dataCount)
+        /// <param name="SoftwareID"></param>
+        private void UpdateStatisticData(int dataCount,string SoftwareID, String relay, String commander)
         {
             try
             {
-                if (!m_StatisticData.ContainsKey(SoftwareID))
-                    m_StatisticData.Add(SoftwareID, new EDDNStatistics());
+                if (!m_StatisticDataSW.ContainsKey(SoftwareID))
+                    m_StatisticDataSW.Add(SoftwareID, new EDDNStatistics());
 
-                m_StatisticData[SoftwareID].MessagesReceived += 1;
-                m_StatisticData[SoftwareID].DatasetsReceived += dataCount;
+                m_StatisticDataSW[SoftwareID].MessagesReceived += 1;
+                m_StatisticDataSW[SoftwareID].DatasetsReceived += dataCount;
+
+                if (!m_StatisticDataRL.ContainsKey(relay))
+                    m_StatisticDataRL.Add(relay, new EDDNStatistics());
+
+                m_StatisticDataRL[relay].MessagesReceived += 1;
+                m_StatisticDataRL[relay].DatasetsReceived += dataCount;
+
+                if (!m_StatisticDataCM.ContainsKey(commander))
+                    m_StatisticDataCM.Add(commander, new EDDNStatistics());
+
+                m_StatisticDataCM[commander].MessagesReceived += 1;
+                m_StatisticDataCM[commander].DatasetsReceived += dataCount;
 
                 DataChangedEvent.Raise(this, new DataChangedEventArgs(enDataTypes.Statistics));
 
@@ -562,11 +468,25 @@ namespace IBE.EDDN
                 return m_RawData;
             }
         }
-        public Dictionary<String, EDDNStatistics> StatisticData
+        public Dictionary<String, EDDNStatistics> StatisticDataSW
         {
             get
             {
-                return m_StatisticData;
+                return m_StatisticDataSW;
+            }
+        }
+        public Dictionary<String, EDDNStatistics> StatisticDataRL
+        {
+            get
+            {
+                return m_StatisticDataRL;
+            }
+        }
+        public Dictionary<String, EDDNStatistics> StatisticDataCM
+        {
+            get
+            {
+                return m_StatisticDataCM;
             }
         }
         public List<String> RejectedData
@@ -582,6 +502,95 @@ namespace IBE.EDDN
 #region send
 
         /// <summary>
+        /// returns if the sender is active
+        /// </summary>
+        public bool SenderIsActivated
+        {
+            get
+            {
+                return m_SenderIsActivated;
+            }
+        }
+
+        /// <summary>
+        /// activatesender the sender
+        /// </summary>
+        public void ActivateSender()
+        {
+            m_SenderIsActivated = true;
+        }
+
+        /// <summary>
+        /// deactivates the sender
+        /// </summary> 
+        public void DeactivateSender()
+        {
+            m_SenderIsActivated = false;
+        }
+
+        /// <summary>
+        /// register everything for sending with this function.
+        /// 2 seconds after the last registration all data will be sent automatically
+        /// </summary>
+        /// <param name="commodityData"></param>
+        public void sendToEdDDN(CsvRow CommodityData)
+        {
+            if(m_SenderIsActivated)
+            {
+                // register next data row
+                _SendItems.Enqueue(CommodityData);
+
+                // reset the timer
+                _SendDelayTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// register everything for sending with this function.
+        /// 2 seconds after the last registration all data will be sent automatically
+        /// </summary>
+        /// <param name="commodityData"></param>
+        public void sendToEdDDN(List<CsvRow> csvRowList)
+        {
+            if(m_SenderIsActivated)
+            {
+                // reset the timer
+                _SendDelayTimer.Start();
+
+                // register rows
+                foreach (CsvRow csvRowListItem in csvRowList)
+                    _SendItems.Enqueue(csvRowListItem);
+
+                // reset the timer
+                _SendDelayTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// register everything for sending with this function.
+        /// 2 seconds after the last registration all data will be sent automatically
+        /// </summary>
+        /// <param name="commodityData"></param>
+        public void sendToEdDDN(String[] csv_Strings)
+        {
+            if(m_SenderIsActivated)
+            {
+                foreach (String csvString in csv_Strings)
+                {
+                    // reset the timer
+                    _SendDelayTimer.Start();
+
+                    // register rows
+                    foreach (String csvRowString in csv_Strings)
+                        _SendItems.Enqueue(new CsvRow(csvString));
+
+                    // reset the timer
+                    _SendDelayTimer.Start();
+                }
+            }
+        }
+
+        /// <summary>
         /// send routine for registered data:
         /// It's called by the delay-timer "_SendDelayTimer"
         /// </summary>
@@ -594,12 +603,11 @@ namespace IBE.EDDN
                 String TimeStamp;
                 String commodity;
 
-                TimeStamp = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
-
-                UserID = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "UserName", Guid.NewGuid().ToString(), false, true);
+                TimeStamp   = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
+                UserID      = UserIdentification();
 
                 // test or real ?
-                if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "UseEddnTestSchema", false.ToString(), true))
+                if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
                 else
                     Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
@@ -607,7 +615,7 @@ namespace IBE.EDDN
                 // fill the header
                 Data.Header = new EDDNSchema_v2.Header_Class()
                 {
-                    SoftwareName = "RegulatedNoise__DJ",
+                    SoftwareName = "ED-IBE",
                     SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
                     GatewayTimestamp = TimeStamp,
                     UploaderID = UserID
@@ -704,26 +712,11 @@ namespace IBE.EDDN
         }
 
         /// <summary>
-        /// register everything for sending with this function.
-        /// 2 seconds after the last registration all data will be sent automatically
-        /// </summary>
-        /// <param name="commodityData"></param>
-        public void sendToEdDDN(CsvRow CommodityData)
-        {
-            // register next data row
-            _SendItems.Enqueue(CommodityData);
-
-            // reset the timer
-            _SendDelayTimer.Start();
-
-        }
-
-        /// <summary>
         /// timer routine for sending all registered data to EDDN
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        public void SendDelayTimer_Elapsed(object source, System.Timers.ElapsedEventArgs e)
+        private void SendDelayTimer_Elapsed(object source, System.Timers.ElapsedEventArgs e)
         {
             try
             {
@@ -742,7 +735,42 @@ namespace IBE.EDDN
             }
         }
 
+        /// <summary>
+        /// checks and gets the EDDN id
+        /// </summary>
+        private String UserIdentification()
+        {
+            String retValue = "";
+            String userName = "";
+
+            try
+            {
+                retValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID");
+
+                if(String.IsNullOrEmpty(retValue))
+                {
+                    retValue = Guid.NewGuid().ToString();
+                    Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID", retValue);
+                }
+                    
+                if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserName") == "useUserName")
+                {
+                    userName = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName");
+
+                    if (String.IsNullOrEmpty(userName))
+                        Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserID");
+                    else
+                        retValue = userName;
+                }
+
+                return userName;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking the EDDN id", ex);
+            }
+        }
+
 #endregion
-    
     }
 }

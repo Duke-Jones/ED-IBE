@@ -56,10 +56,11 @@ namespace IBE.SQL
 
         public enum enDataSource
         {
-            undefined           = 0,
-            fromIBE             = 1,
-            fromEDDN            = 2,
-            fromFILE            = 3
+            fromRN              = -1,
+            undefined           =  0,
+            fromIBE             =  1,
+            fromEDDN            =  2,
+            fromFILE            =  3
         }
 
 #endregion
@@ -1530,7 +1531,7 @@ namespace IBE.SQL
                 // now add the prices if wanted
                 if (addPrices)
                 {
-                    ImportPrices(Stations);
+                    ImportPrices(Stations, enImportBehaviour.OnlyNewer, enDataSource.fromEDDN);
                 }
 
                 // reset freaky performance
@@ -2312,7 +2313,7 @@ namespace IBE.SQL
         /// firstly to import the stations from the same file.
         /// </summary>
         /// <param name="Stations"></param>
-        private void ImportPrices(List<EDStation> Stations, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer, enDataSource dataSource = enDataSource.fromIBE)
+        private void ImportPrices(List<EDStation> Stations, enImportBehaviour importBehaviour, enDataSource dataSource)
         {
             try
             { 
@@ -2326,6 +2327,9 @@ namespace IBE.SQL
                 Int32 priceCountTotal = 0;
                 Int32 priceCount = 0;
                 Int32 SourceID;
+
+                if (dataSource == enDataSource.fromRN)
+                    dataSource = enDataSource.fromIBE;
 
                 // for the prices is no transaction necessary, because we're changing
                 // only a single table
@@ -2375,6 +2379,9 @@ namespace IBE.SQL
                                         SourceID = (Int32)BaseTableNameToID("source", StationListing.DataSource);
                                     else
                                         SourceID = (Int32)dataSource;
+
+                                    if (dataSource <= 0)
+                                        throw new Exception("Illegal SourceID for import : " + SourceID);
 
                                     if (AddComma)
                                         sqlStringB.Append(" union all ");
@@ -2472,7 +2479,7 @@ namespace IBE.SQL
         /// Imports the prices from a file with csv-strings (e.g. the old autosave-file)
         /// </summary>
         /// <returns></returns>
-        public Int32 ImportPricesFromCSVFile(String filename, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer)
+        public Int32 ImportPricesFromCSVFile(String filename, enImportBehaviour importBehaviour, enDataSource dataSource)
         {
             try
             {
@@ -2501,7 +2508,7 @@ namespace IBE.SQL
 
                 reader.Close();
 
-                ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour);
+                ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour, dataSource);
 
                 return CSV_Strings.Count();
             }
@@ -2517,7 +2524,7 @@ namespace IBE.SQL
         /// <param name="CSV_Strings">data to import</param>
         /// <param name="importBehaviour">filter, which prices to import</param>
         /// <param name="dataSource">if data has no information about the datasource, this setting will count</param>
-        public void ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour = enImportBehaviour.OnlyNewer, enDataSource dataSource = enDataSource.fromIBE)
+        public void ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour, enDataSource dataSource)
         {
             Boolean MissingSystem   = false;
             Boolean MissingStation  = false;
@@ -2525,6 +2532,8 @@ namespace IBE.SQL
             DataTable newData;
             List<EDStation> StationData;
             List<EDSystem> SystemData = null;
+            List<CsvRow> csvRowList = new List<CsvRow>();
+
             Int32 counter = 0;
             Dictionary<String, String> foundNames = new Dictionary<string,string>();            // quick cache for finding commodity names
 
@@ -2595,7 +2604,7 @@ namespace IBE.SQL
 
                 sendProgressEvent("converting data...", 0, 0);
                 // convert csv-strings to EDStation-objects
-                StationData = fromCSV(CSV_Strings, ref SystemData);
+                StationData = fromCSV(CSV_Strings, ref SystemData, ref csvRowList);
                 sendProgressEvent("converting data...", 1, 1);
 
                 // check if we've unknown systems or stations
@@ -2634,6 +2643,9 @@ namespace IBE.SQL
                     ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
                 }
 
+                if(dataSource == enDataSource.fromIBE)
+                    Program.EDDNComm.sendToEdDDN(csvRowList);
+
                 // now import the prices
                 ImportPrices(StationData, importBehaviour, dataSource);
 
@@ -2660,9 +2672,11 @@ namespace IBE.SQL
         /// <summary>
         /// creates a list of "EDStations" with price listings from csv-array
         /// </summary>
-        /// <param name="CSV_Strings"></param>
+        /// <param name="CSV_Strings">String to be converted</param>
+        /// <param name="foundSystems"></param>
+        /// <param name="csvRowList">for optional processing outside: a list of the data converted to CsvRow-objects</param>
         /// <returns></returns>
-        public List<EDStation> fromCSV(String[] CSV_Strings, ref List<EDSystem> foundSystems)
+        public List<EDStation> fromCSV(String[] CSV_Strings, ref List<EDSystem> foundSystems, ref List<CsvRow> csvRowList)
         {
             List<EDStation> foundValues                     = new List<EDStation>();
             Dictionary<String, Int32> foundIndex            = new Dictionary<String, Int32>();
@@ -2673,7 +2687,7 @@ namespace IBE.SQL
             EDStation currentStation                        = null;
             Int32 Index                                     = 0;
             Dictionary<String, Int32> commodityIDCache      = new Dictionary<string,Int32>();            // quick cache for finding commodity names
-
+            
             try
             {
                 if(foundSystems != null)
@@ -2688,6 +2702,9 @@ namespace IBE.SQL
                     if(!String.IsNullOrEmpty(CSV_String.Trim()))
                     {
 		                CsvRow currentRow           = new CsvRow(CSV_String);
+
+                        if(csvRowList != null)
+                            csvRowList.Add(currentRow);
 
                         currentID = currentRow.StationID;
 

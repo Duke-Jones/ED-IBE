@@ -39,25 +39,18 @@
             this.pbOriginalImage = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.rbCmdrsName = new System.Windows.Forms.RadioButton();
-            this.rbUserID = new System.Windows.Forms.RadioButton();
-            this.txtCmdrsName = new System.Windows.Forms.TextBox();
             this.bIgnoreTrash = new System.Windows.Forms.Button();
             this.bClearOcrOutput = new System.Windows.Forms.Button();
             this.bEditResults = new System.Windows.Forms.Button();
             this.cbAutoImport = new System.Windows.Forms.CheckBox();
-            this.cbUseEddnTestSchema = new System.Windows.Forms.CheckBox();
             this.cbDeleteScreenshotOnImport = new System.Windows.Forms.CheckBox();
             this.cbStartOCROnLoad = new System.Windows.Forms.CheckBox();
-            this.cbExtendedInfoInCSV = new System.Windows.Forms.CheckBox();
             this.cmdHint = new System.Windows.Forms.Button();
             this.label36 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.tbUsername = new System.Windows.Forms.TextBox();
-            this.cbPostOnImport = new System.Windows.Forms.CheckBox();
             this.tbOcrSystemName = new System.Windows.Forms.TextBox();
             this.tbFinalOcrOutput = new System.Windows.Forms.TextBox();
             this.bContinueOcr = new System.Windows.Forms.Button();
@@ -152,7 +145,7 @@
             this.pbTrimmed.TabIndex = 7;
             this.pbTrimmed.TabStop = false;
             // 
-            // groupbox_Import
+            // panel2
             // 
             this.panel2.AutoScroll = true;
             this.panel2.Controls.Add(this.pbOriginalImage);
@@ -188,25 +181,18 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox4.Controls.Add(this.rbCmdrsName);
-            this.groupBox4.Controls.Add(this.rbUserID);
-            this.groupBox4.Controls.Add(this.txtCmdrsName);
             this.groupBox4.Controls.Add(this.bIgnoreTrash);
             this.groupBox4.Controls.Add(this.bClearOcrOutput);
             this.groupBox4.Controls.Add(this.bEditResults);
             this.groupBox4.Controls.Add(this.cbAutoImport);
-            this.groupBox4.Controls.Add(this.cbUseEddnTestSchema);
             this.groupBox4.Controls.Add(this.cbDeleteScreenshotOnImport);
             this.groupBox4.Controls.Add(this.cbStartOCROnLoad);
-            this.groupBox4.Controls.Add(this.cbExtendedInfoInCSV);
             this.groupBox4.Controls.Add(this.cmdHint);
             this.groupBox4.Controls.Add(this.label36);
             this.groupBox4.Controls.Add(this.label35);
             this.groupBox4.Controls.Add(this.label34);
             this.groupBox4.Controls.Add(this.label33);
             this.groupBox4.Controls.Add(this.label32);
-            this.groupBox4.Controls.Add(this.tbUsername);
-            this.groupBox4.Controls.Add(this.cbPostOnImport);
             this.groupBox4.Controls.Add(this.tbOcrSystemName);
             this.groupBox4.Controls.Add(this.tbFinalOcrOutput);
             this.groupBox4.Controls.Add(this.bContinueOcr);
@@ -220,40 +206,6 @@
             this.groupBox4.TabIndex = 23;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "OCR Corrections";
-            // 
-            // rbCmdrsName
-            // 
-            this.rbCmdrsName.AutoSize = true;
-            this.rbCmdrsName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.rbCmdrsName.Location = new System.Drawing.Point(253, 493);
-            this.rbCmdrsName.Name = "rbCmdrsName";
-            this.rbCmdrsName.Size = new System.Drawing.Size(85, 17);
-            this.rbCmdrsName.TabIndex = 39;
-            this.rbCmdrsName.TabStop = true;
-            this.rbCmdrsName.Text = "Cmdrs Name";
-            this.rbCmdrsName.UseVisualStyleBackColor = true;
-            this.rbCmdrsName.CheckedChanged += new System.EventHandler(this.rbCmdrsName_CheckedChanged);
-            // 
-            // rbUserID
-            // 
-            this.rbUserID.AutoSize = true;
-            this.rbUserID.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.rbUserID.Location = new System.Drawing.Point(277, 472);
-            this.rbUserID.Name = "rbUserID";
-            this.rbUserID.Size = new System.Drawing.Size(61, 17);
-            this.rbUserID.TabIndex = 38;
-            this.rbUserID.TabStop = true;
-            this.rbUserID.Text = "User ID";
-            this.rbUserID.UseVisualStyleBackColor = true;
-            this.rbUserID.CheckedChanged += new System.EventHandler(this.rbUserID_CheckedChanged);
-            // 
-            // txtCmdrsName
-            // 
-            this.txtCmdrsName.Location = new System.Drawing.Point(347, 493);
-            this.txtCmdrsName.Name = "txtCmdrsName";
-            this.txtCmdrsName.ReadOnly = true;
-            this.txtCmdrsName.Size = new System.Drawing.Size(230, 20);
-            this.txtCmdrsName.TabIndex = 36;
             // 
             // bIgnoreTrash
             // 
@@ -292,7 +244,7 @@
             // cbAutoImport
             // 
             this.cbAutoImport.AutoSize = true;
-            this.cbAutoImport.Location = new System.Drawing.Point(261, 431);
+            this.cbAutoImport.Location = new System.Drawing.Point(6, 477);
             this.cbAutoImport.Name = "cbAutoImport";
             this.cbAutoImport.Size = new System.Drawing.Size(80, 17);
             this.cbAutoImport.TabIndex = 31;
@@ -300,21 +252,10 @@
             this.cbAutoImport.UseVisualStyleBackColor = true;
             this.cbAutoImport.CheckedChanged += new System.EventHandler(this.cbAutoImport_CheckedChanged);
             // 
-            // cbUseEddnTestSchema
-            // 
-            this.cbUseEddnTestSchema.AutoSize = true;
-            this.cbUseEddnTestSchema.Location = new System.Drawing.Point(6, 492);
-            this.cbUseEddnTestSchema.Name = "cbUseEddnTestSchema";
-            this.cbUseEddnTestSchema.Size = new System.Drawing.Size(89, 17);
-            this.cbUseEddnTestSchema.TabIndex = 30;
-            this.cbUseEddnTestSchema.Text = "Test Schema";
-            this.cbUseEddnTestSchema.UseVisualStyleBackColor = true;
-            this.cbUseEddnTestSchema.CheckedChanged += new System.EventHandler(this.cbUseEddnTestSchema_CheckedChanged);
-            // 
             // cbDeleteScreenshotOnImport
             // 
             this.cbDeleteScreenshotOnImport.AutoSize = true;
-            this.cbDeleteScreenshotOnImport.Location = new System.Drawing.Point(355, 431);
+            this.cbDeleteScreenshotOnImport.Location = new System.Drawing.Point(6, 454);
             this.cbDeleteScreenshotOnImport.Name = "cbDeleteScreenshotOnImport";
             this.cbDeleteScreenshotOnImport.Size = new System.Drawing.Size(222, 17);
             this.cbDeleteScreenshotOnImport.TabIndex = 29;
@@ -332,20 +273,6 @@
             this.cbStartOCROnLoad.Text = "Start OCR automatically when this app is started";
             this.cbStartOCROnLoad.UseVisualStyleBackColor = true;
             this.cbStartOCROnLoad.CheckStateChanged += new System.EventHandler(this.cbStartOCROnLoad_CheckedChanged);
-            // 
-            // cbExtendedInfoInCSV
-            // 
-            this.cbExtendedInfoInCSV.AutoSize = true;
-            this.cbExtendedInfoInCSV.Checked = true;
-            this.cbExtendedInfoInCSV.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbExtendedInfoInCSV.Location = new System.Drawing.Point(6, 452);
-            this.cbExtendedInfoInCSV.Name = "cbExtendedInfoInCSV";
-            this.cbExtendedInfoInCSV.Size = new System.Drawing.Size(552, 17);
-            this.cbExtendedInfoInCSV.TabIndex = 27;
-            this.cbExtendedInfoInCSV.Text = "Include extended info in CSV (extra functionality in RegulatedNoise, but may brea" +
-    "k compatibility with other apps)";
-            this.cbExtendedInfoInCSV.UseVisualStyleBackColor = true;
-            this.cbExtendedInfoInCSV.CheckedChanged += new System.EventHandler(this.cbExtendedInfoInCSV_CheckedChanged);
             // 
             // cmdHint
             // 
@@ -402,25 +329,6 @@
             this.label32.Size = new System.Drawing.Size(71, 13);
             this.label32.TabIndex = 21;
             this.label32.Text = "Station Name";
-            // 
-            // tbUsername
-            // 
-            this.tbUsername.Location = new System.Drawing.Point(347, 469);
-            this.tbUsername.Name = "tbUsername";
-            this.tbUsername.Size = new System.Drawing.Size(230, 20);
-            this.tbUsername.TabIndex = 20;
-            this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
-            // 
-            // cbPostOnImport
-            // 
-            this.cbPostOnImport.AutoSize = true;
-            this.cbPostOnImport.Location = new System.Drawing.Point(6, 471);
-            this.cbPostOnImport.Name = "cbPostOnImport";
-            this.cbPostOnImport.Size = new System.Drawing.Size(163, 17);
-            this.cbPostOnImport.TabIndex = 18;
-            this.cbPostOnImport.Text = "Post data to EDDN on import";
-            this.cbPostOnImport.UseVisualStyleBackColor = true;
-            this.cbPostOnImport.CheckedChanged += new System.EventHandler(this.cbPostOnImport_CheckedChanged);
             // 
             // tbOcrSystemName
             // 
@@ -488,13 +396,13 @@
             this.tbOcrStationName.TabIndex = 10;
             this.tbOcrStationName.TextChanged += new System.EventHandler(this.tbOcrStationName_TextChanged);
             // 
-            // OcrCaptureAndCorrect
+            // tabOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox1);
-            this.Name = "OcrCaptureAndCorrect";
+            this.Name = "tabOCR";
             this.Size = new System.Drawing.Size(1047, 560);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -523,25 +431,18 @@
         public System.Windows.Forms.PictureBox pbOriginalImage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.RadioButton rbCmdrsName;
-        private System.Windows.Forms.RadioButton rbUserID;
-        internal System.Windows.Forms.TextBox txtCmdrsName;
         private System.Windows.Forms.Button bIgnoreTrash;
         private System.Windows.Forms.Button bClearOcrOutput;
         private System.Windows.Forms.Button bEditResults;
         private System.Windows.Forms.CheckBox cbAutoImport;
-        private System.Windows.Forms.CheckBox cbUseEddnTestSchema;
         private System.Windows.Forms.CheckBox cbDeleteScreenshotOnImport;
         private System.Windows.Forms.CheckBox cbStartOCROnLoad;
-        private System.Windows.Forms.CheckBox cbExtendedInfoInCSV;
         private System.Windows.Forms.Button cmdHint;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label32;
-        internal System.Windows.Forms.TextBox tbUsername;
-        private System.Windows.Forms.CheckBox cbPostOnImport;
         private System.Windows.Forms.TextBox tbOcrSystemName;
         private System.Windows.Forms.TextBox tbFinalOcrOutput;
         private System.Windows.Forms.Button bContinueOcr;

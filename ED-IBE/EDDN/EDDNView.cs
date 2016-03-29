@@ -62,9 +62,9 @@ namespace IBE.EDDN
             {
                 tmrRefresh.Stop();
 
-                if (m_Communicator.ListenerIsRunning != (lblListenerStatus.Text == "Listening"))
+                if ((m_Communicator.ListenersRunning > 0) != (lblListenerStatus.Text == "Listening"))
                 {
-                    if(m_Communicator.ListenerIsRunning)
+                    if(m_Communicator.ListenersRunning > 0)
                     { 
                         pbListenerStatus.Image = Properties.Resources.green_led_on_md;
                         lblListenerStatus.Text = "Listening";
@@ -74,7 +74,20 @@ namespace IBE.EDDN
                         pbListenerStatus.Image = Properties.Resources.green_led_off_md;
                         lblListenerStatus.Text = "Off";
                     }
-                    
+                }
+
+                if (m_Communicator.SenderIsActivated != (lblSenderStatus.Text == "Active"))
+                {
+                    if(m_Communicator.SenderIsActivated)
+                    { 
+                        pbSenderStatus.Image = Properties.Resources.green_led_on_md;
+                        lblSenderStatus.Text = "Active";
+                    }
+                    else
+                    { 
+                        pbSenderStatus.Image = Properties.Resources.green_led_off_md;
+                        lblSenderStatus.Text = "Off";
+                    }
                 }
 
                 if(m_ChangedData != EDDNCommunicator.enDataTypes.NoChanges)
@@ -105,19 +118,40 @@ namespace IBE.EDDN
 
                     if(lChanged == EDDNCommunicator.enDataTypes.Statistics)
                     {
-                        if(m_Communicator.StatisticData.Count() > 0)
+                        tbEddnStatsSW.Text = "";
+
+                        if(m_Communicator.StatisticDataSW.Count() > 0)
                         {
                             System.Text.StringBuilder output = new System.Text.StringBuilder();
-                            foreach (var appVersion in m_Communicator.StatisticData.OrderByDescending(x => x.Value.MessagesReceived))
+                            foreach (var appVersion in m_Communicator.StatisticDataSW.OrderByDescending(x => x.Value.MessagesReceived))
                             {
                                 output.AppendFormat("{0} : {1} messages ({2} datasets)\r\n", appVersion.Key, appVersion.Value.MessagesReceived, appVersion.Value.DatasetsReceived);
                             }
 
-                            tbEddnStats.Text = output.ToString();
+                            tbEddnStatsSW.Text = output.ToString();
                         }
-                        else
-                            tbEddnStats.Text = "waiting for data...";
 
+                        if(m_Communicator.StatisticDataRL.Count() > 0)
+                        {
+                            System.Text.StringBuilder output = new System.Text.StringBuilder();
+                            foreach (var appVersion in m_Communicator.StatisticDataRL.OrderByDescending(x => x.Value.MessagesReceived))
+                            {
+                                output.AppendFormat("{0} : {1} messages ({2} datasets)\r\n", appVersion.Key, appVersion.Value.MessagesReceived, appVersion.Value.DatasetsReceived);
+                            }
+
+                            tbEddnStatsRL.Text = output.ToString();
+                        }
+
+                        if(m_Communicator.StatisticDataCM.Count() > 0)
+                        {
+                            System.Text.StringBuilder output = new System.Text.StringBuilder();
+                            foreach (var appVersion in m_Communicator.StatisticDataCM.OrderByDescending(x => x.Value.MessagesReceived))
+                            {
+                                output.AppendFormat("{0} : {1} messages ({2} datasets)\r\n", appVersion.Key, appVersion.Value.MessagesReceived, appVersion.Value.DatasetsReceived);
+                            }
+
+                            tbEddnStatsCM.Text = output.ToString();
+                        }
                     }
                 }
 
@@ -153,15 +187,7 @@ namespace IBE.EDDN
         {
             try
             {
-                if(!m_Communicator.ListenerIsRunning)
-                {
-                    m_Communicator.StartEDDNListening();
-                }
-                else
-                {
-                    MessageBox.Show(this, "EDDNComminicator is already listing", "EDDN", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                
+                m_Communicator.StartEDDNListening();
             }
             catch (Exception ex)
             {
@@ -179,6 +205,68 @@ namespace IBE.EDDN
             {
                 cErr.processError(ex, "Error in cmdStopListening_Click");
             }
+        }
+
+        private void cmdStartSender_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(!m_Communicator.SenderIsActivated)
+                {
+                    m_Communicator.ActivateSender();
+                }
+                else
+                {
+                    MessageBox.Show(this, "EDDNComminicator is already listing", "EDDN", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdStartSender_Click");
+            }
+        }
+
+        private void cmdStopSender_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                m_Communicator.DeactivateSender();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdStopSender_Click");
+            }
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if(e.KeyCode == Keys.Enter)
+                    m_GUIInterface.saveSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in TextBox_KeyDown", ex);
+            }
+        }
+
+        private void TextBox_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                m_GUIInterface.saveSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in TextBox_Leave", ex);
+            }
+        }
+
+        private void tbEddnStats_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
     }

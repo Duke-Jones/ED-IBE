@@ -1293,12 +1293,14 @@ namespace IBE
 
                 if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
                 {
-                    Debug.Print("Zeit (10) : " + st.ElapsedMilliseconds);
-                    st.Start();
-
                     Program.SplashScreen.InfoAdd("starting eddn listening");
                     Program.EDDNComm.StartEDDNListening();
                     Program.SplashScreen.InfoAppendLast("<OK>");
+                }
+
+                if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", false.ToString(), false))
+                {
+                    Program.EDDNComm.ActivateSender();
                 }
 
                 Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
