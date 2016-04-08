@@ -1,5 +1,15 @@
+* filter: age of data
+* purge history data
+* switch : enable disable history
+* hold rejected data
+* add station type to price analysis
+* can't use "_" in paths save in db
+* add marked color for datagrids
 
 
+   * editable whitelist for EDDN
+   * added duplicate filter to EDDN-import
+-------------------------------------------------------------------------------------         
    * EDDN is working again (more testing needed)
 -------------------------------------------------------------------------------------         
    * relocated "VerboseLogging"-flag from AppConfig.xml to AppConfigLocal.xml

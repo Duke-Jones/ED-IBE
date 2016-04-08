@@ -56,6 +56,7 @@ namespace IBE.SQL
 
         public enum enDataSource
         {
+            fromIBE_OCR         = -2,
             fromRN              = -1,
             undefined           =  0,
             fromIBE             =  1,
@@ -216,7 +217,8 @@ namespace IBE.SQL
                                                             "tbvisitedstations", 
                                                             "tbpower",
                                                             "tbpowerstate", 
-                                                            "tblanguage"};
+                                                            "tblanguage", 
+                                                            "tbtrustedsenders"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -2328,7 +2330,7 @@ namespace IBE.SQL
                 Int32 priceCount = 0;
                 Int32 SourceID;
 
-                if (dataSource == enDataSource.fromRN)
+                if ((dataSource == enDataSource.fromRN) || (dataSource == enDataSource.fromIBE_OCR))
                     dataSource = enDataSource.fromIBE;
 
                 // for the prices is no transaction necessary, because we're changing
@@ -2644,7 +2646,9 @@ namespace IBE.SQL
                 }
 
                 if(dataSource == enDataSource.fromIBE)
-                    Program.EDDNComm.sendToEdDDN(csvRowList);
+                    Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
+                else if(dataSource == enDataSource.fromIBE_OCR)
+                    Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
 
                 // now import the prices
                 ImportPrices(StationData, importBehaviour, dataSource);

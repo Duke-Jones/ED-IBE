@@ -942,6 +942,15 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbStations_org` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbTrustedSenders`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbTrustedSenders` (
+  `Name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`Name`))
+ENGINE = InnoDB;
+
 USE `elite_db` ;
 
 -- -----------------------------------------------------
@@ -1228,6 +1237,19 @@ USE `elite_db`;
 INSERT INTO `elite_db`.`tbAttribute` (`id`, `Attribute`) VALUES (0, 'import');
 INSERT INTO `elite_db`.`tbAttribute` (`id`, `Attribute`) VALUES (1, 'export');
 INSERT INTO `elite_db`.`tbAttribute` (`id`, `Attribute`) VALUES (2, 'prohibited');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbTrustedSenders`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('E:D Market Connector [Windows]');
+INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EDAPI Trade Dangerous Plugin');
+INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('E:D Market Connector [Mac OS]');
+INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('ED-IBE (API)');
 
 COMMIT;
 

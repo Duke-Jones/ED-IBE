@@ -22,10 +22,16 @@ namespace IBE.EDDN
     public class EDDNCommunicator : IDisposable
     {
 
-        enum enSchema
+        private enum enSchema
         {
             Real = 0,
             Test = 1
+        }
+
+        public enum enInterface
+        {
+            API = 0,
+            OCR = 1
         }
 
 #region dispose region
@@ -55,6 +61,11 @@ bool disposed = false;
 
                 // Free any other managed objects here.
                 StopEDDNListening();
+
+                if (m_DuplicateFilter != null)
+                    m_DuplicateFilter.Dispose(); 
+
+                m_DuplicateFilter = null;
             }
 
             // Free any unmanaged objects here.
@@ -98,7 +109,8 @@ bool disposed = false;
  #endregion
 
         private Thread                              _Spool2EDDN;   
-        private Queue                               _SendItems = new Queue(100,10);
+        private Queue                               _SendItems_API = new Queue(100,10);
+        private Queue                               _SendItems_OCR = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer;
         private StreamWriter                        m_EDDNSpooler = null;
@@ -107,6 +119,7 @@ bool disposed = false;
         private Dictionary<String, EDDNStatistics>  m_StatisticDataCM = new Dictionary<String, EDDNStatistics>();
         private List<String>                        m_RejectedData;
         private List<String>                        m_RawData;
+        private EDDNDuplicateFilter                 m_DuplicateFilter = new EDDNDuplicateFilter();
         private Dictionary<String, EDDNReciever>    m_Reciever;
         private List<String>                        m_Relays    = new List<string>() { "tcp://eddn-relay.elite-markets.net:9500", 
                                                                                        "tcp://eddn-relay.ed-td.space:9500"};
@@ -196,7 +209,7 @@ bool disposed = false;
             try
             {
 
-                UpdateRawData(String.Format("{0}\n(from {2})\n{1}", e.Message, e.RawData, e.Adress));
+                UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
                 if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
                 {
@@ -274,12 +287,12 @@ bool disposed = false;
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
-                        UpdateRawData("recieved outfitting message ignored (coming feature)");
+                        //UpdateRawData("recieved outfitting message ignored (coming feature)");
                         Debug.Print("recieved outfitting message ignored");
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved:
-                        UpdateRawData("recieved shipyard message ignored (coming feature)");
+                        //UpdateRawData("recieved shipyard message ignored (coming feature)");
                         Debug.Print("recieved shipyard message ignored");
                         break;
 
@@ -300,47 +313,47 @@ bool disposed = false;
                 {
                     UpdateStatisticData(DataRows.GetUpperBound(0) + 1, nameAndVersion, e.Adress, uploaderID);
 
-                    List<String> trustedSenders = Program.DBCon.getIniValue<String>("EDDN", "TrustedSenders", "").Split(new char[] { '|' }).ToList();
-
-                    bool isTrusty = trustedSenders.Exists(x => x.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-
                     foreach (String DataRow in DataRows)
                     {
-
-                        // data is plausible ?
-                        if (isTrusty || (!Program.PlausibiltyCheck.CheckPricePlausibility(new string[] { DataRow }, SimpleEDDNCheck)))
+                        if(m_DuplicateFilter.DataAccepted(DataRow))
                         {
+                            bool isTrusty = (Program.Data.BaseData.tbtrustedsenders.Rows.Find(name) != null);
 
-                            // import is wanted ?
-                            if (Program.DBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
+                            // data is plausible ?
+                            if (isTrusty || (!Program.PlausibiltyCheck.CheckPricePlausibility(new string[] { DataRow }, SimpleEDDNCheck)))
                             {
-                                // collect importable data
-                                Debug.Print("import :" + DataRow);
-                                importData.Add(DataRow);
+
+                                // import is wanted ?
+                                if (Program.DBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
+                                {
+                                    // collect importable data
+                                    Debug.Print("import :" + DataRow);
+                                    importData.Add(DataRow);
+                                }
+
                             }
-
-                        }
-                        else
-                        {
-                            Debug.Print("implausible :" + DataRow);
-                            // data is implausible
-                            string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
-
-                            UpdateRejectedData(InfoString);
-
-                            if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false))
+                            else
                             {
+                                Debug.Print("implausible :" + DataRow);
+                                // data is implausible
+                                string InfoString = string.Format("IMPLAUSIBLE DATA : \"{2}\" from {0}/ID=[{1}]", nameAndVersion, uploaderID, DataRow);
 
-                                FileStream LogFileStream = null;
-                                string FileName = Program.GetDataPath(@"Logs\EddnImplausibleOutput.txt");
+                                UpdateRejectedData(InfoString);
 
-                                if (File.Exists(FileName))
-                                    LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                                else
-                                    LogFileStream = File.Create(FileName);
+                                if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false))
+                                {
 
-                                LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n"), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
-                                LogFileStream.Close();
+                                    FileStream LogFileStream = null;
+                                    string FileName = Program.GetDataPath(@"Logs\EddnImplausibleOutput.txt");
+
+                                    if (File.Exists(FileName))
+                                        LogFileStream = File.Open(FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                                    else
+                                        LogFileStream = File.Create(FileName);
+
+                                    LogFileStream.Write(System.Text.Encoding.Default.GetBytes(InfoString + "\n"), 0, System.Text.Encoding.Default.GetByteCount(InfoString + "\n"));
+                                    LogFileStream.Close();
+                                }
                             }
                         }
                     }
@@ -533,12 +546,15 @@ bool disposed = false;
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
         /// <param name="commodityData"></param>
-        public void sendToEdDDN(CsvRow CommodityData)
+        public void sendToEDDN(CsvRow CommodityData, enInterface usedInterface)
         {
             if(m_SenderIsActivated)
             {
                 // register next data row
-                _SendItems.Enqueue(CommodityData);
+                if(usedInterface == enInterface.API)
+                    _SendItems_API.Enqueue(CommodityData);
+                else
+                    _SendItems_OCR.Enqueue(CommodityData);
 
                 // reset the timer
                 _SendDelayTimer.Start();
@@ -550,7 +566,7 @@ bool disposed = false;
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
         /// <param name="commodityData"></param>
-        public void sendToEdDDN(List<CsvRow> csvRowList)
+        public void sendToEDDN(List<CsvRow> csvRowList, enInterface usedInterface)
         {
             if(m_SenderIsActivated)
             {
@@ -559,7 +575,10 @@ bool disposed = false;
 
                 // register rows
                 foreach (CsvRow csvRowListItem in csvRowList)
-                    _SendItems.Enqueue(csvRowListItem);
+                    if(usedInterface == enInterface.API)
+                        _SendItems_API.Enqueue(csvRowListItem);
+                    else
+                        _SendItems_OCR.Enqueue(csvRowListItem);
 
                 // reset the timer
                 _SendDelayTimer.Start();
@@ -571,7 +590,7 @@ bool disposed = false;
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
         /// <param name="commodityData"></param>
-        public void sendToEdDDN(String[] csv_Strings)
+        public void sendToEDDN(String[] csv_Strings, enInterface usedInterface)
         {
             if(m_SenderIsActivated)
             {
@@ -582,7 +601,10 @@ bool disposed = false;
 
                     // register rows
                     foreach (String csvRowString in csv_Strings)
-                        _SendItems.Enqueue(new CsvRow(csvString));
+                        if(usedInterface == enInterface.API)
+                            _SendItems_API.Enqueue(new CsvRow(csvString));
+                        else
+                            _SendItems_OCR.Enqueue(new CsvRow(csvString));
 
                     // reset the timer
                     _SendDelayTimer.Start();
@@ -598,104 +620,128 @@ bool disposed = false;
         {
             try
             {
+                Queue activeQueue = null; 
                 String UserID;
-                EDDNSchema_v2 Data = new EDDNSchema_v2();
+                EDDNSchema_v2 Data;
                 String TimeStamp;
                 String commodity;
 
-                TimeStamp   = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
-                UserID      = UserIdentification();
+                do{
 
-                // test or real ?
-                if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
-                    Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
-                else
-                    Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
+                    TimeStamp   = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
+                    UserID      = UserIdentification();
+                    Data        = new EDDNSchema_v2();
 
-                // fill the header
-                Data.Header = new EDDNSchema_v2.Header_Class()
-                {
-                    SoftwareName = "ED-IBE",
-                    SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp = TimeStamp,
-                    UploaderID = UserID
-                };
+                    // test or real ?
+                    if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
+                    else
+                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
 
-                // prepare the message object
-                Data.Message = new EDDNSchema_v2.Message_Class()
-                {
-                    SystemName = "",
-                    StationName = "",
-                    Timestamp = TimeStamp,
-                    Commodities = new EDDNSchema_v2.Commodity_Class[_SendItems.Count]
-                };
-
-                // collect the commodity data
-                for (int i = 0; i <= Data.Message.Commodities.GetUpperBound(0); i++)
-                {
-                    CsvRow Row = (CsvRow)_SendItems.Dequeue();
-
-                    commodity = Row.CommodityName;
-
-                    // if it's a user added commodity send it anyhow to see that there's a unknown commodity
-                    if (commodity.Equals(Program.COMMODITY_NOT_SET))
-                        commodity = Row.CommodityName;
-
-                    Data.Message.Commodities[i] = new EDDNSchema_v2.Commodity_Class()
+                    if(_SendItems_API.Count > 0)
                     {
-                        Name = commodity,
-                        BuyPrice = (Int32)Math.Floor(Row.BuyPrice),
-                        SellPrice = (Int32)Math.Floor(Row.SellPrice),
-                        Demand = (Int32)Math.Floor(Row.Demand),
-                        DemandLevel = (Row.DemandLevel == "") ? null : Row.DemandLevel,
-                        Supply = (Int32)Math.Floor(Row.Supply),
-                        SupplyLevel = (Row.SupplyLevel == "") ? null : Row.SupplyLevel,
+                        // fill the header
+                        Data.Header = new EDDNSchema_v2.Header_Class()
+                        {
+                            SoftwareName = "ED-IBE (API)",
+                            SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
+                            GatewayTimestamp = TimeStamp,
+                            UploaderID = UserID
+                        };
+
+                        activeQueue = _SendItems_API;
+                    }
+                    else
+                    { 
+                        // fill the header
+                        Data.Header = new EDDNSchema_v2.Header_Class()
+                        {
+                            SoftwareName = "ED-IBE (OCR)",
+                            SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
+                            GatewayTimestamp = TimeStamp,
+                            UploaderID = UserID
+                        };
+
+                        activeQueue = _SendItems_OCR;
+                    }
+
+                    // prepare the message object
+                    Data.Message = new EDDNSchema_v2.Message_Class()
+                    {
+                        SystemName = "",
+                        StationName = "",
+                        Timestamp = TimeStamp,
+                        Commodities = new EDDNSchema_v2.Commodity_Class[activeQueue.Count]
                     };
 
-                    if (i == 0)
+                    // collect the commodity data
+                    for (int i = 0; i <= Data.Message.Commodities.GetUpperBound(0); i++)
                     {
-                        Data.Message.SystemName = Row.SystemName;
-                        Data.Message.StationName = Row.StationName;
+                        CsvRow Row = (CsvRow)activeQueue.Dequeue();
 
-                    }
+                        commodity = Row.CommodityName;
 
-                }
+                        // if it's a user added commodity send it anyhow to see that there's a unknown commodity
+                        if (commodity.Equals(Program.COMMODITY_NOT_SET))
+                            commodity = Row.CommodityName;
 
-                using (var client = new WebClient())
-                {
-                    try
-                    {
-                        Debug.Print(JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
-
-                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
-                    }
-                    catch (WebException ex)
-                    {
-                        _logger.Log("Error uploading Json (v2)", true);
-                        _logger.Log(ex.ToString(), true);
-                        _logger.Log(ex.Message, true);
-                        _logger.Log(ex.StackTrace, true);
-                        if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString(), true);
-
-                        using (WebResponse response = ex.Response)
+                        Data.Message.Commodities[i] = new EDDNSchema_v2.Commodity_Class()
                         {
-                            using (Stream data = response.GetResponseStream())
+                            Name = commodity,
+                            BuyPrice = (Int32)Math.Floor(Row.BuyPrice),
+                            SellPrice = (Int32)Math.Floor(Row.SellPrice),
+                            Demand = (Int32)Math.Floor(Row.Demand),
+                            DemandLevel = (Row.DemandLevel == "") ? null : Row.DemandLevel,
+                            Supply = (Int32)Math.Floor(Row.Supply),
+                            SupplyLevel = (Row.SupplyLevel == "") ? null : Row.SupplyLevel,
+                        };
+
+                        if (i == 0)
+                        {
+                            Data.Message.SystemName = Row.SystemName;
+                            Data.Message.StationName = Row.StationName;
+
+                        }
+
+                    }
+
+                    using (var client = new WebClient())
+                    {
+                        try
+                        {
+                            Debug.Print(JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
+
+                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
+                        }
+                        catch (WebException ex)
+                        {
+                            _logger.Log("Error uploading Json (v2)", true);
+                            _logger.Log(ex.ToString(), true);
+                            _logger.Log(ex.Message, true);
+                            _logger.Log(ex.StackTrace, true);
+                            if (ex.InnerException != null)
+                                _logger.Log(ex.InnerException.ToString(), true);
+
+                            using (WebResponse response = ex.Response)
                             {
-                                if (data != null)
+                                using (Stream data = response.GetResponseStream())
                                 {
-                                    StreamReader sr = new StreamReader(data);
-                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (v2)");
+                                    if (data != null)
+                                    {
+                                        StreamReader sr = new StreamReader(data);
+                                        MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (v2)");
+                                    }
                                 }
                             }
                         }
+                        finally
+                        {
+                            client.Dispose();
+                        }
                     }
-                    finally
-                    {
-                        client.Dispose();
-                    }
-                }
 
+                    // retry, if the ocr-queue has entries and the last queue was then api-queue
+	            } while ((activeQueue != _SendItems_OCR) && (_SendItems_OCR.Count > 0));
             }
             catch (Exception ex)
             {

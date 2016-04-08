@@ -32,6 +32,8 @@ namespace IBE.EDDN
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
+                LoadTrustedSenders();
+
                 m_Communicator.DataChangedEvent += m_Communicator_DataChangedEvent;
                 tmrRefresh.Start();
             }
@@ -264,9 +266,60 @@ namespace IBE.EDDN
             }
         }
 
-        private void tbEddnStats_TextChanged(object sender, EventArgs e)
+        private void LoadTrustedSenders()
         {
+            try
+            {
+                dgvTrustedSenders.DataSource = Program.Data.BaseData.tbtrustedsenders;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading trusted senders", ex);
+            }
+        }
 
+        private void cmdAddTrusted_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                String newName = "";
+
+                if ((InputBox.Show("Trusted Senders", "Name of the sender ?", ref newName) == System.Windows.Forms.DialogResult.OK) && (!String.IsNullOrEmpty(newName.Trim())))
+                {
+                    Program.Data.BaseData.tbtrustedsenders.Rows.Add(newName.Trim());
+
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbtrustedsenders.TableName, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while adding a trusted sender");
+            }
+        }
+
+        private void cmdRemoveTrusted_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (dgvTrustedSenders.SelectedRows.Count > 0)
+                {
+                    if(MessageBox.Show("Remove selected senders from list ?", "Trusted Senders", MessageBoxButtons.OKCancel,  MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        foreach (DataGridViewRow selRow in dgvTrustedSenders.SelectedRows)
+                        {
+                            ((SQL.Datasets.dsEliteDB.tbtrustedsendersRow)((System.Data.DataRowView)(selRow.DataBoundItem)).Row).Delete();
+                        }
+
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbtrustedsenders.TableName, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while removing a trusted sender");
+            }
         }
 
     }

@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EDDN\EDDNDuplicateFilter.cs" />
     <Compile Include="EDDN\EDDNReciever.cs" />
     <Compile Include="Elite Dangerous Specifics\AppConfig.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">

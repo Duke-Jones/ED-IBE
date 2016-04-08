@@ -34,18 +34,22 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.tbEddnStatsSW = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmdRemoveTrusted = new System.Windows.Forms.Button();
+            this.cmdAddTrusted = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dgvTrustedSenders = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.colSenderName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblListenerStatus = new System.Windows.Forms.Label();
             this.pbListenerStatus = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbEDDNAutoListen = new System.Windows.Forms.CheckBox();
             this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
             this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
-            this.bPurgeAllEddnData = new System.Windows.Forms.Button();
             this.cbImportEDDN = new System.Windows.Forms.CheckBox();
-            this.label24 = new System.Windows.Forms.Label();
             this.cmdStopListening = new System.Windows.Forms.Button();
-            this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.cmdStartListening = new System.Windows.Forms.Button();
+            this.label24 = new System.Windows.Forms.Label();
+            this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -55,6 +59,7 @@
             this.tabByRelay = new System.Windows.Forms.TabPage();
             this.tbEddnStatsRL = new System.Windows.Forms.TextBox();
             this.tabByCommander = new System.Windows.Forms.TabPage();
+            this.tbEddnStatsCM = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.rbSchemaTest = new System.Windows.Forms.RadioButton();
@@ -73,8 +78,9 @@
             this.tbUsername = new System.Windows.Forms.TextBox();
             this.rbUserID = new System.Windows.Forms.RadioButton();
             this.txtCmdrsName = new System.Windows.Forms.TextBox();
-            this.tbEddnStatsCM = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -93,7 +99,7 @@
             // label83
             // 
             this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(6, 388);
+            this.label83.Location = new System.Drawing.Point(490, 414);
             this.label83.Name = "label83";
             this.label83.Size = new System.Drawing.Size(76, 13);
             this.label83.TabIndex = 10;
@@ -106,10 +112,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbEddnImplausible.FormattingEnabled = true;
             this.lbEddnImplausible.HorizontalScrollbar = true;
-            this.lbEddnImplausible.Location = new System.Drawing.Point(8, 404);
+            this.lbEddnImplausible.Location = new System.Drawing.Point(493, 430);
             this.lbEddnImplausible.Name = "lbEddnImplausible";
             this.lbEddnImplausible.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbEddnImplausible.Size = new System.Drawing.Size(1039, 251);
+            this.lbEddnImplausible.Size = new System.Drawing.Size(554, 225);
             this.lbEddnImplausible.TabIndex = 9;
             // 
             // tbEddnStatsSW
@@ -118,35 +124,91 @@
             this.tbEddnStatsSW.Location = new System.Drawing.Point(3, 3);
             this.tbEddnStatsSW.Multiline = true;
             this.tbEddnStatsSW.Name = "tbEddnStatsSW";
-            this.tbEddnStatsSW.Size = new System.Drawing.Size(565, 341);
+            this.tbEddnStatsSW.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEddnStatsSW.Size = new System.Drawing.Size(536, 341);
             this.tbEddnStatsSW.TabIndex = 8;
-            this.tbEddnStatsSW.TextChanged += new System.EventHandler(this.tbEddnStats_TextChanged);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cmdRemoveTrusted);
+            this.groupBox2.Controls.Add(this.cmdAddTrusted);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.dgvTrustedSenders);
             this.groupBox2.Controls.Add(this.lblListenerStatus);
             this.groupBox2.Controls.Add(this.pbListenerStatus);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.cbEDDNAutoListen);
             this.groupBox2.Controls.Add(this.cbSpoolImplausibleToFile);
             this.groupBox2.Controls.Add(this.cbSpoolEddnToFile);
-            this.groupBox2.Controls.Add(this.bPurgeAllEddnData);
             this.groupBox2.Controls.Add(this.cbImportEDDN);
-            this.groupBox2.Controls.Add(this.label24);
             this.groupBox2.Controls.Add(this.cmdStopListening);
-            this.groupBox2.Controls.Add(this.tbEDDNOutput);
             this.groupBox2.Controls.Add(this.cmdStartListening);
             this.groupBox2.Location = new System.Drawing.Point(8, 6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(450, 379);
+            this.groupBox2.Size = new System.Drawing.Size(479, 392);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Listen for EDDN Events";
             // 
+            // cmdRemoveTrusted
+            // 
+            this.cmdRemoveTrusted.Location = new System.Drawing.Point(380, 242);
+            this.cmdRemoveTrusted.Name = "cmdRemoveTrusted";
+            this.cmdRemoveTrusted.Size = new System.Drawing.Size(93, 23);
+            this.cmdRemoveTrusted.TabIndex = 21;
+            this.cmdRemoveTrusted.Text = "Remove";
+            this.toolTip1.SetToolTip(this.cmdRemoveTrusted, "Removes selected senders from list (select row header)");
+            this.cmdRemoveTrusted.UseVisualStyleBackColor = true;
+            this.cmdRemoveTrusted.Click += new System.EventHandler(this.cmdRemoveTrusted_Click);
+            // 
+            // cmdAddTrusted
+            // 
+            this.cmdAddTrusted.Location = new System.Drawing.Point(281, 242);
+            this.cmdAddTrusted.Name = "cmdAddTrusted";
+            this.cmdAddTrusted.Size = new System.Drawing.Size(93, 23);
+            this.cmdAddTrusted.TabIndex = 20;
+            this.cmdAddTrusted.Text = "Add";
+            this.toolTip1.SetToolTip(this.cmdAddTrusted, "Adds a new sender to the list.");
+            this.cmdAddTrusted.UseVisualStyleBackColor = true;
+            this.cmdAddTrusted.Click += new System.EventHandler(this.cmdAddTrusted_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 257);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(85, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Trusted Senders";
+            this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
+            // 
+            // dgvTrustedSenders
+            // 
+            this.dgvTrustedSenders.AllowUserToAddRows = false;
+            this.dgvTrustedSenders.AllowUserToDeleteRows = false;
+            this.dgvTrustedSenders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTrustedSenders.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colSenderName});
+            this.dgvTrustedSenders.DoubleBuffer = true;
+            this.dgvTrustedSenders.Location = new System.Drawing.Point(10, 273);
+            this.dgvTrustedSenders.Name = "dgvTrustedSenders";
+            this.dgvTrustedSenders.RowHeadersWidth = 20;
+            this.dgvTrustedSenders.Size = new System.Drawing.Size(463, 109);
+            this.dgvTrustedSenders.TabIndex = 19;
+            this.toolTip1.SetToolTip(this.dgvTrustedSenders, resources.GetString("dgvTrustedSenders.ToolTip"));
+            // 
+            // colSenderName
+            // 
+            this.colSenderName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colSenderName.DataPropertyName = "Name";
+            this.colSenderName.HeaderText = "Name Of Sender";
+            this.colSenderName.Name = "colSenderName";
+            this.colSenderName.ReadOnly = true;
+            // 
             // lblListenerStatus
             // 
             this.lblListenerStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblListenerStatus.Location = new System.Drawing.Point(315, 162);
+            this.lblListenerStatus.Location = new System.Drawing.Point(346, 162);
             this.lblListenerStatus.Name = "lblListenerStatus";
             this.lblListenerStatus.Size = new System.Drawing.Size(111, 13);
             this.lblListenerStatus.TabIndex = 18;
@@ -157,7 +219,7 @@
             // 
             this.pbListenerStatus.Image = global::IBE.Properties.Resources.green_led_off_md;
             this.pbListenerStatus.InitialImage = global::IBE.Properties.Resources.green_led_off_md;
-            this.pbListenerStatus.Location = new System.Drawing.Point(351, 119);
+            this.pbListenerStatus.Location = new System.Drawing.Point(382, 119);
             this.pbListenerStatus.Margin = new System.Windows.Forms.Padding(0);
             this.pbListenerStatus.Name = "pbListenerStatus";
             this.pbListenerStatus.Size = new System.Drawing.Size(40, 40);
@@ -168,7 +230,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(319, 103);
+            this.label1.Location = new System.Drawing.Point(350, 103);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(111, 13);
             this.label1.TabIndex = 16;
@@ -210,16 +272,6 @@
             this.cbSpoolEddnToFile.UseVisualStyleBackColor = true;
             this.cbSpoolEddnToFile.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
-            // bPurgeAllEddnData
-            // 
-            this.bPurgeAllEddnData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bPurgeAllEddnData.Location = new System.Drawing.Point(315, 348);
-            this.bPurgeAllEddnData.Name = "bPurgeAllEddnData";
-            this.bPurgeAllEddnData.Size = new System.Drawing.Size(129, 23);
-            this.bPurgeAllEddnData.TabIndex = 12;
-            this.bPurgeAllEddnData.Text = "Purge all EDDN data";
-            this.bPurgeAllEddnData.UseVisualStyleBackColor = true;
-            // 
             // cbImportEDDN
             // 
             this.cbImportEDDN.AutoSize = true;
@@ -234,18 +286,9 @@
             this.cbImportEDDN.UseVisualStyleBackColor = true;
             this.cbImportEDDN.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 174);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(64, 13);
-            this.label24.TabIndex = 5;
-            this.label24.Text = "Raw Output";
-            // 
             // cmdStopListening
             // 
-            this.cmdStopListening.Location = new System.Drawing.Point(351, 50);
+            this.cmdStopListening.Location = new System.Drawing.Point(358, 58);
             this.cmdStopListening.Name = "cmdStopListening";
             this.cmdStopListening.Size = new System.Drawing.Size(93, 23);
             this.cmdStopListening.TabIndex = 4;
@@ -253,26 +296,36 @@
             this.cmdStopListening.UseVisualStyleBackColor = true;
             this.cmdStopListening.Click += new System.EventHandler(this.cmdStopListening_Click);
             // 
-            // tbEDDNOutput
-            // 
-            this.tbEDDNOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbEDDNOutput.Location = new System.Drawing.Point(6, 190);
-            this.tbEDDNOutput.Multiline = true;
-            this.tbEDDNOutput.Name = "tbEDDNOutput";
-            this.tbEDDNOutput.Size = new System.Drawing.Size(438, 152);
-            this.tbEDDNOutput.TabIndex = 3;
-            // 
             // cmdStartListening
             // 
-            this.cmdStartListening.Location = new System.Drawing.Point(351, 19);
+            this.cmdStartListening.Location = new System.Drawing.Point(358, 27);
             this.cmdStartListening.Name = "cmdStartListening";
             this.cmdStartListening.Size = new System.Drawing.Size(93, 23);
             this.cmdStartListening.TabIndex = 2;
             this.cmdStartListening.Text = "Start Listening";
             this.cmdStartListening.UseVisualStyleBackColor = true;
             this.cmdStartListening.Click += new System.EventHandler(this.cmdStartListening_Click);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(8, 414);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(64, 13);
+            this.label24.TabIndex = 5;
+            this.label24.Text = "Raw Output";
+            // 
+            // tbEDDNOutput
+            // 
+            this.tbEDDNOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbEDDNOutput.Location = new System.Drawing.Point(8, 430);
+            this.tbEDDNOutput.Multiline = true;
+            this.tbEDDNOutput.Name = "tbEDDNOutput";
+            this.tbEDDNOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEDDNOutput.Size = new System.Drawing.Size(479, 224);
+            this.tbEDDNOutput.TabIndex = 3;
             // 
             // tmrRefresh
             // 
@@ -297,6 +350,8 @@
             this.tabPage1.Controls.Add(this.label83);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.lbEddnImplausible);
+            this.tabPage1.Controls.Add(this.label24);
+            this.tabPage1.Controls.Add(this.tbEDDNOutput);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -310,9 +365,9 @@
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.tbcStatistics);
-            this.groupBox5.Location = new System.Drawing.Point(464, 6);
+            this.groupBox5.Location = new System.Drawing.Point(493, 6);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(585, 392);
+            this.groupBox5.Size = new System.Drawing.Size(556, 392);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Statistics";
@@ -326,7 +381,7 @@
             this.tbcStatistics.Location = new System.Drawing.Point(3, 16);
             this.tbcStatistics.Name = "tbcStatistics";
             this.tbcStatistics.SelectedIndex = 0;
-            this.tbcStatistics.Size = new System.Drawing.Size(579, 373);
+            this.tbcStatistics.Size = new System.Drawing.Size(550, 373);
             this.tbcStatistics.TabIndex = 11;
             // 
             // tabBySoftware
@@ -335,7 +390,7 @@
             this.tabBySoftware.Location = new System.Drawing.Point(4, 22);
             this.tabBySoftware.Name = "tabBySoftware";
             this.tabBySoftware.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBySoftware.Size = new System.Drawing.Size(571, 347);
+            this.tabBySoftware.Size = new System.Drawing.Size(542, 347);
             this.tabBySoftware.TabIndex = 0;
             this.tabBySoftware.Text = "By Software";
             this.tabBySoftware.UseVisualStyleBackColor = true;
@@ -346,7 +401,7 @@
             this.tabByRelay.Location = new System.Drawing.Point(4, 22);
             this.tabByRelay.Name = "tabByRelay";
             this.tabByRelay.Padding = new System.Windows.Forms.Padding(3);
-            this.tabByRelay.Size = new System.Drawing.Size(571, 347);
+            this.tabByRelay.Size = new System.Drawing.Size(542, 347);
             this.tabByRelay.TabIndex = 1;
             this.tabByRelay.Text = "By Relay";
             this.tabByRelay.UseVisualStyleBackColor = true;
@@ -357,17 +412,9 @@
             this.tbEddnStatsRL.Location = new System.Drawing.Point(3, 3);
             this.tbEddnStatsRL.Multiline = true;
             this.tbEddnStatsRL.Name = "tbEddnStatsRL";
-            this.tbEddnStatsRL.Size = new System.Drawing.Size(565, 341);
+            this.tbEddnStatsRL.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEddnStatsRL.Size = new System.Drawing.Size(536, 341);
             this.tbEddnStatsRL.TabIndex = 9;
-            // 
-            // tbEddnStatsCM
-            // 
-            this.tbEddnStatsCM.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbEddnStatsCM.Location = new System.Drawing.Point(0, 0);
-            this.tbEddnStatsCM.Multiline = true;
-            this.tbEddnStatsCM.Name = "tbEddnStatsCM";
-            this.tbEddnStatsCM.Size = new System.Drawing.Size(571, 347);
-            this.tbEddnStatsCM.TabIndex = 10;
             // 
             // tabByCommander
             // 
@@ -375,10 +422,20 @@
             this.tabByCommander.Location = new System.Drawing.Point(4, 22);
             this.tabByCommander.Name = "tabByCommander";
             this.tabByCommander.Padding = new System.Windows.Forms.Padding(3);
-            this.tabByCommander.Size = new System.Drawing.Size(571, 347);
+            this.tabByCommander.Size = new System.Drawing.Size(542, 347);
             this.tabByCommander.TabIndex = 2;
             this.tabByCommander.Text = "By Commander";
             this.tabByCommander.UseVisualStyleBackColor = true;
+            // 
+            // tbEddnStatsCM
+            // 
+            this.tbEddnStatsCM.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbEddnStatsCM.Location = new System.Drawing.Point(3, 3);
+            this.tbEddnStatsCM.Multiline = true;
+            this.tbEddnStatsCM.Name = "tbEddnStatsCM";
+            this.tbEddnStatsCM.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEddnStatsCM.Size = new System.Drawing.Size(536, 341);
+            this.tbEddnStatsCM.TabIndex = 10;
             // 
             // tabPage2
             // 
@@ -609,6 +666,7 @@
             this.Load += new System.EventHandler(this.EDDNView_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -642,7 +700,6 @@
         private System.Windows.Forms.CheckBox cbEDDNAutoListen;
         private System.Windows.Forms.CheckBox cbSpoolImplausibleToFile;
         private System.Windows.Forms.CheckBox cbSpoolEddnToFile;
-        private System.Windows.Forms.Button bPurgeAllEddnData;
         private System.Windows.Forms.CheckBox cbImportEDDN;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button cmdStopListening;
@@ -679,5 +736,12 @@
         private System.Windows.Forms.TabPage tabByCommander;
         private System.Windows.Forms.TextBox tbEddnStatsRL;
         private System.Windows.Forms.TextBox tbEddnStatsCM;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private IBE.Enums_and_Utility_Classes.DataGridViewExt dgvTrustedSenders;
+        private System.Windows.Forms.Button cmdRemoveTrusted;
+        private System.Windows.Forms.Button cmdAddTrusted;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSenderName;
     }
 }
