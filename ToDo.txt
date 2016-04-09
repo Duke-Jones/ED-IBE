@@ -3,10 +3,14 @@
 * switch : enable disable history
 * hold rejected data
 * add station type to price analysis
-* can't use "_" in paths save in db
 * add marked color for datagrids
 
 
+
+   * fix in installer script
+   * fixed error with "_" in paths
+   * splitted DB-update function in a early and a late part
+-------------------------------------------------------------------------------------         
    * editable whitelist for EDDN
    * added duplicate filter to EDDN-import
 -------------------------------------------------------------------------------------         

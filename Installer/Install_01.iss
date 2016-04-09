@@ -54,8 +54,6 @@ Source: "..\ED-IBE\bin\Release\Tesseract.xml"; DestDir: "{app}"; Flags: ignoreve
 Source: "..\ED-IBE\bin\Release\clrzmq.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\clrzmq.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\clrzmq.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\ED-IBE\bin\Release\EdClasses.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\ED-IBE\bin\Release\EdClasses.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\x64\liblept168.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\x64\libtesseract302.dll"; DestDir: "{app}\x64\"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\x86\liblept168.dll"; DestDir: "{app}\x86\"; Flags: ignoreversion

@@ -268,6 +268,7 @@ namespace IBE
 
         private static ManualResetEvent                 m_MREvent;                      // for updating the database with scripts
         private static Boolean                          m_gotScriptErrors = false;      // for updating the database with scripts
+        private static Version                          m_OldDBVersion;
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -335,6 +336,9 @@ namespace IBE
 
                     /* **************** database is running ********************** */
                     
+                    /* perform updates */
+                    m_OldDBVersion = Program.DBUpdate();
+
                     Program.SplashScreen.InfoAdd("preparing global objects...");
 
                     // prepare colors-object
@@ -476,7 +480,7 @@ namespace IBE
         /// this sub starts special things to do if this version runs
         /// for the first time
         /// </summary>
-        internal static void DoSpecial()
+        internal static Version DBUpdate()
         {
             Version dbVersion;
             Version appVersion;
@@ -763,9 +767,26 @@ namespace IBE
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
+                return dbVersion;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while doing special things", ex);
+            }
+        }
+
+        /// <summary>
+        /// this sub starts special things to do if this version runs
+        /// for the first time
+        /// </summary>
+        internal static void DoSpecial()
+        {
+            try
+            {
+
                 if (!Program.Data.InitImportDone)
                 {
-                    if (dbVersion != new Version(0,1,0))
+                    if (m_OldDBVersion != new Version(0,1,0))
                     { 
                         // here it's required to import all master data 
                         var DataIO = new frmDataIO();
@@ -785,17 +806,13 @@ namespace IBE
                     }
 
                     Program.Data.InitImportDone = true;
-
                 }
-
             }
             catch (Exception ex)
             {
                 throw new Exception("Error while doing special things", ex);
             }
         }
-
-        
 
         static void sqlScript_ScriptCompleted(object sender, EventArgs e)
         {
