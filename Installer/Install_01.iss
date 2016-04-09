@@ -74,6 +74,8 @@ Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{code:GetDat
 ;ini files
 Source: "..\ED-IBE\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion onlyifdoesntexist
 Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{code:GetDataBasepath}\Database\"; Flags: ignoreversion onlyifdoesntexist
+;license
+Source: "..\license\*"; DestDir: "{app}"; Flags: ignoreversion createallsubdirs recursesubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
