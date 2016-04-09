@@ -57,9 +57,6 @@
             this.label48 = new System.Windows.Forms.Label();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.label89 = new System.Windows.Forms.Label();
-            this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
-            this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.cbAutoActivateSystemTab = new System.Windows.Forms.CheckBox();
             this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
             this.button6 = new System.Windows.Forms.Button();
@@ -74,6 +71,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.txtSQLConnectionPort = new System.Windows.Forms.TextBoxInt32();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cmdChangeSQLPort = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.rbNoDistanceToStarConsider = new System.Windows.Forms.RadioButton();
@@ -92,9 +92,6 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rbUseExternalTool = new System.Windows.Forms.RadioButton();
             this.rbUseOCR = new System.Windows.Forms.RadioButton();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.cmdChangeSQLPort = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtGamePath = new System.Windows.Forms.TextBox();
             this.cmdGamePath = new System.Windows.Forms.Button();
@@ -105,7 +102,7 @@
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
+            this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -115,7 +112,6 @@
             this.tabExternalToolSettings.SuspendLayout();
             this.gbDataInterface.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -415,9 +411,6 @@
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox12.Controls.Add(this.label89);
-            this.groupBox12.Controls.Add(this.nudPurgeOldDataDays);
-            this.groupBox12.Controls.Add(this.cmdPurgeOldData);
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
@@ -427,46 +420,6 @@
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
-            // 
-            // label89
-            // 
-            this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(203, 176);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(29, 13);
-            this.label89.TabIndex = 19;
-            this.label89.Text = "days";
-            // 
-            // nudPurgeOldDataDays
-            // 
-            this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(154, 173);
-            this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
-            365,
-            0,
-            0,
-            0});
-            this.nudPurgeOldDataDays.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.nudPurgeOldDataDays.Name = "nudPurgeOldDataDays";
-            this.nudPurgeOldDataDays.Size = new System.Drawing.Size(44, 20);
-            this.nudPurgeOldDataDays.TabIndex = 62;
-            this.nudPurgeOldDataDays.Tag = "PurgeOldDataDays;30";
-            this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // cmdPurgeOldData
-            // 
-            this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 171);
-            this.cmdPurgeOldData.Name = "cmdPurgeOldData";
-            this.cmdPurgeOldData.Size = new System.Drawing.Size(116, 23);
-            this.cmdPurgeOldData.TabIndex = 8;
-            this.cmdPurgeOldData.Text = "purge data older than";
-            this.cmdPurgeOldData.UseVisualStyleBackColor = true;
             // 
             // cbAutoActivateSystemTab
             // 
@@ -622,6 +575,43 @@
             this.toolTip1.SetToolTip(this.txtSQLConnectionPort, "connection port for the mysql-server (restart required)");
             this.txtSQLConnectionPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSQLConnectionPort_KeyPress);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox4.Controls.Add(this.cmdChangeSQLPort);
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
+            this.groupBox4.Location = new System.Drawing.Point(9, 542);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(635, 135);
+            this.groupBox4.TabIndex = 71;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "SQL-Server";
+            this.toolTip1.SetToolTip(this.groupBox4, "To resolve conflicts with other tools you can change \r\nthe port for the sql-commu" +
+        "nication. Restart is required!");
+            // 
+            // cmdChangeSQLPort
+            // 
+            this.cmdChangeSQLPort.Location = new System.Drawing.Point(139, 22);
+            this.cmdChangeSQLPort.Name = "cmdChangeSQLPort";
+            this.cmdChangeSQLPort.Size = new System.Drawing.Size(55, 23);
+            this.cmdChangeSQLPort.TabIndex = 19;
+            this.cmdChangeSQLPort.Text = "Set";
+            this.toolTip1.SetToolTip(this.cmdChangeSQLPort, "To resolve conflicts with other tools you can change ");
+            this.cmdChangeSQLPort.UseVisualStyleBackColor = true;
+            this.cmdChangeSQLPort.Click += new System.EventHandler(this.cmdChangeSQLPort_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(34, 27);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(32, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Port :";
+            this.toolTip1.SetToolTip(this.label7, "To resolve conflicts with other tools you can change ");
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -642,9 +632,9 @@
             // 
             this.groupBox7.Controls.Add(this.rbNoDistanceToStarConsider);
             this.groupBox7.Controls.Add(this.rbNoDistanceToStarIgnore);
-            this.groupBox7.Location = new System.Drawing.Point(312, 65);
+            this.groupBox7.Location = new System.Drawing.Point(299, 65);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(184, 45);
+            this.groupBox7.Size = new System.Drawing.Size(197, 45);
             this.groupBox7.TabIndex = 67;
             this.groupBox7.TabStop = false;
             this.groupBox7.Tag = "NoDistanceToStar;consider";
@@ -680,9 +670,9 @@
             // 
             this.groupBox5.Controls.Add(this.rbNoLandingPadSizeConsider);
             this.groupBox5.Controls.Add(this.rbNoLandingPadSizeIgnore);
-            this.groupBox5.Location = new System.Drawing.Point(312, 14);
+            this.groupBox5.Location = new System.Drawing.Point(299, 14);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(184, 45);
+            this.groupBox5.Size = new System.Drawing.Size(197, 45);
             this.groupBox5.TabIndex = 66;
             this.groupBox5.TabStop = false;
             this.groupBox5.Tag = "NoLandingPadSize;consider";
@@ -841,39 +831,6 @@
             this.rbUseOCR.UseVisualStyleBackColor = true;
             this.rbUseOCR.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox4.Controls.Add(this.cmdChangeSQLPort);
-            this.groupBox4.Controls.Add(this.label7);
-            this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
-            this.groupBox4.Location = new System.Drawing.Point(9, 542);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(635, 135);
-            this.groupBox4.TabIndex = 71;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "SQL-Server";
-            // 
-            // cmdChangeSQLPort
-            // 
-            this.cmdChangeSQLPort.Location = new System.Drawing.Point(139, 22);
-            this.cmdChangeSQLPort.Name = "cmdChangeSQLPort";
-            this.cmdChangeSQLPort.Size = new System.Drawing.Size(55, 23);
-            this.cmdChangeSQLPort.TabIndex = 19;
-            this.cmdChangeSQLPort.Text = "Set";
-            this.cmdChangeSQLPort.UseVisualStyleBackColor = true;
-            this.cmdChangeSQLPort.Click += new System.EventHandler(this.cmdChangeSQLPort_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(34, 27);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(32, 13);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "Port :";
-            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -890,10 +847,10 @@
             // txtGamePath
             // 
             this.txtGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGamePath.Location = new System.Drawing.Point(-12, 14);
+            this.txtGamePath.Location = new System.Drawing.Point(13, 14);
             this.txtGamePath.Name = "txtGamePath";
             this.txtGamePath.ReadOnly = true;
-            this.txtGamePath.Size = new System.Drawing.Size(498, 20);
+            this.txtGamePath.Size = new System.Drawing.Size(473, 20);
             this.txtGamePath.TabIndex = 68;
             this.txtGamePath.Tag = "GamePath;";
             // 
@@ -935,7 +892,8 @@
             this.groupBox8.PerformLayout();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -950,8 +908,6 @@
             this.gbDataInterface.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -986,9 +942,6 @@
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.ComboBox cmbLanguage;
         private System.Windows.Forms.GroupBox groupBox12;
-        private System.Windows.Forms.Label label89;
-        private System.Windows.Forms.NumericUpDown nudPurgeOldDataDays;
-        private System.Windows.Forms.Button cmdPurgeOldData;
         private System.Windows.Forms.CheckBox cbAutoActivateSystemTab;
         private System.Windows.Forms.CheckBox cbAutoActivateOCRTab;
         private System.Windows.Forms.Button button6;

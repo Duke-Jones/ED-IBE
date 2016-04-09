@@ -378,6 +378,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Content Include="Data\_readme_ifmissing.txt" />
+    <Content Include="libzmq.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\green-led-off-md.png" />
     <Content Include="Resources\green-led-on-md.png" />
     <Content Include="x64\liblept168.dll">
@@ -390,6 +393,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="x86\libtesseract302.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="zeromq\info.txt" />
+    <Content Include="zeromq\x64\libzmq-v120-mt-4_0_4.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="zeromq\x86\libzmq-v120-mt-4_0_4.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
@@ -948,9 +958,6 @@
     <Content Include="Calibration Examples\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="libzmq.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="Enums and Utility Classes\enumBindTo.cs" />
     <Content Include="Json\Bin\Net45\Newtonsoft.Json.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

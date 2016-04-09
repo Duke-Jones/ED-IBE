@@ -1,0 +1,2 @@
+﻿Only used for debug/development.
+Release have zeromq.dll (x64) in main path.

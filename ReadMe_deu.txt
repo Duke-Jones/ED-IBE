@@ -65,7 +65,6 @@ Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
 öffnet sich ein Dialog, mit dem die Tabellenansicht angepasst werden kann.
 Die Breite der Spalten können auch per Drag'n'Drop angepasst werden.
 Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen dann auch übernommen.
-(bekannter Bug: die Tabelle darf beim Einstellen nicht leer sein)
 
 6. Comboboxen
 Die ComboBoxen habe zwar feste Einträge. In vielen Fällen hat man aber die Möglichkeit 
@@ -78,6 +77,34 @@ Wenn man sich nicht sicher ist, dann lieber die Finger davon lassen.
 Es besteht die Möglichkeit, interne Daten zu zerstören.
 Wenn mehrere Befehle eingetragen sind, kann man diese durch Selektion gezielt
 zum Ausführen auswählen.
+
+8. EDDN
+Das EDDN-Interface ist standardmäßig deaktiviert. Über Settings->EDDN-Interface
+kann der Empfang und/oder das Senden von EDDN-Nachrichten aktiviert werden.
+Um EDDN-Daten automatisch beim nächsten Start zu empfangen, müssen
+"import received data into database" und "autostart listening on program start"
+aktiviert werden. Bitte hierzu auch Punkt 9. berücksichtigen
+Für das Senden von Daten in das EDDN gilt das gleiche.
+
+Um Datenmüll auszufiltern beträgt das Zeitfenster für gültige Daten +- 5 Minuten - 
+die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach eingehende
+Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
+
+9. Berücksichtigung der Systeme/Stationen !!!!!!!
+ED-IBE berücksichtigt für die Anzeigen im Normalfall nur Daten von Systeme, die bereits selbst besucht wurden !
+Es können aber weitere Daten vorhanden sein (über den manuellen CSV-Import oder über das EDDN-Interface).
+
+So kann man trotzdem die Daten von nur von selbstbesuchten (also selbst gefundenen) Systemen bei der 
+Berechnung der besten Handelsrouten berücksichtigen, aber gleichzeitig für diese Systeme Preisupdates 
+über EDDN bekommen. Wer pauschal immer ALLE Daten berücksichtigt haben möchte muß dieses aktivieren.
+Die Umschaltung hierfür ist in den Settings zu finden (->Datafilter) und kann jederzeit wieder verändert
+werden. 
+
+Hinweis: Wer seine alten RN-Daten importiert, fügt auch die Einträge in die Liste der besuchten Systeme hinzu.
+Grundlage hierfür ist beim Import das "Commander's Log" sowie die "StationHistory" von "RegulatedNoise DJ".
+
+
+
 
 
 

@@ -4,9 +4,13 @@
 * hold rejected data
 * add station type to price analysis
 * add marked color for datagrids
+* ask for update on new EDDB-datafiles
 
-
-
+   * fixed a bug in sql-mainscript
+   * added a few ToolTips
+   * added license infos
+   * dynamic architecture-dependent selection of zeromq-bin
+-------------------------------------------------------------------------------------         
    * fix in installer script
    * fixed error with "_" in paths
    * splitted DB-update function in a early and a late part

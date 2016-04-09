@@ -1152,9 +1152,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (0, 'IBE');
-INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (1, 'EDDN');
-INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (2, 'FILE');
+INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (1, 'IBE');
+INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (2, 'EDDN');
+INSERT INTO `elite_db`.`tbSource` (`id`, `source`) VALUES (3, 'FILE');
 
 COMMIT;
 

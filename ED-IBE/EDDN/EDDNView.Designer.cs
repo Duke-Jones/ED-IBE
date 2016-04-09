@@ -279,10 +279,10 @@
             this.cbImportEDDN.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbImportEDDN.Location = new System.Drawing.Point(10, 18);
             this.cbImportEDDN.Name = "cbImportEDDN";
-            this.cbImportEDDN.Size = new System.Drawing.Size(221, 17);
+            this.cbImportEDDN.Size = new System.Drawing.Size(189, 17);
             this.cbImportEDDN.TabIndex = 6;
             this.cbImportEDDN.Tag = "ImportEDDN;true";
-            this.cbImportEDDN.Text = "import received data into RegulatedNoise";
+            this.cbImportEDDN.Text = "import received data into database";
             this.cbImportEDDN.UseVisualStyleBackColor = true;
             this.cbImportEDDN.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -461,6 +461,8 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Tag = "Schema;Real";
             this.groupBox4.Text = "Schema";
+            this.toolTip1.SetToolTip(this.groupBox4, "Choose, if you only want to check/test something\r\nor if you really want to send t" +
+        "o EDDN.\r\nThis setting concerns SENDING AND RECEIVING.");
             // 
             // rbSchemaTest
             // 
@@ -472,6 +474,7 @@
             this.rbSchemaTest.TabStop = true;
             this.rbSchemaTest.Tag = "Test";
             this.rbSchemaTest.Text = "Post To Test-Network";
+            this.toolTip1.SetToolTip(this.rbSchemaTest, "Choose, if you only want to check/test something");
             this.rbSchemaTest.UseVisualStyleBackColor = true;
             this.rbSchemaTest.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -485,6 +488,7 @@
             this.rbSchemaReal.TabStop = true;
             this.rbSchemaReal.Tag = "Real";
             this.rbSchemaReal.Text = "Post To Real-Network";
+            this.toolTip1.SetToolTip(this.rbSchemaReal, "Choose, if you only want to check/test something");
             this.rbSchemaReal.UseVisualStyleBackColor = true;
             this.rbSchemaReal.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -575,7 +579,7 @@
             this.cbPostOCRData.Name = "cbPostOCRData";
             this.cbPostOCRData.Size = new System.Drawing.Size(137, 17);
             this.cbPostOCRData.TabIndex = 40;
-            this.cbPostOCRData.Tag = "EDDNPostOCRData;False";
+            this.cbPostOCRData.Tag = "EDDNPostOCRData;True";
             this.cbPostOCRData.Text = "Market Data From OCR";
             this.cbPostOCRData.UseVisualStyleBackColor = true;
             this.cbPostOCRData.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
@@ -587,7 +591,7 @@
             this.cbPostCompanionData.Name = "cbPostCompanionData";
             this.cbPostCompanionData.Size = new System.Drawing.Size(190, 17);
             this.cbPostCompanionData.TabIndex = 46;
-            this.cbPostCompanionData.Tag = "EDDNPostCompanionData;False";
+            this.cbPostCompanionData.Tag = "EDDNPostCompanionData;True";
             this.cbPostCompanionData.Text = "Market Data From Companion API ";
             this.cbPostCompanionData.UseVisualStyleBackColor = true;
             this.cbPostCompanionData.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
@@ -605,6 +609,7 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Tag = "Identification;useUserName";
             this.groupBox1.Text = "Identification";
+            this.toolTip1.SetToolTip(this.groupBox1, "Choose the anonymous ID or your name for sending to EDDN.");
             // 
             // rbCmdrsName
             // 
@@ -617,6 +622,7 @@
             this.rbCmdrsName.TabStop = true;
             this.rbCmdrsName.Tag = "useUserName";
             this.rbCmdrsName.Text = "Cmdrs Name";
+            this.toolTip1.SetToolTip(this.rbCmdrsName, "Choose the anonymous ID or your name for sending to EDDN.");
             this.rbCmdrsName.UseVisualStyleBackColor = true;
             this.rbCmdrsName.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -627,6 +633,7 @@
             this.tbUsername.Size = new System.Drawing.Size(230, 20);
             this.tbUsername.TabIndex = 41;
             this.tbUsername.Tag = "UserID;EMPTY";
+            this.toolTip1.SetToolTip(this.tbUsername, "Choose the anonymous ID or your name for sending to EDDN.");
             this.tbUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.tbUsername.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
@@ -641,6 +648,7 @@
             this.rbUserID.TabStop = true;
             this.rbUserID.Tag = "useUserID";
             this.rbUserID.Text = "User ID";
+            this.toolTip1.SetToolTip(this.rbUserID, "Choose the anonymous ID or your name for sending to EDDN.");
             this.rbUserID.UseVisualStyleBackColor = true;
             this.rbUserID.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -651,6 +659,7 @@
             this.txtCmdrsName.Size = new System.Drawing.Size(230, 20);
             this.txtCmdrsName.TabIndex = 43;
             this.txtCmdrsName.Tag = "UserName;EMPTY";
+            this.toolTip1.SetToolTip(this.txtCmdrsName, "Choose the anonymous ID or your name for sending to EDDN.");
             this.txtCmdrsName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.txtCmdrsName.Leave += new System.EventHandler(this.TextBox_Leave);
             // 

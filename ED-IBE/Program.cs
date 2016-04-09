@@ -294,7 +294,11 @@ namespace IBE
                     // load settings from file
                     IniFile = new STA.Settings.INIFile(GetDataPath("ED-IBE.ini"), false, true);
 
-                    // starT database process (if not running)
+
+                    // prepare architecture-dependend files
+                    PrepareDepFiles();
+
+                    // start database process (if not running)
                     DBProcess.DBProcessParams newProcessParams  = new DBProcess.DBProcessParams() { };
                     newProcessParams.Commandline                = IniFile.GetValue("DB_Server",         "Commandline",      @"bin\mysqld.exe");    
                     newProcessParams.Commandargs                = IniFile.GetValue("DB_Server",         "CommandArgs",      @"--defaults-file=Elite.ini --console");
@@ -837,6 +841,49 @@ namespace IBE
         }
 
     #endregion //global objects
+
+        private static void PrepareDepFiles()
+        {
+            String mainPath;
+            String sourceName;
+            String destName;
+            String dllDir;
+            String archDir;
+
+            try
+            {
+
+                if (Debugger.IsAttached)
+                {
+                    // For debugging in x86 and x64 mode.
+                    // Release use zeromq.dll (x64) from main path .
+                    mainPath = System.Windows.Forms.Application.StartupPath;
+
+                    if (Environment.Is64BitProcess)
+                        archDir = "x64";
+                    else
+                        archDir = "x86";
+                
+                    dllDir      = "zeromq";
+                    sourceName  = "libzmq*.dll";
+                    destName    = "libzmq.dll";
+
+                    dllDir = System.IO.Path.Combine(mainPath, Path.Combine(dllDir, archDir));
+
+                    string[] files = Directory.GetFiles(dllDir, sourceName, SearchOption.TopDirectoryOnly);
+
+                    if(File.Exists(Path.Combine(mainPath, destName)))
+                        File.Delete(Path.Combine(mainPath, destName));
+
+                    File.Copy(files[0], Path.Combine(mainPath, destName));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while preparing dep-files", ex);
+            }
+        }
 
 
     }

@@ -2646,9 +2646,15 @@ namespace IBE.SQL
                 }
 
                 if(dataSource == enDataSource.fromIBE)
-                    Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
+                { 
+                    if(Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false))
+                        Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
+                }
                 else if(dataSource == enDataSource.fromIBE_OCR)
-                    Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
+                { 
+                    if(Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData", true.ToString(), false))
+                        Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
+                }
 
                 // now import the prices
                 ImportPrices(StationData, importBehaviour, dataSource);
