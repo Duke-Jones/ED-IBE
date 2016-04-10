@@ -1,3 +1,5 @@
+todo:
+
 * filter: age of data
 * purge history data
 * switch : enable disable history
@@ -6,6 +8,10 @@
 * add marked color for datagrids
 * ask for update on new EDDB-datafiles
 
+
+done:
+
+v0.2.0
    * autoupdate basedata after IBE update
    * fixed bug in csv-converter
    * added a english translation of ReadMe
