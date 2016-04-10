@@ -93,7 +93,7 @@ namespace IBE.Enums_and_Utility_Classes
                         SourceFileName  = "";
 
                     if(Parts.Count() > 11)
-                        DataSource  = Parts[10];
+                        DataSource  = Parts[11];
                     else
                         DataSource  = "";
                     

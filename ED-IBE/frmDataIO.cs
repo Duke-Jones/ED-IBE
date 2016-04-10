@@ -122,6 +122,34 @@ namespace IBE
         }
 
         /// <summary>
+        /// start the master update (data for systems/stations/commoditynames ...)
+        /// </summary>
+        public void StartMasterUpdate(String path)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new DelTextParam(StartMasterUpdate), new Object[] {path});
+            }
+            else
+            {
+                this.Visible = false;
+
+                try
+                {
+                    enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+                                                enImportTypes.EDDB_Systems | 
+                                                enImportTypes.EDDB_Stations;
+
+                    ImportData(null, importFlags, null, path);
+                }
+                catch (Exception ex)
+                {
+                    cErr.processError(ex, "Error while starting master import");
+                }
+            }
+        }
+
+        /// <summary>
         /// checks if a file ist existing, if not it shows a info-message
         /// </summary>
         /// <param name="sourcePath"></param>

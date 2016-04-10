@@ -209,8 +209,6 @@ bool disposed = false;
             try
             {
 
-                UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
-
                 if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
                 {
                     if (m_EDDNSpooler == null)
@@ -229,6 +227,8 @@ bool disposed = false;
                 {
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
+
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
                         // process only if it's the correct schema
 
@@ -258,6 +258,8 @@ bool disposed = false;
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
+
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
                         // process only if it's the correct schema
                         dataSchema = ((EDDN.EDDNSchema_v2)e.Data).isTest() ? enSchema.Test : enSchema.Real;
@@ -297,11 +299,13 @@ bool disposed = false;
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.UnknownData:
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
                         UpdateRawData("Recieved a unknown EDDN message:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
                         Debug.Print("handle unkown message");
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.ParseError:
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
                         Debug.Print("handle error message");
                         UpdateRawData("Error while processing recieved EDDN data:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
 

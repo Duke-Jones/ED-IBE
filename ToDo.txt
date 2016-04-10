@@ -6,6 +6,10 @@
 * add marked color for datagrids
 * ask for update on new EDDB-datafiles
 
+   * autoupdate basedata after IBE update
+   * fixed bug in csv-converter
+   * added a english translation of ReadMe
+-------------------------------------------------------------------------------------         
    * fixed a bug in sql-mainscript
    * added a few ToolTips
    * added license infos

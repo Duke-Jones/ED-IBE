@@ -518,7 +518,7 @@
             // 
             this.txtExtTool_Path.Location = new System.Drawing.Point(11, 83);
             this.txtExtTool_Path.Name = "txtExtTool_Path";
-            this.txtExtTool_Path.Size = new System.Drawing.Size(420, 20);
+            this.txtExtTool_Path.Size = new System.Drawing.Size(410, 20);
             this.txtExtTool_Path.TabIndex = 69;
             this.txtExtTool_Path.Tag = "ExtTool_Path;EMPTY";
             this.toolTip1.SetToolTip(this.txtExtTool_Path, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
@@ -527,9 +527,9 @@
             // 
             // cmdSelectExternalToolPath
             // 
-            this.cmdSelectExternalToolPath.Location = new System.Drawing.Point(437, 81);
+            this.cmdSelectExternalToolPath.Location = new System.Drawing.Point(427, 81);
             this.cmdSelectExternalToolPath.Name = "cmdSelectExternalToolPath";
-            this.cmdSelectExternalToolPath.Size = new System.Drawing.Size(171, 23);
+            this.cmdSelectExternalToolPath.Size = new System.Drawing.Size(167, 23);
             this.cmdSelectExternalToolPath.TabIndex = 68;
             this.cmdSelectExternalToolPath.Text = "Select";
             this.toolTip1.SetToolTip(this.cmdSelectExternalToolPath, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
@@ -726,7 +726,7 @@
             this.gbExternalDataInterface.Controls.Add(this.label2);
             this.gbExternalDataInterface.Location = new System.Drawing.Point(6, 6);
             this.gbExternalDataInterface.Name = "gbExternalDataInterface";
-            this.gbExternalDataInterface.Size = new System.Drawing.Size(619, 393);
+            this.gbExternalDataInterface.Size = new System.Drawing.Size(599, 393);
             this.gbExternalDataInterface.TabIndex = 66;
             this.gbExternalDataInterface.TabStop = false;
             this.gbExternalDataInterface.Text = "ED Market Connector Interface";
@@ -745,7 +745,7 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(8, 16);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(605, 40);
+            this.label2.Size = new System.Drawing.Size(578, 40);
             this.label2.TabIndex = 66;
             this.label2.Text = "If you don\'t wan\'t to use the internal OCR-interface you also can use the \"ED Mar" +
     "ket Connector\" \r\nfor getting the current station and market data.";

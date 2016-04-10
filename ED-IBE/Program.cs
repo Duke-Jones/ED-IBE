@@ -246,6 +246,9 @@ namespace IBE
 
     #region global objects
 
+        private static Version                          m_OldDBVersion;
+        private static Version                          m_NewDBVersion;
+
         public static SingleThreadLogger                MainLog = new SingleThreadLogger(ThreadLoggerType.App);
 
         private static Boolean                          m_initDone                  = false;
@@ -268,7 +271,6 @@ namespace IBE
 
         private static ManualResetEvent                 m_MREvent;                      // for updating the database with scripts
         private static Boolean                          m_gotScriptErrors = false;      // for updating the database with scripts
-        private static Version                          m_OldDBVersion;
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -341,7 +343,7 @@ namespace IBE
                     /* **************** database is running ********************** */
                     
                     /* perform updates */
-                    m_OldDBVersion = Program.DBUpdate();
+                    Program.DBUpdate();
 
                     Program.SplashScreen.InfoAdd("preparing global objects...");
 
@@ -484,7 +486,7 @@ namespace IBE
         /// this sub starts special things to do if this version runs
         /// for the first time
         /// </summary>
-        internal static Version DBUpdate()
+        internal static void DBUpdate()
         {
             Version dbVersion;
             Version appVersion;
@@ -495,6 +497,9 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("check for required structure updates...");
                 dbVersion   = Program.DBCon.getIniValue<Version>("Database", "Version", new Version(0,0,0,0).ToString(), false);
                 appVersion  = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+                m_OldDBVersion = dbVersion;
+                m_NewDBVersion = appVersion;
 
                 if (dbVersion < appVersion)
                 {
@@ -741,7 +746,6 @@ namespace IBE
                         else
                             Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.0...<OK>");
 
-                        Data.PrepareBaseTables("tbsource");
                     }
                     
 
@@ -771,7 +775,6 @@ namespace IBE
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
-                return dbVersion;
             }
             catch (Exception ex)
             {
@@ -795,7 +798,7 @@ namespace IBE
                         // here it's required to import all master data 
                         var DataIO = new frmDataIO();
 
-                        Program.SplashScreen.InfoAdd("Importing master data...");
+                        Program.SplashScreen.InfoAdd("importing master data...");
                         Thread.Sleep(1500);
 
                         DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
@@ -806,10 +809,29 @@ namespace IBE
                         DataIO.Close();
                         DataIO.Dispose();
                         
-                        Program.SplashScreen.InfoAdd("Importing master data...<OK>");
+                        Program.SplashScreen.InfoAdd("importing master data...<OK>");
                     }
 
                     Program.Data.InitImportDone = true;
+                }
+                else if(m_OldDBVersion != m_NewDBVersion)
+                { 
+                    // new version installed
+                    var DataIO = new frmDataIO();
+
+                    Program.SplashScreen.InfoAdd("updating master data...");
+                    Thread.Sleep(1500);
+
+                    DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                    DataIO.ReUseLine  = true;
+
+                    DataIO.StartMasterUpdate(GetDataPath("Data"));
+
+                    DataIO.Close();
+                    DataIO.Dispose();
+                        
+                    Program.SplashScreen.InfoAdd("updating master data...<OK>");
+
                 }
             }
             catch (Exception ex)

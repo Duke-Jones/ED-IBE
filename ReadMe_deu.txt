@@ -12,7 +12,8 @@ Kurzanleitung/Starter-Tipps
 Standardmäßig installiert sich das Programm zu Hälfte in das Programme-
 verzeichnis (C:\Program Files\ED-IBE) und zur Hälfte in das Data-Verzeichnis
 (C:\Users\{USER}\AppData\Local\ED-IBE). Diese Pfade können während der Installation 
-angepasst werden. Es kann auch für beide Teile das gleiche Verzeichnis (z. B. "F:\ED-IBE") angegeben werden.
+angepasst werden. Es kann auch für beide Teile das gleiche Verzeichnis angegeben werden
+(z. B. "F:\ED-IBE").
 
 Am Ende der Installation sollte für ein paar Augenblicke ein cmd-Fenster aufgehen.
 Während dieser Zeit wird die Datenbankstruktur erstellt. Wenn dieses Fenster nicht erscheint, 
@@ -20,11 +21,11 @@ stimmt etwas nicht. Evtl. die Installation in einem anderen Zielverzeichnis erne
 Ein Log hiervon ist im Data-Verzeichnis zu finden, falls hierbei Probleme auftreten.
 (ED-IBE\Database\install.log). 
 
-Sollte eine erneute Installation durchgeführt werden (z. B. bei einem Update) erkennt 
+Sollte eine erneute Installation durchgeführt werden (z.B. bei einem Update) erkennt 
 die Installationsroutine eine bestehende Datenbank anhand der Existenz der Datei "\ED-IBE\Database\data\ibdata1".
 Die Datenbank wird dann unverändert beibehalten, solange bei der Installation nicht explizit 
 das "Löschen und Neuerstellen" ausgewählt wird. 
-Fall etwas schiefgeht und man die Datenbank einmal löschen möchte, mus man 
+Fall etwas schiefgeht und man die Datenbank einmal löschen möchte, muss man 
 die Installation erneut durchführen und die Checkbox zum "Löschen und Neuerstellen" markieren.
 
 2. Starten
@@ -48,6 +49,7 @@ neue Waren hinzugefügt. Dieser Import kann beliebig oft wiederholt werden macht
 (Empfehlung: alle 1 bis 4 Wochen reicht vollkommen - oder wenn bestimmte Daten fehlen, 
 die inzwischen in der EDDB angelegt worden sind)
 ->Bei ersten Start von ED-IBE wird dieser Import automatisch mit den mitgelieferten EDDB-Dumps ausgeführt. 
+> bei einem Update von ED-IBE werden diese Daten ebenfalls automatisch aktualisiert.
 
 Mit "Import RN-CommandersLog Files" können gesplittete Logfiles von RN wieder eingelesen werden.
 Voraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.
@@ -91,14 +93,10 @@ die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach ein
 Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
 
 9. Berücksichtigung der Systeme/Stationen !!!!!!!
-ED-IBE berücksichtigt für die Anzeigen im Normalfall nur Daten von Systeme, die bereits selbst besucht wurden !
-Es können aber weitere Daten vorhanden sein (über den manuellen CSV-Import oder über das EDDN-Interface).
-
-So kann man trotzdem die Daten von nur von selbstbesuchten (also selbst gefundenen) Systemen bei der 
-Berechnung der besten Handelsrouten berücksichtigen, aber gleichzeitig für diese Systeme Preisupdates 
-über EDDN bekommen. Wer pauschal immer ALLE Daten berücksichtigt haben möchte muß dieses aktivieren.
-Die Umschaltung hierfür ist in den Settings zu finden (->Datafilter) und kann jederzeit wieder verändert
-werden. 
+ED-IBE berücksichtigt im Normalfall nur Daten von Systeme, die bereits selbst besucht wurden !
+Es können jedoch weitere Daten vorhanden sein (über den manuellen CSV-Import oder über das EDDN-Interface).
+Über diesen Mechanismus kann man sich bewußt gegen das Sammeln von Preisdaten unbekannter Systeme entscheiden,
+aber trotzdem Aktualisierungen von Preisen der besuchten Systeme über EDDN empfangen.
 
 Hinweis: Wer seine alten RN-Daten importiert, fügt auch die Einträge in die Liste der besuchten Systeme hinzu.
 Grundlage hierfür ist beim Import das "Commander's Log" sowie die "StationHistory" von "RegulatedNoise DJ".
