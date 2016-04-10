@@ -22,6 +22,7 @@ The database runs as a normal process (not as a service on you pc)
 
 **working:**
 * PriceAnalysis
+* EDDN interface
 * Commanders Log
 * getting market data by EDMC (fully integrated by EDMC commandline version, but has to be installed manually)
 * overtaking existing data from the old RegulatedNoise
@@ -42,7 +43,6 @@ The database runs as a normal process (not as a service on you pc)
 * view of systems and stations
 * ocr (take EDMC instead)
 * webserver
-* EDDN interface
 
 
 **Installation:**  
