@@ -130,8 +130,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompanionAPI\CompanionIO.cs" />
     <Compile Include="EDDN\EDDNDuplicateFilter.cs" />
     <Compile Include="EDDN\EDDNReciever.cs" />
+    <Compile Include="EDDN\EDDNCommodity_v2.cs" />
     <Compile Include="Elite Dangerous Specifics\AppConfig.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">
       <SubType>Form</SubType>
@@ -213,8 +215,6 @@
     <Compile Include="EDDB_Data\EDSystems.cs" />
     <Compile Include="EDDB_Data\EDMilkyway.cs" />
     <Compile Include="EDDB_Data\Listing.cs" />
-    <Compile Include="EDDN\EDDNSchema_v1.cs" />
-    <Compile Include="EDDN\EDDNSchema_v2.cs" />
     <Compile Include="Enums and Utility Classes\Controls_ext.cs">
       <SubType>Component</SubType>
     </Compile>

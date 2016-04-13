@@ -30,7 +30,6 @@ namespace IBE.EDDN
 #region dispose region
 
         // Flag: Has Dispose already been called?
-        private bool m_SenderIsActivated;
         bool disposed = false;
 
         // Instantiate a SafeHandle instance.
@@ -179,39 +178,19 @@ namespace IBE.EDDN
         {
             try
             {
-                EDDNSchema_v1 V1_Data;
-                EDDNSchema_v2 V2_Data;
                 EDDNRecievedArgs ArgsObject;
 
-                if (RawData.Contains(@"commodity/1"))
-                {
-                    // old v1 schema
-
-                    Debug.Print("recieved v1 commodities message");
-                    V1_Data = JsonConvert.DeserializeObject<EDDNSchema_v1>(RawData);
-
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data commodities message (v1) ",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved,
-                        RawData = RawData,
-                        Data = V1_Data,
-                        Adress = m_Adress
-                    };
-
-                }
-                else if (RawData.Contains(@"commodity/2"))
+                if (RawData.Contains(@"commodity/2"))
                 {
                     // new v2 schema
                     Debug.Print("recieved v2 commodities message");
-                    V2_Data = JsonConvert.DeserializeObject<EDDNSchema_v2>(RawData);
 
                     ArgsObject = new EDDNRecievedArgs()
                     {
                         Message = "recieved data commodities message (v2)",
                         InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved,
                         RawData = RawData,
-                        Data = V2_Data,
+                        Data = JsonConvert.DeserializeObject<EDDNCommodity_v2>(RawData),
                         Adress = m_Adress
                     };
                 }
@@ -219,31 +198,33 @@ namespace IBE.EDDN
                 {
                     // outfitting schema
                     Debug.Print("recieved v1 outfitting message");
-                    //V2_Data = JsonConvert.DeserializeObject<Schema_v2>(RawData);
+                    
+                    ArgsObject = null;
 
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data outfitting message (v1)",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved,
-                        RawData = RawData,
-                        Data = null,
-                        Adress = m_Adress
-                    };
+                    //ArgsObject = new EDDNRecievedArgs()
+                    //{
+                    //    Message = "recieved data outfitting message (v1)",
+                    //    InfoType = EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved,
+                    //    RawData = RawData,
+                    //    Data = null,
+                    //    Adress = m_Adress
+                    //};
                 }
                 else if (RawData.Contains(@"shipyard/1"))
                 {
                     // outfitting schema
                     Debug.Print("recieved v1 shipyard message");
-                    //V2_Data = JsonConvert.DeserializeObject<Schema_v2>(RawData);
 
-                    ArgsObject = new EDDNRecievedArgs()
-                    {
-                        Message = "recieved data shipyard message (v1)",
-                        InfoType = EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved,
-                        RawData = RawData,
-                        Data = null,
-                        Adress = m_Adress
-                    };
+                    ArgsObject = null;
+
+                    //ArgsObject = new EDDNRecievedArgs()
+                    //{
+                    //    Message = "recieved data shipyard message (v1)",
+                    //    InfoType = EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved,
+                    //    RawData = RawData,
+                    //    Data = null,
+                    //    Adress = m_Adress
+                    //};
                 }
                 else
                 {
@@ -259,10 +240,13 @@ namespace IBE.EDDN
                     };
                 }
 
-                // only for one listener per time this is allowed
-                lock (m_RecieveLocker)
+                if(ArgsObject != null)
                 { 
-                    DataRecieved(this, ArgsObject);
+                    // only for one listener per time this is allowed
+                    lock (m_RecieveLocker)
+                    { 
+                        DataRecieved(this, ArgsObject);
+                    }
                 }
             }
             catch (Exception ex)

@@ -97,7 +97,7 @@ namespace IBE.EDDN
                     EDDNCommunicator.enDataTypes lChanged = m_ChangedData;
                     m_ChangedData = EDDNCommunicator.enDataTypes.NoChanges;
 
-                    if(lChanged == EDDNCommunicator.enDataTypes.RecieveData)
+                    if((lChanged & EDDNCommunicator.enDataTypes.RecieveData) != 0)
                     {
                         if(m_Communicator.RawData.Count() > 0)
                             tbEDDNOutput.Text = m_Communicator.RawData[m_Communicator.RawData.Count()-1];
@@ -105,9 +105,9 @@ namespace IBE.EDDN
                             tbEDDNOutput.Text = "";
                     }
 
-                    if(lChanged == EDDNCommunicator.enDataTypes.ImplausibleData)
+                    if((lChanged & EDDNCommunicator.enDataTypes.ImplausibleData) != 0)
                     {
-                        if(m_Communicator.RawData.Count() > 0)
+                        if(m_Communicator.RejectedData.Count() > 0)
                         {
                             do
                             {
@@ -118,7 +118,7 @@ namespace IBE.EDDN
 
                     }
 
-                    if(lChanged == EDDNCommunicator.enDataTypes.Statistics)
+                    if((lChanged & EDDNCommunicator.enDataTypes.Statistics) != 0)
                     {
                         tbEddnStatsSW.Text = "";
 
@@ -153,6 +153,17 @@ namespace IBE.EDDN
                             }
 
                             tbEddnStatsCM.Text = output.ToString();
+                        }
+
+                        if(m_Communicator.StatisticDataMT.Count() > 0)
+                        {
+                            System.Text.StringBuilder output = new System.Text.StringBuilder();
+                            foreach (var mType in m_Communicator.StatisticDataMT.OrderByDescending(x => x.Value.MessagesReceived))
+                            {
+                                output.AppendFormat("{0} : {1} messages\r\n", mType.Key, mType.Value.MessagesReceived);
+                            }
+
+                            tbEddnStatsMT.Text = output.ToString();
                         }
                     }
                 }

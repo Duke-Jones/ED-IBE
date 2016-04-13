@@ -997,6 +997,8 @@ namespace IBE
         {
             try
             {
+                Cursor = Cursors.WaitCursor;
+
                 if (_tooltip != null) _tooltip.RemoveAll();
                 if (_tooltip2 != null) _tooltip2.RemoveAll();
 
@@ -1004,9 +1006,12 @@ namespace IBE
                 RefreshCurrentTab();
 
                 m_PreviousTab = e.TabPage;
+
+                Cursor = Cursors.Default;
             }
             catch (Exception ex)
             {
+                Cursor = Cursors.Default;
                 cErr.processError(ex, "Error when selecting a new tab on main tabcontrol");
             }
         }

@@ -1,16 +1,23 @@
 todo:
 
-* filter: age of data
 * purge history data
 * switch : enable disable history
 * hold rejected data
-* add station type to price analysis
 * add marked color for datagrids
 * ask for update on new EDDB-datafiles
 
+* filter: age of data
+* add station type to price analysis
+* mark datasource colorized
 
 done:
 
+
+   * change order of price analysis tab to avoid loading timeout
+   * extended eddn statistics with messagetype
+   * added a filter to avoid processing the same message from different relays 
+   * eddn view : fixed some bugs
+-------------------------------------------------------------------------------------         
 v0.2.0
    * autoupdate basedata after IBE update
    * fixed bug in csv-converter

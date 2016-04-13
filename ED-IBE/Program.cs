@@ -748,7 +748,6 @@ namespace IBE
 
                     }
                     
-
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else

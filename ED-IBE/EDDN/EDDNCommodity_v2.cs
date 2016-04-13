@@ -14,7 +14,7 @@ namespace IBE.EDDN
     /// based on the structure from 
     /// https://github.com/jamesremuscat/EDDN/blob/master/schemas/commodity-v2.0.json
     /// </summary>
-    internal partial class EDDNSchema_v2
+    internal partial class EDDNCommodity_v2
     {
         internal class Header_Class
         {
@@ -34,7 +34,7 @@ namespace IBE.EDDN
 
     }
 
-    internal partial class EDDNSchema_v2
+    internal partial class EDDNCommodity_v2
     {
         internal class Commodity_Class
         {
@@ -62,7 +62,7 @@ namespace IBE.EDDN
         }
     }
 
-    internal partial class EDDNSchema_v2
+    internal partial class EDDNCommodity_v2
     {
         internal class Message_Class
         {
@@ -81,7 +81,7 @@ namespace IBE.EDDN
         }
     }
 
-    internal partial class EDDNSchema_v2
+    internal partial class EDDNCommodity_v2
     {
 
         [JsonProperty("header")]

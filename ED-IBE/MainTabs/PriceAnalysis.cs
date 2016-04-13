@@ -430,6 +430,8 @@ namespace IBE.MTPriceAnalysis
                                 " order by C.ID, FS.Distance";
                 }
   
+                var oldTimeout = m_lDBCon.Connection.ConnectionTimeout;
+
                 m_lDBCon.Execute(sqlString, Data);
 
                 lastCommodity   = null;

@@ -66,6 +66,11 @@ bool disposed = false;
                     m_DuplicateFilter.Dispose(); 
 
                 m_DuplicateFilter = null;
+
+                if (m_DuplicateRelayFilter != null)
+                    m_DuplicateRelayFilter.Dispose(); 
+
+                m_DuplicateRelayFilter = null;
             }
 
             // Free any unmanaged objects here.
@@ -103,9 +108,20 @@ bool disposed = false;
             NoChanges           =  0,
             RecieveData         =  1,
             ImplausibleData     =  2,
-            Statistics          =  3,
-            DataImported        =  4    
+            Statistics          =  4,
+            DataImported        =  8    
         }
+
+        public enum enMessageTypes
+        {
+            unknown             =  0,
+            Commodity_V1        =  1,
+            Commodity_V2        =  2,
+            Shipyard_V1         =  11,
+            Outfitting_V1       =  21    
+        }
+
+
  #endregion
 
         private Thread                              _Spool2EDDN;   
@@ -117,9 +133,11 @@ bool disposed = false;
         private Dictionary<String, EDDNStatistics>  m_StatisticDataSW = new Dictionary<String, EDDNStatistics>();
         private Dictionary<String, EDDNStatistics>  m_StatisticDataRL = new Dictionary<String, EDDNStatistics>();
         private Dictionary<String, EDDNStatistics>  m_StatisticDataCM = new Dictionary<String, EDDNStatistics>();
+        private Dictionary<String, EDDNStatistics>  m_StatisticDataMT = new Dictionary<String, EDDNStatistics>();
         private List<String>                        m_RejectedData;
         private List<String>                        m_RawData;
-        private EDDNDuplicateFilter                 m_DuplicateFilter = new EDDNDuplicateFilter();
+        private EDDNDuplicateFilter                 m_DuplicateFilter       = new EDDNDuplicateFilter(new TimeSpan(0,5,0));
+        private EDDNDuplicateFilter                 m_DuplicateRelayFilter  = new EDDNDuplicateFilter(new TimeSpan(0,0,30));
         private Dictionary<String, EDDNReciever>    m_Reciever;
         private List<String>                        m_Relays    = new List<string>() { "tcp://eddn-relay.elite-markets.net:9500", 
                                                                                        "tcp://eddn-relay.ed-td.space:9500"};
@@ -226,79 +244,60 @@ bool disposed = false;
                 switch (e.InfoType)
                 {
 
-                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
-
-                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
-
-                        // process only if it's the correct schema
-
-                        dataSchema = ((EDDN.EDDNSchema_v1)e.Data).isTest() ? enSchema.Test : enSchema.Real;
-
-                        if (ownSchema == dataSchema)
-                        {
-                            Debug.Print("handle v1 message");
-                            EDDN.EDDNSchema_v1 DataObject = (EDDN.EDDNSchema_v1)e.Data;
-
-                            // Don't import our own uploads...
-                            if (DataObject.Header.UploaderID != UserIdentification())
-                            {
-                                DataRows = new String[1] { DataObject.getEDDNCSVImportString() };
-                                nameAndVersion = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                name = String.Format("{0}", DataObject.Header.SoftwareName);
-                                uploaderID = DataObject.Header.UploaderID;
-                                SimpleEDDNCheck = true;
-                            }
-                            else
-                                Debug.Print("handle v1 rejected (it's our own message)");
-
-                        }
-                        else
-                            Debug.Print("handle v1 rejected (wrong schema)");
-
-                        break;
-
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
 
-                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
+                        EDDN.EDDNCommodity_v2 DataObject = (EDDN.EDDNCommodity_v2)e.Data;
 
-                        // process only if it's the correct schema
-                        dataSchema = ((EDDN.EDDNSchema_v2)e.Data).isTest() ? enSchema.Test : enSchema.Real;
+                        if(m_DuplicateRelayFilter.DataAccepted(DataObject.Header.UploaderID, DataObject.Message.SystemName + "|" + DataObject.Message.StationName, DataObject.Message.Commodities.Count().ToString(), DateTime.Parse(DataObject.Message.Timestamp)))
+                        { 
+                            UpdateStatisticDataMsg(enMessageTypes.Commodity_V2);
+                            UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
-                        if (ownSchema == dataSchema)
-                        {
-                            Debug.Print("handle v2 message");
+                            // process only if it's the correct schema
+                            dataSchema = ((EDDN.EDDNCommodity_v2)e.Data).isTest() ? enSchema.Test : enSchema.Real;
 
-
-                            EDDN.EDDNSchema_v2 DataObject = (EDDN.EDDNSchema_v2)e.Data;
-
-                            // Don't import our own uploads...
-                            if (DataObject.Header.UploaderID != UserIdentification())
+                            if (ownSchema == dataSchema)
                             {
-                                DataRows = DataObject.getEDDNCSVImportStrings();
-                                nameAndVersion = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                name = String.Format("{0}", DataObject.Header.SoftwareName);
-                                uploaderID = DataObject.Header.UploaderID;
+                                Debug.Print("handle v2 message");
+
+
+
+                                // Don't import our own uploads...
+                                if (DataObject.Header.UploaderID != UserIdentification())
+                                {
+                                    DataRows = DataObject.getEDDNCSVImportStrings();
+                                    nameAndVersion = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
+                                    name = String.Format("{0}", DataObject.Header.SoftwareName);
+                                    uploaderID = DataObject.Header.UploaderID;
+                                }
+                                else
+                                    Debug.Print("handle v2 rejected (it's our own message)");
                             }
                             else
-                                Debug.Print("handle v2 rejected (it's our own message)");
-
+                                Debug.Print("handle v2 rejected (wrong schema)");
                         }
                         else
-                            Debug.Print("handle v2 rejected (wrong schema)");
+                            Debug.Print("handle v2 rejected (double recieved)");
 
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
-                        //UpdateRawData("recieved outfitting message ignored (coming feature)");
-                        Debug.Print("recieved outfitting message ignored");
+
+                        UpdateStatisticDataMsg(enMessageTypes.Outfitting_V1);
+                        //UpdateRawData("recieved shipyard message ignored (coming feature)");
+                        Debug.Print("recieved shipyard message ignored");
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
+
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved:
+                        UpdateStatisticDataMsg(enMessageTypes.Shipyard_V1);
                         //UpdateRawData("recieved shipyard message ignored (coming feature)");
                         Debug.Print("recieved shipyard message ignored");
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.UnknownData:
+                        UpdateStatisticDataMsg(enMessageTypes.unknown);
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
                         UpdateRawData("Recieved a unknown EDDN message:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
                         Debug.Print("handle unkown message");
@@ -443,6 +442,27 @@ bool disposed = false;
         }
 
         /// <summary>
+        /// refreshes the info about recieved messagetypes
+        /// </summary>
+        /// <param name="dataCount"></param>
+        /// <param name="SoftwareID"></param>
+        private void UpdateStatisticDataMsg(enMessageTypes mType)
+        {
+            try
+            {
+                if (!m_StatisticDataMT.ContainsKey(mType.ToString()))
+                    m_StatisticDataMT.Add(mType.ToString(), new EDDNStatistics());
+
+                m_StatisticDataMT[mType.ToString()].MessagesReceived += 1;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating statistics (mt)", ex);
+            }
+        }
+
+        /// <summary>
         /// refreshes the info about software versions and recieved messages
         /// </summary>
         /// <param name="dataCount"></param>
@@ -504,6 +524,13 @@ bool disposed = false;
             get
             {
                 return m_StatisticDataCM;
+            }
+        }
+        public Dictionary<String, EDDNStatistics> StatisticDataMT
+        {
+            get
+            {
+                return m_StatisticDataMT;
             }
         }
         public List<String> RejectedData
@@ -626,7 +653,7 @@ bool disposed = false;
             {
                 Queue activeQueue = null; 
                 String UserID;
-                EDDNSchema_v2 Data;
+                EDDNCommodity_v2 Data;
                 String TimeStamp;
                 String commodity;
 
@@ -634,7 +661,7 @@ bool disposed = false;
 
                     TimeStamp   = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
                     UserID      = UserIdentification();
-                    Data        = new EDDNSchema_v2();
+                    Data        = new EDDNCommodity_v2();
 
                     // test or real ?
                     if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
@@ -645,7 +672,7 @@ bool disposed = false;
                     if(_SendItems_API.Count > 0)
                     {
                         // fill the header
-                        Data.Header = new EDDNSchema_v2.Header_Class()
+                        Data.Header = new EDDNCommodity_v2.Header_Class()
                         {
                             SoftwareName = "ED-IBE (API)",
                             SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
@@ -658,7 +685,7 @@ bool disposed = false;
                     else
                     { 
                         // fill the header
-                        Data.Header = new EDDNSchema_v2.Header_Class()
+                        Data.Header = new EDDNCommodity_v2.Header_Class()
                         {
                             SoftwareName = "ED-IBE (OCR)",
                             SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
@@ -670,12 +697,12 @@ bool disposed = false;
                     }
 
                     // prepare the message object
-                    Data.Message = new EDDNSchema_v2.Message_Class()
+                    Data.Message = new EDDNCommodity_v2.Message_Class()
                     {
                         SystemName = "",
                         StationName = "",
                         Timestamp = TimeStamp,
-                        Commodities = new EDDNSchema_v2.Commodity_Class[activeQueue.Count]
+                        Commodities = new EDDNCommodity_v2.Commodity_Class[activeQueue.Count]
                     };
 
                     // collect the commodity data
@@ -689,7 +716,7 @@ bool disposed = false;
                         if (commodity.Equals(Program.COMMODITY_NOT_SET))
                             commodity = Row.CommodityName;
 
-                        Data.Message.Commodities[i] = new EDDNSchema_v2.Commodity_Class()
+                        Data.Message.Commodities[i] = new EDDNCommodity_v2.Commodity_Class()
                         {
                             Name = commodity,
                             BuyPrice = (Int32)Math.Floor(Row.BuyPrice),

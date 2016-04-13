@@ -79,6 +79,8 @@
             this.rbUserID = new System.Windows.Forms.RadioButton();
             this.txtCmdrsName = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tabByMessageType = new System.Windows.Forms.TabPage();
+            this.tbEddnStatsMT = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).BeginInit();
@@ -94,6 +96,7 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.tabByMessageType.SuspendLayout();
             this.SuspendLayout();
             // 
             // label83
@@ -377,6 +380,7 @@
             this.tbcStatistics.Controls.Add(this.tabBySoftware);
             this.tbcStatistics.Controls.Add(this.tabByRelay);
             this.tbcStatistics.Controls.Add(this.tabByCommander);
+            this.tbcStatistics.Controls.Add(this.tabByMessageType);
             this.tbcStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbcStatistics.Location = new System.Drawing.Point(3, 16);
             this.tbcStatistics.Name = "tbcStatistics";
@@ -663,6 +667,26 @@
             this.txtCmdrsName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.txtCmdrsName.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
+            // tabByMessageType
+            // 
+            this.tabByMessageType.Controls.Add(this.tbEddnStatsMT);
+            this.tabByMessageType.Location = new System.Drawing.Point(4, 22);
+            this.tabByMessageType.Name = "tabByMessageType";
+            this.tabByMessageType.Size = new System.Drawing.Size(542, 347);
+            this.tabByMessageType.TabIndex = 3;
+            this.tabByMessageType.Text = "By Message";
+            this.tabByMessageType.UseVisualStyleBackColor = true;
+            // 
+            // tbEddnStatsMT
+            // 
+            this.tbEddnStatsMT.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbEddnStatsMT.Location = new System.Drawing.Point(0, 0);
+            this.tbEddnStatsMT.Multiline = true;
+            this.tbEddnStatsMT.Name = "tbEddnStatsMT";
+            this.tbEddnStatsMT.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEddnStatsMT.Size = new System.Drawing.Size(542, 347);
+            this.tbEddnStatsMT.TabIndex = 11;
+            // 
             // EDDNView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -696,6 +720,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabByMessageType.ResumeLayout(false);
+            this.tabByMessageType.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -750,7 +776,8 @@
         private IBE.Enums_and_Utility_Classes.DataGridViewExt dgvTrustedSenders;
         private System.Windows.Forms.Button cmdRemoveTrusted;
         private System.Windows.Forms.Button cmdAddTrusted;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSenderName;
+        private System.Windows.Forms.TabPage tabByMessageType;
+        private System.Windows.Forms.TextBox tbEddnStatsMT;
     }
 }
