@@ -1,4 +1,4 @@
-ED - Intelligent Boardcomputer Extension
+﻿ED - Intelligent Boardcomputer Extension
 
 Voraussetzungen:
 - Win7 oder höher, x64
@@ -38,16 +38,16 @@ EDDN-Dumpfiles importiert und weitere benötigte Stammdaten angelegt.
 (siehe hierzu auch unter 3. : "Import data of systems/stations/commodities from EDDB-Files") 
 Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
 
-3. Import bestehender Daten aus dem alten RegulatedNoise.
+3. Ex-/Import von Daten
 ED-IBE besitzt ein Menüpunkt "Data"->"Import". Dort können über "Import Old Datafiles" 
 die Datenbestände aus dem alten RN übernommen werden.
 
 "Import data of systems/stations/commodities from EDDB-Files" bietet die Möglichkeit
-neuere Dumpfiles (die zunächst von der EDDB-Seite heruntergeladen werden müssen)
+neuere Stammdaten (die zunächst von der EDDB-Seite heruntergeladen werden müssen)
 zu importieren. Hierdurch werden die Stations- und Systemdaten aktualisiert oder
-neue Waren hinzugefügt. Dieser Import kann beliebig oft wiederholt werden macht
-(Empfehlung: alle 1 bis 4 Wochen reicht vollkommen - oder wenn bestimmte Daten fehlen, 
-die inzwischen in der EDDB angelegt worden sind)
+neue Waren hinzugefügt - es werden keine Preisdaten importiert. Dieser Import kann 
+beliebig oft wiederholt werden macht (Empfehlung: alle 1 bis 4 Wochen reicht 
+vollkommen - oder wenn bestimmte Daten fehlen, die inzwischen in der EDDB angelegt worden sind)
 ->Bei ersten Start von ED-IBE wird dieser Import automatisch mit den mitgelieferten EDDB-Dumps ausgeführt. 
 > bei einem Update von ED-IBE werden diese Daten ebenfalls automatisch aktualisiert.
 
@@ -61,6 +61,18 @@ Auch das Hinzufügen einer weiteren Sprache ist möglich. Hierzu die Übersetzun
 die neuen Spracheinträge hinzufügenund danach die geänderte csv-Datei wieder importieren. 
 Nicht vorhandenen Übersetzungen einer neuen Sprache werden mit der englischen Bezeichnung ergänzt 
 und können dann später korrigiert werden.
+
+Beispiel: 
+von:
+1;eng;Explosives
+1;ger;Sprengstoffe
+1;fra;Explosifs
+
+nach:
+1;eng;Explosives
+1;ger;Sprengstoffe
+1;fra;Explosifs
+1;spa;<spanischer Name>
 
 5. Tabellenansichten
 Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)

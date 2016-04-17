@@ -112,9 +112,7 @@
             this.cmdImportSystemsAndStations.Size = new System.Drawing.Size(276, 34);
             this.cmdImportSystemsAndStations.TabIndex = 0;
             this.cmdImportSystemsAndStations.Text = "Import data of systems/stations/commodities from EDDB-files";
-            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, "Imports the data of systems, stations and commodities from \r\nEDDN files (\"system." +
-        "json\", \"stations.json\", \"commodities.json\").\r\nSuggestion is to import all three " +
-        "files to avoid missing dependences.\r\n");
+            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, resources.GetString("cmdImportSystemsAndStations.ToolTip"));
             this.cmdImportSystemsAndStations.UseVisualStyleBackColor = true;
             this.cmdImportSystemsAndStations.Click += new System.EventHandler(this.cmdImportSystemsAndStations_Click);
             // 
@@ -223,7 +221,7 @@
             this.gbRepeat.Size = new System.Drawing.Size(345, 96);
             this.gbRepeat.TabIndex = 4;
             this.gbRepeat.TabStop = false;
-            this.gbRepeat.Text = "EDDN imports";
+            this.gbRepeat.Text = "EDDB imports";
             // 
             // rbImportSame
             // 

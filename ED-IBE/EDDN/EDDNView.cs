@@ -187,7 +187,20 @@ namespace IBE.EDDN
             {
                 if(m_GUIInterface.saveSetting(sender))
                 {
+                    if(((CheckBox)sender).Name.Equals("cbEDDNAutoListen") && ((CheckBox)sender).Checked && (Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, "AutoSend", false.ToString(), false)))
+                    {
+                        if(MessageBox.Show(this, "The EDDN/EDDB lives from the data. If you want to receive data permanently, it would be nice in return also to send data.\r\n" +
+                                                 "Shall I activate sending of market data for you?", 
+                                                 "EDDN Network", 
+                                                 MessageBoxButtons.YesNo, 
+                                                 MessageBoxIcon.Question, 
+                                                 MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                        {
+                            Program.DBCon.setIniValue(DB_GROUPNAME, "AutoSend", true.ToString());
+                        }
 
+
+                    }
                 }
             }
             catch (Exception ex)

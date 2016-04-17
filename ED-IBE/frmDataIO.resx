@@ -125,6 +125,13 @@
 Be aware this can need long time, if you already have price data in your database.
 It's only useful if you want to have all (also old) price information from the EDDB.</value>
   </data>
+  <data name="cmdImportSystemsAndStations.ToolTip" xml:space="preserve">
+    <value>Imports the data of systems, stations and commodities from 
+EDDB files ("system.json", "stations.json", "commodities.json").
+Suggestion is to import all three files to avoid missing dependences.
+
+Download from "https://eddb.io/api"</value>
+  </data>
   <data name="checkBox1.ToolTip" xml:space="preserve">
     <value>You can also accept the import of the price-data from the EDDB-file (stations.json).
 Be aware this can need long time, if you already have price data in your database.

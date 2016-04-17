@@ -12,7 +12,10 @@ todo:
 
 done:
 
-
+   * added messagebox on activating EDDN reciever permanently
+   * updated a few tooltips
+   * updated "StarterTips"
+-------------------------------------------------------------------------------------         
    * change order of price analysis tab to avoid loading timeout
    * extended eddn statistics with messagetype
    * added a filter to avoid processing the same message from different relays 
