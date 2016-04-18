@@ -748,6 +748,71 @@ namespace IBE
 
                     }
                     
+                    if (dbVersion < new Version(0,2,1))
+                    {
+                        String sqlString;
+
+                        Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.1...");
+                        Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+
+                        // insert settings for new columns
+                        Program.Data.InsertColumnDefinition(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "StationToStationRoutes_ColumnSettings", 6,  6, "True/NotSet/40/100/5");
+                        Program.Data.InsertColumnDefinition(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "StationToStationRoutes_ColumnSettings", 13, 13, "True/NotSet/40/100/5");
+                        
+                        Program.SplashScreen.InfoAdd("...");
+
+                        // add changes to the database
+                        sqlString = "-- MySQL Workbench Synchronization                                                         " +
+                                    "-- Generated: 2016-04-18 12:27                                                             " +
+                                    "-- Model: New Model                                                                        " +
+                                    "-- Version: 1.0                                                                            " +
+                                    "-- Project: Name of the project                                                            " +
+                                    "-- Author: Duke                                                                            " +
+                                    "                                                                                           " +
+                                    "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                   " +
+                                    "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                    " +
+                                    "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                  " +
+                                    "                                                                                           " +
+                                    "ALTER TABLE `elite_db`.`tmPA_S2S_BestTrips`                                                " +
+                                    "ADD COLUMN `Station_Location_1` VARCHAR(80) NULL DEFAULT NULL AFTER `TimeStamp_1`,         " +
+                                    "ADD COLUMN `Station_Location_2` VARCHAR(80) NULL DEFAULT NULL AFTER `TimeStamp_2`;         " +
+                                    "                                                                                           " +
+                                    "                                                                                           " +
+                                    "SET SQL_MODE=@OLD_SQL_MODE;                                                                " +
+                                    "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                            " +
+                                    "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                      ";
+
+
+                        var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                        sqlScript.Query = sqlString;
+
+                        sqlScript.Error             += sqlScript_Error;
+                        sqlScript.ScriptCompleted   += sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                        m_MREvent = new ManualResetEvent(false);
+
+                        sqlScript.ExecuteAsync();
+
+                        sqlScript.Error             -= sqlScript_Error;
+                        sqlScript.ScriptCompleted   -= sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                        if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else if (m_gotScriptErrors)
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else
+                            Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.1...<OK>");
+
+                    }
+                    
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -905,6 +970,7 @@ namespace IBE
                 throw new Exception("Error while preparing dep-files", ex);
             }
         }
+
 
 
     }

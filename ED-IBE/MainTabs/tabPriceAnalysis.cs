@@ -394,10 +394,15 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
+                Cursor = Cursors.WaitCursor;
+
                 refreshPriceView(true);
+
+                Cursor = Cursors.Default;
             }
             catch (Exception ex)
             {
+                Cursor = Cursors.Default;
                 cErr.processError(ex, "Error after changing active tabindex");
             }
         }
@@ -507,6 +512,7 @@ namespace IBE.MTPriceAnalysis
             Object Distance = null;
             Object DistanceToStar = null;
             Object minLandingPadSize = null;
+            Object locationType = null;
             Cursor oldCursor =  this.Cursor;
             String sqlString;
             DataTable Data;
@@ -524,6 +530,9 @@ namespace IBE.MTPriceAnalysis
                 if(cbMinLandingPadSize.Checked)                 
                     minLandingPadSize = cmbMinLandingPadSize.Text;
                 
+                if(cbLocation.Checked)                 
+                    locationType = cmbLocation.Text;
+
                 // get the id of the selected "base system"
                 if(cmbSystemBase.Text.Equals(CURRENT_SYSTEM, StringComparison.InvariantCultureIgnoreCase))
                     sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
@@ -554,7 +563,7 @@ namespace IBE.MTPriceAnalysis
                                                                                         ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                         false);
 
-                    m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter);
+                    m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter, locationType);
 
                     Int32 StationCount;
                     Int32 SystemCount;
@@ -971,6 +980,52 @@ namespace IBE.MTPriceAnalysis
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in cmbMaxTripDistance_Leave");
+            }
+        }
+
+        private void cmbLocation_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if(e.KeyCode == Keys.Enter)
+                    if(m_GUIInterface.saveSetting(sender) && cbLocation.Checked)
+                    {
+                        setFilterHasChanged(true);                
+                    }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmbLocation_KeyDown");
+            }
+        }
+
+        private void cmbLocation_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender) && cbLocation.Checked)
+                {
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmbLocation_Leave");
+            }
+        }
+
+        private void cmbLocation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender) && cbLocation.Checked)
+                {
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmbLocation_SelectedIndexChanged");
             }
         }
 

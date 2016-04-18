@@ -3481,6 +3481,86 @@ namespace IBE.SQL
                 throw new Exception("Error while calculating the distance between two systems", ex);
             }
         }
+
+        /// <summary>
+        /// Inserts data for new columns in existing definitions of datagrids
+        /// </summary>
+        /// <param name="iniGroup"></param>
+        /// <param name="iniKey"></param>
+        /// <param name="newColumnIndex"></param>
+        /// <param name="newViewIndex"></param>
+        /// <param name="newColumnDefinition"></param>
+        public void InsertColumnDefinition(string iniGroup, string iniKey, int newColumnIndex,  int newViewIndex, string newColumnDefinition)
+        {
+            // format from "DBGUIInterface"
+            // 
+            // SaveString.Append(String.Format("{0}/{1}/{2}/{3}/{4}/{5};", currentColumn.DisplayIndex.ToString(), 
+            //                                                             currentColumn.Visible.ToString(), 
+            //                                                             currentColumn.AutoSizeMode.ToString(), 
+            //                                                             currentColumn.Width.ToString(), 
+            //                                                             currentColumn.FillWeight.ToString().Replace(",","."), 
+            //                                                             currentColumn.MinimumWidth.ToString()));
+
+            try
+            {
+
+                System.Data.DataTable data = new System.Data.DataTable();
+
+                String sqlString = String.Format("select InitValue from tbInitValue" +
+                                                 " where InitGroup = '{0}'" +
+                                                 " and InitKey     = '{1}'",
+                                                 iniGroup, iniKey);
+
+                if(Program.DBCon.Execute(sqlString, data) != 0)
+                {
+                    String dataString = (String)(data.Rows[0].ItemArray[0]);
+                    System.Text.StringBuilder newString = new System.Text.StringBuilder();
+
+                    Int32 currentColumnIndex = 0;
+
+                    foreach (String existingColumnDefinition in dataString.Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+
+                        if(currentColumnIndex == newColumnIndex)
+                        {
+                            // insert the new column
+                            newString.Append(newViewIndex + "/" + newColumnDefinition);
+                            newString.Append(";");
+                        }
+
+                        String[] existingParts = existingColumnDefinition.Split(new Char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if(Int32.Parse(existingParts[0]) >= newViewIndex)
+                        { 
+                            existingParts[0] = (Int32.Parse(existingParts[0]) + 1).ToString();
+                            newString.Append(String.Join("/", existingParts));
+                        }
+                        else
+                        { 
+                            // take the leading column unchanged 
+                            newString.Append(existingColumnDefinition);
+                        }
+
+                        newString.Append(";");
+                        currentColumnIndex++;
+                    } 
+
+                    sqlString = String.Format("update tbInitValue" +
+                                              " set InitValue   = '{2}'" +  
+                                              " where InitGroup = '{0}'" +
+                                              " and InitKey     = '{1}';",
+                                              iniGroup, iniKey, newString.ToString());
+                    Program.DBCon.Execute(sqlString);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while inserting new column defnitions", ex);
+            }   
+
+        }
+
 #endregion
 
         public void ExportLocalizationDataToCSV(string fileName, enLocalizationType activeSetting)

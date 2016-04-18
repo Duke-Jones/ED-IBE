@@ -75,6 +75,9 @@
             this.cmdChangeSQLPort = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.rbNoDistanceToStarConsider = new System.Windows.Forms.RadioButton();
             this.rbNoDistanceToStarIgnore = new System.Windows.Forms.RadioButton();
@@ -104,6 +107,7 @@
             this.groupBox12.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.gbExternalDataInterface.SuspendLayout();
@@ -414,9 +418,9 @@
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(650, 418);
+            this.groupBox12.Location = new System.Drawing.Point(650, 457);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(502, 259);
+            this.groupBox12.Size = new System.Drawing.Size(502, 220);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -448,7 +452,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 207);
+            this.button6.Location = new System.Drawing.Point(32, 168);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -616,6 +620,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.groupBox13);
             this.groupBox1.Controls.Add(this.groupBox7);
             this.groupBox1.Controls.Add(this.groupBox5);
             this.groupBox1.Controls.Add(this.label1);
@@ -623,10 +628,48 @@
             this.groupBox1.Controls.Add(this.label25);
             this.groupBox1.Location = new System.Drawing.Point(650, 211);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(502, 133);
+            this.groupBox1.Size = new System.Drawing.Size(502, 169);
             this.groupBox1.TabIndex = 65;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datafilter";
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.radioButton1);
+            this.groupBox13.Controls.Add(this.radioButton2);
+            this.groupBox13.Location = new System.Drawing.Point(299, 116);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(197, 45);
+            this.groupBox13.TabIndex = 68;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Tag = "NoLocation;consider";
+            this.groupBox13.Text = "Stations Without Location";
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(23, 19);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(66, 17);
+            this.radioButton1.TabIndex = 3;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Tag = "consider";
+            this.radioButton1.Text = "Consider";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(117, 19);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(55, 17);
+            this.radioButton2.TabIndex = 2;
+            this.radioButton2.Tag = "ignore";
+            this.radioButton2.Text = "Ignore";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
             // 
             // groupBox7
             // 
@@ -837,9 +880,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.txtGamePath);
             this.groupBox3.Controls.Add(this.cmdGamePath);
-            this.groupBox3.Location = new System.Drawing.Point(652, 350);
+            this.groupBox3.Location = new System.Drawing.Point(652, 386);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(500, 62);
+            this.groupBox3.Size = new System.Drawing.Size(500, 65);
             this.groupBox3.TabIndex = 69;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Active Game Path (for analysing ED-logfiles)";
@@ -896,6 +939,8 @@
             this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -981,6 +1026,9 @@
         private System.Windows.Forms.Button cmdChangeSQLPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBoxInt32 txtSQLConnectionPort;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
 
     }
 }

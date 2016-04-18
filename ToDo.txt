@@ -7,11 +7,15 @@ todo:
 * ask for update on new EDDB-datafiles
 
 * filter: age of data
-* add station type to price analysis
 * mark datasource colorized
+* download of EDDB files
+* message if permanantly eddn reciver active without sending
 
 done:
 
+   * added station location type to list of best routes
+   * filtering by station location type (planetary/space) added
+-------------------------------------------------------------------------------------         
    * added messagebox on activating EDDN reciever permanently
    * updated a few tooltips
    * updated "StarterTips"

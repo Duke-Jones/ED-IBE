@@ -251,7 +251,8 @@ namespace IBE.MTPriceAnalysis
         /// <param name="Distance"></param>
         /// <param name="DistanceToStar"></param>
         /// <param name="minLandingPadSize"></param>
-        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize, Program.enVisitedFilter VisitedFilter)
+        /// <param name="locationType"></param>
+        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize, Program.enVisitedFilter VisitedFilter, Object locationType)
         {
             String sqlString;
             DataTable currentSystem = new DataTable();
@@ -348,6 +349,34 @@ namespace IBE.MTPriceAnalysis
                     sqlString = sqlString + String.Format(
                             "   and ({0})",
                             LandingPadString);
+                }
+
+                if(locationType != null)                            
+                {
+                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "NoLocation", "consider").Equals("consider");
+
+                    if(consider)
+                    { 
+                        if (((String)locationType).Equals("space"))
+                        {
+                            sqlString = sqlString + " and ((St.is_planetary is null) or (St.is_planetary = 0))";
+                        }
+                        else
+                        {
+                            sqlString = sqlString + " and ((St.is_planetary is null) or (St.is_planetary = 1))";
+                        }
+                    }
+                    else
+                    {
+                        if (((String)locationType).Equals("space"))
+                        {
+                            sqlString = sqlString + " and St.is_planetary = 0";
+                        }
+                        else
+                        {
+                            sqlString = sqlString + " and St.is_planetary = 1";
+                        }
+                    }
                 }
 
                 sqlString += ";";
@@ -531,6 +560,7 @@ namespace IBE.MTPriceAnalysis
             String sqlBaseString;
             String sqlBaseString2;
             String sqlString;
+            String sqlLocationString;
             DataSet Data            = new DataSet();
             var tmNeighbourstations  = new dsEliteDB.tmneighbourstationsDataTable();
             var tmFilteredStations  = new dsEliteDB.tmfilteredstationsDataTable();
@@ -825,28 +855,54 @@ namespace IBE.MTPriceAnalysis
                                  "    or  Station_id = {1})" +
                                  " order by distance limit 1";
 
-                // now get the timestamps of the best-profit commodities
+
+                sqlLocationString = "select st1.is_planetary As FW_is_planetary, st2.is_planetary As BW_is_planetary from " +
+                                    " (select is_planetary from tbstations" +
+                                    " where ID = {0}) as st1 ," +
+                                    " (select is_planetary from tbstations" +
+                                    " where ID = {1}) as st2;";
+
+                // now get the timestamps of the best-profit commodities and get other details
                 foreach (dsEliteDB.tmpa_s2s_besttripsRow CurrentRow in Result)
                 {
+                    // timestamp
                     sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1");
                     m_lDBCon.Execute(sqlString, "Timestamps", Data);
-
-                    sqlString = String.Format(sqlBaseString2, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2);
-                    m_lDBCon.Execute(sqlString, "Distance", Data);
 
                     if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"]))
                         CurrentRow.TimeStamp_1 = (DateTime)Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"];
 
                     if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["BkTimeStamp"]))
                         CurrentRow.TimeStamp_2 = (DateTime)Data.Tables["Timestamps"].Rows[0]["BkTimeStamp"];
-                    
+
+                    // distance
+                    sqlString = String.Format(sqlBaseString2, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2);
+                    m_lDBCon.Execute(sqlString, "Distance", Data);
+
                     if((Data.Tables["Distance"].Rows.Count > 0) && (!DBNull.Value.Equals(Data.Tables["Distance"].Rows[0]["distance"])))
                         CurrentRow.DistanceToRoute = (Double)Data.Tables["Distance"].Rows[0]["distance"];
                     else
                         CurrentRow.DistanceToRoute = double.NaN;
 
+                    // location
+                    sqlString = String.Format(sqlLocationString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2);
+                    m_lDBCon.Execute(sqlString, "Location", Data);
+
+                    if(!DBNull.Value.Equals(Data.Tables["Location"].Rows[0]["FW_is_planetary"]))
+                        if(((Boolean)Data.Tables["Location"].Rows[0]["FW_is_planetary"]))
+                            CurrentRow.Station_Location_1 = "P";
+                        else
+                            CurrentRow.Station_Location_1 = "S";
+
+                    if(!DBNull.Value.Equals(Data.Tables["Location"].Rows[0]["BW_is_planetary"]))
+                        if(((Boolean)Data.Tables["Location"].Rows[0]["BW_is_planetary"]))
+                            CurrentRow.Station_Location_2 = "P";
+                        else
+                            CurrentRow.Station_Location_2 = "S";
+
                     Data.Tables["Timestamps"].Clear();
                     Data.Tables["Distance"].Clear();
+                    Data.Tables["Location"].Clear();
                 }
                 
                 Debug.Print("Ende :" + DateTime.Now.ToShortTimeString());

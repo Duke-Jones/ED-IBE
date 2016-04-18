@@ -15745,6 +15745,10 @@ namespace IBE.SQL.Datasets {
             
             private global::System.Data.DataColumn columnDistanceToRoute;
             
+            private global::System.Data.DataColumn columnStation_Location_1;
+            
+            private global::System.Data.DataColumn columnStation_Location_2;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public tmpa_s2s_besttripsDataTable() {
@@ -15900,6 +15904,22 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Station_Location_1Column {
+                get {
+                    return this.columnStation_Location_1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Station_Location_2Column {
+                get {
+                    return this.columnStation_Location_2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -15935,7 +15955,24 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public tmpa_s2s_besttripsRow Addtmpa_s2s_besttripsRow(int System_ID_1, string SystemName_1, int Station_ID_1, string StationName_1, System.DateTime TimeStamp_1, int System_ID_2, string SystemName_2, int Station_ID_2, string StationName_2, System.DateTime TimeStamp_2, string Profit, double Distance, double DistanceToStar_1, double DistanceToStar_2, double DistanceToRoute) {
+            public tmpa_s2s_besttripsRow Addtmpa_s2s_besttripsRow(
+                        int System_ID_1, 
+                        string SystemName_1, 
+                        int Station_ID_1, 
+                        string StationName_1, 
+                        System.DateTime TimeStamp_1, 
+                        int System_ID_2, 
+                        string SystemName_2, 
+                        int Station_ID_2, 
+                        string StationName_2, 
+                        System.DateTime TimeStamp_2, 
+                        string Profit, 
+                        double Distance, 
+                        double DistanceToStar_1, 
+                        double DistanceToStar_2, 
+                        double DistanceToRoute, 
+                        string Station_Location_1, 
+                        string Station_Location_2) {
                 tmpa_s2s_besttripsRow rowtmpa_s2s_besttripsRow = ((tmpa_s2s_besttripsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         System_ID_1,
@@ -15952,7 +15989,9 @@ namespace IBE.SQL.Datasets {
                         Distance,
                         DistanceToStar_1,
                         DistanceToStar_2,
-                        DistanceToRoute};
+                        DistanceToRoute,
+                        Station_Location_1,
+                        Station_Location_2};
                 rowtmpa_s2s_besttripsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowtmpa_s2s_besttripsRow);
                 return rowtmpa_s2s_besttripsRow;
@@ -15998,6 +16037,8 @@ namespace IBE.SQL.Datasets {
                 this.columnDistanceToStar_1 = base.Columns["DistanceToStar_1"];
                 this.columnDistanceToStar_2 = base.Columns["DistanceToStar_2"];
                 this.columnDistanceToRoute = base.Columns["DistanceToRoute"];
+                this.columnStation_Location_1 = base.Columns["Station_Location_1"];
+                this.columnStation_Location_2 = base.Columns["Station_Location_2"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -16033,6 +16074,10 @@ namespace IBE.SQL.Datasets {
                 base.Columns.Add(this.columnDistanceToStar_2);
                 this.columnDistanceToRoute = new global::System.Data.DataColumn("DistanceToRoute", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDistanceToRoute);
+                this.columnStation_Location_1 = new global::System.Data.DataColumn("Station_Location_1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStation_Location_1);
+                this.columnStation_Location_2 = new global::System.Data.DataColumn("Station_Location_2", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStation_Location_2);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnStation_ID_1,
                                 this.columnStation_ID_2}, true));
@@ -16043,6 +16088,8 @@ namespace IBE.SQL.Datasets {
                 this.columnStation_ID_2.AllowDBNull = false;
                 this.columnStationName_2.MaxLength = 80;
                 this.columnProfit.MaxLength = 80;
+                this.columnStation_Location_1.MaxLength = 80;
+                this.columnStation_Location_2.MaxLength = 80;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -24957,6 +25004,38 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Station_Location_1 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.Station_Location_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Station_Location_1 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.Station_Location_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Station_Location_2 {
+                get {
+                    try {
+                        return ((string)(this[this.tabletmpa_s2s_besttrips.Station_Location_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Station_Location_2 in Tabelle tmpa_s2s_besttrips ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tabletmpa_s2s_besttrips.Station_Location_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsSystem_ID_1Null() {
                 return this.IsNull(this.tabletmpa_s2s_besttrips.System_ID_1Column);
             }
@@ -25109,6 +25188,30 @@ namespace IBE.SQL.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetDistanceToRouteNull() {
                 this[this.tabletmpa_s2s_besttrips.DistanceToRouteColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsStation_Location_1Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.Station_Location_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetStation_Location_1Null() {
+                this[this.tabletmpa_s2s_besttrips.Station_Location_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsStation_Location_2Null() {
+                return this.IsNull(this.tabletmpa_s2s_besttrips.Station_Location_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetStation_Location_2Null() {
+                this[this.tabletmpa_s2s_besttrips.Station_Location_2Column] = global::System.Convert.DBNull;
             }
         }
         
@@ -55786,10 +55889,12 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             tableMapping.ColumnMappings.Add("DistanceToStar_1", "DistanceToStar_1");
             tableMapping.ColumnMappings.Add("DistanceToStar_2", "DistanceToStar_2");
             tableMapping.ColumnMappings.Add("DistanceToRoute", "DistanceToRoute");
+            tableMapping.ColumnMappings.Add("Station_Location_1", "Station_Location_1");
+            tableMapping.ColumnMappings.Add("Station_Location_2", "Station_Location_2");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_s2s_besttrips` WHERE (((@p1 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p2)) AND ((@p3 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p4)) AND (`Station_ID_1` = @p5) AND ((@p6 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p7)) AND ((@p8 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p9)) AND ((@p10 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p11)) AND ((@p12 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p13)) AND (`Station_ID_2` = @p14) AND ((@p15 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p16)) AND ((@p17 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p18)) AND ((@p19 = 1 AND `Profit` IS NULL) OR (`Profit` = @p20)) AND ((@p21 = 1 AND `Distance` IS NULL) OR (`Distance` = @p22)) AND ((@p23 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p24)) AND ((@p25 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p26)) AND ((@p27 = 1 AND `DistanceToRoute` IS NULL) OR (`DistanceToRoute` = @p28)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `tmpa_s2s_besttrips` WHERE (((@p1 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p2)) AND ((@p3 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p4)) AND (`Station_ID_1` = @p5) AND ((@p6 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p7)) AND ((@p8 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p9)) AND ((@p10 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p11)) AND ((@p12 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p13)) AND (`Station_ID_2` = @p14) AND ((@p15 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p16)) AND ((@p17 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p18)) AND ((@p19 = 1 AND `Profit` IS NULL) OR (`Profit` = @p20)) AND ((@p21 = 1 AND `Distance` IS NULL) OR (`Distance` = @p22)) AND ((@p23 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p24)) AND ((@p25 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p26)) AND ((@p27 = 1 AND `DistanceToRoute` IS NULL) OR (`DistanceToRoute` = @p28)) AND ((@p29 = 1 AND `Station_Location_1` IS NULL) OR (`Station_Location_1` = @p30)) AND ((@p31 = 1 AND `Station_Location_2` IS NULL) OR (`Station_Location_2` = @p32)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::MySql.Data.MySqlClient.MySqlParameter param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -56028,9 +56133,43 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.SourceColumn = "DistanceToRoute";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p29";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p30";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p31";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_2";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p32";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_2";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_s2s_besttrips` (`System_ID_1`, `SystemName_1`, `Station_ID_1`, `StationName_1`, `TimeStamp_1`, `System_ID_2`, `SystemName_2`, `Station_ID_2`, `StationName_2`, `TimeStamp_2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2`, `DistanceToRoute`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO `tmpa_s2s_besttrips` (`System_ID_1`, `SystemName_1`, `Station_ID_1`, `StationName_1`, `TimeStamp_1`, `System_ID_2`, `SystemName_2`, `Station_ID_2`, `StationName_2`, `TimeStamp_2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2`, `DistanceToRoute`, `Station_Location_1`, `Station_Location_2`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -56137,9 +56276,42 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.IsNullable = true;
             param.SourceColumn = "DistanceToRoute";
             this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p16";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_1";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p17";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_2";
+            this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE `tmpa_s2s_besttrips` SET `System_ID_1` = @p1, `SystemName_1` = @p2, `Station_ID_1` = @p3, `StationName_1` = @p4, `TimeStamp_1` = @p5, `System_ID_2` = @p6, `SystemName_2` = @p7, `Station_ID_2` = @p8, `StationName_2` = @p9, `TimeStamp_2` = @p10, `Profit` = @p11, `Distance` = @p12, `DistanceToStar_1` = @p13, `DistanceToStar_2` = @p14, `DistanceToRoute` = @p15 WHERE (((@p16 = 1 AND `System_ID_1` IS NULL) OR (`System_ID_1` = @p17)) AND ((@p18 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @p19)) AND (`Station_ID_1` = @p20) AND ((@p21 = 1 AND `StationName_1` IS NULL) OR (`StationName_1` = @p22)) AND ((@p23 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeStamp_1` = @p24)) AND ((@p25 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p26)) AND ((@p27 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p28)) AND (`Station_ID_2` = @p29) AND ((@p30 = 1 AND `StationName_2` IS NULL) OR (`StationName_2` = @p31)) AND ((@p32 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @p33)) AND ((@p34 = 1 AND `Profit` IS NULL) OR (`Profit` = @p35)) AND ((@p36 = 1 AND `Distance` IS NULL) OR (`Distance` = @p37)) AND ((@p38 = 1 AND `DistanceToStar_1` IS NULL) OR (`DistanceToStar_1` = @p39)) AND ((@p40 = 1 AND `DistanceToStar_2` IS NULL) OR (`DistanceToStar_2` = @p41)) AND ((@p42 = 1 AND `DistanceToRoute` IS NULL) OR (`DistanceToRoute` = @p43)))";
+            this._adapter.UpdateCommand.CommandText = "UPDATE `tmpa_s2s_besttrips` SET `System_ID_1` = @p1, `SystemName_1` = @p2, `Stati" +
+                "on_ID_1` = @p3, `StationName_1` = @p4, `TimeStamp_1` = @p5, `System_ID_2` = @p6," +
+                " `SystemName_2` = @p7, `Station_ID_2` = @p8, `StationName_2` = @p9, `TimeStamp_2" +
+                "` = @p10, `Profit` = @p11, `Distance` = @p12, `DistanceToStar_1` = @p13, `Distan" +
+                "ceToStar_2` = @p14, `DistanceToRoute` = @p15, `Station_Location_1` = @p16, `Stat" +
+                "ion_Location_2` = @p17 WHERE (((@p18 = 1 AND `System_ID_1` IS NULL) OR (`System_" +
+                "ID_1` = @p19)) AND ((@p20 = 1 AND `SystemName_1` IS NULL) OR (`SystemName_1` = @" +
+                "p21)) AND (`Station_ID_1` = @p22) AND ((@p23 = 1 AND `StationName_1` IS NULL) OR" +
+                " (`StationName_1` = @p24)) AND ((@p25 = 1 AND `TimeStamp_1` IS NULL) OR (`TimeSt" +
+                "amp_1` = @p26)) AND ((@p27 = 1 AND `System_ID_2` IS NULL) OR (`System_ID_2` = @p" +
+                "28)) AND ((@p29 = 1 AND `SystemName_2` IS NULL) OR (`SystemName_2` = @p30)) AND " +
+                "(`Station_ID_2` = @p31) AND ((@p32 = 1 AND `StationName_2` IS NULL) OR (`Station" +
+                "Name_2` = @p33)) AND ((@p34 = 1 AND `TimeStamp_2` IS NULL) OR (`TimeStamp_2` = @" +
+                "p35)) AND ((@p36 = 1 AND `Profit` IS NULL) OR (`Profit` = @p37)) AND ((@p38 = 1 " +
+                "AND `Distance` IS NULL) OR (`Distance` = @p39)) AND ((@p40 = 1 AND `DistanceToSt" +
+                "ar_1` IS NULL) OR (`DistanceToStar_1` = @p41)) AND ((@p42 = 1 AND `DistanceToSta" +
+                "r_2` IS NULL) OR (`DistanceToStar_2` = @p43)) AND ((@p44 = 1 AND `DistanceToRout" +
+                "e` IS NULL) OR (`DistanceToRoute` = @p45)) AND ((@p46 = 1 AND `Station_Location_" +
+                "1` IS NULL) OR (`Station_Location_1` = @p47)) AND ((@p48 = 1 AND `Station_Locati" +
+                "on_2` IS NULL) OR (`Station_Location_2` = @p49)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p1";
@@ -56248,36 +56420,33 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p16";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_1";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
+            param.SourceColumn = "Station_Location_1";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p17";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_1";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumn = "Station_Location_2";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p18";
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "SystemName_1";
+            param.SourceColumn = "System_ID_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p19";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "SystemName_1";
+            param.SourceColumn = "System_ID_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56285,24 +56454,24 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_1";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p21";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "StationName_1";
+            param.SourceColumn = "SystemName_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p22";
+            param.ParameterName = "@p21";
             param.DbType = global::System.Data.DbType.String;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "StationName_1";
+            param.SourceColumn = "SystemName_1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p22";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56310,16 +56479,16 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "TimeStamp_1";
+            param.SourceColumn = "StationName_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p24";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "TimeStamp_1";
+            param.SourceColumn = "StationName_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56327,16 +56496,16 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_2";
+            param.SourceColumn = "TimeStamp_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p26";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
             param.IsNullable = true;
-            param.SourceColumn = "System_ID_2";
+            param.SourceColumn = "TimeStamp_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56344,16 +56513,16 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "SystemName_2";
+            param.SourceColumn = "System_ID_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p28";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "SystemName_2";
+            param.SourceColumn = "System_ID_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56361,24 +56530,24 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Station_ID_2";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p30";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
-            param.IsNullable = true;
-            param.SourceColumn = "StationName_2";
+            param.SourceColumn = "SystemName_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
-            param.ParameterName = "@p31";
+            param.ParameterName = "@p30";
             param.DbType = global::System.Data.DbType.String;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "StationName_2";
+            param.SourceColumn = "SystemName_2";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p31";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_ID_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56386,16 +56555,16 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "TimeStamp_2";
+            param.SourceColumn = "StationName_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p33";
-            param.DbType = global::System.Data.DbType.DateTime;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "TimeStamp_2";
+            param.SourceColumn = "StationName_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56403,16 +56572,16 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Profit";
+            param.SourceColumn = "TimeStamp_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p35";
-            param.DbType = global::System.Data.DbType.String;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.DbType = global::System.Data.DbType.DateTime;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.DateTime;
             param.IsNullable = true;
-            param.SourceColumn = "Profit";
+            param.SourceColumn = "TimeStamp_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56420,16 +56589,16 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "Distance";
+            param.SourceColumn = "Profit";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
             param.ParameterName = "@p37";
-            param.DbType = global::System.Data.DbType.Double;
-            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
             param.IsNullable = true;
-            param.SourceColumn = "Distance";
+            param.SourceColumn = "Profit";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56437,7 +56606,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "DistanceToStar_1";
+            param.SourceColumn = "Distance";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
@@ -56446,7 +56615,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Double;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
             param.IsNullable = true;
-            param.SourceColumn = "DistanceToStar_1";
+            param.SourceColumn = "Distance";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56454,7 +56623,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "DistanceToStar_2";
+            param.SourceColumn = "DistanceToStar_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
@@ -56463,7 +56632,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Double;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
             param.IsNullable = true;
-            param.SourceColumn = "DistanceToStar_2";
+            param.SourceColumn = "DistanceToStar_1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::MySql.Data.MySqlClient.MySqlParameter();
@@ -56471,7 +56640,7 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Int32;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
             param.IsNullable = true;
-            param.SourceColumn = "DistanceToRoute";
+            param.SourceColumn = "DistanceToStar_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
@@ -56480,7 +56649,58 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             param.DbType = global::System.Data.DbType.Double;
             param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
             param.IsNullable = true;
+            param.SourceColumn = "DistanceToStar_2";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p44";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
             param.SourceColumn = "DistanceToRoute";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p45";
+            param.DbType = global::System.Data.DbType.Double;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Double;
+            param.IsNullable = true;
+            param.SourceColumn = "DistanceToRoute";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p46";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p47";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p48";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.Int32;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_2";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::MySql.Data.MySqlClient.MySqlParameter();
+            param.ParameterName = "@p49";
+            param.DbType = global::System.Data.DbType.String;
+            param.MySqlDbType = global::MySql.Data.MySqlClient.MySqlDbType.VarChar;
+            param.IsNullable = true;
+            param.SourceColumn = "Station_Location_2";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -56498,7 +56718,9 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             this._commandCollection = new global::MySql.Data.MySqlClient.MySqlCommand[1];
             this._commandCollection[0] = new global::MySql.Data.MySqlClient.MySqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT `System_ID_1`, `SystemName_1`, `Station_ID_1`, `StationName_1`, `TimeStamp_1`, `System_ID_2`, `SystemName_2`, `Station_ID_2`, `StationName_2`, `TimeStamp_2`, `Profit`, `Distance`, `DistanceToStar_1`, `DistanceToStar_2`, `DistanceToRoute` FROM `tmpa_s2s_besttrips`";
+            this._commandCollection[0].CommandText = @"SELECT        System_ID_1, SystemName_1, Station_ID_1, StationName_1, TimeStamp_1, System_ID_2, SystemName_2, Station_ID_2, StationName_2, TimeStamp_2, Profit, 
+                         Distance, DistanceToStar_1, DistanceToStar_2, DistanceToRoute, Station_Location_1, Station_Location_2
+FROM            tmpa_s2s_besttrips";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -56559,7 +56781,24 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(global::System.Nullable<int> p2, string p4, int p5, string p7, global::System.Nullable<global::System.DateTime> p9, global::System.Nullable<int> p11, string p13, int p14, string p16, global::System.Nullable<global::System.DateTime> p18, string p20, global::System.Nullable<double> p22, global::System.Nullable<double> p24, global::System.Nullable<double> p26, global::System.Nullable<double> p28) {
+        public virtual int Delete(
+                    global::System.Nullable<int> p2, 
+                    string p4, 
+                    int p5, 
+                    string p7, 
+                    global::System.Nullable<global::System.DateTime> p9, 
+                    global::System.Nullable<int> p11, 
+                    string p13, 
+                    int p14, 
+                    string p16, 
+                    global::System.Nullable<global::System.DateTime> p18, 
+                    string p20, 
+                    global::System.Nullable<double> p22, 
+                    global::System.Nullable<double> p24, 
+                    global::System.Nullable<double> p26, 
+                    global::System.Nullable<double> p28, 
+                    string p30, 
+                    string p32) {
             if ((p2.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[0].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(p2.Value));
@@ -56666,6 +56905,22 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                 this.Adapter.DeleteCommand.Parameters[26].Value = ((object)(1));
                 this.Adapter.DeleteCommand.Parameters[27].Value = global::System.DBNull.Value;
             }
+            if ((p30 == null)) {
+                this.Adapter.DeleteCommand.Parameters[28].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[29].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[28].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[29].Value = ((string)(p30));
+            }
+            if ((p32 == null)) {
+                this.Adapter.DeleteCommand.Parameters[30].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[31].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[30].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[31].Value = ((string)(p32));
+            }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -56686,7 +56941,24 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(global::System.Nullable<int> p1, string p2, int p3, string p4, global::System.Nullable<global::System.DateTime> p5, global::System.Nullable<int> p6, string p7, int p8, string p9, global::System.Nullable<global::System.DateTime> p10, string p11, global::System.Nullable<double> p12, global::System.Nullable<double> p13, global::System.Nullable<double> p14, global::System.Nullable<double> p15) {
+        public virtual int Insert(
+                    global::System.Nullable<int> p1, 
+                    string p2, 
+                    int p3, 
+                    string p4, 
+                    global::System.Nullable<global::System.DateTime> p5, 
+                    global::System.Nullable<int> p6, 
+                    string p7, 
+                    int p8, 
+                    string p9, 
+                    global::System.Nullable<global::System.DateTime> p10, 
+                    string p11, 
+                    global::System.Nullable<double> p12, 
+                    global::System.Nullable<double> p13, 
+                    global::System.Nullable<double> p14, 
+                    global::System.Nullable<double> p15, 
+                    string p16, 
+                    string p17) {
             if ((p1.HasValue == true)) {
                 this.Adapter.InsertCommand.Parameters[0].Value = ((int)(p1.Value));
             }
@@ -56767,6 +57039,18 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             else {
                 this.Adapter.InsertCommand.Parameters[14].Value = global::System.DBNull.Value;
             }
+            if ((p16 == null)) {
+                this.Adapter.InsertCommand.Parameters[15].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[15].Value = ((string)(p16));
+            }
+            if ((p17 == null)) {
+                this.Adapter.InsertCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[16].Value = ((string)(p17));
+            }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -56803,21 +57087,25 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     global::System.Nullable<double> p13, 
                     global::System.Nullable<double> p14, 
                     global::System.Nullable<double> p15, 
-                    global::System.Nullable<int> p17, 
-                    string p19, 
-                    int p20, 
-                    string p22, 
-                    global::System.Nullable<global::System.DateTime> p24, 
-                    global::System.Nullable<int> p26, 
-                    string p28, 
-                    int p29, 
-                    string p31, 
-                    global::System.Nullable<global::System.DateTime> p33, 
-                    string p35, 
-                    global::System.Nullable<double> p37, 
+                    string p16, 
+                    string p17, 
+                    global::System.Nullable<int> p19, 
+                    string p21, 
+                    int p22, 
+                    string p24, 
+                    global::System.Nullable<global::System.DateTime> p26, 
+                    global::System.Nullable<int> p28, 
+                    string p30, 
+                    int p31, 
+                    string p33, 
+                    global::System.Nullable<global::System.DateTime> p35, 
+                    string p37, 
                     global::System.Nullable<double> p39, 
                     global::System.Nullable<double> p41, 
-                    global::System.Nullable<double> p43) {
+                    global::System.Nullable<double> p43, 
+                    global::System.Nullable<double> p45, 
+                    string p47, 
+                    string p49) {
             if ((p1.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(p1.Value));
             }
@@ -56898,87 +57186,91 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             else {
                 this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
             }
-            if ((p17.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(p17.Value));
+            if ((p16 == null)) {
+                this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((string)(p16));
+            }
+            if ((p17 == null)) {
                 this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
             }
-            if ((p19 == null)) {
+            else {
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((string)(p17));
+            }
+            if ((p19.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((int)(p19.Value));
+            }
+            else {
                 this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[18].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[18].Value = ((string)(p19));
-            }
-            this.Adapter.UpdateCommand.Parameters[19].Value = ((int)(p20));
-            if ((p22 == null)) {
-                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[21].Value = global::System.DBNull.Value;
+            if ((p21 == null)) {
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[20].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((string)(p22));
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((string)(p21));
             }
-            if ((p24.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((System.DateTime)(p24.Value));
-            }
-            else {
+            this.Adapter.UpdateCommand.Parameters[21].Value = ((int)(p22));
+            if ((p24 == null)) {
                 this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[23].Value = global::System.DBNull.Value;
             }
+            else {
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[23].Value = ((string)(p24));
+            }
             if ((p26.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((int)(p26.Value));
+                this.Adapter.UpdateCommand.Parameters[25].Value = ((System.DateTime)(p26.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[25].Value = global::System.DBNull.Value;
             }
-            if ((p28 == null)) {
+            if ((p28.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[27].Value = ((int)(p28.Value));
+            }
+            else {
                 this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[27].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((string)(p28));
-            }
-            this.Adapter.UpdateCommand.Parameters[28].Value = ((int)(p29));
-            if ((p31 == null)) {
-                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[30].Value = global::System.DBNull.Value;
+            if ((p30 == null)) {
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[29].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[30].Value = ((string)(p31));
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[29].Value = ((string)(p30));
             }
-            if ((p33.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[32].Value = ((System.DateTime)(p33.Value));
-            }
-            else {
+            this.Adapter.UpdateCommand.Parameters[30].Value = ((int)(p31));
+            if ((p33 == null)) {
                 this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[32].Value = global::System.DBNull.Value;
             }
-            if ((p35 == null)) {
+            else {
+                this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[32].Value = ((string)(p33));
+            }
+            if ((p35.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[34].Value = ((System.DateTime)(p35.Value));
+            }
+            else {
                 this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[34].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[34].Value = ((string)(p35));
-            }
-            if ((p37.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[36].Value = ((double)(p37.Value));
-            }
-            else {
+            if ((p37 == null)) {
                 this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[36].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[36].Value = ((string)(p37));
             }
             if ((p39.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[37].Value = ((object)(0));
@@ -57003,6 +57295,30 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
             else {
                 this.Adapter.UpdateCommand.Parameters[41].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[42].Value = global::System.DBNull.Value;
+            }
+            if ((p45.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[43].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[44].Value = ((double)(p45.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[43].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[44].Value = global::System.DBNull.Value;
+            }
+            if ((p47 == null)) {
+                this.Adapter.UpdateCommand.Parameters[45].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[46].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[45].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[46].Value = ((string)(p47));
+            }
+            if ((p49 == null)) {
+                this.Adapter.UpdateCommand.Parameters[47].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[48].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[47].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[48].Value = ((string)(p49));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -57038,22 +57354,26 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     global::System.Nullable<double> p13, 
                     global::System.Nullable<double> p14, 
                     global::System.Nullable<double> p15, 
-                    global::System.Nullable<int> p17, 
-                    string p19, 
-                    int p20, 
-                    string p22, 
-                    global::System.Nullable<global::System.DateTime> p24, 
-                    global::System.Nullable<int> p26, 
-                    string p28, 
-                    int p29, 
-                    string p31, 
-                    global::System.Nullable<global::System.DateTime> p33, 
-                    string p35, 
-                    global::System.Nullable<double> p37, 
+                    string p16, 
+                    string p17, 
+                    global::System.Nullable<int> p19, 
+                    string p21, 
+                    int p22, 
+                    string p24, 
+                    global::System.Nullable<global::System.DateTime> p26, 
+                    global::System.Nullable<int> p28, 
+                    string p30, 
+                    int p31, 
+                    string p33, 
+                    global::System.Nullable<global::System.DateTime> p35, 
+                    string p37, 
                     global::System.Nullable<double> p39, 
                     global::System.Nullable<double> p41, 
-                    global::System.Nullable<double> p43) {
-            return this.Update(p1, p2, p20, p4, p5, p6, p7, p29, p9, p10, p11, p12, p13, p14, p15, p17, p19, p20, p22, p24, p26, p28, p29, p31, p33, p35, p37, p39, p41, p43);
+                    global::System.Nullable<double> p43, 
+                    global::System.Nullable<double> p45, 
+                    string p47, 
+                    string p49) {
+            return this.Update(p1, p2, p22, p4, p5, p6, p7, p31, p9, p10, p11, p12, p13, p14, p15, p16, p17, p19, p21, p22, p24, p26, p28, p30, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49);
         }
     }
     

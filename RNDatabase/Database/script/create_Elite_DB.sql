@@ -739,11 +739,13 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_BestTrips` (
   `Station_ID_1` INT NOT NULL,
   `StationName_1` VARCHAR(80) NULL,
   `TimeStamp_1` DATETIME NULL,
+  `Station_Location_1` VARCHAR(80) NULL,
   `System_ID_2` INT NULL,
   `SystemName_2` VARCHAR(80) NULL,
   `Station_ID_2` INT NOT NULL,
   `StationName_2` VARCHAR(80) NULL,
   `TimeStamp_2` DATETIME NULL,
+  `Station_Location_2` VARCHAR(80) NULL,
   `Profit` VARCHAR(80) NULL,
   `Distance` DOUBLE NULL,
   `DistanceToStar_1` DOUBLE NULL,
@@ -1188,7 +1190,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.2.0.0');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.2.1.0');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');
 
 COMMIT;
