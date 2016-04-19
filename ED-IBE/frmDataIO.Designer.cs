@@ -324,7 +324,7 @@
             this.label89.TabIndex = 64;
             this.label89.Text = "Days";
             // 
-            // nudPurgeOldDataDays
+            // nudTimeFilterDays
             // 
             this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nudPurgeOldDataDays.Location = new System.Drawing.Point(186, 21);

@@ -150,7 +150,7 @@ namespace IBE.SQL
                         var Parts    = splitTag(cbSender.Tag);    
 
                         if(Parts != null)
-                            retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Text);
+                            retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Value.ToString());
                     }
                     else if(sender.GetType() == typeof(RadioButton))
                     {

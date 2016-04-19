@@ -638,7 +638,7 @@
             this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(871, 331);
+            this.cmdDonate.Location = new System.Drawing.Point(866, 330);
             this.cmdDonate.Name = "cmdDonate";
             this.cmdDonate.Size = new System.Drawing.Size(161, 43);
             this.cmdDonate.TabIndex = 37;

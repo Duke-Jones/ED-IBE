@@ -4,15 +4,17 @@ todo:
 * switch : enable disable history
 * hold rejected data
 * add marked color for datagrids
-* ask for update on new EDDB-datafiles
 
-* filter: age of data
+
 * mark datasource colorized
-* message if permanantly eddn reciver active without sending
 
 done:
 
  
+   
+   * new filter option : max age
+   * cleaned up the price analysis gui a little
+-------------------------------------------------------------------------------------         
    * small fixes
    * ask once for sending if already recieving EDDN data
 -------------------------------------------------------------------------------------         

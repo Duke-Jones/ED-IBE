@@ -1587,5 +1587,51 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+        private void nudTimeFilterDays_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if(e.KeyCode == Keys.Enter)
+                    if(m_GUIInterface.saveSetting(sender) && cbTimeFilter.Checked)
+                    {
+                        setFilterHasChanged(true);                
+                    }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in nudTimeFilterDays_KeyDown");
+            }
+        }
+
+        private void nudTimeFilterDays_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender) && cbTimeFilter.Checked)
+                {
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in nudTimeFilterDays_Leave");
+            }
+        }
+
+        private void nudTimeFilterDays_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender) && cbTimeFilter.Checked)
+                {
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in nudTimeFilterDays_ValueChanged");
+            }
+        }
+
     }
 }
