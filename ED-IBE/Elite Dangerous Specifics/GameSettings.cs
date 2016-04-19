@@ -68,7 +68,7 @@ namespace IBE
                             "Set verbose logging?", MessageBoxButtons.YesNo);
 
                     if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = false;
+                        Program.SplashScreen.TopMost = true;
 
                     if (setLog == DialogResult.Yes)
                     {
@@ -112,7 +112,7 @@ namespace IBE
                             fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.");
 
                         if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = false;
+                            Program.SplashScreen.TopMost = true;
 
                     }
 
@@ -222,7 +222,7 @@ namespace IBE
                                 MBResult = MessageBox.Show(String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
 
                                 if(!Program.SplashScreen.IsDisposed)
-                                    Program.SplashScreen.TopMost = false;
+                                    Program.SplashScreen.TopMost = true;
 
                                 if (MBResult == DialogResult.Abort)
                                 {

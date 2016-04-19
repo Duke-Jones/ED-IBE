@@ -39,15 +39,6 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new IBE.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
-            this.label53 = new System.Windows.Forms.Label();
-            this.txtEDTime = new System.Windows.Forms.TextBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.txtLocalTime = new System.Windows.Forms.TextBox();
-            this.label45 = new System.Windows.Forms.Label();
-            this.tbCurrentStationinfoFromLogs = new System.Windows.Forms.TextBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.msMainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,39 +51,51 @@
             this.createJumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabWebserver = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtWebserverPort = new System.Windows.Forms.TextBox();
-            this.cbInterfaces = new System.Windows.Forms.ComboBox();
-            this.label71 = new System.Windows.Forms.Label();
-            this.cbStartWebserverOnLoad = new System.Windows.Forms.CheckBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.tbBackgroundColour = new System.Windows.Forms.TextBox();
-            this.tbForegroundColour = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.cbColourScheme = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.bStart = new System.Windows.Forms.Button();
-            this.bStop = new System.Windows.Forms.Button();
-            this.lblURL = new System.Windows.Forms.Label();
-            this.tabOCRGroup = new System.Windows.Forms.TabPage();
-            this.tabCtrlOCR = new System.Windows.Forms.TabControl();
-            this.tabExternal = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtExtInfo2 = new System.Windows.Forms.TextBox();
-            this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.cmdConfirm = new System.Windows.Forms.Button();
-            this.cmdGetMarketData = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtRecievedStation = new System.Windows.Forms.TextBox();
-            this.txtRecievedSystem = new System.Windows.Forms.TextBox();
-            this.txtExtInfo = new System.Windows.Forms.TextBox();
-            this.cmdLanded = new System.Windows.Forms.Button();
+            this.eDDNInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
+            this.label53 = new System.Windows.Forms.Label();
+            this.txtEDTime = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.txtLocalTime = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.tbCurrentStationinfoFromLogs = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
+            this.tabCtrlMain = new System.Windows.Forms.TabControl();
+            this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
+            this.label93 = new System.Windows.Forms.Label();
+            this.label92 = new System.Windows.Forms.Label();
+            this.label91 = new System.Windows.Forms.Label();
+            this.linkLabel11 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel10 = new System.Windows.Forms.LinkLabel();
+            this.llVisitUpdate = new System.Windows.Forms.LinkLabel();
+            this.cmdUpdate = new System.Windows.Forms.Button();
+            this.lblUpdateInfo = new System.Windows.Forms.Label();
+            this.lblUpdateDetail = new System.Windows.Forms.TextBox();
+            this.cmdDonate = new System.Windows.Forms.Button();
+            this.label42 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label44 = new System.Windows.Forms.Label();
+            this.linkLabel9 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel8 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel6 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel7 = new System.Windows.Forms.LinkLabel();
+            this.BackgroundSet = new System.Windows.Forms.Label();
+            this.ForegroundSet = new System.Windows.Forms.Label();
+            this.button20 = new System.Windows.Forms.Button();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
+            this.pbForegroundColour = new System.Windows.Forms.PictureBox();
+            this.button23 = new System.Windows.Forms.Button();
+            this.button22 = new System.Windows.Forms.Button();
+            this.lblSubtitle = new System.Windows.Forms.Label();
+            this.lblRegulatedNoise = new System.Windows.Forms.Label();
             this.tabSystemData = new System.Windows.Forms.TabPage();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.cmbStationStations = new System.Windows.Forms.ComboBox_ro();
@@ -185,61 +188,58 @@
             this.cmbSystemState = new System.Windows.Forms.ComboBox_ro();
             this.cmbSystemAllegiance = new System.Windows.Forms.ComboBox_ro();
             this.cmbSystemGovernment = new System.Windows.Forms.ComboBox_ro();
-            this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
-            this.label93 = new System.Windows.Forms.Label();
-            this.label92 = new System.Windows.Forms.Label();
-            this.label91 = new System.Windows.Forms.Label();
-            this.linkLabel11 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel10 = new System.Windows.Forms.LinkLabel();
-            this.llVisitUpdate = new System.Windows.Forms.LinkLabel();
-            this.cmdUpdate = new System.Windows.Forms.Button();
-            this.lblUpdateInfo = new System.Windows.Forms.Label();
-            this.lblUpdateDetail = new System.Windows.Forms.TextBox();
-            this.cmdDonate = new System.Windows.Forms.Button();
-            this.label42 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label44 = new System.Windows.Forms.Label();
-            this.linkLabel9 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel8 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel6 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel7 = new System.Windows.Forms.LinkLabel();
-            this.BackgroundSet = new System.Windows.Forms.Label();
-            this.ForegroundSet = new System.Windows.Forms.Label();
-            this.button20 = new System.Windows.Forms.Button();
-            this.label47 = new System.Windows.Forms.Label();
-            this.label46 = new System.Windows.Forms.Label();
-            this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
-            this.pbForegroundColour = new System.Windows.Forms.PictureBox();
-            this.button23 = new System.Windows.Forms.Button();
-            this.button22 = new System.Windows.Forms.Button();
-            this.lblSubtitle = new System.Windows.Forms.Label();
-            this.lblRegulatedNoise = new System.Windows.Forms.Label();
-            this.tabCtrlMain = new System.Windows.Forms.TabControl();
-            this.eDDNInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabOCRGroup = new System.Windows.Forms.TabPage();
+            this.tabCtrlOCR = new System.Windows.Forms.TabControl();
+            this.tabExternal = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtExtInfo2 = new System.Windows.Forms.TextBox();
+            this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmdConfirm = new System.Windows.Forms.Button();
+            this.cmdGetMarketData = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtRecievedStation = new System.Windows.Forms.TextBox();
+            this.txtRecievedSystem = new System.Windows.Forms.TextBox();
+            this.txtExtInfo = new System.Windows.Forms.TextBox();
+            this.cmdLanded = new System.Windows.Forms.Button();
+            this.tabWebserver = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtWebserverPort = new System.Windows.Forms.TextBox();
+            this.cbInterfaces = new System.Windows.Forms.ComboBox();
+            this.label71 = new System.Windows.Forms.Label();
+            this.cbStartWebserverOnLoad = new System.Windows.Forms.CheckBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.tbBackgroundColour = new System.Windows.Forms.TextBox();
+            this.tbForegroundColour = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.cbColourScheme = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.bStart = new System.Windows.Forms.Button();
+            this.bStop = new System.Windows.Forms.Button();
+            this.lblURL = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.msMainMenu.SuspendLayout();
-            this.tabWebserver.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.tabOCRGroup.SuspendLayout();
-            this.tabCtrlOCR.SuspendLayout();
-            this.tabExternal.SuspendLayout();
-            this.tabSystemData.SuspendLayout();
-            this.groupBox14.SuspendLayout();
-            this.paEconomies.SuspendLayout();
-            this.gbSystemSystemData.SuspendLayout();
+            this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
-            this.tabCtrlMain.SuspendLayout();
+            this.tabSystemData.SuspendLayout();
+            this.groupBox14.SuspendLayout();
+            this.paEconomies.SuspendLayout();
+            this.gbSystemSystemData.SuspendLayout();
+            this.tabOCRGroup.SuspendLayout();
+            this.tabCtrlOCR.SuspendLayout();
+            this.tabExternal.SuspendLayout();
+            this.tabWebserver.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -296,6 +296,108 @@
             // 
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
+            // 
+            // msMainMenu
+            // 
+            this.msMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.dataToolStripMenuItem,
+            this.settingsToolStripMenuItem});
+            this.msMainMenu.Location = new System.Drawing.Point(0, 0);
+            this.msMainMenu.Name = "msMainMenu";
+            this.msMainMenu.Size = new System.Drawing.Size(1154, 24);
+            this.msMainMenu.TabIndex = 61;
+            this.msMainMenu.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            // 
+            // dataToolStripMenuItem
+            // 
+            this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem,
+            this.editLocalizationsToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.directDBAccessToolStripMenuItem,
+            this.testToolStripMenuItem});
+            this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
+            this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.dataToolStripMenuItem.Text = "&Data";
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.importToolStripMenuItem.Text = "&Import && Export";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            // 
+            // editLocalizationsToolStripMenuItem
+            // 
+            this.editLocalizationsToolStripMenuItem.Name = "editLocalizationsToolStripMenuItem";
+            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
+            this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 6);
+            // 
+            // directDBAccessToolStripMenuItem
+            // 
+            this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
+            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
+            this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createJumpToolStripMenuItem});
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.testToolStripMenuItem.Text = "Test";
+            // 
+            // createJumpToolStripMenuItem
+            // 
+            this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
+            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.createJumpToolStripMenuItem.Text = "create Jump";
+            this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem1,
+            this.eDDNInterfaceToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // settingsToolStripMenuItem1
+            // 
+            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.settingsToolStripMenuItem1.Text = "Settings";
+            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
+            // 
+            // eDDNInterfaceToolStripMenuItem
+            // 
+            this.eDDNInterfaceToolStripMenuItem.Name = "eDDNInterfaceToolStripMenuItem";
+            this.eDDNInterfaceToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.eDDNInterfaceToolStripMenuItem.Text = "EDDN-Interface";
+            this.eDDNInterfaceToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // cmdLoadCurrentSystem
             // 
@@ -388,447 +490,422 @@
             this.tbCurrentSystemFromLogs.TabIndex = 7;
             this.tbCurrentSystemFromLogs.Text = "scanning...";
             // 
-            // msMainMenu
+            // tabCtrlMain
             // 
-            this.msMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.dataToolStripMenuItem,
-            this.settingsToolStripMenuItem});
-            this.msMainMenu.Location = new System.Drawing.Point(0, 0);
-            this.msMainMenu.Name = "msMainMenu";
-            this.msMainMenu.Size = new System.Drawing.Size(1154, 24);
-            this.msMainMenu.TabIndex = 61;
-            this.msMainMenu.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            // 
-            // dataToolStripMenuItem
-            // 
-            this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importToolStripMenuItem,
-            this.editLocalizationsToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.directDBAccessToolStripMenuItem,
-            this.testToolStripMenuItem});
-            this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
-            this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.dataToolStripMenuItem.Text = "&Data";
-            // 
-            // importToolStripMenuItem
-            // 
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.importToolStripMenuItem.Text = "&Import && Export";
-            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
-            // 
-            // editLocalizationsToolStripMenuItem
-            // 
-            this.editLocalizationsToolStripMenuItem.Name = "editLocalizationsToolStripMenuItem";
-            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
-            this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 6);
-            // 
-            // directDBAccessToolStripMenuItem
-            // 
-            this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
-            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
-            this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
-            // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createJumpToolStripMenuItem});
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.testToolStripMenuItem.Text = "Test";
-            // 
-            // createJumpToolStripMenuItem
-            // 
-            this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
-            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
-            this.createJumpToolStripMenuItem.Text = "create Jump";
-            this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem1,
-            this.eDDNInterfaceToolStripMenuItem});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
-            // settingsToolStripMenuItem1
-            // 
-            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
-            this.settingsToolStripMenuItem1.Text = "Settings";
-            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
-            // 
-            // tabWebserver
-            // 
-            this.tabWebserver.Controls.Add(this.groupBox1);
-            this.tabWebserver.Location = new System.Drawing.Point(4, 22);
-            this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1141, 638);
-            this.tabWebserver.TabIndex = 3;
-            this.tabWebserver.Text = "Webserver";
-            this.tabWebserver.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabCtrlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.txtWebserverPort);
-            this.groupBox1.Controls.Add(this.cbInterfaces);
-            this.groupBox1.Controls.Add(this.label71);
-            this.groupBox1.Controls.Add(this.cbStartWebserverOnLoad);
-            this.groupBox1.Controls.Add(this.label17);
-            this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.tbBackgroundColour);
-            this.groupBox1.Controls.Add(this.tbForegroundColour);
-            this.groupBox1.Controls.Add(this.label15);
-            this.groupBox1.Controls.Add(this.cbColourScheme);
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Controls.Add(this.label10);
-            this.groupBox1.Controls.Add(this.bStart);
-            this.groupBox1.Controls.Add(this.bStop);
-            this.groupBox1.Controls.Add(this.lblURL);
-            this.groupBox1.Location = new System.Drawing.Point(10, 14);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1055, 578);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Webserver";
+            this.tabCtrlMain.Controls.Add(this.tabHelpAndChangeLog);
+            this.tabCtrlMain.Controls.Add(this.tabSystemData);
+            this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
+            this.tabCtrlMain.Controls.Add(this.tabWebserver);
+            this.tabCtrlMain.Location = new System.Drawing.Point(3, 72);
+            this.tabCtrlMain.Name = "tabCtrlMain";
+            this.tabCtrlMain.SelectedIndex = 0;
+            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 664);
+            this.tabCtrlMain.TabIndex = 4;
+            this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
-            // txtWebserverPort
+            // tabHelpAndChangeLog
             // 
-            this.txtWebserverPort.Location = new System.Drawing.Point(146, 18);
-            this.txtWebserverPort.Name = "txtWebserverPort";
-            this.txtWebserverPort.Size = new System.Drawing.Size(41, 20);
-            this.txtWebserverPort.TabIndex = 15;
-            this.txtWebserverPort.Text = "8080";
-            this.txtWebserverPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tabHelpAndChangeLog.Controls.Add(this.label93);
+            this.tabHelpAndChangeLog.Controls.Add(this.label92);
+            this.tabHelpAndChangeLog.Controls.Add(this.label91);
+            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel11);
+            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel10);
+            this.tabHelpAndChangeLog.Controls.Add(this.llVisitUpdate);
+            this.tabHelpAndChangeLog.Controls.Add(this.cmdUpdate);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateInfo);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateDetail);
+            this.tabHelpAndChangeLog.Controls.Add(this.cmdDonate);
+            this.tabHelpAndChangeLog.Controls.Add(this.label42);
+            this.tabHelpAndChangeLog.Controls.Add(this.panel2);
+            this.tabHelpAndChangeLog.Controls.Add(this.BackgroundSet);
+            this.tabHelpAndChangeLog.Controls.Add(this.ForegroundSet);
+            this.tabHelpAndChangeLog.Controls.Add(this.button20);
+            this.tabHelpAndChangeLog.Controls.Add(this.label47);
+            this.tabHelpAndChangeLog.Controls.Add(this.label46);
+            this.tabHelpAndChangeLog.Controls.Add(this.pbBackgroundColour);
+            this.tabHelpAndChangeLog.Controls.Add(this.pbForegroundColour);
+            this.tabHelpAndChangeLog.Controls.Add(this.button23);
+            this.tabHelpAndChangeLog.Controls.Add(this.button22);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblSubtitle);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
+            this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
+            this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 638);
+            this.tabHelpAndChangeLog.TabIndex = 9;
+            this.tabHelpAndChangeLog.Text = "Help and Changelog";
+            this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
             // 
-            // cbInterfaces
+            // label93
             // 
-            this.cbInterfaces.FormattingEnabled = true;
-            this.cbInterfaces.Location = new System.Drawing.Point(10, 18);
-            this.cbInterfaces.Name = "cbInterfaces";
-            this.cbInterfaces.Size = new System.Drawing.Size(130, 21);
-            this.cbInterfaces.TabIndex = 3;
-            this.cbInterfaces.SelectedIndexChanged += new System.EventHandler(this.cbInterfaces_SelectedIndexChanged);
+            this.label93.AutoSize = true;
+            this.label93.Location = new System.Drawing.Point(297, 221);
+            this.label93.Name = "label93";
+            this.label93.Size = new System.Drawing.Size(122, 13);
+            this.label93.TabIndex = 47;
+            this.label93.Text = "IBE im deutschen Forum";
             // 
-            // label71
+            // label92
             // 
-            this.label71.AutoSize = true;
-            this.label71.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label71.Location = new System.Drawing.Point(139, 21);
-            this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(10, 13);
-            this.label71.TabIndex = 14;
-            this.label71.Text = ":";
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(297, 186);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(93, 13);
+            this.label92.TabIndex = 46;
+            this.label92.Text = "english IBE thread";
             // 
-            // cbStartWebserverOnLoad
+            // label91
             // 
-            this.cbStartWebserverOnLoad.AutoSize = true;
-            this.cbStartWebserverOnLoad.Location = new System.Drawing.Point(11, 190);
-            this.cbStartWebserverOnLoad.Name = "cbStartWebserverOnLoad";
-            this.cbStartWebserverOnLoad.Size = new System.Drawing.Size(281, 17);
-            this.cbStartWebserverOnLoad.TabIndex = 13;
-            this.cbStartWebserverOnLoad.Text = "Start Webserver automatically when this app is started";
-            this.cbStartWebserverOnLoad.UseVisualStyleBackColor = true;
-            this.cbStartWebserverOnLoad.CheckedChanged += new System.EventHandler(this.cbStartWebserverOnLoad_CheckedChanged);
+            this.label91.AutoSize = true;
+            this.label91.Location = new System.Drawing.Point(27, 186);
+            this.label91.Name = "label91";
+            this.label91.Size = new System.Drawing.Size(63, 13);
+            this.label91.TabIndex = 45;
+            this.label91.Text = "Project-Link";
             // 
-            // label17
+            // linkLabel11
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(226, 215);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(65, 13);
-            this.label17.TabIndex = 12;
-            this.label17.Text = "Background";
+            this.linkLabel11.AutoSize = true;
+            this.linkLabel11.Location = new System.Drawing.Point(297, 234);
+            this.linkLabel11.Name = "linkLabel11";
+            this.linkLabel11.Size = new System.Drawing.Size(343, 13);
+            this.linkLabel11.TabIndex = 44;
+            this.linkLabel11.TabStop = true;
+            this.linkLabel11.Text = "http://www.elitedangerous.de/forum/viewtopic.php?f=66&t=6404&start=0";
+            this.linkLabel11.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
             // 
-            // label16
+            // linkLabel10
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(131, 216);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(61, 13);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "Foreground";
+            this.linkLabel10.AutoSize = true;
+            this.linkLabel10.Location = new System.Drawing.Point(297, 200);
+            this.linkLabel10.Name = "linkLabel10";
+            this.linkLabel10.Size = new System.Drawing.Size(271, 13);
+            this.linkLabel10.TabIndex = 43;
+            this.linkLabel10.TabStop = true;
+            this.linkLabel10.Text = "https://forums.frontier.co.uk/showthread.php?t=137732";
+            this.linkLabel10.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
             // 
-            // tbBackgroundColour
+            // llVisitUpdate
             // 
-            this.tbBackgroundColour.Location = new System.Drawing.Point(229, 231);
-            this.tbBackgroundColour.Name = "tbBackgroundColour";
-            this.tbBackgroundColour.Size = new System.Drawing.Size(87, 20);
-            this.tbBackgroundColour.TabIndex = 10;
-            this.tbBackgroundColour.TextChanged += new System.EventHandler(this.tbBackgroundColour_TextChanged);
+            this.llVisitUpdate.AutoSize = true;
+            this.llVisitUpdate.Location = new System.Drawing.Point(27, 200);
+            this.llVisitUpdate.Name = "llVisitUpdate";
+            this.llVisitUpdate.Size = new System.Drawing.Size(197, 13);
+            this.llVisitUpdate.TabIndex = 42;
+            this.llVisitUpdate.TabStop = true;
+            this.llVisitUpdate.Text = "https://github.com/Duke-Jones/ED-IBE";
+            this.llVisitUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
             // 
-            // tbForegroundColour
+            // cmdUpdate
             // 
-            this.tbForegroundColour.Location = new System.Drawing.Point(136, 232);
-            this.tbForegroundColour.Name = "tbForegroundColour";
-            this.tbForegroundColour.Size = new System.Drawing.Size(87, 20);
-            this.tbForegroundColour.TabIndex = 9;
-            this.tbForegroundColour.TextChanged += new System.EventHandler(this.tbForegroundColour_TextChanged);
+            this.cmdUpdate.Location = new System.Drawing.Point(541, 257);
+            this.cmdUpdate.Name = "cmdUpdate";
+            this.cmdUpdate.Size = new System.Drawing.Size(167, 32);
+            this.cmdUpdate.TabIndex = 41;
+            this.cmdUpdate.Text = "visit update page";
+            this.cmdUpdate.UseVisualStyleBackColor = true;
+            this.cmdUpdate.Click += new System.EventHandler(this.cmdUpdate_Click);
             // 
-            // label15
+            // lblUpdateInfo
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(8, 215);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(79, 13);
-            this.label15.TabIndex = 8;
-            this.label15.Text = "Colour Scheme";
+            this.lblUpdateInfo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblUpdateInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUpdateInfo.Location = new System.Drawing.Point(30, 260);
+            this.lblUpdateInfo.Name = "lblUpdateInfo";
+            this.lblUpdateInfo.Size = new System.Drawing.Size(491, 25);
+            this.lblUpdateInfo.TabIndex = 40;
+            this.lblUpdateInfo.Text = "label92";
             // 
-            // cbColourScheme
+            // lblUpdateDetail
             // 
-            this.cbColourScheme.FormattingEnabled = true;
-            this.cbColourScheme.Items.AddRange(new object[] {
-            "Black on White",
-            "White on Black",
-            "Orange on Black"});
-            this.cbColourScheme.Location = new System.Drawing.Point(9, 231);
-            this.cbColourScheme.Name = "cbColourScheme";
-            this.cbColourScheme.Size = new System.Drawing.Size(121, 21);
-            this.cbColourScheme.TabIndex = 7;
-            this.cbColourScheme.SelectedIndexChanged += new System.EventHandler(this.cbColourScheme_SelectedIndexChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 167);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(43, 13);
-            this.label14.TabIndex = 6;
-            this.label14.Text = "Options";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 63);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(535, 104);
-            this.label10.TabIndex = 5;
-            this.label10.Text = resources.GetString("label10.Text");
-            // 
-            // bStart
-            // 
-            this.bStart.Location = new System.Drawing.Point(253, 18);
-            this.bStart.Name = "bStart";
-            this.bStart.Size = new System.Drawing.Size(111, 23);
-            this.bStart.TabIndex = 1;
-            this.bStart.Text = "Start Webserver";
-            this.bStart.UseVisualStyleBackColor = true;
-            this.bStart.Click += new System.EventHandler(this.bStart_Click);
-            // 
-            // bStop
-            // 
-            this.bStop.Location = new System.Drawing.Point(370, 18);
-            this.bStop.Name = "bStop";
-            this.bStop.Size = new System.Drawing.Size(111, 23);
-            this.bStop.TabIndex = 2;
-            this.bStop.Text = "Stop Webserver";
-            this.bStop.UseVisualStyleBackColor = true;
-            this.bStop.Click += new System.EventHandler(this.bStop_Click);
-            // 
-            // lblURL
-            // 
-            this.lblURL.AutoSize = true;
-            this.lblURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblURL.Location = new System.Drawing.Point(8, 44);
-            this.lblURL.Name = "lblURL";
-            this.lblURL.Size = new System.Drawing.Size(42, 13);
-            this.lblURL.TabIndex = 4;
-            this.lblURL.Text = "http://";
-            this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
-            // 
-            // tabOCRGroup
-            // 
-            this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
-            this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
-            this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 638);
-            this.tabOCRGroup.TabIndex = 11;
-            this.tabOCRGroup.Text = "Market Data Interface";
-            this.tabOCRGroup.UseVisualStyleBackColor = true;
-            // 
-            // tabCtrlOCR
-            // 
-            this.tabCtrlOCR.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.lblUpdateDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabCtrlOCR.Controls.Add(this.tabExternal);
-            this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
-            this.tabCtrlOCR.Name = "tabCtrlOCR";
-            this.tabCtrlOCR.SelectedIndex = 0;
-            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 605);
-            this.tabCtrlOCR.TabIndex = 0;
+            this.lblUpdateDetail.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUpdateDetail.Location = new System.Drawing.Point(30, 295);
+            this.lblUpdateDetail.Multiline = true;
+            this.lblUpdateDetail.Name = "lblUpdateDetail";
+            this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.lblUpdateDetail.Size = new System.Drawing.Size(729, 241);
+            this.lblUpdateDetail.TabIndex = 39;
             // 
-            // tabExternal
+            // cmdDonate
             // 
-            this.tabExternal.Controls.Add(this.label5);
-            this.tabExternal.Controls.Add(this.txtExtInfo2);
-            this.tabExternal.Controls.Add(this.txtLocalDataCollected);
-            this.tabExternal.Controls.Add(this.label4);
-            this.tabExternal.Controls.Add(this.cmdConfirm);
-            this.tabExternal.Controls.Add(this.cmdGetMarketData);
-            this.tabExternal.Controls.Add(this.label3);
-            this.tabExternal.Controls.Add(this.label2);
-            this.tabExternal.Controls.Add(this.label1);
-            this.tabExternal.Controls.Add(this.txtRecievedStation);
-            this.tabExternal.Controls.Add(this.txtRecievedSystem);
-            this.tabExternal.Controls.Add(this.txtExtInfo);
-            this.tabExternal.Controls.Add(this.cmdLanded);
-            this.tabExternal.Location = new System.Drawing.Point(4, 22);
-            this.tabExternal.Name = "tabExternal";
-            this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternal.Size = new System.Drawing.Size(1068, 579);
-            this.tabExternal.TabIndex = 5;
-            this.tabExternal.Text = "External IO";
-            this.tabExternal.UseVisualStyleBackColor = true;
+            this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdDonate.BackColor = System.Drawing.Color.PaleGreen;
+            this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
+            this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.cmdDonate.FlatAppearance.BorderSize = 0;
+            this.cmdDonate.Location = new System.Drawing.Point(871, 331);
+            this.cmdDonate.Name = "cmdDonate";
+            this.cmdDonate.Size = new System.Drawing.Size(161, 43);
+            this.cmdDonate.TabIndex = 37;
+            this.cmdDonate.UseVisualStyleBackColor = false;
+            this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
             // 
-            // label5
+            // label42
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(31, 237);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Info 2";
+            this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label42.BackColor = System.Drawing.Color.Transparent;
+            this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.ForeColor = System.Drawing.Color.Green;
+            this.label42.Location = new System.Drawing.Point(767, 235);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(352, 139);
+            this.label42.TabIndex = 38;
+            this.label42.Text = "If you like this program and you want to support \r\nmy development, I was very hap" +
+    "py \r\nabout a small donation. \r\n\r\nThank you, Duke Jones\r\n";
+            this.label42.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // txtExtInfo2
+            // panel2
             // 
-            this.txtExtInfo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtExtInfo2.Location = new System.Drawing.Point(34, 253);
-            this.txtExtInfo2.Multiline = true;
-            this.txtExtInfo2.Name = "txtExtInfo2";
-            this.txtExtInfo2.ReadOnly = true;
-            this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
-            this.txtExtInfo2.TabIndex = 11;
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panel2.Controls.Add(this.label44);
+            this.panel2.Controls.Add(this.linkLabel9);
+            this.panel2.Controls.Add(this.linkLabel1);
+            this.panel2.Controls.Add(this.linkLabel8);
+            this.panel2.Controls.Add(this.linkLabel2);
+            this.panel2.Controls.Add(this.linkLabel3);
+            this.panel2.Controls.Add(this.linkLabel4);
+            this.panel2.Controls.Add(this.linkLabel5);
+            this.panel2.Controls.Add(this.linkLabel6);
+            this.panel2.Controls.Add(this.linkLabel7);
+            this.panel2.Location = new System.Drawing.Point(28, 555);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1079, 77);
+            this.panel2.TabIndex = 33;
             // 
-            // txtLocalDataCollected
+            // label44
             // 
-            this.txtLocalDataCollected.Location = new System.Drawing.Point(199, 132);
-            this.txtLocalDataCollected.Name = "txtLocalDataCollected";
-            this.txtLocalDataCollected.ReadOnly = true;
-            this.txtLocalDataCollected.Size = new System.Drawing.Size(235, 20);
-            this.txtLocalDataCollected.TabIndex = 10;
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(235, 6);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(663, 13);
+            this.label44.TabIndex = 5;
+            this.label44.Text = "ED - Intelligent Boardcomputer Extension is as unofficial as it gets.   Elite: Da" +
+    "ngerous is a registered trademark of Frontier Developments plc.";
             // 
-            // label4
+            // linkLabel9
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(196, 116);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(102, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "local data collected:";
+            this.linkLabel9.AutoSize = true;
+            this.linkLabel9.Location = new System.Drawing.Point(545, 24);
+            this.linkLabel9.Name = "linkLabel9";
+            this.linkLabel9.Size = new System.Drawing.Size(509, 13);
+            this.linkLabel9.TabIndex = 32;
+            this.linkLabel9.TabStop = true;
+            this.linkLabel9.Text = "System Location information kindly provided by Maddavo\'s Market Share at http://w" +
+    "ww.davek.com.au/td/";
+            this.linkLabel9.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel9_LinkClicked);
             // 
-            // cmdConfirm
+            // linkLabel1
             // 
-            this.cmdConfirm.Enabled = false;
-            this.cmdConfirm.Location = new System.Drawing.Point(34, 74);
-            this.cmdConfirm.Name = "cmdConfirm";
-            this.cmdConfirm.Size = new System.Drawing.Size(139, 36);
-            this.cmdConfirm.TabIndex = 8;
-            this.cmdConfirm.Text = "Confirm Location";
-            this.cmdConfirm.UseVisualStyleBackColor = true;
-            this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(208, 43);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(162, 13);
+            this.linkLabel1.TabIndex = 14;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Tesseract OCR - Apache license";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // cmdGetMarketData
+            // linkLabel8
             // 
-            this.cmdGetMarketData.Enabled = false;
-            this.cmdGetMarketData.Location = new System.Drawing.Point(34, 116);
-            this.cmdGetMarketData.Name = "cmdGetMarketData";
-            this.cmdGetMarketData.Size = new System.Drawing.Size(139, 36);
-            this.cmdGetMarketData.TabIndex = 7;
-            this.cmdGetMarketData.Text = "Get Market Data";
-            this.cmdGetMarketData.UseVisualStyleBackColor = true;
-            this.cmdGetMarketData.Click += new System.EventHandler(this.cmdGetMarketData_Click);
+            this.linkLabel8.AutoSize = true;
+            this.linkLabel8.Location = new System.Drawing.Point(3, 24);
+            this.linkLabel8.Name = "linkLabel8";
+            this.linkLabel8.Size = new System.Drawing.Size(94, 13);
+            this.linkLabel8.TabIndex = 31;
+            this.linkLabel8.TabStop = true;
+            this.linkLabel8.Text = "Json.NET License";
+            this.linkLabel8.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel8_LinkClicked);
             // 
-            // label3
+            // linkLabel2
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(196, 73);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Recieved station";
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(3, 43);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(199, 13);
+            this.linkLabel2.TabIndex = 15;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Originally inspired by seeebek\'s EliteOCR";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
-            // label2
+            // linkLabel3
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(196, 32);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Recieved system";
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(376, 43);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(143, 13);
+            this.linkLabel3.TabIndex = 16;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "Webserver from CodeProject";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
-            // label1
+            // linkLabel4
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(31, 166);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(25, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Info";
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.Location = new System.Drawing.Point(525, 43);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(85, 13);
+            this.linkLabel4.TabIndex = 17;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "LibZMQ License";
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked_1);
             // 
-            // txtRecievedStation
+            // linkLabel5
             // 
-            this.txtRecievedStation.Location = new System.Drawing.Point(199, 89);
-            this.txtRecievedStation.Name = "txtRecievedStation";
-            this.txtRecievedStation.ReadOnly = true;
-            this.txtRecievedStation.Size = new System.Drawing.Size(235, 20);
-            this.txtRecievedStation.TabIndex = 3;
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.Location = new System.Drawing.Point(620, 43);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(78, 13);
+            this.linkLabel5.TabIndex = 18;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "Clrzmq License";
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
             // 
-            // txtRecievedSystem
+            // linkLabel6
             // 
-            this.txtRecievedSystem.Location = new System.Drawing.Point(199, 48);
-            this.txtRecievedSystem.Name = "txtRecievedSystem";
-            this.txtRecievedSystem.ReadOnly = true;
-            this.txtRecievedSystem.Size = new System.Drawing.Size(235, 20);
-            this.txtRecievedSystem.TabIndex = 2;
+            this.linkLabel6.AutoSize = true;
+            this.linkLabel6.Location = new System.Drawing.Point(704, 43);
+            this.linkLabel6.Name = "linkLabel6";
+            this.linkLabel6.Size = new System.Drawing.Size(339, 13);
+            this.linkLabel6.TabIndex = 20;
+            this.linkLabel6.TabStop = true;
+            this.linkLabel6.Text = "Numeric OCR handled by EliteBrainerous by zxctypo, used with thanks";
+            this.linkLabel6.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel6_LinkClicked_1);
             // 
-            // txtExtInfo
+            // linkLabel7
             // 
-            this.txtExtInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtExtInfo.Location = new System.Drawing.Point(34, 182);
-            this.txtExtInfo.Multiline = true;
-            this.txtExtInfo.Name = "txtExtInfo";
-            this.txtExtInfo.ReadOnly = true;
-            this.txtExtInfo.Size = new System.Drawing.Size(400, 46);
-            this.txtExtInfo.TabIndex = 1;
+            this.linkLabel7.AutoSize = true;
+            this.linkLabel7.Location = new System.Drawing.Point(100, 24);
+            this.linkLabel7.Name = "linkLabel7";
+            this.linkLabel7.Size = new System.Drawing.Size(445, 13);
+            this.linkLabel7.TabIndex = 23;
+            this.linkLabel7.TabStop = true;
+            this.linkLabel7.Text = "System Location information kindly provided by Biteketkergetek at http://starchar" +
+    "t.club/map/";
+            this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
             // 
-            // cmdLanded
+            // BackgroundSet
             // 
-            this.cmdLanded.Location = new System.Drawing.Point(34, 32);
-            this.cmdLanded.Name = "cmdLanded";
-            this.cmdLanded.Size = new System.Drawing.Size(139, 36);
-            this.cmdLanded.TabIndex = 0;
-            this.cmdLanded.Text = "Landed";
-            this.cmdLanded.UseVisualStyleBackColor = true;
-            this.cmdLanded.Click += new System.EventHandler(this.cmdLanded_Click);
+            this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BackgroundSet.AutoSize = true;
+            this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BackgroundSet.Location = new System.Drawing.Point(1101, 69);
+            this.BackgroundSet.Name = "BackgroundSet";
+            this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
+            this.BackgroundSet.TabIndex = 30;
+            this.BackgroundSet.Text = "?";
+            this.BackgroundSet.Click += new System.EventHandler(this.BackgroundSet_Click);
+            // 
+            // ForegroundSet
+            // 
+            this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ForegroundSet.AutoSize = true;
+            this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForegroundSet.Location = new System.Drawing.Point(1101, 31);
+            this.ForegroundSet.Name = "ForegroundSet";
+            this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
+            this.ForegroundSet.TabIndex = 29;
+            this.ForegroundSet.Text = "?";
+            this.ForegroundSet.Click += new System.EventHandler(this.ForegroundSet_Click);
+            // 
+            // button20
+            // 
+            this.button20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button20.Location = new System.Drawing.Point(978, 101);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(148, 44);
+            this.button20.TabIndex = 28;
+            this.button20.Text = "Reset to default colours - requires app restart";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
+            // label47
+            // 
+            this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(994, 71);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(98, 13);
+            this.label47.TabIndex = 27;
+            this.label47.Text = "Background Colour";
+            // 
+            // label46
+            // 
+            this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(994, 32);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(94, 13);
+            this.label46.TabIndex = 26;
+            this.label46.Text = "Foreground Colour";
+            // 
+            // pbBackgroundColour
+            // 
+            this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbBackgroundColour.Location = new System.Drawing.Point(1094, 63);
+            this.pbBackgroundColour.Name = "pbBackgroundColour";
+            this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
+            this.pbBackgroundColour.TabIndex = 25;
+            this.pbBackgroundColour.TabStop = false;
+            this.pbBackgroundColour.Click += new System.EventHandler(this.pbBackgroundColour_Click);
+            // 
+            // pbForegroundColour
+            // 
+            this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbForegroundColour.Location = new System.Drawing.Point(1094, 25);
+            this.pbForegroundColour.Name = "pbForegroundColour";
+            this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
+            this.pbForegroundColour.TabIndex = 24;
+            this.pbForegroundColour.TabStop = false;
+            this.pbForegroundColour.Click += new System.EventHandler(this.pbForegroundColour_Click);
+            // 
+            // button23
+            // 
+            this.button23.Location = new System.Drawing.Point(203, 150);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(167, 23);
+            this.button23.TabIndex = 7;
+            this.button23.Text = "How can I analyse price data?";
+            this.button23.UseVisualStyleBackColor = true;
+            this.button23.Visible = false;
+            this.button23.Click += new System.EventHandler(this.ShowCommodityHelpClick);
+            // 
+            // button22
+            // 
+            this.button22.Location = new System.Drawing.Point(30, 150);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(167, 23);
+            this.button22.TabIndex = 4;
+            this.button22.Text = "How does the OCR work?";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.Visible = false;
+            this.button22.Click += new System.EventHandler(this.ShowOcrHelpClick);
+            // 
+            // lblSubtitle
+            // 
+            this.lblSubtitle.AutoSize = true;
+            this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtitle.Location = new System.Drawing.Point(49, 111);
+            this.lblSubtitle.Name = "lblSubtitle";
+            this.lblSubtitle.Size = new System.Drawing.Size(551, 21);
+            this.lblSubtitle.TabIndex = 3;
+            this.lblSubtitle.Text = "-=- Built-in OCR -=- Price Analysis -=- Commander\'s Log -=- Web Control -=-";
+            // 
+            // lblRegulatedNoise
+            // 
+            this.lblRegulatedNoise.AutoSize = true;
+            this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 49);
+            this.lblRegulatedNoise.Name = "lblRegulatedNoise";
+            this.lblRegulatedNoise.Size = new System.Drawing.Size(746, 50);
+            this.lblRegulatedNoise.TabIndex = 2;
+            this.lblRegulatedNoise.Text = "ED - Intelligent Boardcomputer Extension";
             // 
             // tabSystemData
             // 
@@ -1892,427 +1969,352 @@
             this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemGovernment.TabIndex = 10;
             // 
-            // tabHelpAndChangeLog
+            // tabOCRGroup
             // 
-            this.tabHelpAndChangeLog.Controls.Add(this.label93);
-            this.tabHelpAndChangeLog.Controls.Add(this.label92);
-            this.tabHelpAndChangeLog.Controls.Add(this.label91);
-            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel11);
-            this.tabHelpAndChangeLog.Controls.Add(this.linkLabel10);
-            this.tabHelpAndChangeLog.Controls.Add(this.llVisitUpdate);
-            this.tabHelpAndChangeLog.Controls.Add(this.cmdUpdate);
-            this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateInfo);
-            this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateDetail);
-            this.tabHelpAndChangeLog.Controls.Add(this.cmdDonate);
-            this.tabHelpAndChangeLog.Controls.Add(this.label42);
-            this.tabHelpAndChangeLog.Controls.Add(this.panel2);
-            this.tabHelpAndChangeLog.Controls.Add(this.BackgroundSet);
-            this.tabHelpAndChangeLog.Controls.Add(this.ForegroundSet);
-            this.tabHelpAndChangeLog.Controls.Add(this.button20);
-            this.tabHelpAndChangeLog.Controls.Add(this.label47);
-            this.tabHelpAndChangeLog.Controls.Add(this.label46);
-            this.tabHelpAndChangeLog.Controls.Add(this.pbBackgroundColour);
-            this.tabHelpAndChangeLog.Controls.Add(this.pbForegroundColour);
-            this.tabHelpAndChangeLog.Controls.Add(this.button23);
-            this.tabHelpAndChangeLog.Controls.Add(this.button22);
-            this.tabHelpAndChangeLog.Controls.Add(this.lblSubtitle);
-            this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
-            this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
-            this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 638);
-            this.tabHelpAndChangeLog.TabIndex = 9;
-            this.tabHelpAndChangeLog.Text = "Help and Changelog";
-            this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
+            this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
+            this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
+            this.tabOCRGroup.Name = "tabOCRGroup";
+            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 638);
+            this.tabOCRGroup.TabIndex = 11;
+            this.tabOCRGroup.Text = "Market Data Interface";
+            this.tabOCRGroup.UseVisualStyleBackColor = true;
             // 
-            // label93
+            // tabCtrlOCR
             // 
-            this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(297, 221);
-            this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(122, 13);
-            this.label93.TabIndex = 47;
-            this.label93.Text = "IBE im deutschen Forum";
-            // 
-            // label92
-            // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(297, 186);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(93, 13);
-            this.label92.TabIndex = 46;
-            this.label92.Text = "english IBE thread";
-            // 
-            // label91
-            // 
-            this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(27, 186);
-            this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(63, 13);
-            this.label91.TabIndex = 45;
-            this.label91.Text = "Project-Link";
-            // 
-            // linkLabel11
-            // 
-            this.linkLabel11.AutoSize = true;
-            this.linkLabel11.Location = new System.Drawing.Point(297, 234);
-            this.linkLabel11.Name = "linkLabel11";
-            this.linkLabel11.Size = new System.Drawing.Size(343, 13);
-            this.linkLabel11.TabIndex = 44;
-            this.linkLabel11.TabStop = true;
-            this.linkLabel11.Text = "http://www.elitedangerous.de/forum/viewtopic.php?f=66&t=6404&start=0";
-            this.linkLabel11.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
-            // 
-            // linkLabel10
-            // 
-            this.linkLabel10.AutoSize = true;
-            this.linkLabel10.Location = new System.Drawing.Point(297, 200);
-            this.linkLabel10.Name = "linkLabel10";
-            this.linkLabel10.Size = new System.Drawing.Size(271, 13);
-            this.linkLabel10.TabIndex = 43;
-            this.linkLabel10.TabStop = true;
-            this.linkLabel10.Text = "https://forums.frontier.co.uk/showthread.php?t=137732";
-            this.linkLabel10.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
-            // 
-            // llVisitUpdate
-            // 
-            this.llVisitUpdate.AutoSize = true;
-            this.llVisitUpdate.Location = new System.Drawing.Point(27, 200);
-            this.llVisitUpdate.Name = "llVisitUpdate";
-            this.llVisitUpdate.Size = new System.Drawing.Size(197, 13);
-            this.llVisitUpdate.TabIndex = 42;
-            this.llVisitUpdate.TabStop = true;
-            this.llVisitUpdate.Text = "https://github.com/Duke-Jones/ED-IBE";
-            this.llVisitUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llVisitUpdate_LinkClicked);
-            // 
-            // cmdUpdate
-            // 
-            this.cmdUpdate.Location = new System.Drawing.Point(541, 257);
-            this.cmdUpdate.Name = "cmdUpdate";
-            this.cmdUpdate.Size = new System.Drawing.Size(167, 32);
-            this.cmdUpdate.TabIndex = 41;
-            this.cmdUpdate.Text = "visit update page";
-            this.cmdUpdate.UseVisualStyleBackColor = true;
-            this.cmdUpdate.Click += new System.EventHandler(this.cmdUpdate_Click);
-            // 
-            // lblUpdateInfo
-            // 
-            this.lblUpdateInfo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblUpdateInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUpdateInfo.Location = new System.Drawing.Point(30, 260);
-            this.lblUpdateInfo.Name = "lblUpdateInfo";
-            this.lblUpdateInfo.Size = new System.Drawing.Size(491, 25);
-            this.lblUpdateInfo.TabIndex = 40;
-            this.lblUpdateInfo.Text = "label92";
-            // 
-            // lblUpdateDetail
-            // 
-            this.lblUpdateDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabCtrlOCR.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblUpdateDetail.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUpdateDetail.Location = new System.Drawing.Point(30, 295);
-            this.lblUpdateDetail.Multiline = true;
-            this.lblUpdateDetail.Name = "lblUpdateDetail";
-            this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lblUpdateDetail.Size = new System.Drawing.Size(729, 241);
-            this.lblUpdateDetail.TabIndex = 39;
+            this.tabCtrlOCR.Controls.Add(this.tabExternal);
+            this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
+            this.tabCtrlOCR.Name = "tabCtrlOCR";
+            this.tabCtrlOCR.SelectedIndex = 0;
+            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 605);
+            this.tabCtrlOCR.TabIndex = 0;
             // 
-            // cmdDonate
+            // tabExternal
             // 
-            this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
-            this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(875, 366);
-            this.cmdDonate.Name = "cmdDonate";
-            this.cmdDonate.Size = new System.Drawing.Size(161, 43);
-            this.cmdDonate.TabIndex = 37;
-            this.cmdDonate.UseVisualStyleBackColor = true;
-            this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
+            this.tabExternal.Controls.Add(this.label5);
+            this.tabExternal.Controls.Add(this.txtExtInfo2);
+            this.tabExternal.Controls.Add(this.txtLocalDataCollected);
+            this.tabExternal.Controls.Add(this.label4);
+            this.tabExternal.Controls.Add(this.cmdConfirm);
+            this.tabExternal.Controls.Add(this.cmdGetMarketData);
+            this.tabExternal.Controls.Add(this.label3);
+            this.tabExternal.Controls.Add(this.label2);
+            this.tabExternal.Controls.Add(this.label1);
+            this.tabExternal.Controls.Add(this.txtRecievedStation);
+            this.tabExternal.Controls.Add(this.txtRecievedSystem);
+            this.tabExternal.Controls.Add(this.txtExtInfo);
+            this.tabExternal.Controls.Add(this.cmdLanded);
+            this.tabExternal.Location = new System.Drawing.Point(4, 22);
+            this.tabExternal.Name = "tabExternal";
+            this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
+            this.tabExternal.Size = new System.Drawing.Size(1068, 579);
+            this.tabExternal.TabIndex = 5;
+            this.tabExternal.Text = "External IO";
+            this.tabExternal.UseVisualStyleBackColor = true;
             // 
-            // label42
+            // label5
             // 
-            this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.ForeColor = System.Drawing.Color.Green;
-            this.label42.Location = new System.Drawing.Point(786, 245);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(352, 139);
-            this.label42.TabIndex = 38;
-            this.label42.Text = "Hi guys. I spent many (hundreds) of hours for this tool.\r\nIf you like this progra" +
-    "m and you want to support furthermore development, \r\nI was very happy about a sm" +
-    "all donation. \r\n\r\nThank you, Duke Jones";
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(31, 237);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(34, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Info 2";
             // 
-            // groupbox_Import
+            // txtExtInfo2
             // 
-            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.panel2.Controls.Add(this.label44);
-            this.panel2.Controls.Add(this.linkLabel9);
-            this.panel2.Controls.Add(this.linkLabel1);
-            this.panel2.Controls.Add(this.linkLabel8);
-            this.panel2.Controls.Add(this.linkLabel2);
-            this.panel2.Controls.Add(this.linkLabel3);
-            this.panel2.Controls.Add(this.linkLabel4);
-            this.panel2.Controls.Add(this.linkLabel5);
-            this.panel2.Controls.Add(this.linkLabel6);
-            this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(28, 555);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1079, 77);
-            this.panel2.TabIndex = 33;
+            this.txtExtInfo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtExtInfo2.Location = new System.Drawing.Point(34, 253);
+            this.txtExtInfo2.Multiline = true;
+            this.txtExtInfo2.Name = "txtExtInfo2";
+            this.txtExtInfo2.ReadOnly = true;
+            this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
+            this.txtExtInfo2.TabIndex = 11;
             // 
-            // label44
+            // txtLocalDataCollected
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(235, 6);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(663, 13);
-            this.label44.TabIndex = 5;
-            this.label44.Text = "ED - Intelligent Boardcomputer Extension is as unofficial as it gets.   Elite: Da" +
-    "ngerous is a registered trademark of Frontier Developments plc.";
+            this.txtLocalDataCollected.Location = new System.Drawing.Point(199, 132);
+            this.txtLocalDataCollected.Name = "txtLocalDataCollected";
+            this.txtLocalDataCollected.ReadOnly = true;
+            this.txtLocalDataCollected.Size = new System.Drawing.Size(235, 20);
+            this.txtLocalDataCollected.TabIndex = 10;
             // 
-            // linkLabel9
+            // label4
             // 
-            this.linkLabel9.AutoSize = true;
-            this.linkLabel9.Location = new System.Drawing.Point(545, 24);
-            this.linkLabel9.Name = "linkLabel9";
-            this.linkLabel9.Size = new System.Drawing.Size(509, 13);
-            this.linkLabel9.TabIndex = 32;
-            this.linkLabel9.TabStop = true;
-            this.linkLabel9.Text = "System Location information kindly provided by Maddavo\'s Market Share at http://w" +
-    "ww.davek.com.au/td/";
-            this.linkLabel9.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel9_LinkClicked);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(196, 116);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(102, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "local data collected:";
             // 
-            // linkLabel1
+            // cmdConfirm
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(208, 43);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(162, 13);
-            this.linkLabel1.TabIndex = 14;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Tesseract OCR - Apache license";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.cmdConfirm.Enabled = false;
+            this.cmdConfirm.Location = new System.Drawing.Point(34, 74);
+            this.cmdConfirm.Name = "cmdConfirm";
+            this.cmdConfirm.Size = new System.Drawing.Size(139, 36);
+            this.cmdConfirm.TabIndex = 8;
+            this.cmdConfirm.Text = "Confirm Location";
+            this.cmdConfirm.UseVisualStyleBackColor = true;
+            this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
             // 
-            // linkLabel8
+            // cmdGetMarketData
             // 
-            this.linkLabel8.AutoSize = true;
-            this.linkLabel8.Location = new System.Drawing.Point(3, 24);
-            this.linkLabel8.Name = "linkLabel8";
-            this.linkLabel8.Size = new System.Drawing.Size(94, 13);
-            this.linkLabel8.TabIndex = 31;
-            this.linkLabel8.TabStop = true;
-            this.linkLabel8.Text = "Json.NET License";
-            this.linkLabel8.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel8_LinkClicked);
+            this.cmdGetMarketData.Enabled = false;
+            this.cmdGetMarketData.Location = new System.Drawing.Point(34, 116);
+            this.cmdGetMarketData.Name = "cmdGetMarketData";
+            this.cmdGetMarketData.Size = new System.Drawing.Size(139, 36);
+            this.cmdGetMarketData.TabIndex = 7;
+            this.cmdGetMarketData.Text = "Get Market Data";
+            this.cmdGetMarketData.UseVisualStyleBackColor = true;
+            this.cmdGetMarketData.Click += new System.EventHandler(this.cmdGetMarketData_Click);
             // 
-            // linkLabel2
+            // label3
             // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(3, 43);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(199, 13);
-            this.linkLabel2.TabIndex = 15;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Originally inspired by seeebek\'s EliteOCR";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(196, 73);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Recieved station";
             // 
-            // linkLabel3
+            // label2
             // 
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(376, 43);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(143, 13);
-            this.linkLabel3.TabIndex = 16;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "Webserver from CodeProject";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(196, 32);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Recieved system";
             // 
-            // linkLabel4
+            // label1
             // 
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(525, 43);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(85, 13);
-            this.linkLabel4.TabIndex = 17;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "LibZMQ License";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked_1);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(31, 166);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(25, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Info";
             // 
-            // linkLabel5
+            // txtRecievedStation
             // 
-            this.linkLabel5.AutoSize = true;
-            this.linkLabel5.Location = new System.Drawing.Point(620, 43);
-            this.linkLabel5.Name = "linkLabel5";
-            this.linkLabel5.Size = new System.Drawing.Size(78, 13);
-            this.linkLabel5.TabIndex = 18;
-            this.linkLabel5.TabStop = true;
-            this.linkLabel5.Text = "Clrzmq License";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            this.txtRecievedStation.Location = new System.Drawing.Point(199, 89);
+            this.txtRecievedStation.Name = "txtRecievedStation";
+            this.txtRecievedStation.ReadOnly = true;
+            this.txtRecievedStation.Size = new System.Drawing.Size(235, 20);
+            this.txtRecievedStation.TabIndex = 3;
             // 
-            // linkLabel6
+            // txtRecievedSystem
             // 
-            this.linkLabel6.AutoSize = true;
-            this.linkLabel6.Location = new System.Drawing.Point(704, 43);
-            this.linkLabel6.Name = "linkLabel6";
-            this.linkLabel6.Size = new System.Drawing.Size(339, 13);
-            this.linkLabel6.TabIndex = 20;
-            this.linkLabel6.TabStop = true;
-            this.linkLabel6.Text = "Numeric OCR handled by EliteBrainerous by zxctypo, used with thanks";
-            this.linkLabel6.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel6_LinkClicked_1);
+            this.txtRecievedSystem.Location = new System.Drawing.Point(199, 48);
+            this.txtRecievedSystem.Name = "txtRecievedSystem";
+            this.txtRecievedSystem.ReadOnly = true;
+            this.txtRecievedSystem.Size = new System.Drawing.Size(235, 20);
+            this.txtRecievedSystem.TabIndex = 2;
             // 
-            // linkLabel7
+            // txtExtInfo
             // 
-            this.linkLabel7.AutoSize = true;
-            this.linkLabel7.Location = new System.Drawing.Point(100, 24);
-            this.linkLabel7.Name = "linkLabel7";
-            this.linkLabel7.Size = new System.Drawing.Size(445, 13);
-            this.linkLabel7.TabIndex = 23;
-            this.linkLabel7.TabStop = true;
-            this.linkLabel7.Text = "System Location information kindly provided by Biteketkergetek at http://starchar" +
-    "t.club/map/";
-            this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
+            this.txtExtInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtExtInfo.Location = new System.Drawing.Point(34, 182);
+            this.txtExtInfo.Multiline = true;
+            this.txtExtInfo.Name = "txtExtInfo";
+            this.txtExtInfo.ReadOnly = true;
+            this.txtExtInfo.Size = new System.Drawing.Size(400, 46);
+            this.txtExtInfo.TabIndex = 1;
             // 
-            // BackgroundSet
+            // cmdLanded
             // 
-            this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BackgroundSet.AutoSize = true;
-            this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackgroundSet.Location = new System.Drawing.Point(1101, 69);
-            this.BackgroundSet.Name = "BackgroundSet";
-            this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
-            this.BackgroundSet.TabIndex = 30;
-            this.BackgroundSet.Text = "?";
-            this.BackgroundSet.Click += new System.EventHandler(this.BackgroundSet_Click);
+            this.cmdLanded.Location = new System.Drawing.Point(34, 32);
+            this.cmdLanded.Name = "cmdLanded";
+            this.cmdLanded.Size = new System.Drawing.Size(139, 36);
+            this.cmdLanded.TabIndex = 0;
+            this.cmdLanded.Text = "Landed";
+            this.cmdLanded.UseVisualStyleBackColor = true;
+            this.cmdLanded.Click += new System.EventHandler(this.cmdLanded_Click);
             // 
-            // ForegroundSet
+            // tabWebserver
             // 
-            this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ForegroundSet.AutoSize = true;
-            this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForegroundSet.Location = new System.Drawing.Point(1101, 31);
-            this.ForegroundSet.Name = "ForegroundSet";
-            this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
-            this.ForegroundSet.TabIndex = 29;
-            this.ForegroundSet.Text = "?";
-            this.ForegroundSet.Click += new System.EventHandler(this.ForegroundSet_Click);
+            this.tabWebserver.Controls.Add(this.groupBox1);
+            this.tabWebserver.Location = new System.Drawing.Point(4, 22);
+            this.tabWebserver.Name = "tabWebserver";
+            this.tabWebserver.Size = new System.Drawing.Size(1141, 638);
+            this.tabWebserver.TabIndex = 3;
+            this.tabWebserver.Text = "Webserver";
+            this.tabWebserver.UseVisualStyleBackColor = true;
             // 
-            // button20
+            // groupBox1
             // 
-            this.button20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button20.Location = new System.Drawing.Point(978, 101);
-            this.button20.Name = "button20";
-            this.button20.Size = new System.Drawing.Size(148, 44);
-            this.button20.TabIndex = 28;
-            this.button20.Text = "Reset to default colours - requires app restart";
-            this.button20.UseVisualStyleBackColor = true;
-            this.button20.Click += new System.EventHandler(this.button20_Click);
-            // 
-            // label47
-            // 
-            this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(994, 71);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(98, 13);
-            this.label47.TabIndex = 27;
-            this.label47.Text = "Background Colour";
-            // 
-            // label46
-            // 
-            this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(994, 32);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(94, 13);
-            this.label46.TabIndex = 26;
-            this.label46.Text = "Foreground Colour";
-            // 
-            // pbBackgroundColour
-            // 
-            this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbBackgroundColour.Location = new System.Drawing.Point(1094, 63);
-            this.pbBackgroundColour.Name = "pbBackgroundColour";
-            this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
-            this.pbBackgroundColour.TabIndex = 25;
-            this.pbBackgroundColour.TabStop = false;
-            this.pbBackgroundColour.Click += new System.EventHandler(this.pbBackgroundColour_Click);
-            // 
-            // pbForegroundColour
-            // 
-            this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbForegroundColour.Location = new System.Drawing.Point(1094, 25);
-            this.pbForegroundColour.Name = "pbForegroundColour";
-            this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
-            this.pbForegroundColour.TabIndex = 24;
-            this.pbForegroundColour.TabStop = false;
-            this.pbForegroundColour.Click += new System.EventHandler(this.pbForegroundColour_Click);
-            // 
-            // button23
-            // 
-            this.button23.Location = new System.Drawing.Point(203, 150);
-            this.button23.Name = "button23";
-            this.button23.Size = new System.Drawing.Size(167, 23);
-            this.button23.TabIndex = 7;
-            this.button23.Text = "How can I analyse price data?";
-            this.button23.UseVisualStyleBackColor = true;
-            this.button23.Visible = false;
-            this.button23.Click += new System.EventHandler(this.ShowCommodityHelpClick);
-            // 
-            // button22
-            // 
-            this.button22.Location = new System.Drawing.Point(30, 150);
-            this.button22.Name = "button22";
-            this.button22.Size = new System.Drawing.Size(167, 23);
-            this.button22.TabIndex = 4;
-            this.button22.Text = "How does the OCR work?";
-            this.button22.UseVisualStyleBackColor = true;
-            this.button22.Visible = false;
-            this.button22.Click += new System.EventHandler(this.ShowOcrHelpClick);
-            // 
-            // lblSubtitle
-            // 
-            this.lblSubtitle.AutoSize = true;
-            this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubtitle.Location = new System.Drawing.Point(49, 111);
-            this.lblSubtitle.Name = "lblSubtitle";
-            this.lblSubtitle.Size = new System.Drawing.Size(551, 21);
-            this.lblSubtitle.TabIndex = 3;
-            this.lblSubtitle.Text = "-=- Built-in OCR -=- Price Analysis -=- Commander\'s Log -=- Web Control -=-";
-            // 
-            // lblRegulatedNoise
-            // 
-            this.lblRegulatedNoise.AutoSize = true;
-            this.lblRegulatedNoise.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRegulatedNoise.Location = new System.Drawing.Point(12, 49);
-            this.lblRegulatedNoise.Name = "lblRegulatedNoise";
-            this.lblRegulatedNoise.Size = new System.Drawing.Size(746, 50);
-            this.lblRegulatedNoise.TabIndex = 2;
-            this.lblRegulatedNoise.Text = "ED - Intelligent Boardcomputer Extension";
-            // 
-            // tabCtrlMain
-            // 
-            this.tabCtrlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabCtrlMain.Controls.Add(this.tabHelpAndChangeLog);
-            this.tabCtrlMain.Controls.Add(this.tabSystemData);
-            this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
-            this.tabCtrlMain.Controls.Add(this.tabWebserver);
-            this.tabCtrlMain.Location = new System.Drawing.Point(3, 72);
-            this.tabCtrlMain.Name = "tabCtrlMain";
-            this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 664);
-            this.tabCtrlMain.TabIndex = 4;
-            this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
+            this.groupBox1.Controls.Add(this.txtWebserverPort);
+            this.groupBox1.Controls.Add(this.cbInterfaces);
+            this.groupBox1.Controls.Add(this.label71);
+            this.groupBox1.Controls.Add(this.cbStartWebserverOnLoad);
+            this.groupBox1.Controls.Add(this.label17);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.tbBackgroundColour);
+            this.groupBox1.Controls.Add(this.tbForegroundColour);
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.cbColourScheme);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Controls.Add(this.bStart);
+            this.groupBox1.Controls.Add(this.bStop);
+            this.groupBox1.Controls.Add(this.lblURL);
+            this.groupBox1.Location = new System.Drawing.Point(10, 14);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(1055, 578);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Webserver";
             // 
-            // eDDNInterfaceToolStripMenuItem
+            // txtWebserverPort
             // 
-            this.eDDNInterfaceToolStripMenuItem.Name = "eDDNInterfaceToolStripMenuItem";
-            this.eDDNInterfaceToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.eDDNInterfaceToolStripMenuItem.Text = "EDDN-Interface";
-            this.eDDNInterfaceToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
+            this.txtWebserverPort.Location = new System.Drawing.Point(146, 18);
+            this.txtWebserverPort.Name = "txtWebserverPort";
+            this.txtWebserverPort.Size = new System.Drawing.Size(41, 20);
+            this.txtWebserverPort.TabIndex = 15;
+            this.txtWebserverPort.Text = "8080";
+            this.txtWebserverPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // cbInterfaces
+            // 
+            this.cbInterfaces.FormattingEnabled = true;
+            this.cbInterfaces.Location = new System.Drawing.Point(10, 18);
+            this.cbInterfaces.Name = "cbInterfaces";
+            this.cbInterfaces.Size = new System.Drawing.Size(130, 21);
+            this.cbInterfaces.TabIndex = 3;
+            this.cbInterfaces.SelectedIndexChanged += new System.EventHandler(this.cbInterfaces_SelectedIndexChanged);
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label71.Location = new System.Drawing.Point(139, 21);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(10, 13);
+            this.label71.TabIndex = 14;
+            this.label71.Text = ":";
+            // 
+            // cbStartWebserverOnLoad
+            // 
+            this.cbStartWebserverOnLoad.AutoSize = true;
+            this.cbStartWebserverOnLoad.Location = new System.Drawing.Point(11, 190);
+            this.cbStartWebserverOnLoad.Name = "cbStartWebserverOnLoad";
+            this.cbStartWebserverOnLoad.Size = new System.Drawing.Size(281, 17);
+            this.cbStartWebserverOnLoad.TabIndex = 13;
+            this.cbStartWebserverOnLoad.Text = "Start Webserver automatically when this app is started";
+            this.cbStartWebserverOnLoad.UseVisualStyleBackColor = true;
+            this.cbStartWebserverOnLoad.CheckedChanged += new System.EventHandler(this.cbStartWebserverOnLoad_CheckedChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(226, 215);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(65, 13);
+            this.label17.TabIndex = 12;
+            this.label17.Text = "Background";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(131, 216);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(61, 13);
+            this.label16.TabIndex = 11;
+            this.label16.Text = "Foreground";
+            // 
+            // tbBackgroundColour
+            // 
+            this.tbBackgroundColour.Location = new System.Drawing.Point(229, 231);
+            this.tbBackgroundColour.Name = "tbBackgroundColour";
+            this.tbBackgroundColour.Size = new System.Drawing.Size(87, 20);
+            this.tbBackgroundColour.TabIndex = 10;
+            this.tbBackgroundColour.TextChanged += new System.EventHandler(this.tbBackgroundColour_TextChanged);
+            // 
+            // tbForegroundColour
+            // 
+            this.tbForegroundColour.Location = new System.Drawing.Point(136, 232);
+            this.tbForegroundColour.Name = "tbForegroundColour";
+            this.tbForegroundColour.Size = new System.Drawing.Size(87, 20);
+            this.tbForegroundColour.TabIndex = 9;
+            this.tbForegroundColour.TextChanged += new System.EventHandler(this.tbForegroundColour_TextChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(8, 215);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(79, 13);
+            this.label15.TabIndex = 8;
+            this.label15.Text = "Colour Scheme";
+            // 
+            // cbColourScheme
+            // 
+            this.cbColourScheme.FormattingEnabled = true;
+            this.cbColourScheme.Items.AddRange(new object[] {
+            "Black on White",
+            "White on Black",
+            "Orange on Black"});
+            this.cbColourScheme.Location = new System.Drawing.Point(9, 231);
+            this.cbColourScheme.Name = "cbColourScheme";
+            this.cbColourScheme.Size = new System.Drawing.Size(121, 21);
+            this.cbColourScheme.TabIndex = 7;
+            this.cbColourScheme.SelectedIndexChanged += new System.EventHandler(this.cbColourScheme_SelectedIndexChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 167);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(43, 13);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "Options";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 63);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(535, 104);
+            this.label10.TabIndex = 5;
+            this.label10.Text = resources.GetString("label10.Text");
+            // 
+            // bStart
+            // 
+            this.bStart.Location = new System.Drawing.Point(253, 18);
+            this.bStart.Name = "bStart";
+            this.bStart.Size = new System.Drawing.Size(111, 23);
+            this.bStart.TabIndex = 1;
+            this.bStart.Text = "Start Webserver";
+            this.bStart.UseVisualStyleBackColor = true;
+            this.bStart.Click += new System.EventHandler(this.bStart_Click);
+            // 
+            // bStop
+            // 
+            this.bStop.Location = new System.Drawing.Point(370, 18);
+            this.bStop.Name = "bStop";
+            this.bStop.Size = new System.Drawing.Size(111, 23);
+            this.bStop.TabIndex = 2;
+            this.bStop.Text = "Stop Webserver";
+            this.bStop.UseVisualStyleBackColor = true;
+            this.bStop.Click += new System.EventHandler(this.bStop_Click);
+            // 
+            // lblURL
+            // 
+            this.lblURL.AutoSize = true;
+            this.lblURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblURL.Location = new System.Drawing.Point(8, 44);
+            this.lblURL.Name = "lblURL";
+            this.lblURL.Size = new System.Drawing.Size(42, 13);
+            this.lblURL.TabIndex = 4;
+            this.lblURL.Text = "http://";
+            this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
             // Form1
             // 
@@ -2332,6 +2334,7 @@
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.tabCtrlMain);
             this.Enabled = false;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.msMainMenu;
             this.Name = "Form1";
@@ -2345,13 +2348,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
-            this.tabWebserver.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.tabOCRGroup.ResumeLayout(false);
-            this.tabCtrlOCR.ResumeLayout(false);
-            this.tabExternal.ResumeLayout(false);
-            this.tabExternal.PerformLayout();
+            this.tabCtrlMain.ResumeLayout(false);
+            this.tabHelpAndChangeLog.ResumeLayout(false);
+            this.tabHelpAndChangeLog.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
             this.tabSystemData.ResumeLayout(false);
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
@@ -2359,13 +2362,13 @@
             this.paEconomies.PerformLayout();
             this.gbSystemSystemData.ResumeLayout(false);
             this.gbSystemSystemData.PerformLayout();
-            this.tabHelpAndChangeLog.ResumeLayout(false);
-            this.tabHelpAndChangeLog.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
-            this.tabCtrlMain.ResumeLayout(false);
+            this.tabOCRGroup.ResumeLayout(false);
+            this.tabCtrlOCR.ResumeLayout(false);
+            this.tabExternal.ResumeLayout(false);
+            this.tabExternal.PerformLayout();
+            this.tabWebserver.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

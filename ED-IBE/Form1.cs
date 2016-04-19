@@ -1294,7 +1294,7 @@ namespace IBE
                 Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
                 st.Start();
                 
-                Program.DoSpecial();
+                Program.DoSpecial(this);
 
                 if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
                 {

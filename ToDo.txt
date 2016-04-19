@@ -12,7 +12,10 @@ todo:
 
 done:
 
-   
+ 
+   * small fixes
+   * ask once for sending if already recieving EDDN data
+-------------------------------------------------------------------------------------         
    * added function for download and import EDDB files directly
 -------------------------------------------------------------------------------------         
    * added station location type to list of best routes

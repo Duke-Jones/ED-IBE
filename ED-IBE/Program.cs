@@ -565,7 +565,7 @@ namespace IBE
                         MessageBox.Show("DB-Timeoutsetting changed. Please restart ED-IBE", "Restart required",  MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = false;
+                            Program.SplashScreen.TopMost = true;
                     }
 
                     if (dbVersion < new Version(0,1,5))
@@ -856,7 +856,8 @@ namespace IBE
         /// this sub starts special things to do if this version runs
         /// for the first time
         /// </summary>
-        internal static void DoSpecial()
+        /// <param name="parent"></param>
+        internal static void DoSpecial(Form parent)
         {
             try
             {
@@ -902,6 +903,33 @@ namespace IBE
                         
                     Program.SplashScreen.InfoAdd("updating master data...<OK>");
 
+                    if(m_NewDBVersion == new Version(0,2,1,0))
+                    {
+
+                        if(  Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoListen", false.ToString(), false) && 
+                           (!Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend",   false.ToString(), false)))
+                        {
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = false;
+
+                            if(MessageBox.Show(parent, "You decided to recieve data from the EDDN permanently\r\n" +
+                                                       "but not to send to EDDN.\r\n\r\n" +
+                                                       "The EDDN/EDDB lives from the data. If you want to receive data\r\n" +
+                                                       "permanently, it would be fair in return also to send data.\r\n\r\n" +
+                                                       "Shall I activate sending of market data for you?", 
+                                                       "EDDN Network", 
+                                                       MessageBoxButtons.YesNo, 
+                                                       MessageBoxIcon.Question, 
+                                                       MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend", true.ToString());
+                            }
+
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = true;
+
+                        }
+                    }
                 }
             }
             catch (Exception ex)
