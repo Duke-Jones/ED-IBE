@@ -4,6 +4,9 @@ using System.Windows.Forms;
 using IBE.Enums_and_Utility_Classes;
 using System.IO;
 using IBE.SQL;
+using System.Net;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace IBE
 {
@@ -16,10 +19,17 @@ namespace IBE
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
         public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
         private Boolean m_DataImportHappened = false; 
-
+        
         private DBGuiInterface      m_GUIInterface;
+        private ProgressView        m_ProgressView;
+        private String              m_DownloadInfo;
+        private Int32               m_lastFileSize;
+        private Boolean             m_DownloadFinished;
+        private String              m_TempPath = Path.Combine(Path.GetTempPath(), "ED-IBE");
+        private List<String>        m_DL_Files = new List<string> {"systems.json", 
+                                                                   "stations.json", 
+                                                                   "commodities.json"};
 
-                                 
         [Flags] enum enImportTypes
         {
             Undefiend                       = 0x0000,
@@ -67,22 +77,24 @@ namespace IBE
         {
             try
             {
-                cmdImportOldData.Enabled                = (!Program.Data.OldDataImportDone) && setEnabled;
-                cbImportPriceData.Enabled               = (!Program.Data.OldDataImportDone) && setEnabled;
-                cmdImportCommandersLog.Enabled          = setEnabled;
-                cmdImportSystemsAndStations.Enabled     = setEnabled;
-                checkBox1.Enabled                       = setEnabled;
-                cmdExportCSV.Enabled                    = setEnabled;
-                rbDefaultLanguage.Enabled               = setEnabled;
-                rbUserLanguage.Enabled                  = setEnabled;
-                cmdImportFromCSV.Enabled                = setEnabled;
-                rbImportNewer.Enabled                   = setEnabled;
-                rbImportSame.Enabled                    = setEnabled;
-                cmdTest.Enabled                         = setEnabled;
-                cmdPurgeOldData.Enabled                 = setEnabled;
-                rbFormatExtended.Enabled                = setEnabled;
-                rbFormatSimple.Enabled                  = setEnabled;
-                cmdExit.Enabled                         = setEnabled;    
+                cmdImportOldData.Enabled                        = (!Program.Data.OldDataImportDone) && setEnabled;
+                cbImportPriceData.Enabled                       = (!Program.Data.OldDataImportDone) && setEnabled;
+                cmdImportCommandersLog.Enabled                  = setEnabled;
+                cmdDownloadSystemsAndStations.Enabled           = setEnabled;
+                cmdImportSystemsAndStationsFromDownload.Enabled = setEnabled && EDDBDownloadComplete();
+                cmdImportSystemsAndStations.Enabled             = setEnabled;
+                checkBox1.Enabled                               = setEnabled;
+                cmdExportCSV.Enabled                            = setEnabled;
+                rbDefaultLanguage.Enabled                       = setEnabled;
+                rbUserLanguage.Enabled                          = setEnabled;
+                cmdImportFromCSV.Enabled                        = setEnabled;
+                rbImportNewer.Enabled                           = setEnabled;
+                rbImportSame.Enabled                            = setEnabled;
+                cmdTest.Enabled                                 = setEnabled;
+                cmdPurgeOldData.Enabled                         = setEnabled;
+                rbFormatExtended.Enabled                        = setEnabled;
+                rbFormatSimple.Enabled                          = setEnabled;
+                cmdExit.Enabled                                 = setEnabled;    
 
             }
             catch (Exception ex)
@@ -211,13 +223,13 @@ namespace IBE
                         if (ReUseLine && (destination.Items.Count > 0))
                         {
                             if(e.Total != 0)
-                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total);
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit);
                             else
-                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}", e.Tablename, 0, e.Index, 0);
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{3}", e.Tablename, 0, e.Index, 0, e.Unit);
                         }
                         else
                         {
-                            destination.Items.Add(String.Format("{0} : {1}% ({2} of {3})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total));
+                            destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit));
                         }
                     }
                 }
@@ -615,6 +627,221 @@ namespace IBE
             }
         }
 
+        private void cmdDownloadSystemsAndStations_Click(object sender, EventArgs e)
+        {
+            String baseUrl = "https://eddb.io/archive/v4/";
+            List<DateTime> filesTimes = new List<DateTime>();
+
+            Boolean download;
+            String currentDestinationFile;
+                                              
+            try
+            {
+                if(!Directory.Exists(m_TempPath))
+                    Directory.CreateDirectory(m_TempPath);
+
+                SetButtons(false);
+                lbProgess.Items.Clear();   
+
+                m_ProgressView = new ProgressView(this, false);
+                m_ProgressView.progressStart("connecting to eddb.io...");
+
+                // get the timestamps from the webfiles
+                for (int i = 0; i < m_DL_Files.Count; i++)
+                {
+                    HttpWebRequest request      = (HttpWebRequest)WebRequest.Create(baseUrl + m_DL_Files[i]);
+                    request.Method              = "HEAD";
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        filesTimes.Add(response.LastModified);    
+                }
+
+                WebClient downLoader = new WebClient();
+                downLoader.DownloadFileCompleted   += new AsyncCompletedEventHandler (webClient_DownloadFileCompleted);
+                downLoader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+
+                // download m_DL_Files if newer
+                for (int i = 0; i < m_DL_Files.Count; i++)
+                {
+                    download = false;
+                    currentDestinationFile = Path.Combine(m_TempPath, m_DL_Files[i]);
+
+                    if(File.Exists(currentDestinationFile))
+                    { 
+                        var localFileTime = File.GetCreationTime(currentDestinationFile);
+
+                        if(filesTimes[i] != localFileTime)
+                        { 
+                            download = true;
+                            File.Delete(currentDestinationFile);
+                        }
+                    }
+                    else 
+                        download = true;
+
+                    if(download)
+                    { 
+                        m_ProgressView.progressUpdate(0, 100);
+                        m_DownloadInfo = String.Format("downloading file {0} of {1}: {2}...", i+1, m_DL_Files.Count, m_DL_Files[i]);
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
+
+                        m_ProgressView.progressInfo(m_DownloadInfo);
+                        
+                        m_DownloadFinished = false;
+                        Debug.Print("in");
+                        downLoader.DownloadFileAsync(new Uri(baseUrl + m_DL_Files[i]), Path.Combine(m_TempPath, m_DL_Files[i]));
+
+                        do
+                        {
+                            System.Threading.Thread.Sleep(100);    
+                            Application.DoEvents();
+                        } while (!m_DownloadFinished);
+
+                        Debug.Print("out");
+                        if(!m_ProgressView.Cancelled)
+                        { 
+                            File.SetCreationTime(currentDestinationFile, filesTimes[i]);
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 1, Total = 1 });
+                        }
+                        else
+                        {
+                            if(File.Exists(currentDestinationFile))
+                                File.Delete(currentDestinationFile);
+                            lbProgess.Items.Add("");
+                            lbProgess.Items.Add("download cancelled !!! ");
+                        }
+                    }
+                    else
+                    { 
+                        m_DownloadInfo = String.Format("skipping download, newest version already existing: {0} of {1}: {2}...", i+1, m_DL_Files.Count, m_DL_Files[i]);
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
+
+                        m_ProgressView.progressInfo(m_DownloadInfo);                    
+                        m_ProgressView.progressUpdate(1,1);
+
+                        System.Threading.Thread.Sleep(500);
+                    }
+
+                    if(m_ProgressView.Cancelled)
+                        break;
+                }
+
+                if(!m_ProgressView.Cancelled)
+                { 
+                    lbProgess.Items.Add("");
+                    lbProgess.Items.Add("download finished !!! ");
+                }
+                       
+                if(m_ProgressView != null)
+                {
+                    m_ProgressView.progressStop();
+                    m_ProgressView = null;
+                }
+                
+                SetButtons(true);
+            }
+            catch (Exception ex)
+            {
+                SetButtons(true);
+                cErr.processError(ex, "Error while downloading system/station data from EDDB");
+            }
+        }
+
+        /// <summary>
+        /// checks if the downloadfiles existing
+        /// </summary>
+        /// <returns></returns>
+        private Boolean EDDBDownloadComplete()
+        {
+
+            String currentDestinationFile;
+            Boolean retValue = true;
+
+            try
+            {
+                // download m_DL_Files if newer
+                for (int i = 0; i < m_DL_Files.Count; i++)
+                {
+                    currentDestinationFile = Path.Combine(m_TempPath, m_DL_Files[i]);
+
+                    if(!File.Exists(currentDestinationFile))
+                    { 
+                        retValue = false;
+                        break;
+                    }
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking EDDB files", ex);
+            }
+        }
+
+        private void cmdImportSystemsAndStationsFromDownload_Click(object sender, EventArgs e)
+        {
+            String tempPath = Path.Combine(Path.GetTempPath(), "ED-IBE");
+                                              
+            try
+            {
+                if(!Directory.Exists(tempPath))
+                    Directory.CreateDirectory(tempPath);
+
+                SetButtons(false);
+                lbProgess.Items.Clear();
+
+
+                enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+                                            enImportTypes.EDDB_Systems | 
+                                            enImportTypes.EDDB_Stations;
+
+                ImportData(null, importFlags, null, tempPath);
+
+                SetButtons(true);
+
+                m_DataImportHappened = true;
+                
+            }
+            catch (Exception ex)
+            {
+                SetButtons(true);
+                cErr.processError(ex, "Error while importing downloaded system/station data from EDDB");
+            }
+        }
+
+        private void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if(!m_DownloadFinished)
+            { 
+                if(m_ProgressView != null)
+                {
+                    m_lastFileSize = (Int32)(e.TotalBytesToReceive / (1024));
+                    m_ProgressView.progressUpdate((Int32)(e.BytesReceived / (1024)), m_lastFileSize);
+                                    
+                    if(m_ProgressView.Cancelled)
+                        ((WebClient)sender).CancelAsync();
+                }
+
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = (Int32)(e.BytesReceived / (1024)), Total = m_lastFileSize, Unit = " kByte"});
+                Debug.Print("1");
+            }
+        }
+
+        private void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            m_DownloadFinished = true;
+            
+            if(!e.Cancelled)
+            { 
+                if(m_ProgressView != null)
+                {
+                    m_ProgressView.progressUpdate(1,1);
+                }
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = m_lastFileSize, Total = m_lastFileSize, Unit = " kByte"});
+            }
+            Debug.Print("2");
+        }
+
         private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
         {
             try
@@ -635,7 +862,7 @@ namespace IBE
             catch (Exception ex)
             {
                 SetButtons(true);
-                cErr.processError(ex, "Error while importing system/station data from EDDN");
+                cErr.processError(ex, "Error while importing system/station data from EDDB");
             }
         }
 
@@ -943,5 +1170,25 @@ namespace IBE
                 cErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
             }
         }
+
+        private void frmDataIO_Shown(object sender, EventArgs e)
+        {
+            try
+            {
+                SetButtons(true);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in Shown event");
+            }
+        }
+
+        private void frmDataIO_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(!cmdExit.Enabled)
+                e.Cancel = true;
+        }
+
+
     }
 }

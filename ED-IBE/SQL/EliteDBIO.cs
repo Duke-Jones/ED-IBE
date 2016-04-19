@@ -132,6 +132,8 @@ namespace IBE.SQL
             public String Tablename { get; set; }
             public Int32  Index { get; set; }
             public Int32  Total { get; set; }
+            public String Unit { get; set; }
+            
         }
 
         /// <summary>
@@ -3490,7 +3492,7 @@ namespace IBE.SQL
         /// <param name="newColumnIndex"></param>
         /// <param name="newViewIndex"></param>
         /// <param name="newColumnDefinition"></param>
-        public void InsertColumnDefinition(string iniGroup, string iniKey, int newColumnIndex,  int newViewIndex, string newColumnDefinition)
+        public static void InsertColumnDefinition(string iniGroup, string iniKey, int newColumnIndex,  int newViewIndex, string newColumnDefinition)
         {
             // format from "DBGUIInterface"
             // 

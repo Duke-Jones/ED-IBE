@@ -130,7 +130,11 @@ It's only useful if you want to have all (also old) price information from the E
 EDDB files ("system.json", "stations.json", "commodities.json").
 Suggestion is to import all three files to avoid missing dependences.
 
-Download from "https://eddb.io/api"</value>
+Download from "https://eddb.io/api"
+
+No update of price data !
+
+</value>
   </data>
   <data name="checkBox1.ToolTip" xml:space="preserve">
     <value>You can also accept the import of the price-data from the EDDB-file (stations.json).

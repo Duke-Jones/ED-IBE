@@ -11,18 +11,18 @@ namespace IBE
 {
     public partial class ProgressView : IBE.Enums_and_Utility_Classes.RNBaseForm
     {
-
-
         PerformanceTimer m_PTimer = new PerformanceTimer();
         //string THISOBJECTNAME = "FormProgressView";
         public delegate void del_Sub_PInt32(Int32 Value);
         public delegate void del_Sub_PString(string Text);
         bool m_Cancelled;           //  True: Abbruch wurde angefordert
+        Boolean m_SelfDoEvents;
 
-        public ProgressView(Control parent = null)
+        public ProgressView(Control parent = null, Boolean SelfDoEvents = true)
         {
             InitializeComponent();
             ParentControl = parent;
+            m_SelfDoEvents = SelfDoEvents;
             m_Cancelled = false;
             m_PTimer.startMeasuring();
             DoPositioning = false;
@@ -38,7 +38,7 @@ namespace IBE
             this.Show();
             progressUpdate(0);
             progressInfo(Info);
-            Application.DoEvents();
+            if(m_SelfDoEvents) Application.DoEvents();
             this.TopMost = true;
         }
         catch (Exception ex) {
@@ -97,7 +97,7 @@ namespace IBE
 
                 lblProgress.Text = string.Format("{0}%", Percent);
                 ProgressBar1.Refresh();
-                Application.DoEvents();
+                if(m_SelfDoEvents) Application.DoEvents();
             }
         }
         catch (Exception ex) {
@@ -123,7 +123,7 @@ namespace IBE
                     this.Height = 161;
                 }
                 lblInfotext.Text = Info;
-                Application.DoEvents();
+                if(m_SelfDoEvents) Application.DoEvents();
             }
         }
         catch (Exception ex) {

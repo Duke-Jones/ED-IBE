@@ -40,10 +40,12 @@
             this.cmdImportFromCSV = new System.Windows.Forms.Button();
             this.rbFormatExtended = new System.Windows.Forms.RadioButton();
             this.rbFormatSimple = new System.Windows.Forms.RadioButton();
+            this.gbRepeat = new System.Windows.Forms.GroupBox();
+            this.cmdImportSystemsAndStationsFromDownload = new System.Windows.Forms.Button();
+            this.cmdDownloadSystemsAndStations = new System.Windows.Forms.Button();
             this.fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.lbProgess = new System.Windows.Forms.ListBox();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
-            this.gbRepeat = new System.Windows.Forms.GroupBox();
             this.rbImportSame = new System.Windows.Forms.RadioButton();
             this.rbImportNewer = new System.Windows.Forms.RadioButton();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -62,8 +64,8 @@
             this.cmdTest = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cmdExit = new System.Windows.Forms.Button();
-            this.gbFirstTime.SuspendLayout();
             this.gbRepeat.SuspendLayout();
+            this.gbFirstTime.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
@@ -107,11 +109,11 @@
             // 
             // cmdImportSystemsAndStations
             // 
-            this.cmdImportSystemsAndStations.Location = new System.Drawing.Point(36, 19);
+            this.cmdImportSystemsAndStations.Location = new System.Drawing.Point(34, 15);
             this.cmdImportSystemsAndStations.Name = "cmdImportSystemsAndStations";
             this.cmdImportSystemsAndStations.Size = new System.Drawing.Size(276, 34);
             this.cmdImportSystemsAndStations.TabIndex = 0;
-            this.cmdImportSystemsAndStations.Text = "Import data of systems/stations/commodities from EDDB-files";
+            this.cmdImportSystemsAndStations.Text = "Import from local EDDB dumpfiles";
             this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, resources.GetString("cmdImportSystemsAndStations.ToolTip"));
             this.cmdImportSystemsAndStations.UseVisualStyleBackColor = true;
             this.cmdImportSystemsAndStations.Click += new System.EventHandler(this.cmdImportSystemsAndStations_Click);
@@ -119,7 +121,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(12, 55);
+            this.checkBox1.Location = new System.Drawing.Point(12, 104);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(318, 17);
             this.checkBox1.TabIndex = 2;
@@ -142,7 +144,7 @@
             // 
             // cmdExportCSV
             // 
-            this.cmdExportCSV.Location = new System.Drawing.Point(20, 17);
+            this.cmdExportCSV.Location = new System.Drawing.Point(15, 16);
             this.cmdExportCSV.Name = "cmdExportCSV";
             this.cmdExportCSV.Size = new System.Drawing.Size(276, 34);
             this.cmdExportCSV.TabIndex = 0;
@@ -189,6 +191,45 @@
         " don\'t know the extended data from ED-IBE)\r\n\r\n");
             this.rbFormatSimple.UseVisualStyleBackColor = true;
             // 
+            // gbRepeat
+            // 
+            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStationsFromDownload);
+            this.gbRepeat.Controls.Add(this.cmdDownloadSystemsAndStations);
+            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
+            this.gbRepeat.Controls.Add(this.checkBox1);
+            this.gbRepeat.Location = new System.Drawing.Point(363, 12);
+            this.gbRepeat.Name = "gbRepeat";
+            this.gbRepeat.Size = new System.Drawing.Size(345, 164);
+            this.gbRepeat.TabIndex = 4;
+            this.gbRepeat.TabStop = false;
+            this.gbRepeat.Text = "EDDB imports";
+            this.ttToolTip.SetToolTip(this.gbRepeat, "Upating the master data.\r\nGet dumpfiles from EDDB (https://eddb.io/api)\r\nand upda" +
+        "te master data for systems, stations and other.");
+            // 
+            // cmdImportSystemsAndStationsFromDownload
+            // 
+            this.cmdImportSystemsAndStationsFromDownload.Location = new System.Drawing.Point(173, 55);
+            this.cmdImportSystemsAndStationsFromDownload.Name = "cmdImportSystemsAndStationsFromDownload";
+            this.cmdImportSystemsAndStationsFromDownload.Size = new System.Drawing.Size(133, 41);
+            this.cmdImportSystemsAndStationsFromDownload.TabIndex = 4;
+            this.cmdImportSystemsAndStationsFromDownload.Text = "Import downloaded EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStationsFromDownload, "Imports the dumpfiles downloaded from https://eddb.io/api \r\n(\"system.json\", \"stat" +
+        "ions.json\", \"commodities.json\").\r\n\r\nNo update of price data !\r\n");
+            this.cmdImportSystemsAndStationsFromDownload.UseVisualStyleBackColor = true;
+            this.cmdImportSystemsAndStationsFromDownload.Click += new System.EventHandler(this.cmdImportSystemsAndStationsFromDownload_Click);
+            // 
+            // cmdDownloadSystemsAndStations
+            // 
+            this.cmdDownloadSystemsAndStations.Location = new System.Drawing.Point(34, 55);
+            this.cmdDownloadSystemsAndStations.Name = "cmdDownloadSystemsAndStations";
+            this.cmdDownloadSystemsAndStations.Size = new System.Drawing.Size(133, 41);
+            this.cmdDownloadSystemsAndStations.TabIndex = 3;
+            this.cmdDownloadSystemsAndStations.Text = "Download latest EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdDownloadSystemsAndStations, "Downloads the latest dumpfiles of systems, stations and commodities from \r\nhttps:" +
+        "//eddb.io/api (\"system.json\", \"stations.json\", \"commodities.json\").\r\n\r\n");
+            this.cmdDownloadSystemsAndStations.UseVisualStyleBackColor = true;
+            this.cmdDownloadSystemsAndStations.Click += new System.EventHandler(this.cmdDownloadSystemsAndStations_Click);
+            // 
             // lbProgess
             // 
             this.lbProgess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -211,17 +252,6 @@
             this.gbFirstTime.TabIndex = 3;
             this.gbFirstTime.TabStop = false;
             this.gbFirstTime.Text = "Import data from \"RegulatedNoise\"";
-            // 
-            // gbRepeat
-            // 
-            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
-            this.gbRepeat.Controls.Add(this.checkBox1);
-            this.gbRepeat.Location = new System.Drawing.Point(363, 12);
-            this.gbRepeat.Name = "gbRepeat";
-            this.gbRepeat.Size = new System.Drawing.Size(345, 96);
-            this.gbRepeat.TabIndex = 4;
-            this.gbRepeat.TabStop = false;
-            this.gbRepeat.Text = "EDDB imports";
             // 
             // rbImportSame
             // 
@@ -391,9 +421,9 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.cmdTest);
-            this.groupBox2.Location = new System.Drawing.Point(363, 122);
+            this.groupBox2.Location = new System.Drawing.Point(363, 181);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(332, 72);
+            this.groupBox2.Size = new System.Drawing.Size(332, 73);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Other";
@@ -444,11 +474,13 @@
             this.MinimumSize = new System.Drawing.Size(1254, 506);
             this.Name = "frmDataIO";
             this.Text = "Data Interface";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDataIO_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDataIO_FormClosed);
-            this.gbFirstTime.ResumeLayout(false);
-            this.gbFirstTime.PerformLayout();
+            this.Shown += new System.EventHandler(this.frmDataIO_Shown);
             this.gbRepeat.ResumeLayout(false);
             this.gbRepeat.PerformLayout();
+            this.gbFirstTime.ResumeLayout(false);
+            this.gbFirstTime.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
@@ -500,5 +532,7 @@
         private System.Windows.Forms.NumericUpDown nudPurgeOldDataDays;
         private System.Windows.Forms.Button cmdPurgeOldData;
         private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button cmdDownloadSystemsAndStations;
+        private System.Windows.Forms.Button cmdImportSystemsAndStationsFromDownload;
     }
 }

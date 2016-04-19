@@ -8,11 +8,13 @@ todo:
 
 * filter: age of data
 * mark datasource colorized
-* download of EDDB files
 * message if permanantly eddn reciver active without sending
 
 done:
 
+   
+   * added function for download and import EDDB files directly
+-------------------------------------------------------------------------------------         
    * added station location type to list of best routes
    * filtering by station location type (planetary/space) added
 -------------------------------------------------------------------------------------         
