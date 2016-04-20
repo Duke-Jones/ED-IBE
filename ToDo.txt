@@ -4,7 +4,7 @@ todo:
 * switch : enable disable history
 * hold rejected data
 * add marked color for datagrids
-
+* option for recalculate distances in log
 
 * mark datasource colorized
 
@@ -12,6 +12,9 @@ done:
 
  
    
+v0.2.1
+   * EDDN: fixed error when switching between testmode an realmode
+-------------------------------------------------------------------------------------         
    * updated StarterTipps and added files to installer 
    * added fairness hints for use of EDDN
 -------------------------------------------------------------------------------------         
