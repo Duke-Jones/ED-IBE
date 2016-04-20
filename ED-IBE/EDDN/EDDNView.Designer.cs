@@ -52,15 +52,7 @@
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.tbcStatistics = new System.Windows.Forms.TabControl();
-            this.tabBySoftware = new System.Windows.Forms.TabPage();
-            this.tabByRelay = new System.Windows.Forms.TabPage();
-            this.tbEddnStatsRL = new System.Windows.Forms.TextBox();
-            this.tabByCommander = new System.Windows.Forms.TabPage();
-            this.tbEddnStatsCM = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabSend = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.rbSchemaTest = new System.Windows.Forms.RadioButton();
             this.rbSchemaReal = new System.Windows.Forms.RadioButton();
@@ -78,24 +70,33 @@
             this.tbUsername = new System.Windows.Forms.TextBox();
             this.rbUserID = new System.Windows.Forms.RadioButton();
             this.txtCmdrsName = new System.Windows.Forms.TextBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tabRecieve = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.tbcStatistics = new System.Windows.Forms.TabControl();
+            this.tabBySoftware = new System.Windows.Forms.TabPage();
+            this.tabByRelay = new System.Windows.Forms.TabPage();
+            this.tbEddnStatsRL = new System.Windows.Forms.TextBox();
+            this.tabByCommander = new System.Windows.Forms.TabPage();
+            this.tbEddnStatsCM = new System.Windows.Forms.TextBox();
             this.tabByMessageType = new System.Windows.Forms.TabPage();
             this.tbEddnStatsMT = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.lbEDDNInfo = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabSend.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.tabRecieve.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tbcStatistics.SuspendLayout();
             this.tabBySoftware.SuspendLayout();
             this.tabByRelay.SuspendLayout();
             this.tabByCommander.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.tabByMessageType.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -336,8 +337,8 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabSend);
+            this.tabControl1.Controls.Add(this.tabRecieve);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.MaximumSize = new System.Drawing.Size(1063, 687);
@@ -347,112 +348,19 @@
             this.tabControl1.Size = new System.Drawing.Size(1063, 687);
             this.tabControl1.TabIndex = 11;
             // 
-            // tabPage1
+            // tabSend
             // 
-            this.tabPage1.Controls.Add(this.groupBox5);
-            this.tabPage1.Controls.Add(this.label83);
-            this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.lbEddnImplausible);
-            this.tabPage1.Controls.Add(this.label24);
-            this.tabPage1.Controls.Add(this.tbEDDNOutput);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1055, 661);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Recieve Data";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox5.Controls.Add(this.tbcStatistics);
-            this.groupBox5.Location = new System.Drawing.Point(493, 6);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(556, 392);
-            this.groupBox5.TabIndex = 12;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Statistics";
-            // 
-            // tbcStatistics
-            // 
-            this.tbcStatistics.Controls.Add(this.tabBySoftware);
-            this.tbcStatistics.Controls.Add(this.tabByRelay);
-            this.tbcStatistics.Controls.Add(this.tabByCommander);
-            this.tbcStatistics.Controls.Add(this.tabByMessageType);
-            this.tbcStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbcStatistics.Location = new System.Drawing.Point(3, 16);
-            this.tbcStatistics.Name = "tbcStatistics";
-            this.tbcStatistics.SelectedIndex = 0;
-            this.tbcStatistics.Size = new System.Drawing.Size(550, 373);
-            this.tbcStatistics.TabIndex = 11;
-            // 
-            // tabBySoftware
-            // 
-            this.tabBySoftware.Controls.Add(this.tbEddnStatsSW);
-            this.tabBySoftware.Location = new System.Drawing.Point(4, 22);
-            this.tabBySoftware.Name = "tabBySoftware";
-            this.tabBySoftware.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBySoftware.Size = new System.Drawing.Size(542, 347);
-            this.tabBySoftware.TabIndex = 0;
-            this.tabBySoftware.Text = "By Software";
-            this.tabBySoftware.UseVisualStyleBackColor = true;
-            // 
-            // tabByRelay
-            // 
-            this.tabByRelay.Controls.Add(this.tbEddnStatsRL);
-            this.tabByRelay.Location = new System.Drawing.Point(4, 22);
-            this.tabByRelay.Name = "tabByRelay";
-            this.tabByRelay.Padding = new System.Windows.Forms.Padding(3);
-            this.tabByRelay.Size = new System.Drawing.Size(542, 347);
-            this.tabByRelay.TabIndex = 1;
-            this.tabByRelay.Text = "By Relay";
-            this.tabByRelay.UseVisualStyleBackColor = true;
-            // 
-            // tbEddnStatsRL
-            // 
-            this.tbEddnStatsRL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbEddnStatsRL.Location = new System.Drawing.Point(3, 3);
-            this.tbEddnStatsRL.Multiline = true;
-            this.tbEddnStatsRL.Name = "tbEddnStatsRL";
-            this.tbEddnStatsRL.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbEddnStatsRL.Size = new System.Drawing.Size(536, 341);
-            this.tbEddnStatsRL.TabIndex = 9;
-            // 
-            // tabByCommander
-            // 
-            this.tabByCommander.Controls.Add(this.tbEddnStatsCM);
-            this.tabByCommander.Location = new System.Drawing.Point(4, 22);
-            this.tabByCommander.Name = "tabByCommander";
-            this.tabByCommander.Padding = new System.Windows.Forms.Padding(3);
-            this.tabByCommander.Size = new System.Drawing.Size(542, 347);
-            this.tabByCommander.TabIndex = 2;
-            this.tabByCommander.Text = "By Commander";
-            this.tabByCommander.UseVisualStyleBackColor = true;
-            // 
-            // tbEddnStatsCM
-            // 
-            this.tbEddnStatsCM.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbEddnStatsCM.Location = new System.Drawing.Point(3, 3);
-            this.tbEddnStatsCM.Multiline = true;
-            this.tbEddnStatsCM.Name = "tbEddnStatsCM";
-            this.tbEddnStatsCM.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbEddnStatsCM.Size = new System.Drawing.Size(536, 341);
-            this.tbEddnStatsCM.TabIndex = 10;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.groupBox4);
-            this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1055, 661);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Transmit Data";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabSend.Controls.Add(this.lbEDDNInfo);
+            this.tabSend.Controls.Add(this.groupBox4);
+            this.tabSend.Controls.Add(this.groupBox3);
+            this.tabSend.Controls.Add(this.groupBox1);
+            this.tabSend.Location = new System.Drawing.Point(4, 22);
+            this.tabSend.Name = "tabSend";
+            this.tabSend.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSend.Size = new System.Drawing.Size(1055, 661);
+            this.tabSend.TabIndex = 1;
+            this.tabSend.Text = "Transmit Data";
+            this.tabSend.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -460,7 +368,7 @@
             this.groupBox4.Controls.Add(this.rbSchemaReal);
             this.groupBox4.Location = new System.Drawing.Point(471, 92);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(374, 76);
+            this.groupBox4.Size = new System.Drawing.Size(374, 121);
             this.groupBox4.TabIndex = 48;
             this.groupBox4.TabStop = false;
             this.groupBox4.Tag = "Schema;Real";
@@ -667,6 +575,100 @@
             this.txtCmdrsName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.txtCmdrsName.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
+            // tabRecieve
+            // 
+            this.tabRecieve.Controls.Add(this.groupBox5);
+            this.tabRecieve.Controls.Add(this.label83);
+            this.tabRecieve.Controls.Add(this.groupBox2);
+            this.tabRecieve.Controls.Add(this.lbEddnImplausible);
+            this.tabRecieve.Controls.Add(this.label24);
+            this.tabRecieve.Controls.Add(this.tbEDDNOutput);
+            this.tabRecieve.Location = new System.Drawing.Point(4, 22);
+            this.tabRecieve.Name = "tabRecieve";
+            this.tabRecieve.Padding = new System.Windows.Forms.Padding(3);
+            this.tabRecieve.Size = new System.Drawing.Size(1055, 661);
+            this.tabRecieve.TabIndex = 0;
+            this.tabRecieve.Text = "Recieve Data";
+            this.tabRecieve.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.tbcStatistics);
+            this.groupBox5.Location = new System.Drawing.Point(493, 6);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(556, 392);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Statistics";
+            // 
+            // tbcStatistics
+            // 
+            this.tbcStatistics.Controls.Add(this.tabBySoftware);
+            this.tbcStatistics.Controls.Add(this.tabByRelay);
+            this.tbcStatistics.Controls.Add(this.tabByCommander);
+            this.tbcStatistics.Controls.Add(this.tabByMessageType);
+            this.tbcStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbcStatistics.Location = new System.Drawing.Point(3, 16);
+            this.tbcStatistics.Name = "tbcStatistics";
+            this.tbcStatistics.SelectedIndex = 0;
+            this.tbcStatistics.Size = new System.Drawing.Size(550, 373);
+            this.tbcStatistics.TabIndex = 11;
+            // 
+            // tabBySoftware
+            // 
+            this.tabBySoftware.Controls.Add(this.tbEddnStatsSW);
+            this.tabBySoftware.Location = new System.Drawing.Point(4, 22);
+            this.tabBySoftware.Name = "tabBySoftware";
+            this.tabBySoftware.Padding = new System.Windows.Forms.Padding(3);
+            this.tabBySoftware.Size = new System.Drawing.Size(542, 347);
+            this.tabBySoftware.TabIndex = 0;
+            this.tabBySoftware.Text = "By Software";
+            this.tabBySoftware.UseVisualStyleBackColor = true;
+            // 
+            // tabByRelay
+            // 
+            this.tabByRelay.Controls.Add(this.tbEddnStatsRL);
+            this.tabByRelay.Location = new System.Drawing.Point(4, 22);
+            this.tabByRelay.Name = "tabByRelay";
+            this.tabByRelay.Padding = new System.Windows.Forms.Padding(3);
+            this.tabByRelay.Size = new System.Drawing.Size(542, 347);
+            this.tabByRelay.TabIndex = 1;
+            this.tabByRelay.Text = "By Relay";
+            this.tabByRelay.UseVisualStyleBackColor = true;
+            // 
+            // tbEddnStatsRL
+            // 
+            this.tbEddnStatsRL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbEddnStatsRL.Location = new System.Drawing.Point(3, 3);
+            this.tbEddnStatsRL.Multiline = true;
+            this.tbEddnStatsRL.Name = "tbEddnStatsRL";
+            this.tbEddnStatsRL.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEddnStatsRL.Size = new System.Drawing.Size(536, 341);
+            this.tbEddnStatsRL.TabIndex = 9;
+            // 
+            // tabByCommander
+            // 
+            this.tabByCommander.Controls.Add(this.tbEddnStatsCM);
+            this.tabByCommander.Location = new System.Drawing.Point(4, 22);
+            this.tabByCommander.Name = "tabByCommander";
+            this.tabByCommander.Padding = new System.Windows.Forms.Padding(3);
+            this.tabByCommander.Size = new System.Drawing.Size(542, 347);
+            this.tabByCommander.TabIndex = 2;
+            this.tabByCommander.Text = "By Commander";
+            this.tabByCommander.UseVisualStyleBackColor = true;
+            // 
+            // tbEddnStatsCM
+            // 
+            this.tbEddnStatsCM.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbEddnStatsCM.Location = new System.Drawing.Point(3, 3);
+            this.tbEddnStatsCM.Multiline = true;
+            this.tbEddnStatsCM.Name = "tbEddnStatsCM";
+            this.tbEddnStatsCM.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbEddnStatsCM.Size = new System.Drawing.Size(536, 341);
+            this.tbEddnStatsCM.TabIndex = 10;
+            // 
             // tabByMessageType
             // 
             this.tabByMessageType.Controls.Add(this.tbEddnStatsMT);
@@ -687,6 +689,19 @@
             this.tbEddnStatsMT.Size = new System.Drawing.Size(542, 347);
             this.tbEddnStatsMT.TabIndex = 11;
             // 
+            // lbEDDNInfo
+            // 
+            this.lbEDDNInfo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbEDDNInfo.AutoSize = true;
+            this.lbEDDNInfo.Font = new System.Drawing.Font("Cooper Black", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbEDDNInfo.ForeColor = System.Drawing.Color.Crimson;
+            this.lbEDDNInfo.Location = new System.Drawing.Point(191, 298);
+            this.lbEDDNInfo.Name = "lbEDDNInfo";
+            this.lbEDDNInfo.Size = new System.Drawing.Size(709, 180);
+            this.lbEDDNInfo.TabIndex = 49;
+            this.lbEDDNInfo.Text = "Have in mind:\r\n\r\nThe EDDN/EDDB lives from the data. \r\nIf you want to receive data" +
+    " permanently, \r\nit would be fair in return also to send data.";
+            // 
             // EDDNView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -702,8 +717,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabSend.ResumeLayout(false);
+            this.tabSend.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabRecieve.ResumeLayout(false);
+            this.tabRecieve.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.tbcStatistics.ResumeLayout(false);
             this.tabBySoftware.ResumeLayout(false);
@@ -712,14 +736,6 @@
             this.tabByRelay.PerformLayout();
             this.tabByCommander.ResumeLayout(false);
             this.tabByCommander.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabByMessageType.ResumeLayout(false);
             this.tabByMessageType.PerformLayout();
             this.ResumeLayout(false);
@@ -745,8 +761,8 @@
         private System.Windows.Forms.PictureBox pbListenerStatus;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabSend;
+        private System.Windows.Forms.TabPage tabRecieve;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.RadioButton rbSchemaTest;
         private System.Windows.Forms.RadioButton rbSchemaReal;
@@ -779,5 +795,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSenderName;
         private System.Windows.Forms.TabPage tabByMessageType;
         private System.Windows.Forms.TextBox tbEddnStatsMT;
+        private System.Windows.Forms.Label lbEDDNInfo;
     }
 }

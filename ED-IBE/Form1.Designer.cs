@@ -73,7 +73,7 @@
             this.lblUpdateInfo = new System.Windows.Forms.Label();
             this.lblUpdateDetail = new System.Windows.Forms.TextBox();
             this.cmdDonate = new System.Windows.Forms.Button();
-            this.label42 = new System.Windows.Forms.Label();
+            this.lblDonate = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label44 = new System.Windows.Forms.Label();
             this.linkLabel9 = new System.Windows.Forms.LinkLabel();
@@ -518,7 +518,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateInfo);
             this.tabHelpAndChangeLog.Controls.Add(this.lblUpdateDetail);
             this.tabHelpAndChangeLog.Controls.Add(this.cmdDonate);
-            this.tabHelpAndChangeLog.Controls.Add(this.label42);
+            this.tabHelpAndChangeLog.Controls.Add(this.lblDonate);
             this.tabHelpAndChangeLog.Controls.Add(this.panel2);
             this.tabHelpAndChangeLog.Controls.Add(this.BackgroundSet);
             this.tabHelpAndChangeLog.Controls.Add(this.ForegroundSet);
@@ -645,19 +645,19 @@
             this.cmdDonate.UseVisualStyleBackColor = false;
             this.cmdDonate.Click += new System.EventHandler(this.cmdDonate_Click);
             // 
-            // label42
+            // lblDonate
             // 
-            this.label42.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label42.BackColor = System.Drawing.Color.Transparent;
-            this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.ForeColor = System.Drawing.Color.Green;
-            this.label42.Location = new System.Drawing.Point(767, 235);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(352, 139);
-            this.label42.TabIndex = 38;
-            this.label42.Text = "If you like this program and you want to support \r\nmy development, I was very hap" +
+            this.lblDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDonate.BackColor = System.Drawing.Color.Transparent;
+            this.lblDonate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDonate.ForeColor = System.Drawing.Color.Green;
+            this.lblDonate.Location = new System.Drawing.Point(767, 235);
+            this.lblDonate.Name = "lblDonate";
+            this.lblDonate.Size = new System.Drawing.Size(352, 139);
+            this.lblDonate.TabIndex = 38;
+            this.lblDonate.Text = "If you like this program and you want to support \r\nmy development, I was very hap" +
     "py \r\nabout a small donation. \r\n\r\nThank you, Duke Jones\r\n";
-            this.label42.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblDonate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panel2
             // 
@@ -2522,7 +2522,7 @@
         internal System.Windows.Forms.Label lblUpdateInfo;
         internal System.Windows.Forms.TextBox lblUpdateDetail;
         private System.Windows.Forms.Button cmdDonate;
-        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label lblDonate;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.LinkLabel linkLabel9;

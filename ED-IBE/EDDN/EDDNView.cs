@@ -187,7 +187,7 @@ namespace IBE.EDDN
             {
                 if(m_GUIInterface.saveSetting(sender))
                 {
-                    if(((CheckBox)sender).Name.Equals("cbEDDNAutoListen") && ((CheckBox)sender).Checked && (!Program.DBCon.getIniValue<Boolean>(DB_GROUPNAME, "AutoSend", false.ToString(), false)))
+                    if(((CheckBox)sender).Name.Equals("cbEDDNAutoListen") && cbEDDNAutoListen.Checked && (!cbEDDNAutoSend.Checked))
                     {
                         if(MessageBox.Show(this, "The EDDN/EDDB lives from the data. If you want to receive data permanently, it would be fair in return also to send data.\r\n" +
                                                  "Shall I activate sending of market data for you?", 
@@ -196,7 +196,10 @@ namespace IBE.EDDN
                                                  MessageBoxIcon.Question, 
                                                  MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
                         {
-                            Program.DBCon.setIniValue(DB_GROUPNAME, "AutoSend", true.ToString());
+                            cbEDDNAutoSend.Checked = true;
+
+                            if(!m_Communicator.SenderIsActivated)
+                                m_Communicator.ActivateSender();
                         }
                     }
                 }
@@ -212,6 +215,16 @@ namespace IBE.EDDN
             try
             {
                 m_Communicator.StartEDDNListening();
+
+                if(MessageBox.Show(this, "Shall I also activate sending of market data for you?", 
+                                         "EDDN Network", 
+                                         MessageBoxButtons.YesNo, 
+                                         MessageBoxIcon.Question, 
+                                         MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    if(!m_Communicator.SenderIsActivated)
+                        m_Communicator.ActivateSender();
+                }
             }
             catch (Exception ex)
             {

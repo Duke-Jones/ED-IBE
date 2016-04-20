@@ -12,6 +12,9 @@ done:
 
  
    
+   * updated StarterTipps and added files to installer 
+   * added fairness hints for use of EDDN
+-------------------------------------------------------------------------------------         
    * new filter option : max age
    * cleaned up the price analysis gui a little
 -------------------------------------------------------------------------------------         

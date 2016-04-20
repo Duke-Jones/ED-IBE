@@ -38,9 +38,9 @@ EDDN-Dumpfiles importiert und weitere benötigte Stammdaten angelegt.
 (siehe hierzu auch unter 3. : "Import data of systems/stations/commodities from EDDB-Files") 
 Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
 
-3. Ex-/Import von Daten
-ED-IBE besitzt ein Menüpunkt "Data"->"Import". Dort können über "Import Old Datafiles" 
-die Datenbestände aus dem alten RN übernommen werden.
+3. Ex-/Import von Daten (Menüpunkt "Data"->"Import".)
+
+Dort können über "Import Old Datafiles" die Datenbestände aus dem alten RN übernommen werden.
 
 "Import data of systems/stations/commodities from EDDB-Files" bietet die Möglichkeit
 neuere Stammdaten (die zunächst von der EDDB-Seite heruntergeladen werden müssen)
@@ -50,6 +50,10 @@ beliebig oft wiederholt werden macht (Empfehlung: alle 1 bis 4 Wochen reicht
 vollkommen - oder wenn bestimmte Daten fehlen, die inzwischen in der EDDB angelegt worden sind)
 ->Bei ersten Start von ED-IBE wird dieser Import automatisch mit den mitgelieferten EDDB-Dumps ausgeführt. 
 > bei einem Update von ED-IBE werden diese Daten ebenfalls automatisch aktualisiert.
+
+Mit "Download latest EDDB dumpfiles" und "Import downloaded EDDB dumpfiles" hat man die Möglichkeit,
+weitgehend automatisiert die neuesten Dumpfiles von https://eddb.io/api herunterzuladen und zu importieren.
+Die Dateien werden im persönlichen temp-Ordner abgelegt (.\temp\ED-IBE\)
 
 Mit "Import RN-CommandersLog Files" können gesplittete Logfiles von RN wieder eingelesen werden.
 Voraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.

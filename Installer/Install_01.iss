@@ -61,6 +61,8 @@ Source: "..\ED-IBE\bin\Release\x86\libtesseract302.dll"; DestDir: "{app}\x86\"; 
 Source: "..\ED-IBE\bin\Release\Json\Bin\Net45\Newtonsoft.Json.dll"; DestDir: "{app}\Json\Bin\Net45\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\COPYING"; DestDir: "{app}\Database\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\README"; DestDir: "{app}\Database\"; Flags: ignoreversion
+Source: "..\StarterTips_deu.txt"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion
+Source: "..\StarterTips_eng.txt"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\bin\*"; DestDir: "{app}\Database\bin\"; Flags: ignoreversion
 Source: "..\RNDatabase\Database\share\*"; DestDir: "{app}\Database\share\"; Flags: ignoreversion createallsubdirs recursesubdirs
 ;data path
@@ -75,7 +77,7 @@ Source: "..\RNDatabase\Database\script\start_server.cmd"; DestDir: "{code:GetDat
 Source: "..\ED-IBE\bin\Release\ED-IBE.ini"; DestDir: "{code:GetDataBasepath}"; Flags: ignoreversion onlyifdoesntexist
 Source: "..\RNDatabase\Database\Elite.ini"; DestDir: "{code:GetDataBasepath}\Database\"; Flags: ignoreversion onlyifdoesntexist
 ;license
-Source: "..\license\*"; DestDir: "{app}"; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: "..\license\*"; DestDir: "{code:GetDataBasepath}\license\"; Flags: ignoreversion createallsubdirs recursesubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

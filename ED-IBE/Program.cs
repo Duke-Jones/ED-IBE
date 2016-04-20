@@ -923,6 +923,9 @@ namespace IBE
                                                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
                             {
                                 Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend", true.ToString());
+
+                                if(!EDDNComm.SenderIsActivated)
+                                    EDDNComm.ActivateSender();
                             }
 
                             if(!Program.SplashScreen.IsDisposed)

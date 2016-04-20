@@ -44,8 +44,7 @@ imported from the supplied EDDN dumpfiles.
 
 Tip for this moment: change to your language in the settings
 
-3. Export and import of data
-ED-IBE has a menu item "Data" -> "Import&Export". 
+3. Export and import of data (menu item "Data" -> "Import&Export")
 
 "Import data of systems/stations/commodities from EDDB-Files" offers the possibility
 to refresh the master data (which must first be downloaded from the EDDB page). 
@@ -54,6 +53,10 @@ This import can be repeated as often as you like. Recommended is every 1 to 4 we
 when you think certain data is missing, which have since been applied in the EDDB.
 -> At the first start of ED-IBE this import is performed automatically using the supplied EDDB dumps.
 -> During an update from ED-IBE this data is also updated automatically.
+
+"Download latest EDDB dumpfiles" and "Import downloaded EDDB dumpfiles" offers the possibility
+to download and import the latest dumpfiles from https://eddb.io/api. The files ere located
+in your personal tempfolder (.\temp\ED-IBE\).
 
 With "Import Old Data Files" you can import your existing data from the old RN if existing.
 
