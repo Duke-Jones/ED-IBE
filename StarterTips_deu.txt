@@ -1,5 +1,10 @@
 ﻿ED - Intelligent Boardcomputer Extension
 
+Inhalt: 
+   * Voraussetzungen
+   * Kurzanleitung/Starter-Tipps
+   * FAQ
+
 Voraussetzungen:
 - Win7 oder höher, x64
 - Microsoft dotNet 4.6
@@ -121,6 +126,52 @@ Grundlage hierfür ist beim Import das "Commander's Log" sowie die "StationHisto
 
 
 
+FAQ:
+
+*************************************************************************
+Q: Absturz beim Starten von ED-IBE?
+
+A1: Eventuell ist der Datenteil von ED-IBE in einem Verzeichnis installiert, das mit hohen Zugriffs-Restriktionen ausgestattet ist, 
+wie z. B. "C:\Programme\....". ED-IBE benötigt aber in jedem Fall Schreibzugriff auf die Log-Dateien etc. 
+Lösung : Den Datenteil von ED-IBE  in einem Verzeichnis installieren, in dem keinerlei Zugriffs-Restriktionen
+bestehen, wie dem vorgeschlagenen Standardpfad (Userverzecihnis) oder z. B. D:\Games\...."
+
+A2: Die Datenbank wurde bei der Installation nicht angelegt. 
+Siehe unter "1) Installation" der "Startertipps"
+
+*************************************************************************
+Q: Absturz beim Verarbeiten der Screenshots?
+
+A1: Die OCR-Funktionalität erfordert "Visual Studio 2012 C++ Redistributables" für x86 UND x64, 
+Download => https://www.microsoft.com/en-us/download/details.aspx?id=30679
+
+A2: Du hast eine Sicherheits-Suite wie "360 Internet Security", "Norton Internet Security" oder 
+ein anderes Anti-Viren-Tool mit einer Blockierfunktion installiert
+Versuche, das Tool (temporär) zu deaktivieren und prüfe, ob das Problem behoben ist. Wenn es jetzt geht, 
+versuche das Programm "nn_training.exe" (zu finden im "\Brainerous\" Unterordner) auf eine WhiteList zu setzen.
+
+A3: Du hast vielleicht zuvor schon mal "Tesseract OCR" installiert. Zum Testen einfach
+mal in in cmd-Fenster "echo %TESSDATA_PREFIX%" eingeben und prüfen, ob ein Pfad angezeigt wird.
+Wenn ja, entweder "Tesseract OCR" deinstallieren (auch sicherstellen, dass  TESSDATA_PREFIX gelöscht wird)
+ODER die "*.traineddata"-Dateien aus dem ".\tessdata\"-Unterverzeichnis in das Verzeichnis kopieren, auf das TESSDATA_PREFIX verweist.
+
+*************************************************************************
+Q: Crash, wenn der EDDN-Listener aktviert wird ?
+A1: 
+Die genutzte ZeroMQ-Komponente benötigt "Microsoft Visual Studio 2013 C++ Runtimes"
+Download => [url]https://www.microsoft.com/en-gb/download/details.aspx?id=40784[/url]
+
+*************************************************************************
+Q: Allgemein schlechte Erkennung der Zahlen ?
+A: Schlechte Kalibrierung ? Schau in das "\Brainerous\images" Unterverzeichnis. Sind die Zahlen abgeschnitten
+muss die OCR-Kalibrierung wiederholt und die Positionierung verbessert werden.
+
+*************************************************************************
+Q: "8" wird oft als "6" erkannt oder anders herum ?
+A1: Das ist bekannt, aber im Moment leider nicht zu verhindern . Es sollte aber nicht zu häufig vorkommen -
+vielleicht alle 4 bis 8 (?) Screenshots. Du kannst versuchen, die Erkennung zu verbessern, in dem der "UI Color Cutoff Level"
+verändert wird. Versuch Werte, durch die die Ziffern ein wenig dünner werden, um die Unterscheidbarkeit von "6" und "8" zu verbessern.
+Aber darauf achten, dass die Ziffern nicht anfangen Unterbrechungen in der Kontur zu bekommen.
 
 
 

@@ -2,16 +2,21 @@
 ! If you want to translate this text to another language, 
 ! I suggest to use "ReadMe_ger.txt" as base for translation.
 
-
 ED - Intelligent Board Computer Extension
 
-Conditions:
-- Win7 or higher, x64
-- Microsoft .Net 4.6
-- Microsoft Visual Studio 2013 C ++ runtimes (https://www.microsoft.com/en-gb/download/details.aspx?id=40784)
-- Visual Studio 2012 C ++ Redistributable (x86 and x64) (https://www.microsoft.com/en-us/download/details.aspx?id=30679)
+Content:
+	* Prerequisites
+	* Quick Guide / Starter Tips
+	* FAQ
 
-Quick Guide / Starter Tips
+Prerequisites:
+	- Win7 or higher, x64
+	- Microsoft .Net 4.6
+	- Microsoft Visual Studio 2013 C ++ runtimes (https://www.microsoft.com/en-gb/download/details.aspx?id=40784)
+	- Visual Studio 2012 C ++ Redistributable (x86 and x64) (https://www.microsoft.com/en-us/download/details.aspx?id=30679)
+
+
+Quick Guide / Starter Tips:
 
 1. Installation
 By default, the program installs to half in the Programs
@@ -133,3 +138,44 @@ It can changed at any time will.
 Note: If you have imported your old RN data, the list of visited systems/stations
 is completed by the data of the "Commander's Log" and the RN-list of visited systems.
 
+
+
+FAQ:
+
+*******************************************
+Q: Crash when starting the app ?
+
+A: The data part of ED-IBE maybe is installed in a directory where IBE has no rights to write someting, e.g. "C:\Program Files\....".
+Solution is to install IBE's data part in another directory without restrictions like D:\Games\.." or in the suggested path by the installer.
+
+*******************************************
+Q: Crash when grabbing a screenshot?
+
+A1: OCR functions REQUIRE the Visual Studio 2012 C++ Redistributables for BOTH x86 and x64, 
+from here => https://www.microsoft.com/en-us/download/details.aspx?id=30679
+
+A2: you're running a security or antivirus tool like "360 Internet Security", "Norton Internet Security" or a AV tool with a blocking funktionality. 
+Try to disable this tool (temporary) and check if this is the problem. If so, put "nn_training.exe" (it's in the "\Brainerous" subdir) on a whitelist if possible.
+
+A3: you may already had installed the "Tesseract OCR" before and now the "TESSDATA_PREFIX" environment variable is defined. 
+For test this open a cmd window and type "echo %TESSDATA_PREFIX%" + Enter
+Solution: copy the "*.traineddata" which is selected on the settings tab (default is "big.traineddata") to this directory 
+*OR* uninstall "Tesseract OCR". Be sure also the environment variable is deleted.
+
+*******************************************
+Q: Crash when starting the EDDN listener?
+
+A: The ZeroMQ component I use for EDDN listening, require the Microsoft Visual Studio 2013 C++ Runtimes. 
+You can get them here => https://www.microsoft.com/en-gb/download/details.aspx?id=40784
+
+*******************************************
+Q: General bad recognition of digits ?
+
+A: Bad calibration ? Look into the "\Brainerous\images" subdirectory. If the numbers are truncated try to recalibrate the OCR positions.
+
+*******************************************
+Q: "8" is often as "6" recognized or other way round ?
+
+A: It's known but there's no solution at the moment. But it should not happen too often -  at most every 4 - 8 screenshots. 
+You can try to optimize the recognition if you test other values for "UI Color Cutoff Level". 
+Take a value that makes the digits more thinly - [U]but be sure that there are no breaks in the contour.
