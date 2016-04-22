@@ -89,7 +89,9 @@ The download function will get files only if they are newer than the existing on
 By default no prices will be imported or updated. But if you activate the option
 you can select between importing a "Starter Kit" (and get the existing market 
 data from all stations in the bubble of 20 ly around your current location)
-or the full EDDB copy (which can take few hours to finish).
+or the full EDDB copy.
+Warning: If your database is empty the full import is fast. But if you already have 
+much data in it the full import can take few hours to finish.
 
 If you select the "Starter-Kit" the found systems will automatically added to
 your list of visited systems (see also 9. "Consideration of systems/stations")

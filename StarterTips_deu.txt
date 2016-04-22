@@ -86,7 +86,8 @@ Es werden normalerweise keine Preisdaten importiert/aktualisiert.
 Durch Auswahl der Importoptionen kann man jedoch ein Starter-Kit
 (Preisdaten im Umkreis von 20 Lichtjahren um die aktuelle Schiffsposition)
 oder auch den gesamten aktuellen Preis-Datenbestand der EDDB importieren.
-Achtung: Der Gesamtimport kann durchaus mehrere Stunden dauern.
+Achtung: Ist die Datenbank noch leer gehts recht schnell. Sind bereits 
+viele Preisdaten vorhanden, kann der Gesamtimport durchaus mehrere Stunden dauern.
 
 Beim Import des "Starter-Kits" weden die betreffenden Systeme automatisch
 zur Liste der besuchten Systeme hinzugefügt (siehe 9. "Berücksichtigung der Systeme/Stationen")
