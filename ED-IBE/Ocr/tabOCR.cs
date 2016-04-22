@@ -85,7 +85,7 @@ namespace IBE.Ocr
             if (_fileSystemWatcher == null)
                 _fileSystemWatcher = new FileSystemWatcher();
 
-            _fileSystemWatcher.Path = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder");
+            _fileSystemWatcher.Path = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder");
 
             _fileSystemWatcher.Filter = "*.bmp";
 
@@ -736,7 +736,7 @@ namespace IBE.Ocr
                     UpdateOriginalImage(null);
                     UpdateTrimmedImage(null, null);
 
-                    if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "DeleteScreenshotOnImport"))
+                    if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettingsView.DB_GROUPNAME, "DeleteScreenshotOnImport"))
                         File.Delete(_screenshotName);
 
                     Acquisition();
@@ -777,7 +777,7 @@ namespace IBE.Ocr
                     {
                         tbFinalOcrOutput.Enabled = true;
 
-                        if ((!noAutoImport) && Program.DBCon.getIniValue<Boolean>(IBE.IBESettings.DB_GROUPNAME, "AutoImport"))
+                        if ((!noAutoImport) && Program.DBCon.getIniValue<Boolean>(IBE.IBESettingsView.DB_GROUPNAME, "AutoImport"))
                         {
                             tbCommoditiesOcrOutput.Text = "Imported!";
                             ImportFinalOcrOutput();
@@ -938,10 +938,10 @@ namespace IBE.Ocr
             }
 
             var dialog = new FolderBrowserDialog();
-            dialog.SelectedPath = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder");
+            dialog.SelectedPath = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder");
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder", dialog.SelectedPath);
+                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder", dialog.SelectedPath);
 
                 if (_fileSystemWatcher == null)
                     _fileSystemWatcher = new FileSystemWatcher();
@@ -973,7 +973,7 @@ namespace IBE.Ocr
                 return;
             }
             var dialog = new OpenFileDialog();
-            dialog.InitialDirectory = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder");
+            dialog.InitialDirectory = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder");
             dialog.Filter = "BMP Files|*.bmp";
             dialog.CheckFileExists = true;
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -1119,26 +1119,26 @@ namespace IBE.Ocr
 
         private void cbStartOCROnLoad_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbStartOCROnLoad.Checked && Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "MostRecentOCRFolder") == "")
+            if (cbStartOCROnLoad.Checked && Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder") == "")
             {
                 MessageBox.Show("You need to pick a directory first, using the Monitor Directory button.  Once you've done that, you can enable Start OCR On Load.");
-                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "StartOCROnLoad", false.ToString());
+                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "StartOCROnLoad", false.ToString());
                 cbStartOCROnLoad.Checked = false;
             }
             else
             {
-                Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "StartOCROnLoad", cbStartOCROnLoad.Checked.ToString());
+                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "StartOCROnLoad", cbStartOCROnLoad.Checked.ToString());
             }
         }
 
         private void cbAutoImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "AutoImport", cbAutoImport.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "AutoImport", cbAutoImport.Checked.ToString());
         }
 
         private void cbDeleteScreenshotOnImport_CheckedChanged(object sender, EventArgs e)
         {
-            Program.DBCon.setIniValue(IBE.IBESettings.DB_GROUPNAME, "DeleteScreenshotOnImport", cbDeleteScreenshotOnImport.Checked.ToString());
+            Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "DeleteScreenshotOnImport", cbDeleteScreenshotOnImport.Checked.ToString());
         }
 
         private void cmdHint_Click(object sender, EventArgs e)

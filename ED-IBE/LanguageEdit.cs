@@ -57,7 +57,7 @@ namespace IBE
                 m_ChangedIDs = new Dictionary<Int32, Int32>();
                 m_DeletedIDs = new List<Int32>();
 
-                currentLanguage = Program.DBCon.getIniValue(IBE.IBESettings.DB_GROUPNAME, "Language");
+                currentLanguage = Program.DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
                 clbLanguageFilter.Items.Clear();
                 foreach (SQL.Datasets.dsEliteDB.tblanguageRow langRow in Program.Data.BaseData.tblanguage.Rows)
                 {
@@ -620,7 +620,7 @@ namespace IBE
 
             try
             {
-                currentLanguage = Program.DBCon.getIniValue(IBE.IBESettings.DB_GROUPNAME, "Language");
+                currentLanguage = Program.DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
 
                 currentBaseItem = m_DGVTables[dgvData   ].Select(string.Format("id1 = {0} and id2 = 0", dgvData.SelectedRows[0].Cells[0].Value));
                 ownBaseItem     = m_DGVTables[dgvDataOwn].Select(string.Format("id1 = {0} and id2 = 0", dgvDataOwn.SelectedRows[0].Cells[0].Value));

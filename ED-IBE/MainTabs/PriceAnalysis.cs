@@ -59,7 +59,7 @@ namespace IBE.MTPriceAnalysis
         private Boolean                             m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner        m_LogfileScanner;
         private ExternalDataInterface               m_ExternalDataInterface;
-        private IBE.IBESettings          m_Settings;
+        private IBE.IBESettingsView          m_Settings;
         private DBConnector                         m_lDBCon;
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace IBE.MTPriceAnalysis
                             
                 if(DistanceToStar != null)                            
                 {
-                    if (Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "NoDistanceToStar", "consider").Equals("consider"))
+                    if (Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "NoDistanceToStar", "consider").Equals("consider"))
                     {
                         sqlString = sqlString + String.Format(
                                 "   and ((St.Distance_To_Star <= {0}) or (St.Distance_To_Star is null))",
@@ -343,7 +343,7 @@ namespace IBE.MTPriceAnalysis
                 if(minLandingPadSize != null)                            
                 {
                     String LandingPadString = "";
-                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "NoLandingPadSize", "consider").Equals("consider");
+                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "NoLandingPadSize", "consider").Equals("consider");
 
                     switch (((String)minLandingPadSize).ToUpper())
                     {
@@ -371,7 +371,7 @@ namespace IBE.MTPriceAnalysis
 
                 if(locationType != null)                            
                 {
-                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "NoLocation", "consider").Equals("consider");
+                    Boolean consider = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "NoLocation", "consider").Equals("consider");
 
                     if(consider)
                     { 

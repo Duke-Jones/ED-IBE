@@ -209,6 +209,75 @@ namespace IBE.EDDB_Data
             }
         }
 
+        /// <summary>
+        /// creates a new station with values from the CsvRow object
+        /// </summary>
+        /// <param name="currentRow"></param>
+        public EDStation(Listing listingString)
+        {
+            try
+            {
+                var SystemsAndStations =  Program.Data.BaseData.visystemsandstations;
+
+                Id                    = 0;
+                SystemId              = 0;
+
+                var stationID = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])SystemsAndStations.Select(
+                                        String.Format("stationid = '{0}'",  
+                                        listingString.StationId));
+                             
+                if(stationID.GetUpperBound(0) >= 0)
+                {
+                    Id                    = stationID[0].StationID;
+                    SystemId              = stationID[0].SystemID;
+                }
+                else
+                {
+                    throw new Exception("unknown station id");
+                }
+
+                Name                  = stationID[0].StationName;
+                SystemName            = stationID[0].SystemName;  
+                MaxLandingPadSize     = null;
+                DistanceToStar        = null;
+                Faction               = null;
+                Government            = null;
+                Allegiance            = null;
+                State                 = null;
+                Type                  = null;
+                HasBlackmarket        = null;
+                HasMarket             = null;
+                HasRefuel             = null;
+                HasRepair             = null;
+                HasRearm              = null;
+                HasOutfitting         = null;
+                HasShipyard           = null;
+
+                ImportCommodities     = new String[0];
+                ExportCommodities     = new String[0];
+                ProhibitedCommodities = new String[0];
+                Economies             = new String[0];
+
+                Listings              = new Listing[0];
+                    
+                UpdatedAt             = 0; 
+                Shipyard_UpdatedAt    = 0;
+                Outfitting_UpdatedAt  = 0;
+                Market_UpdatedAt      = 0;
+                TypeID                = null;
+                HasCommodities        = null; 
+                IsPlanetary           = null;
+                SellingShips          = new String[0];
+                SellingModules        = new Int32[0];
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while creating new EDStation object with values from CsvRow object", ex);
+            }
+        }
+
         public void clear()
         {
             Id                    = 0;
@@ -408,6 +477,25 @@ namespace IBE.EDDB_Data
                     Listings[currentIndex+1] = newListing;
                     currentIndex++;
                 }
+            }            
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding a record to the pricelistings", ex);
+            }
+        }
+
+        /// <summary>
+        /// adds a record to the pricelistings of this station
+        /// </summary>
+        /// <param name="CSV_String"></param>
+        public void addListing(Listing listingRow)
+        {
+            try
+            {
+                ListingExtendMode       = true;
+
+                Listings[currentIndex+1] = listingRow;
+                currentIndex++;
             }            
             catch (Exception ex)
             {

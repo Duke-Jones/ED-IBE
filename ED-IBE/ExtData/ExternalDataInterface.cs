@@ -178,7 +178,7 @@ namespace IBE.ExtData
 
                 ProcessObject = new Process();
 
-                ProcessObject.StartInfo.FileName                = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, "ExtTool_Path").Trim();
+                ProcessObject.StartInfo.FileName                = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, "ExtTool_Path").Trim();
 
                 if(ProcessObject.StartInfo.FileName != "")
                 {
@@ -192,10 +192,10 @@ namespace IBE.ExtData
                         ProcessObject.StartInfo.CreateNoWindow          = true;
 
                         if(DataFunction == enExternalDataFunction.getLocation)
-                            ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, 
+                            ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, 
                                                                                                     "ExtTool_ParamLocation").Trim();
                         else
-                            ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, 
+                            ProcessObject.StartInfo.Arguments           = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, 
                                                                                                     "txtExtTool_ParamMarket").Trim();
 
 

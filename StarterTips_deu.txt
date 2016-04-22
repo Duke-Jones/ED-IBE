@@ -2,9 +2,26 @@
 
 Inhalt: 
    * Voraussetzungen
-   * Kurzanleitung/Starter-Tipps
-   * FAQ
 
+   * Kurzanleitung/Starter-Tipps
+		1. Installation 
+		2. Starten
+		3. Ex-/Import von Daten
+		4. Übersetzungen
+		5. Tabellenansichten
+		6. Comboboxen
+		7. Service-Formular SQL
+		8. EDDN
+		9. Berücksichtigung der Systeme/Stationen !!!!!!!
+
+	* FAQ
+		Q: bei der Preisanalyse werden keine/zu wenig Stationen angezeigt
+		Q: Absturz beim Starten von ED-IBE?
+		Q: Absturz beim Verarbeiten der Screenshots?
+		Q: Crash, wenn der EDDN-Listener aktviert wird ?
+		Q: Allgemein schlechte Erkennung der Zahlen ?
+		Q: "8" wird oft als "6" erkannt oder anders herum ?
+		
 Voraussetzungen:
 - Win7 oder höher, x64
 - Microsoft dotNet 4.6
@@ -20,6 +37,7 @@ verzeichnis (C:\Program Files\ED-IBE) und zur Hälfte in das Data-Verzeichnis
 angepasst werden. Es kann auch für beide Teile das gleiche Verzeichnis angegeben werden
 (z. B. "F:\ED-IBE").
 
+
 Am Ende der Installation sollte für ein paar Augenblicke ein cmd-Fenster aufgehen.
 Während dieser Zeit wird die Datenbankstruktur erstellt. Wenn dieses Fenster nicht erscheint, 
 stimmt etwas nicht. Evtl. die Installation in einem anderen Zielverzeichnis erneut versuchen.
@@ -33,6 +51,7 @@ das "Löschen und Neuerstellen" ausgewählt wird.
 Fall etwas schiefgeht und man die Datenbank einmal löschen möchte, muss man 
 die Installation erneut durchführen und die Checkbox zum "Löschen und Neuerstellen" markieren.
 
+
 2. Starten
 Wenn ED-IBE gestartet wird, wird automatisch der Datenbankprozess mitgestartet ("mysqld.exe" im Taskmanager).
 Wird ED-IBE beendet, wird auch der Datenbankprozess mit beendet (Ausnahme: Der Datenbankprozess war 
@@ -41,31 +60,51 @@ schon vor dem Start von ED-IBE vorhanden.)
 Beim ersten Start werden auch die derzeit bekannten Waren, Systeme und Stationen aus den mitgelieferten
 EDDN-Dumpfiles importiert und weitere benötigte Stammdaten angelegt. 
 (siehe hierzu auch unter 3. : "Import data of systems/stations/commodities from EDDB-Files") 
+
 Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
+Leider betrifft dies nur die Warennamen, aber so ist es möglich 
+auch OCR-Ergebnisse in der eigenen Sprache zu importieren. 
 
-3. Ex-/Import von Daten (Menüpunkt "Data"->"Import".)
+3. Ex-/Import von Daten (Menüpunkt "Data"->"Import")
 
-Dort können über "Import Old Datafiles" die Datenbestände aus dem alten RN übernommen werden.
+"EDDB imports"
+Dieser Punkt bietet die Möglichkeit die Stammdaten zu aktualisieren.
 
-"Import data of systems/stations/commodities from EDDB-Files" bietet die Möglichkeit
-neuere Stammdaten (die zunächst von der EDDB-Seite heruntergeladen werden müssen)
-zu importieren. Hierdurch werden die Stations- und Systemdaten aktualisiert oder
-neue Waren hinzugefügt - es werden keine Preisdaten importiert. Dieser Import kann 
-beliebig oft wiederholt werden macht (Empfehlung: alle 1 bis 4 Wochen reicht 
-vollkommen - oder wenn bestimmte Daten fehlen, die inzwischen in der EDDB angelegt worden sind)
-->Bei ersten Start von ED-IBE wird dieser Import automatisch mit den mitgelieferten EDDB-Dumps ausgeführt. 
-> bei einem Update von ED-IBE werden diese Daten ebenfalls automatisch aktualisiert.
+-> Bei ersten Start von ED-IBE wird dieser Import automatisch ausgeführt *)
+-> Bei einem Update von ED-IBE werden diese Daten ebenfalls automatisch aktualisiert *)
+*) mit den mitgelieferten EDDB-Dumps - diese müssen nicht die akuellsten Daten enthalten.
 
-Mit "Download latest EDDB dumpfiles" und "Import downloaded EDDB dumpfiles" hat man die Möglichkeit,
-weitgehend automatisiert die neuesten Dumpfiles von https://eddb.io/api herunterzuladen und zu importieren.
-Die Dateien werden im persönlichen temp-Ordner abgelegt (.\temp\ED-IBE\)
+Es können die neuesten Dumpfiles von der EDDB-Seite heruntergeladen und
+importiert werden. Die Dateien werden im persönlichen temp-Ordner abgelegt 
+(.{User}\AppData\local\temp\ED-IBE\) und nur heruntergeladen, wenn auf
+https://eddb.io/api neuere Dateien verfügbar sind.
+
+Alternativ können auch manuell bereitgestellt Dumpfiles aus einem 
+zu wählenden Ordner importiert werden.
+
+Es werden normalerweise keine Preisdaten importiert/aktualisiert.
+Durch Auswahl der Importoptionen kann man jedoch ein Starter-Kit
+(Preisdaten im Umkreis von 20 Lichtjahren um die aktuelle Schiffsposition)
+oder auch den gesamten aktuellen Preis-Datenbestand der EDDB importieren.
+Achtung: Der Gesamtimport kann durchaus mehrere Stunden dauern.
+
+Beim Import des "Starter-Kits" weden die betreffenden Systeme automatisch
+zur Liste der besuchten Systeme hinzugefügt (siehe 9. "Berücksichtigung der Systeme/Stationen")
+
+"Import Old Datafiles"
+Über "Import Old Datafiles" können die Datenbestände aus dem alten RN übernommen werden.
 
 Mit "Import RN-CommandersLog Files" können gesplittete Logfiles von RN wieder eingelesen werden.
 Voraussetzung ist, dass die einzelnen Dateien nach dem Muster "CommandersLog*.xml" benannt sind.
 Mehrfachimport wird durch Abgleich des Zeitstempels verhindert.
 
+"Market Data (CSV)"
+Bietet die Ex- und Importmöglichkeit über CSV-Dateien.
+Gut geeignet zum Datenaustausch mit Freunden.
+
 4. Übersetzungen
 Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportieren.
+Leider betrifft dies nur die Warennamen, aber so ist es möglich auch OCR-Ergebnisse in der eigenen Sprache zu importieren. 
 Auch das Hinzufügen einer weiteren Sprache ist möglich. Hierzu die Übersetzungen exportieren, dann in der csv-Datei 
 die neuen Spracheinträge hinzufügenund danach die geänderte csv-Datei wieder importieren. 
 Nicht vorhandenen Übersetzungen einer neuen Sprache werden mit der englischen Bezeichnung ergänzt 
@@ -83,15 +122,18 @@ nach:
 1;fra;Explosifs
 1;spa;<spanischer Name>
 
+
 5. Tabellenansichten
 Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
 öffnet sich ein Dialog, mit dem die Tabellenansicht angepasst werden kann.
 Die Breite der Spalten können auch per Drag'n'Drop angepasst werden.
 Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen dann auch übernommen.
 
+
 6. Comboboxen
 Die ComboBoxen habe zwar feste Einträge. In vielen Fällen hat man aber die Möglichkeit 
 beliebige eigene Werte einzutragen (z.B. bei "Max. Trip Distance")
+
 
 7. Service-Formular SQL
 Unter gibt es die Möglichkeit direkt Sql-Befehle abzusetzen.
@@ -100,6 +142,7 @@ Wenn man sich nicht sicher ist, dann lieber die Finger davon lassen.
 Es besteht die Möglichkeit, interne Daten zu zerstören.
 Wenn mehrere Befehle eingetragen sind, kann man diese durch Selektion gezielt
 zum Ausführen auswählen.
+
 
 8. EDDN
 Das EDDN-Interface ist standardmäßig deaktiviert. Über Settings->EDDN-Interface
@@ -113,6 +156,7 @@ Um Datenmüll auszufiltern beträgt das Zeitfenster für gültige Daten +- 5 Min
 die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach eingehende
 Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
 
+
 9. Berücksichtigung der Systeme/Stationen !!!!!!!
 ED-IBE berücksichtigt im Normalfall nur Daten von Systeme, die bereits selbst besucht wurden !
 Es können jedoch weitere Daten vorhanden sein (über den manuellen CSV-Import oder über das EDDN-Interface).
@@ -123,10 +167,17 @@ Hinweis: Wer seine alten RN-Daten importiert, fügt auch die Einträge in die Li
 Grundlage hierfür ist beim Import das "Commander's Log" sowie die "StationHistory" von "RegulatedNoise DJ".
 
 
-
-
-
 FAQ:
+*************************************************************************
+Q: bei der Preisanalyse werden keine/zu wenig Stationen angezeigt
+
+A1: Als Standard ist ein Filter aktiv, der nur Daten von bereits besuchten 
+Systemen berücksichtigt. Um mehr Systeme zu berücksichtigen (z.B. von EDDN oder EDDB), 
+müssen die Systeme bereist werden (der Normalfall, wenn man selber die Daten sammeln möchte)
+oder der Filter muss in den Settings deaktiviert werden (-> Datafilter)
+Siehe auch "9. Berücksichtigung der Systeme/Stationen"
+
+A2: Die Filterreinstellungen sind falsch gewählt (z.B "Distance To Star" oder der Zeitfilter etc.)
 
 *************************************************************************
 Q: Absturz beim Starten von ED-IBE?

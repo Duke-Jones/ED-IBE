@@ -7,11 +7,19 @@ todo:
 * option for recalculate distances in log
 
 * mark datasource colorized
+* show all systems around another system with infos
+* complete StarterTips_eng
 
 done:
 
  
    
+v0.2.2
+   * added import of market data from EDDB dumpfiles
+		- Starter Kit
+        - full EDDB database
+   * refreshed StarterTips
+-------------------------------------------------------------------------------------         
 v0.2.1
    * EDDN: fixed error when switching between testmode an realmode
 -------------------------------------------------------------------------------------         

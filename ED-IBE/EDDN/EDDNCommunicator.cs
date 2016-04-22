@@ -194,11 +194,8 @@ bool disposed = false;
         {
             try
             {
-
                 foreach (var recieverKVP in m_Reciever)
-                {
                     recieverKVP.Value.Dispose();
-                }
 
                 m_Reciever.Clear();
             }
@@ -377,7 +374,7 @@ bool disposed = false;
         }
 
         /// <summary>
-        /// returns "true" if the listener is working
+        /// returns the number of active listeners
         /// </summary>
         public Int32 ListenersRunning
         {

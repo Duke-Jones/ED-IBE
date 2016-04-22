@@ -284,7 +284,6 @@ namespace IBE.Web
         }
 
 
-
         /// <summary>
         /// Liest den Inhalt einer WebResponse als Zeichenkettenrepräsentation aus.
         /// </summary>

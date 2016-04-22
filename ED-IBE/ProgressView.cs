@@ -52,7 +52,7 @@ namespace IBE
     // <param name="Value">progress current value</param>
     // <param name="Total">total value</param>
     // <remarks></remarks>
-    public void progressUpdate(Int32 Value, Int32 Total) {
+    public void progressUpdate(Int32 Value, Int32 Total, String infoText = null) {
         Int32 ProzValue;
         try {
             if ((Total > 0)) {
@@ -68,6 +68,10 @@ namespace IBE
             else {
                 ProzValue = 0;
             }
+
+            if(infoText != null)
+                progressInfo(infoText);
+
             if (m_PTimer.currentMeasuring() >= 50)
             { 
                 m_PTimer.startMeasuring();
@@ -112,18 +116,21 @@ namespace IBE
     // <remarks></remarks>
     public void progressInfo(string Info) {
         try {
-            if (lblInfotext.InvokeRequired) {
-                lblInfotext.Invoke(new del_Sub_PString(this.progressInfo), Info);
-            }
-            else {
-                if (string.IsNullOrEmpty(Info)) {
-                    this.Height = 125;
+            if (lblInfotext.Text != Info)
+            { 
+                if (lblInfotext.InvokeRequired) {
+                    lblInfotext.Invoke(new del_Sub_PString(this.progressInfo), Info);
                 }
                 else {
-                    this.Height = 161;
+                    if (string.IsNullOrEmpty(Info)) {
+                        this.Height = 125;
+                    }
+                    else {
+                        this.Height = 161;
+                    }
+                    lblInfotext.Text = Info;
+                    if(m_SelfDoEvents) Application.DoEvents();
                 }
-                lblInfotext.Text = Info;
-                if(m_SelfDoEvents) Application.DoEvents();
             }
         }
         catch (Exception ex) {

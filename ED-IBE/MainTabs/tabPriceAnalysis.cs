@@ -558,7 +558,7 @@ namespace IBE.MTPriceAnalysis
                     Program.enVisitedFilter VFilter;
                     SystemID = (Int32)Data.Rows[0]["ID"];
 
-                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettings.DB_GROUPNAME,
+                    VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettingsView.DB_GROUPNAME,
                                                                                         "VisitedFilter",
                                                                                         ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                         false);
@@ -636,7 +636,7 @@ namespace IBE.MTPriceAnalysis
             try
             {
                 cText = cmbSystemBase.Text;
-                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettings.DB_GROUPNAME, 
+                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettingsView.DB_GROUPNAME, 
                                                                                     "VisitedFilter", 
                                                                                     ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
                                                                                     false);

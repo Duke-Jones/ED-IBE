@@ -148,6 +148,7 @@
       <DependentUpon>EDDNView.cs</DependentUpon>
     </Compile>
     <Compile Include="EDDN\EDDNRecievedArgs.cs" />
+    <Compile Include="Enums and Utility Classes\PriceImportParameters.cs" />
     <Compile Include="Enums and Utility Classes\Settings\STA_INIFile.cs" />
     <Compile Include="Enums and Utility Classes\TabControlExt.cs">
       <SubType>Component</SubType>
@@ -342,13 +343,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="IBESettings.cs">
+    <Compile Include="IBESettingsView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IBESettings.Designer.cs">
-      <DependentUpon>IBESettings.cs</DependentUpon>
+    <Compile Include="IBESettingsView.Designer.cs">
+      <DependentUpon>IBESettingsView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="IBESettings.cs" />
     <Compile Include="SplashScreenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -804,8 +805,8 @@
     <Content Include="Data\Commodities.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="IBESettings.resx">
-      <DependentUpon>IBESettings.cs</DependentUpon>
+    <EmbeddedResource Include="IBESettingsView.resx">
+      <DependentUpon>IBESettingsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SplashScreenForm.resx">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>

@@ -1,6 +1,6 @@
 ﻿namespace IBE
 {
-    partial class IBESettings
+    partial class IBESettingsView
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IBESettings));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IBESettingsView));
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.gbTesseract = new System.Windows.Forms.GroupBox();
             this.txtOCRTraineddataFile = new System.Windows.Forms.TextBox();

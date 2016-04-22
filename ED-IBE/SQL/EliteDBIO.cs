@@ -84,10 +84,11 @@ namespace IBE.SQL
 
 #region event handler
 
-        private const Int32 m_TimeSlice_ms    = 500;
-        private const Int32 m_PercentSlice    = 10;
-        private PerformanceTimer m_EventTimer = new PerformanceTimer();
-        private Int32 m_lastProgress          = 0;
+        private const Int32 m_TimeSlice_ms      = 500;
+        private const Int32 m_PercentSlice      = 10;
+        private PerformanceTimer m_EventTimer   = new PerformanceTimer();
+        private Int32 m_lastProgress            = 0;
+        private Boolean m_ProgressCancelled     = false;
 
         /// <summary>
         /// checks if the import of old data is done or sets the value
@@ -133,6 +134,7 @@ namespace IBE.SQL
             public Int32  Index { get; set; }
             public Int32  Total { get; set; }
             public String Unit { get; set; }
+            public ProgressView progressObject;
             
         }
 
@@ -142,16 +144,20 @@ namespace IBE.SQL
         /// <param name="Tablename"></param>
         /// <param name="Index"></param>
         /// <param name="Total"></param>
-        private void sendProgressEvent(String Tablename, Int32 Index, Int32 Total, Boolean noSuppress = false)
+        private Boolean sendProgressEvent(String Tablename, Int32 Index, Int32 Total, Boolean noSuppress = false)
         {
             Int32   ProgressSendLevel;
+            ProgressEventArgs pEArgs    = null;
+            Boolean retValue            = false;
+
             try 
 	        {	        
                
 		        if((m_EventTimer.currentMeasuring() > m_TimeSlice_ms) || noSuppress)
                 {
                     // time is reason
-                    Progress.Raise(this, new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total});
+                    pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total};
+                    Progress.Raise(this, pEArgs);
 
                     if(Total > 0)
                         ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
@@ -178,13 +184,21 @@ namespace IBE.SQL
                        (ProgressSendLevel != m_lastProgress))
                     { 
                         // time is reason
-                        Progress.Raise(this, new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total});
+                        pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total};
+                        Progress.Raise(this, pEArgs);
 
                         m_EventTimer.startMeasuring();
                         m_lastProgress = ProgressSendLevel;
                         Debug.Print("Progress (l):" + ProgressSendLevel.ToString());
                     }
                 }
+
+                if((pEArgs != null) && (pEArgs.progressObject != null) && pEArgs.progressObject.Cancelled)
+                    m_ProgressCancelled = true;
+                else
+                    m_ProgressCancelled = false;
+
+                return retValue;
 	        }
 	        catch (Exception ex)
 	        {
@@ -470,6 +484,9 @@ namespace IBE.SQL
 
                     Counter++;
                     sendProgressEvent("import commodities", Counter, Commodities.Count);
+
+                    if(m_ProgressCancelled)
+                        break;
                 }
 
                 Program.DBCon.TransCommit();
@@ -1067,6 +1084,8 @@ namespace IBE.SQL
                     Counter++;
                     sendProgressEvent("import systems", Counter, Systems.Count);
 
+                    if(m_ProgressCancelled)
+                        break;
                 }
 
                 // save changes
@@ -1520,6 +1539,8 @@ namespace IBE.SQL
                     Counter++;
                     sendProgressEvent("import stations", Counter, Stations.Count);
 
+                    if(m_ProgressCancelled)
+                        break;
                 }
 
                 // save changes
@@ -2343,7 +2364,7 @@ namespace IBE.SQL
                     priceCountTotal += Station.Listings.Count();
 
                 Counter = 0;
-                sendProgressEvent("updating prices", 0, 0);
+                sendProgressEvent("updating prices", -1, -1);
 
                 Boolean AddComma = false;
                 int?  DemandLevel = null;
@@ -2379,7 +2400,7 @@ namespace IBE.SQL
                                 {
                                     // ... no
 
-                                    if (StationListing.DataSource  != "")
+                                    if (!String.IsNullOrEmpty(StationListing.DataSource))
                                         SourceID = (Int32)BaseTableNameToID("source", StationListing.DataSource);
                                     else
                                         SourceID = (Int32)dataSource;
@@ -2455,11 +2476,19 @@ namespace IBE.SQL
 
                         AddComma = false;
                         Counter++;
+
                         sendProgressEvent("updating prices", priceCount, priceCountTotal);
+
+                        if(m_ProgressCancelled)
+                            break;
 
                         currentListing = missedListings.ToArray();
 
+                        
                     } while (!currentListingDone);
+
+                    if(m_ProgressCancelled)
+                        break;
                 }
 
                 sendProgressEvent("updating prices", 1, 1);
@@ -2482,8 +2511,12 @@ namespace IBE.SQL
         /// <summary>
         /// Imports the prices from a file with csv-strings (e.g. the old autosave-file)
         /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="importBehaviour"></param>
+        /// <param name="dataSource"></param>
+        /// <param name="importParams">only for control import behaviour from EDDB files, can be null</param>
         /// <returns></returns>
-        public Int32 ImportPricesFromCSVFile(String filename, enImportBehaviour importBehaviour, enDataSource dataSource)
+        public Int32 ImportPricesFromCSVFile(String filename, enImportBehaviour importBehaviour, enDataSource dataSource, PriceImportParameters importParams = null)
         {
             try
             {
@@ -2497,23 +2530,48 @@ namespace IBE.SQL
                 sendProgressEvent("reading data from file ...", 0, 0);
 
               
-                if(header.StartsWith("System;Station"))
+                if(header.StartsWith("System;Station;Commodity;Sell;Buy;Demand;;Supply"))
                 {
+                    // old RN format
                     do
                     {
                         CSV_Strings.Add(reader.ReadLine());
                         counter ++;
                         sendProgressEvent("reading data from file ...", counter, 0);
+
+                        if(m_ProgressCancelled)
+                            break;
+
                     } while (!reader.EndOfStream);
+
+                    sendProgressEvent("reading data from file ...", counter, counter);
+                    sendProgressEvent("reading data from file ...", 1, 1);
+
+                    reader.Close();
+
+                    ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour, dataSource);
                 }
+                else if(header.StartsWith("id,station_id,commodity_id,supply,buy_price,sell_price,demand"))
+                {
+                    // EDDB format
+                    do
+                    {
+                        CSV_Strings.Add(reader.ReadLine());
+                        counter ++;
+                        sendProgressEvent("reading data from file ...", counter, 0);
 
-                sendProgressEvent("reading data from file ...", counter, counter);
-                sendProgressEvent("reading data from file ...", 1, 1);
+                        if(m_ProgressCancelled)
+                            break;
 
-                reader.Close();
+                    } while (!reader.EndOfStream);
 
-                ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour, dataSource);
+                    sendProgressEvent("reading data from file ...", counter, counter);
+                    sendProgressEvent("reading data from file ...", 1, 1);
 
+                    reader.Close();
+
+                    ImportPricesFromEDDBStrings(CSV_Strings.ToArray(), importBehaviour, dataSource, importParams);
+                }
                 return CSV_Strings.Count();
             }
             catch (Exception ex)
@@ -2546,14 +2604,14 @@ namespace IBE.SQL
                 // *****************************************************************
                 // START :section for automatically add unknown commodities
 
-                currentLanguage     = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
+                currentLanguage     = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
                 newData             = new DataTable();
                 newData.TableName   = "Names";
                 newData.Columns.Add(Program.BASE_LANGUAGE, typeof(String));
                 if(currentLanguage != Program.BASE_LANGUAGE)
                     newData.Columns.Add(currentLanguage, typeof(String));
 
-                sendProgressEvent("analysing data...", 0, 0);
+                sendProgressEvent("analysing data...", -1, -1);
 
                 foreach (String DataLine in CSV_Strings)
 	            {
@@ -2584,49 +2642,56 @@ namespace IBE.SQL
                     }
                     counter++;
                     sendProgressEvent("analysing data...", counter, CSV_Strings.GetUpperBound(0)+1);
+
+                    if(m_ProgressCancelled)
+                        break;
+
 	            }
 
                 sendProgressEvent("analysing data...", 1, 1);
 
-                if(newData.Rows.Count > 0)
-                {
-                    // add found unknown commodities
-                    var ds = new DataSet();
-                    ds.Tables.Add(newData);
-                    ImportCommodityLocalizations(ds);
+                if (!m_ProgressCancelled)
+                    if(newData.Rows.Count > 0)
+                    {
+                        // add found unknown commodities
+                        var ds = new DataSet();
+                        ds.Tables.Add(newData);
+                        ImportCommodityLocalizations(ds);
 
-                    // refresh translation columns
-                    Program.Data.updateTranslation();
+                        // refresh translation columns
+                        Program.Data.updateTranslation();
 
-                    // refresh working tables 
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                }
+                        // refresh working tables 
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                    }
                     
                 // END : section for automatically add unknown commodities
                 // *****************************************************************
 
-                sendProgressEvent("converting data...", 0, 0);
+                sendProgressEvent("converting data...", -1, -1);
                 // convert csv-strings to EDStation-objects
                 StationData = fromCSV(CSV_Strings, ref SystemData, ref csvRowList);
                 sendProgressEvent("converting data...", 1, 1);
 
                 // check if we've unknown systems or stations
-                foreach (EDStation Station in StationData)
-                {
-                    if (Station.SystemId == 0)
-                        MissingSystem = true;
-                    else if(Station.Id == 0)
-                        MissingStation = true;
-                }
+                if(!m_ProgressCancelled)
+                    foreach (EDStation Station in StationData)
+                    {
+                        if (Station.SystemId == 0)
+                            MissingSystem = true;
+                        else if(Station.Id == 0)
+                            MissingStation = true;
+                    }
 
-                if (MissingSystem)
+
+                if ((!m_ProgressCancelled) && MissingSystem)
                 {
                     // add unknown systems
                     ImportSystems_Own(ref SystemData, true);
                 }
 
-                if (MissingSystem || MissingStation)
+                if (!m_ProgressCancelled && (MissingSystem || MissingStation))
                 {
                     // add unknown stations
                     foreach (EDStation Station in StationData)
@@ -2642,6 +2707,9 @@ namespace IBE.SQL
                                 Station.SystemId = thisSystem.Id;
                             }
                         }
+
+                        if(m_ProgressCancelled)
+                            break;
                     }
 
                     ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
@@ -2682,6 +2750,89 @@ namespace IBE.SQL
         }
 
         /// <summary>
+        /// Imports the prices from a list of csv-strings in EDDB format
+        /// </summary>
+        /// <param name="CSV_Strings">data to import</param>
+        /// <param name="importBehaviour">filter, which prices to import</param>
+        /// <param name="dataSource">if data has no information about the datasource, this setting will count</param>
+        public void ImportPricesFromEDDBStrings(String[] CSV_Strings, enImportBehaviour importBehaviour, enDataSource dataSource, PriceImportParameters importParams)
+        {
+            List<EDStation> StationData;
+            Boolean updateTables = false;
+
+            try
+            {
+                StationData = fromCSV_EDDB(CSV_Strings);
+
+                if((importParams != null) && (!m_ProgressCancelled))
+                {
+                    DataTable data = Program.Data.GetNeighbourSystems(importParams.SystemID, importParams.Radius);
+                    String info = "filter data to the bubble (radius " + importParams.Radius+ " ly) : " + data.Rows.Count +" systems...";
+
+                    sendProgressEvent(info, -1,-1);
+
+                    if(data.Rows.Count > 0)
+                    {
+                        updateTables = true;
+
+                        Int32 initialSize = StationData.Count();
+
+                        for (int i = StationData.Count()-1 ; i >= 0 ; i--)
+                        {
+                            if(data.Rows.Find(StationData[i].SystemId) == null)    
+                            {
+                                // system is not in the bubble
+                                StationData.Remove(StationData[i]);
+                            }
+                            else
+                            { 
+                                   // system is in the bubble - set as visited
+                                Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, true, false);
+                            }
+
+                            sendProgressEvent(info, initialSize-i, initialSize);
+                            
+                            if(m_ProgressCancelled)
+                                break;
+                        }
+
+                    }
+                    else
+                        StationData.Clear();
+
+                    sendProgressEvent(info, 1, 1);
+                }
+
+                if(updateTables)
+                { 
+                    sendProgressEvent("refreshing basetables in memory...", -1,-1);
+                    Program.Data.updateVisitedFlagsFromBase();
+                    sendProgressEvent("refreshing basetables in memory...", 25, 100);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                    sendProgressEvent("refreshing basetables in memory...", 50, 100);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                    sendProgressEvent("refreshing basetables in memory...", 75, 100);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
+                    sendProgressEvent("refreshing basetables in memory...", 1 , 1);
+                }
+
+                // now import the prices
+                if(!m_ProgressCancelled)
+                { 
+                   ImportPrices(StationData, importBehaviour, dataSource);
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing self collected price data", ex);
+            }
+        }
+
+
+        /// <summary>
         /// creates a list of "EDStations" with price listings from csv-array
         /// </summary>
         /// <param name="CSV_Strings">String to be converted</param>
@@ -2699,9 +2850,13 @@ namespace IBE.SQL
             EDStation currentStation                        = null;
             Int32 Index                                     = 0;
             Dictionary<String, Int32> commodityIDCache      = new Dictionary<string,Int32>();            // quick cache for finding commodity names
-            
+            Int32 currentItem                               = 0;
+
             try
             {
+                sendProgressEvent("converting data...", -1,-1);
+                sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+
                 if(foundSystems != null)
                     foundSystems.Clear();
                 else
@@ -2760,10 +2915,97 @@ namespace IBE.SQL
 
                         currentStation.addListing(currentRow, ref commodityIDCache);
                     }
+
+                    sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+
+                    if(m_ProgressCancelled)
+                        break;
+                    currentItem++;
+
 	            }
 
                 if(currentStation != null)
                     currentStation.ListingExtendMode = false;
+
+                sendProgressEvent("converting data...", 1,1);
+
+                return foundValues;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting station values from CSV-String", ex);
+            }
+        }
+
+        /// <summary>
+        /// creates a list of "EDStations" with price listings from csv-array in EDDB format
+        /// </summary>
+        /// <param name="CSV_Strings">String to be converted</param>
+        /// <param name="foundSystems"></param>
+        /// <param name="csvRowList">for optional processing outside: a list of the data converted to CsvRow-objects</param>
+        /// <returns></returns>
+        public List<EDStation> fromCSV_EDDB(String[] CSV_Strings)
+        {
+            List<EDStation> foundValues                     = new List<EDStation>();
+            Dictionary<Int32, Int32> foundIndex             = new Dictionary<Int32, Int32>();
+            Dictionary<String, Int32> foundSystemIndex      = new Dictionary<String, Int32>();
+            Int32 LastID                                    = 0;
+            EDSystem LastSystem                             = null;
+            Int32 currentID                                 = 0;
+            EDStation currentStation                        = null;
+            Int32 Index                                     = 0;
+            Dictionary<String, Int32> commodityIDCache      = new Dictionary<string,Int32>();            // quick cache for finding commodity names
+            Int32 currentItem                               = 0;
+
+            try
+            {
+                sendProgressEvent("converting data...", -1,-1);
+                sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+
+                foreach (String CSV_String in CSV_Strings)
+	            {
+
+                    if(!String.IsNullOrEmpty(CSV_String.Trim()))
+                    {
+		                Listing currentRow           = new Listing(CSV_String);
+
+                        currentID = currentRow.StationId;
+
+                        if(LastID != currentID)
+                        {
+                            if(currentStation != null)
+                                currentStation.ListingExtendMode = false;
+
+                            if(foundIndex.TryGetValue(currentID, out Index))
+                                currentStation = foundValues[Index];
+                            else
+                            {
+                                currentStation  = new EDStation(currentRow);
+
+                                foundValues.Add(currentStation);
+                                foundIndex.Add(currentID, foundValues.Count-1);
+                            }
+                            LastID = currentRow.StationId;
+
+                            currentStation.ListingExtendMode = true;
+
+                        }
+
+                        currentStation.addListing(currentRow);
+                    }
+                
+                    sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+
+                    if(m_ProgressCancelled)
+                        break;
+                    currentItem++;
+	            }
+
+                if(currentStation != null)
+                    currentStation.ListingExtendMode = false;
+
+                sendProgressEvent("converting data...", 1,1);
 
                 return foundValues;
 
@@ -2960,7 +3202,13 @@ namespace IBE.SQL
 
                         Counter++;
                         sendProgressEvent(String.Format("export prices '{0}'...", filterCharacter), Counter, totalDataCount);
+
+                        if(m_ProgressCancelled)
+                            break;
                     }
+                    if(m_ProgressCancelled)
+                        break;
+
                 }
 
                 sendProgressEvent("export prices...", 1, 1);
@@ -3094,7 +3342,7 @@ namespace IBE.SQL
             try
             {
 
-                String currentLanguage = Program.DBCon.getIniValue(IBESettings.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
+                String currentLanguage = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
 
                 switchLanguage(currentLanguage);
 
@@ -3237,7 +3485,14 @@ namespace IBE.SQL
             }
         }
 
-        public void checkPotentiallyNewSystemOrStation(String System, String Station, Boolean setVisitedFlag = true)
+        /// <summary>
+        /// Checks if the system is existing and adds it, if not.
+        /// Also sets the visited-flag if not set.
+        /// </summary>
+        /// <param name="System"></param>
+        /// <param name="Station"></param>
+        /// <param name="setVisitedFlag"></param>
+        public void checkPotentiallyNewSystemOrStation(String System, String Station, Boolean setVisitedFlag = true, Boolean refreshBasetables = true)
         {
             String sqlString;
             Int32 SystemID;
@@ -3325,23 +3580,26 @@ namespace IBE.SQL
                     }
 
 
-                    if(systemFirstTimeVisited || stationFirstTimeVisited)
-                    {
-                        // if there's a new visitedflag set in the visited-tables
-                        // then update the maintables
-                        Program.Data.updateVisitedFlagsFromBase(systemFirstTimeVisited, stationFirstTimeVisited);
+                    if(refreshBasetables)
+                    { 
+                        if(systemFirstTimeVisited || stationFirstTimeVisited)
+                        {
+                            // if there's a new visitedflag set in the visited-tables
+                            // then update the maintables
+                            Program.Data.updateVisitedFlagsFromBase(systemFirstTimeVisited, stationFirstTimeVisited);
 
-                        // last but not least reload the BaseTables with the new visited-information
-                        if(systemFirstTimeVisited)
-                            Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                            // last but not least reload the BaseTables with the new visited-information
+                            if(systemFirstTimeVisited)
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
 
-                        if(stationFirstTimeVisited)
-                            Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                    }
+                            if(stationFirstTimeVisited)
+                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                        }
 
-                    if(isNewSystem || isNewStation)
-                    {
-                        Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
+                        if(isNewSystem || isNewStation)
+                        {
+                            Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
+                        }
                     }
                 }
             }
@@ -3562,6 +3820,44 @@ namespace IBE.SQL
             }   
 
         }
+
+        /// <summary>
+        /// gets all neighbours in a bubble around a system
+        /// </summary>
+        /// <param name="stationId">system in the center of the bubble</param>
+        /// <param name="maxDistance">radius of the bubble</param>
+        /// <returns></returns>
+        public DataTable GetNeighbourSystems(Int32 stationId, Double maxDistance)
+        {
+            String sqlBaseString;
+            String sqlString;
+            DataTable data            = new DataTable();
+            DataColumn[] keys         = new DataColumn[1]; 
+
+            try
+            {
+
+                sqlBaseString =  " select FS.Id, FS.Systemname, sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) as Distance" +
+                                 " from (select * from tbSystems " + 
+                                 "         where id = {0}) BS" +
+                                 " join tbSystems FS on (sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) <=  {1});";
+
+                sqlString = String.Format(sqlBaseString, stationId, maxDistance);
+
+                Program.DBCon.Execute(sqlString, data);
+
+                keys[0] = data.Columns["Id"];
+                data.PrimaryKey  = keys;
+
+                return data;
+
+	        }
+	        catch (Exception ex)
+	        {
+		        throw new Exception("Error while getting neighbours of a system", ex);
+	        }
+        }
+
 
 #endregion
 

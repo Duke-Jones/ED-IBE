@@ -6,17 +6,37 @@ ED - Intelligent Board Computer Extension
 
 Content:
 	* Prerequisites
+	
 	* Quick Guide / Starter Tips
+		1. Installation
+		2. Start
+		3. Export and import of data (menu item "Data" -> "Import&Export")
+		4. Translations
+		5. Table Views
+		6. ComboBoxes
+		7. Acessing sql tables directly
+		8. EDDN
+		9. Consideration of systems/stations !!!!!!!
 	* FAQ
+		Q: Crash when starting the app ?
+		Q: Crash when grabbing a screenshot?
+		Q: Crash when starting the EDDN listener?
+		Q: General bad recognition of digits ?
+		Q: "8" is often as "6" recognized or other way round ?
 
+		
+		
+		
+		
 Prerequisites:
 	- Win7 or higher, x64
 	- Microsoft .Net 4.6
 	- Microsoft Visual Studio 2013 C ++ runtimes (https://www.microsoft.com/en-gb/download/details.aspx?id=40784)
 	- Visual Studio 2012 C ++ Redistributable (x86 and x64) (https://www.microsoft.com/en-us/download/details.aspx?id=30679)
 
-
+	
 Quick Guide / Starter Tips:
+
 
 1. Installation
 By default, the program installs to half in the Programs
@@ -38,6 +58,7 @@ Case something goes wrong and you want to delete the database again, you have to
 run the installer again and check the checkbox for "Delete and re-create."
 But have in mind all data will be lost.
 
+
 2. Start
 If ED-IBE starts, the database engine automatically starts, too ("mysqld.exe" in the TaskManager).
 If ED-IBE exits the database process is also terminated (exception: the database engine
@@ -47,30 +68,47 @@ When you start ED-IBE for the first time (or after an update) the master data wi
 imported from the supplied EDDN dumpfiles. 
 (also see point "3. Export and import of data" -> "Import data of systems/stations/commodities from EDDB-Files")
 
-Tip for this moment: change to your language in the settings
+Tip for this moment: change to your language in the settings.
+Sorry, this concerns only the commodities but you're able to 
+import in your own language OCR-ed data !
 
-3. Export and import of data (menu item "Data" -> "Import&Export")
 
-"Import data of systems/stations/commodities from EDDB-Files" offers the possibility
-to refresh the master data (which must first be downloaded from the EDDB page). 
-Thereby, the station and system data are updated or new products added, but this import do not refresh any prices !
-This import can be repeated as often as you like. Recommended is every 1 to 4 weeks - or 
-when you think certain data is missing, which have since been applied in the EDDB.
--> At the first start of ED-IBE this import is performed automatically using the supplied EDDB dumps.
--> During an update from ED-IBE this data is also updated automatically.
+3. Export and import of data ("Data" -> "Import&Export")
 
-"Download latest EDDB dumpfiles" and "Import downloaded EDDB dumpfiles" offers the possibility
-to download and import the latest dumpfiles from https://eddb.io/api. The files ere located
-in your personal tempfolder (.\temp\ED-IBE\).
+"EDDB imports"
+This Point offers the possibility to refresh the master data.
+-> At the first start of ED-IBE this import is performed automatically *)
+-> During an update from ED-IBE this data is also updated automatically *)
+*) using the supplied EDDB dumps, which may not have the newest data
+ 
+You can download and import the latest dumpfiles from the EDDB homepage by button-clicking
+(the files will be saved in your temp directory : '.{User}\AppData\local\temp\ED-IBE\')
+or do the import by manual appropriated dumpfiles. 
+The download function will get files only if they are newer than the existing ones.
 
+By default no prices will be imported or updated. But if you activate the option
+you can select between importing a "Starter Kit" (and get the existing market 
+data from all stations in the bubble of 20 ly around your current location)
+or the full EDDB copy (which can take few hours to finish).
+
+If you select the "Starter-Kit" the found systems will automatically added to
+your list of visited systems (see also 9. "Consideration of systems/stations")
+ 
+"Market Data (CSV)"
+Here you can export and import data in the simple and well known csv format.
+A good possibility for exchange data with friends.
+ 
+"Import Old Data Files" 
 With "Import Old Data Files" you can import your existing data from the old RN if existing.
 
 With "Import RN CommandersLog Files" you can import splitted logfiles from the old RN.
 The prerequisite is that the individual files are named like "CommandersLog*.xml".
 Multiple import is prevented internally by comparing the time stamp.
 
+
 4. Translations
 Under "Data" -> "Edit Localization" you can view translations, edit, import and export.
+Sorry, this concerns only the commodities but you're able to import in your own language OCR-ed data !
 Also, the addition of another language is possible. For this purpose, export the translations, 
 then in the csv file add the new strings then reimport the modified CSV file.
 Not existing translations of a new language to be supplemented with the English name
@@ -88,6 +126,7 @@ to:
 1;fra;Explosifs
 1;spa;<spanish name>
 
+
 5. Table Views
 By right-clicking on the table header (upper left small field)
 a dialog box opens. With this the table view can be customized.
@@ -95,10 +134,12 @@ a dialog box opens. With this the table view can be customized.
 The width of the columns can also be customized by simple drag and drop.
 For save the widths open the dialog and simply confirm again.
 
+
 6. ComboBoxes
 Although the combo boxes have fixed items, in many cases
 you can enter custom values 
 (for example you can enter "7" in "Max. Trip Distance")
+
 
 7.  Acessing sql tables directly
 At "Data" -> "Direct DB Access" there is a possibility of 
@@ -107,6 +148,7 @@ for service activities. If you are not sure, then do not put your fingers on it.
 It is possible to destroy internal data. 
 If multiple commands are entered, a single statement can be targeted 
 for run by selecting its text.
+
 
 8. EDDN
 The EDDN interface is disabled by default. 
@@ -119,6 +161,7 @@ To filter out garbage the time window of valid data is +- 5 minutes.
 The time of your own computer should therefore be well adjusted. 
 Multiple incoming data from EDDN  is also be filtered within a 5-minute period.
 
+
 9. Consideration of systems/stations !!!!!!!
 For the people who like to reduce the data strictly to the self-visited 
 systems (even only self-visited stations) there is a datafilter active by default.
@@ -127,7 +170,7 @@ This means even if you get tons of data from somewhere (eg. EDDN or csv-files),
 you will not see them - until you have visit the systems OR you deactivate 
 this datafilter in the settings.
 
-Through this mechanism, you are able to consciously decide against collecting 
+With this mechanism, you are able to consciously decide against collecting 
 price data of unknown systems, but still receive updates of prices of 
 visited systems by EDDN (as example!)
 
@@ -141,6 +184,19 @@ is completed by the data of the "Commander's Log" and the RN-list of visited sys
 
 
 FAQ:
+
+*************************************************************************
+Q: price analysis shows no or not enough stations
+
+A1: For the people who like to reduce the data strictly by the self-visited systems 
+(even only self-visited stations) there is a datafilter active by default 
+(this is also one of the base ideas of this tool - in cause of this it is active by default - yet)
+This means even if you get tons of data from anywhere you will not see them - 
+until you have visit the systems OR you deactivate the datafilter in the settings.
+(Settings => Datafilter)
+See also "9. Consideration of systems/stations"
+
+A2: You have bad filter settings (eg. "Distance To Star" or timefilter etc.)
 
 *******************************************
 Q: Crash when starting the app ?

@@ -876,6 +876,23 @@ namespace IBE
                         DataIO.ReUseLine  = true;
 
                         DataIO.StartMasterImport(GetDataPath("Data"));
+                            
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = false;
+
+                        MessageBox.Show(parent, "Do you want to get a starters data kit ?\r\n\r\n" +
+                                                "You will get the existing market data from all stations in\r\n" +
+                                                "the bubble of 20 ly around your current location.\r\n\r\n" +
+                                                "Go to the 'Data' => 'Import&Export' menu.\r\n" +
+                                                "Download the latest EDDB files and start\r\n" +
+                                                "the import with the 'Starters Kit' option enabled.\r\n" +
+                                                "More information in the 'StarterTipps' files.", 
+                                                "wanna get a starters data kit ?", 
+                                                MessageBoxButtons.OK, 
+                                                MessageBoxIcon.Information);
+
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = true;
 
                         DataIO.Close();
                         DataIO.Dispose();

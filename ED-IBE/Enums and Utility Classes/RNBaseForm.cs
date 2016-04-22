@@ -172,18 +172,18 @@ namespace IBE.Enums_and_Utility_Classes
 
             try
             {
-                if (Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour", "") == "" || 
-                    Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour", "") == "") return;
+                if (Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour", "") == "" || 
+                    Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour", "") == "") return;
 
                 var x = GetAll(this);
 
-                int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-                int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-                int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
                 var f = Color.FromArgb(redF, greenF, blueF);
-                int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-                int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-                int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettings.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
                 var b = Color.FromArgb(redB, greenB, blueB);
 
                 foreach (Control c in x)

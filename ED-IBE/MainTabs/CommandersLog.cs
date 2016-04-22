@@ -755,9 +755,9 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
+                if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
                 {
-                    if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
+                    if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
                     {
 
                         String sqlString                = "select * from tbLog" +
