@@ -18,6 +18,7 @@ Content:
 		8. EDDN
 		9. Consideration of systems/stations !!!!!!!
 	* FAQ
+	        Q: price analysis shows no or not enough stations
 		Q: Crash when starting the app ?
 		Q: Crash when grabbing a screenshot?
 		Q: Crash when starting the EDDN listener?
