@@ -10,10 +10,16 @@ todo:
 * show all systems around another system with infos
 * complete StarterTips_eng
 
+* routes with one specific destination
+* a few specific commodities
+
 done:
 
  
-   
+
+   * added "AppConfigLocal.xml" to repository
+   * refreshed StarterTips
+-------------------------------------------------------------------------------------         
 v0.2.2
    * added import of market data from EDDB dumpfiles
 		- Starter Kit

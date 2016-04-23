@@ -183,13 +183,24 @@ A2: Die Filterreinstellungen sind falsch gewählt (z.B "Distance To Star" oder d
 *************************************************************************
 Q: Absturz beim Starten von ED-IBE?
 
-A1: Eventuell ist der Datenteil von ED-IBE in einem Verzeichnis installiert, das mit hohen Zugriffs-Restriktionen ausgestattet ist, 
+A1: Die Datenbank wurde bei der Installation nicht angelegt. 
+Siehe unter "1) Installation" der "Startertipps"
+
+A2: Beim Versuch, das "VerboseLogging" bei ED zu aktivieren scheitert ED-IBE an den nicht vohandenen
+Schreibrechten (wenn ED z.B. im Programme-Verzeichnis installiert ist.)
+Erstelle in dem Verzeichnis, in dem auch die AppConfig.xml von ED liegt eine zweite Datei mit dem Namen
+"AppConfigLocal.xml" und trage den folgenden Inhalt ein (oder kopiere die Datei von "https://github.com/Duke-Jones/ED-IBE/blob/master/AppConfigLocal.xml")
+
+<AppConfig>
+  <Network VerboseLogging="1">
+  </Network>
+</AppConfig>
+
+A3: Eventuell ist der Datenteil von ED-IBE in einem Verzeichnis installiert, das mit hohen Zugriffs-Restriktionen ausgestattet ist, 
 wie z. B. "C:\Programme\....". ED-IBE benötigt aber in jedem Fall Schreibzugriff auf die Log-Dateien etc. 
 Lösung : Den Datenteil von ED-IBE  in einem Verzeichnis installieren, in dem keinerlei Zugriffs-Restriktionen
 bestehen, wie dem vorgeschlagenen Standardpfad (Userverzecihnis) oder z. B. D:\Games\...."
 
-A2: Die Datenbank wurde bei der Installation nicht angelegt. 
-Siehe unter "1) Installation" der "Startertipps"
 
 *************************************************************************
 Q: Absturz beim Verarbeiten der Screenshots?
