@@ -10,13 +10,18 @@ Content:
 	* Quick Guide / Starter Tips
 		1. Installation
 		2. Start
-		3. Export and import of data (menu item "Data" -> "Import&Export")
-		4. Translations
-		5. Table Views
-		6. ComboBoxes
-		7. Acessing sql tables directly
-		8. EDDN
-		9. Consideration of systems/stations !!!!!!!
+		3. Erste Schritte und Ergebnisse
+			3.1. enter your own data
+			3.2. Starters Kit
+			3.3. find profitable route
+			3.4. find the next station that sells a particular commodity
+		4. Export and import of data (menu item "Data" -> "Import&Export")
+		5. Translations
+		6. Table Views
+		7. ComboBoxes
+		8. Acessing sql tables directly
+		9. EDDN
+	   10. Consideration of systems/stations !!!!!!!
 	* FAQ
 	        Q: price analysis shows no or not enough stations
 		Q: Crash when starting the app ?
@@ -38,7 +43,7 @@ Prerequisites:
 	
 Quick Guide / Starter Tips:
 
-
+_________________________________________________________________________
 1. Installation
 By default, the program installs to half in the Programs
 directory (C:\Program Files\ED-IBE) and the other half in the data directory
@@ -59,7 +64,7 @@ Case something goes wrong and you want to delete the database again, you have to
 run the installer again and check the checkbox for "Delete and re-create."
 But have in mind all data will be lost.
 
-
+_________________________________________________________________________
 2. Start
 If ED-IBE starts, the database engine automatically starts, too ("mysqld.exe" in the TaskManager).
 If ED-IBE exits the database process is also terminated (exception: the database engine
@@ -73,8 +78,47 @@ Tip for this moment: change to your language in the settings.
 Sorry, this concerns only the commodities but you're able to 
 import in your own language OCR-ed data !
 
+_________________________________________________________________________
+3. First steps and results
 
-3. Export and import of data ("Data" -> "Import&Export")
+3.1. enter your own data
+After IBE runs and also the right system in the "Current Location" displays
+firstly install the "ED Market Connector" (EDMC), if not already done.
+The commandline verion of this program (EDMC.exe) must be entered in the settings.
+( "Settings" -> "use External Tool" -> "ED Market Connector" -> "a) Path ...")
+Now you should be able to read the market data of the current station 
+(go to the tab "Market Data Interface") 
+by pressing "Landed", "Confirm Location" and "Get Market Data".
+
+* "Landed" + "Confirm Location" also generates a "Landed" event in the Commander's Log
+* "Get Market Data"             also generates a "Market Data Collected" event in the Commander's Log
+
+3.2. Starters Kit
+If you do not rigidly insists on want to collect only your own data, I recommend
+the import of the "Starters Kit": "Data" -> "Import & Export" -> "EDDB imports").
+Get the latest data from the EDDB website by pressing "Download latest EDDB dumpfiles".
+Then import the data by pressing "Import from downloaded EDDB dumpfiles".
+The option "Ok, give me a starter kit out of a bubble ..." must be activated.
+Result:
+1. you get the latest updates on systems and stations
+2. by the activating "starters kit" option you'll all available price data
+   out of a bubble around of 20 ly of your current system.
+
+3.3. find profitable route
+Go to the tab "Price Analysis" -> "Station-To_Station" and press "Start Calculation".
+In the right table you see an overview of the 100 most profitable routes with details.
+Depending on which row you select, in the two left tables the commodity data is shown.
+So look for the right route that suits most to your needs and then identify
+in the left windows which commodities to be purchased for each way (they are also sorted by profit).
+
+3.4. find the next station that sells a particular commodity
+Set the "Station Filters" accordingly and then press "Activate filter".
+Open the tab "By Commodity" and select from the list the required commodity.
+Now sort the table by distance by pressing the column header and search 
+the first station, which have a "Supply" or a buy price (Buy). Voila.
+
+_________________________________________________________________________
+4. Export and import of data ("Data" -> "Import&Export")
 
 "EDDB imports"
 This Point offers the possibility to refresh the master data.
@@ -108,8 +152,8 @@ With "Import RN CommandersLog Files" you can import splitted logfiles from the o
 The prerequisite is that the individual files are named like "CommandersLog*.xml".
 Multiple import is prevented internally by comparing the time stamp.
 
-
-4. Translations
+_________________________________________________________________________
+5. Translations
 Under "Data" -> "Edit Localization" you can view translations, edit, import and export.
 Sorry, this concerns only the commodities but you're able to import in your own language OCR-ed data !
 Also, the addition of another language is possible. For this purpose, export the translations, 
@@ -129,22 +173,22 @@ to:
 1;fra;Explosifs
 1;spa;<spanish name>
 
-
-5. Table Views
+_________________________________________________________________________
+6. Table Views
 By right-clicking on the table header (upper left small field)
 a dialog box opens. With this the table view can be customized.
 
 The width of the columns can also be customized by simple drag and drop.
 For save the widths open the dialog and simply confirm again.
 
-
-6. ComboBoxes
+_________________________________________________________________________
+7. ComboBoxes
 Although the combo boxes have fixed items, in many cases
 you can enter custom values 
 (for example you can enter "7" in "Max. Trip Distance")
 
-
-7.  Acessing sql tables directly
+_________________________________________________________________________
+8.  Acessing sql tables directly
 At "Data" -> "Direct DB Access" there is a possibility of 
 directly depose sql commands. This is intended for debugging and 
 for service activities. If you are not sure, then do not put your fingers on it.
@@ -152,8 +196,8 @@ It is possible to destroy internal data.
 If multiple commands are entered, a single statement can be targeted 
 for run by selecting its text.
 
-
-8. EDDN
+_________________________________________________________________________
+9. EDDN
 The EDDN interface is disabled by default. 
 At "Settings"->"EDDN Interface" you can enable the reciever and/or the sender. 
 To receive EDDN data automatically at the next start you have to check
@@ -164,8 +208,8 @@ To filter out garbage the time window of valid data is +- 5 minutes.
 The time of your own computer should therefore be well adjusted. 
 Multiple incoming data from EDDN  is also be filtered within a 5-minute period.
 
-
-9. Consideration of systems/stations !!!!!!!
+_________________________________________________________________________
+10. Consideration of systems/stations !!!!!!!
 For the people who like to reduce the data strictly to the self-visited 
 systems (even only self-visited stations) there is a datafilter active by default.
 
@@ -185,6 +229,7 @@ Note: If you have imported your old RN data, the list of visited systems/station
 is completed by the data of the "Commander's Log" and the RN-list of visited systems.
 
 
+=========================================================================
 
 FAQ:
 

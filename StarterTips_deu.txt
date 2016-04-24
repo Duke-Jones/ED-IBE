@@ -6,13 +6,18 @@ Inhalt:
    * Kurzanleitung/Starter-Tipps
 		1. Installation 
 		2. Starten
-		3. Ex-/Import von Daten
-		4. Übersetzungen
-		5. Tabellenansichten
-		6. Comboboxen
-		7. Service-Formular SQL
-		8. EDDN
-		9. Berücksichtigung der Systeme/Stationen !!!!!!!
+		4. Ex-/Import von Daten
+		3. Erste Schritte und Ergebnisse
+			3.1. eigene Daten erfassen
+			3.2. Starters Kit
+			3.3. profitable Route finden
+			3.4. die nächste Station finden, die eine bestimmte Ware verkauft
+		5. Übersetzungen
+		6. Tabellenansichten
+		7. Comboboxen
+		8. Service-Formular SQL
+		9. EDDN
+		10. Berücksichtigung der Systeme/Stationen !!!!!!!
 
 	* FAQ
 		Q: bei der Preisanalyse werden keine/zu wenig Stationen angezeigt
@@ -29,7 +34,7 @@ Voraussetzungen:
 - Visual Studio 2012 C++ Redistributables (x86 und x64) (https://www.microsoft.com/en-us/download/details.aspx?id=30679)
 
 Kurzanleitung/Starter-Tipps
-
+_________________________________________________________________________
 1. Installation 
 Standardmäßig installiert sich das Programm zu Hälfte in das Programme-
 verzeichnis (C:\Program Files\ED-IBE) und zur Hälfte in das Data-Verzeichnis
@@ -51,7 +56,7 @@ das "Löschen und Neuerstellen" ausgewählt wird.
 Fall etwas schiefgeht und man die Datenbank einmal löschen möchte, muss man 
 die Installation erneut durchführen und die Checkbox zum "Löschen und Neuerstellen" markieren.
 
-
+_________________________________________________________________________
 2. Starten
 Wenn ED-IBE gestartet wird, wird automatisch der Datenbankprozess mitgestartet ("mysqld.exe" im Taskmanager).
 Wird ED-IBE beendet, wird auch der Datenbankprozess mit beendet (Ausnahme: Der Datenbankprozess war 
@@ -65,7 +70,48 @@ Tipp: am besten als erstes auf die eigene Sprache umstellen (Settings)
 Leider betrifft dies nur die Warennamen, aber so ist es möglich 
 auch OCR-Ergebnisse in der eigenen Sprache zu importieren. 
 
-3. Ex-/Import von Daten (Menüpunkt "Data"->"Import")
+_________________________________________________________________________
+3. Erste Schritte und Ergebnisse
+
+3.1. eigene Daten erfassen
+Nachdem IBE läuft und auch das richtige System im Feld "Current Location" anzeigt
+am besten erst mal den "ED Market Connector" (EDMC) installieren, falls noch nicht getan.
+Die Kommandezeilenversion der Exe (EDMC.exe) muss in den Settings eingetragen werden.
+("Settings" -> "use External Tool" -> "ED Market Connector" -> "a) Path ...")
+Jetzt sollte man auf dem Tab "Market Data Interface" durch betätigen "Landed", "Confirm Location" 
+und "Get Market Data" die Preise der aktuellen Station einlesen können.
+
+* "Landed" + "Confirm Location"  erzeugt gleichzeitig ein "Landed"-Event im Commander's Log
+* "Get Market Data"              erzeugt gleichzeitig ein "Market Data Collected"-Event im Commander's Log
+
+3.2. Starters Kit
+Wenn man nicht starr darauf beharrt, nur eigene Preise sammeln zu wollen, empfehle ich
+das Einspielen des "Starters Kits" : "Data" -> "Import & Export" -> "EDDB imports").
+Mit "Download latest EDDB dumpfiles" zunächst die neuesten Daten von der EDDB-Homepage
+herunterladen und anschliessend mit "Import from downloaded  EDDB dumpfiles" importieren.
+Die Option "Ok, give me a Starters Kit out of a bubble..." muss dazu aktiviert sein.
+Ergebnis:
+1. durch den Ipmort als solchen hat man den neuesten Stand bei den System und Stationsdaten
+2. durch die aktivierte "Starters Kit"-Option bekommt man alle vorhandenen Preisdaten
+   der System, die sich innerhalb einer Blase von 20 Lj um das aktuelle System befinden.
+
+3.3. profitable Route finden
+Geht man jetzt auf den Tab "Preisanalysis" -> "Station-To_Station" und drückt "Start Calculation"
+werden einem kurze Zeit später die Ergebnisse unter Berücksichtigung der eingestellten Filter präsentiert:
+In der rechten Tabelle befindet sich die Übersicht über die 100 profitabelsten Routen mit Detailangaben.
+Je nachdem welchen Datensatz man auswählt werden die Warendaten der beiden beteiligten Stationen in 
+den beiden linken Tabellen angezeigt. 
+Man sucht sich also rechts die Route, die einem am meisten zusagt und ermittelt dann in den 
+linken Fenstern, um welche zu kaufenden Waren es sich für die jeweilige Station handelt.
+
+3.4. die nächste Station finden, die eine bestimmte Ware verkauft
+Die Stationsfilter entsprechend einstellen und dann "Activate Filter" drücken.
+Den Tab "By Commodity öffnen" und aus der Liste die gesuchte Ware wählen.
+Jetzt die Tabelle noch nach Spalte "Distance" sortieren und die erste Station suchen, 
+"Supply" bzw. einen "Kaufpreis" (Buy) hat. Voilá.
+
+________________________________________________________________________
+4. Ex-/Import von Daten (Menüpunkt "Data"->"Import")
 
 "EDDB imports"
 Dieser Punkt bietet die Möglichkeit die Stammdaten zu aktualisieren.
@@ -103,7 +149,8 @@ Mehrfachimport wird durch Abgleich des Zeitstempels verhindert.
 Bietet die Ex- und Importmöglichkeit über CSV-Dateien.
 Gut geeignet zum Datenaustausch mit Freunden.
 
-4. Übersetzungen
+_________________________________________________________________________
+5. Übersetzungen
 Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportieren.
 Leider betrifft dies nur die Warennamen, aber so ist es möglich auch OCR-Ergebnisse in der eigenen Sprache zu importieren. 
 Auch das Hinzufügen einer weiteren Sprache ist möglich. Hierzu die Übersetzungen exportieren, dann in der csv-Datei 
@@ -123,20 +170,20 @@ nach:
 1;fra;Explosifs
 1;spa;<spanischer Name>
 
-
-5. Tabellenansichten
+_________________________________________________________________________
+6. Tabellenansichten
 Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
 öffnet sich ein Dialog, mit dem die Tabellenansicht angepasst werden kann.
 Die Breite der Spalten können auch per Drag'n'Drop angepasst werden.
 Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen dann auch übernommen.
 
-
-6. Comboboxen
+_________________________________________________________________________
+7. Comboboxen
 Die ComboBoxen habe zwar feste Einträge. In vielen Fällen hat man aber die Möglichkeit 
 beliebige eigene Werte einzutragen (z.B. bei "Max. Trip Distance")
 
-
-7. Service-Formular SQL
+_________________________________________________________________________
+8. Service-Formular SQL
 Unter gibt es die Möglichkeit direkt Sql-Befehle abzusetzen.
 Diese Möglichkeit wurde zur Fehlersuche und für Service-Tätigkeiten geschaffen.
 Wenn man sich nicht sicher ist, dann lieber die Finger davon lassen.
@@ -144,8 +191,8 @@ Es besteht die Möglichkeit, interne Daten zu zerstören.
 Wenn mehrere Befehle eingetragen sind, kann man diese durch Selektion gezielt
 zum Ausführen auswählen.
 
-
-8. EDDN
+_________________________________________________________________________
+9. EDDN
 Das EDDN-Interface ist standardmäßig deaktiviert. Über Settings->EDDN-Interface
 kann der Empfang und/oder das Senden von EDDN-Nachrichten aktiviert werden.
 Um EDDN-Daten automatisch beim nächsten Start zu empfangen, müssen
@@ -157,8 +204,8 @@ Um Datenmüll auszufiltern beträgt das Zeitfenster für gültige Daten +- 5 Min
 die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach eingehende
 Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
 
-
-9. Berücksichtigung der Systeme/Stationen !!!!!!!
+_________________________________________________________________________
+10. Berücksichtigung der Systeme/Stationen !!!!!!!
 ED-IBE berücksichtigt im Normalfall nur Daten von Systeme, die bereits selbst besucht wurden !
 Es können jedoch weitere Daten vorhanden sein (über den manuellen CSV-Import oder über das EDDN-Interface).
 Über diesen Mechanismus kann man sich bewußt gegen das Sammeln von Preisdaten unbekannter Systeme entscheiden,
@@ -167,6 +214,8 @@ aber trotzdem Aktualisierungen von Preisen der besuchten Systeme über EDDN empf
 Hinweis: Wer seine alten RN-Daten importiert, fügt auch die Einträge in die Liste der besuchten Systeme hinzu.
 Grundlage hierfür ist beim Import das "Commander's Log" sowie die "StationHistory" von "RegulatedNoise DJ".
 
+
+=========================================================================
 
 FAQ:
 *************************************************************************
