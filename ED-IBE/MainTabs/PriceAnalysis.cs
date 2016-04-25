@@ -19,6 +19,7 @@ namespace IBE.MTPriceAnalysis
 {
     public class PriceAnalysis
     {
+        private int? _FixedStation;
         private const string tbn_BestMarketPrices = "tbBestMarketPrices";
 
         public enum enGUIEditElements
@@ -59,9 +60,12 @@ namespace IBE.MTPriceAnalysis
         private Boolean                             m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner        m_LogfileScanner;
         private ExternalDataInterface               m_ExternalDataInterface;
-        private IBE.IBESettingsView          m_Settings;
+        private IBE.IBESettingsView                 m_Settings;
         private DBConnector                         m_lDBCon;
+        private List<Int32>                         m_CommoditiesSend = new List<int>();
+        private List<Int32>                         m_CommoditiesReturn = new List<int>();
 
+        
         /// <summary>
         /// constructor
         /// </summary>
@@ -184,6 +188,39 @@ namespace IBE.MTPriceAnalysis
             {
                 throw new Exception("Error while registering the LogfileScanner", ex);
             }
+        }
+
+        /// <summary>
+        /// id of a fixed target station if not null
+        /// </summary>
+        public int? FixedStation
+        {
+            get
+            {
+                return _FixedStation;
+            }
+            set
+            {
+                _FixedStation = value;
+            }
+        }
+
+        /// <summary>
+        /// filter for commodities to buy from station 1
+        /// </summary>
+        public List<Int32> CommoditiesSend
+        {
+            get { return m_CommoditiesSend; }
+            set { m_CommoditiesSend = value; }
+        }
+
+        /// <summary>
+        /// filter for commodities to buy from station 2 and return to station 1
+        /// </summary>
+        public List<Int32> CommoditiesReturn
+        {
+            get { return m_CommoditiesReturn; }
+            set { m_CommoditiesReturn = value; }
         }
 
         /// <summary>
@@ -603,9 +640,21 @@ namespace IBE.MTPriceAnalysis
 
                 getFilteredSystemAndStationCount(out StationCount, out SystemCount);
 
+
                 // get the results for a cancellable loop
-                sqlString = "select * from tmfilteredstations" +
-                            " order by Station_ID";
+                if(FixedStation == null)
+                { 
+                    sqlString = "select * from tmfilteredstations" +
+                                " order by Station_ID";
+                }
+                else
+                { 
+                    sqlString = String.Format("select * from tmfilteredstations" +
+                                              " where Station_ID = {0}" +
+                                              " order by Station_ID",
+                                              FixedStation.Value);
+                }
+
                 m_lDBCon.Execute(sqlString, tmFilteredStations);
 
                 maxTradingDistance = -1;
@@ -676,7 +725,7 @@ namespace IBE.MTPriceAnalysis
                                 " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit  from  " +
                                 " 	(select L1.*, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward,  " +
                                 " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back  " +
-                                " 	from (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell  " +
+                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell  " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
                                 " 																		  and N.Station_ID_From = {0} {2}" +
                                 " 				   ) L1  " +
@@ -693,14 +742,14 @@ namespace IBE.MTPriceAnalysis
                                 "  " +
                                 " 	(select L1.*, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward,  " +
                                 " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back  " +
-                                " 	from (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell  " +
+                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell  " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
-                                " 																		  and N.Station_ID_From = {0} {2}" +
+                                " 																		  and N.Station_ID_From = {0} {3}" +
                                 " 				   ) L1  " +
                                 " 	 join " +
                                 " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
-                                " 																		  and N.Station_ID_From = {0} {2}" +
+                                " 																		  and N.Station_ID_From = {0} {3}" +
                                 " 				   ) L2 " +
                                 " 	on  L1.Station_ID_From = L2.Station_ID_From " +
                                 " 	and L1.Station_ID_To   = L2.Station_ID_To " +
@@ -720,7 +769,32 @@ namespace IBE.MTPriceAnalysis
                                 " order by Max_Profit desc" +
                                 " limit 100,1;";
 
+                String wherePart_Return         = "";
+                String wherePart_Send           = "";
 
+                // time filter         
+                if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
+                {
+                    wherePart_Send   = " where CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                    wherePart_Return = " where CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                }
+
+                // commodity filter
+                if(CommoditiesSend.Count > 0)
+                {
+                    if(String.IsNullOrEmpty(wherePart_Send))
+                        wherePart_Send  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
+                    else
+                        wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
+                }
+
+                if(CommoditiesReturn.Count > 0)
+                {
+                    if(String.IsNullOrEmpty(wherePart_Return))
+                        wherePart_Return  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+                    else
+                        wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+                }
 
                 if(!Cancelled)
                 {
@@ -748,20 +822,13 @@ namespace IBE.MTPriceAnalysis
 
                     foreach(DataRow StartStation in Data.Tables["StartStations"].Rows)
                     {
-                        // get the trading data 
-                        if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
-                        {
-                            String wherePart = " where CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
-                            sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart);
-                        }
-                        else
-                            sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, "");
+                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return);
 
                         m_lDBCon.Execute(sqlString, "MinProfit", Data);
 
                         if((Data.Tables["minProfit"].Rows.Count > 0) && (!Convert.IsDBNull(Data.Tables["MinProfit"])))
                             currentMinValue = (Int32)Data.Tables["MinProfit"].Rows[0]["Min_Profit"];
-
+                        Clipboard.SetText(sqlString);
                         Current += 1;
 
                         PV.progressUpdate(Current,  Data.Tables["StartStations"].Rows.Count);
@@ -842,14 +909,14 @@ namespace IBE.MTPriceAnalysis
                                 "		if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
                                 "		if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
                                 "        if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.timestamp, if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, L2.timestamp, null)) As timestamp" +
-                                "	from (select Commodity_ID, Buy, Sell, timestamp " +
-                                "				 from tbCommodityData " +
-                                "                 where Station_ID      = {0} {3}" +
+                                "	from (select CD.Commodity_ID, CD.Buy, CD.Sell, CD.timestamp " +
+                                "				 from tbCommodityData CD " +
+                                "                 where CD.Station_ID      = {0} {4}" +
                                 "		  ) L1 " +
                                 "	 join" +
-                                "		 (select Commodity_ID, Buy, Sell, timestamp" +
-                                "				 from tbCommodityData " +
-                                "                 where Station_ID      = {1} {3}" +
+                                "		 (select CD.Commodity_ID, CD.Buy, CD.Sell, CD.timestamp" +
+                                "				 from tbCommodityData CD " +
+                                "                 where CD.Station_ID      = {1} {4}" +
                                 "		  ) L2" +
                                 "	on  L1.Commodity_ID    = L2.Commodity_ID" +
                                 "    join tbCommodity T" +
@@ -860,14 +927,14 @@ namespace IBE.MTPriceAnalysis
                                 "		if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
                                 "		if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
                                 "        if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.timestamp, if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, L2.timestamp, null)) As timestamp" +
-                                "	from (select Commodity_ID, Buy, Sell, timestamp " +
-                                "				 from tbCommodityData " +
-                                "                 where Station_ID      = {0} {3}" +
+                                "	from (select CD.Commodity_ID, CD.Buy, CD.Sell, CD.timestamp " +
+                                "				 from tbCommodityData CD " +
+                                "                 where CD.Station_ID      = {0} {3}" +
                                 "		  ) L1 " +
                                 "	 join" +
-                                "		 (select Commodity_ID, Buy, Sell, timestamp  " +
-                                "				 from tbCommodityData " +
-                                "                 where Station_ID      = {1} {3}" +
+                                "		 (select CD.Commodity_ID, CD.Buy, CD.Sell, CD.timestamp" +
+                                "				 from tbCommodityData CD " +
+                                "                 where CD.Station_ID      = {1} {3}" +
                                 "		  ) L2" +
                                 "	on  L1.Commodity_ID    = L2.Commodity_ID" +
                                 "    join tbCommodity T" +
@@ -888,18 +955,31 @@ namespace IBE.MTPriceAnalysis
                                     " (select is_planetary from tbstations" +
                                     " where ID = {1}) as st2;";
 
+                wherePart_Send   = "";
+                wherePart_Return = "";
+
+                // time filter         
+                if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
+                {
+                    wherePart_Send   = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                    wherePart_Return = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                }
+
+                // commodity filter
+                if(CommoditiesSend.Count > 0)
+                {
+                    wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
+                }
+
+                if(CommoditiesReturn.Count > 0)
+                {
+                    wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+                }
+
                 // now get the timestamps of the best-profit commodities and get other details
                 foreach (dsEliteDB.tmpa_s2s_besttripsRow CurrentRow in Result)
                 {
-                    // timestamp
-                    if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
-                    {
-                        String wherePart = " and timestamp >= " + DBConnector.SQLDateTime(stopTime);
-                        sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1", wherePart);
-                    }
-                    else
-                        sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1", "");
-
+                    sqlString = String.Format(sqlBaseString, CurrentRow.Station_ID_1, CurrentRow.Station_ID_2, "limit 1", wherePart_Send, wherePart_Return);
                     m_lDBCon.Execute(sqlString, "Timestamps", Data);
 
                     if(!DBNull.Value.Equals(Data.Tables["Timestamps"].Rows[0]["FWTimeStamp"]))
@@ -984,9 +1064,11 @@ namespace IBE.MTPriceAnalysis
         /// <param name="Data"></param>
         /// <param name="Station_From"></param>
         /// <param name="Station_To"></param>
-        public void loadBestProfitStationCommodities(dsEliteDB.tmpa_s2s_stationdataDataTable Data, int? Station_From, int? Station_To)
+        public void loadBestProfitStationCommodities(dsEliteDB.tmpa_s2s_stationdataDataTable Data, int? Station_From, int? Station_To, List<Int32> commodityFilter)
         {
             String sqlString;
+            String orString = "";
+
             try
             {
                 if ((Station_From == null) || (Station_To == null))
@@ -997,13 +1079,17 @@ namespace IBE.MTPriceAnalysis
                 }
                 else
                 {
+                    if(commodityFilter.Count > 0)
+                        orString = " and " + DBConnector.GetString_Or<Int32>("commodity_id", commodityFilter);
+
                     sqlString = String.Format(
                                 "select Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
                                 "       Sd1.Buy, Sd1.Supply, Sd1.SupplyLevel, Sd1.timestamp As Timestamp1, " +
                                 "       Sd2.Sell, Sd2.Demand, Sd2.DemandLevel, Sd2.timestamp As Timestamp2, " +
                                 "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit, Sd1.Sources_ID from " +
                                 " (select * from tbCommodityData " +
-                                "   where Station_ID   = {0}) Sd1 " +
+                                "   where Station_ID   = {0} " + 
+                                    orString + ") Sd1 " +
                                 " join" +
                                 " (select * from tbCommodityData " +
                                 "   where Station_ID   = {1}) Sd2" +

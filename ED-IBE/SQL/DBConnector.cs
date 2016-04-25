@@ -1219,6 +1219,33 @@ namespace IBE.SQL
                 return m_ConfigData;
             }
         }
+
+        internal static string GetString_Or<T>(string p, List<T> CommoditiesSend)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            try
+            {
+                foreach (T item in CommoditiesSend)
+                {
+                    if(sb.Length > 0)
+                        sb.Append(" or ");
+
+                    if(Type.GetTypeCode(typeof(T)) == TypeCode.Int32)
+                        sb.Append(String.Format("({0} = {1})", p, item.ToString()));                    
+                    else if(Type.GetTypeCode(typeof(T)) == TypeCode.String)
+                        sb.Append(String.Format("({0} = '{1})'", p, item.ToString()));                    
+
+                }
+                    
+                return " (" + sb.ToString() + ")"; 
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while creating or-string", ex);
+            }
+        }
     }
 
 

@@ -12,11 +12,18 @@ todo:
 
 * routes with one specific destination
 * a few specific commodities
+* default values for table columns
+* profit for selected columns
+
+* filter  results without named commodity when filter is active
+* ask if the update of master is wanted after update
 
 done:
 
- 
 
+   * optional commodity filter for source and destination stations on "Station-To-Station" tab (for Community Goals)
+   * optional fixing for start-station on "Station-To-Station" tab (for Community Goals)
+-------------------------------------------------------------------------------------         
    * added "AppConfigLocal.xml" to repository
    * refreshed StarterTips
 -------------------------------------------------------------------------------------         

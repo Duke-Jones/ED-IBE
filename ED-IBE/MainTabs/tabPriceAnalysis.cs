@@ -597,6 +597,9 @@ namespace IBE.MTPriceAnalysis
                     }
 
                     orderComboBoxes();
+
+                    if(cbFixedStation.Checked)
+                        cmbStation1.SelectedValue = m_DataSource.FixedStation;
                 }
                 
                 this.Cursor = oldCursor;
@@ -1141,6 +1144,15 @@ namespace IBE.MTPriceAnalysis
 
             try
             {
+                //m_DataSource.CommoditiesReturn.Clear();
+                //m_DataSource.CommoditiesSend.Clear();
+
+
+                //m_DataSource.CommoditiesReturn.Add(41);
+                //m_DataSource.CommoditiesReturn.Add(43);
+                //m_DataSource.CommoditiesReturn.Add(48);
+                ////m_DataSource.CommoditiesSend.Add(61);
+
                 SetButtons(false);
 
                 if (Program.actualCondition.System == "")
@@ -1157,11 +1169,6 @@ namespace IBE.MTPriceAnalysis
                     dgvStationToStationRoutes.AutoGenerateColumns = false;
                     dgvStationToStationRoutes.DataSource          = bs;
 
-                    m_IsRefreshed["tpStationToStation"] = true;
-
-                    cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
-                    cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
-
                     if(dgvStationToStationRoutes.RowCount > 0)
                     {
                         //dgvStationToStationRoutes.Rows[0].Selected  = true;
@@ -1172,6 +1179,11 @@ namespace IBE.MTPriceAnalysis
                     }
                 
                     loadStationCommoditiesFromComboBoxes();
+
+                    m_IsRefreshed["tpStationToStation"] = true;
+
+                    cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
+                    cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
 
                     SetComboBoxEventsActive(true);
 
@@ -1239,9 +1251,12 @@ namespace IBE.MTPriceAnalysis
             dsEliteDB.tmpa_s2s_stationdataDataTable Data = null;
             int? Station1 = null;
             int? Station2 = null;
+            List<Int32> commodityFilter = null;
 
             try
             {
+                UpdateFixedStation();
+
                 for (int i = 0; i < 2; i++)
                 {
                     switch (i)
@@ -1263,7 +1278,9 @@ namespace IBE.MTPriceAnalysis
                                 Station2 = null;
                             }
 
-                            Data     = (dsEliteDB.tmpa_s2s_stationdataDataTable)m_DGVTables[dgvStation1.Name];
+                            Data            = (dsEliteDB.tmpa_s2s_stationdataDataTable)m_DGVTables[dgvStation1.Name];
+                            commodityFilter = m_DataSource.CommoditiesSend;                            
+
                             break;
                         case 1:
                             try
@@ -1282,11 +1299,12 @@ namespace IBE.MTPriceAnalysis
                                 Station1 = null;
                             }
 
-                            Data     = (dsEliteDB.tmpa_s2s_stationdataDataTable)m_DGVTables[dgvStation2.Name];
+                            Data            = (dsEliteDB.tmpa_s2s_stationdataDataTable)m_DGVTables[dgvStation2.Name];
+                            commodityFilter  = m_DataSource.CommoditiesReturn;
                             break;
                     }             
                     
-                    m_DataSource.loadBestProfitStationCommodities(Data, Station1, Station2);
+                    m_DataSource.loadBestProfitStationCommodities(Data, Station1, Station2, commodityFilter);
 
                 }
 
@@ -1633,5 +1651,121 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+        private void cbFixedStation_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateFixedStation();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cbFixedStation_CheckedChanged");
+            }
+        }
+
+        private void UpdateFixedStation()
+        {
+            try
+            {
+                int? Station1;
+
+                if(cbFixedStation.Checked)
+                {
+                    try
+                    {
+                        Station1 = (int?)cmbStation1.SelectedValue;
+                    }
+                    catch (Exception){
+                        Station1 = null;
+                    }
+
+                    m_DataSource.FixedStation = Station1;
+                }
+                else
+                    m_DataSource.FixedStation = null;
+
+                cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
+                cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+            
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in cbFixedStation_CheckedChanged", ex);
+            }
+        }
+
+        private void cmdCommodityFilter_Click(object sender, EventArgs e)
+        {
+            CommoditySelector cSelector;
+            DialogResult dResult = DialogResult.None;
+            List<Int32> cList;
+
+            try
+            {
+                cSelector = new CommoditySelector();
+
+                if(sender.Equals(cmdCommodityFilter1))
+                    cList = new List<Int32>(m_DataSource.CommoditiesSend);
+                else
+                    cList = new List<Int32>(m_DataSource.CommoditiesReturn);
+
+                dResult = cSelector.Start(this.ParentForm, ref cList);
+
+                if(dResult == DialogResult.OK)
+                {
+                    if(sender.Equals(cmdCommodityFilter1))
+                    {
+                        m_DataSource.CommoditiesSend.Clear();
+                        m_DataSource.CommoditiesSend.AddRange(cList);
+
+                        SetFilterButtonText(cmdCommodityFilter1, cList);
+                    }
+                    else
+                    {
+                        m_DataSource.CommoditiesReturn.Clear();
+                        m_DataSource.CommoditiesReturn.AddRange(cList);
+
+                        SetFilterButtonText(cmdCommodityFilter2, cList);
+                    }
+
+                    cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
+                    cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdCommodityFilter_Click");
+            }
+        }
+
+        private void cmdClearCommodityFilters_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                m_DataSource.CommoditiesSend.Clear();
+                m_DataSource.CommoditiesReturn.Clear();
+
+                cbFixedStation.Checked = false;
+
+                SetFilterButtonText(cmdCommodityFilter1, m_DataSource.CommoditiesSend);
+                SetFilterButtonText(cmdCommodityFilter2, m_DataSource.CommoditiesReturn);
+
+                cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
+                cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+
+           }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdClearCommodityFilters_Click");
+            }
+        }
+
+        private void SetFilterButtonText(Button filterButton, List<Int32> cList)
+        {
+            if (cList.Count() == 0)
+                filterButton.Text = "Buy-Filter : Off";
+            else
+                filterButton.Text = string.Format("Buy-Filter : {0} Commodities", cList.Count());
+        }
     }
 }
