@@ -10,7 +10,7 @@ Content:
 	* Quick Guide / Starter Tips
 		1. Installation
 		2. Start
-		3. Erste Schritte und Ergebnisse
+		3. First steps and results
 			3.1. enter your own data
 			3.2. Starters Kit
 			3.3. find profitable route
