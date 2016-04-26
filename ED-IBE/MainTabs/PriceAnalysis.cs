@@ -736,7 +736,8 @@ namespace IBE.MTPriceAnalysis
                                 " 				   ) L2 " +
                                 " 	on  L1.Station_ID_From = L2.Station_ID_From " +
                                 " 	and L1.Station_ID_To   = L2.Station_ID_To " +
-                                " 	and L1.Commodity_ID    = L2.Commodity_ID) Pr1 " +
+                                " 	and L1.Commodity_ID    = L2.Commodity_ID" +
+                                "   {4}) Pr1 " +
                                 "      " +
                                 "     join  " +
                                 "  " +
@@ -753,7 +754,8 @@ namespace IBE.MTPriceAnalysis
                                 " 				   ) L2 " +
                                 " 	on  L1.Station_ID_From = L2.Station_ID_From " +
                                 " 	and L1.Station_ID_To   = L2.Station_ID_To " +
-                                " 	and L1.Commodity_ID    = L2.Commodity_ID) Pr2 " +
+                                " 	and L1.Commodity_ID    = L2.Commodity_ID" +
+                                "   {5}) Pr2 " +
                                 "      " +
                                 " on  Pr1.Station_ID_From = Pr2.Station_ID_From " +
                                 " and Pr1.Station_ID_To   = Pr2.Station_ID_To) ALL_RESULTS " +
@@ -771,6 +773,9 @@ namespace IBE.MTPriceAnalysis
 
                 String wherePart_Return         = "";
                 String wherePart_Send           = "";
+                String havingPart_Return        = "";
+                String havingPart_Send          = "";
+
 
                 // time filter         
                 if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
@@ -786,6 +791,8 @@ namespace IBE.MTPriceAnalysis
                         wherePart_Send  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
                     else
                         wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
+
+                    havingPart_Send = " having Forward > 0 ";
                 }
 
                 if(CommoditiesReturn.Count > 0)
@@ -794,6 +801,8 @@ namespace IBE.MTPriceAnalysis
                         wherePart_Return  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
                     else
                         wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+
+                    havingPart_Return = " having Back > 0 ";
                 }
 
                 if(!Cancelled)
@@ -822,7 +831,8 @@ namespace IBE.MTPriceAnalysis
 
                     foreach(DataRow StartStation in Data.Tables["StartStations"].Rows)
                     {
-                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return);
+                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return);
+
 
                         m_lDBCon.Execute(sqlString, "MinProfit", Data);
 
@@ -939,7 +949,6 @@ namespace IBE.MTPriceAnalysis
                                 "	on  L1.Commodity_ID    = L2.Commodity_ID" +
                                 "    join tbCommodity T" +
                                 "    on  L1.Commodity_ID    = T.ID" +
-                                "    " +
                                 "    ) Pr2" +
                                 "    order by Profit desc {2}";
                 
