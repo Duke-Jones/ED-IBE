@@ -234,9 +234,9 @@ namespace IBE.SQL
                         if(Parts != null)
                         { 
                             if(cbSender.Orientation == Orientation.Vertical)
-                                SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance) * 100  / ((Single)cbSender.Width)), 0);
+                                SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance + (cbSender.SplitterWidth / 2)) * 100  / ((Single)cbSender.Width)), 0);
                             else
-                                SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance) * 100  / ((Single)cbSender.Height)), 0);
+                                SplitterRatio = (Int32)Math.Round(((Single)(cbSender.SplitterDistance + (cbSender.SplitterWidth / 2)) * 100  / ((Single)cbSender.Height)), 0);
                             
                             if(SplitterRatio > 0)
                                 retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, SplitterRatio.ToString());
@@ -543,9 +543,9 @@ namespace IBE.SQL
                     {
                         SplitterRatio = m_DBCon.getIniValue<Int32>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
                         if(cbSender.Orientation == Orientation.Vertical)
-                            SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Width)) / 100, 0);
+                            SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Width)) / 100 - (cbSender.SplitterWidth / 2), 0);
                         else
-                            SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Height)) / 100, 0);
+                            SplitterRatio = (Int32)Math.Round(((Single)(SplitterRatio * cbSender.Height)) / 100 - (cbSender.SplitterWidth / 2), 0);
 
                         if(SplitterRatio > 0)
                         { 

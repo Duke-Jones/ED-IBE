@@ -20,10 +20,8 @@ todo:
 
 done:
 
-
-   * optional commodity filter for source and destination stations on "Station-To-Station" tab (for Community Goals)
-   * optional fixing for start-station on "Station-To-Station" tab (for Community Goals)
--------------------------------------------------------------------------------------         
+   * detail results in station-to-station, depends on selected commodity column
+   * fixes on commodity filter
 -------------------------------------------------------------------------------------         
    * optional commodity filter for source and destination stations on "Station-To-Station" tab (for Community Goals)
    * optional fixing for start-station on "Station-To-Station" tab (for Community Goals)

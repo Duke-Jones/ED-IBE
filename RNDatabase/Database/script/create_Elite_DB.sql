@@ -714,6 +714,7 @@ ENGINE = InnoDB;
 -- Table `elite_db`.`tmPA_S2S_StationData`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_StationData` (
+  `Station_ID` INT(11) NULL,
   `Commodity_ID` INT NOT NULL,
   `Commodity` VARCHAR(80) NULL,
   `Buy` INT NULL,
@@ -1190,7 +1191,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.2.1.0');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.2.3.0');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');
 
 COMMIT;

@@ -622,6 +622,9 @@ namespace IBE.MTPriceAnalysis
             {
                 if(m_GUIInterface != null)
                     m_GUIInterface.saveSetting(sender);
+
+                    //SetResultpanelPosition();
+
             }
             catch (Exception ex)
             {
@@ -1564,12 +1567,38 @@ namespace IBE.MTPriceAnalysis
             {
                 if(m_GUIInterface != null)
                     m_GUIInterface.loadSetting(sender);
+
+                //SetResultpanelPosition();
             }
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in SplitContainer_Resize");
             }
         }
+
+        ///// <summary>
+        ///// set the Position and size of the panel to overlay the splitter 
+        ///// </summary>
+        //private void SetResultpanelPosition()
+        //{
+        //    try
+        //    {
+        //        var spLocation = scStationToStation_2.SplitterRectangle.Location;
+        //        spLocation.Offset(scStationToStation_1.Location);
+        //        spLocation.Offset(scStationToStation_2.Location);
+        //        spLocation.Offset(1, 2);
+        //        paResultDetail.Location = spLocation;
+
+        //        var spRect = scStationToStation_2.SplitterRectangle.Size;
+        //        spRect.Width -= 10;
+        //        spRect.Height -= 2;
+        //        paResultDetail.Size = spRect;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while repositioning the result panel", ex);
+        //    }
+        //}
 
         private void dgvStation_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -1766,6 +1795,65 @@ namespace IBE.MTPriceAnalysis
                 filterButton.Text = "Buy-Filter : Off";
             else
                 filterButton.Text = string.Format("Buy-Filter : {0} Commodities", cList.Count());
+        }
+
+        private void dgvStation_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+
+            SQL.Datasets.dsEliteDB.visystemsandstationsRow[] stationInfo;
+            SQL.Datasets.dsEliteDB.tmpa_s2s_stationdataRow commodityInfo;
+            Int32 totalProfit = 0;
+            DataGridViewExt currentDGV = (DataGridViewExt)sender;
+            Label detailStation;
+            Label detailCommodity;
+            Label detailProfit;
+            Int32 intValue = 0;
+
+            try
+            {
+                if(currentDGV == dgvStation1)
+                {
+                    detailStation     = lbDetailStation1;
+                    detailCommodity   = lbDetailCommodity1;
+                    detailProfit      = lbDetailProfit1;     
+                }
+                else
+                {
+                    detailStation     = lbDetailStation2;
+                    detailCommodity   = lbDetailCommodity2;
+                    detailProfit      = lbDetailProfit2;     
+                }
+
+
+                if((currentDGV.RowCount > 0) && (e.RowIndex >= 0))
+                {
+                    commodityInfo = (SQL.Datasets.dsEliteDB.tmpa_s2s_stationdataRow)((DataRowView)currentDGV.Rows[e.RowIndex].DataBoundItem).Row;
+                    stationInfo   = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])Program.Data.BaseData.visystemsandstations.Select("StationID=" + commodityInfo.Station_ID);
+
+                    detailStation.Text    = String.Format("{0} / {1}", stationInfo[0].SystemName, stationInfo[0].StationName);
+                    detailCommodity.Text  = commodityInfo.Commodity;
+                    detailProfit.Text     = commodityInfo.Profit.ToString();
+               }
+                else
+                {
+                    detailStation.Text    =  "-";
+                    detailCommodity.Text  =  "-";
+                    detailProfit.Text     =  "0";
+                }
+
+                if(Int32.TryParse(lbDetailProfit1.Text, out intValue))
+                    totalProfit += intValue;
+
+                if(Int32.TryParse(lbDetailProfit2.Text, out intValue))
+                    totalProfit += intValue;
+
+                lbDetailProfitTotal.Text = totalProfit.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in dgvStation_RowEnter");
+            }
         }
     }
 }

@@ -818,7 +818,68 @@ namespace IBE
                             Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.1...<OK>");
 
                     }
-                    
+
+                    if (dbVersion < new Version(0, 2, 3))
+                    {
+                        String sqlString;
+
+                        Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.3...");
+                        Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+
+                        // insert settings for new columns
+                        EliteDBIO.InsertColumnDefinition(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "Station1_ColumnSettings", 0, 0, "False/NotSet/40/100/5");
+                        EliteDBIO.InsertColumnDefinition(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "Station2_ColumnSettings", 0, 0, "False/NotSet/40/100/5");
+                        
+                        Program.SplashScreen.InfoAdd("...");
+
+                        // add changes to the database
+                        sqlString = "-- MySQL Workbench Synchronization                                          \n" +
+                                    "-- Generated: 2016-04-26 14:30                                              \n" +
+                                    "-- Model: New Model                                                         \n" +
+                                    "-- Version: 1.0                                                             \n" +
+                                    "-- Project: Name of the project                                             \n" +
+                                    "-- Author: Duke                                                             \n" +
+                                    "                                                                            \n" +
+                                    "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                    \n" +
+                                    "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;     \n" +
+                                    "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';   \n" +         
+                                    "                                                                            \n" +
+                                    "ALTER TABLE `elite_db`.`tmPA_S2S_StationData`                               \n" +
+                                    "ADD COLUMN `Station_ID` INT(11) NULL DEFAULT NULL FIRST;                    \n" +
+                                    "                                                                            \n" +
+                                    "SET SQL_MODE=@OLD_SQL_MODE;                                                 \n" +
+                                    "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                             \n" +
+                                    "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                       \n";
+
+                        var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                        sqlScript.Query = sqlString;
+
+                        sqlScript.Error             += sqlScript_Error;
+                        sqlScript.ScriptCompleted   += sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                        m_MREvent = new ManualResetEvent(false);
+
+                        sqlScript.ExecuteAsync();
+
+                        sqlScript.Error             -= sqlScript_Error;
+                        sqlScript.ScriptCompleted   -= sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                        if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else if (m_gotScriptErrors)
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else
+                            Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.3...<OK>");
+                    }
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -905,20 +966,35 @@ namespace IBE
                 else if(m_OldDBVersion != m_NewDBVersion)
                 { 
                     // new version installed
-                    var DataIO = new frmDataIO();
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = false;
 
-                    Program.SplashScreen.InfoAdd("updating master data...");
-                    Thread.Sleep(1500);
+                    var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied EDDB dump files ?", 
+                                                          "Update master data", 
+                                                          MessageBoxButtons.YesNo, 
+                                                          MessageBoxIcon.Question, 
+                                                          MessageBoxDefaultButton.Button1);
 
-                    DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
-                    DataIO.ReUseLine  = true;
+                    if(!Program.SplashScreen.IsDisposed)
+                        Program.SplashScreen.TopMost = true;
 
-                    DataIO.StartMasterUpdate(GetDataPath("Data"));
+                    if(dResult ==  System.Windows.Forms.DialogResult.Yes)
+                    {
+                        var DataIO = new frmDataIO();
 
-                    DataIO.Close();
-                    DataIO.Dispose();
+                        Program.SplashScreen.InfoAdd("updating master data...");
+                        Thread.Sleep(1500);
+
+                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.ReUseLine  = true;
+
+                        DataIO.StartMasterUpdate(GetDataPath("Data"));
+
+                        DataIO.Close();
+                        DataIO.Dispose();
                         
-                    Program.SplashScreen.InfoAdd("updating master data...<OK>");
+                        Program.SplashScreen.InfoAdd("updating master data...<OK>");
+                    }
 
                     if(m_NewDBVersion == new Version(0,2,1,0))
                     {

@@ -1092,7 +1092,7 @@ namespace IBE.MTPriceAnalysis
                         orString = " and " + DBConnector.GetString_Or<Int32>("commodity_id", commodityFilter);
 
                     sqlString = String.Format(
-                                "select Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
+                                "select Sd1.Station_ID, Sd1.Commodity_Id, Cm.LocCommodity As Commodity, " +
                                 "       Sd1.Buy, Sd1.Supply, Sd1.SupplyLevel, Sd1.timestamp As Timestamp1, " +
                                 "       Sd2.Sell, Sd2.Demand, Sd2.DemandLevel, Sd2.timestamp As Timestamp2, " +
                                 "       (nullif(Sd2.Sell, 0) - nullif(Sd1.Buy,0)) As Profit, Sd1.Sources_ID from " +
