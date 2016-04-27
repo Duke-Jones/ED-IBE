@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CommoditySelector));
             this.dgvCommodities = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,6 +59,7 @@
             this.cmdClear = new System.Windows.Forms.Button();
             this.cmdReset = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.tmrAutoClear = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbcommodityBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dsEliteDB)).BeginInit();
@@ -102,8 +103,8 @@
             // idDataGridViewTextBoxColumn
             // 
             this.idDataGridViewTextBoxColumn.DataPropertyName = "id";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.idDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.idDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.idDataGridViewTextBoxColumn.HeaderText = "Id";
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
             this.idDataGridViewTextBoxColumn.ReadOnly = true;
@@ -132,8 +133,8 @@
             // 
             this.loccommodityDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.loccommodityDataGridViewTextBoxColumn.DataPropertyName = "loccommodity";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.loccommodityDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.loccommodityDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.loccommodityDataGridViewTextBoxColumn.HeaderText = "Name";
             this.loccommodityDataGridViewTextBoxColumn.Name = "loccommodityDataGridViewTextBoxColumn";
             this.loccommodityDataGridViewTextBoxColumn.ReadOnly = true;
@@ -320,6 +321,10 @@
             this.panel1.Size = new System.Drawing.Size(467, 230);
             this.panel1.TabIndex = 8;
             // 
+            // tmrAutoClear
+            // 
+            this.tmrAutoClear.Tick += new System.EventHandler(this.tmrAutoClear_Tick);
+            // 
             // CommoditySelector
             // 
             this.AcceptButton = this.cmdOK;
@@ -377,5 +382,6 @@
         private System.Windows.Forms.Button cmdClear;
         private System.Windows.Forms.Button cmdReset;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Timer tmrAutoClear;
     }
 }

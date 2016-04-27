@@ -75,7 +75,7 @@ namespace IBE
 
                 m_BindingSource.Sort = "loccommodity asc";
 
-                if(m_selectedCommodities.Count > 0)
+                if(true || m_selectedCommodities.Count > 0)
                 { 
                     cbOnlySelected.Checked = true;
                 }
@@ -127,13 +127,13 @@ namespace IBE
             try
             {
                 
-                if((e.RowIndex >= 0) && (e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index) && (!String.IsNullOrEmpty(txtSearchString.Text.Trim())) && (dgvCommodities.RowCount == 1))
-                {
-                    if((Boolean)(dgvCommodities[e.ColumnIndex, e.RowIndex].Value) == true)
-                    {               
-                        txtSearchString.Text = "";
-                    }
-                }
+                //if((e.RowIndex >= 0) && (e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index) && (!String.IsNullOrEmpty(txtSearchString.Text.Trim())) && (dgvCommodities.RowCount == 1))
+                //{
+                //    if((Boolean)(dgvCommodities[e.ColumnIndex, e.RowIndex].Value) == true)
+                //    {               
+                //        tmrAutoClear.Start();
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -165,6 +165,19 @@ namespace IBE
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
+            }
+        }
+
+        private void tmrAutoClear_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                //tmrAutoClear.Stop();
+                //txtSearchString.Text = "";            
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in tmrAutoClear_Tick");
             }
         }
     }

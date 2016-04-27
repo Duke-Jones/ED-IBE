@@ -206,7 +206,7 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("prepare system/location view...");
                 //prePrepareSystemAndStationFields();
                 if (Debugger.IsAttached && Program.showToDo)
-                    MessageBox.Show("todo");
+                    MessageBox.Show(this, "todo");
                 Program.SplashScreen.InfoChange("prepare system/location view...<OK>");
 
                 Program.SplashScreen.InfoAdd("prepare GUI elements...");
@@ -1567,7 +1567,7 @@ namespace IBE
                 cmbSystemsAllSystems.SelectedValue = Systemname;
 
                 if (Debugger.IsAttached && Program.showToDo)
-                    MessageBox.Show("TODO");
+                    MessageBox.Show(this, "TODO");
                 // throw new NotImplementedException();
                 //m_loadedSystemdata = _Milkyway.getSystem(Systemname);
                 m_loadedSystemdata = null;
@@ -1687,7 +1687,7 @@ namespace IBE
                 cmbStationStations.SelectedItem    = Stationname;
 
                 if (Debugger.IsAttached && Program.showToDo)
-                    MessageBox.Show("TODO");
+                    MessageBox.Show(this, "TODO");
                 //m_loadedStationdata                 = _Milkyway.getLocation(Systemname, Locationname);
                 m_StationIsNew                      = false;
             }
@@ -1737,7 +1737,7 @@ namespace IBE
 //                if (_Milkyway.getStations(EDMilkyway.enDataType.Data_EDDB).Exists(x => (x.Name.Equals(m_loadedStationdata.Name, StringComparison.InvariantCultureIgnoreCase)) &&
 //                                                                                      (x.SystemId == m_loadedStationdata.SystemId)))
                 if (Debugger.IsAttached && Program.showToDo)
-                    MessageBox.Show("TODO");
+                    MessageBox.Show(this, "TODO");
 
                 if(false)
                 {
@@ -3170,7 +3170,7 @@ namespace IBE
 
                 if(!Program.actualCondition.System.Equals(txtRecievedSystem.Text))
                 {
-                    MBResult = MessageBox.Show("The external recieved system does not correspond to the system from the logfile!\n" +
+                    MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
                                                "Confirm even so ?", "Unexpected system retrieved !", 
                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
                 }

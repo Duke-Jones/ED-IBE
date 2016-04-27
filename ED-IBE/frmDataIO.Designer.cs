@@ -143,7 +143,7 @@
             this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
             this.gbRepeat.Location = new System.Drawing.Point(363, 12);
             this.gbRepeat.Name = "gbRepeat";
-            this.gbRepeat.Size = new System.Drawing.Size(345, 242);
+            this.gbRepeat.Size = new System.Drawing.Size(345, 250);
             this.gbRepeat.TabIndex = 4;
             this.gbRepeat.TabStop = false;
             this.gbRepeat.Text = "EDDB imports";
@@ -157,7 +157,7 @@
             this.gbPriceImport.Controls.Add(this.rbImportPrices_No);
             this.gbPriceImport.Location = new System.Drawing.Point(45, 120);
             this.gbPriceImport.Name = "gbPriceImport";
-            this.gbPriceImport.Size = new System.Drawing.Size(253, 112);
+            this.gbPriceImport.Size = new System.Drawing.Size(253, 123);
             this.gbPriceImport.TabIndex = 5;
             this.gbPriceImport.TabStop = false;
             this.gbPriceImport.Tag = "PriceImport;ImportPricesNo";
@@ -169,10 +169,11 @@
             this.rbImportPrices_All.AutoSize = true;
             this.rbImportPrices_All.Location = new System.Drawing.Point(25, 76);
             this.rbImportPrices_All.Name = "rbImportPrices_All";
-            this.rbImportPrices_All.Size = new System.Drawing.Size(190, 30);
+            this.rbImportPrices_All.Size = new System.Drawing.Size(191, 43);
             this.rbImportPrices_All.TabIndex = 2;
             this.rbImportPrices_All.Tag = "ImportPricesAll";
-            this.rbImportPrices_All.Text = "Yeah, gimme all prices I can get \r\n(takes long time, up to a few hours)";
+            this.rbImportPrices_All.Text = "Yeah, gimme all prices I can get \r\n(can take long time if the database \r\nis alrea" +
+    "dy filled - up to a few hours )";
             this.rbImportPrices_All.UseVisualStyleBackColor = true;
             // 
             // rbImportPrices_Bubble
@@ -483,7 +484,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbProgess.FormattingEnabled = true;
-            this.lbProgess.Location = new System.Drawing.Point(12, 260);
+            this.lbProgess.Location = new System.Drawing.Point(12, 270);
             this.lbProgess.Name = "lbProgess";
             this.lbProgess.Size = new System.Drawing.Size(696, 186);
             this.lbProgess.TabIndex = 1;

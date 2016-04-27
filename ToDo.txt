@@ -9,12 +9,14 @@ todo:
 * show all systems around another system with infos
 
 
-* default values for table columns
-* complete starter tips
-* set messeageboxes parents in dataimport
-
 done:
 
+-------------------------------------------------------------------------------------         
+v0.2.3
+   * StarterTips updated
+   * message instead of exception when no file permissions on change "VerboseLogging"=1
+   * added parent-parameter to some messageboxes for better positioning
+   * set optimized defaultvalues for grid columns on first start
 -------------------------------------------------------------------------------------         
    * improved input of filter commodities
 -------------------------------------------------------------------------------------         

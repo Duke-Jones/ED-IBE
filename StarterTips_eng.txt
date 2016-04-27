@@ -15,6 +15,8 @@ Content:
 			3.2. Starters Kit
 			3.3. find profitable route
 			3.4. find the next station that sells a particular commodity
+			3.5. find profitable route "extended" (eg. for Trading-CGs)
+			     (station and commodity filter)
 		4. Export and import of data (menu item "Data" -> "Import&Export")
 		5. Translations
 		6. Table Views
@@ -117,7 +119,19 @@ Open the tab "By Commodity" and select from the list the required commodity.
 Now sort the table by distance by pressing the column header and search 
 the first station, which have a "Supply" or a buy price (Buy). Voila.
 
-_________________________________________________________________________
+3.5. find profitable route "extended" (eg. for Trading-CGs)
+For community goals there's often the requirement to trade only with a single particular station.
+For this you can fix the currently selected "Station 1" with the checkbox "Fix Station".
+From now you get only routes which include this station. 
+
+In addition you can activate a filter to consider only specific commodities
+in a specific direction. Eg. if you need to buy "Gallium" und "Indium" 
+for selling it on "Station 1",you have to set the buy filter for "Station 2" to 
+"Gallium" und "Indium". Now you get only routes with stations which can supply 
+at least one these both commodities.
+
+___________________________________________
+_____________________________
 4. Export and import of data ("Data" -> "Import&Export")
 
 "EDDB imports"

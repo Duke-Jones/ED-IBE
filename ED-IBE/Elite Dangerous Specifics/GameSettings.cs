@@ -103,16 +103,29 @@ namespace IBE
                             }
                         }
 
-                        doc.Save(appConfigFilePath);
+                        try
+                        {
+                            doc.Save(appConfigFilePath);
 
-                        if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = false;
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = false;
 
-                        MessageBox.Show(
-                            fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.");
+                            MessageBox.Show(
+                                fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.");
 
-                        if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = true;
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = false;
+
+                            MessageBox.Show("I can't save the file (no permission). Please set the 'VorboseLogging' manually.", "Can't write", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = true;
+                        }
 
                     }
 

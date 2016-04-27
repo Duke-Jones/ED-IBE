@@ -830,9 +830,9 @@ namespace IBE
                 }
 
                 if(StopProgress())
-                    MessageBox.Show("Download was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, "Download was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
-                    MessageBox.Show("Download has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Download has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 SetButtons(true);
 
@@ -927,9 +927,9 @@ namespace IBE
                     ImportData(null, importFlags, null, tempPath, false, importParams);
 
                     if(StopProgress())
-                        MessageBox.Show("Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     else
-                        MessageBox.Show("Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     m_DataImportHappened = true;
                 }
@@ -1005,9 +1005,9 @@ namespace IBE
                 ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "", "", false, importParams);
 
                 if(StopProgress())
-                    MessageBox.Show("Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
-                    MessageBox.Show("Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 SetButtons(true);
 
@@ -1090,14 +1090,14 @@ namespace IBE
                             Program.Data.OldDataImportDone = true;
                             cmdImportOldData.Enabled = false;
 
-                            MessageBox.Show("Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             Program.Data.Progress -= Data_Progress;
                             Cursor = Cursors.Default;
                         }
                         else
                         {
-                            MessageBox.Show("<RegulatedNoise.exe> not found. Wrong directory ?", "Data import",  MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show(this, "<RegulatedNoise.exe> not found. Wrong directory ?", "Data import",  MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                     }
                 }
@@ -1153,9 +1153,9 @@ namespace IBE
                     Program.Data.Progress -= Data_Progress;
 
                     if(StopProgress())
-                        MessageBox.Show("Export was cancelled and is unfinished!", "Data export", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, "Export was cancelled and is unfinished!", "Data export", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     else
-                        MessageBox.Show("Export has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, "Export has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 SetButtons(true);
@@ -1219,9 +1219,9 @@ namespace IBE
                     Program.Data.Progress -= Data_Progress;
 
                     if(StopProgress())
-                        MessageBox.Show("Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     else
-                        MessageBox.Show("Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 SetButtons(true);

@@ -495,6 +495,7 @@
             // 
             // systemname
             // 
+            this.systemname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.systemname.DataPropertyName = "systemname";
             this.systemname.HeaderText = "System";
             this.systemname.Name = "systemname";
@@ -502,6 +503,7 @@
             // 
             // stationname
             // 
+            this.stationname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.stationname.DataPropertyName = "stationname";
             this.stationname.HeaderText = "Station";
             this.stationname.Name = "stationname";
@@ -571,6 +573,7 @@
             // 
             // notes
             // 
+            this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.notes.DataPropertyName = "notes";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
@@ -578,7 +581,6 @@
             this.notes.HeaderText = "notes";
             this.notes.Name = "notes";
             this.notes.ReadOnly = true;
-            this.notes.Width = 379;
             // 
             // tabCommandersLog
             // 
@@ -628,6 +630,8 @@
         private System.Windows.Forms.Label label3;
         internal System.Windows.Forms.TextBoxDoubleB txtLogDistance;
         private System.Windows.Forms.Label label2;
+        internal Enums_and_Utility_Classes.DataGridViewExt dgvCommandersLog;
+        internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
         private System.Windows.Forms.DataGridViewTextBoxColumn time;
         private System.Windows.Forms.DataGridViewTextBoxColumn systemname;
         private System.Windows.Forms.DataGridViewTextBoxColumn stationname;
@@ -639,7 +643,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn distance;
         private System.Windows.Forms.DataGridViewTextBoxColumn notes;
-        internal Enums_and_Utility_Classes.DataGridViewExt dgvCommandersLog;
-        internal System.Windows.Forms.ComboBox_ro cbLogSystemName;
     }
 }

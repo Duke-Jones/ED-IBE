@@ -11,6 +11,8 @@ Inhalt:
 			3.2. Starters Kit
 			3.3. profitable Route finden
 			3.4. die nächste Station finden, die eine bestimmte Ware verkauft
+			3.5. profitable Route finden "extended" (z. für Trading-CGs)
+			     (Station-Filter + Commodity-Filter)
 		4. Ex-/Import von Daten
 		5. Übersetzungen
 		6. Tabellenansichten
@@ -110,6 +112,16 @@ Die Stationsfilter entsprechend einstellen und dann "Activate Filter" drücken.
 Den Tab "By Commodity öffnen" und aus der Liste die gesuchte Ware wählen.
 Jetzt die Tabelle noch nach Spalte "Distance" sortieren und die erste Station suchen, 
 "Supply" bzw. einen "Kaufpreis" (Buy) hat. Voilá.
+
+3.5. profitable Route finden, "extended" (z. B. für Trading-CGs)
+Für Community-Goals möchte man häufig nur mit einer bestimmten Station handeln.
+Dafür kann man die in "Station 1" ausgewählte Station mit der Checkbox "Fix Station"
+fixieren. Schon werden nur Routen mit dieser Station angezeigt.
+
+Zusätzlich kann man für beide Flugrichtungen die Waren einschränken. 
+Wenn auf der fixierten "Station 1" nur die Waren "Gallium" und "Indium" 
+verkauft werden solln, muss man den Kauf-Filter der "Station 2" auf "Gallium" und "Indium"
+setzen. Jetzt werden nur noch Station berücksichtigt, die die ausgewählten Waren liefern können.
 
 ________________________________________________________________________
 4. Ex-/Import von Daten (Menüpunkt "Data"->"Import")

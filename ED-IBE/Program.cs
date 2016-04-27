@@ -879,6 +879,7 @@ namespace IBE
                         else
                             Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.3...<OK>");
 
+                        // forcing once
                         SetGridDefaults(true);
                     }
 
@@ -901,12 +902,14 @@ namespace IBE
                             Program.SplashScreen.TopMost = oldValue;
                         }
                     }
-
                 }
                 else
                 {
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
+
+                // if not already set...
+                SetGridDefaults(false);
 
             }
             catch (Exception ex)
@@ -915,11 +918,31 @@ namespace IBE
             }
         }
 
-        private static void SetGridDefaults(bool param1)
+        /// <summary>
+        /// sets defaultvalues to the columns of the datagrids
+        /// </summary>
+        /// <param name="overwrite"></param>
+        private static void SetGridDefaults(bool overwrite)
         {
-
             try
             {
+                String[] settings = {"CmdrsLog"     ,"CommandersLog_ColumnSettings"         ,"0/True/NotSet/70/100/5;1/True/NotSet/136/100/5;2/True/NotSet/159/100/5;3/True/NotSet/189/100/5;4/True/NotSet/118/100/5;5/True/NotSet/166/100/5;6/True/NotSet/97/100/5;7/True/NotSet/70/100/5;8/True/NotSet/62/100/5;9/True/NotSet/60/100/5;10/True/Fill/365/100/5;", 
+                                     "PriceAnalysis","AllCommodities_ColumnSettings"        ,"0/False/NotSet/100/100/5;1/True/Fill/197/100/5;2/True/NotSet/80/43/5;3/False/NotSet/100/100/5;4/True/Fill/196/100/5;5/False/NotSet/100/100/5;6/True/Fill/197/100/5;7/True/NotSet/80/100/5;8/True/NotSet/80/61/5;9/True/NotSet/80/63/5;10/True/NotSet/80/100/5;11/False/NotSet/184/120/5;12/True/Fill/196/100/5;13/False/NotSet/195/120/5;14/True/Fill/197/100/5;15/True/NotSet/80/55/5;16/True/NotSet/80/62/5;17/True/NotSet/80/59.17297/5;18/True/Fill/196/100/5;",
+                                     "PriceAnalysis","byCcommodity_ColumnSettings"          ,"0/False/NotSet/100/100/5;1/True/Fill/292/100/5;2/False/Fill/100/100/5;3/True/Fill/291/100/5;4/True/NotSet/80/100/5;5/True/NotSet/80/100/5;6/True/NotSet/80/100/5;7/True/NotSet/100/100/5;8/True/NotSet/80/100/5;9/True/NotSet/80/100/5;10/True/NotSet/100/100/5;11/True/NotSet/70/100/5;12/True/Fill/583/200/5;",
+                                     "PriceAnalysis","byStation_ColumnSettings"             ,"0/False/NotSet/100/100/5;1/True/Fill/174/100/5;2/True/NotSet/50/100/5;3/True/NotSet/70/100/5;4/True/NotSet/70/100/5;5/True/NotSet/50/100/5;6/True/NotSet/70/100/5;7/True/NotSet/70/100/5;8/True/NotSet/70/100/5;9/True/NotSet/50/100/5;10/True/NotSet/50/100/5;11/True/NotSet/50/100/5;12/True/Fill/523/300/5;",
+                                     "PriceAnalysis","Station1_ColumnSettings"              ,"0/False/NotSet/40/100/5;1/False/NotSet/100/100/5;2/True/Fill/114/184/5;3/True/Fill/34/55/5;4/True/Fill/34/55/5;5/True/Fill/34/54/5;6/True/Fill/41/67/5;7/True/Fill/34/55/5;8/True/Fill/35/55/5;9/True/Fill/33/54/5;10/True/NotSet/68/100/5;11/True/NotSet/53/100/5;12/True/NotSet/60/100/5;",
+                                     "PriceAnalysis","Station2_ColumnSettings"              ,"0/False/NotSet/40/100/5;1/False/NotSet/100/100/5;2/True/Fill/114/184/5;3/True/Fill/34/55/5;4/True/Fill/34/55/5;5/True/Fill/34/54/5;6/True/Fill/41/67/5;7/True/Fill/34/55/5;8/True/Fill/35/55/5;9/True/Fill/33/54/5;10/True/NotSet/68/100/5;11/True/NotSet/53/100/5;12/True/NotSet/60/100/5;",
+                                     "PriceAnalysis","StationToStationRoutes_ColumnSettings","0/False/NotSet/100/100/5;1/True/Fill/78/100/5;2/False/NotSet/100/100/5;3/True/Fill/77/100/5;4/True/NotSet/55/100/5;5/False/NotSet/53/100/5;6/True/NotSet/40/100/5;7/False/NotSet/100/100/5;8/True/Fill/78/100/5;9/False/NotSet/100/100/5;10/True/Fill/77/100/5;11/True/NotSet/53/100/5;12/False/NotSet/53/100/5;13/True/NotSet/40/100/5;14/True/NotSet/54/100/5;15/True/NotSet/53/100/5;16/True/NotSet/60/100/5;"};
+
+                for (int i = 0; i < settings.GetUpperBound(0); i+=3)
+                {
+                    if(overwrite || String.IsNullOrEmpty(DBCon.getIniValue(settings[i], settings[i+1], "")))
+                    {
+                        DBCon.setIniValue(settings[i], settings[i+1], settings[i+2]);
+                    }
+
+                }
+
                 
             }
             catch (Exception ex)
