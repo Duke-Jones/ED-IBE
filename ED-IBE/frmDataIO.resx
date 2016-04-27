@@ -122,14 +122,10 @@
   </metadata>
   <data name="cmdImportSystemsAndStations.ToolTip" xml:space="preserve">
     <value>Imports the data of systems, stations and commodities from 
-EDDB files ("system.json", "stations.json", "commodities.json").
+EDDB files ("system.json", "stations.json", "commodities.json", optional "listings.csv").
 Suggestion is to import all three files to avoid missing dependences.
 
-Download from "https://eddb.io/api"
-
-No update of price data !
-
-</value>
+Download from "https://eddb.io/api"</value>
   </data>
   <metadata name="fbFolderDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>118, 17</value>

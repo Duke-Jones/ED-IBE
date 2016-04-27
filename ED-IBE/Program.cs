@@ -878,6 +878,8 @@ namespace IBE
                         }
                         else
                             Program.SplashScreen.InfoAdd("...updating structure of database to v0.2.3...<OK>");
+
+                        SetGridDefaults(true);
                     }
 
                     if (!foundError) 
@@ -913,7 +915,22 @@ namespace IBE
             }
         }
 
+        private static void SetGridDefaults(bool param1)
+        {
+
+            try
+            {
+                
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while setting grid defaults", ex);
+            }
+        }
+
+
         /// <summary>
+        /// 
         /// this sub starts special things to do if this version runs
         /// for the first time
         /// </summary>
@@ -963,7 +980,7 @@ namespace IBE
 
                     Program.Data.InitImportDone = true;
                 }
-                else if(m_OldDBVersion != m_NewDBVersion)
+                else if(m_OldDBVersion < m_NewDBVersion)
                 { 
                     // new version installed
                     if(!Program.SplashScreen.IsDisposed)

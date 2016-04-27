@@ -29,7 +29,7 @@ Content:
 		Q: Crash when starting the EDDN listener?
 		Q: General bad recognition of digits ?
 		Q: "8" is often as "6" recognized or other way round ?
-
+        Q: "Current System" is not updated
 		
 		
 		
@@ -296,3 +296,12 @@ Q: "8" is often as "6" recognized or other way round ?
 A: It's known but there's no solution at the moment. But it should not happen too often -  at most every 4 - 8 screenshots. 
 You can try to optimize the recognition if you test other values for "UI Color Cutoff Level". 
 Take a value that makes the digits more thinly - [U]but be sure that there are no breaks in the contour.
+
+*************************************************************************
+Q: "Current System" is not updated
+
+A1: Check if the correct path to ED is choosen in the settings ("Active Game Path")
+
+A2: There's a second program running which is accessing the logfiles of ED exclusively.
+Therefore ED-IBE can't access the logfiles to get the information.
+

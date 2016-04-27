@@ -6,12 +6,12 @@ Inhalt:
    * Kurzanleitung/Starter-Tipps
 		1. Installation 
 		2. Starten
-		4. Ex-/Import von Daten
 		3. Erste Schritte und Ergebnisse
 			3.1. eigene Daten erfassen
 			3.2. Starters Kit
 			3.3. profitable Route finden
 			3.4. die nächste Station finden, die eine bestimmte Ware verkauft
+		4. Ex-/Import von Daten
 		5. Übersetzungen
 		6. Tabellenansichten
 		7. Comboboxen
@@ -26,6 +26,7 @@ Inhalt:
 		Q: Crash, wenn der EDDN-Listener aktviert wird ?
 		Q: Allgemein schlechte Erkennung der Zahlen ?
 		Q: "8" wird oft als "6" erkannt oder anders herum ?
+		Q: "Current System" wird nicht richtig angezeigt
 		
 Voraussetzungen:
 - Win7 oder höher, x64
@@ -269,21 +270,33 @@ ODER die "*.traineddata"-Dateien aus dem ".\tessdata\"-Unterverzeichnis in das V
 
 *************************************************************************
 Q: Crash, wenn der EDDN-Listener aktviert wird ?
+
 A1: 
 Die genutzte ZeroMQ-Komponente benötigt "Microsoft Visual Studio 2013 C++ Runtimes"
 Download => [url]https://www.microsoft.com/en-gb/download/details.aspx?id=40784[/url]
 
 *************************************************************************
 Q: Allgemein schlechte Erkennung der Zahlen ?
+
 A: Schlechte Kalibrierung ? Schau in das "\Brainerous\images" Unterverzeichnis. Sind die Zahlen abgeschnitten
 muss die OCR-Kalibrierung wiederholt und die Positionierung verbessert werden.
 
 *************************************************************************
 Q: "8" wird oft als "6" erkannt oder anders herum ?
+
 A1: Das ist bekannt, aber im Moment leider nicht zu verhindern . Es sollte aber nicht zu häufig vorkommen -
 vielleicht alle 4 bis 8 (?) Screenshots. Du kannst versuchen, die Erkennung zu verbessern, in dem der "UI Color Cutoff Level"
 verändert wird. Versuch Werte, durch die die Ziffern ein wenig dünner werden, um die Unterscheidbarkeit von "6" und "8" zu verbessern.
 Aber darauf achten, dass die Ziffern nicht anfangen Unterbrechungen in der Kontur zu bekommen.
+
+*************************************************************************
+Q: "Current System" wird nicht richtig angezeigt
+
+A1: Überprüfe, ob in den Setting der richtige Pfad unter "Active Game Path" eingetragen ist.
+
+A2: Es ist ein zweites Programm aktiv, dass auf die Logfiles von ED exklusiv zugreift.
+Dadurch kann ED-IBE seinerseits nicht mehr darauf zugreifen.
+
 
 
 

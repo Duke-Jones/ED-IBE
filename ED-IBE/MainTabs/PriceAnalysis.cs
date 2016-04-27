@@ -19,7 +19,6 @@ namespace IBE.MTPriceAnalysis
 {
     public class PriceAnalysis
     {
-        private int? _FixedStation;
         private const string tbn_BestMarketPrices = "tbBestMarketPrices";
 
         public enum enGUIEditElements
@@ -62,9 +61,6 @@ namespace IBE.MTPriceAnalysis
         private ExternalDataInterface               m_ExternalDataInterface;
         private IBE.IBESettingsView                 m_Settings;
         private DBConnector                         m_lDBCon;
-        private List<Int32>                         m_CommoditiesSend = new List<int>();
-        private List<Int32>                         m_CommoditiesReturn = new List<int>();
-
         
         /// <summary>
         /// constructor
@@ -193,15 +189,15 @@ namespace IBE.MTPriceAnalysis
         /// <summary>
         /// id of a fixed target station if not null
         /// </summary>
-        public int? FixedStation
+        public Int32 FixedStation
         {
             get
             {
-                return _FixedStation;
+                return Program.DBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "FixedStationValue", "0", false);
             }
             set
             {
-                _FixedStation = value;
+                Program.DBCon.setIniValue(tabPriceAnalysis.DB_GROUPNAME, "FixedStationValue", value.ToString());
             }
         }
 
@@ -210,8 +206,14 @@ namespace IBE.MTPriceAnalysis
         /// </summary>
         public List<Int32> CommoditiesSend
         {
-            get { return m_CommoditiesSend; }
-            set { m_CommoditiesSend = value; }
+            get
+            {
+                return (Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "BuyCommoditiesSend", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)).ToList().ConvertAll(s => Int32.Parse(s));
+            }
+            set
+            {
+                Program.DBCon.setIniValue(tabPriceAnalysis.DB_GROUPNAME, "BuyCommoditiesSend", String.Join(";", value));
+            }
         }
 
         /// <summary>
@@ -219,8 +221,14 @@ namespace IBE.MTPriceAnalysis
         /// </summary>
         public List<Int32> CommoditiesReturn
         {
-            get { return m_CommoditiesReturn; }
-            set { m_CommoditiesReturn = value; }
+            get
+            {
+                return (Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "BuyCommoditiesReturn", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries)).ToList().ConvertAll(s => Int32.Parse(s));
+            }
+            set
+            {
+                Program.DBCon.setIniValue(tabPriceAnalysis.DB_GROUPNAME, "BuyCommoditiesReturn", String.Join(";", value));
+            }
         }
 
         /// <summary>
@@ -642,7 +650,7 @@ namespace IBE.MTPriceAnalysis
 
 
                 // get the results for a cancellable loop
-                if(FixedStation == null)
+                if(FixedStation == 0)
                 { 
                     sqlString = "select * from tmfilteredstations" +
                                 " order by Station_ID";
@@ -652,7 +660,7 @@ namespace IBE.MTPriceAnalysis
                     sqlString = String.Format("select * from tmfilteredstations" +
                                               " where Station_ID = {0}" +
                                               " order by Station_ID",
-                                              FixedStation.Value);
+                                              FixedStation);
                 }
 
                 m_lDBCon.Execute(sqlString, tmFilteredStations);

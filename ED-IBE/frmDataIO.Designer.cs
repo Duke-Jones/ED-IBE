@@ -209,7 +209,7 @@
             this.cmdImportSystemsAndStationsFromDownload.TabIndex = 4;
             this.cmdImportSystemsAndStationsFromDownload.Text = "Import from downloaded EDDB dumpfiles";
             this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStationsFromDownload, "Imports the dumpfiles downloaded from https://eddb.io/api \r\n(\"system.json\", \"stat" +
-        "ions.json\", \"commodities.json\").\r\n\r\nNo update of price data !\r\n");
+        "ions.json\", \"commodities.json\", optional \"listings.csv\").\r\n");
             this.cmdImportSystemsAndStationsFromDownload.UseVisualStyleBackColor = true;
             this.cmdImportSystemsAndStationsFromDownload.Click += new System.EventHandler(this.cmdImportSystemsAndStationsFromDownload_Click);
             // 
@@ -221,7 +221,8 @@
             this.cmdDownloadSystemsAndStations.TabIndex = 3;
             this.cmdDownloadSystemsAndStations.Text = "Download latest EDDB dumpfiles";
             this.ttToolTip.SetToolTip(this.cmdDownloadSystemsAndStations, "Downloads the latest dumpfiles of systems, stations and commodities from \r\nhttps:" +
-        "//eddb.io/api (\"system.json\", \"stations.json\", \"commodities.json\").\r\n\r\n");
+        "//eddb.io/api (\"system.json\", \"stations.json\", \"commodities.json\", \"listings.csv" +
+        "\").\r\n\r\n");
             this.cmdDownloadSystemsAndStations.UseVisualStyleBackColor = true;
             this.cmdDownloadSystemsAndStations.Click += new System.EventHandler(this.cmdDownloadSystemsAndStations_Click);
             // 

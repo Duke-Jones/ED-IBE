@@ -5,21 +5,24 @@ todo:
 * hold rejected data
 * add marked color for datagrids
 * option for recalculate distances in log
-
 * mark datasource colorized
 * show all systems around another system with infos
-* complete StarterTips_eng
 
-* routes with one specific destination
-* a few specific commodities
+
 * default values for table columns
-* profit for selected columns
+* ´complete starter tips
+* save settings of commodity filter
+* commodity selection filter by selected, by group
 
-* filter  results without named commodity when filter is active
-* ask if the update of master is wanted after update
+
+* set messeageboxes parents in dataimport
 
 done:
 
+-------------------------------------------------------------------------------------         
+   * current settings of commodity filter/fixed station are also saved
+   * StarterTips updated
+-------------------------------------------------------------------------------------         
    * detail results in station-to-station, depends on selected commodity column
    * fixes on commodity filter
 -------------------------------------------------------------------------------------         

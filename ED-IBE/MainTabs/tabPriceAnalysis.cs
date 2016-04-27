@@ -41,6 +41,7 @@ namespace IBE.MTPriceAnalysis
                                                                                             
         private Dictionary<String, Boolean>             m_IsRefreshed;                  // shows, which tabs already refreshed after a new filtering
         private Int32                                   m_ActiveCounter;                  
+        private Boolean                                 m_InitDone                      = false;
 
         /// <summary>
         /// Constructor
@@ -182,7 +183,11 @@ namespace IBE.MTPriceAnalysis
                 SetComboBoxEventsActive(true);
 
                 cmbSystemBase.Text = CURRENT_SYSTEM;
-                                              
+
+                SetFilterButtonText(cmdCommodityFilter1, m_DataSource.CommoditiesSend);
+                SetFilterButtonText(cmdCommodityFilter2, m_DataSource.CommoditiesReturn);
+
+                m_InitDone = true;                              
 
                 Cursor = oldCursor;
             }
@@ -534,7 +539,7 @@ namespace IBE.MTPriceAnalysis
                     locationType = cmbLocation.Text;
 
                 // get the id of the selected "base system"
-                if(cmbSystemBase.Text.Equals(CURRENT_SYSTEM, StringComparison.InvariantCultureIgnoreCase))
+                if((cmbSystemBase.Text == "") || (cmbSystemBase.Text.Equals(CURRENT_SYSTEM, StringComparison.InvariantCultureIgnoreCase)))
                     sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
                 else
                     sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(cmbSystemBase.Text);
@@ -599,7 +604,20 @@ namespace IBE.MTPriceAnalysis
                     orderComboBoxes();
 
                     if(cbFixedStation.Checked)
-                        cmbStation1.SelectedValue = m_DataSource.FixedStation;
+                    {
+                        if((m_DataSource.FixedStation == 0) || ((m_DGVTables[cmbStation1.Name].Select("StationID = " +  m_DataSource.FixedStation)).GetUpperBound(0) < 0))
+                        { 
+                            cbFixedStation.Checked = false;
+
+                            if(m_DataSource.FixedStation != 0)
+                                m_DataSource.FixedStation = 0;
+                        }
+                        else
+                        { 
+                            cmbStation1.SelectedValue = m_DataSource.FixedStation;
+                        }
+                    }
+                        
                 }
                 
                 this.Cursor = oldCursor;
@@ -709,6 +727,13 @@ namespace IBE.MTPriceAnalysis
                 {
                     if (((CheckBox)sender).Equals(cbMaxTripDistance))
                     {
+                        cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
+                        cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+                    }
+                    else if (((CheckBox)sender).Equals(cbFixedStation) && m_InitDone)
+                    {                                       
+                        UpdateFixedStation();
+
                         cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
                         cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
                     }
@@ -1347,6 +1372,7 @@ namespace IBE.MTPriceAnalysis
             {
                 if(Activate)
                 {
+                    Debug.Print("Activate +" + m_ActiveCounter);
                     if (m_ActiveCounter == 0)
                     {
                         cmbStation1.SelectedValueChanged    += cmbStation_SelectedValueChanged;
@@ -1358,6 +1384,7 @@ namespace IBE.MTPriceAnalysis
                 }
                 else
                 {
+                    Debug.Print("Activate -" + m_ActiveCounter);
                     if(m_ActiveCounter == 1)
                     {
                         cmbStation1.SelectedValueChanged    -= cmbStation_SelectedValueChanged;
@@ -1680,18 +1707,6 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-        private void cbFixedStation_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                UpdateFixedStation();
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in cbFixedStation_CheckedChanged");
-            }
-        }
-
         private void UpdateFixedStation()
         {
             try
@@ -1703,15 +1718,16 @@ namespace IBE.MTPriceAnalysis
                     try
                     {
                         Station1 = (int?)cmbStation1.SelectedValue;
+                        m_DataSource.FixedStation = Station1.Value;
                     }
-                    catch (Exception){
-                        Station1 = null;
+                    catch (Exception)
+                    {
+                        m_DataSource.FixedStation = 0;
+                        cbFixedStation.Checked = false;
                     }
-
-                    m_DataSource.FixedStation = Station1;
                 }
                 else
-                    m_DataSource.FixedStation = null;
+                    m_DataSource.FixedStation = 0;
 
                 cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
                 cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
@@ -1743,19 +1759,11 @@ namespace IBE.MTPriceAnalysis
                 if(dResult == DialogResult.OK)
                 {
                     if(sender.Equals(cmdCommodityFilter1))
-                    {
-                        m_DataSource.CommoditiesSend.Clear();
-                        m_DataSource.CommoditiesSend.AddRange(cList);
-
-                        SetFilterButtonText(cmdCommodityFilter1, cList);
-                    }
+                        m_DataSource.CommoditiesSend = cList;
                     else
-                    {
-                        m_DataSource.CommoditiesReturn.Clear();
-                        m_DataSource.CommoditiesReturn.AddRange(cList);
+                        m_DataSource.CommoditiesReturn = cList;
 
-                        SetFilterButtonText(cmdCommodityFilter2, cList);
-                    }
+                    SetFilterButtonText((Button)sender, cList);
 
                     cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
                     cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
@@ -1771,8 +1779,8 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
-                m_DataSource.CommoditiesSend.Clear();
-                m_DataSource.CommoditiesReturn.Clear();
+                m_DataSource.CommoditiesSend   = new List<Int32>();
+                m_DataSource.CommoditiesReturn = new List<Int32>();
 
                 cbFixedStation.Checked = false;
 
@@ -1792,7 +1800,7 @@ namespace IBE.MTPriceAnalysis
         private void SetFilterButtonText(Button filterButton, List<Int32> cList)
         {
             if (cList.Count() == 0)
-                filterButton.Text = "Buy-Filter : Off";
+                filterButton.Text = "Buy : No Filter";
             else
                 filterButton.Text = string.Format("Buy-Filter : {0} Commodities", cList.Count());
         }
