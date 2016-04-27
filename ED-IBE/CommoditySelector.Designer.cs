@@ -34,6 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CommoditySelector));
             this.dgvCommodities = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.commodityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.loccommodityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.categoryidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,25 +48,33 @@
             this.pwlsupplyselllowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pwlsupplysellhighDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.israreDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.is_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tbcommodityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
             this.tbcommodityTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tbcommodityTableAdapter();
             this.cmdOK = new System.Windows.Forms.Button();
             this.cmdCancel = new System.Windows.Forms.Button();
+            this.cbOnlySelected = new System.Windows.Forms.CheckBox();
+            this.txtSearchString = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmdClear = new System.Windows.Forms.Button();
+            this.cmdReset = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbcommodityBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dsEliteDB)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvCommodities
             // 
-            this.dgvCommodities.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvCommodities.AllowUserToAddRows = false;
+            this.dgvCommodities.AllowUserToDeleteRows = false;
             this.dgvCommodities.AutoGenerateColumns = false;
+            this.dgvCommodities.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvCommodities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCommodities.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.idDataGridViewTextBoxColumn,
+            this.is_Selected,
             this.commodityDataGridViewTextBoxColumn,
             this.loccommodityDataGridViewTextBoxColumn,
             this.categoryidDataGridViewTextBoxColumn,
@@ -78,17 +87,17 @@
             this.pwldemandsellhighDataGridViewTextBoxColumn,
             this.pwlsupplyselllowDataGridViewTextBoxColumn,
             this.pwlsupplysellhighDataGridViewTextBoxColumn,
-            this.israreDataGridViewCheckBoxColumn,
-            this.is_Selected});
+            this.israreDataGridViewCheckBoxColumn});
             this.dgvCommodities.DataSource = this.tbcommodityBindingSource;
+            this.dgvCommodities.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvCommodities.DoubleBuffer = true;
-            this.dgvCommodities.Location = new System.Drawing.Point(12, 12);
+            this.dgvCommodities.Location = new System.Drawing.Point(0, 0);
             this.dgvCommodities.MultiSelect = false;
             this.dgvCommodities.Name = "dgvCommodities";
-            this.dgvCommodities.RowTemplate.ReadOnly = true;
-            this.dgvCommodities.Size = new System.Drawing.Size(467, 416);
+            this.dgvCommodities.Size = new System.Drawing.Size(467, 230);
             this.dgvCommodities.TabIndex = 0;
-            this.dgvCommodities.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCommodities_CellContentClick);
+            this.dgvCommodities.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCommodities_CellValueChanged);
+            this.dgvCommodities.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvCommodities_CurrentCellDirtyStateChanged);
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -99,6 +108,17 @@
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
             this.idDataGridViewTextBoxColumn.ReadOnly = true;
             this.idDataGridViewTextBoxColumn.Width = 40;
+            // 
+            // is_Selected
+            // 
+            this.is_Selected.DataPropertyName = "is_selected";
+            this.is_Selected.FalseValue = "False";
+            this.is_Selected.HeaderText = "Select";
+            this.is_Selected.Name = "is_Selected";
+            this.is_Selected.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.is_Selected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.is_Selected.TrueValue = "True";
+            this.is_Selected.Width = 60;
             // 
             // commodityDataGridViewTextBoxColumn
             // 
@@ -206,16 +226,6 @@
             this.israreDataGridViewCheckBoxColumn.ReadOnly = true;
             this.israreDataGridViewCheckBoxColumn.Visible = false;
             // 
-            // is_Selected
-            // 
-            this.is_Selected.FalseValue = "0";
-            this.is_Selected.HeaderText = "Select";
-            this.is_Selected.Name = "is_Selected";
-            this.is_Selected.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.is_Selected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.is_Selected.TrueValue = "1";
-            this.is_Selected.Width = 50;
-            // 
             // tbcommodityBindingSource
             // 
             this.tbcommodityBindingSource.DataMember = "tbcommodity";
@@ -236,19 +246,79 @@
             this.cmdOK.Location = new System.Drawing.Point(495, 12);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(129, 33);
-            this.cmdOK.TabIndex = 1;
+            this.cmdOK.TabIndex = 4;
             this.cmdOK.Text = "OK";
             this.cmdOK.UseVisualStyleBackColor = true;
             // 
             // cmdCancel
             // 
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(495, 51);
+            this.cmdCancel.Location = new System.Drawing.Point(495, 90);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(129, 33);
-            this.cmdCancel.TabIndex = 2;
+            this.cmdCancel.TabIndex = 6;
             this.cmdCancel.Text = "Cancel";
             this.cmdCancel.UseVisualStyleBackColor = true;
+            // 
+            // cbOnlySelected
+            // 
+            this.cbOnlySelected.AutoSize = true;
+            this.cbOnlySelected.Location = new System.Drawing.Point(500, 140);
+            this.cbOnlySelected.Name = "cbOnlySelected";
+            this.cbOnlySelected.Size = new System.Drawing.Size(118, 17);
+            this.cbOnlySelected.TabIndex = 3;
+            this.cbOnlySelected.Text = "&Show only selected";
+            this.cbOnlySelected.UseVisualStyleBackColor = true;
+            this.cbOnlySelected.CheckedChanged += new System.EventHandler(this.cbOnlySelected_CheckedChanged);
+            // 
+            // txtSearchString
+            // 
+            this.txtSearchString.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearchString.Location = new System.Drawing.Point(73, 17);
+            this.txtSearchString.Name = "txtSearchString";
+            this.txtSearchString.Size = new System.Drawing.Size(303, 22);
+            this.txtSearchString.TabIndex = 0;
+            this.txtSearchString.TextChanged += new System.EventHandler(this.txtSearchString_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Search :";
+            // 
+            // cmdClear
+            // 
+            this.cmdClear.Location = new System.Drawing.Point(382, 12);
+            this.cmdClear.Name = "cmdClear";
+            this.cmdClear.Size = new System.Drawing.Size(97, 33);
+            this.cmdClear.TabIndex = 2;
+            this.cmdClear.Text = "&Clear Search";
+            this.cmdClear.UseVisualStyleBackColor = true;
+            this.cmdClear.Click += new System.EventHandler(this.cmdClear_Click);
+            // 
+            // cmdReset
+            // 
+            this.cmdReset.DialogResult = System.Windows.Forms.DialogResult.Yes;
+            this.cmdReset.Location = new System.Drawing.Point(495, 51);
+            this.cmdReset.Name = "cmdReset";
+            this.cmdReset.Size = new System.Drawing.Size(129, 33);
+            this.cmdReset.TabIndex = 5;
+            this.cmdReset.Text = "C&lear + OK";
+            this.cmdReset.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.dgvCommodities);
+            this.panel1.Location = new System.Drawing.Point(12, 51);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(467, 230);
+            this.panel1.TabIndex = 8;
             // 
             // CommoditySelector
             // 
@@ -256,10 +326,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cmdCancel;
-            this.ClientSize = new System.Drawing.Size(636, 444);
+            this.ClientSize = new System.Drawing.Size(636, 293);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.cmdReset);
+            this.Controls.Add(this.cmdClear);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtSearchString);
+            this.Controls.Add(this.cbOnlySelected);
             this.Controls.Add(this.cmdCancel);
             this.Controls.Add(this.cmdOK);
-            this.Controls.Add(this.dgvCommodities);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CommoditySelector";
             this.Text = "Commodities";
@@ -267,7 +342,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommodities)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbcommodityBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dsEliteDB)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -279,7 +356,9 @@
         private SQL.Datasets.dsEliteDBTableAdapters.tbcommodityTableAdapter tbcommodityTableAdapter;
         private System.Windows.Forms.Button cmdOK;
         private System.Windows.Forms.Button cmdCancel;
+        private System.Windows.Forms.CheckBox cbOnlySelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn is_Selected;
         private System.Windows.Forms.DataGridViewTextBoxColumn commodityDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn loccommodityDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn categoryidDataGridViewTextBoxColumn;
@@ -293,6 +372,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn pwlsupplyselllowDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn pwlsupplysellhighDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn israreDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn is_Selected;
+        private System.Windows.Forms.TextBox txtSearchString;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button cmdClear;
+        private System.Windows.Forms.Button cmdReset;
+        private System.Windows.Forms.Panel panel1;
     }
 }

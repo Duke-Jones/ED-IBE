@@ -15,8 +15,10 @@ namespace IBE
     {
         List<Int32> m_selectedCommodities;
 
-        DataTable data              = new DataTable();
-        BindingSource bs            = new BindingSource();
+        BindingSource m_BindingSource        = new BindingSource();
+        SQL.Datasets.dsEliteDB.tbcommodityDataTable m_Table;
+
+
 
         public CommoditySelector()
         {
@@ -31,6 +33,19 @@ namespace IBE
 
                 this.ShowDialog(parent);
 
+                if(DialogResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    m_selectedCommodities.Clear();
+
+                    foreach (SQL.Datasets.dsEliteDB.tbcommodityRow dRow in m_Table.Select("is_selected = true"))
+		                m_selectedCommodities.Add(dRow.id);
+                }
+                else if(DialogResult == System.Windows.Forms.DialogResult.Yes)
+                {
+                    DialogResult = System.Windows.Forms.DialogResult.OK;
+                    m_selectedCommodities.Clear();
+                }
+                
                 return this.DialogResult;
             }
             catch (Exception ex)
@@ -41,15 +56,29 @@ namespace IBE
 
         private void CommoditySelector_Load(object sender, EventArgs e)
         {
+            DataColumn col; 
+
             try
             {
-                
                 dgvCommodities.AutoGenerateColumns = false;
-                bs.DataSource = Program.Data.BaseData.tbcommodity;
-                dgvCommodities.DataSource = bs;
+                m_Table = (SQL.Datasets.dsEliteDB.tbcommodityDataTable)Program.Data.BaseData.tbcommodity.Copy();
 
-                dgvCommodities.CellFormatting   += dgvCommodities_CellFormatting;
-                dgvCommodities.CellValueChanged += dgvCommodities_CellValueChanged;
+                col = new DataColumn("is_Selected", typeof(Boolean));
+                col.DefaultValue = false;
+                m_Table.Columns.Add(col);
+
+                foreach (Int32 commodityID in m_selectedCommodities)
+                    m_Table.FindByid(commodityID)["is_Selected"] = true;
+
+                m_BindingSource.DataSource = m_Table;
+                dgvCommodities.DataSource = m_BindingSource;
+
+                m_BindingSource.Sort = "loccommodity asc";
+
+                if(m_selectedCommodities.Count > 0)
+                { 
+                    cbOnlySelected.Checked = true;
+                }
 
             }
             catch (Exception ex)
@@ -58,61 +87,84 @@ namespace IBE
             }
         }
 
+        private void cbOnlySelected_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(cbOnlySelected.Checked)
+                    m_BindingSource.Filter = "is_selected = true";
+                else
+                    m_BindingSource.Filter = "";
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cbOnlySelected_CheckedChanged");
+            }
+        }
+
+        private void txtSearchString_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(!String.IsNullOrEmpty(txtSearchString.Text.Trim()))
+                    m_BindingSource.Filter = string.Format("loccommodity like '{0}*'", txtSearchString.Text.Trim());
+                else
+                    if(cbOnlySelected.Checked)
+                        m_BindingSource.Filter = "is_selected = true";
+                    else
+                        m_BindingSource.Filter = "";
+
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in txtSearchString_TextChanged");
+            }
+        }
+
         private void dgvCommodities_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                if(e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index)
+                
+                if((e.RowIndex >= 0) && (e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index) && (!String.IsNullOrEmpty(txtSearchString.Text.Trim())) && (dgvCommodities.RowCount == 1))
                 {
-                    Int32 commodityID = (Int32)dgvCommodities.Rows[e.RowIndex].Cells[dgvCommodities.Columns["idDataGridViewTextBoxColumn"].Index].Value;
-
-                    if((Boolean)dgvCommodities.Rows[e.RowIndex].Cells[dgvCommodities.Columns["is_Selected"].Index].Value)
-                    {
-                        if(!m_selectedCommodities.Contains(commodityID))
-                            m_selectedCommodities.Add(commodityID);
-                    }
-                    else
-                    { 
-                        if(m_selectedCommodities.Contains(commodityID))
-                            m_selectedCommodities.Remove(commodityID);
+                    if((Boolean)(dgvCommodities[e.ColumnIndex, e.RowIndex].Value) == true)
+                    {               
+                        txtSearchString.Text = "";
                     }
                 }
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommodities_CellValueChanged");
+                cErr.processError(ex, "Error in txtSearchString_TextChanged");
             }
         }
 
-        private void dgvCommodities_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void dgvCommodities_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             try
             {
-                if(e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index)
+                if (dgvCommodities.IsCurrentCellDirty)
                 {
-                    Int32 commodityID = (Int32)dgvCommodities.Rows[e.RowIndex].Cells[dgvCommodities.Columns["idDataGridViewTextBoxColumn"].Index].Value;
-
-                    dgvCommodities.Rows[e.RowIndex].Cells[dgvCommodities.Columns["is_Selected"].Index].Value = m_selectedCommodities.Contains(commodityID);
+                    dgvCommodities.CommitEdit(DataGridViewDataErrorContexts.Commit);
                 }
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommodities_CellFormatting");
+                cErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
             }
         }
 
-        private void dgvCommodities_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void cmdClear_Click(object sender, EventArgs e)
         {
             try
             {
-                if (e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index)
-                {
-                    dgvCommodities.Rows[e.RowIndex].Cells["is_Selected"].Value = (!(Boolean)dgvCommodities.Rows[e.RowIndex].Cells["is_Selected"].Value);
-                }
+                txtSearchString.Text = "";            
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommodities_CellContentClick");
+                cErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
             }
         }
     }

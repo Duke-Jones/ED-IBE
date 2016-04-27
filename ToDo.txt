@@ -10,15 +10,13 @@ todo:
 
 
 * default values for table columns
-* ´complete starter tips
-* save settings of commodity filter
-* commodity selection filter by selected, by group
-
-
+* complete starter tips
 * set messeageboxes parents in dataimport
 
 done:
 
+-------------------------------------------------------------------------------------         
+   * improved input of filter commodities
 -------------------------------------------------------------------------------------         
    * current settings of commodity filter/fixed station are also saved
    * StarterTips updated
