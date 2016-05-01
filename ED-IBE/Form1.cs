@@ -3106,11 +3106,13 @@ namespace IBE
             String extInfo      = "";
             String ErrInfo      = "";
             Boolean ContinueChecking = true;
+            DialogResult MBResult = System.Windows.Forms.DialogResult.OK;
+            Boolean canConfirm  = false;
+
+
             try
             {
                 
-                cmdConfirm.Enabled = false;
-
                 do
                 {
                     Cursor = Cursors.WaitCursor;
@@ -3135,15 +3137,29 @@ namespace IBE
                         txtRecievedStation.Text     = extStation;
                         ContinueChecking            = false;
 
-                        if(Program.actualCondition.System.Equals(txtRecievedSystem.Text))
-                            cmdConfirm.Enabled      = true;
-                        else
+                        if(!Program.actualCondition.System.Equals(txtRecievedSystem.Text))
                             txtExtInfo.Text             = "The external recieved system does not correspond to the system from the logfile!";
+
+                        canConfirm              = true;
                     }
 
-
                 } while (ContinueChecking);
-                
+
+                if(canConfirm)
+                { 
+                    if(!Program.actualCondition.System.Equals(txtRecievedSystem.Text))
+                    {
+                        MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
+                                                   "Confirm even so ?", "Unexpected system retrieved !", 
+                                                   MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                    }
+
+                    if(MBResult == System.Windows.Forms.DialogResult.OK)
+                    {
+                        Program.ExternalData.Confirm();
+                    }
+                }
+
                 Cursor = Cursors.Default;
             }
             catch (Exception ex)
@@ -3160,34 +3176,6 @@ namespace IBE
         /// <param name="e"></param>
         private void cmdConfirm_Click(object sender, EventArgs e)
         {
-            DialogResult MBResult = System.Windows.Forms.DialogResult.OK;
-
-            try
-            {
-                Cursor = Cursors.WaitCursor;
-
-                cmdGetMarketData.Enabled = false;
-
-                if(!Program.actualCondition.System.Equals(txtRecievedSystem.Text))
-                {
-                    MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
-                                               "Confirm even so ?", "Unexpected system retrieved !", 
-                                               MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
-                }
-
-                if(MBResult == System.Windows.Forms.DialogResult.OK)
-                {
-                    Program.ExternalData.Confirm();
-                    cmdGetMarketData.Enabled = true;
-                }
-
-                Cursor = Cursors.Default;
-            }
-            catch (Exception ex)
-            {
-                Cursor = Cursors.Default;
-                throw new Exception("Error while confirming retrieved location", ex);
-            }
         }
 
         private void cmdGetMarketData_Click(object sender, EventArgs e)
@@ -3240,7 +3228,6 @@ namespace IBE
                     setText(txtRecievedStation,     "");
                     setText(txtLocalDataCollected,  "");
 
-                    setButton(cmdConfirm, false);
                     setButton(cmdGetMarketData, false);
 
                     Program.actualCondition.Location = e.Location;

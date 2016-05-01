@@ -11,6 +11,7 @@ namespace IBE.ExtData
 {
     public class ExternalDataInterface
     {
+        private const int MAX_DATA_AGE = 300;
         
         #region LogEvents
 
@@ -352,6 +353,7 @@ namespace IBE.ExtData
                 Info        = "";
                 ErrorInfo   = "";
                 DataCount   = 0;
+
                 DataOk      = CheckDataFile(out Datafile);
 
                 if(!DataOk)
@@ -406,7 +408,7 @@ namespace IBE.ExtData
                 {
                     Age = DateTime.UtcNow.Subtract(TimeStamp);
 
-                    if (Age.TotalSeconds <= 60)
+                    if (Age.TotalSeconds <= MAX_DATA_AGE)
                     { 
                         DataOk = true;
                         DataFile = Files[0];
