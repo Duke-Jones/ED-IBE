@@ -39,7 +39,6 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new IBE.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
             this.msMainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +53,6 @@
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.eDDNInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
-            this.cmdGetMarketData = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
             this.label54 = new System.Windows.Forms.Label();
@@ -62,7 +60,6 @@
             this.label45 = new System.Windows.Forms.Label();
             this.tbCurrentStationinfoFromLogs = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.cmdLanded = new System.Windows.Forms.Button();
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
@@ -196,13 +193,17 @@
             this.tabExternal = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
             this.txtExtInfo2 = new System.Windows.Forms.TextBox();
+            this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.cmdConfirm = new System.Windows.Forms.Button();
+            this.cmdGetMarketData = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtRecievedStation = new System.Windows.Forms.TextBox();
             this.txtRecievedSystem = new System.Windows.Forms.TextBox();
             this.txtExtInfo = new System.Windows.Forms.TextBox();
+            this.cmdLanded = new System.Windows.Forms.Button();
             this.tabWebserver = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtWebserverPort = new System.Windows.Forms.TextBox();
@@ -220,6 +221,8 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
+            this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -296,20 +299,13 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
-            // txtLocalDataCollected
-            // 
-            this.txtLocalDataCollected.Location = new System.Drawing.Point(259, 56);
-            this.txtLocalDataCollected.Name = "txtLocalDataCollected";
-            this.txtLocalDataCollected.ReadOnly = true;
-            this.txtLocalDataCollected.Size = new System.Drawing.Size(186, 20);
-            this.txtLocalDataCollected.TabIndex = 10;
-            // 
             // msMainMenu
             // 
             this.msMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.dataToolStripMenuItem,
-            this.settingsToolStripMenuItem});
+            this.settingsToolStripMenuItem,
+            this.iOToolStripMenuItem});
             this.msMainMenu.Location = new System.Drawing.Point(0, 0);
             this.msMainMenu.Name = "msMainMenu";
             this.msMainMenu.Size = new System.Drawing.Size(1154, 24);
@@ -418,16 +414,6 @@
             this.cmdLoadCurrentSystem.Visible = false;
             this.cmdLoadCurrentSystem.Click += new System.EventHandler(this.cmdLoadCurrentSystem_Click);
             // 
-            // cmdGetMarketData
-            // 
-            this.cmdGetMarketData.Location = new System.Drawing.Point(158, 54);
-            this.cmdGetMarketData.Name = "cmdGetMarketData";
-            this.cmdGetMarketData.Size = new System.Drawing.Size(96, 22);
-            this.cmdGetMarketData.TabIndex = 7;
-            this.cmdGetMarketData.Text = "Get Market Data";
-            this.cmdGetMarketData.UseVisualStyleBackColor = true;
-            this.cmdGetMarketData.Click += new System.EventHandler(this.cmdGetMarketData_Click);
-            // 
             // label53
             // 
             this.label53.AutoSize = true;
@@ -497,16 +483,6 @@
             this.label37.TabIndex = 8;
             this.label37.Text = "Current System:";
             // 
-            // cmdLanded
-            // 
-            this.cmdLanded.Location = new System.Drawing.Point(158, 26);
-            this.cmdLanded.Name = "cmdLanded";
-            this.cmdLanded.Size = new System.Drawing.Size(96, 22);
-            this.cmdLanded.TabIndex = 0;
-            this.cmdLanded.Text = "Landed";
-            this.cmdLanded.UseVisualStyleBackColor = true;
-            this.cmdLanded.Click += new System.EventHandler(this.cmdLanded_Click);
-            // 
             // tbCurrentSystemFromLogs
             // 
             this.tbCurrentSystemFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -526,10 +502,10 @@
             this.tabCtrlMain.Controls.Add(this.tabSystemData);
             this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
             this.tabCtrlMain.Controls.Add(this.tabWebserver);
-            this.tabCtrlMain.Location = new System.Drawing.Point(3, 82);
+            this.tabCtrlMain.Location = new System.Drawing.Point(3, 72);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 654);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 664);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -560,7 +536,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 628);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 638);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -940,7 +916,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1141, 628);
+            this.tabSystemData.Size = new System.Drawing.Size(1141, 638);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -2001,7 +1977,7 @@
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 628);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 638);
             this.tabOCRGroup.TabIndex = 11;
             this.tabOCRGroup.Text = "Market Data Interface";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
@@ -2015,24 +1991,28 @@
             this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
             this.tabCtrlOCR.Name = "tabCtrlOCR";
             this.tabCtrlOCR.SelectedIndex = 0;
-            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 595);
+            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 605);
             this.tabCtrlOCR.TabIndex = 0;
             // 
             // tabExternal
             // 
             this.tabExternal.Controls.Add(this.label5);
             this.tabExternal.Controls.Add(this.txtExtInfo2);
+            this.tabExternal.Controls.Add(this.txtLocalDataCollected);
             this.tabExternal.Controls.Add(this.label4);
+            this.tabExternal.Controls.Add(this.cmdConfirm);
+            this.tabExternal.Controls.Add(this.cmdGetMarketData);
             this.tabExternal.Controls.Add(this.label3);
             this.tabExternal.Controls.Add(this.label2);
             this.tabExternal.Controls.Add(this.label1);
             this.tabExternal.Controls.Add(this.txtRecievedStation);
             this.tabExternal.Controls.Add(this.txtRecievedSystem);
             this.tabExternal.Controls.Add(this.txtExtInfo);
+            this.tabExternal.Controls.Add(this.cmdLanded);
             this.tabExternal.Location = new System.Drawing.Point(4, 22);
             this.tabExternal.Name = "tabExternal";
             this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternal.Size = new System.Drawing.Size(1068, 569);
+            this.tabExternal.Size = new System.Drawing.Size(1068, 579);
             this.tabExternal.TabIndex = 5;
             this.tabExternal.Text = "External IO";
             this.tabExternal.UseVisualStyleBackColor = true;
@@ -2056,6 +2036,14 @@
             this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
             this.txtExtInfo2.TabIndex = 11;
             // 
+            // txtLocalDataCollected
+            // 
+            this.txtLocalDataCollected.Location = new System.Drawing.Point(199, 132);
+            this.txtLocalDataCollected.Name = "txtLocalDataCollected";
+            this.txtLocalDataCollected.ReadOnly = true;
+            this.txtLocalDataCollected.Size = new System.Drawing.Size(235, 20);
+            this.txtLocalDataCollected.TabIndex = 10;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -2064,6 +2052,28 @@
             this.label4.Size = new System.Drawing.Size(102, 13);
             this.label4.TabIndex = 9;
             this.label4.Text = "local data collected:";
+            // 
+            // cmdConfirm
+            // 
+            this.cmdConfirm.Enabled = false;
+            this.cmdConfirm.Location = new System.Drawing.Point(34, 74);
+            this.cmdConfirm.Name = "cmdConfirm";
+            this.cmdConfirm.Size = new System.Drawing.Size(139, 36);
+            this.cmdConfirm.TabIndex = 8;
+            this.cmdConfirm.Text = "Confirm Location";
+            this.cmdConfirm.UseVisualStyleBackColor = true;
+            this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
+            // 
+            // cmdGetMarketData
+            // 
+            this.cmdGetMarketData.Enabled = false;
+            this.cmdGetMarketData.Location = new System.Drawing.Point(34, 116);
+            this.cmdGetMarketData.Name = "cmdGetMarketData";
+            this.cmdGetMarketData.Size = new System.Drawing.Size(139, 36);
+            this.cmdGetMarketData.TabIndex = 7;
+            this.cmdGetMarketData.Text = "Get Market Data";
+            this.cmdGetMarketData.UseVisualStyleBackColor = true;
+            this.cmdGetMarketData.Click += new System.EventHandler(this.cmdGetMarketData_Click);
             // 
             // label3
             // 
@@ -2118,12 +2128,22 @@
             this.txtExtInfo.Size = new System.Drawing.Size(400, 46);
             this.txtExtInfo.TabIndex = 1;
             // 
+            // cmdLanded
+            // 
+            this.cmdLanded.Location = new System.Drawing.Point(34, 32);
+            this.cmdLanded.Name = "cmdLanded";
+            this.cmdLanded.Size = new System.Drawing.Size(139, 36);
+            this.cmdLanded.TabIndex = 0;
+            this.cmdLanded.Text = "Landed";
+            this.cmdLanded.UseVisualStyleBackColor = true;
+            this.cmdLanded.Click += new System.EventHandler(this.cmdLanded_Click);
+            // 
             // tabWebserver
             // 
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1141, 628);
+            this.tabWebserver.Size = new System.Drawing.Size(1141, 638);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -2299,16 +2319,29 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
+            // iOToolStripMenuItem
+            // 
+            this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.companionToolStripMenuItem});
+            this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
+            this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
+            this.iOToolStripMenuItem.Text = "IO";
+            // 
+            // companionToolStripMenuItem
+            // 
+            this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.companionToolStripMenuItem.Text = "Companion";
+            this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1154, 737);
-            this.Controls.Add(this.txtLocalDataCollected);
             this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
-            this.Controls.Add(this.cmdGetMarketData);
             this.Controls.Add(this.label53);
             this.Controls.Add(this.txtEDTime);
             this.Controls.Add(this.label54);
@@ -2316,7 +2349,6 @@
             this.Controls.Add(this.label45);
             this.Controls.Add(this.tbCurrentStationinfoFromLogs);
             this.Controls.Add(this.label37);
-            this.Controls.Add(this.cmdLanded);
             this.Controls.Add(this.tbCurrentSystemFromLogs);
             this.Controls.Add(this.tabCtrlMain);
             this.Enabled = false;
@@ -2540,6 +2572,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtRecievedStation;
         private System.Windows.Forms.TextBox txtRecievedSystem;
+        private System.Windows.Forms.Button cmdConfirm;
         private System.Windows.Forms.Button cmdGetMarketData;
         private System.Windows.Forms.TextBox txtLocalDataCollected;
         private System.Windows.Forms.Label label4;
@@ -2553,6 +2586,8 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem eDDNInterfaceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem iOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem companionToolStripMenuItem;
     }
 }
 

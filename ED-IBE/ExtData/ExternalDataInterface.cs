@@ -11,7 +11,6 @@ namespace IBE.ExtData
 {
     public class ExternalDataInterface
     {
-        private const int MAX_DATA_AGE = 300;
         
         #region LogEvents
 
@@ -117,7 +116,7 @@ namespace IBE.ExtData
 
             //var response = await EliteCompanion.Instance.GetProfileData();
             //var json = "";
-            //if (response.LoginStatus == ZNS.EliteCompanionAPI.Models.LoginStatus.PendingVerification)
+            //if (response.LoginStatus == EDCompanionAPI.Models.LoginStatus.PendingVerification)
             //{
             //    Console.WriteLine("Enter verification code sent as email:");
             //    string code = Console.ReadLine();
@@ -353,7 +352,6 @@ namespace IBE.ExtData
                 Info        = "";
                 ErrorInfo   = "";
                 DataCount   = 0;
-
                 DataOk      = CheckDataFile(out Datafile);
 
                 if(!DataOk)
@@ -408,7 +406,7 @@ namespace IBE.ExtData
                 {
                     Age = DateTime.UtcNow.Subtract(TimeStamp);
 
-                    if (Age.TotalSeconds <= MAX_DATA_AGE)
+                    if (Age.TotalSeconds <= 60)
                     { 
                         DataOk = true;
                         DataFile = Files[0];

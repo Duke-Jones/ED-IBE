@@ -17,6 +17,7 @@ using IBE.MTPriceAnalysis;
 using IBE.ExtData;
 using IBE.FileScanner;
 using IBE.Enums_and_Utility_Classes;
+using EDCompanionAPI;
 
 namespace IBE
 {
@@ -246,31 +247,31 @@ namespace IBE
 
     #region global objects
 
-        private static Version                          m_OldDBVersion;
-        private static Version                          m_NewDBVersion;
+        private static Version                              m_OldDBVersion;
+        private static Version                              m_NewDBVersion;
 
-        public static SingleThreadLogger                MainLog = new SingleThreadLogger(ThreadLoggerType.App);
+        public static SingleThreadLogger                    MainLog = new SingleThreadLogger(ThreadLoggerType.App);
 
-        private static Boolean                          m_initDone                  = false;
+        private static Boolean                              m_initDone                  = false;
 
-        public static GUIColors                         Colors;
-        public static CompanionInterface                CompanionIO;
-        public static ExternalDataInterface             ExternalData;
-        public static DBConnector                       DBCon = null;
-        public static STA.Settings.INIFile              IniFile;
-        private static DBProcess                        EliteDBProcess;
-        public static CommandersLog                     CommandersLog;
-        public static PriceAnalysis                     PriceAnalysis;
-        public static EliteDBIO                         Data;
-        public static Condition                         actualCondition;
-        public static EDLogfileScanner                  LogfileScanner;
-        public static SplashScreenForm                  SplashScreen;
-        public static EDDN.EDDNCommunicator             EDDNComm;
-        public static PlausibiltyChecker                PlausibiltyCheck;
-        public static GameSettings                      GameSettings;
+        public static GUIColors                             Colors;
+        public static IBECompanion.CompanionData            CompanionIO;
+        public static ExternalDataInterface                 ExternalData;
+        public static DBConnector                           DBCon = null;
+        public static STA.Settings.INIFile                  IniFile;
+        private static DBProcess                            EliteDBProcess;
+        public static CommandersLog                         CommandersLog;
+        public static PriceAnalysis                         PriceAnalysis;
+        public static EliteDBIO                             Data;
+        public static Condition                             actualCondition;
+        public static EDLogfileScanner                      LogfileScanner;
+        public static SplashScreenForm                      SplashScreen;
+        public static EDDN.EDDNCommunicator                 EDDNComm;
+        public static PlausibiltyChecker                    PlausibiltyCheck;
+        public static GameSettings                          GameSettings;
 
-        private static ManualResetEvent                 m_MREvent;                      // for updating the database with scripts
-        private static Boolean                          m_gotScriptErrors = false;      // for updating the database with scripts
+        private static ManualResetEvent                     m_MREvent;                      // for updating the database with scripts
+        private static Boolean                              m_gotScriptErrors = false;      // for updating the database with scripts
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -390,9 +391,15 @@ namespace IBE
                     PriceAnalysis.registerLogFileScanner(LogfileScanner);
                     PriceAnalysis.registerExternalTool(ExternalData);
 
+                    // Plausibility-Checker
                     PlausibiltyCheck = new PlausibiltyChecker();
 
+                    // EDDN Interface
                     EDDNComm = new IBE.EDDN.EDDNCommunicator();
+
+                    // Companion IO
+                    CompanionIO = new IBECompanion.CompanionData(Program.GetDataPath());
+                    CompanionIO.ConditionalLogIn();
 
                     Program.SplashScreen.InfoAppendLast("<OK>");
 

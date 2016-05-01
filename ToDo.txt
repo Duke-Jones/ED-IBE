@@ -11,6 +11,7 @@ todo:
 
 done:
 
+   * added internal Companion interface
 -------------------------------------------------------------------------------------         
 v0.2.3
    * StarterTips updated

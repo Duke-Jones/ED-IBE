@@ -110,8 +110,10 @@
       <HintPath>C:\Program Files (x86)\MySQL\Connector.NET 6.9\Assemblies\v4.5\MySql.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -130,7 +132,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompanionAPI\CompanionIO.cs" />
+    <Compile Include="IBECompanion\CompanionData.cs" />
+    <Compile Include="IBECompanion\CompanionDataView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IBECompanion\CompanionDataView.Designer.cs">
+      <DependentUpon>CompanionDataView.cs</DependentUpon>
+    </Compile>
     <Compile Include="EDDN\EDDNDuplicateFilter.cs" />
     <Compile Include="EDDN\EDDNReciever.cs" />
     <Compile Include="EDDN\EDDNCommodity_v2.cs" />
@@ -415,9 +423,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommoditySelector.resx">
       <DependentUpon>CommoditySelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IBECompanion\CompanionDataView.resx">
+      <DependentUpon>CompanionDataView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EDDN\EDDNView.resx">
       <DependentUpon>EDDNView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\DataGridViewSettings.resx">
       <DependentUpon>DataGridViewSettings.cs</DependentUpon>
@@ -456,6 +469,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmDataIO.resx">
       <DependentUpon>frmDataIO.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Help Forms\HelpCommodities.resx">
       <DependentUpon>HelpCommodities.cs</DependentUpon>
@@ -816,6 +830,7 @@
     </Content>
     <EmbeddedResource Include="IBESettingsView.resx">
       <DependentUpon>IBESettingsView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SplashScreenForm.resx">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
@@ -994,6 +1009,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EDCompanionAPI\EDCompanionAPI.csproj">
+      <Project>{50546805-f69d-4c2e-b2c5-2442864ab465}</Project>
+      <Name>EDCompanionAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
