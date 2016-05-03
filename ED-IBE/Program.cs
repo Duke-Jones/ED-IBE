@@ -1007,7 +1007,11 @@ namespace IBE
                                                                                       {"Heliostatic Furnaces",        "Microbial Furnaces"},
                                                                                       {"Marine Supplies",             "Marine Equipment"},
                                                                                       {"Non Lethal Weapons",          "Non-Lethal Weapons"},
-                                                                                      {"Terrain Enrichment Systems",  "Land Enrichment Systems"}};
+                                                                                      {"Terrain Enrichment Systems",  "Land Enrichment Systems"},
+                                                                                      {"Advanceo Catalysers",         "Advanced Catalysers"},
+                                                                                      {"Meta Alloys",                 "Meta-Alloys"},
+                                                                                      {"Mu Tom Imager",               "Muon Imager"},
+                                                                                      {"Skimer Components",           "Skimmer Components"}};
 
                 String sqlString = "insert ignore into tbCommodityMapping(Name,MappedName) values ({0},{1})";
 
@@ -1172,6 +1176,19 @@ namespace IBE
 
                         }
                     }
+
+                    if(m_NewDBVersion == new Version(0,3,0,0))
+                    {
+                        Program.SplashScreen.InfoAdd("checking spell of commodity names once...");
+
+                        var count = Program.Data.CorrectMisspelledCommodities();
+
+                        if(count > 0)
+                            Program.SplashScreen.InfoAdd("checking spell of commodity names once...<OK>");
+                        else
+                            Program.SplashScreen.InfoAppendLast("<OK>");
+                    }
+
                 }
             }
             catch (Exception ex)

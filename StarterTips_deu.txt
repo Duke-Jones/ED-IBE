@@ -15,6 +15,8 @@ Inhalt:
 			     (Station-Filter + Commodity-Filter)
 		4. Ex-/Import von Daten
 		5. Übersetzungen
+			5.1 Gruppenfeld "Assign self-added items to EDDB items"
+			5.2 Gruppenfeld "Correct misspelled commodities"
 		6. Tabellenansichten
 		7. Comboboxen
 		8. Service-Formular SQL
@@ -182,6 +184,29 @@ nach:
 1;ger;Sprengstoffe
 1;fra;Explosifs
 1;spa;<spanischer Name>
+
+5.1 Gruppenfeld "Assign self-added items to EDDB items"
+Sollten durch einen Import fälschlicherweise neue Waren ( = "self-added items") 
+angelegt werden (zu erkennen an negativen IDs), kann man hier die Zuordnung korrigieren. 
+Das kann vorkommen, wenn eine Ware in einer nicht-englischen Sprache importiert wird 
+und diese Bezeichnung noch nicht mit dem englischen (Referenz-)Namen ( = "EDDB items") verknüpft ist.
+Um das zu korrigieren muß in der rechten Tabelle die Zeile mit der neue Ware (negative ID) und in der linken Tabelle
+die Zeile mit der tatsächlichen Ware (positive ID) markiert werden. 
+Jetzt kann man mit "Confirm Translation" den/die nicht-englischen Namen mit dem englischen Referenznamen verknüpfen.
+Auch die unter der falschen, negativen ID gesammelten Marktdaten werden auf die korrekte Waren-ID übertragen 
+und bei zukünftigen Preisanalysen richtig berücksichtigt. (Änderungen werden erst durch "Save Changes" übernommen)
+
+5.2 Gruppenfeld "Correct misspelled commodities"
+Wenn bei einem Import von Preisdaten einige Warennamen Schreibfehler enthalten (z. B. durch einen OCR-Import), 
+entstehen ebenfalls automatisch neue Waren ( = "self-added items", zu erkennen an den negativen IDs).
+Um das zu korrigieren muß in der rechten Tabelle die Zeile mit der fehlerhaften Bezeichnung (negative ID) und 
+in der linken Tabelle die Zeile mit der tatsächlichen Ware (positive ID) markiert werden. 
+Jetzt kann man mit "Assign to existing" die unter der falschen, negativen ID gesammelten Marktdaten
+auf die korrekte Waren-ID übertragen. (Änderungen werden erst durch "Save Changes" übernommen).
+Hier erscheint beim Speichern der Änderungen eine Messagebox. Bestätigt man diese mit ja, werden 
+die fehlerhaften Schreibweisen in eine Mapping-Tabelle geschrieben. Dadurch wird bei zukünftigen Importen
+die fehlerhafte Schreibweise automatisch erkannt und korrigiert.
+
 
 _________________________________________________________________________
 6. Tabellenansichten

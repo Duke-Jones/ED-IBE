@@ -24,6 +24,7 @@ namespace IBE
         private DBGuiInterface                          m_GUIInterface;
         private Boolean                                 m_DataChanged = false;        
         private Dictionary<Int32, Int32>                m_ChangedIDs;
+        private Dictionary<Int32, Int32>                m_MisspelledIDs;
         private List<Int32>                             m_DeletedIDs;
 
 
@@ -54,8 +55,9 @@ namespace IBE
             String currentLanguage;
             try
             {
-                m_ChangedIDs = new Dictionary<Int32, Int32>();
-                m_DeletedIDs = new List<Int32>();
+                m_ChangedIDs    = new Dictionary<Int32, Int32>();
+                m_MisspelledIDs = new Dictionary<Int32, Int32>();
+                m_DeletedIDs    = new List<Int32>();
 
                 currentLanguage = Program.DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
                 clbLanguageFilter.Items.Clear();
@@ -233,15 +235,29 @@ namespace IBE
             EliteDBIO.enLocalizationType activeSetting;
             List<Int32> collectorID = new List<Int32>();
             List<Int32> deletedIDs = new List<Int32>();
+            DialogResult addMispellingsToMapping = System.Windows.Forms.DialogResult.No;
+
 
             try
             {
+                parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
+                activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
+
+                if((m_MisspelledIDs.Count > 0) && (activeSetting == EliteDBIO.enLocalizationType.Commodity))
+                {
+                    addMispellingsToMapping = MessageBox.Show(this, "Add misspellings to the mapping table to allow a autocorrection in future cases ?", 
+                                                                    "Extend mapping table ?", 
+                                                                    MessageBoxButtons.YesNo, 
+                                                                    MessageBoxIcon.Question);
+                }
+
                 Program.DBCon.TransBegin();
                 
                 Program.DBCon.TableUpdate(dgvData.Name, m_MainDataset, m_DataAdapter[dgvData]);
 
                 Program.DBCon.TableUpdate(dgvDataOwn.Name, m_MainDataset, m_DataAdapter[dgvDataOwn]);
 
+                // entries which have to be deleted
                 foreach (Int32 delID in m_DeletedIDs)
                 {
                     if(!deletedIDs.Contains(delID))
@@ -254,11 +270,9 @@ namespace IBE
                     }
                 }
 
+                // entries which have to be updated, because their localization was unknown
                 foreach (var changedValuePair in m_ChangedIDs)
                 {
-                    parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
-                    activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
-
                     switch (activeSetting)
                     {
                         case EliteDBIO.enLocalizationType.Commodity:
@@ -304,6 +318,116 @@ namespace IBE
                             Program.DBCon.Execute(sqlString);
 
                             break;
+                        case EliteDBIO.enLocalizationType.Economylevel:
+                            // change the commodities to the new id
+                            sqlString = String.Format("update tbCommodityData" +
+                                                      " set   DemandLevel = {1}" +
+                                                      " where DemandLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbCommodityData" +
+                                                      " set   SupplyLevel = {1}" +
+                                                      " where SupplyLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                      " set   DemandLevel = {1}" +
+                                                      " where DemandLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                      " set   SupplyLevel = {1}" +
+                                                      " where SupplyLevel = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                        // delete entry from tbCategory, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            sqlString = String.Format("delete from tbEconomyLevel" +
+                                                      " where id = {0}", 
+                                                      changedValuePair.Key);
+                            Program.DBCon.Execute(sqlString);
+
+                            break;
+                        default:
+                            throw new Exception("unknown setting :  " + activeSetting);
+                    }
+
+                    collectorID.Add(changedValuePair.Value);
+                }
+
+                // entries which have to be updated, because they're simply misspelled
+                foreach (var changedValuePair in m_MisspelledIDs)
+                {
+
+                    switch (activeSetting)
+                    {
+                        case EliteDBIO.enLocalizationType.Commodity:
+                            // change the collected data to the new id
+                            sqlString = String.Format("update tbCommodityData" +
+                                                      " set   commodity_id = {1}" +
+                                                      " where commodity_id = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                      " set   commodity_id = {1}" +
+                                                      " where commodity_id = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            // extend mapping table
+                            if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                sqlString = String.Format("insert ignore into tbCommodityMapping(Name, MappedName)" +
+                                                          " select c1.commodity as Name, c2.commodity as MappedName" +
+                                                          "  from" +
+                                                          "    (select commodity from tbCommodity where id = {0}) c1" +
+                                                          "  join" +
+                                                          "    (select commodity from tbCommodity where id = {1}) c2",
+                                                          changedValuePair.Key, 
+                                                          changedValuePair.Value);
+                                Program.DBCon.Execute(sqlString);
+                            }
+
+                            // delete entry from tbCommodity, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            // entries in table "tbCommodityClassification" can be deleted
+                            sqlString = String.Format("delete from tbCommodity" +
+                                                      " where id = {0}", 
+                                                      changedValuePair.Key);
+                            Program.DBCon.Execute(sqlString);
+
+
+                            break;
+
+                        case EliteDBIO.enLocalizationType.Category:
+                            // change the commodities to the new id
+                            sqlString = String.Format("update tbCommodity" +
+                                                      " set   category_id = {1}" +
+                                                      " where category_id = {0}", 
+                                                      changedValuePair.Key, 
+                                                      changedValuePair.Value);
+                            Program.DBCon.Execute(sqlString);
+
+                            // delete entry from tbCategory, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            sqlString = String.Format("delete from tbCategory" +
+                                                      " where id = {0}", 
+                                                      changedValuePair.Key);
+                            Program.DBCon.Execute(sqlString);
+
+                            break;
+
                         case EliteDBIO.enLocalizationType.Economylevel:
                             // change the commodities to the new id
                             sqlString = String.Format("update tbCommodityData" +
@@ -598,14 +722,25 @@ namespace IBE
             try
             {
                 if ((dgvData.SelectedRows.Count == 1) && (dgvDataOwn.SelectedRows.Count == 1))
-                    cmdConfirm.Enabled = true;
+                {
+                    cmdConfirm.Enabled          = true;
+                    cmdCorrectSpelling.Enabled  = true;
+                }
                 else
-                    cmdConfirm.Enabled = false;
+                { 
+                    cmdConfirm.Enabled          = false;
+                    cmdCorrectSpelling.Enabled  = false;
+                }
             }
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in dgvData_SelectionChanged");        
             }
+        }
+
+        private void CheckSaveButton()
+        {
+            cmdSave.Enabled = ((m_MainDataset != null) && (m_MainDataset.HasChanges())) || (m_ChangedIDs.Count > 0) || (m_DeletedIDs.Count > 0) || (m_MisspelledIDs.Count > 0);
         }
 
         private void cmdConfirm_Click(object sender, EventArgs e)
@@ -666,8 +801,38 @@ namespace IBE
                     }
                 }
 
-                cmdSave.Enabled = (m_MainDataset != null) && (m_MainDataset.HasChanges());                   
+                CheckSaveButton();
 
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdConfirm_Click");        
+            }
+        }
+
+        private void cmdCorrectSpelling_Click(object sender, EventArgs e)
+        {
+            String InfoString;
+
+            try
+            {
+                InfoString  = "Do you want to assign the misspelled commodity\n\n";
+                InfoString += String.Format("\t'{0}' (id={1})\n\n", dgvDataOwn.SelectedRows[0].Cells[2].Value, dgvDataOwn.SelectedRows[0].Cells[0].Value);    
+                InfoString += "to the well-known commodity\n\n";
+                InfoString += String.Format("\t'{0}' (id={1})", dgvData.SelectedRows[0].Cells[2].Value, dgvData.SelectedRows[0].Cells[0].Value);    
+
+                if (MessageBox.Show(InfoString, "Transfer data to new id...",  MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+                {
+                    m_MisspelledIDs.Add((Int32)dgvDataOwn.SelectedRows[0].Cells[0].Value, (Int32)dgvData.SelectedRows[0].Cells[0].Value);
+                    var deleteOwn = m_DGVTables[dgvDataOwn].Select(string.Format("id1 = {0}", dgvDataOwn.SelectedRows[0].Cells[0].Value));
+
+                    foreach (var item in deleteOwn)
+                    {
+                        m_DGVTables[dgvDataOwn].Rows.Remove(item);
+                    }
+                }
+
+                CheckSaveButton();
             }
             catch (Exception ex)
             {
@@ -816,6 +981,7 @@ namespace IBE
         {
 
         }
+
 
     }
 }

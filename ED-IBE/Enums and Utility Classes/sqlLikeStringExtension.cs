@@ -1,4 +1,5 @@
-﻿using System;
+﻿// "C# Version Of SQL LIKE" found on http://stackoverflow.com/a/8583383
+using System;
 using System.Collections.Generic;
 
 namespace IBE.Enums_and_Utility_Classes

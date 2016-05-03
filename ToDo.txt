@@ -8,9 +8,18 @@ todo:
 * mark datasource colorized
 * show all systems around another system with infos
 
+* wrong data in sell-date of S2S detailgrid
+
 
 done:
 
+   * new content in StarterTipps : 5.1. / 5.2.
+   * fixes on getting data from CompanionIO
+   * manual and automatic correction of misspelled commodities 
+-------------------------------------------------------------------------------------         
+   * internal Companion interface is working
+   * mapping function for commodity names
+-------------------------------------------------------------------------------------         
    * added internal Companion interface
 -------------------------------------------------------------------------------------         
 v0.2.3

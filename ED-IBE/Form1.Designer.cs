@@ -39,6 +39,10 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new IBE.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gbEvents = new System.Windows.Forms.GroupBox();
+            this.txtEventInfo = new System.Windows.Forms.TextBox();
+            this.cmdEventMarketData = new System.Windows.Forms.Button();
+            this.cmdEventLanded = new System.Windows.Forms.Button();
             this.msMainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,9 +55,9 @@
             this.createJumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.eDDNInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eDDNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
@@ -223,14 +227,11 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
-            this.cmdEventLanded = new System.Windows.Forms.Button();
-            this.cmdEventMarketData = new System.Windows.Forms.Button();
-            this.gbEvents = new System.Windows.Forms.GroupBox();
-            this.txtEventInfo = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
+            this.gbEvents.SuspendLayout();
             this.msMainMenu.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
@@ -246,7 +247,6 @@
             this.tabExternal.SuspendLayout();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.gbEvents.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -303,6 +303,49 @@
             // 
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
+            // 
+            // gbEvents
+            // 
+            this.gbEvents.Controls.Add(this.txtEventInfo);
+            this.gbEvents.Controls.Add(this.cmdEventMarketData);
+            this.gbEvents.Controls.Add(this.cmdEventLanded);
+            this.gbEvents.Location = new System.Drawing.Point(12, 27);
+            this.gbEvents.Name = "gbEvents";
+            this.gbEvents.Size = new System.Drawing.Size(481, 108);
+            this.gbEvents.TabIndex = 63;
+            this.gbEvents.TabStop = false;
+            this.gbEvents.Text = "Events";
+            // 
+            // txtEventInfo
+            // 
+            this.txtEventInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtEventInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEventInfo.Location = new System.Drawing.Point(6, 81);
+            this.txtEventInfo.Name = "txtEventInfo";
+            this.txtEventInfo.ReadOnly = true;
+            this.txtEventInfo.Size = new System.Drawing.Size(469, 22);
+            this.txtEventInfo.TabIndex = 63;
+            this.txtEventInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // cmdEventMarketData
+            // 
+            this.cmdEventMarketData.Location = new System.Drawing.Point(17, 48);
+            this.cmdEventMarketData.Name = "cmdEventMarketData";
+            this.cmdEventMarketData.Size = new System.Drawing.Size(100, 25);
+            this.cmdEventMarketData.TabIndex = 62;
+            this.cmdEventMarketData.Text = "Market Data";
+            this.cmdEventMarketData.UseVisualStyleBackColor = true;
+            this.cmdEventMarketData.Click += new System.EventHandler(this.cmdEventMarketData_Click);
+            // 
+            // cmdEventLanded
+            // 
+            this.cmdEventLanded.Location = new System.Drawing.Point(17, 17);
+            this.cmdEventLanded.Name = "cmdEventLanded";
+            this.cmdEventLanded.Size = new System.Drawing.Size(100, 25);
+            this.cmdEventLanded.TabIndex = 13;
+            this.cmdEventLanded.Text = "Landed";
+            this.cmdEventLanded.UseVisualStyleBackColor = true;
+            this.cmdEventLanded.Click += new System.EventHandler(this.cmdEventLanded_Click);
             // 
             // msMainMenu
             // 
@@ -387,8 +430,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem1,
-            this.eDDNInterfaceToolStripMenuItem});
+            this.settingsToolStripMenuItem1});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -396,21 +438,15 @@
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
-            // 
-            // eDDNInterfaceToolStripMenuItem
-            // 
-            this.eDDNInterfaceToolStripMenuItem.Name = "eDDNInterfaceToolStripMenuItem";
-            this.eDDNInterfaceToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.eDDNInterfaceToolStripMenuItem.Text = "EDDN-Interface";
-            this.eDDNInterfaceToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // iOToolStripMenuItem
             // 
             this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.companionToolStripMenuItem});
+            this.companionToolStripMenuItem,
+            this.eDDNToolStripMenuItem});
             this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
             this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
             this.iOToolStripMenuItem.Text = "IO";
@@ -421,6 +457,13 @@
             this.companionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.companionToolStripMenuItem.Text = "Companion";
             this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
+            // 
+            // eDDNToolStripMenuItem
+            // 
+            this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
+            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.eDDNToolStripMenuItem.Text = "EDDN";
+            this.eDDNToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // cmdLoadCurrentSystem
             // 
@@ -651,7 +694,7 @@
             this.lblUpdateDetail.Multiline = true;
             this.lblUpdateDetail.Name = "lblUpdateDetail";
             this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lblUpdateDetail.Size = new System.Drawing.Size(729, 241);
+            this.lblUpdateDetail.Size = new System.Drawing.Size(729, 182);
             this.lblUpdateDetail.TabIndex = 39;
             // 
             // cmdDonate
@@ -695,7 +738,7 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(28, 555);
+            this.panel2.Location = new System.Drawing.Point(28, 485);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1079, 77);
             this.panel2.TabIndex = 33;
@@ -2336,47 +2379,6 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
-            // cmdEventLanded
-            // 
-            this.cmdEventLanded.Location = new System.Drawing.Point(6, 19);
-            this.cmdEventLanded.Name = "cmdEventLanded";
-            this.cmdEventLanded.Size = new System.Drawing.Size(100, 25);
-            this.cmdEventLanded.TabIndex = 13;
-            this.cmdEventLanded.Text = "Landed";
-            this.cmdEventLanded.UseVisualStyleBackColor = true;
-            this.cmdEventLanded.Click += new System.EventHandler(this.cmdEventLanded_Click);
-            // 
-            // cmdEventMarketData
-            // 
-            this.cmdEventMarketData.Location = new System.Drawing.Point(6, 50);
-            this.cmdEventMarketData.Name = "cmdEventMarketData";
-            this.cmdEventMarketData.Size = new System.Drawing.Size(100, 25);
-            this.cmdEventMarketData.TabIndex = 62;
-            this.cmdEventMarketData.Text = "Market Data";
-            this.cmdEventMarketData.UseVisualStyleBackColor = true;
-            this.cmdEventMarketData.Click += new System.EventHandler(this.cmdEventMarketData_Click);
-            // 
-            // gbEvents
-            // 
-            this.gbEvents.Controls.Add(this.txtEventInfo);
-            this.gbEvents.Controls.Add(this.cmdEventMarketData);
-            this.gbEvents.Controls.Add(this.cmdEventLanded);
-            this.gbEvents.Location = new System.Drawing.Point(12, 27);
-            this.gbEvents.Name = "gbEvents";
-            this.gbEvents.Size = new System.Drawing.Size(481, 108);
-            this.gbEvents.TabIndex = 63;
-            this.gbEvents.TabStop = false;
-            this.gbEvents.Text = "Events";
-            // 
-            // txtEventInfo
-            // 
-            this.txtEventInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtEventInfo.Location = new System.Drawing.Point(6, 81);
-            this.txtEventInfo.Name = "txtEventInfo";
-            this.txtEventInfo.ReadOnly = true;
-            this.txtEventInfo.Size = new System.Drawing.Size(469, 20);
-            this.txtEventInfo.TabIndex = 63;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2408,6 +2410,8 @@
             this.contextMenuStrip2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
+            this.gbEvents.ResumeLayout(false);
+            this.gbEvents.PerformLayout();
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
             this.tabCtrlMain.ResumeLayout(false);
@@ -2431,8 +2435,6 @@
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.gbEvents.ResumeLayout(false);
-            this.gbEvents.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2631,13 +2633,13 @@
         private System.Windows.Forms.ToolStripMenuItem directDBAccessToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem eDDNInterfaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem iOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem companionToolStripMenuItem;
         private System.Windows.Forms.Button cmdEventLanded;
         private System.Windows.Forms.Button cmdEventMarketData;
         private System.Windows.Forms.GroupBox gbEvents;
         public System.Windows.Forms.TextBox txtEventInfo;
+        private System.Windows.Forms.ToolStripMenuItem eDDNToolStripMenuItem;
     }
 }
 

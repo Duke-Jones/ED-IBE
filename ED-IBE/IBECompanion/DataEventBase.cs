@@ -151,7 +151,7 @@ namespace IBE.IBECompanion
         /// <summary>
         /// collects the marketdata from a external tool
         /// </summary>
-        public void getMarketData()
+        public Int32 getMarketData()
         {
             Int32 DataCount = 0;
 
@@ -168,6 +168,7 @@ namespace IBE.IBECompanion
                                                           Amount        = DataCount};
                 ExternalDataEvent.Raise(this, EA);
 
+                return DataCount;
             }
             catch (Exception ex)
             {

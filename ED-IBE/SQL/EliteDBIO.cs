@@ -2423,7 +2423,7 @@ namespace IBE.SQL
 
                                         case enImportBehaviour.NewerOrEqual:
                                             timeFilter = String.Format("SC1.timestamp <= {0}) or (SC1.timestamp is null)", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
-                                            break;
+                                            break;                                                          
 
                                         case enImportBehaviour.All:
                                             timeFilter = String.Format("SC1.timestamp = SC1.timestamp", DBConnector.SQLDateTime(DateTimeOffset.FromUnixTimeSeconds(StationListing.CollectedAt).DateTime));
@@ -3255,6 +3255,106 @@ namespace IBE.SQL
 
 #endregion
 
+#region localization
+
+        /// <summary>
+        /// updates the localization of all commodities for the current language
+        /// </summary>
+        public void updateTranslation()
+        {
+            try
+            {
+
+                String currentLanguage = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
+
+                switchLanguage(currentLanguage);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating the current translation", ex);
+            }
+        }
+
+        /// <summary>
+        /// Checks the commodity names with reference to table tbCommodityMapping.
+        /// Correct misspellings if some found.
+        /// </summary>
+        public Int32 CorrectMisspelledCommodities()
+        {
+            String sqlString;
+            String sqlBaseString;
+            DataTable data = new DataTable();
+            Int32 found = 0;
+
+
+            try
+            {
+                sqlBaseString = "select c1.id as ID, c2.ID as WrongID" +
+                                "  from" +
+                                "    (select id from tbcommodity where commodity = {0}) c1" +
+                                "  join" +
+                                "    (select id from tbcommodity where commodity = {1}) c2;";
+
+                foreach (dsEliteDB.tbcommoditymappingRow mapping in BaseData.tbcommoditymapping.Rows)
+	            {
+                    Program.DBCon.Execute(String.Format(sqlBaseString, DBConnector.SQLAEscape(mapping.MappedName), DBConnector.SQLAEscape(mapping.Name)), data);
+
+                    foreach (DataRow wrongSpellings in data.Rows)
+	                {
+                        Program.SplashScreen.InfoAdd(String.Format("...alter '{0}' to '{1}'...", mapping.Name, mapping.MappedName));
+                        Program.DBCon.TransBegin();
+
+                        // change the collected data to the new id
+                        sqlString = String.Format("update tbCommodityData" +
+                                                    " set   commodity_id = {1}" +
+                                                    " where commodity_id = {0}", 
+                                                    wrongSpellings["WrongID"], 
+                                                    wrongSpellings["ID"]);
+                        Program.DBCon.Execute(sqlString);
+
+                        sqlString = String.Format("update tbPriceHistory" +
+                                                    " set   commodity_id = {1}" +
+                                                    " where commodity_id = {0}", 
+                                                    wrongSpellings["WrongID"], 
+                                                    wrongSpellings["ID"]);
+                        Program.DBCon.Execute(sqlString);
+
+                        // delete entry from tbCommodity, the ForeigenKeys will delete the 
+                        // entries from the other affected tables
+                        // entries in table "tbCommodityClassification" can be deleted
+                        sqlString = String.Format("delete from tbCommodity" +
+                                                    " where id = {0}", 
+                                                    wrongSpellings["WrongID"]);
+                        Program.DBCon.Execute(sqlString);
+
+                        Program.Data.DeleteMultiplePrices(new List<Int32>() {(Int32)wrongSpellings["ID"]});
+
+                        Program.DBCon.TransCommit();
+
+                        Program.SplashScreen.InfoAppendLast("OK");
+                        found++;
+	                }
+	            }
+
+                Program.Data.AddMissingLocalizationEntries();
+                Program.Data.updateTranslation();
+
+                return found;
+            }
+            catch (Exception ex)
+            {
+                if(Program.DBCon.TransActive())
+                    Program.DBCon.TransRollback();
+
+                throw new Exception("Error while saving data", ex);
+            }
+        }
+
+
+#endregion
+
+
 #region general
 
         /// <summary>
@@ -3334,25 +3434,6 @@ namespace IBE.SQL
             catch (Exception ex)
             {
                 throw new Exception("Error while updating the visited systems from log", ex);
-            }
-        }
-
-        /// <summary>
-        /// updates the localization of all commodities for the current language
-        /// </summary>
-        public void updateTranslation()
-        {
-            try
-            {
-
-                String currentLanguage = Program.DBCon.getIniValue(IBESettingsView.DB_GROUPNAME, "Language", Program.BASE_LANGUAGE, false);
-
-                switchLanguage(currentLanguage);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while updating the current translation", ex);
             }
         }
 
@@ -3860,6 +3941,8 @@ namespace IBE.SQL
 		        throw new Exception("Error while getting neighbours of a system", ex);
 	        }
         }
+
+
 
 
 #endregion

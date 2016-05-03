@@ -3405,37 +3405,50 @@ namespace IBE
 
             try
             {
-                Cursor = Cursors.WaitCursor;
+                if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
+                { 
+                    Cursor = Cursors.WaitCursor;
 
-                MBResult = System.Windows.Forms.DialogResult.OK;
+                    MBResult = System.Windows.Forms.DialogResult.OK;
 
-                txtEventInfo.Text = "checking for current station...";
-                txtEventInfo.Refresh();
+                    txtEventInfo.Text = "checking for current station...";
+                    txtEventInfo.Refresh();
 
-                if(Program.CompanionIO.GetValue<Boolean>("commander.docked"))
-                {
-                    extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
-                    extStation = Program.CompanionIO.GetValue("lastStarport.name");
-
-                    if(!Program.actualCondition.System.Equals(extSystem))
+                    if(Program.CompanionIO.GetValue<Boolean>("commander.docked"))
                     {
-                        MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
-                                                                                "Confirm even so ?", "Unexpected system retrieved !",
-                                                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                        extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
+                        extStation = Program.CompanionIO.GetValue("lastStarport.name");
+
+                        if(!Program.actualCondition.System.Equals(extSystem))
+                        {
+                            MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
+                                                                                    "Confirm even so ?", "Unexpected system retrieved !",
+                                                                                    MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                        }
+
+                        if(MBResult == System.Windows.Forms.DialogResult.OK)
+                        {
+                            Program.CompanionIO.ConfirmLocation(extSystem, extStation);
+                            txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
+                        }
+                        else
+                        {
+                            txtEventInfo.Text             = String.Format("location '{1}' in '{0}' not confirmed !", extSystem, extStation);                        
+                        }
+                    }
+                    else
+                    { 
+                        txtEventInfo.Text             = "You're not docked";                        
                     }
 
-                    if(MBResult == System.Windows.Forms.DialogResult.OK)
-                    {
-                        Program.CompanionIO.ConfirmLocation(extSystem, extStation);
-                    }
+                    Cursor = Cursors.Default;
                 }
                 else
-                { 
-                    txtEventInfo.Text             = "You're not docked";                        
+                {
+                    MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
                 }
 
-                Cursor = Cursors.Default;
-                
             }
             catch (Exception ex)
             {
@@ -3447,14 +3460,28 @@ namespace IBE
         {
             try
             {
-                Program.CompanionIO.getMarketData();
+                if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
+                { 
+                    txtEventInfo.Text             = "getting market data...";                        
+
+                    Int32 count = Program.CompanionIO.getMarketData();
+                    
+                    if(count > 0)
+                        txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
+                    else
+                        txtEventInfo.Text             = String.Format("getting market data...no market data available !");                        
+                }
+                else
+                {
+                    MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
+                }
+
             }
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in cmdEventMarketData_Click");
             }
         }
-
     }
-
 }

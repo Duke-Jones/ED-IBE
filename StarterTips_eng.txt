@@ -19,6 +19,8 @@ Content:
 			     (station and commodity filter)
 		4. Export and import of data (menu item "Data" -> "Import&Export")
 		5. Translations
+			5.1 Groupbox "Assign self-added items to EDDB items"
+			5.2 Groupbox "Correct misspelled commodities"
 		6. Table Views
 		7. ComboBoxes
 		8. Acessing sql tables directly
@@ -186,6 +188,27 @@ to:
 1;ger;Sprengstoffe
 1;fra;Explosifs
 1;spa;<spanish name>
+
+5.1 Groupbox "Assign self-added items to EDDB items"
+If you get new commodities ( = "self-added items", identifiably on the negative id)
+wrongly, you can correct this here. This can happen if you import prices with commodity names
+in a non-english language and these names are not linked yet with it's english name (which is the reference).
+To correct this you need to select the row with the non-english name from right table (negative id) 
+and the appropriate row from right table (positive id). Now press "Confirm Translation" to assign
+the non-englisch name with the appropriate commodity ( = well-known EDDB item). All so far collected prices 
+will also transmitted to the appropriate commodity and be considered in future price analysis.
+(changes will have affect after "Save Changes")
+
+5.2 Groupbox "Correct misspelled commodities"
+If you get new commodities ( = "self-added items", identifiably on the negative id)
+in cause of misspelled names, you can correct this here. This can happen if you import 
+e.g. data from a OCR or they may come with EDDN. To correct this you need to select the row 
+with the misspelled name from right table (negative id) and the appropriate row from right table (positive id). 
+Now press "Assigne to existing" to transmit the prices to the appropriate commodity ( = well-known EDDB item). 
+All so far collected prices will be considered in future price analysis. (changes will have affect after "Save Changes")
+(!)Doing this way you will see a messagebox when you save the changes. If you confirm it with "yes"
+the misspelled name will be added to a mapping table. Through that the next time this wrong name
+it will be automatically corrected.
 
 _________________________________________________________________________
 6. Table Views

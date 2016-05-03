@@ -230,7 +230,7 @@ namespace IBE.IBECompanion
 
                         csvData.SystemName          = system;
                         csvData.StationName         = starPort;
-                        csvData.StationID           = String.Format("{0}[{1}]", starPort, system);
+                        csvData.StationID           = String.Format("{0} [{1}]", starPort, system);
                         csvData.CommodityName       = commodity.Value<String>("name");
                         csvData.SellPrice           = commodity.Value<Int32>("sellPrice");
                         csvData.BuyPrice            = commodity.Value<Int32>("buyPrice");
@@ -240,9 +240,13 @@ namespace IBE.IBECompanion
 
                         if(commodity.Value<Int32>("demandBracket") > 0)
                             csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
+                        else
+                            csvData.DemandLevel = null;
 
                         if(commodity.Value<Int32>("stockBracket") > 0)
                             csvData.SupplyLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("stockBracket") - 1, "level");
+                        else
+                            csvData.SupplyLevel = null;
 
                         csvData.SourceFileName      = "";
                         csvData.DataSource          = "";
