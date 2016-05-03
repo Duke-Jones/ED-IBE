@@ -220,6 +220,19 @@ namespace IBE.IBECompanion
             this.Close();
         }
 
+        private void cmdToClipBoard_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText(Program.CompanionIO.GetRawData());
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                cErr.processError(ex, "cmdToClipBoard_Click");
+            }
+        }
+
 
     }
 }

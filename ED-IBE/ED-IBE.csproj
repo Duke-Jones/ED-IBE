@@ -132,6 +132,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
+    <Compile Include="ExtData\ExternalDataInterface.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IBECompanion\CompanionData.cs" />
     <Compile Include="IBECompanion\CompanionDataView.cs">
       <SubType>Form</SubType>
@@ -166,7 +170,6 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\VersionExt.cs" />
     <Compile Include="Enums and Utility Classes\WindowData.cs" />
-    <Compile Include="ExtData\ExternalDataInterface.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,6 +184,7 @@
       <DependentUpon>CommoditySelector.cs</DependentUpon>
     </Compile>
     <Compile Include="GUIColors.cs" />
+    <Compile Include="IBECompanion\DataEventBase.cs" />
     <Compile Include="LanguageEdit.cs">
       <SubType>Form</SubType>
     </Compile>

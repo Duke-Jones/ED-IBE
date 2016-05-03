@@ -234,7 +234,8 @@ namespace IBE.SQL
                                                             "tbpower",
                                                             "tbpowerstate", 
                                                             "tblanguage", 
-                                                            "tbtrustedsenders"};
+                                                            "tbtrustedsenders",
+                                                            "tbcommoditymapping"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -2613,40 +2614,42 @@ namespace IBE.SQL
 
                 sendProgressEvent("analysing data...", -1, -1);
 
-                foreach (String DataLine in CSV_Strings)
-	            {
+                for (int i = 0; i < CSV_Strings.Length; i++)
+                {
                     String currentName;
                     List<dsEliteDB.tbcommoditylocalizationRow> currentCommodity;
-
-                    if(DataLine.Trim().Length > 0)
+                    if (CSV_Strings[i].Trim().Length > 0)
                     {
-                        currentName         = new CsvRow(DataLine).CommodityName;
-
-                        if(!String.IsNullOrEmpty(currentName))
+                        currentName = new CsvRow(CSV_Strings[i]).CommodityName;
+                        if (!String.IsNullOrEmpty(currentName))
                         {
-                            if(!foundNames.ContainsKey(currentName))
+                            // check if we need to remap this name
+                            Datasets.dsEliteDB.tbcommoditymappingRow mappedName = (Datasets.dsEliteDB.tbcommoditymappingRow)BaseData.tbcommoditymapping.Rows.Find(currentName);
+                            if (mappedName != null)
                             {
-                                currentCommodity    = Program.Data.BaseData.tbcommoditylocalization.Where(x => x.locname.Equals(currentName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                                CSV_Strings[i].Replace(mappedName.Name, mappedName.MappedName);
+                                currentName = mappedName.MappedName;
+                            }
 
-                                if(currentCommodity.Count == 0)
+                            if (!foundNames.ContainsKey(currentName))
+                            {
+                                currentCommodity = Program.Data.BaseData.tbcommoditylocalization.Where(x => x.locname.Equals(currentName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                                if (currentCommodity.Count == 0)
                                 {
-                                    if(currentLanguage == Program.BASE_LANGUAGE)
+                                    if (currentLanguage == Program.BASE_LANGUAGE)
                                         newData.Rows.Add(currentName);
                                     else
                                         newData.Rows.Add(currentName, currentName);
                                 }
-
                                 foundNames.Add(currentName, "");
                             }
                         }
                     }
                     counter++;
-                    sendProgressEvent("analysing data...", counter, CSV_Strings.GetUpperBound(0)+1);
-
-                    if(m_ProgressCancelled)
+                    sendProgressEvent("analysing data...", counter, CSV_Strings.GetUpperBound(0) + 1);
+                    if (m_ProgressCancelled)
                         break;
-
-	            }
+                }
 
                 sendProgressEvent("analysing data...", 1, 1);
 

@@ -71,7 +71,7 @@ namespace IBE.MTCommandersLog
         private DataRetriever                           retriever;
         private Boolean                                 m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner            m_LogfileScanner;
-        private ExternalDataInterface                   m_ExternalDataInterface;
+        private IBE.IBECompanion.DataEventBase          m_DataEventObject;
         private Dictionary<Object, BindingSource>       m_BindingSources;
 
         /// <summary>
@@ -645,14 +645,14 @@ namespace IBE.MTCommandersLog
         /// register the external tool in the CommandersLog for the DataEvent
         /// </summary>
         /// <param name="LogfileScanner"></param>
-        public void registerExternalTool(ExternalDataInterface ExternalDataInterface)
+        public void registerExternalTool(IBE.IBECompanion.DataEventBase ExternalDataInterface)
         {
             try
             {
-                if(m_ExternalDataInterface == null)
+                if(m_DataEventObject == null)
                 { 
-                    m_ExternalDataInterface                    = ExternalDataInterface;
-                    m_ExternalDataInterface.ExternalDataEvent += m_ExternalDataInterface_ExternalDataEvent;
+                    m_DataEventObject                    = ExternalDataInterface;
+                    m_DataEventObject.ExternalDataEvent += m_ExternalDataInterface_ExternalDataEvent;
                 }
                 else 
                     throw new Exception("LogfileScanner already registered");
@@ -693,10 +693,10 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                if(m_ExternalDataInterface != null)
+                if(m_DataEventObject != null)
                 { 
-                    m_ExternalDataInterface.ExternalDataEvent -= m_ExternalDataInterface_ExternalDataEvent;
-                    m_ExternalDataInterface = null;
+                    m_DataEventObject.ExternalDataEvent -= m_ExternalDataInterface_ExternalDataEvent;
+                    m_DataEventObject = null;
                 }
             }
             catch (Exception ex)
@@ -727,17 +727,17 @@ namespace IBE.MTCommandersLog
             }
         }
 
-        void m_ExternalDataInterface_ExternalDataEvent(object sender, ExternalDataInterface.LocationChangedEventArgs e)
+        void m_ExternalDataInterface_ExternalDataEvent(object sender, IBE.IBECompanion.DataEventBase.LocationChangedEventArgs e)
         {
             try
             {
-                if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) > 0)
+                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) > 0)
                 {
                   
                     SaveEvent(DateTime.UtcNow, e.System, e.Location, "", "", 0, 0, 0, "Visited", "");
                 }
 
-                if((e.Changed & ExternalDataInterface.enExternalDataEvents.DataCollected) > 0)
+                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.DataCollected) > 0)
                 {
                     createMarketdataCollectedEvent();
                 }

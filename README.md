@@ -57,6 +57,10 @@ https://forums.frontier.co.uk/showthread.php?t=137732
 on elitedangerous.de (deutsches Forum):  
 http://www.elitedangerous.de/forum/viewtopic.php?f=66&t=6404&start=0
 
+**License**
+Copyright © 2016 Duke Jones
+Licensed under the [GNU Public License (GPL) v2]
+(see ".license\ED-IBE license.txt")
 
 
 *****************************************************************************************

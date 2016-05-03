@@ -1,4 +1,4 @@
-# Elite Companion API (from https://github.com/Duke-Jones/EliteCompanionAPI)
+# Elite Companion API (from https://github.com/ZNS/EliteCompanionAPI)
 
 This is a class library in c# for accessing the official api exposed by the Elite Dangerous Companion. This not an official library and is not endorsed by Frontier developments.
 

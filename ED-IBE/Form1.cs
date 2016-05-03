@@ -257,7 +257,7 @@ namespace IBE
 
                 // register events for getting new location- and data infos for the gui
                 Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
-                Program.ExternalData.ExternalDataEvent += ExternalDataInterface_ExternalDataEvent;
+                Program.CompanionIO.ExternalDataEvent  += ExternalDataInterface_ExternalDataEvent;
                 Program.EDDNComm.DataChangedEvent      += EDDNComm_DataChangedEvent;
 
 
@@ -3097,6 +3097,10 @@ namespace IBE
 
         #region ExternalTool
 
+#if false
+
+
+
         private FileScanner.EDLogfileScanner    m_LogfileScanner;
 
         private void cmdLanded_Click(object sender, EventArgs e)
@@ -3228,6 +3232,8 @@ namespace IBE
             }
         }
 
+#endif
+
         void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
         {
             try
@@ -3270,15 +3276,12 @@ namespace IBE
             }
         }
 
-        void ExternalDataInterface_ExternalDataEvent(object sender, ExternalDataInterface.LocationChangedEventArgs e)
+        void ExternalDataInterface_ExternalDataEvent(object sender, IBE.IBECompanion.DataEventBase.LocationChangedEventArgs e)
         {
             try
             {
-                if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) != 0)
+                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) != 0)
                 {
-                    Program.actualCondition.System   = e.System;
-                    Program.actualCondition.Location = e.Location;
-                    
                     setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
                     setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
                 }
@@ -3307,6 +3310,7 @@ namespace IBE
         }
 
 #endregion
+
 
         private void editLocalizationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -3390,6 +3394,64 @@ namespace IBE
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error while opening Companion interface");
+            }
+        }
+
+        private void cmdEventLanded_Click(object sender, EventArgs e)
+        {
+            String extSystem    = "";
+            String extStation   = "";
+            DialogResult MBResult;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                MBResult = System.Windows.Forms.DialogResult.OK;
+
+                txtEventInfo.Text = "checking for current station...";
+                txtEventInfo.Refresh();
+
+                if(Program.CompanionIO.GetValue<Boolean>("commander.docked"))
+                {
+                    extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
+                    extStation = Program.CompanionIO.GetValue("lastStarport.name");
+
+                    if(!Program.actualCondition.System.Equals(extSystem))
+                    {
+                        MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
+                                                                                "Confirm even so ?", "Unexpected system retrieved !",
+                                                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                    }
+
+                    if(MBResult == System.Windows.Forms.DialogResult.OK)
+                    {
+                        Program.CompanionIO.ConfirmLocation(extSystem, extStation);
+                    }
+                }
+                else
+                { 
+                    txtEventInfo.Text             = "You're not docked";                        
+                }
+
+                Cursor = Cursors.Default;
+                
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdEventLanded_Click");
+            }
+        }
+
+        private void cmdEventMarketData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.CompanionIO.getMarketData();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdEventMarketData_Click");
             }
         }
 

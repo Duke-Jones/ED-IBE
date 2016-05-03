@@ -58,7 +58,7 @@ namespace IBE.MTPriceAnalysis
         private DataRetriever                       retriever;
         private Boolean                             m_NoGuiNotifyAfterSave;
         private FileScanner.EDLogfileScanner        m_LogfileScanner;
-        private ExternalDataInterface               m_ExternalDataInterface;
+        private IBE.IBECompanion.DataEventBase      m_ExternalDataInterface;
         private IBE.IBESettingsView                 m_Settings;
         private DBConnector                         m_lDBCon;
         
@@ -167,7 +167,7 @@ namespace IBE.MTPriceAnalysis
         /// register the external tool in the CommandersLog for the DataEvent
         /// </summary>
         /// <param name="LogfileScanner"></param>
-        public void registerExternalTool(ExternalDataInterface ExternalDataInterface)
+        public void registerExternalTool(IBE.IBECompanion.DataEventBase ExternalDataInterface)
         {
             try
             {
@@ -251,16 +251,16 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-        void m_ExternalDataInterface_ExternalDataEvent(object sender, ExternalDataInterface.LocationChangedEventArgs e)
+        void m_ExternalDataInterface_ExternalDataEvent(object sender, IBE.IBECompanion.DataEventBase.LocationChangedEventArgs e)
         {
             try
             {
-                if((e.Changed & ExternalDataInterface.enExternalDataEvents.Landed) > 0)
+                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) > 0)
                 {
                   
                 }
 
-                if((e.Changed & ExternalDataInterface.enExternalDataEvents.DataCollected) > 0)
+                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.DataCollected) > 0)
                 {
                     GUI.setFilterHasChanged(true);
                     //GUI.RefreshData();

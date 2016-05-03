@@ -52,6 +52,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.eDDNInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
@@ -221,8 +223,10 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
-            this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmdEventLanded = new System.Windows.Forms.Button();
+            this.cmdEventMarketData = new System.Windows.Forms.Button();
+            this.gbEvents = new System.Windows.Forms.GroupBox();
+            this.txtEventInfo = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -242,6 +246,7 @@
             this.tabExternal.SuspendLayout();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.gbEvents.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -402,6 +407,21 @@
             this.eDDNInterfaceToolStripMenuItem.Text = "EDDN-Interface";
             this.eDDNInterfaceToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
+            // iOToolStripMenuItem
+            // 
+            this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.companionToolStripMenuItem});
+            this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
+            this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
+            this.iOToolStripMenuItem.Text = "IO";
+            // 
+            // companionToolStripMenuItem
+            // 
+            this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.companionToolStripMenuItem.Text = "Companion";
+            this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
+            // 
             // cmdLoadCurrentSystem
             // 
             this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -502,10 +522,10 @@
             this.tabCtrlMain.Controls.Add(this.tabSystemData);
             this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
             this.tabCtrlMain.Controls.Add(this.tabWebserver);
-            this.tabCtrlMain.Location = new System.Drawing.Point(3, 72);
+            this.tabCtrlMain.Location = new System.Drawing.Point(3, 141);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 664);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 595);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -536,7 +556,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 638);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 569);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -916,7 +936,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1141, 638);
+            this.tabSystemData.Size = new System.Drawing.Size(1141, 569);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -1977,7 +1997,7 @@
             this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
             this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
             this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 638);
+            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 569);
             this.tabOCRGroup.TabIndex = 11;
             this.tabOCRGroup.Text = "Market Data Interface";
             this.tabOCRGroup.UseVisualStyleBackColor = true;
@@ -1991,7 +2011,7 @@
             this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
             this.tabCtrlOCR.Name = "tabCtrlOCR";
             this.tabCtrlOCR.SelectedIndex = 0;
-            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 605);
+            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 536);
             this.tabCtrlOCR.TabIndex = 0;
             // 
             // tabExternal
@@ -2012,7 +2032,7 @@
             this.tabExternal.Location = new System.Drawing.Point(4, 22);
             this.tabExternal.Name = "tabExternal";
             this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternal.Size = new System.Drawing.Size(1068, 579);
+            this.tabExternal.Size = new System.Drawing.Size(1068, 510);
             this.tabExternal.TabIndex = 5;
             this.tabExternal.Text = "External IO";
             this.tabExternal.UseVisualStyleBackColor = true;
@@ -2062,7 +2082,6 @@
             this.cmdConfirm.TabIndex = 8;
             this.cmdConfirm.Text = "Confirm Location";
             this.cmdConfirm.UseVisualStyleBackColor = true;
-            this.cmdConfirm.Click += new System.EventHandler(this.cmdConfirm_Click);
             // 
             // cmdGetMarketData
             // 
@@ -2073,7 +2092,6 @@
             this.cmdGetMarketData.TabIndex = 7;
             this.cmdGetMarketData.Text = "Get Market Data";
             this.cmdGetMarketData.UseVisualStyleBackColor = true;
-            this.cmdGetMarketData.Click += new System.EventHandler(this.cmdGetMarketData_Click);
             // 
             // label3
             // 
@@ -2136,14 +2154,13 @@
             this.cmdLanded.TabIndex = 0;
             this.cmdLanded.Text = "Landed";
             this.cmdLanded.UseVisualStyleBackColor = true;
-            this.cmdLanded.Click += new System.EventHandler(this.cmdLanded_Click);
             // 
             // tabWebserver
             // 
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1141, 638);
+            this.tabWebserver.Size = new System.Drawing.Size(1141, 569);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -2319,20 +2336,46 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
-            // iOToolStripMenuItem
+            // cmdEventLanded
             // 
-            this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.companionToolStripMenuItem});
-            this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
-            this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
-            this.iOToolStripMenuItem.Text = "IO";
+            this.cmdEventLanded.Location = new System.Drawing.Point(6, 19);
+            this.cmdEventLanded.Name = "cmdEventLanded";
+            this.cmdEventLanded.Size = new System.Drawing.Size(100, 25);
+            this.cmdEventLanded.TabIndex = 13;
+            this.cmdEventLanded.Text = "Landed";
+            this.cmdEventLanded.UseVisualStyleBackColor = true;
+            this.cmdEventLanded.Click += new System.EventHandler(this.cmdEventLanded_Click);
             // 
-            // companionToolStripMenuItem
+            // cmdEventMarketData
             // 
-            this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
-            this.companionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.companionToolStripMenuItem.Text = "Companion";
-            this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
+            this.cmdEventMarketData.Location = new System.Drawing.Point(6, 50);
+            this.cmdEventMarketData.Name = "cmdEventMarketData";
+            this.cmdEventMarketData.Size = new System.Drawing.Size(100, 25);
+            this.cmdEventMarketData.TabIndex = 62;
+            this.cmdEventMarketData.Text = "Market Data";
+            this.cmdEventMarketData.UseVisualStyleBackColor = true;
+            this.cmdEventMarketData.Click += new System.EventHandler(this.cmdEventMarketData_Click);
+            // 
+            // gbEvents
+            // 
+            this.gbEvents.Controls.Add(this.txtEventInfo);
+            this.gbEvents.Controls.Add(this.cmdEventMarketData);
+            this.gbEvents.Controls.Add(this.cmdEventLanded);
+            this.gbEvents.Location = new System.Drawing.Point(12, 27);
+            this.gbEvents.Name = "gbEvents";
+            this.gbEvents.Size = new System.Drawing.Size(481, 108);
+            this.gbEvents.TabIndex = 63;
+            this.gbEvents.TabStop = false;
+            this.gbEvents.Text = "Events";
+            // 
+            // txtEventInfo
+            // 
+            this.txtEventInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtEventInfo.Location = new System.Drawing.Point(6, 81);
+            this.txtEventInfo.Name = "txtEventInfo";
+            this.txtEventInfo.ReadOnly = true;
+            this.txtEventInfo.Size = new System.Drawing.Size(469, 20);
+            this.txtEventInfo.TabIndex = 63;
             // 
             // Form1
             // 
@@ -2340,6 +2383,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1154, 737);
+            this.Controls.Add(this.gbEvents);
             this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
             this.Controls.Add(this.label53);
@@ -2387,6 +2431,8 @@
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.gbEvents.ResumeLayout(false);
+            this.gbEvents.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2588,6 +2634,10 @@
         private System.Windows.Forms.ToolStripMenuItem eDDNInterfaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem iOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem companionToolStripMenuItem;
+        private System.Windows.Forms.Button cmdEventLanded;
+        private System.Windows.Forms.Button cmdEventMarketData;
+        private System.Windows.Forms.GroupBox gbEvents;
+        public System.Windows.Forms.TextBox txtEventInfo;
     }
 }
 

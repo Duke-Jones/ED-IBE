@@ -256,7 +256,7 @@ namespace IBE
 
         public static GUIColors                             Colors;
         public static IBECompanion.CompanionData            CompanionIO;
-        public static ExternalDataInterface                 ExternalData;
+//        public static ExternalDataInterface                 ExternalData;
         public static DBConnector                           DBCon = null;
         public static STA.Settings.INIFile                  IniFile;
         private static DBProcess                            EliteDBProcess;
@@ -370,8 +370,12 @@ namespace IBE
                     PriceAnalysis                               = new PriceAnalysis(new DBConnector(DBCon.ConfigData, true));
                     PriceAnalysis.BaseData                      = Data.BaseData;
 
-                    // starting the external data interface
-                    ExternalData                                = new ExternalDataInterface();
+                    //// starting the external data interface
+                    //ExternalData                                = new ExternalDataInterface();
+
+                    // Companion IO
+                    CompanionIO = new IBECompanion.CompanionData(Program.GetDataPath());
+                    CompanionIO.ConditionalLogIn();
 
                     // initializing the object for the actual condition
                     actualCondition                             = new Condition();
@@ -382,24 +386,20 @@ namespace IBE
 
                     // forwards a potentially new system or station information to database
                     Program.LogfileScanner.LocationInfo += LogfileScanner_LocationInfo;
-                    Program.ExternalData.LocationInfo   += ExternalData_LocationInfo;
+                    Program.CompanionIO.LocationInfo   += ExternalData_LocationInfo;
 
                     // register the LogfileScanner in the CommandersLog for the DataSavedEvent-event
                     CommandersLog.registerLogFileScanner(LogfileScanner);
-                    CommandersLog.registerExternalTool(ExternalData);
+                    CommandersLog.registerExternalTool(CompanionIO);
                     
                     PriceAnalysis.registerLogFileScanner(LogfileScanner);
-                    PriceAnalysis.registerExternalTool(ExternalData);
+                    PriceAnalysis.registerExternalTool(CompanionIO);
 
                     // Plausibility-Checker
                     PlausibiltyCheck = new PlausibiltyChecker();
 
                     // EDDN Interface
                     EDDNComm = new IBE.EDDN.EDDNCommunicator();
-
-                    // Companion IO
-                    CompanionIO = new IBECompanion.CompanionData(Program.GetDataPath());
-                    CompanionIO.ConditionalLogIn();
 
                     Program.SplashScreen.InfoAppendLast("<OK>");
 
@@ -477,8 +477,8 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void ExternalData_LocationInfo(object sender, ExternalDataInterface.LocationInfoEventArgs e)
-        {
+        static void ExternalData_LocationInfo(object sender, IBE.IBECompanion.DataEventBase.LocationInfoEventArgs e)
+        {                                                       
             try
             {
                 Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, false);
@@ -890,6 +890,72 @@ namespace IBE
                         SetGridDefaults(true);
                     }
 
+                    if (dbVersion < new Version(0, 3, 0))
+                    {
+                        String sqlString;
+
+                        Program.SplashScreen.InfoAdd("...updating structure of database to v0.3.0...");
+                        Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                        Program.SplashScreen.InfoAdd("...");
+
+                        // add changes to the database
+                        sqlString = "-- MySQL Workbench Synchronization                                           \n" +
+                                    "-- Generated: 2016-05-02 20:41                                               \n" +
+                                    "-- Model: New Model                                                          \n" +
+                                    "-- Version: 1.0                                                              \n" +
+                                    "-- Project: Name of the project                                              \n" +
+                                    "-- Author: Duke                                                              \n" +
+                                    "                                                                             \n" +
+                                    "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                     \n" +
+                                    "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;      \n" +
+                                    "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';    \n" +
+                                    "                                                                             \n" +
+                                    "CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityMapping` (                 \n" +
+                                    "  `Name` VARCHAR(80) NOT NULL,                                               \n" +
+                                    "  `MappedName` VARCHAR(80) NOT NULL,                                         \n" +
+                                    "  PRIMARY KEY (`Name`))                                                      \n" +
+                                    "ENGINE = InnoDB                                                              \n" +
+                                    "DEFAULT CHARACTER SET = utf8;                                                \n" +
+                                    "                                                                             \n" +
+                                    "                                                                             \n" +
+                                    "SET SQL_MODE=@OLD_SQL_MODE;                                                  \n" +
+                                    "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                              \n" +
+                                    "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                        \n";
+
+
+                        var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                        sqlScript.Query = sqlString;
+
+                        sqlScript.Error             += sqlScript_Error;
+                        sqlScript.ScriptCompleted   += sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                        m_MREvent = new ManualResetEvent(false);
+
+                        sqlScript.ExecuteAsync();
+
+                        sqlScript.Error             -= sqlScript_Error;
+                        sqlScript.ScriptCompleted   -= sqlScript_ScriptCompleted;
+                        sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                        if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else if (m_gotScriptErrors)
+                        {
+                            foundError = true;
+                            Program.SplashScreen.InfoAppendLast("finished with errors !");
+                        }
+                        else
+                        {
+                            Program.SplashScreen.InfoAdd("...updating structure of database to v0.3.0...<OK>");
+
+                            InsertCommodityMappings();
+                        }
+                    }
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -922,6 +988,36 @@ namespace IBE
             catch (Exception ex)
             {
                 throw new Exception("Error while doing special things", ex);
+            }
+        }
+
+        /// <summary>
+        /// inserts the initial mapping values for the commodity names
+        /// </summary>
+        private static void InsertCommodityMappings()
+        {
+            try
+            {
+                Dictionary<String,String> mappings = new Dictionary<string,string>() {{"Agricultural Medicines",      "Agri-Medicines"},
+                                                                                      {"Atmospheric Extractors",      "Atmospheric Processors"},
+                                                                                      {"Auto Fabricators",            "Auto-Fabricators"},
+                                                                                      {"Basic Narcotics",             "Narcotics"},
+                                                                                      {"Bio Reducing Lichen",         "Bioreducing Lichen"},
+                                                                                      {"Hazardous Environment Suits", "H.E. Suits"},
+                                                                                      {"Heliostatic Furnaces",        "Microbial Furnaces"},
+                                                                                      {"Marine Supplies",             "Marine Equipment"},
+                                                                                      {"Non Lethal Weapons",          "Non-Lethal Weapons"},
+                                                                                      {"Terrain Enrichment Systems",  "Land Enrichment Systems"}};
+
+                String sqlString = "insert ignore into tbCommodityMapping(Name,MappedName) values ({0},{1})";
+
+                foreach (var mapping in mappings)
+                    DBCon.Execute(String.Format(sqlString, DBConnector.SQLAEscape(mapping.Key), DBConnector.SQLAEscape(mapping.Value)));
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while inserting the mapping defaults", ex);
             }
         }
 
@@ -984,6 +1080,9 @@ namespace IBE
                         DataIO.ReUseLine  = true;
 
                         DataIO.StartMasterImport(GetDataPath("Data"));
+
+                        InsertCommodityMappings();
+                        Data.PrepareBaseTables("tbcommoditymapping");
                             
                         if(!Program.SplashScreen.IsDisposed)
                             Program.SplashScreen.TopMost = false;

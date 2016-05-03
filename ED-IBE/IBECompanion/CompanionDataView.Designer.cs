@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompanioDataView));
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -44,6 +45,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmdClose = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
+            this.cmdToClipBoard = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -196,12 +199,25 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "Status";
             // 
+            // cmdToClipBoard
+            // 
+            this.cmdToClipBoard.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cmdToClipBoard.Location = new System.Drawing.Point(395, 205);
+            this.cmdToClipBoard.Name = "cmdToClipBoard";
+            this.cmdToClipBoard.Size = new System.Drawing.Size(75, 23);
+            this.cmdToClipBoard.TabIndex = 12;
+            this.cmdToClipBoard.Text = "Copy";
+            this.toolTip1.SetToolTip(this.cmdToClipBoard, "Copies the raw data to the clipboard (if connected)");
+            this.cmdToClipBoard.UseVisualStyleBackColor = true;
+            this.cmdToClipBoard.Click += new System.EventHandler(this.cmdToClipBoard_Click);
+            // 
             // CompanioDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cmdClose;
             this.ClientSize = new System.Drawing.Size(492, 272);
+            this.Controls.Add(this.cmdToClipBoard);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.cmdClose);
             this.Controls.Add(this.groupBox2);
@@ -242,5 +258,7 @@
         private System.Windows.Forms.Button cmdClose;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button cmdClear;
+        private System.Windows.Forms.Button cmdToClipBoard;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
