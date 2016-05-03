@@ -13,6 +13,12 @@ todo:
 
 done:
 
+
+
+-------------------------------------------------------------------------------------         
+   * added output for cool-down timer of CompanionIO
+   * some cleanups
+-------------------------------------------------------------------------------------         
    * new content in StarterTipps : 5.1. / 5.2.
    * fixes on getting data from CompanionIO
    * manual and automatic correction of misspelled commodities 

@@ -130,7 +130,8 @@ namespace IBE.Ocr
 
             if (_ocrThread == null || !_ocrThread.IsAlive)
             {
-                Form1.InstanceObject.ActivateOCRTab();
+                throw new NotImplementedException();
+//                Form1.InstanceObject.ActivateOCRTab();
 
                 // some stateful enabling for the buttons
 

@@ -20,6 +20,7 @@ namespace EDCompanionAPI
         private static HttpHelper _Http;
         private static Profile _CurrentProfile;
         private static string _DataPath;
+        private static System.Diagnostics.Stopwatch _sWatch = new System.Diagnostics.Stopwatch();
 
         public string DataPath
         {
@@ -80,6 +81,7 @@ namespace EDCompanionAPI
             profile.Password = Convert.ToBase64String(encryptedData);
             profile.Save();
             _Cache.Remove(Constants.CACHE_PROFILEJSON);
+            _sWatch.Stop();
             _CurrentProfile = profile;
             _Http = new HttpHelper(_CurrentProfile);
         }
@@ -97,6 +99,7 @@ namespace EDCompanionAPI
                 return false;
             }
             _Cache.Remove(Constants.CACHE_PROFILEJSON);
+            _sWatch.Stop();
             _CurrentProfile = profile;
             _Http = new HttpHelper(_CurrentProfile);
             return true;
@@ -109,6 +112,7 @@ namespace EDCompanionAPI
             if(_CurrentProfile.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase))
             { 
                 _Cache.Remove(Constants.CACHE_PROFILEJSON);
+                _sWatch.Stop();
                 _CurrentProfile = null;;
             }
 
@@ -271,6 +275,7 @@ namespace EDCompanionAPI
             //We don't want to allow hammering of the API, so we cache response for 60 seconds.
             var profileResponse = new ProfileResponse();
             profileResponse.LoginStatus = LoginStatus.Ok;
+
             string cachedResponse = _Cache.Get(Constants.CACHE_PROFILEJSON) as string;
             if (!String.IsNullOrEmpty(cachedResponse) && !force)
             {
@@ -306,9 +311,39 @@ namespace EDCompanionAPI
             }
             _Cache.Set(Constants.CACHE_PROFILEJSON, profileResponse.Json, DateTimeOffset.Now.AddSeconds(Constants.CACHE_PROFILE_SECONDS));
 
+            _sWatch.Restart();
+
             return profileResponse;
         }
         #endregion
 
+        /// <summary>
+        /// returns the time until cache is no more valid
+        /// </summary>
+        /// <returns></returns>
+        public TimeSpan RestTime()
+        { 
+            TimeSpan retValue;
+
+            if(_sWatch.IsRunning)
+            {
+                if(_sWatch.ElapsedMilliseconds < (Constants.CACHE_PROFILE_SECONDS * 1000))
+                { 
+                    retValue = new TimeSpan(0, 0, 0, 0, (Int32)((Constants.CACHE_PROFILE_SECONDS * 1000) - _sWatch.ElapsedMilliseconds));
+
+                    if(retValue.TotalMilliseconds <= 0)
+                        retValue = new TimeSpan(0);
+                }
+                else
+                    retValue = new TimeSpan(0);
+
+            }
+            else
+            {
+                retValue = new TimeSpan(0);
+            }
+
+            return retValue;
+        }
     }
 }

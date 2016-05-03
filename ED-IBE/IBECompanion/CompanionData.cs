@@ -302,5 +302,9 @@ namespace IBE.IBECompanion
             m_CompanionIO.DeleteProfile(email);
         }
 
+        internal TimeSpan RestTime()
+        {
+            return m_CompanionIO.RestTime();
+        }
     }
 }

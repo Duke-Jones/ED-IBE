@@ -39,7 +39,10 @@
             this.removeEconomyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dsCommodities = new IBE.Enums_and_Utility_Classes.dsCommodities();
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.gbEvents = new System.Windows.Forms.GroupBox();
+            this.txtRestTime = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.txtEventInfo = new System.Windows.Forms.TextBox();
             this.cmdEventMarketData = new System.Windows.Forms.Button();
             this.cmdEventLanded = new System.Windows.Forms.Button();
@@ -194,22 +197,6 @@
             this.cmbSystemState = new System.Windows.Forms.ComboBox_ro();
             this.cmbSystemAllegiance = new System.Windows.Forms.ComboBox_ro();
             this.cmbSystemGovernment = new System.Windows.Forms.ComboBox_ro();
-            this.tabOCRGroup = new System.Windows.Forms.TabPage();
-            this.tabCtrlOCR = new System.Windows.Forms.TabControl();
-            this.tabExternal = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtExtInfo2 = new System.Windows.Forms.TextBox();
-            this.txtLocalDataCollected = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.cmdConfirm = new System.Windows.Forms.Button();
-            this.cmdGetMarketData = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtRecievedStation = new System.Windows.Forms.TextBox();
-            this.txtRecievedSystem = new System.Windows.Forms.TextBox();
-            this.txtExtInfo = new System.Windows.Forms.TextBox();
-            this.cmdLanded = new System.Windows.Forms.Button();
             this.tabWebserver = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtWebserverPort = new System.Windows.Forms.TextBox();
@@ -242,9 +229,6 @@
             this.groupBox14.SuspendLayout();
             this.paEconomies.SuspendLayout();
             this.gbSystemSystemData.SuspendLayout();
-            this.tabOCRGroup.SuspendLayout();
-            this.tabCtrlOCR.SuspendLayout();
-            this.tabExternal.SuspendLayout();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -304,8 +288,16 @@
             this.namesBindingSource.DataMember = "Names";
             this.namesBindingSource.DataSource = this.dsCommodities;
             // 
+            // tmrRefresh
+            // 
+            this.tmrRefresh.Enabled = true;
+            this.tmrRefresh.Interval = 1000;
+            this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
+            // 
             // gbEvents
             // 
+            this.gbEvents.Controls.Add(this.txtRestTime);
+            this.gbEvents.Controls.Add(this.label6);
             this.gbEvents.Controls.Add(this.txtEventInfo);
             this.gbEvents.Controls.Add(this.cmdEventMarketData);
             this.gbEvents.Controls.Add(this.cmdEventLanded);
@@ -315,6 +307,30 @@
             this.gbEvents.TabIndex = 63;
             this.gbEvents.TabStop = false;
             this.gbEvents.Text = "Events";
+            // 
+            // txtRestTime
+            // 
+            this.txtRestTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRestTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRestTime.Location = new System.Drawing.Point(449, 13);
+            this.txtRestTime.Name = "txtRestTime";
+            this.txtRestTime.ReadOnly = true;
+            this.txtRestTime.Size = new System.Drawing.Size(26, 22);
+            this.txtRestTime.TabIndex = 64;
+            this.txtRestTime.Text = "00";
+            this.txtRestTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip1.SetToolTip(this.txtRestTime, "Until timer is running you\'ll work with cached data from the last call,");
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(408, 17);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 13);
+            this.label6.TabIndex = 64;
+            this.label6.Text = "cached";
+            this.toolTip1.SetToolTip(this.label6, "Until timer is running you\'ll work with cached data from the last call,");
             // 
             // txtEventInfo
             // 
@@ -356,7 +372,7 @@
             this.iOToolStripMenuItem});
             this.msMainMenu.Location = new System.Drawing.Point(0, 0);
             this.msMainMenu.Name = "msMainMenu";
-            this.msMainMenu.Size = new System.Drawing.Size(1154, 24);
+            this.msMainMenu.Size = new System.Drawing.Size(1164, 24);
             this.msMainMenu.TabIndex = 61;
             this.msMainMenu.Text = "menuStrip1";
             // 
@@ -445,8 +461,8 @@
             // iOToolStripMenuItem
             // 
             this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.companionToolStripMenuItem,
-            this.eDDNToolStripMenuItem});
+            this.eDDNToolStripMenuItem,
+            this.companionToolStripMenuItem});
             this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
             this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
             this.iOToolStripMenuItem.Text = "IO";
@@ -454,8 +470,8 @@
             // companionToolStripMenuItem
             // 
             this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
-            this.companionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.companionToolStripMenuItem.Text = "Companion";
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.companionToolStripMenuItem.Text = "ED Companion";
             this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
             // 
             // eDDNToolStripMenuItem
@@ -468,7 +484,7 @@
             // cmdLoadCurrentSystem
             // 
             this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(1000, 69);
+            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(1010, 69);
             this.cmdLoadCurrentSystem.Name = "cmdLoadCurrentSystem";
             this.cmdLoadCurrentSystem.Size = new System.Drawing.Size(148, 21);
             this.cmdLoadCurrentSystem.TabIndex = 60;
@@ -521,7 +537,7 @@
             // 
             this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(796, 52);
+            this.label45.Location = new System.Drawing.Point(806, 52);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(91, 13);
             this.label45.TabIndex = 10;
@@ -530,7 +546,7 @@
             // tbCurrentStationinfoFromLogs
             // 
             this.tbCurrentStationinfoFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(893, 49);
+            this.tbCurrentStationinfoFromLogs.Location = new System.Drawing.Point(903, 49);
             this.tbCurrentStationinfoFromLogs.Name = "tbCurrentStationinfoFromLogs";
             this.tbCurrentStationinfoFromLogs.ReadOnly = true;
             this.tbCurrentStationinfoFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -540,7 +556,7 @@
             // 
             this.label37.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(806, 31);
+            this.label37.Location = new System.Drawing.Point(816, 31);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(81, 13);
             this.label37.TabIndex = 8;
@@ -549,7 +565,7 @@
             // tbCurrentSystemFromLogs
             // 
             this.tbCurrentSystemFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(893, 28);
+            this.tbCurrentSystemFromLogs.Location = new System.Drawing.Point(903, 28);
             this.tbCurrentSystemFromLogs.Name = "tbCurrentSystemFromLogs";
             this.tbCurrentSystemFromLogs.ReadOnly = true;
             this.tbCurrentSystemFromLogs.Size = new System.Drawing.Size(255, 20);
@@ -563,12 +579,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabCtrlMain.Controls.Add(this.tabHelpAndChangeLog);
             this.tabCtrlMain.Controls.Add(this.tabSystemData);
-            this.tabCtrlMain.Controls.Add(this.tabOCRGroup);
             this.tabCtrlMain.Controls.Add(this.tabWebserver);
             this.tabCtrlMain.Location = new System.Drawing.Point(3, 141);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1149, 595);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1159, 595);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -599,7 +614,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1141, 569);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1151, 569);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -694,7 +709,7 @@
             this.lblUpdateDetail.Multiline = true;
             this.lblUpdateDetail.Name = "lblUpdateDetail";
             this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lblUpdateDetail.Size = new System.Drawing.Size(729, 182);
+            this.lblUpdateDetail.Size = new System.Drawing.Size(739, 182);
             this.lblUpdateDetail.TabIndex = 39;
             // 
             // cmdDonate
@@ -704,7 +719,7 @@
             this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(866, 330);
+            this.cmdDonate.Location = new System.Drawing.Point(876, 330);
             this.cmdDonate.Name = "cmdDonate";
             this.cmdDonate.Size = new System.Drawing.Size(161, 43);
             this.cmdDonate.TabIndex = 37;
@@ -717,7 +732,7 @@
             this.lblDonate.BackColor = System.Drawing.Color.Transparent;
             this.lblDonate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDonate.ForeColor = System.Drawing.Color.Green;
-            this.lblDonate.Location = new System.Drawing.Point(767, 235);
+            this.lblDonate.Location = new System.Drawing.Point(777, 235);
             this.lblDonate.Name = "lblDonate";
             this.lblDonate.Size = new System.Drawing.Size(352, 139);
             this.lblDonate.TabIndex = 38;
@@ -738,7 +753,7 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(28, 485);
+            this.panel2.Location = new System.Drawing.Point(33, 485);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1079, 77);
             this.panel2.TabIndex = 33;
@@ -859,7 +874,7 @@
             this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BackgroundSet.AutoSize = true;
             this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackgroundSet.Location = new System.Drawing.Point(1101, 69);
+            this.BackgroundSet.Location = new System.Drawing.Point(1111, 69);
             this.BackgroundSet.Name = "BackgroundSet";
             this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
             this.BackgroundSet.TabIndex = 30;
@@ -871,7 +886,7 @@
             this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ForegroundSet.AutoSize = true;
             this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForegroundSet.Location = new System.Drawing.Point(1101, 31);
+            this.ForegroundSet.Location = new System.Drawing.Point(1111, 31);
             this.ForegroundSet.Name = "ForegroundSet";
             this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
             this.ForegroundSet.TabIndex = 29;
@@ -881,7 +896,7 @@
             // button20
             // 
             this.button20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button20.Location = new System.Drawing.Point(978, 101);
+            this.button20.Location = new System.Drawing.Point(988, 101);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(148, 44);
             this.button20.TabIndex = 28;
@@ -893,7 +908,7 @@
             // 
             this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(994, 71);
+            this.label47.Location = new System.Drawing.Point(1004, 71);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(98, 13);
             this.label47.TabIndex = 27;
@@ -903,7 +918,7 @@
             // 
             this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(994, 32);
+            this.label46.Location = new System.Drawing.Point(1004, 32);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(94, 13);
             this.label46.TabIndex = 26;
@@ -913,7 +928,7 @@
             // 
             this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbBackgroundColour.Location = new System.Drawing.Point(1094, 63);
+            this.pbBackgroundColour.Location = new System.Drawing.Point(1104, 63);
             this.pbBackgroundColour.Name = "pbBackgroundColour";
             this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbBackgroundColour.TabIndex = 25;
@@ -924,7 +939,7 @@
             // 
             this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbForegroundColour.Location = new System.Drawing.Point(1094, 25);
+            this.pbForegroundColour.Location = new System.Drawing.Point(1104, 25);
             this.pbForegroundColour.Name = "pbForegroundColour";
             this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
             this.pbForegroundColour.TabIndex = 24;
@@ -979,7 +994,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1141, 569);
+            this.tabSystemData.Size = new System.Drawing.Size(1151, 569);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -2035,175 +2050,12 @@
             this.cmbSystemGovernment.Size = new System.Drawing.Size(151, 23);
             this.cmbSystemGovernment.TabIndex = 10;
             // 
-            // tabOCRGroup
-            // 
-            this.tabOCRGroup.Controls.Add(this.tabCtrlOCR);
-            this.tabOCRGroup.Location = new System.Drawing.Point(4, 22);
-            this.tabOCRGroup.Name = "tabOCRGroup";
-            this.tabOCRGroup.Size = new System.Drawing.Size(1141, 569);
-            this.tabOCRGroup.TabIndex = 11;
-            this.tabOCRGroup.Text = "Market Data Interface";
-            this.tabOCRGroup.UseVisualStyleBackColor = true;
-            // 
-            // tabCtrlOCR
-            // 
-            this.tabCtrlOCR.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabCtrlOCR.Controls.Add(this.tabExternal);
-            this.tabCtrlOCR.Location = new System.Drawing.Point(0, 0);
-            this.tabCtrlOCR.Name = "tabCtrlOCR";
-            this.tabCtrlOCR.SelectedIndex = 0;
-            this.tabCtrlOCR.Size = new System.Drawing.Size(1076, 536);
-            this.tabCtrlOCR.TabIndex = 0;
-            // 
-            // tabExternal
-            // 
-            this.tabExternal.Controls.Add(this.label5);
-            this.tabExternal.Controls.Add(this.txtExtInfo2);
-            this.tabExternal.Controls.Add(this.txtLocalDataCollected);
-            this.tabExternal.Controls.Add(this.label4);
-            this.tabExternal.Controls.Add(this.cmdConfirm);
-            this.tabExternal.Controls.Add(this.cmdGetMarketData);
-            this.tabExternal.Controls.Add(this.label3);
-            this.tabExternal.Controls.Add(this.label2);
-            this.tabExternal.Controls.Add(this.label1);
-            this.tabExternal.Controls.Add(this.txtRecievedStation);
-            this.tabExternal.Controls.Add(this.txtRecievedSystem);
-            this.tabExternal.Controls.Add(this.txtExtInfo);
-            this.tabExternal.Controls.Add(this.cmdLanded);
-            this.tabExternal.Location = new System.Drawing.Point(4, 22);
-            this.tabExternal.Name = "tabExternal";
-            this.tabExternal.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternal.Size = new System.Drawing.Size(1068, 510);
-            this.tabExternal.TabIndex = 5;
-            this.tabExternal.Text = "External IO";
-            this.tabExternal.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(31, 237);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Info 2";
-            // 
-            // txtExtInfo2
-            // 
-            this.txtExtInfo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtExtInfo2.Location = new System.Drawing.Point(34, 253);
-            this.txtExtInfo2.Multiline = true;
-            this.txtExtInfo2.Name = "txtExtInfo2";
-            this.txtExtInfo2.ReadOnly = true;
-            this.txtExtInfo2.Size = new System.Drawing.Size(400, 46);
-            this.txtExtInfo2.TabIndex = 11;
-            // 
-            // txtLocalDataCollected
-            // 
-            this.txtLocalDataCollected.Location = new System.Drawing.Point(199, 132);
-            this.txtLocalDataCollected.Name = "txtLocalDataCollected";
-            this.txtLocalDataCollected.ReadOnly = true;
-            this.txtLocalDataCollected.Size = new System.Drawing.Size(235, 20);
-            this.txtLocalDataCollected.TabIndex = 10;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(196, 116);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(102, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "local data collected:";
-            // 
-            // cmdConfirm
-            // 
-            this.cmdConfirm.Enabled = false;
-            this.cmdConfirm.Location = new System.Drawing.Point(34, 74);
-            this.cmdConfirm.Name = "cmdConfirm";
-            this.cmdConfirm.Size = new System.Drawing.Size(139, 36);
-            this.cmdConfirm.TabIndex = 8;
-            this.cmdConfirm.Text = "Confirm Location";
-            this.cmdConfirm.UseVisualStyleBackColor = true;
-            // 
-            // cmdGetMarketData
-            // 
-            this.cmdGetMarketData.Enabled = false;
-            this.cmdGetMarketData.Location = new System.Drawing.Point(34, 116);
-            this.cmdGetMarketData.Name = "cmdGetMarketData";
-            this.cmdGetMarketData.Size = new System.Drawing.Size(139, 36);
-            this.cmdGetMarketData.TabIndex = 7;
-            this.cmdGetMarketData.Text = "Get Market Data";
-            this.cmdGetMarketData.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(196, 73);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Recieved station";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(196, 32);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Recieved system";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(31, 166);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(25, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Info";
-            // 
-            // txtRecievedStation
-            // 
-            this.txtRecievedStation.Location = new System.Drawing.Point(199, 89);
-            this.txtRecievedStation.Name = "txtRecievedStation";
-            this.txtRecievedStation.ReadOnly = true;
-            this.txtRecievedStation.Size = new System.Drawing.Size(235, 20);
-            this.txtRecievedStation.TabIndex = 3;
-            // 
-            // txtRecievedSystem
-            // 
-            this.txtRecievedSystem.Location = new System.Drawing.Point(199, 48);
-            this.txtRecievedSystem.Name = "txtRecievedSystem";
-            this.txtRecievedSystem.ReadOnly = true;
-            this.txtRecievedSystem.Size = new System.Drawing.Size(235, 20);
-            this.txtRecievedSystem.TabIndex = 2;
-            // 
-            // txtExtInfo
-            // 
-            this.txtExtInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtExtInfo.Location = new System.Drawing.Point(34, 182);
-            this.txtExtInfo.Multiline = true;
-            this.txtExtInfo.Name = "txtExtInfo";
-            this.txtExtInfo.ReadOnly = true;
-            this.txtExtInfo.Size = new System.Drawing.Size(400, 46);
-            this.txtExtInfo.TabIndex = 1;
-            // 
-            // cmdLanded
-            // 
-            this.cmdLanded.Location = new System.Drawing.Point(34, 32);
-            this.cmdLanded.Name = "cmdLanded";
-            this.cmdLanded.Size = new System.Drawing.Size(139, 36);
-            this.cmdLanded.TabIndex = 0;
-            this.cmdLanded.Text = "Landed";
-            this.cmdLanded.UseVisualStyleBackColor = true;
-            // 
             // tabWebserver
             // 
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1141, 569);
+            this.tabWebserver.Size = new System.Drawing.Size(1151, 569);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -2384,7 +2236,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1154, 737);
+            this.ClientSize = new System.Drawing.Size(1164, 737);
             this.Controls.Add(this.gbEvents);
             this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
@@ -2428,10 +2280,6 @@
             this.paEconomies.PerformLayout();
             this.gbSystemSystemData.ResumeLayout(false);
             this.gbSystemSystemData.PerformLayout();
-            this.tabOCRGroup.ResumeLayout(false);
-            this.tabCtrlOCR.ResumeLayout(false);
-            this.tabExternal.ResumeLayout(false);
-            this.tabExternal.PerformLayout();
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -2483,8 +2331,6 @@
         private System.Windows.Forms.Button bStart;
         private System.Windows.Forms.Button bStop;
         private System.Windows.Forms.Label lblURL;
-        private System.Windows.Forms.TabPage tabOCRGroup;
-        private System.Windows.Forms.TabControl tabCtrlOCR;
         private System.Windows.Forms.TabPage tabSystemData;
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.ComboBox_ro cmbStationStations;
@@ -2612,20 +2458,6 @@
         private System.Windows.Forms.Label lblSubtitle;
         private System.Windows.Forms.Label lblRegulatedNoise;
         private System.Windows.Forms.TabControl tabCtrlMain;
-        private System.Windows.Forms.TabPage tabExternal;
-        private System.Windows.Forms.Button cmdLanded;
-        private System.Windows.Forms.TextBox txtExtInfo;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtRecievedStation;
-        private System.Windows.Forms.TextBox txtRecievedSystem;
-        private System.Windows.Forms.Button cmdConfirm;
-        private System.Windows.Forms.Button cmdGetMarketData;
-        private System.Windows.Forms.TextBox txtLocalDataCollected;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtExtInfo2;
         private System.Windows.Forms.ToolStripMenuItem editLocalizationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createJumpToolStripMenuItem;
@@ -2640,6 +2472,9 @@
         private System.Windows.Forms.GroupBox gbEvents;
         public System.Windows.Forms.TextBox txtEventInfo;
         private System.Windows.Forms.ToolStripMenuItem eDDNToolStripMenuItem;
+        private System.Windows.Forms.Label label6;
+        public System.Windows.Forms.TextBox txtRestTime;
+        private System.Windows.Forms.Timer tmrRefresh;
     }
 }
 

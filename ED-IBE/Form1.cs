@@ -174,22 +174,22 @@ namespace IBE
                 cOcrCaptureAndCorrect.Dock = DockStyle.Fill;
                 cOcrCaptureAndCorrect._parent = this;
 
-                if(Debugger.IsAttached)
-                {
-                    OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
-                    tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
-                    Program.MainLog.Log("  - initialised Ocr ");
-                    Program.SplashScreen.InfoAppendLast("<OK>");
+                //if(Debugger.IsAttached)
+                //{
+                //    OcrCapAndCorrectTabPage.Controls.Add(cOcrCaptureAndCorrect);
+                //    tabCtrlOCR.Controls.Add(OcrCapAndCorrectTabPage);
+                //    Program.MainLog.Log("  - initialised Ocr ");
+                //    Program.SplashScreen.InfoAppendLast("<OK>");
 
-                    Program.SplashScreen.InfoAdd("create ocr calibrator...");
-                    var OcrCalibratorTabPage = new TabPage("OCR Calibration");
-                    OcrCalibratorTabPage.Name = "OCR_Calibration";
-                    var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
-                    OcrCalibratorTabPage.Controls.Add(oct);
-                    tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
-                    Program.MainLog.Log("  - initialised Ocr Calibrator");
-                    Program.SplashScreen.InfoAppendLast("<OK>");
-                }
+                //    Program.SplashScreen.InfoAdd("create ocr calibrator...");
+                //    var OcrCalibratorTabPage = new TabPage("OCR Calibration");
+                //    OcrCalibratorTabPage.Name = "OCR_Calibration";
+                //    var oct = new OcrCalibratorTab { Dock = DockStyle.Fill };
+                //    OcrCalibratorTabPage.Controls.Add(oct);
+                //    tabCtrlOCR.Controls.Add(OcrCalibratorTabPage);
+                //    Program.MainLog.Log("  - initialised Ocr Calibrator");
+                //    Program.SplashScreen.InfoAppendLast("<OK>");
+                //}
 
                 Program.SplashScreen.InfoAdd("apply settings...");
                 ApplySettings();
@@ -638,24 +638,24 @@ namespace IBE
        
       
 
-        public void ActivateOCRTab()
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new MethodInvoker(ActivateOCRTab));
-                return;
-            }
+        //public void ActivateOCRTab()
+        //{
+        //    if (InvokeRequired)
+        //    {
+        //        Invoke(new MethodInvoker(ActivateOCRTab));
+        //        return;
+        //    }
 
-            if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoActivateOCRTab", true.ToString(), false, true) && !Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
-                try
-                {
-                    tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabOCRGroup"];
-                    tabCtrlOCR.SelectedTab  = tabCtrlOCR.TabPages["tabOCR"];
-                }
-                catch (Exception)
-                {
-                }
-        }
+        //    if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoActivateOCRTab", true.ToString(), false, true) && !Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "CheckNextScreenshotForOne", false.ToString(), false, true))
+        //        try
+        //        {
+        //            tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabOCRGroup"];
+        //            tabCtrlOCR.SelectedTab  = tabCtrlOCR.TabPages["tabOCR"];
+        //        }
+        //        catch (Exception)
+        //        {
+        //        }
+        //}
 
      
 
@@ -1421,44 +1421,44 @@ namespace IBE
 
         }
 
-        public void setOCRTabsVisibility()
-        {
-            try
-            {
-                try
-                {
-                    if (this.InvokeRequired)
-                        this.Invoke(new MethodInvoker(setOCRTabsVisibility));
-                    else
-                    {
-                        if (Program.GameSettings != null && tabCtrlOCR.TabPages["OCR_Calibration"] != null)
-                        {
-                            var OCRTabPage = tabCtrlOCR.TabPages["OCR_Calibration"];
-                            OCRTabPage.Enabled = (Program.GameSettings.Display != null);
-                            var TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
+        //public void setOCRTabsVisibility()
+        //{
+        //    try
+        //    {
+        //        try
+        //        {
+        //            if (this.InvokeRequired)
+        //                this.Invoke(new MethodInvoker(setOCRTabsVisibility));
+        //            else
+        //            {
+        //                if (Program.GameSettings != null && tabCtrlOCR.TabPages["OCR_Calibration"] != null)
+        //                {
+        //                    var OCRTabPage = tabCtrlOCR.TabPages["OCR_Calibration"];
+        //                    OCRTabPage.Enabled = (Program.GameSettings.Display != null);
+        //                    var TabControl = (OcrCalibratorTab)(OCRTabPage.Controls[0]);
 
-                            TabControl.lblWarning.Visible = (Program.GameSettings.Display == null); 
-                        }
+        //                    TabControl.lblWarning.Visible = (Program.GameSettings.Display == null); 
+        //                }
 
-                        if (Program.GameSettings != null && tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"] != null)
-                        {
-                            var OCRTabPage = tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"];
-                            OCRTabPage.Enabled = (Program.GameSettings.Display != null);
-                            var TabControl = (tabOCR)(OCRTabPage.Controls[0]);
-                            TabControl.startOcrOnload(Program.DBCon.getIniValue<Boolean>(IBE.IBESettingsView.DB_GROUPNAME, "StartOCROnLoad", false.ToString(), false, true) && Directory.Exists(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder", "")));
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error in setOCRTabsVisibility (inline)", ex);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in setOCRTabsVisibility (outline)", ex);
-            }
-        }
+        //                if (Program.GameSettings != null && tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"] != null)
+        //                {
+        //                    var OCRTabPage = tabCtrlOCR.TabPages["OCR_CaptureAndCorrect"];
+        //                    OCRTabPage.Enabled = (Program.GameSettings.Display != null);
+        //                    var TabControl = (tabOCR)(OCRTabPage.Controls[0]);
+        //                    TabControl.startOcrOnload(Program.DBCon.getIniValue<Boolean>(IBE.IBESettingsView.DB_GROUPNAME, "StartOCROnLoad", false.ToString(), false, true) && Directory.Exists(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "MostRecentOCRFolder", "")));
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw new Exception("Error in setOCRTabsVisibility (inline)", ex);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error in setOCRTabsVisibility (outline)", ex);
+        //    }
+        //}
 
         private void cmdDonate_Click(object sender, EventArgs e)
         {
@@ -3241,13 +3241,7 @@ namespace IBE
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
                 {
-                    setText(txtExtInfo,             "jump recognized...");
-                    setText(txtRecievedSystem,      "");
-                    setText(txtRecievedStation,     "");
-                    setText(txtLocalDataCollected,  "");
-
-                    setButton(cmdConfirm, false);
-                    setButton(cmdGetMarketData, false);
+                    setText(txtEventInfo,             "...jump recognized...");
 
                     Program.actualCondition.Location = e.Location;
                     setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
@@ -3482,6 +3476,20 @@ namespace IBE
             {
                 cErr.processError(ex, "Error in cmdEventMarketData_Click");
             }
+        }
+
+        private void tmrRefresh_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                TimeSpan rest = Program.CompanionIO.RestTime();
+
+                txtRestTime.Text = rest.TotalSeconds.ToString("00");
+            }
+            catch (Exception)
+            {
+            }
+
         }
     }
 }
