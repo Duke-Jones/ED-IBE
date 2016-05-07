@@ -20,7 +20,7 @@ namespace EDCompanionAPI
         private static HttpHelper _Http;
         private static Profile _CurrentProfile;
         private static string _DataPath;
-        private static System.Diagnostics.Stopwatch _sWatch = new System.Diagnostics.Stopwatch();
+        private static PerformanceTimer _sWatch = new PerformanceTimer();
 
         public string DataPath
         {
@@ -81,7 +81,7 @@ namespace EDCompanionAPI
             profile.Password = Convert.ToBase64String(encryptedData);
             profile.Save();
             _Cache.Remove(Constants.CACHE_PROFILEJSON);
-            _sWatch.Stop();
+            _sWatch.stopMeasuring();
             _CurrentProfile = profile;
             _Http = new HttpHelper(_CurrentProfile);
         }
@@ -99,7 +99,7 @@ namespace EDCompanionAPI
                 return false;
             }
             _Cache.Remove(Constants.CACHE_PROFILEJSON);
-            _sWatch.Stop();
+            _sWatch.stopMeasuring();
             _CurrentProfile = profile;
             _Http = new HttpHelper(_CurrentProfile);
             return true;
@@ -112,7 +112,7 @@ namespace EDCompanionAPI
             if(_CurrentProfile.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase))
             { 
                 _Cache.Remove(Constants.CACHE_PROFILEJSON);
-                _sWatch.Stop();
+                _sWatch.stopMeasuring();
                 _CurrentProfile = null;;
             }
 
@@ -267,6 +267,7 @@ namespace EDCompanionAPI
         /// <returns>Profile response object</returns>
         public ProfileResponse GetProfileData(bool force = false)
         {
+            force |= (RestTime().TotalSeconds <= 0);
             return GetProfileDataInternal(force);
         }
 
@@ -325,11 +326,11 @@ namespace EDCompanionAPI
         { 
             TimeSpan retValue;
 
-            if(_sWatch.IsRunning)
+            if(_sWatch.isStarted)
             {
-                if(_sWatch.ElapsedMilliseconds < (Constants.CACHE_PROFILE_SECONDS * 1000))
+                if(_sWatch.currentMeasuring() < (Constants.CACHE_PROFILE_SECONDS * 1000))
                 { 
-                    retValue = new TimeSpan(0, 0, 0, 0, (Int32)((Constants.CACHE_PROFILE_SECONDS * 1000) - _sWatch.ElapsedMilliseconds));
+                    retValue = new TimeSpan(0, 0, 0, 0, (Int32)((Constants.CACHE_PROFILE_SECONDS * 1000) - _sWatch.currentMeasuring()));
 
                     if(retValue.TotalMilliseconds <= 0)
                         retValue = new TimeSpan(0);
@@ -344,6 +345,15 @@ namespace EDCompanionAPI
             }
 
             return retValue;
+        }
+
+        /// <summary>
+        /// sets the cooldowntimer to "finished"
+        /// </summary>
+        /// <returns></returns>
+        public void RestTimeReset()
+        { 
+            _sWatch.setcurrentMeasuring(Constants.CACHE_PROFILE_SECONDS * 1000);
         }
     }
 }

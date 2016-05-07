@@ -19,7 +19,6 @@ using CodeProject.Dialog;
 using IBE.SQL;
 using IBE.MTCommandersLog;
 using IBE.MTPriceAnalysis;
-using IBE.ExtData;
 using IBE.Ocr;
 
 namespace IBE
@@ -3238,13 +3237,13 @@ namespace IBE
         {
             try
             {
-
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
                 {
                     setText(txtEventInfo,             "...jump recognized...");
 
                     Program.actualCondition.Location = e.Location;
                     setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
+
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
@@ -3254,6 +3253,10 @@ namespace IBE
 
                     Program.actualCondition.System   = e.System;
                     setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
+
+                    /// after a system jump you can get data immediately
+                    Program.CompanionIO.RestTimeReset();
+
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Location) > 0)
@@ -3424,6 +3427,8 @@ namespace IBE
                         {
                             Program.CompanionIO.ConfirmLocation(extSystem, extStation);
                             txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
+
+                            //Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
                         }
                         else
                         {
@@ -3490,6 +3495,20 @@ namespace IBE
             {
             }
 
+        }
+
+        private void commodityMappingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var mappingForm = new CommodityMappingsView();
+
+                mappingForm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in commodityMappingsToolStripMenuItem_Click");
+            }
         }
     }
 }

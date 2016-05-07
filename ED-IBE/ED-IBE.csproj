@@ -132,10 +132,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
-    <Compile Include="ExtData\ExternalDataInterface.cs">
-      <SubType>Code</SubType>
+    <Compile Include="CommodityMappingsView.cs">
+      <SubType>Form</SubType>
     </Compile>
+    <Compile Include="CommodityMappingsView.Designer.cs">
+      <DependentUpon>CommodityMappingsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="IBECompanion\CompanionData.cs" />
     <Compile Include="IBECompanion\CompanionDataView.cs">
       <SubType>Form</SubType>
@@ -424,6 +427,9 @@
     <EmbeddedResource Include="Brainerous Pixeltest\EBPixeltest.resx">
       <DependentUpon>EBPixeltest.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommodityMappingsView.resx">
+      <DependentUpon>CommodityMappingsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommoditySelector.resx">
       <DependentUpon>CommoditySelector.cs</DependentUpon>

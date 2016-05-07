@@ -62,13 +62,6 @@
             this.button6 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label25 = new System.Windows.Forms.Label();
-            this.txtExtTool_ParamMarket = new System.Windows.Forms.TextBox();
-            this.txtExtTool_ParamLocation = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtExtTool_Path = new System.Windows.Forms.TextBox();
-            this.cmdSelectExternalToolPath = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.txtSQLConnectionPort = new System.Windows.Forms.TextBoxInt32();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -85,16 +78,7 @@
             this.rbNoLandingPadSizeConsider = new System.Windows.Forms.RadioButton();
             this.rbNoLandingPadSizeIgnore = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
-            this.gbExternalDataInterface = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tcDataInterface = new System.Windows.Forms.TabControl();
-            this.tabOCRSettings = new System.Windows.Forms.TabPage();
-            this.tabExternalToolSettings = new System.Windows.Forms.TabPage();
             this.gbDataInterface = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.rbUseExternalTool = new System.Windows.Forms.RadioButton();
-            this.rbUseOCR = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtGamePath = new System.Windows.Forms.TextBox();
             this.cmdGamePath = new System.Windows.Forms.Button();
@@ -110,12 +94,7 @@
             this.groupBox13.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.gbExternalDataInterface.SuspendLayout();
-            this.tcDataInterface.SuspendLayout();
-            this.tabOCRSettings.SuspendLayout();
-            this.tabExternalToolSettings.SuspendLayout();
             this.gbDataInterface.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -124,7 +103,7 @@
             this.groupBox6.Controls.Add(this.gbTesseract);
             this.groupBox6.Controls.Add(this.groupBox9);
             this.groupBox6.Controls.Add(this.groupBox11);
-            this.groupBox6.Location = new System.Drawing.Point(6, 6);
+            this.groupBox6.Location = new System.Drawing.Point(16, 61);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(600, 428);
             this.groupBox6.TabIndex = 10;
@@ -476,80 +455,6 @@
             this.label25.Text = "Filter Setting";
             this.toolTip1.SetToolTip(this.label25, "Here you can select, if you want to see in all analysis");
             // 
-            // txtExtTool_ParamMarket
-            // 
-            this.txtExtTool_ParamMarket.Location = new System.Drawing.Point(11, 211);
-            this.txtExtTool_ParamMarket.Multiline = true;
-            this.txtExtTool_ParamMarket.Name = "txtExtTool_ParamMarket";
-            this.txtExtTool_ParamMarket.Size = new System.Drawing.Size(416, 20);
-            this.txtExtTool_ParamMarket.TabIndex = 72;
-            this.txtExtTool_ParamMarket.Tag = "ExtTool_ParamMarket;-m !OUTPUTFILE!";
-            this.toolTip1.SetToolTip(this.txtExtTool_ParamMarket, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
-            this.txtExtTool_ParamMarket.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
-            this.txtExtTool_ParamMarket.Leave += new System.EventHandler(this.TextBox_Leave);
-            // 
-            // txtExtTool_ParamLocation
-            // 
-            this.txtExtTool_ParamLocation.Location = new System.Drawing.Point(11, 157);
-            this.txtExtTool_ParamLocation.Name = "txtExtTool_ParamLocation";
-            this.txtExtTool_ParamLocation.Size = new System.Drawing.Size(416, 20);
-            this.txtExtTool_ParamLocation.TabIndex = 70;
-            this.txtExtTool_ParamLocation.Tag = "ExtTool_ParamLocation;-m !OUTPUTFILE!";
-            this.toolTip1.SetToolTip(this.txtExtTool_ParamLocation, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
-            this.txtExtTool_ParamLocation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
-            this.txtExtTool_ParamLocation.Leave += new System.EventHandler(this.TextBox_Leave);
-            // 
-            // label5
-            // 
-            this.label5.Location = new System.Drawing.Point(9, 185);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(571, 29);
-            this.label5.TabIndex = 73;
-            this.label5.Text = "c) Parameters for getting market data. Use placeholder \"!OUTPUTFILE!\" (without qu" +
-    "otes) to specify the location of parameter for the destination file *).";
-            this.toolTip1.SetToolTip(this.label5, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(9, 114);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(562, 52);
-            this.label4.TabIndex = 71;
-            this.label4.Text = resources.GetString("label4.Text");
-            this.toolTip1.SetToolTip(this.label4, "Example (for EDMC): \"-m !OUTPUTFILE!\"");
-            // 
-            // txtExtTool_Path
-            // 
-            this.txtExtTool_Path.Location = new System.Drawing.Point(11, 83);
-            this.txtExtTool_Path.Name = "txtExtTool_Path";
-            this.txtExtTool_Path.Size = new System.Drawing.Size(410, 20);
-            this.txtExtTool_Path.TabIndex = 69;
-            this.txtExtTool_Path.Tag = "ExtTool_Path;EMPTY";
-            this.toolTip1.SetToolTip(this.txtExtTool_Path, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
-            this.txtExtTool_Path.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
-            this.txtExtTool_Path.Leave += new System.EventHandler(this.TextBox_Leave);
-            // 
-            // cmdSelectExternalToolPath
-            // 
-            this.cmdSelectExternalToolPath.Location = new System.Drawing.Point(427, 81);
-            this.cmdSelectExternalToolPath.Name = "cmdSelectExternalToolPath";
-            this.cmdSelectExternalToolPath.Size = new System.Drawing.Size(167, 23);
-            this.cmdSelectExternalToolPath.TabIndex = 68;
-            this.cmdSelectExternalToolPath.Text = "Select";
-            this.toolTip1.SetToolTip(this.cmdSelectExternalToolPath, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
-            this.cmdSelectExternalToolPath.UseVisualStyleBackColor = true;
-            this.cmdSelectExternalToolPath.Click += new System.EventHandler(this.cmdSelectExternalToolPath_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 66);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(352, 13);
-            this.label3.TabIndex = 67;
-            this.label3.Text = "a) Path to the ED Market Connector (command line version \"EDMC.exe\")";
-            this.toolTip1.SetToolTip(this.label3, "Example (for EDMC): \"C:\\Program Files (x86)\\EDMarketConnector\\EDMC.exe\"");
-            // 
             // cmbVisitedFilter
             // 
             this.cmbVisitedFilter.Cursor = System.Windows.Forms.Cursors.UpArrow;
@@ -756,123 +661,15 @@
             this.label1.TabIndex = 65;
             this.label1.Text = resources.GetString("label1.Text");
             // 
-            // gbExternalDataInterface
-            // 
-            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamMarket);
-            this.gbExternalDataInterface.Controls.Add(this.label6);
-            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_ParamLocation);
-            this.gbExternalDataInterface.Controls.Add(this.label5);
-            this.gbExternalDataInterface.Controls.Add(this.label4);
-            this.gbExternalDataInterface.Controls.Add(this.txtExtTool_Path);
-            this.gbExternalDataInterface.Controls.Add(this.cmdSelectExternalToolPath);
-            this.gbExternalDataInterface.Controls.Add(this.label3);
-            this.gbExternalDataInterface.Controls.Add(this.label2);
-            this.gbExternalDataInterface.Location = new System.Drawing.Point(6, 6);
-            this.gbExternalDataInterface.Name = "gbExternalDataInterface";
-            this.gbExternalDataInterface.Size = new System.Drawing.Size(599, 393);
-            this.gbExternalDataInterface.TabIndex = 66;
-            this.gbExternalDataInterface.TabStop = false;
-            this.gbExternalDataInterface.Text = "ED Market Connector Interface";
-            // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(9, 242);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(571, 29);
-            this.label6.TabIndex = 74;
-            this.label6.Text = "*) the path and the filename will be automatically selected. You can find it in y" +
-    "our \"LocalApplicationDataPath\".";
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(8, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(578, 40);
-            this.label2.TabIndex = 66;
-            this.label2.Text = "If you don\'t wan\'t to use the internal OCR-interface you also can use the \"ED Mar" +
-    "ket Connector\" \r\nfor getting the current station and market data.";
-            // 
-            // tcDataInterface
-            // 
-            this.tcDataInterface.Controls.Add(this.tabOCRSettings);
-            this.tcDataInterface.Controls.Add(this.tabExternalToolSettings);
-            this.tcDataInterface.Location = new System.Drawing.Point(6, 90);
-            this.tcDataInterface.Name = "tcDataInterface";
-            this.tcDataInterface.SelectedIndex = 0;
-            this.tcDataInterface.Size = new System.Drawing.Size(620, 426);
-            this.tcDataInterface.TabIndex = 67;
-            // 
-            // tabOCRSettings
-            // 
-            this.tabOCRSettings.Controls.Add(this.groupBox6);
-            this.tabOCRSettings.Location = new System.Drawing.Point(4, 22);
-            this.tabOCRSettings.Name = "tabOCRSettings";
-            this.tabOCRSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabOCRSettings.Size = new System.Drawing.Size(612, 400);
-            this.tabOCRSettings.TabIndex = 0;
-            this.tabOCRSettings.Text = "OCR";
-            this.tabOCRSettings.UseVisualStyleBackColor = true;
-            // 
-            // tabExternalToolSettings
-            // 
-            this.tabExternalToolSettings.Controls.Add(this.gbExternalDataInterface);
-            this.tabExternalToolSettings.Location = new System.Drawing.Point(4, 22);
-            this.tabExternalToolSettings.Name = "tabExternalToolSettings";
-            this.tabExternalToolSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabExternalToolSettings.Size = new System.Drawing.Size(612, 400);
-            this.tabExternalToolSettings.TabIndex = 1;
-            this.tabExternalToolSettings.Text = "ED Market Connector";
-            this.tabExternalToolSettings.UseVisualStyleBackColor = true;
-            // 
             // gbDataInterface
             // 
-            this.gbDataInterface.Controls.Add(this.groupBox2);
-            this.gbDataInterface.Controls.Add(this.tcDataInterface);
+            this.gbDataInterface.Controls.Add(this.groupBox6);
             this.gbDataInterface.Location = new System.Drawing.Point(12, 12);
             this.gbDataInterface.Name = "gbDataInterface";
             this.gbDataInterface.Size = new System.Drawing.Size(632, 524);
             this.gbDataInterface.TabIndex = 68;
             this.gbDataInterface.TabStop = false;
             this.gbDataInterface.Text = "Data Interface";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.rbUseExternalTool);
-            this.groupBox2.Controls.Add(this.rbUseOCR);
-            this.groupBox2.Location = new System.Drawing.Point(6, 19);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(618, 65);
-            this.groupBox2.TabIndex = 70;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Tag = "SelectedInterface;OCR";
-            this.groupBox2.Text = "Select Interface";
-            // 
-            // rbUseExternalTool
-            // 
-            this.rbUseExternalTool.AutoSize = true;
-            this.rbUseExternalTool.Location = new System.Drawing.Point(24, 38);
-            this.rbUseExternalTool.Name = "rbUseExternalTool";
-            this.rbUseExternalTool.Size = new System.Drawing.Size(107, 17);
-            this.rbUseExternalTool.TabIndex = 69;
-            this.rbUseExternalTool.TabStop = true;
-            this.rbUseExternalTool.Tag = "External";
-            this.rbUseExternalTool.Text = "use External Tool";
-            this.rbUseExternalTool.UseVisualStyleBackColor = true;
-            this.rbUseExternalTool.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
-            // 
-            // rbUseOCR
-            // 
-            this.rbUseOCR.AutoSize = true;
-            this.rbUseOCR.Location = new System.Drawing.Point(24, 15);
-            this.rbUseOCR.Name = "rbUseOCR";
-            this.rbUseOCR.Size = new System.Drawing.Size(103, 17);
-            this.rbUseOCR.TabIndex = 68;
-            this.rbUseOCR.TabStop = true;
-            this.rbUseOCR.Tag = "OCR";
-            this.rbUseOCR.Text = "use Built-In OCR";
-            this.rbUseOCR.UseVisualStyleBackColor = true;
-            this.rbUseOCR.CheckedChanged += new System.EventHandler(this.rbInterface_CheckedChanged);
             // 
             // groupBox3
             // 
@@ -908,7 +705,7 @@
             this.cmdGamePath.UseVisualStyleBackColor = true;
             this.cmdGamePath.Click += new System.EventHandler(this.cmdGamePath_Click);
             // 
-            // IBESettings
+            // IBESettingsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1164, 689);
@@ -920,7 +717,7 @@
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "IBESettings";
+            this.Name = "IBESettingsView";
             this.Load += new System.EventHandler(this.IBESettings_Load);
             this.groupBox6.ResumeLayout(false);
             this.gbTesseract.ResumeLayout(false);
@@ -945,14 +742,7 @@
             this.groupBox7.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.gbExternalDataInterface.ResumeLayout(false);
-            this.gbExternalDataInterface.PerformLayout();
-            this.tcDataInterface.ResumeLayout(false);
-            this.tabOCRSettings.ResumeLayout(false);
-            this.tabExternalToolSettings.ResumeLayout(false);
             this.gbDataInterface.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -996,23 +786,7 @@
         private System.Windows.Forms.GroupBox gbTesseract;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox gbExternalDataInterface;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtExtTool_ParamMarket;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtExtTool_ParamLocation;
-        private System.Windows.Forms.TextBox txtExtTool_Path;
-        private System.Windows.Forms.Button cmdSelectExternalToolPath;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TabControl tcDataInterface;
-        private System.Windows.Forms.TabPage tabOCRSettings;
-        private System.Windows.Forms.TabPage tabExternalToolSettings;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox gbDataInterface;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RadioButton rbUseExternalTool;
-        private System.Windows.Forms.RadioButton rbUseOCR;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox txtGamePath;
         private System.Windows.Forms.Button cmdGamePath;

@@ -492,37 +492,6 @@ namespace IBE
             }
         }
 
-        private void cmdSelectExternalToolPath_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                OpenFileDialog ToolPath = new OpenFileDialog();
-
-                ToolPath.Filter = "Program-Files|*.exe|All Files|*.*";
-                ToolPath.FileName = System.IO.Path.GetFileName(txtExtTool_Path.Text);
-                try
-                {
-                    ToolPath.InitialDirectory = System.IO.Path.GetFullPath(txtExtTool_Path.Text);
-                }
-                catch (Exception)
-                {
-                    ToolPath.InitialDirectory = "C:";
-                }
-                
-                ToolPath.Title = "select external tool...";
-
-                if (ToolPath.ShowDialog(this) == DialogResult.OK)
-                {
-                    txtExtTool_Path.Text = ToolPath.FileName;
-                    m_GUIInterface.saveSetting(txtExtTool_Path);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while getting the path to the external data tool", ex);
-            }
-        }
-
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -553,12 +522,6 @@ namespace IBE
             try
             {
                 m_GUIInterface.saveSetting(sender);
-
-                if(rbUseOCR.Checked)
-                    tcDataInterface.SelectedTab = tcDataInterface.TabPages["tabOCRSettings"];
-                else
-                    tcDataInterface.SelectedTab = tcDataInterface.TabPages["tabExternalToolSettings"];
-
             }
             catch (Exception ex)
             {

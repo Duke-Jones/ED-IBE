@@ -15,6 +15,8 @@ using System.Linq;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using IBE.Enums_and_Utility_Classes;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace IBE.EDDN
 {
@@ -125,8 +127,9 @@ bool disposed = false;
  #endregion
 
         private Thread                              _Spool2EDDN;   
-        private Queue                               _SendItems_API = new Queue(100,10);
-        private Queue                               _SendItems_OCR = new Queue(100,10);
+        private Queue                               _Send_MarketData_API = new Queue(100,10);
+        private Queue                               _Send_MarketData_OCR = new Queue(100,10);
+        private Queue                               _Send_Outfitting_OCR = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer;
         private StreamWriter                        m_EDDNSpooler = null;
@@ -574,15 +577,15 @@ bool disposed = false;
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
         /// <param name="commodityData"></param>
-        public void sendToEDDN(CsvRow CommodityData, enInterface usedInterface)
+        public void SendMarketData(CsvRow CommodityData, enInterface usedInterface)
         {
             if(m_SenderIsActivated)
             {
                 // register next data row
                 if(usedInterface == enInterface.API)
-                    _SendItems_API.Enqueue(CommodityData);
+                    _Send_MarketData_API.Enqueue(CommodityData);
                 else
-                    _SendItems_OCR.Enqueue(CommodityData);
+                    _Send_MarketData_OCR.Enqueue(CommodityData);
 
                 // reset the timer
                 _SendDelayTimer.Start();
@@ -594,7 +597,7 @@ bool disposed = false;
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
         /// <param name="commodityData"></param>
-        public void sendToEDDN(List<CsvRow> csvRowList, enInterface usedInterface)
+        public void SendMarketData(List<CsvRow> csvRowList, enInterface usedInterface)
         {
             if(m_SenderIsActivated)
             {
@@ -604,9 +607,9 @@ bool disposed = false;
                 // register rows
                 foreach (CsvRow csvRowListItem in csvRowList)
                     if(usedInterface == enInterface.API)
-                        _SendItems_API.Enqueue(csvRowListItem);
+                        _Send_MarketData_API.Enqueue(csvRowListItem);
                     else
-                        _SendItems_OCR.Enqueue(csvRowListItem);
+                        _Send_MarketData_OCR.Enqueue(csvRowListItem);
 
                 // reset the timer
                 _SendDelayTimer.Start();
@@ -618,7 +621,7 @@ bool disposed = false;
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
         /// <param name="commodityData"></param>
-        public void sendToEDDN(String[] csv_Strings, enInterface usedInterface)
+        public void SendMarketData(String[] csv_Strings, enInterface usedInterface)
         {
             if(m_SenderIsActivated)
             {
@@ -630,9 +633,9 @@ bool disposed = false;
                     // register rows
                     foreach (String csvRowString in csv_Strings)
                         if(usedInterface == enInterface.API)
-                            _SendItems_API.Enqueue(new CsvRow(csvString));
+                            _Send_MarketData_API.Enqueue(new CsvRow(csvString));
                         else
-                            _SendItems_OCR.Enqueue(new CsvRow(csvString));
+                            _Send_MarketData_OCR.Enqueue(new CsvRow(csvString));
 
                     // reset the timer
                     _SendDelayTimer.Start();
@@ -640,11 +643,59 @@ bool disposed = false;
             }
         }
 
+        
+
         /// <summary>
-        /// send routine for registered data:
+        /// to send the outfitting data of this station
+        /// </summary>
+        /// <param name="commodityData">json object with parsed full companion data</param>
+        public void SendOutfittingData(JObject dataObject)
+        {
+            if(m_SenderIsActivated)
+            {
+                String systeName   = dataObject.SelectTokens("lastSystem.name").ToString();
+                String stationName = dataObject.SelectTokens("lastStarport.name").ToString();
+
+                StringBuilder outfittingStringEDDN = new StringBuilder();
+
+                outfittingStringEDDN.Append(String.Format("\"message\": {"));
+
+                outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectTokens("lastSystem.name")));
+                outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectTokens("lastStation.name")));
+
+                outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+
+                outfittingStringEDDN.Append(String.Format("\"modules\": ["));
+
+
+                foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
+                {
+                    outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfittingItem.SelectToken("category")));
+
+
+
+                    outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                    outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                    outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category")));
+
+
+                } 
+                outfittingStringEDDN.Append(String.Format("]}"));
+            }
+        }
+
+
+                //"id": 128049390,
+                //"category": "weapon",
+                //"name": "Hpt_PulseLaser_Turret_Large",
+                //"cost": 400400,
+                //"sku": null
+
+        /// <summary>
+        /// internal send routine for registered data:
         /// It's called by the delay-timer "_SendDelayTimer"
         /// </summary>
-        private void sendToEDDN()
+        private void SendMarketData_i()
         {
             try
             {
@@ -666,7 +717,7 @@ bool disposed = false;
                     else
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
 
-                    if(_SendItems_API.Count > 0)
+                    if(_Send_MarketData_API.Count > 0)
                     {
                         // fill the header
                         Data.Header = new EDDNCommodity_v2.Header_Class()
@@ -677,7 +728,7 @@ bool disposed = false;
                             UploaderID = UserID
                         };
 
-                        activeQueue = _SendItems_API;
+                        activeQueue = _Send_MarketData_API;
                     }
                     else
                     { 
@@ -690,7 +741,7 @@ bool disposed = false;
                             UploaderID = UserID
                         };
 
-                        activeQueue = _SendItems_OCR;
+                        activeQueue = _Send_MarketData_OCR;
                     }
 
                     // prepare the message object
@@ -724,11 +775,16 @@ bool disposed = false;
                             SupplyLevel = (Row.SupplyLevel == "") ? null : Row.SupplyLevel,
                         };
 
+                        if(!String.IsNullOrEmpty(Data.Message.Commodities[i].DemandLevel))
+                            Data.Message.Commodities[i].DemandLevel         = char.ToUpper(Data.Message.Commodities[i].DemandLevel[0]) + Data.Message.Commodities[i].DemandLevel.Substring(1);
+
+                        if(!String.IsNullOrEmpty(Data.Message.Commodities[i].SupplyLevel))
+                            Data.Message.Commodities[i].SupplyLevel         = char.ToUpper(Data.Message.Commodities[i].SupplyLevel[0]) + Data.Message.Commodities[i].SupplyLevel.Substring(1);
+
                         if (i == 0)
                         {
                             Data.Message.SystemName = Row.SystemName;
                             Data.Message.StationName = Row.StationName;
-
                         }
 
                     }
@@ -769,7 +825,7 @@ bool disposed = false;
                     }
 
                     // retry, if the ocr-queue has entries and the last queue was then api-queue
-	            } while ((activeQueue != _SendItems_OCR) && (_SendItems_OCR.Count > 0));
+	            } while ((activeQueue != _Send_MarketData_OCR) && (_Send_MarketData_OCR.Count > 0));
             }
             catch (Exception ex)
             {
@@ -796,7 +852,7 @@ bool disposed = false;
             {
 
                 // it's time to start the EDDN transmission
-                _Spool2EDDN = new Thread(new ThreadStart(sendToEDDN));
+                _Spool2EDDN = new Thread(new ThreadStart(SendMarketData_i));
                 _Spool2EDDN.Name = "Spool2EDDN";
                 _Spool2EDDN.IsBackground = true;
 

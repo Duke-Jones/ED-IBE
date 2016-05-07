@@ -87,15 +87,23 @@ _________________________________________________________________________
 
 3.1. enter your own data
 After IBE runs and also the right system in the "Current Location" displays
-firstly install the "ED Market Connector" (EDMC), if not already done.
-The commandline verion of this program (EDMC.exe) must be entered in the settings.
-( "Settings" -> "use External Tool" -> "ED Market Connector" -> "a) Path ...")
-Now you should be able to read the market data of the current station 
-(go to the tab "Market Data Interface") 
-by pressing "Landed", "Confirm Location" and "Get Market Data".
+firstly activate the Companion interface. For this go to the login mask 
+("IO"->"ED Companion"), enter your credentials (for your ED account) and press
+"Connect". You'll recieve a mail with your verification code. Enter this code 
+in the appropriate field and press "Verify". After a few seconds you should
+see in the lower status bar a message about the operating readiness of the interface.
 
-* "Landed" + "Confirm Location" also generates a "Landed" event in the Commander's Log
-* "Get Market Data"             also generates a "Market Data Collected" event in the Commander's Log
+Now you can deal with the interface by pressing "Landed" to get your current location
+or "Market Data" to import the current prices.
+
+* "Landed"       also generates a "Landed" event in the Commander's Log
+* "Market Data"  also generates a "Market Data Collected" event in the Commander's Log
+
+The "cached" timer shows how long you will get the data from a internal cache of the interface.
+The next request to the ED server will not send until the timer is 0 again. For example 
+you can press "Landed" and you will get the whole bunch of data from the server.
+After this (while the timer is counting) you press "Market Data".
+Conclusion: Even if the counter is running you have cached data and need not to wait.
 
 3.2. Starters Kit
 If you do not rigidly insists on want to collect only your own data, I recommend
@@ -133,7 +141,6 @@ for selling it on "Station 1",you have to set the buy filter for "Station 2" to
 at least one these both commodities.
 
 ___________________________________________
-_____________________________
 4. Export and import of data ("Data" -> "Import&Export")
 
 "EDDB imports"

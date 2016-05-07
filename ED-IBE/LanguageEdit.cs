@@ -982,6 +982,18 @@ namespace IBE
 
         }
 
+        private void cmdMappings_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var mappingForm = new CommodityMappingsView();
 
+                mappingForm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdMappings_Click");
+            }
+        }
     }
 }

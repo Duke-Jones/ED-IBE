@@ -2721,12 +2721,12 @@ namespace IBE.SQL
                 if(dataSource == enDataSource.fromIBE)
                 { 
                     if(Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false))
-                        Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
+                        Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
                 }
                 else if(dataSource == enDataSource.fromIBE_OCR)
                 { 
                     if(Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData", true.ToString(), false))
-                        Program.EDDNComm.sendToEDDN(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
+                        Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
                 }
 
                 // now import the prices

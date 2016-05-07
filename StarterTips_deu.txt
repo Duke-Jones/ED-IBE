@@ -79,15 +79,26 @@ _________________________________________________________________________
 3. Erste Schritte und Ergebnisse
 
 3.1. eigene Daten erfassen
-Nachdem IBE läuft und auch das richtige System im Feld "Current Location" anzeigt
-am besten erst mal den "ED Market Connector" (EDMC) installieren, falls noch nicht getan.
-Die Kommandezeilenversion der Exe (EDMC.exe) muss in den Settings eingetragen werden.
-("Settings" -> "use External Tool" -> "ED Market Connector" -> "a) Path ...")
-Jetzt sollte man auf dem Tab "Market Data Interface" durch betätigen "Landed", "Confirm Location" 
-und "Get Market Data" die Preise der aktuellen Station einlesen können.
+Nachdem IBE läuft und auch das richtige System im Feld "Current System" anzeigt
+am besten erst mal das Companion Interface in Betrieb nehmen. Dazu die Anmeldemaske
+öffnen (Menü "IO"->"ED Companion") und die Mailadresse und das Passwort des eigenen
+ED-Accounts eingeben. Über "Connect" wird der Verifizierungscode angefordert, der 
+dann einen Augenblick später per Email eintreffen sollte. 
+Diesen in das betreffende Feld eingeben und mit "Verify absenden.
+Einen Augenblick später sollte die untere Statuszeile die Bereitschaft der 
+Schnittstelle melden.
 
-* "Landed" + "Confirm Location"  erzeugt gleichzeitig ein "Landed"-Event im Commander's Log
-* "Get Market Data"              erzeugt gleichzeitig ein "Market Data Collected"-Event im Commander's Log
+Jetzt sollte man auf mit den Tasten "Landed" und "Market Data" die aktuellen 
+Daten der Station erfassen können.
+
+* "Landed"            erzeugt gleichzeitig ein "Landed"-Event im Commander's Log
+* "Market Data"       erzeugt gleichzeitig ein "Market Data Collected"-Event im Commander's Log
+
+Der "cached"-Timer zeigt an, wie lange weitere Datenanfragen noch aus einem Cache 
+bedient werden. Erst wenn der Timer wieder auf 0 steht werden die internen Daten bei der 
+nächsten Anfrage aktualisiert. So wird zum Beispiel nach einem Klick auf "Landed"
+der kurz darauf folgende Klick auf "Market Data" mit den selben Daten bedient, die bereits 
+beim Klick auf "Landed" von den ED-Servern abgefragt wurden.
 
 3.2. Starters Kit
 Wenn man nicht starr darauf beharrt, nur eigene Preise sammeln zu wollen, empfehle ich

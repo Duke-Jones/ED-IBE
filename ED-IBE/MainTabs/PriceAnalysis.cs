@@ -12,8 +12,6 @@ using System.Diagnostics;
 using IBE.SQL;
 using IBE.SQL.Datasets;
 using System.Collections.Generic;
-using IBE.ExtData;
-
 
 namespace IBE.MTPriceAnalysis
 {

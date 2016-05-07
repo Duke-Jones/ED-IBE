@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.txtRestTime = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -41,8 +43,6 @@
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.gbEvents = new System.Windows.Forms.GroupBox();
-            this.txtRestTime = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.txtEventInfo = new System.Windows.Forms.TextBox();
             this.cmdEventMarketData = new System.Windows.Forms.Button();
             this.cmdEventLanded = new System.Windows.Forms.Button();
@@ -59,8 +59,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eDDNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
@@ -214,6 +214,7 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
+            this.commodityMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -245,6 +246,30 @@
             this.toolTip1.AutoPopDelay = 20000;
             this.toolTip1.InitialDelay = 500;
             this.toolTip1.ReshowDelay = 100;
+            // 
+            // txtRestTime
+            // 
+            this.txtRestTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRestTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRestTime.Location = new System.Drawing.Point(449, 13);
+            this.txtRestTime.Name = "txtRestTime";
+            this.txtRestTime.ReadOnly = true;
+            this.txtRestTime.Size = new System.Drawing.Size(26, 22);
+            this.txtRestTime.TabIndex = 64;
+            this.txtRestTime.Text = "00";
+            this.txtRestTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip1.SetToolTip(this.txtRestTime, "Until timer is running you\'ll work with cached data from the last call,");
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(408, 17);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 13);
+            this.label6.TabIndex = 64;
+            this.label6.Text = "cached";
+            this.toolTip1.SetToolTip(this.label6, "Until timer is running you\'ll work with cached data from the last call,");
             // 
             // contextMenuStrip1
             // 
@@ -307,30 +332,6 @@
             this.gbEvents.TabIndex = 63;
             this.gbEvents.TabStop = false;
             this.gbEvents.Text = "Events";
-            // 
-            // txtRestTime
-            // 
-            this.txtRestTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRestTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRestTime.Location = new System.Drawing.Point(449, 13);
-            this.txtRestTime.Name = "txtRestTime";
-            this.txtRestTime.ReadOnly = true;
-            this.txtRestTime.Size = new System.Drawing.Size(26, 22);
-            this.txtRestTime.TabIndex = 64;
-            this.txtRestTime.Text = "00";
-            this.txtRestTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip1.SetToolTip(this.txtRestTime, "Until timer is running you\'ll work with cached data from the last call,");
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(408, 17);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 13);
-            this.label6.TabIndex = 64;
-            this.label6.Text = "cached";
-            this.toolTip1.SetToolTip(this.label6, "Until timer is running you\'ll work with cached data from the last call,");
             // 
             // txtEventInfo
             // 
@@ -395,6 +396,7 @@
             this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.importToolStripMenuItem,
             this.editLocalizationsToolStripMenuItem,
+            this.commodityMappingsToolStripMenuItem,
             this.toolStripMenuItem2,
             this.directDBAccessToolStripMenuItem,
             this.testToolStripMenuItem});
@@ -405,26 +407,26 @@
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.importToolStripMenuItem.Text = "&Import && Export";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // editLocalizationsToolStripMenuItem
             // 
             this.editLocalizationsToolStripMenuItem.Name = "editLocalizationsToolStripMenuItem";
-            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
             this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(191, 6);
             // 
             // directDBAccessToolStripMenuItem
             // 
             this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
-            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
             this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
             // 
@@ -433,7 +435,7 @@
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createJumpToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.testToolStripMenuItem.Text = "Test";
             // 
             // createJumpToolStripMenuItem
@@ -467,19 +469,19 @@
             this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
             this.iOToolStripMenuItem.Text = "IO";
             // 
+            // eDDNToolStripMenuItem
+            // 
+            this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
+            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.eDDNToolStripMenuItem.Text = "EDDN";
+            this.eDDNToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
+            // 
             // companionToolStripMenuItem
             // 
             this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
             this.companionToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.companionToolStripMenuItem.Text = "ED Companion";
             this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
-            // 
-            // eDDNToolStripMenuItem
-            // 
-            this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
-            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.eDDNToolStripMenuItem.Text = "EDDN";
-            this.eDDNToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // cmdLoadCurrentSystem
             // 
@@ -2231,6 +2233,13 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
+            // commodityMappingsToolStripMenuItem
+            // 
+            this.commodityMappingsToolStripMenuItem.Name = "commodityMappingsToolStripMenuItem";
+            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.commodityMappingsToolStripMenuItem.Text = "Commodity Mappings";
+            this.commodityMappingsToolStripMenuItem.Click += new System.EventHandler(this.commodityMappingsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2475,6 +2484,7 @@
         private System.Windows.Forms.Label label6;
         public System.Windows.Forms.TextBox txtRestTime;
         private System.Windows.Forms.Timer tmrRefresh;
+        private System.Windows.Forms.ToolStripMenuItem commodityMappingsToolStripMenuItem;
     }
 }
 

@@ -233,6 +233,22 @@ namespace IBE.IBECompanion
             }
         }
 
+        private void txtEmail_Enter(object sender, EventArgs e)
+        {
+            this.AcceptButton = cmdConnect;
+            this.UpdateDefaultButton();
+        }
+
+        private void txtVerficationCode_TextChanged(object sender, EventArgs e)
+        {
+            if(cmdVerify.Enabled)
+            { 
+                this.AcceptButton = cmdVerify;
+                this.UpdateDefaultButton();
+            }
+
+        }
+
 
     }
 }

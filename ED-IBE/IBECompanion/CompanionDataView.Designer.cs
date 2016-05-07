@@ -58,6 +58,7 @@
             this.txtEmail.Size = new System.Drawing.Size(188, 20);
             this.txtEmail.TabIndex = 0;
             this.txtEmail.Tag = "EmailAddress;EMPTY";
+            this.txtEmail.Enter += new System.EventHandler(this.txtEmail_Enter);
             // 
             // label1
             // 
@@ -84,6 +85,7 @@
             this.txtPassword.Size = new System.Drawing.Size(188, 20);
             this.txtPassword.TabIndex = 1;
             this.txtPassword.UseSystemPasswordChar = true;
+            this.txtPassword.Enter += new System.EventHandler(this.txtEmail_Enter);
             // 
             // label3
             // 
@@ -101,6 +103,7 @@
             this.txtVerficationCode.Name = "txtVerficationCode";
             this.txtVerficationCode.Size = new System.Drawing.Size(78, 26);
             this.txtVerficationCode.TabIndex = 0;
+            this.txtVerficationCode.TextChanged += new System.EventHandler(this.txtVerficationCode_TextChanged);
             // 
             // txtStatus
             // 

@@ -72,6 +72,7 @@
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\ProfileResponse.cs" />
     <Compile Include="Models\VerificationResponse.cs" />
+    <Compile Include="PerformanceTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

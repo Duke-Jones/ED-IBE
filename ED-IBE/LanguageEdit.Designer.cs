@@ -30,8 +30,8 @@ namespace IBE
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LanguageEdit));
             this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.column_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,6 +69,7 @@ namespace IBE
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.cmdMappings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataOwn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -112,9 +113,9 @@ namespace IBE
             // column_id
             // 
             this.column_id.DataPropertyName = "id1";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle7.NullValue = null;
-            this.column_id.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle3.NullValue = null;
+            this.column_id.DefaultCellStyle = dataGridViewCellStyle3;
             this.column_id.HeaderText = "ID";
             this.column_id.Name = "column_id";
             this.column_id.ReadOnly = true;
@@ -161,9 +162,9 @@ namespace IBE
             // column_id2
             // 
             this.column_id2.DataPropertyName = "id1";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle8.NullValue = null;
-            this.column_id2.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle4.NullValue = null;
+            this.column_id2.DefaultCellStyle = dataGridViewCellStyle4;
             this.column_id2.HeaderText = "ID";
             this.column_id2.Name = "column_id2";
             this.column_id2.ReadOnly = true;
@@ -489,6 +490,7 @@ namespace IBE
             // groupBox5
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.cmdMappings);
             this.groupBox5.Controls.Add(this.cmdExit);
             this.groupBox5.Controls.Add(this.cmdSave);
             this.groupBox5.Location = new System.Drawing.Point(803, 15);
@@ -507,6 +509,18 @@ namespace IBE
             this.label5.TabIndex = 15;
             this.label5.Text = resources.GetString("label5.Text");
             this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // cmdMappings
+            // 
+            this.cmdMappings.Location = new System.Drawing.Point(11, 135);
+            this.cmdMappings.Name = "cmdMappings";
+            this.cmdMappings.Size = new System.Drawing.Size(156, 34);
+            this.cmdMappings.TabIndex = 11;
+            this.cmdMappings.Text = "Show Mappings";
+            this.toolTip1.SetToolTip(this.cmdMappings, "Shows the current mappings for misspelled commodity names (for auto-correction on" +
+        " import of market data)");
+            this.cmdMappings.UseVisualStyleBackColor = true;
+            this.cmdMappings.Click += new System.EventHandler(this.cmdMappings_Click);
             // 
             // LanguageEdit
             // 
@@ -587,5 +601,6 @@ namespace IBE
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button cmdCorrectSpelling;
+        private System.Windows.Forms.Button cmdMappings;
     }
 }

@@ -13,8 +13,10 @@ todo:
 
 done:
 
-
-
+   * commodity mappings are editable	
+   * fixed error on sending marketdata to eddn
+   * updated StarterTipps: "3.1"
+   * removed last references to EDMC
 -------------------------------------------------------------------------------------         
    * added output for cool-down timer of CompanionIO
    * some cleanups

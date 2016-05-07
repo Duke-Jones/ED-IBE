@@ -302,9 +302,23 @@ namespace IBE.IBECompanion
             m_CompanionIO.DeleteProfile(email);
         }
 
+        /// <summary>
+        /// returns the resttime before a new request will send to the FD servers
+        /// </summary>
+        /// <returns></returns>
         internal TimeSpan RestTime()
         {
             return m_CompanionIO.RestTime();
         }
+
+        /// <summary>
+        /// sets the cooldowntimer to "finished"
+        /// </summary>
+        /// <returns></returns>
+        public void RestTimeReset()
+        { 
+            m_CompanionIO.RestTimeReset();
+        }        
+
     }
 }
