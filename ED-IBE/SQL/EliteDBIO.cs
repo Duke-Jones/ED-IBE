@@ -2627,7 +2627,7 @@ namespace IBE.SQL
                             Datasets.dsEliteDB.tbcommoditymappingRow mappedName = (Datasets.dsEliteDB.tbcommoditymappingRow)BaseData.tbcommoditymapping.Rows.Find(currentName);
                             if (mappedName != null)
                             {
-                                CSV_Strings[i].Replace(mappedName.Name, mappedName.MappedName);
+                                CSV_Strings[i] = CSV_Strings[i].Replace(mappedName.Name, mappedName.MappedName);
                                 currentName = mappedName.MappedName;
                             }
 

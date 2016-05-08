@@ -12,7 +12,9 @@ todo:
 
 
 done:
-
+   * added new tables and inserts for sending EDDN outfitting message
+   * fixed error when mapping commoditynames
+-------------------------------------------------------------------------------------         
    * commodity mappings are editable	
    * fixed error on sending marketdata to eddn
    * updated StarterTipps: "3.1"

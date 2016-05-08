@@ -1,4 +1,6 @@
-﻿namespace IBE
+﻿using IBE.Enums_and_Utility_Classes;
+
+namespace IBE
 {
     partial class CommodityMappingsView
     {
@@ -30,7 +32,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CommodityMappingsView));
-            this.dgvMappings = new System.Windows.Forms.DataGridView();
+            this.dgvMappings = new IBE.Enums_and_Utility_Classes.DataGridViewExt();
             this.cmdCancel = new System.Windows.Forms.Button();
             this.cmdOK = new System.Windows.Forms.Button();
             this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
@@ -133,7 +135,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dgvMappings;
+        private DataGridViewExt dgvMappings;
         private System.Windows.Forms.Button cmdCancel;
         private System.Windows.Forms.Button cmdOK;
         private SQL.Datasets.dsEliteDB dsEliteDB;

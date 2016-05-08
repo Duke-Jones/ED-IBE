@@ -651,36 +651,79 @@ bool disposed = false;
         /// <param name="commodityData">json object with parsed full companion data</param>
         public void SendOutfittingData(JObject dataObject)
         {
-            if(m_SenderIsActivated)
+            try
             {
-                String systeName   = dataObject.SelectTokens("lastSystem.name").ToString();
-                String stationName = dataObject.SelectTokens("lastStarport.name").ToString();
-
-                StringBuilder outfittingStringEDDN = new StringBuilder();
-
-                outfittingStringEDDN.Append(String.Format("\"message\": {"));
-
-                outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectTokens("lastSystem.name")));
-                outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectTokens("lastStation.name")));
-
-                outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
-
-                outfittingStringEDDN.Append(String.Format("\"modules\": ["));
-
-
-                foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
+                if(m_SenderIsActivated)
                 {
-                    outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                    String systeName   = dataObject.SelectToken("lastSystem.name").ToString();
+                    String stationName = dataObject.SelectToken("lastStarport.name").ToString();
+
+                    StringBuilder outfittingStringEDDN = new StringBuilder();
+
+                    outfittingStringEDDN.Append(String.Format("\"message\": {{"));
+
+                    outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
+                    outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
+
+                    outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+
+                    outfittingStringEDDN.Append(String.Format("\"modules\": ["));
+
+
+                    foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
+                    {
+                        var nameParts = outfittingItem.SelectToken("name").ToString().Split(new char[] {'_'}).ToList();
+
+                        var category = outfittingItem.SelectToken("category").ToString();
+
+
+                        outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+
+                        switch (outfittingItem.SelectToken("category").ToString())
+                        {
+                            case "hardpoint":
+                                outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                                outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                                break;
+
+                            case "utility":
+
+                                break;
+
+                            case "standard":
+                                outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                                break;
+
+                            case "internal":
+
+                                break;
 
 
 
-                    outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                    outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                    outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                            default:
+                                break;
+                        }
 
 
-                } 
-                outfittingStringEDDN.Append(String.Format("]}"));
+
+
+                        outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("name")));
+                        outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category")));
+
+                        outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
+
+
+                    } 
+                    outfittingStringEDDN.Append(String.Format("]}"));
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while extracting outfitting data for eddn", ex);
             }
         }
 

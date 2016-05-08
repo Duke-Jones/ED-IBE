@@ -5,10 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE
 {
-    public partial class CommodityMappingsView : IBE.Enums_and_Utility_Classes.RNBaseForm
+    public partial class CommodityMappingsView : RNBaseForm
     {
 
         BindingSource m_BindingSource        = new BindingSource();
