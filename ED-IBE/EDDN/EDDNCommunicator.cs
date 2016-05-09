@@ -682,6 +682,7 @@ bool disposed = false;
                         outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
                         outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
 
+
                         switch (outfittingItem.SelectToken("category").ToString())
                         {
                             case "hardpoint":
@@ -706,15 +707,6 @@ bool disposed = false;
                             default:
                                 break;
                         }
-
-
-
-
-                        outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("name")));
-                        outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category")));
-
-                        outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
-
 
                     } 
                     outfittingStringEDDN.Append(String.Format("]}"));

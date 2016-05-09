@@ -12,6 +12,9 @@ todo:
 
 
 done:
+
+   * a few code clean-ups, extracted update-scripts to class "Updater"
+-------------------------------------------------------------------------------------         
    * added new tables and inserts for sending EDDN outfitting message
    * fixed error when mapping commoditynames
 -------------------------------------------------------------------------------------         

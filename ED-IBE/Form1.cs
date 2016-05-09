@@ -1221,9 +1221,8 @@ namespace IBE
                 st.Start();
 
                 Program.SplashScreen.InfoAdd("checking for updates");
-                Updater updater = new Updater();
 
-                if (updater.CheckVersion(out newVersion, out newInfo))
+                if (Updater.CheckVersion(out newVersion, out newInfo))
                 {
                     lblUpdateInfo.Text = "newer version of ED-IBE found!";
                     lblUpdateInfo.ForeColor = Color.Black;
@@ -1293,7 +1292,7 @@ namespace IBE
                 Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
                 st.Start();
                 
-                Program.DoSpecial(this);
+                Updater.DoSpecial(this);
 
                 if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
                 {
