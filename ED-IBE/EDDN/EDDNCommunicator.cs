@@ -126,12 +126,14 @@ bool disposed = false;
 
  #endregion
 
-        private Thread                              _Spool2EDDN;   
+        private Thread                              _Spool2EDDN_Commodity;   
+        private Thread                              _Spool2EDDN_Outfitting;   
         private Queue                               _Send_MarketData_API = new Queue(100,10);
         private Queue                               _Send_MarketData_OCR = new Queue(100,10);
         private Queue                               _Send_Outfitting_OCR = new Queue(100,10);
         private SingleThreadLogger                  _logger;
-        private System.Timers.Timer                 _SendDelayTimer;
+        private System.Timers.Timer                 _SendDelayTimer_Commodity;
+        private System.Timers.Timer                 _SendDelayTimer_Outfitting;
         private StreamWriter                        m_EDDNSpooler = null;
         private Dictionary<String, EDDNStatistics>  m_StatisticDataSW = new Dictionary<String, EDDNStatistics>();
         private Dictionary<String, EDDNStatistics>  m_StatisticDataRL = new Dictionary<String, EDDNStatistics>();
@@ -151,9 +153,13 @@ bool disposed = false;
 
             m_Reciever = new Dictionary<String, EDDNReciever>();
 
-            _SendDelayTimer             = new System.Timers.Timer(2000);
-            _SendDelayTimer.AutoReset   = false;
-            _SendDelayTimer.Elapsed     += new System.Timers.ElapsedEventHandler(this.SendDelayTimer_Elapsed);
+            _SendDelayTimer_Commodity             = new System.Timers.Timer(2000);
+            _SendDelayTimer_Commodity.AutoReset   = false;
+            _SendDelayTimer_Commodity.Elapsed     += new System.Timers.ElapsedEventHandler(this.SendDelayTimerCommodity_Elapsed);
+
+            _SendDelayTimer_Outfitting            = new System.Timers.Timer(2000);
+            _SendDelayTimer_Outfitting.AutoReset  = false;
+            _SendDelayTimer_Outfitting.Elapsed    += new System.Timers.ElapsedEventHandler(this.SendDelayTimerOutfitting_Elapsed);
 
             _logger                     = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
 
@@ -588,7 +594,7 @@ bool disposed = false;
                     _Send_MarketData_OCR.Enqueue(CommodityData);
 
                 // reset the timer
-                _SendDelayTimer.Start();
+                _SendDelayTimer_Commodity.Start();
             }
         }
 
@@ -602,7 +608,7 @@ bool disposed = false;
             if(m_SenderIsActivated)
             {
                 // reset the timer
-                _SendDelayTimer.Start();
+                _SendDelayTimer_Commodity.Start();
 
                 // register rows
                 foreach (CsvRow csvRowListItem in csvRowList)
@@ -612,7 +618,7 @@ bool disposed = false;
                         _Send_MarketData_OCR.Enqueue(csvRowListItem);
 
                 // reset the timer
-                _SendDelayTimer.Start();
+                _SendDelayTimer_Commodity.Start();
             }
         }
 
@@ -628,7 +634,7 @@ bool disposed = false;
                 foreach (String csvString in csv_Strings)
                 {
                     // reset the timer
-                    _SendDelayTimer.Start();
+                    _SendDelayTimer_Commodity.Start();
 
                     // register rows
                     foreach (String csvRowString in csv_Strings)
@@ -638,18 +644,15 @@ bool disposed = false;
                             _Send_MarketData_OCR.Enqueue(new CsvRow(csvString));
 
                     // reset the timer
-                    _SendDelayTimer.Start();
+                    _SendDelayTimer_Commodity.Start();
                 }
             }
         }
 
-        
-
-
         /// <summary>
-        /// to send the outfitting data of this station
+        /// send the outfitting data of this station
         /// </summary>
-        /// <param name="commodityData">json object with parsed full companion data</param>
+        /// <param name="commodityData">json object with companion data</param>
         public void SendOutfittingData(JObject dataObject)
         {
             try
@@ -674,65 +677,78 @@ bool disposed = false;
                     if(File.Exists(@"C:\temp\outfitting_ibe.csv"))
                         File.Delete(@"C:\temp\outfitting_ibe.csv");
 
-                    
-                    var writer = new StreamWriter(File.OpenWrite(@"C:\temp\outfitting_ibe.csv"));
+                    Boolean writeToFile = false;
+                    StreamWriter writer = null;
+                    Int32 objectCount = 0;
 
+                    if(writeToFile)
+                        writer = new StreamWriter(File.OpenWrite(@"C:\temp\outfitting_ibe.csv"));
+
+
+                    //foreach (JToken outfittingItem in dataObject.SelectTokens("ship.modules.*"))
+                    //{
+                    //    OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem.SelectToken("module"), false);
 
                     foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
                     {
-
                         OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
 
                         if(outfitting != null)
                         { 
-                            writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
-                                systeName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
-                                outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
-                                DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                            if(objectCount > 0)
+                                outfittingStringEDDN.Append(", {");
+                            else
+                                outfittingStringEDDN.Append("{");
+
+                            if(writeToFile)
+                            {
+                                writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                                    systeName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
+                                    outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
+                                    DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                            }
+
+                            outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfitting.Category));
+                            outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfitting.Name));
+                            outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfitting.Class));
+                            outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfitting.Rating));
+
+                            switch (outfitting.Category)
+                            {
+                                case EDDN.OutfittingObject.Cat_Hardpoint:
+
+                                    outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfitting.Mount));
+                                    if(outfitting.Guidance != null)
+                                        outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfitting.Guidance));
+                                    break;
+
+                                case EDDN.OutfittingObject.Cat_Standard:
+
+                                    if(outfitting.Ship != null)
+                                        outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfitting.Ship));
+                                    break;
+                            }
+
+                            outfittingStringEDDN.Remove(outfittingStringEDDN.Length-1, 1);
+                            outfittingStringEDDN.Replace(",", "}", outfittingStringEDDN.Length-1, 1);
+
+                            objectCount++;
                         }
-
-                        //var nameParts = outfittingItem.SelectToken("name").ToString().Split(new char[] {'_'}).ToList();
-
-                        //var category = outfittingItem.SelectToken("category").ToString();
-
-
-                        //outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-                        //outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-                        //outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-                        //outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-
-
-                        //switch (outfittingItem.SelectToken("category").ToString())
-                        //{
-                        //    case "hardpoint":
-                        //        outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                        //        outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                        //        break;
-
-                        //    case "utility":
-
-                        //        break;
-
-                        //    case "standard":
-                        //        outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                        //        break;
-
-                        //    case "internal":
-
-                        //        break;
-
-
-
-                        //    default:
-                        //        break;
-                        //}
-
                     } 
 
-                    writer.Close();
-                    writer.Dispose();
+                    outfittingStringEDDN.Append("]}");
 
-                    //outfittingStringEDDN.Append(String.Format("]}"));
+                    if(objectCount > 0)
+                    { 
+                        _Send_Outfitting_OCR.Enqueue(outfittingStringEDDN);
+                        _SendDelayTimer_Outfitting.Start();
+                    }
+
+                    if(writeToFile)
+                    {
+                        writer.Close();
+                        writer.Dispose();
+                    }
 
                 }
             }
@@ -743,15 +759,9 @@ bool disposed = false;
         }
 
 
-                //"id": 128049390,
-                //"category": "weapon",
-                //"name": "Hpt_PulseLaser_Turret_Large",
-                //"cost": 400400,
-                //"sku": null
-
         /// <summary>
         /// internal send routine for registered data:
-        /// It's called by the delay-timer "_SendDelayTimer"
+        /// It's called by the delay-timer "_SendDelayTimer_Commodity"
         /// </summary>
         private void SendMarketData_i()
         {
@@ -857,7 +867,7 @@ bool disposed = false;
                         }
                         catch (WebException ex)
                         {
-                            _logger.Log("Error uploading Json (v2)", true);
+                            _logger.Log("Error uploading json (commodity)", true);
                             _logger.Log(ex.ToString(), true);
                             _logger.Log(ex.Message, true);
                             _logger.Log(ex.StackTrace, true);
@@ -887,6 +897,94 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
+                _logger.Log("Error uploading json (commodity)", true);
+                _logger.Log(ex.ToString(), true);
+                _logger.Log(ex.Message, true);
+                _logger.Log(ex.StackTrace, true);
+                if (ex.InnerException != null)
+                    _logger.Log(ex.InnerException.ToString(), true);
+
+                cErr.processError(ex, "Error in EDDN-Sending-Thread (commodity)");
+            }
+
+        }
+
+        /// <summary>
+        /// internal send routine for registered data:
+        /// It's called by the delay-timer "_SendDelayTimer_Commodity"
+        /// </summary>
+        private void SendOutfittingData_i()
+        {
+            try
+            {
+                MessageHeader header;
+                String schema;
+                StringBuilder outfittingMessage = new StringBuilder();
+
+                // fill the header
+                header = new MessageHeader()
+                {
+                    SoftwareName        = "ED-IBE (API)",
+                    SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
+                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    UploaderID          = UserIdentification()
+                };
+
+                // fill the schema : test or real ?
+                if(false && (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test"))
+                    schema = "http://schemas.elite-markets.net/eddn/outfitting/1/test";
+                else
+                    schema = "http://schemas.elite-markets.net/eddn/outfitting/1";
+
+                // create full message
+                outfittingMessage.Append(String.Format("{{" +
+                                                       " \"header\" : {0}," +
+                                                       " \"$schemaRef\": \"{1}\","+
+                                                       " {2}" +
+                                                       "}}", 
+                                                       JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
+                                                       schema,
+                                                       _Send_Outfitting_OCR.Dequeue().ToString()));
+
+
+                using (var client = new WebClient())
+                {
+                    try
+                    {
+                        Debug.Print(outfittingMessage.ToString());
+
+                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
+                    }
+                    catch (WebException ex)
+                    {
+                        _logger.Log("Error uploading json (outfitting)", true);
+                        _logger.Log(ex.ToString(), true);
+                        _logger.Log(ex.Message, true);
+                        _logger.Log(ex.StackTrace, true);
+                        if (ex.InnerException != null)
+                            _logger.Log(ex.InnerException.ToString(), true);
+
+                        using (WebResponse response = ex.Response)
+                        {
+                            using (Stream data = response.GetResponseStream())
+                            {
+                                if (data != null)
+                                {
+                                    StreamReader sr = new StreamReader(data);
+                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (outfitting)");
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        client.Dispose();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
                 _logger.Log("Error uploading Json (v2)", true);
                 _logger.Log(ex.ToString(), true);
                 _logger.Log(ex.Message, true);
@@ -900,26 +998,50 @@ bool disposed = false;
         }
 
         /// <summary>
-        /// timer routine for sending all registered data to EDDN
+        /// timer routine for sending all registered commoditydata to EDDN
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private void SendDelayTimer_Elapsed(object source, System.Timers.ElapsedEventArgs e)
+        private void SendDelayTimerCommodity_Elapsed(object source, System.Timers.ElapsedEventArgs e)
         {
             try
             {
 
                 // it's time to start the EDDN transmission
-                _Spool2EDDN = new Thread(new ThreadStart(SendMarketData_i));
-                _Spool2EDDN.Name = "Spool2EDDN";
-                _Spool2EDDN.IsBackground = true;
+                _Spool2EDDN_Commodity = new Thread(new ThreadStart(SendMarketData_i));
+                _Spool2EDDN_Commodity.Name = "Spool2EDDN Comodity";
+                _Spool2EDDN_Commodity.IsBackground = true;
 
-                _Spool2EDDN.Start();
+                _Spool2EDDN_Commodity.Start();
 
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while sending EDDN data");
+                cErr.processError(ex, "Error while sending EDDN data (commodity)");
+            }
+        }
+
+        /// <summary>
+        /// timer routine for sending all registered data to EDDN
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void SendDelayTimerOutfitting_Elapsed(object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+
+                // it's time to start the EDDN transmission
+                _Spool2EDDN_Outfitting = new Thread(new ThreadStart(SendOutfittingData_i));
+                _Spool2EDDN_Outfitting.Name = "Spool2EDDN Outfitting";
+                _Spool2EDDN_Outfitting.IsBackground = true;
+
+                _Spool2EDDN_Outfitting.Start();
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while sending EDDN data (outfitting)");
             }
         }
 

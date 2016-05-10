@@ -14,6 +14,9 @@ todo:
 
 done:
 
+   
+   * sending of outfitting data is working
+-------------------------------------------------------------------------------------         
    * converting of companion-data to eddn-data is working
    * added more mapping tables for Companion/EDDN IO
 -------------------------------------------------------------------------------------         
