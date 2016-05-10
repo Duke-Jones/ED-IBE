@@ -32,46 +32,34 @@ namespace IBE
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CommodityMappingsView));
-            this.dgvMappings = new IBE.Enums_and_Utility_Classes.DataGridViewExt();
-            this.cmdCancel = new System.Windows.Forms.Button();
-            this.cmdOK = new System.Windows.Forms.Button();
             this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
-            this.tbcommoditymappingBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.tbcommoditymappingTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tbcommoditymappingTableAdapter();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mappedNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMappings)).BeginInit();
+            this.tbdnmapcommodityBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tbdnmap_commodityTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter();
+            this.cmdOK = new System.Windows.Forms.Button();
+            this.cmdCancel = new System.Windows.Forms.Button();
+            this.dgvMappings = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.companionNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.companionAdditionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gameNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gameAdditionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dsEliteDB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbcommoditymappingBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbdnmapcommodityBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMappings)).BeginInit();
             this.SuspendLayout();
             // 
-            // dgvMappings
+            // dsEliteDB
             // 
-            this.dgvMappings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvMappings.AutoGenerateColumns = false;
-            this.dgvMappings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMappings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameDataGridViewTextBoxColumn,
-            this.mappedNameDataGridViewTextBoxColumn});
-            this.dgvMappings.DataSource = this.tbcommoditymappingBindingSource;
-            this.dgvMappings.Location = new System.Drawing.Point(12, 12);
-            this.dgvMappings.Name = "dgvMappings";
-            this.dgvMappings.Size = new System.Drawing.Size(607, 310);
-            this.dgvMappings.TabIndex = 0;
+            this.dsEliteDB.DataSetName = "dsEliteDB";
+            this.dsEliteDB.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // cmdCancel
+            // tbdnmapcommodityBindingSource
             // 
-            this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(625, 51);
-            this.cmdCancel.Name = "cmdCancel";
-            this.cmdCancel.Size = new System.Drawing.Size(129, 33);
-            this.cmdCancel.TabIndex = 8;
-            this.cmdCancel.Text = "Cancel";
-            this.cmdCancel.UseVisualStyleBackColor = true;
-            this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
+            this.tbdnmapcommodityBindingSource.DataMember = "tbdnmap_commodity";
+            this.tbdnmapcommodityBindingSource.DataSource = this.dsEliteDB;
+            // 
+            // tbdnmap_commodityTableAdapter
+            // 
+            this.tbdnmap_commodityTableAdapter.ClearBeforeFill = true;
             // 
             // cmdOK
             // 
@@ -85,33 +73,65 @@ namespace IBE
             this.cmdOK.UseVisualStyleBackColor = true;
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
             // 
-            // dsEliteDB
+            // cmdCancel
             // 
-            this.dsEliteDB.DataSetName = "dsEliteDB";
-            this.dsEliteDB.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cmdCancel.Location = new System.Drawing.Point(625, 51);
+            this.cmdCancel.Name = "cmdCancel";
+            this.cmdCancel.Size = new System.Drawing.Size(129, 33);
+            this.cmdCancel.TabIndex = 8;
+            this.cmdCancel.Text = "Cancel";
+            this.cmdCancel.UseVisualStyleBackColor = true;
+            this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
             // 
-            // tbcommoditymappingBindingSource
+            // dgvMappings
             // 
-            this.tbcommoditymappingBindingSource.DataMember = "tbcommoditymapping";
-            this.tbcommoditymappingBindingSource.DataSource = this.dsEliteDB;
+            this.dgvMappings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvMappings.AutoGenerateColumns = false;
+            this.dgvMappings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvMappings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.companionNameDataGridViewTextBoxColumn,
+            this.companionAdditionDataGridViewTextBoxColumn,
+            this.gameNameDataGridViewTextBoxColumn,
+            this.gameAdditionDataGridViewTextBoxColumn});
+            this.dgvMappings.DataSource = this.tbdnmapcommodityBindingSource;
+            this.dgvMappings.DoubleBuffer = false;
+            this.dgvMappings.Location = new System.Drawing.Point(12, 12);
+            this.dgvMappings.Name = "dgvMappings";
+            this.dgvMappings.Size = new System.Drawing.Size(607, 310);
+            this.dgvMappings.TabIndex = 0;
+            this.dgvMappings.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dgvMappings_DefaultValuesNeeded);
             // 
-            // tbcommoditymappingTableAdapter
+            // companionNameDataGridViewTextBoxColumn
             // 
-            this.tbcommoditymappingTableAdapter.ClearBeforeFill = true;
+            this.companionNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.companionNameDataGridViewTextBoxColumn.DataPropertyName = "CompanionName";
+            this.companionNameDataGridViewTextBoxColumn.HeaderText = "Companion-Name (or misspelling)";
+            this.companionNameDataGridViewTextBoxColumn.Name = "companionNameDataGridViewTextBoxColumn";
             // 
-            // nameDataGridViewTextBoxColumn
+            // companionAdditionDataGridViewTextBoxColumn
             // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name (known misspellings)";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.companionAdditionDataGridViewTextBoxColumn.DataPropertyName = "CompanionAddition";
+            this.companionAdditionDataGridViewTextBoxColumn.HeaderText = "CompanionAddition";
+            this.companionAdditionDataGridViewTextBoxColumn.Name = "companionAdditionDataGridViewTextBoxColumn";
+            this.companionAdditionDataGridViewTextBoxColumn.Visible = false;
             // 
-            // mappedNameDataGridViewTextBoxColumn
+            // gameNameDataGridViewTextBoxColumn
             // 
-            this.mappedNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.mappedNameDataGridViewTextBoxColumn.DataPropertyName = "MappedName";
-            this.mappedNameDataGridViewTextBoxColumn.HeaderText = "Mapped Name (well-known commodity)";
-            this.mappedNameDataGridViewTextBoxColumn.Name = "mappedNameDataGridViewTextBoxColumn";
+            this.gameNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.gameNameDataGridViewTextBoxColumn.DataPropertyName = "GameName";
+            this.gameNameDataGridViewTextBoxColumn.HeaderText = "Game-Name";
+            this.gameNameDataGridViewTextBoxColumn.Name = "gameNameDataGridViewTextBoxColumn";
+            // 
+            // gameAdditionDataGridViewTextBoxColumn
+            // 
+            this.gameAdditionDataGridViewTextBoxColumn.DataPropertyName = "GameAddition";
+            this.gameAdditionDataGridViewTextBoxColumn.HeaderText = "GameAddition";
+            this.gameAdditionDataGridViewTextBoxColumn.Name = "gameAdditionDataGridViewTextBoxColumn";
+            this.gameAdditionDataGridViewTextBoxColumn.Visible = false;
             // 
             // CommodityMappingsView
             // 
@@ -126,9 +146,9 @@ namespace IBE
             this.Name = "CommodityMappingsView";
             this.Text = "Commodity Mappings";
             this.Load += new System.EventHandler(this.CommodityMappingsView_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMappings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dsEliteDB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbcommoditymappingBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbdnmapcommodityBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMappings)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -140,8 +160,14 @@ namespace IBE
         private System.Windows.Forms.Button cmdOK;
         private SQL.Datasets.dsEliteDB dsEliteDB;
         private System.Windows.Forms.BindingSource tbcommoditymappingBindingSource;
-        private SQL.Datasets.dsEliteDBTableAdapters.tbcommoditymappingTableAdapter tbcommoditymappingTableAdapter;
+        private SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter tbcommoditymappingTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn mappedNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.BindingSource tbdnmapcommodityBindingSource;
+        private SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter tbdnmap_commodityTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn companionNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn companionAdditionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn gameNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn gameAdditionDataGridViewTextBoxColumn;
     }
 }

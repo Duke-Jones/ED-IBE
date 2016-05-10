@@ -6,6 +6,8 @@ using EDCompanionAPI;
 using EDCompanionAPI.Models;
 using System.Windows.Forms;
 using IBE.Enums_and_Utility_Classes;
+using System.Text;
+using System.Globalization;
 
 namespace IBE.IBECompanion
 {

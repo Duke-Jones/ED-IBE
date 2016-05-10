@@ -13,7 +13,7 @@ namespace IBE
     {
 
         BindingSource m_BindingSource        = new BindingSource();
-        SQL.Datasets.dsEliteDB.tbcommoditymappingDataTable m_Table;
+        SQL.Datasets.dsEliteDB.tbdnmap_commodityDataTable m_Table;
 
         public CommodityMappingsView()
         {
@@ -26,12 +26,12 @@ namespace IBE
             {
                 
                 dgvMappings.AutoGenerateColumns = false;
-                m_Table = (SQL.Datasets.dsEliteDB.tbcommoditymappingDataTable)Program.Data.BaseData.tbcommoditymapping.Copy();
+                m_Table = (SQL.Datasets.dsEliteDB.tbdnmap_commodityDataTable)Program.Data.BaseData.tbdnmap_commodity.Copy();
 
                 m_BindingSource.DataSource = m_Table;
                 dgvMappings.DataSource = m_BindingSource;
 
-                m_BindingSource.Sort = "Name asc";
+                m_BindingSource.Sort = "CompanionName asc";
 
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace IBE
 
                     if (mbResult == System.Windows.Forms.DialogResult.Yes)
                     {
-                        Program.Data.BaseData.tbcommoditymapping.Merge(m_Table);
+                        Program.Data.BaseData.tbdnmap_commodity.Merge(m_Table);
                         Program.Data.PrepareBaseTables(m_Table.TableName, true);
                     }
                     else if (mbResult == System.Windows.Forms.DialogResult.Cancel)
@@ -80,6 +80,13 @@ namespace IBE
             {
                 cErr.processError(ex, "Error in cmdCancel_Click");
             }
+        }
+
+        private void dgvMappings_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["companionAdditionDataGridViewTextBoxColumn"].Value    = "";
+            e.Row.Cells["gameNameDataGridViewTextBoxColumn"].Value             = "";
+            e.Row.Cells["gameAdditionDataGridViewTextBoxColumn"].Value         = "";
         }
     }
 }

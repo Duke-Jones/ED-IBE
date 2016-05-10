@@ -3427,7 +3427,7 @@ namespace IBE
                             Program.CompanionIO.ConfirmLocation(extSystem, extStation);
                             txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
 
-                            //Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+                            Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
                         }
                         else
                         {
@@ -3509,5 +3509,7 @@ namespace IBE
                 cErr.processError(ex, "Error in commodityMappingsToolStripMenuItem_Click");
             }
         }
+
+
     }
 }

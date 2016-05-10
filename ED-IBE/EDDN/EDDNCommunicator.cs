@@ -645,6 +645,7 @@ bool disposed = false;
 
         
 
+
         /// <summary>
         /// to send the outfitting data of this station
         /// </summary>
@@ -655,6 +656,7 @@ bool disposed = false;
             {
                 if(m_SenderIsActivated)
                 {
+                    IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
                     String systeName   = dataObject.SelectToken("lastSystem.name").ToString();
                     String stationName = dataObject.SelectToken("lastStarport.name").ToString();
 
@@ -669,47 +671,68 @@ bool disposed = false;
 
                     outfittingStringEDDN.Append(String.Format("\"modules\": ["));
 
+                    if(File.Exists(@"C:\temp\outfitting_ibe.csv"))
+                        File.Delete(@"C:\temp\outfitting_ibe.csv");
+
+                    
+                    var writer = new StreamWriter(File.OpenWrite(@"C:\temp\outfitting_ibe.csv"));
+
 
                     foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
                     {
-                        var nameParts = outfittingItem.SelectToken("name").ToString().Split(new char[] {'_'}).ToList();
 
-                        var category = outfittingItem.SelectToken("category").ToString();
+                        OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
 
-
-                        outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-                        outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-                        outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-                        outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
-
-
-                        switch (outfittingItem.SelectToken("category").ToString())
-                        {
-                            case "hardpoint":
-                                outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                                outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                                break;
-
-                            case "utility":
-
-                                break;
-
-                            case "standard":
-                                outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfittingItem.SelectToken("category")));
-                                break;
-
-                            case "internal":
-
-                                break;
-
-
-
-                            default:
-                                break;
+                        if(outfitting != null)
+                        { 
+                            writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                                systeName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
+                                outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
+                                DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                         }
 
+                        //var nameParts = outfittingItem.SelectToken("name").ToString().Split(new char[] {'_'}).ToList();
+
+                        //var category = outfittingItem.SelectToken("category").ToString();
+
+
+                        //outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+                        //outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+                        //outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+                        //outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfittingItem.SelectToken("category").ToString()));
+
+
+                        //switch (outfittingItem.SelectToken("category").ToString())
+                        //{
+                        //    case "hardpoint":
+                        //        outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                        //        outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                        //        break;
+
+                        //    case "utility":
+
+                        //        break;
+
+                        //    case "standard":
+                        //        outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfittingItem.SelectToken("category")));
+                        //        break;
+
+                        //    case "internal":
+
+                        //        break;
+
+
+
+                        //    default:
+                        //        break;
+                        //}
+
                     } 
-                    outfittingStringEDDN.Append(String.Format("]}"));
+
+                    writer.Close();
+                    writer.Dispose();
+
+                    //outfittingStringEDDN.Append(String.Format("]}"));
 
                 }
             }

@@ -52,6 +52,7 @@
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editLocalizationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commodityMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.directDBAccessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,6 +85,7 @@
             this.cmdDonate = new System.Windows.Forms.Button();
             this.lblDonate = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lnkEDMC = new System.Windows.Forms.LinkLabel();
             this.label44 = new System.Windows.Forms.Label();
             this.linkLabel9 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -214,7 +216,7 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
-            this.commodityMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lnkZNSCompanionAPI = new System.Windows.Forms.LinkLabel();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -417,6 +419,13 @@
             this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
             this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
+            // 
+            // commodityMappingsToolStripMenuItem
+            // 
+            this.commodityMappingsToolStripMenuItem.Name = "commodityMappingsToolStripMenuItem";
+            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.commodityMappingsToolStripMenuItem.Text = "Commodity Mappings";
+            this.commodityMappingsToolStripMenuItem.Click += new System.EventHandler(this.commodityMappingsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -745,6 +754,8 @@
             // panel2
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panel2.Controls.Add(this.lnkZNSCompanionAPI);
+            this.panel2.Controls.Add(this.lnkEDMC);
             this.panel2.Controls.Add(this.label44);
             this.panel2.Controls.Add(this.linkLabel9);
             this.panel2.Controls.Add(this.linkLabel1);
@@ -757,8 +768,19 @@
             this.panel2.Controls.Add(this.linkLabel7);
             this.panel2.Location = new System.Drawing.Point(33, 485);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1079, 77);
+            this.panel2.Size = new System.Drawing.Size(1079, 80);
             this.panel2.TabIndex = 33;
+            // 
+            // lnkEDMC
+            // 
+            this.lnkEDMC.AutoSize = true;
+            this.lnkEDMC.Location = new System.Drawing.Point(3, 56);
+            this.lnkEDMC.Name = "lnkEDMC";
+            this.lnkEDMC.Size = new System.Drawing.Size(332, 13);
+            this.lnkEDMC.TabIndex = 33;
+            this.lnkEDMC.TabStop = true;
+            this.lnkEDMC.Text = "Companion-to-EDDN logic from Marginals \"EDMC\", used with thanks";
+            this.lnkEDMC.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkEDMC_LinkClicked);
             // 
             // label44
             // 
@@ -785,7 +807,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(208, 43);
+            this.linkLabel1.Location = new System.Drawing.Point(208, 40);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(162, 13);
             this.linkLabel1.TabIndex = 14;
@@ -807,7 +829,7 @@
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(3, 43);
+            this.linkLabel2.Location = new System.Drawing.Point(3, 40);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(199, 13);
             this.linkLabel2.TabIndex = 15;
@@ -818,7 +840,7 @@
             // linkLabel3
             // 
             this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(376, 43);
+            this.linkLabel3.Location = new System.Drawing.Point(376, 40);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(143, 13);
             this.linkLabel3.TabIndex = 16;
@@ -829,7 +851,7 @@
             // linkLabel4
             // 
             this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(525, 43);
+            this.linkLabel4.Location = new System.Drawing.Point(525, 40);
             this.linkLabel4.Name = "linkLabel4";
             this.linkLabel4.Size = new System.Drawing.Size(85, 13);
             this.linkLabel4.TabIndex = 17;
@@ -840,7 +862,7 @@
             // linkLabel5
             // 
             this.linkLabel5.AutoSize = true;
-            this.linkLabel5.Location = new System.Drawing.Point(620, 43);
+            this.linkLabel5.Location = new System.Drawing.Point(620, 40);
             this.linkLabel5.Name = "linkLabel5";
             this.linkLabel5.Size = new System.Drawing.Size(78, 13);
             this.linkLabel5.TabIndex = 18;
@@ -851,7 +873,7 @@
             // linkLabel6
             // 
             this.linkLabel6.AutoSize = true;
-            this.linkLabel6.Location = new System.Drawing.Point(704, 43);
+            this.linkLabel6.Location = new System.Drawing.Point(704, 40);
             this.linkLabel6.Name = "linkLabel6";
             this.linkLabel6.Size = new System.Drawing.Size(339, 13);
             this.linkLabel6.TabIndex = 20;
@@ -2233,12 +2255,16 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
-            // commodityMappingsToolStripMenuItem
+            // lnkZNSCompanionAPI
             // 
-            this.commodityMappingsToolStripMenuItem.Name = "commodityMappingsToolStripMenuItem";
-            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.commodityMappingsToolStripMenuItem.Text = "Commodity Mappings";
-            this.commodityMappingsToolStripMenuItem.Click += new System.EventHandler(this.commodityMappingsToolStripMenuItem_Click);
+            this.lnkZNSCompanionAPI.AutoSize = true;
+            this.lnkZNSCompanionAPI.Location = new System.Drawing.Point(341, 56);
+            this.lnkZNSCompanionAPI.Name = "lnkZNSCompanionAPI";
+            this.lnkZNSCompanionAPI.Size = new System.Drawing.Size(155, 13);
+            this.lnkZNSCompanionAPI.TabIndex = 34;
+            this.lnkZNSCompanionAPI.TabStop = true;
+            this.lnkZNSCompanionAPI.Text = "ZNS C# \"Elite Companion API\"";
+            this.lnkZNSCompanionAPI.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkZNSCompanionAPI_LinkClicked);
             // 
             // Form1
             // 
@@ -2485,6 +2511,8 @@
         public System.Windows.Forms.TextBox txtRestTime;
         private System.Windows.Forms.Timer tmrRefresh;
         private System.Windows.Forms.ToolStripMenuItem commodityMappingsToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel lnkEDMC;
+        private System.Windows.Forms.LinkLabel lnkZNSCompanionAPI;
     }
 }
 

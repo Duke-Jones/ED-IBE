@@ -138,7 +138,9 @@
     <Compile Include="CommodityMappingsView.Designer.cs">
       <DependentUpon>CommodityMappingsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="EDDN\OutfittingObject.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
+    <Compile Include="IBECompanion\CompanionConverter.cs" />
     <Compile Include="IBECompanion\CompanionData.cs" />
     <Compile Include="IBECompanion\CompanionDataView.cs">
       <SubType>Form</SubType>

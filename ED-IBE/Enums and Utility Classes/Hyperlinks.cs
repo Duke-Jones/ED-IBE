@@ -46,6 +46,11 @@ namespace IBE
             Process.Start(@"http://starchart.club/map/");
         }
 
+        private void lnkZNSCompanionAPI_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/ZNS/EliteCompanionAPI/blob/master/license.txt");
+        }
+
         private void linkLabel8_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md");
@@ -77,6 +82,11 @@ namespace IBE
         private void linkLabel9_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"http://www.davek.com.au/td/");
+        }
+
+        private void lnkEDMC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/Marginal/EDMarketConnector/blob/master/LICENSE");  
         }
 
     }

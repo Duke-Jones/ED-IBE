@@ -388,8 +388,8 @@ namespace IBE
                             // extend mapping table
                             if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
                             {
-                                sqlString = String.Format("insert ignore into tbCommodityMapping(Name, MappedName)" +
-                                                          " select c1.commodity as Name, c2.commodity as MappedName" +
+                                sqlString = String.Format("insert ignore into tbdnMap_Commodity(CompanionName, CompanionAddition, GameName, GameAddition)" +
+                                                          " select c1.commodity as CompanionName, '' as CompanionAddition, c2.commodity as GameName, '' as GameAddition" +
                                                           "  from" +
                                                           "    (select commodity from tbCommodity where id = {0}) c1" +
                                                           "  join" +
@@ -474,6 +474,9 @@ namespace IBE
                 }
 
                 Program.DBCon.TransCommit();
+
+                if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
+                    Program.Data.PrepareBaseTables("tbdnmap_commodity");
 
                 cmdSave.Enabled  = m_MainDataset.HasChanges();
 

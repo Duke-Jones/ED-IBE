@@ -9,10 +9,14 @@ todo:
 * show all systems around another system with infos
 
 * wrong data in sell-date of S2S detailgrid
+* quick button for sending to eddn or not
 
 
 done:
 
+   * converting of companion-data to eddn-data is working
+   * added more mapping tables for Companion/EDDN IO
+-------------------------------------------------------------------------------------         
    * a few code clean-ups, extracted update-scripts to class "Updater"
 -------------------------------------------------------------------------------------         
    * added new tables and inserts for sending EDDN outfitting message

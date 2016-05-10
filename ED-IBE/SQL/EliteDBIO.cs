@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using IBE.EDDB_Data;
 using Newtonsoft.Json;
 using System.IO;
@@ -11,7 +9,7 @@ using IBE.Enums_and_Utility_Classes;
 using System.Diagnostics;
 using System.Globalization;
 using IBE.SQL.Datasets;
-using System.Data.Common;
+using System.Collections.Generic;
 
 namespace IBE.SQL
 {
@@ -235,7 +233,23 @@ namespace IBE.SQL
                                                             "tbpowerstate", 
                                                             "tblanguage", 
                                                             "tbtrustedsenders",
-                                                            "tbcommoditymapping"};
+                                                            "tbdnmap_armour",
+                                                            "tbdnmap_weapon",
+                                                            "tbdnmap_missiletype",
+                                                            "tbdnmap_weaponmount",
+                                                            "tbdnmap_weaponclass",
+                                                            "tbdnmap_weaponrating",
+                                                            "tbdnmap_oldvariant",
+                                                            "tbdnmap_countermeasure",
+                                                            "tbdnmap_utility",
+                                                            "tbdnmap_rating",
+                                                            "tbdnmap_ratingplanet",
+                                                            "tbdnmap_internal",
+                                                            "tbdnmap_standard",
+                                                            "tbdnmap_internal_misc",
+                                                            "tbdnmap_category",
+                                                            "tbdnmap_ships",
+                                                            "tbdnmap_commodity"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
@@ -2624,11 +2638,11 @@ namespace IBE.SQL
                         if (!String.IsNullOrEmpty(currentName))
                         {
                             // check if we need to remap this name
-                            Datasets.dsEliteDB.tbcommoditymappingRow mappedName = (Datasets.dsEliteDB.tbcommoditymappingRow)BaseData.tbcommoditymapping.Rows.Find(currentName);
+                            Datasets.dsEliteDB.tbdnmap_commodityRow mappedName = (Datasets.dsEliteDB.tbdnmap_commodityRow)BaseData.tbdnmap_commodity.Rows.Find(new object[] {currentName, ""});
                             if (mappedName != null)
                             {
-                                CSV_Strings[i] = CSV_Strings[i].Replace(mappedName.Name, mappedName.MappedName);
-                                currentName = mappedName.MappedName;
+                                CSV_Strings[i] = CSV_Strings[i].Replace(mappedName.CompanionName, mappedName.GameName);
+                                currentName = mappedName.GameName;
                             }
 
                             if (!foundNames.ContainsKey(currentName))
@@ -3296,44 +3310,47 @@ namespace IBE.SQL
                                 "  join" +
                                 "    (select id from tbcommodity where commodity = {1}) c2;";
 
-                foreach (dsEliteDB.tbcommoditymappingRow mapping in BaseData.tbcommoditymapping.Rows)
+                foreach (dsEliteDB.tbdnmap_commodityRow mapping in BaseData.tbdnmap_commodity.Rows)
 	            {
-                    Program.DBCon.Execute(String.Format(sqlBaseString, DBConnector.SQLAEscape(mapping.MappedName), DBConnector.SQLAEscape(mapping.Name)), data);
+                    Program.DBCon.Execute(String.Format(sqlBaseString, DBConnector.SQLAEscape(mapping.GameName), DBConnector.SQLAEscape(mapping.CompanionName)), data);
 
                     foreach (DataRow wrongSpellings in data.Rows)
 	                {
-                        Program.SplashScreen.InfoAdd(String.Format("...alter '{0}' to '{1}'...", mapping.Name, mapping.MappedName));
-                        Program.DBCon.TransBegin();
+                        if(((Int32)wrongSpellings["ID"]) != ((Int32)wrongSpellings["WrongID"]) && (((Int32)wrongSpellings["WrongID"]) < 0))
+                        { 
+                            Program.SplashScreen.InfoAdd(String.Format("...alter '{0}' to '{1}'...", mapping.CompanionName, mapping.GameName));
+                            Program.DBCon.TransBegin();
 
-                        // change the collected data to the new id
-                        sqlString = String.Format("update tbCommodityData" +
-                                                    " set   commodity_id = {1}" +
-                                                    " where commodity_id = {0}", 
-                                                    wrongSpellings["WrongID"], 
-                                                    wrongSpellings["ID"]);
-                        Program.DBCon.Execute(sqlString);
+                            // change the collected data to the new id
+                            sqlString = String.Format("update tbCommodityData" +
+                                                        " set   commodity_id = {1}" +
+                                                        " where commodity_id = {0}", 
+                                                        wrongSpellings["WrongID"], 
+                                                        wrongSpellings["ID"]);
+                            Program.DBCon.Execute(sqlString);
 
-                        sqlString = String.Format("update tbPriceHistory" +
-                                                    " set   commodity_id = {1}" +
-                                                    " where commodity_id = {0}", 
-                                                    wrongSpellings["WrongID"], 
-                                                    wrongSpellings["ID"]);
-                        Program.DBCon.Execute(sqlString);
+                            sqlString = String.Format("update tbPriceHistory" +
+                                                        " set   commodity_id = {1}" +
+                                                        " where commodity_id = {0}", 
+                                                        wrongSpellings["WrongID"], 
+                                                        wrongSpellings["ID"]);
+                            Program.DBCon.Execute(sqlString);
 
-                        // delete entry from tbCommodity, the ForeigenKeys will delete the 
-                        // entries from the other affected tables
-                        // entries in table "tbCommodityClassification" can be deleted
-                        sqlString = String.Format("delete from tbCommodity" +
-                                                    " where id = {0}", 
-                                                    wrongSpellings["WrongID"]);
-                        Program.DBCon.Execute(sqlString);
+                            // delete entry from tbCommodity, the ForeigenKeys will delete the 
+                            // entries from the other affected tables
+                            // entries in table "tbCommodityClassification" can be deleted
+                            sqlString = String.Format("delete from tbCommodity" +
+                                                        " where id = {0}", 
+                                                        wrongSpellings["WrongID"]);
+                            Program.DBCon.Execute(sqlString);
 
-                        Program.Data.DeleteMultiplePrices(new List<Int32>() {(Int32)wrongSpellings["ID"]});
+                            Program.Data.DeleteMultiplePrices(new List<Int32>() {(Int32)wrongSpellings["ID"]});
 
-                        Program.DBCon.TransCommit();
+                            Program.DBCon.TransCommit();
 
-                        Program.SplashScreen.InfoAppendLast("OK");
-                        found++;
+                            Program.SplashScreen.InfoAppendLast("OK");
+                            found++;
+                        }
 	                }
 	            }
 
@@ -4144,5 +4161,58 @@ namespace IBE.SQL
                 throw new Exception("Error while importing localization data from csv", ex);
             }
         }
+
+        internal string GetMapping(string mappingTable, string idString1, Boolean throwException = true)
+        {
+            string idString2 = String.Empty;
+            return GetMapping(mappingTable, idString1, idString2, throwException);
+        }
+
+        internal string GetMapping(string mappingTable, string idString1, string idString2, Boolean throwException = true)
+        {
+            String retValue;
+
+            Tuple<String, String> mappedValue = GetMappingT(mappingTable, idString1, idString2, throwException);
+
+            if(mappedValue == null)
+                retValue = null;
+            else
+                retValue = mappedValue.Item1;
+
+            return  retValue;
+        }
+
+        internal Tuple<String, String> GetMappingT(string mappingTable, string idString1, Boolean throwException = true)
+        {
+            string idString2 = String.Empty;
+            return GetMappingT(mappingTable, idString1, idString2, throwException);
+        }
+
+        internal Tuple<String,String> GetMappingT(string mappingTable, string idString1, string idString2, Boolean throwException = true)
+        {
+            Tuple<String,String> retValue;
+
+            try
+            {
+                DataRow mappingData = m_BaseData.Tables["tbDNMap_" + mappingTable].Rows.Find(new Object[] {idString1, idString2});
+
+                if(mappingData == null)
+                    if(throwException)
+                        throw new KeyNotFoundException(String.Format("Key '{0}' + '{1}' not found in 'tbDNMap_{2}'", idString1, idString2, mappingTable));
+                    else
+                        retValue = null;
+                else
+                {
+                    retValue = new Tuple<string,string>(mappingData.Field<String>("GameName"), mappingData.Field<String>("GameAddition"));
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting a mapping", ex);
+            }
+        }
+
     }
 }
