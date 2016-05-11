@@ -8,6 +8,10 @@ using System.Windows.Forms;
 using IBE.Enums_and_Utility_Classes;
 using System.Text;
 using System.Globalization;
+using System.Diagnostics;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace IBE.IBECompanion
 {
@@ -124,8 +128,9 @@ namespace IBE.IBECompanion
 
                 if (!response.Cached)
                 {
-                    var json = response.Json ?? "{}";
-                    m_joCompanion = JObject.Parse(json);
+                    String json = response.Json ?? "{}";
+
+                    m_joCompanion = JsonConvert.DeserializeObject<JObject>(json);
 
                     CompanionStatus = response.LoginStatus;
                 }

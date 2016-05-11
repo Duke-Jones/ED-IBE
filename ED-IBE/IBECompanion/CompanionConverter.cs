@@ -271,5 +271,66 @@ namespace IBE.IBECompanion
 
             return null;
         }
+
+        internal EDDN.ShipyardObject GetShipFromCompanion(Newtonsoft.Json.Linq.JToken outfittingItem, bool p)
+        {
+            EDDN.ShipyardObject shipyardItem = null;  
+            List<String> nameParts;
+            String nameFull;
+            List<String> category;
+            String skuString = null;
+            Tuple<string, string> dataTuple;
+
+            try
+            {
+               
+                if(outfittingItem != null)
+                { 
+                    if(outfittingItem.SelectToken("name", false) == null)
+                        throw new NotSupportedException(String.Format("{0}: Missing name", outfittingItem.SelectToken("id")));
+
+                    nameFull = outfittingItem.SelectToken("name", false).ToString().ToLower();
+
+                    if(Program.Data.GetMapping("ships", nameFull, false) != null)
+                    {
+                        shipyardItem = new EDDN.ShipyardObject();
+
+                        shipyardItem.Name       = Program.Data.GetMapping("ships",  nameFull);
+
+                        shipyardItem.Id         = outfittingItem.SelectToken("id").ToString();
+                        shipyardItem.BaseValue  = outfittingItem.SelectToken("basevalue").ToString();
+                        shipyardItem.Sku        = skuString = (outfittingItem.SelectToken("sku", false) ?? "").ToString();
+
+                        if(outfittingItem.SelectToken("unavailableReason", false) != null)
+                            shipyardItem.UnavailableReason = outfittingItem.SelectToken("unavailableReason", false).ToString();
+
+                        if(outfittingItem.SelectToken("factionId", false) != null)
+                            shipyardItem.FactionID = outfittingItem.SelectToken("factionId", false).ToString();
+
+                        if(outfittingItem.SelectToken("requiredRank", false) != null)
+                            shipyardItem.RequiredRank = outfittingItem.SelectToken("requiredRank", false).ToString();
+                    }
+                    else
+                        throw new NotSupportedException(String.Format("{0}: Unknown ship", nameFull));
+
+                }
+                else
+                    Debug.Print("!");
+
+                return shipyardItem;
+
+            }
+            catch (NotSupportedException ex)
+            {
+                Program.MainLog.Log(String.Format("Converting error: {0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while converting companion data to shipyard object", ex);
+            }
+
+            return null;
+            
+        }
     }
 }

@@ -212,7 +212,7 @@ namespace IBE.EDDN
                 }
                 else if (RawData.Contains(@"shipyard/1"))
                 {
-                    // outfitting schema
+                    // shipyardItem schema
                     Debug.Print("recieved v1 shipyard message");
 
                     ArgsObject = null;

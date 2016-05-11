@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="EDDN\MessageHeader.cs" />
     <Compile Include="EDDN\OutfittingObject.cs" />
+    <Compile Include="EDDN\ShipyardObject.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="IBECompanion\CompanionConverter.cs" />
     <Compile Include="IBECompanion\CompanionData.cs" />
@@ -152,7 +153,7 @@
     <Compile Include="EDDN\EDDNDuplicateFilter.cs" />
     <Compile Include="EDDN\EDDNReciever.cs" />
     <Compile Include="EDDN\EDDNCommodity_v2.cs" />
-    <Compile Include="Elite Dangerous Specifics\AppConfig.cs" />
+    <Compile Include="EDDN\Elite Dangerous Specifics\AppConfig.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -283,7 +284,7 @@
       <DependentUpon>frmDataIO.cs</DependentUpon>
     </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
-    <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
+    <Compile Include="EDDN\Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN\EDDNCommunicator.cs" />
     <Compile Include="MainTabs\CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
@@ -298,7 +299,7 @@
     <Compile Include="EditPriceData.Designer.cs">
       <DependentUpon>EditPriceData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Elite Dangerous Specifics\EdNetwork.cs" />
+    <Compile Include="EDDN\Elite Dangerous Specifics\EdNetwork.cs" />
     <Compile Include="Enums and Utility Classes\Hyperlinks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -311,7 +312,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\Levenshtein.cs" />
-    <Compile Include="Elite Dangerous Specifics\GameSettings.cs" />
+    <Compile Include="EDDN\Elite Dangerous Specifics\GameSettings.cs" />
     <Compile Include="Help Forms\HelpCommodities.cs">
       <SubType>Form</SubType>
     </Compile>

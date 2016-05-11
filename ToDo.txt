@@ -14,7 +14,8 @@ todo:
 
 done:
 
-   
+   * sending of shipyard data is working
+-------------------------------------------------------------------------------------         
    * sending of outfitting data is working
 -------------------------------------------------------------------------------------         
    * converting of companion-data to eddn-data is working

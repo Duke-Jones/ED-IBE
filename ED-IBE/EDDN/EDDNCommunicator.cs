@@ -128,12 +128,15 @@ bool disposed = false;
 
         private Thread                              _Spool2EDDN_Commodity;   
         private Thread                              _Spool2EDDN_Outfitting;   
+        private Thread                              _Spool2EDDN_Shipyard;   
         private Queue                               _Send_MarketData_API = new Queue(100,10);
         private Queue                               _Send_MarketData_OCR = new Queue(100,10);
-        private Queue                               _Send_Outfitting_OCR = new Queue(100,10);
+        private Queue                               _Send_Outfitting     = new Queue(100,10);
+        private Queue                               _Send_Shipyard       = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer_Commodity;
         private System.Timers.Timer                 _SendDelayTimer_Outfitting;
+        private System.Timers.Timer                 _SendDelayTimer_Shipyard;
         private StreamWriter                        m_EDDNSpooler = null;
         private Dictionary<String, EDDNStatistics>  m_StatisticDataSW = new Dictionary<String, EDDNStatistics>();
         private Dictionary<String, EDDNStatistics>  m_StatisticDataRL = new Dictionary<String, EDDNStatistics>();
@@ -160,6 +163,10 @@ bool disposed = false;
             _SendDelayTimer_Outfitting            = new System.Timers.Timer(2000);
             _SendDelayTimer_Outfitting.AutoReset  = false;
             _SendDelayTimer_Outfitting.Elapsed    += new System.Timers.ElapsedEventHandler(this.SendDelayTimerOutfitting_Elapsed);
+
+            _SendDelayTimer_Shipyard              = new System.Timers.Timer(2000);
+            _SendDelayTimer_Shipyard.AutoReset    = false;
+            _SendDelayTimer_Shipyard.Elapsed      += new System.Timers.ElapsedEventHandler(this.SendDelayTimerShipyard_Elapsed);
 
             _logger                     = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
 
@@ -655,6 +662,11 @@ bool disposed = false;
         /// <param name="commodityData">json object with companion data</param>
         public void SendOutfittingData(JObject dataObject)
         {
+            Int32 objectCount = 0;
+            Boolean writeToFile = false;
+            StreamWriter writer = null;
+            String debugFile = @"C:\temp\outfitting_ibe.csv";
+
             try
             {
                 if(m_SenderIsActivated)
@@ -674,20 +686,14 @@ bool disposed = false;
 
                     outfittingStringEDDN.Append(String.Format("\"modules\": ["));
 
-                    if(File.Exists(@"C:\temp\outfitting_ibe.csv"))
-                        File.Delete(@"C:\temp\outfitting_ibe.csv");
-
-                    Boolean writeToFile = false;
-                    StreamWriter writer = null;
-                    Int32 objectCount = 0;
-
                     if(writeToFile)
-                        writer = new StreamWriter(File.OpenWrite(@"C:\temp\outfitting_ibe.csv"));
+                    { 
+                        if(File.Exists(debugFile))
+                            File.Delete(debugFile);
 
+                        writer = new StreamWriter(File.OpenWrite(debugFile));
+                    }
 
-                    //foreach (JToken outfittingItem in dataObject.SelectTokens("ship.modules.*"))
-                    //{
-                    //    OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem.SelectToken("module"), false);
 
                     foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
                     {
@@ -740,7 +746,7 @@ bool disposed = false;
 
                     if(objectCount > 0)
                     { 
-                        _Send_Outfitting_OCR.Enqueue(outfittingStringEDDN);
+                        _Send_Outfitting.Enqueue(outfittingStringEDDN);
                         _SendDelayTimer_Outfitting.Start();
                     }
 
@@ -755,6 +761,93 @@ bool disposed = false;
             catch (Exception ex)
             {
                 throw new Exception("Error while extracting outfitting data for eddn", ex);
+            }
+        }
+
+        /// <summary>
+        /// send the shipyard data of this station
+        /// </summary>
+        /// <param name="commodityData">json object with companion data</param>
+        public void SendShipyardData(JObject dataObject)
+        {
+            Int32 objectCount = 0;
+            Boolean writeToFile = false;
+            StreamWriter writer = null;
+            String debugFile = @"C:\temp\shipyard_ibe.csv";
+
+            try
+            {
+                if(m_SenderIsActivated)
+                {
+                    IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
+
+                    String systeName   = dataObject.SelectToken("lastSystem.name").ToString();
+                    String stationName = dataObject.SelectToken("lastStarport.name").ToString();
+
+                    StringBuilder shipyardStringEDDN = new StringBuilder();
+
+                    shipyardStringEDDN.Append(String.Format("\"message\": {{"));
+
+                    shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
+                    shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
+
+                    shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+
+                    shipyardStringEDDN.Append(String.Format("\"ships\": ["));
+
+                    if(writeToFile)
+                    { 
+                        if(File.Exists(debugFile))
+                            File.Delete(debugFile);
+
+                        writer = new StreamWriter(File.OpenWrite(debugFile));
+                    }
+
+                    if(dataObject.SelectToken("lastStarport.ships", false) != null)
+                    { 
+                        List<JToken> allShips = dataObject.SelectTokens("lastStarport.ships.shipyard_list.*").ToList();
+                        allShips.AddRange(dataObject.SelectTokens("lastStarport.ships.unavailable_list.[*]").ToList());
+
+                        foreach (JToken outfittingItem in allShips)
+                        {
+                            ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
+
+                            if(shipyardItem != null)
+                            { 
+                                if(writeToFile)
+                                {
+                                    writer.WriteLine(String.Format("{0},{1},{2},{3}", 
+                                        systeName, stationName, shipyardItem.Name, 
+                                        DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                }
+
+                                shipyardStringEDDN.Append(String.Format("\"{0}\", ", shipyardItem.Name));
+
+                                objectCount++;
+                            }
+                        } 
+
+                        shipyardStringEDDN.Remove(shipyardStringEDDN.Length-2, 2);
+                        shipyardStringEDDN.Append("]}");
+
+                        if(objectCount > 0)
+                        { 
+                            _Send_Shipyard.Enqueue(shipyardStringEDDN);
+                            _SendDelayTimer_Shipyard.Start();
+                        }
+
+                        if(writeToFile)
+                        {
+                            writer.Close();
+                            writer.Dispose();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while extracting shipyard data for eddn", ex);
             }
         }
 
@@ -931,7 +1024,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if(false && (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test"))
+                if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/1/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/1";
@@ -944,7 +1037,7 @@ bool disposed = false;
                                                        "}}", 
                                                        JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
                                                        schema,
-                                                       _Send_Outfitting_OCR.Dequeue().ToString()));
+                                                       _Send_Outfitting.Dequeue().ToString()));
 
 
                 using (var client = new WebClient())
@@ -985,17 +1078,106 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                _logger.Log("Error uploading Json (v2)", true);
+                _logger.Log("Error uploading Json (outfitting)", true);
                 _logger.Log(ex.ToString(), true);
                 _logger.Log(ex.Message, true);
                 _logger.Log(ex.StackTrace, true);
                 if (ex.InnerException != null)
                     _logger.Log(ex.InnerException.ToString(), true);
 
-                cErr.processError(ex, "Error in EDDN-Sending-Thread (v2)");
+                cErr.processError(ex, "Error in EDDN-Sending-Thread (outfitting)");
             }
 
         }
+
+        /// <summary>
+        /// internal send routine for registered data:
+        /// It's called by the delay-timer "_SendDelayTimer_Commodity"
+        /// </summary>
+        private void SendShipyardData_i()
+        {
+            try
+            {
+                MessageHeader header;
+                String schema;
+                StringBuilder shipyardMessage = new StringBuilder();
+
+                // fill the header
+                header = new MessageHeader()
+                {
+                    SoftwareName        = "ED-IBE (API)",
+                    SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
+                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    UploaderID          = UserIdentification()
+                };
+
+                // fill the schema : test or real ?
+                if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                    schema = "http://schemas.elite-markets.net/eddn/shipyard/1/test";
+                else
+                    schema = "http://schemas.elite-markets.net/eddn/shipyard/1";
+
+                // create full message
+                shipyardMessage.Append(String.Format("{{" +
+                                                       " \"header\" : {0}," +
+                                                       " \"$schemaRef\": \"{1}\","+
+                                                       " {2}" +
+                                                       "}}", 
+                                                       JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
+                                                       schema,
+                                                       _Send_Shipyard.Dequeue().ToString()));
+
+
+                using (var client = new WebClient())
+                {
+                    try
+                    {
+                        Debug.Print(shipyardMessage.ToString());
+
+                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", shipyardMessage.ToString());
+                    }
+                    catch (WebException ex)
+                    {
+                        _logger.Log("Error uploading json (shipyard)", true);
+                        _logger.Log(ex.ToString(), true);
+                        _logger.Log(ex.Message, true);
+                        _logger.Log(ex.StackTrace, true);
+                        if (ex.InnerException != null)
+                            _logger.Log(ex.InnerException.ToString(), true);
+
+                        using (WebResponse response = ex.Response)
+                        {
+                            using (Stream data = response.GetResponseStream())
+                            {
+                                if (data != null)
+                                {
+                                    StreamReader sr = new StreamReader(data);
+                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (shipyard)");
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        client.Dispose();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Error uploading Json (shipyard)", true);
+                _logger.Log(ex.ToString(), true);
+                _logger.Log(ex.Message, true);
+                _logger.Log(ex.StackTrace, true);
+                if (ex.InnerException != null)
+                    _logger.Log(ex.InnerException.ToString(), true);
+
+                cErr.processError(ex, "Error in EDDN-Sending-Thread (shipyard)");
+            }
+
+        }
+
 
         /// <summary>
         /// timer routine for sending all registered commoditydata to EDDN
@@ -1042,6 +1224,30 @@ bool disposed = false;
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error while sending EDDN data (outfitting)");
+            }
+        }
+
+        /// <summary>
+        /// timer routine for sending all registered data to EDDN
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void SendDelayTimerShipyard_Elapsed(object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+
+                // it's time to start the EDDN transmission
+                _Spool2EDDN_Shipyard = new Thread(new ThreadStart(SendShipyardData_i));
+                _Spool2EDDN_Shipyard.Name = "Spool2EDDN Shipyard";
+                _Spool2EDDN_Shipyard.IsBackground = true;
+
+                _Spool2EDDN_Shipyard.Start();
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while sending EDDN data (shipyard)");
             }
         }
 
