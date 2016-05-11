@@ -1292,9 +1292,11 @@ namespace IBE
                 Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
                 st.Start();
                 
+                // *******************************************************************
                 Updater.DoSpecial(this);
+                // *******************************************************************
 
-                if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
+                if (Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
                 {
                     Program.SplashScreen.InfoAdd("starting eddn listening");
                     Program.EDDNComm.StartEDDNListening();
@@ -1302,9 +1304,11 @@ namespace IBE
                 }
 
                 if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", false.ToString(), false))
-                {
                     Program.EDDNComm.ActivateSender();
-                }
+
+                SetQuickDecisionSwitch();
+
+                cbEDDNOverride.CheckedChanged += cbEDDNOverride_CheckedChanged;
 
                 Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
                 st.Start();
@@ -1315,7 +1319,22 @@ namespace IBE
 
                 Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);
                 st.Start();
+                
+                /// last preparations for companion io 
+                ShowStatus();
+                Program.CompanionIO.AsyncDataRecievedEvent += CompanionIO_AsyncDataRecievedEvent;
+                if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok) && (!Program.CompanionIO.StationHasShipyardData()))
+                {
+                    int? stationID = Program.actualCondition.Location_ID;
 
+                    if((stationID != null) && Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + stationID))
+                    {
+                        // probably companion error, try once again in 5 seconds
+                        Program.CompanionIO.ReGet_StationData();
+                    }
+                }
+
+                
                 this.Enabled = true;
                 
             }
@@ -1323,6 +1342,66 @@ namespace IBE
             {
                 this.Enabled = true;
                 cErr.processError(ex, "Error in Form_Shown");
+            }
+        }
+
+        /// <summary>
+        /// sets the "Quick Decision Checkbox" value in dependance of the settings
+        /// </summary>
+        private void SetQuickDecisionSwitch()
+        {
+            try
+            { 
+
+                if (Program.EDDNComm.SenderIsActivated)
+                {
+                    cbEDDNOverride.Enabled = true;
+
+                    String decValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold", false);
+
+                    switch (decValue)
+                    {
+                        case "Send":
+                            cbEDDNOverride.Checked = true;
+                            break;
+
+                        case "NotSend":
+                            cbEDDNOverride.Checked = false;
+                            break;
+
+                        case "Hold":
+                            cbEDDNOverride.Checked = Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString(), false);
+                            break;
+
+                        default:
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold");
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString());
+                            cbEDDNOverride.Checked = false;
+                            break;
+                    }
+                }
+                else
+                {
+                    cbEDDNOverride.Checked = false;
+                    cbEDDNOverride.Enabled = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while setting the quick decision switch", ex);
+            }
+        }
+
+        void cbEDDNOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", cbEDDNOverride.Checked.ToString());
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cbEDDNOverride_CheckedChanged");
             }
         }
 
@@ -3243,6 +3322,14 @@ namespace IBE
                     Program.actualCondition.Location = e.Location;
                     setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
 
+                    // can't be docked anymore
+                    Program.CompanionIO.SetDocked(false);
+
+                    // from now it is allowed to send data to eddn immediately again
+                    Program.EDDNComm.SendingReset();
+
+                    ShowStatus();
+
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
@@ -3255,13 +3342,13 @@ namespace IBE
 
                     /// after a system jump you can get data immediately
                     Program.CompanionIO.RestTimeReset();
-
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Location) > 0)
                 {
                     Program.actualCondition.Location   = e.Location;
                     setText(tbCurrentStationinfoFromLogs,  Program.actualCondition.Location);
+
                 }
 
 
@@ -3410,7 +3497,10 @@ namespace IBE
                     txtEventInfo.Text = "checking for current station...";
                     txtEventInfo.Refresh();
 
-                    if(Program.CompanionIO.GetValue<Boolean>("commander.docked"))
+                    // allow refresh of companion data
+                    Program.CompanionIO.GetProfileData(false);
+
+                    if(Program.CompanionIO.IsLanded())
                     {
                         extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
                         extStation = Program.CompanionIO.GetValue("lastStarport.name");
@@ -3427,8 +3517,18 @@ namespace IBE
                             Program.CompanionIO.ConfirmLocation(extSystem, extStation);
                             txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
 
-                            Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
-                            Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+                            if(Program.CompanionIO.StationHasShipyardData())
+                            {
+                                Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                            }
+                            else if(Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Location_ID))
+                            {
+                                // probably companion error, try once again in 5 seconds
+                                Program.CompanionIO.ReGet_StationData();                                
+                            }
+
+                            if(Program.CompanionIO.StationHasOutfittingData())
+                                Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
                             
                         }
                         else
@@ -3449,12 +3549,78 @@ namespace IBE
                     txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
                 }
 
+                ShowStatus();
+
             }
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in cmdEventLanded_Click");
             }
         }
+
+        void CompanionIO_AsyncDataRecievedEvent(object sender, EventArgs e)
+        {
+            try
+            {
+                if(Program.CompanionIO.StationHasShipyardData())
+                    Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+
+                ShowStatus();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in CompanionIO_AsyncDataRecievedEvent");
+            }    
+        }
+
+        
+
+        
+        /// <summary>
+        /// update the status information of companion io
+        /// </summary>
+        private void ShowStatus()
+        {
+            try
+            {
+                if(this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(ShowStatus));
+                else
+                {
+                    if(Program.CompanionIO.IsLanded())
+                    {
+                        pbStatus_IsLanded.Image = Properties.Resources.ledorange_on;
+
+                        if(Program.CompanionIO.StationHasMarketData())
+                            pbStatus_MarketData.Image       = Properties.Resources.ledorange_on;
+                        else
+                            pbStatus_MarketData.Image       = Properties.Resources.ledorange_off;
+
+                        if(Program.CompanionIO.StationHasOutfittingData())
+                            pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_on;
+                        else
+                            pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_off;
+
+                        if(Program.CompanionIO.StationHasShipyardData())
+                            pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_on;
+                        else
+                            pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_off;
+
+                    }
+                    else
+                    { 
+                        pbStatus_IsLanded.Image         = Properties.Resources.ledorange_off;
+                        pbStatus_MarketData.Image       = Properties.Resources.ledorange_off;
+                        pbStatus_OutfittingData.Image   = Properties.Resources.ledorange_off;
+                        pbStatus_ShipyardData.Image     = Properties.Resources.ledorange_off;
+                    }
+                }
+            }
+        catch (Exception ex)
+        {
+            throw new Exception("Error while showing status infos", ex);
+        }
+    }
 
         private void cmdEventMarketData_Click(object sender, EventArgs e)
         {
@@ -3476,6 +3642,10 @@ namespace IBE
                     MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
                 }
+
+                SetQuickDecisionSwitch();
+
+                ShowStatus();
 
             }
             catch (Exception ex)
@@ -3510,6 +3680,11 @@ namespace IBE
             {
                 cErr.processError(ex, "Error in commodityMappingsToolStripMenuItem_Click");
             }
+        }
+
+        private void gbEvents_Enter(object sender, EventArgs e)
+        {
+
         }
 
 

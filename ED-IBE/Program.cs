@@ -369,7 +369,8 @@ namespace IBE
 
                     // Companion IO
                     CompanionIO = new IBECompanion.CompanionData(Program.GetDataPath());
-                    CompanionIO.ConditionalLogIn();
+                    if(CompanionIO.ConditionalLogIn())
+                        CompanionIO.GetProfileDataAsync();
 
                     // initializing the object for the actual condition
                     actualCondition                             = new Condition();

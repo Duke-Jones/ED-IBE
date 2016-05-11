@@ -153,7 +153,7 @@
     <Compile Include="EDDN\EDDNDuplicateFilter.cs" />
     <Compile Include="EDDN\EDDNReciever.cs" />
     <Compile Include="EDDN\EDDNCommodity_v2.cs" />
-    <Compile Include="EDDN\Elite Dangerous Specifics\AppConfig.cs" />
+    <Compile Include="Elite Dangerous Specifics\AppConfig.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -284,7 +284,7 @@
       <DependentUpon>frmDataIO.cs</DependentUpon>
     </Compile>
     <Compile Include="Ocr\Calibration\CalibrationPoint.cs" />
-    <Compile Include="EDDN\Elite Dangerous Specifics\EdDisplayConfig.cs" />
+    <Compile Include="Elite Dangerous Specifics\EdDisplayConfig.cs" />
     <Compile Include="EDDN\EDDNCommunicator.cs" />
     <Compile Include="MainTabs\CommandersLog.cs" />
     <Compile Include="EditOcrResults.cs">
@@ -299,7 +299,7 @@
     <Compile Include="EditPriceData.Designer.cs">
       <DependentUpon>EditPriceData.cs</DependentUpon>
     </Compile>
-    <Compile Include="EDDN\Elite Dangerous Specifics\EdNetwork.cs" />
+    <Compile Include="Elite Dangerous Specifics\EdNetwork.cs" />
     <Compile Include="Enums and Utility Classes\Hyperlinks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -312,7 +312,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\Levenshtein.cs" />
-    <Compile Include="EDDN\Elite Dangerous Specifics\GameSettings.cs" />
+    <Compile Include="Elite Dangerous Specifics\GameSettings.cs" />
     <Compile Include="Help Forms\HelpCommodities.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -409,6 +409,10 @@
     </Content>
     <Content Include="Resources\green-led-off-md.png" />
     <Content Include="Resources\green-led-on-md.png" />
+    <Content Include="Resources\ledgreen_off.png" />
+    <Content Include="Resources\ledgreen_on.png" />
+    <Content Include="Resources\ledorange_off.png" />
+    <Content Include="Resources\ledorange_on.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

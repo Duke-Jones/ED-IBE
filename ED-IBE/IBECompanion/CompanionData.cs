@@ -19,6 +19,8 @@ namespace IBE.IBECompanion
     {
         private EliteCompanion                  m_CompanionIO;
         private JObject                         m_joCompanion = new JObject();
+        private ProfileResponse                 m_cachedResponse;
+        private System.Timers.Timer             m_reGetTimer;
 
         /// <summary>
         /// creates the interface object
@@ -31,12 +33,18 @@ namespace IBE.IBECompanion
                 m_CompanionIO             = EliteCompanion.Instance;
                 m_CompanionIO.DataPath    = dataPath;
 
+                m_reGetTimer = new System.Timers.Timer();
+                m_reGetTimer.Interval = 5000;
+                m_reGetTimer.Elapsed += m_reGetTimer_Elapsed;
+
+
             }
             catch (Exception ex)
             {
                 throw new Exception("Error while creating the companion data interface", ex);
             }
         }
+
 
         /// <summary>
         /// Logins active profile
@@ -60,8 +68,10 @@ namespace IBE.IBECompanion
         /// <summary>
         /// only try to login if already done before
         /// </summary>
-        public void ConditionalLogIn()
+        public Boolean ConditionalLogIn()
         {
+            Boolean retValue = false;
+
             try
             {
                 switch (CompanionStatus)
@@ -90,6 +100,10 @@ namespace IBE.IBECompanion
                                 if(!Program.SplashScreen.IsDisposed)
                                     Program.SplashScreen.TopMost = true;
                             }
+                            else
+                            {
+                                retValue = true;
+                            }
                         }
                         break;
 
@@ -109,6 +123,7 @@ namespace IBE.IBECompanion
                         break;
                 }
 
+                return retValue;
             }
             catch (Exception ex)
             {
@@ -117,22 +132,72 @@ namespace IBE.IBECompanion
         }
 
         /// <summary>
-        /// gets the whole profile data from the FD-servers
+        /// get the data from the servers async
+        /// </summary>
+        public void GetProfileDataAsync()
+        {
+            try
+            {
+                var starter = new System.Threading.Thread(GetProfileData_i);
+
+                starter.IsBackground = true;
+                starter.Name = "Companion.GetProfileDataAsync";
+                starter.Start();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting data async", ex);
+            }
+        }
+
+        /// <summary>
+        /// internal entrypoint for getting the data async
+        /// </summary>
+        /// <returns></returns>
+        private void GetProfileData_i()
+        {
+            Boolean useCachedData = false;
+            GetProfileData(useCachedData);
+        }
+
+        /// <summary>
+        /// gets the whole profile data, returns cached data if existing
         /// </summary>
         /// <returns></returns>
         internal ProfileResponse GetProfileData()
         {
+            Boolean useCachedData = true;
+            return GetProfileData(useCachedData);
+        }
+
+        /// <summary>
+        /// gets the whole profile data from the FD-servers
+        /// </summary>
+        /// <returns></returns>
+        internal ProfileResponse GetProfileData(Boolean useCachedData)
+        {
+            ProfileResponse response;
+
             try
             {
-                ProfileResponse response = m_CompanionIO.GetProfileData();
-
-                if (!response.Cached)
+                if((m_cachedResponse == null) || (!useCachedData))
                 {
-                    String json = response.Json ?? "{}";
+                    response = m_CompanionIO.GetProfileData();
 
-                    m_joCompanion = JsonConvert.DeserializeObject<JObject>(json);
+                    if (!response.Cached)
+                    {
+                        String json = response.Json ?? "{}";
 
-                    CompanionStatus = response.LoginStatus;
+                        m_joCompanion = JsonConvert.DeserializeObject<JObject>(json);
+
+                        CompanionStatus = response.LoginStatus;
+                    }
+
+                    m_cachedResponse = response;
+
+                }else
+                {
+                    response = m_cachedResponse;
                 }
 
                 return response;
@@ -325,7 +390,167 @@ namespace IBE.IBECompanion
         public void RestTimeReset()
         { 
             m_CompanionIO.RestTimeReset();
-        }        
+        }
+        
+        /// <summary>
+        /// returns true if the current data has the landed flag
+        /// </summary>
+        /// <returns></returns>
+        internal bool IsLanded()
+        {
+            try
+            {
+                return Program.CompanionIO.GetValue<Boolean>("commander.docked");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking if landed", ex);
+            }
+        }
 
+        /// <summary>
+        /// returns true if the current data has at least one marketable item
+        /// </summary>
+        /// <returns></returns>
+        internal bool StationHasMarketData()
+        {
+            try
+            {
+                IEnumerable<JToken> stationData = GetData().SelectTokens("lastStarport.commodities[*]");
+
+                if((stationData != null) && (stationData.Count() > 0))
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking if station has market data", ex);
+            }
+        }
+
+        /// <summary>
+        /// returns true if the current data has at least one outfitting item
+        /// </summary>
+        /// <returns></returns>
+        internal bool StationHasOutfittingData()
+        {
+            try
+            {
+                IEnumerable<JToken> stationData = GetData().SelectTokens("lastStarport.modules.*"); 
+
+                if((stationData != null) && (stationData.Count() > 0))
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking if landed", ex);
+            }
+        }
+
+        /// <summary>
+        /// returns true if the current data has at least one ship in the shipyard
+        /// </summary>
+        /// <returns></returns>
+        internal bool StationHasShipyardData()
+        {
+            try
+            {
+                IEnumerable<JToken> stationData = GetData().SelectTokens("lastStarport.ships.shipyard_list.*"); 
+
+                if((stationData != null) && (stationData.Count() > 0))
+                    return true;
+                else
+                {
+                    stationData = GetData().SelectTokens("lastStarport.ships.unavailable_list.[*]"); 
+
+                    if((stationData != null) && (stationData.Count() > 0))
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking if landed", ex);
+            }
+        }
+
+        /// <summary>
+        /// sets the "docked"-flag without calling the FD-servers
+        /// </summary>
+        internal void SetDocked(Boolean isLanded)
+        {
+            try
+            {
+                m_joCompanion["commander"]["docked"] = isLanded;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while checking if station has market data", ex);
+            }
+        }
+
+
+#region event handler
+
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<EventArgs> AsyncDataRecievedEvent;
+
+        protected virtual void OnAsyncDataRecieved(EventArgs e)
+        {
+            EventHandler<EventArgs> myEvent = AsyncDataRecievedEvent;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+ #endregion
+
+        /// <summary>
+        /// retrys to get shipyard data
+        /// </summary>
+        public void ReGet_StationData()
+        {
+            try
+            {
+                m_reGetTimer.Stop();
+                m_reGetTimer.Start();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while starting async re-getter", ex);
+            }
+        }
+
+        void m_reGetTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                m_reGetTimer.Stop();
+                
+                var response = m_CompanionIO.GetProfileData(true);
+
+                if (!response.Cached)
+                {
+                    String json = response.Json ?? "{}";
+
+                    m_joCompanion = JsonConvert.DeserializeObject<JObject>(json);
+                }
+
+                m_cachedResponse = response;
+                
+                AsyncDataRecievedEvent.Raise(this, new EventArgs());
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in m_reGetTimer_Elapsed");
+            }
+        }
     }
 }

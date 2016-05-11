@@ -11,9 +11,18 @@ todo:
 * wrong data in sell-date of S2S detailgrid
 * quick button for sending to eddn or not
 
+* Commanders Name in EDDN Settings
+* deadlock when refetching data
+* check defaults of new settings on new installations
 
 done:
 
+   * optimized control of eddn sending
+   * refetching once companion data if shipyard data is awaited but not recieved
+   * optimized eventhandling relating to companion interface 
+   * logic to avoid multiple data sending to eddn
+   * added gui elements (leds) to show which data was aquired
+-------------------------------------------------------------------------------------         
    * sending of shipyard data is working
 -------------------------------------------------------------------------------------         
    * sending of outfitting data is working

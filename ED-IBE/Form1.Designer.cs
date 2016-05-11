@@ -34,6 +34,10 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtRestTime = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.lbStatusDocked = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -43,9 +47,23 @@
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.gbEvents = new System.Windows.Forms.GroupBox();
+            this.cbEDDNOverride = new System.Windows.Forms.CheckBox();
             this.txtEventInfo = new System.Windows.Forms.TextBox();
             this.cmdEventMarketData = new System.Windows.Forms.Button();
             this.cmdEventLanded = new System.Windows.Forms.Button();
+            this.tlpData = new System.Windows.Forms.TableLayoutPanel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.pbStatus_ShipyardData = new System.Windows.Forms.PictureBox();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.pbStatus_OutfittingData = new System.Windows.Forms.PictureBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.pbStatus_MarketData = new System.Windows.Forms.PictureBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.paStatusDocked = new System.Windows.Forms.Panel();
+            this.pbStatus_IsLanded = new System.Windows.Forms.PictureBox();
             this.msMainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +103,7 @@
             this.cmdDonate = new System.Windows.Forms.Button();
             this.lblDonate = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lnkZNSCompanionAPI = new System.Windows.Forms.LinkLabel();
             this.lnkEDMC = new System.Windows.Forms.LinkLabel();
             this.label44 = new System.Windows.Forms.Label();
             this.linkLabel9 = new System.Windows.Forms.LinkLabel();
@@ -216,12 +235,24 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
-            this.lnkZNSCompanionAPI = new System.Windows.Forms.LinkLabel();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.gbEvents.SuspendLayout();
+            this.tlpData.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardData)).BeginInit();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingData)).BeginInit();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketData)).BeginInit();
+            this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.paStatusDocked.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_IsLanded)).BeginInit();
             this.msMainMenu.SuspendLayout();
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
@@ -253,7 +284,7 @@
             // 
             this.txtRestTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRestTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRestTime.Location = new System.Drawing.Point(449, 13);
+            this.txtRestTime.Location = new System.Drawing.Point(88, 42);
             this.txtRestTime.Name = "txtRestTime";
             this.txtRestTime.ReadOnly = true;
             this.txtRestTime.Size = new System.Drawing.Size(26, 22);
@@ -266,12 +297,60 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(408, 17);
+            this.label6.Location = new System.Drawing.Point(47, 46);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(43, 13);
             this.label6.TabIndex = 64;
             this.label6.Text = "cached";
             this.toolTip1.SetToolTip(this.label6, "Until timer is running you\'ll work with cached data from the last call,");
+            // 
+            // lbStatusDocked
+            // 
+            this.lbStatusDocked.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lbStatusDocked.AutoSize = true;
+            this.lbStatusDocked.Location = new System.Drawing.Point(44, 6);
+            this.lbStatusDocked.Name = "lbStatusDocked";
+            this.lbStatusDocked.Size = new System.Drawing.Size(45, 13);
+            this.lbStatusDocked.TabIndex = 65;
+            this.lbStatusDocked.Text = "Docked";
+            this.lbStatusDocked.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.lbStatusDocked, "Until timer is running you\'ll work with cached data from the last call,");
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(21, 5);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.TabIndex = 65;
+            this.label1.Text = "Market Data";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.label1, "Until timer is running you\'ll work with cached data from the last call,");
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(75, 13);
+            this.label2.TabIndex = 65;
+            this.label2.Text = "Outfitting Data";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.label2, "Until timer is running you\'ll work with cached data from the last call,");
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 6);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 65;
+            this.label3.Text = "Shipyard Data";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.label3, "Until timer is running you\'ll work with cached data from the last call,");
             // 
             // contextMenuStrip1
             // 
@@ -323,6 +402,7 @@
             // 
             // gbEvents
             // 
+            this.gbEvents.Controls.Add(this.cbEDDNOverride);
             this.gbEvents.Controls.Add(this.txtRestTime);
             this.gbEvents.Controls.Add(this.label6);
             this.gbEvents.Controls.Add(this.txtEventInfo);
@@ -334,6 +414,17 @@
             this.gbEvents.TabIndex = 63;
             this.gbEvents.TabStop = false;
             this.gbEvents.Text = "Events";
+            this.gbEvents.Enter += new System.EventHandler(this.gbEvents_Enter);
+            // 
+            // cbEDDNOverride
+            // 
+            this.cbEDDNOverride.AutoSize = true;
+            this.cbEDDNOverride.Location = new System.Drawing.Point(179, 45);
+            this.cbEDDNOverride.Name = "cbEDDNOverride";
+            this.cbEDDNOverride.Size = new System.Drawing.Size(101, 17);
+            this.cbEDDNOverride.TabIndex = 65;
+            this.cbEDDNOverride.Text = "Send To EDDN";
+            this.cbEDDNOverride.UseVisualStyleBackColor = true;
             // 
             // txtEventInfo
             // 
@@ -348,11 +439,11 @@
             // 
             // cmdEventMarketData
             // 
-            this.cmdEventMarketData.Location = new System.Drawing.Point(17, 48);
+            this.cmdEventMarketData.Location = new System.Drawing.Point(162, 17);
             this.cmdEventMarketData.Name = "cmdEventMarketData";
-            this.cmdEventMarketData.Size = new System.Drawing.Size(100, 25);
+            this.cmdEventMarketData.Size = new System.Drawing.Size(132, 25);
             this.cmdEventMarketData.TabIndex = 62;
-            this.cmdEventMarketData.Text = "Market Data";
+            this.cmdEventMarketData.Text = "Import Market Data";
             this.cmdEventMarketData.UseVisualStyleBackColor = true;
             this.cmdEventMarketData.Click += new System.EventHandler(this.cmdEventMarketData_Click);
             // 
@@ -360,11 +451,163 @@
             // 
             this.cmdEventLanded.Location = new System.Drawing.Point(17, 17);
             this.cmdEventLanded.Name = "cmdEventLanded";
-            this.cmdEventLanded.Size = new System.Drawing.Size(100, 25);
+            this.cmdEventLanded.Size = new System.Drawing.Size(132, 25);
             this.cmdEventLanded.TabIndex = 13;
-            this.cmdEventLanded.Text = "Landed";
+            this.cmdEventLanded.Text = "Landed / Station Data";
             this.cmdEventLanded.UseVisualStyleBackColor = true;
             this.cmdEventLanded.Click += new System.EventHandler(this.cmdEventLanded_Click);
+            // 
+            // tlpData
+            // 
+            this.tlpData.ColumnCount = 2;
+            this.tlpData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tlpData.Controls.Add(this.panel7, 0, 3);
+            this.tlpData.Controls.Add(this.panel9, 1, 3);
+            this.tlpData.Controls.Add(this.panel6, 1, 2);
+            this.tlpData.Controls.Add(this.panel5, 1, 1);
+            this.tlpData.Controls.Add(this.panel4, 0, 2);
+            this.tlpData.Controls.Add(this.panel3, 0, 1);
+            this.tlpData.Controls.Add(this.panel1, 0, 0);
+            this.tlpData.Controls.Add(this.paStatusDocked, 1, 0);
+            this.tlpData.Location = new System.Drawing.Point(495, 34);
+            this.tlpData.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpData.Name = "tlpData";
+            this.tlpData.RowCount = 4;
+            this.tlpData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpData.Size = new System.Drawing.Size(111, 82);
+            this.tlpData.TabIndex = 65;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.label3);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel7.Location = new System.Drawing.Point(0, 60);
+            this.panel7.Margin = new System.Windows.Forms.Padding(0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(90, 22);
+            this.panel7.TabIndex = 74;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.pbStatus_ShipyardData);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel9.Location = new System.Drawing.Point(90, 60);
+            this.panel9.Margin = new System.Windows.Forms.Padding(0);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(21, 22);
+            this.panel9.TabIndex = 73;
+            // 
+            // pbStatus_ShipyardData
+            // 
+            this.pbStatus_ShipyardData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_ShipyardData.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_ShipyardData.Image")));
+            this.pbStatus_ShipyardData.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_ShipyardData.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_ShipyardData.Name = "pbStatus_ShipyardData";
+            this.pbStatus_ShipyardData.Size = new System.Drawing.Size(21, 22);
+            this.pbStatus_ShipyardData.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_ShipyardData.TabIndex = 1;
+            this.pbStatus_ShipyardData.TabStop = false;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.pbStatus_OutfittingData);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(90, 40);
+            this.panel6.Margin = new System.Windows.Forms.Padding(0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(21, 20);
+            this.panel6.TabIndex = 71;
+            // 
+            // pbStatus_OutfittingData
+            // 
+            this.pbStatus_OutfittingData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_OutfittingData.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_OutfittingData.Image")));
+            this.pbStatus_OutfittingData.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_OutfittingData.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_OutfittingData.Name = "pbStatus_OutfittingData";
+            this.pbStatus_OutfittingData.Size = new System.Drawing.Size(21, 20);
+            this.pbStatus_OutfittingData.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_OutfittingData.TabIndex = 1;
+            this.pbStatus_OutfittingData.TabStop = false;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.pbStatus_MarketData);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(90, 20);
+            this.panel5.Margin = new System.Windows.Forms.Padding(0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(21, 20);
+            this.panel5.TabIndex = 70;
+            // 
+            // pbStatus_MarketData
+            // 
+            this.pbStatus_MarketData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_MarketData.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_MarketData.Image")));
+            this.pbStatus_MarketData.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_MarketData.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_MarketData.Name = "pbStatus_MarketData";
+            this.pbStatus_MarketData.Size = new System.Drawing.Size(21, 20);
+            this.pbStatus_MarketData.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_MarketData.TabIndex = 1;
+            this.pbStatus_MarketData.TabStop = false;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.label2);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 40);
+            this.panel4.Margin = new System.Windows.Forms.Padding(0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(90, 20);
+            this.panel4.TabIndex = 69;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 20);
+            this.panel3.Margin = new System.Windows.Forms.Padding(0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(90, 20);
+            this.panel3.TabIndex = 68;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lbStatusDocked);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(90, 20);
+            this.panel1.TabIndex = 67;
+            // 
+            // paStatusDocked
+            // 
+            this.paStatusDocked.Controls.Add(this.pbStatus_IsLanded);
+            this.paStatusDocked.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.paStatusDocked.Location = new System.Drawing.Point(90, 0);
+            this.paStatusDocked.Margin = new System.Windows.Forms.Padding(0);
+            this.paStatusDocked.Name = "paStatusDocked";
+            this.paStatusDocked.Size = new System.Drawing.Size(21, 20);
+            this.paStatusDocked.TabIndex = 66;
+            // 
+            // pbStatus_IsLanded
+            // 
+            this.pbStatus_IsLanded.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_IsLanded.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_IsLanded.Image")));
+            this.pbStatus_IsLanded.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_IsLanded.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_IsLanded.Name = "pbStatus_IsLanded";
+            this.pbStatus_IsLanded.Size = new System.Drawing.Size(21, 20);
+            this.pbStatus_IsLanded.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_IsLanded.TabIndex = 1;
+            this.pbStatus_IsLanded.TabStop = false;
             // 
             // msMainMenu
             // 
@@ -506,8 +749,9 @@
             // 
             // label53
             // 
+            this.label53.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(499, 57);
+            this.label53.Location = new System.Drawing.Point(649, 57);
             this.label53.Name = "label53";
             this.label53.Size = new System.Drawing.Size(49, 13);
             this.label53.TabIndex = 15;
@@ -515,8 +759,9 @@
             // 
             // txtEDTime
             // 
+            this.txtEDTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtEDTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEDTime.Location = new System.Drawing.Point(554, 52);
+            this.txtEDTime.Location = new System.Drawing.Point(704, 52);
             this.txtEDTime.Name = "txtEDTime";
             this.txtEDTime.ReadOnly = true;
             this.txtEDTime.Size = new System.Drawing.Size(69, 22);
@@ -526,8 +771,9 @@
             // 
             // label54
             // 
+            this.label54.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(515, 33);
+            this.label54.Location = new System.Drawing.Point(665, 33);
             this.label54.Name = "label54";
             this.label54.Size = new System.Drawing.Size(33, 13);
             this.label54.TabIndex = 13;
@@ -535,8 +781,9 @@
             // 
             // txtLocalTime
             // 
+            this.txtLocalTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLocalTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLocalTime.Location = new System.Drawing.Point(554, 28);
+            this.txtLocalTime.Location = new System.Drawing.Point(704, 28);
             this.txtLocalTime.Name = "txtLocalTime";
             this.txtLocalTime.ReadOnly = true;
             this.txtLocalTime.Size = new System.Drawing.Size(69, 22);
@@ -770,6 +1017,17 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1079, 80);
             this.panel2.TabIndex = 33;
+            // 
+            // lnkZNSCompanionAPI
+            // 
+            this.lnkZNSCompanionAPI.AutoSize = true;
+            this.lnkZNSCompanionAPI.Location = new System.Drawing.Point(341, 56);
+            this.lnkZNSCompanionAPI.Name = "lnkZNSCompanionAPI";
+            this.lnkZNSCompanionAPI.Size = new System.Drawing.Size(155, 13);
+            this.lnkZNSCompanionAPI.TabIndex = 34;
+            this.lnkZNSCompanionAPI.TabStop = true;
+            this.lnkZNSCompanionAPI.Text = "ZNS C# \"Elite Companion API\"";
+            this.lnkZNSCompanionAPI.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkZNSCompanionAPI_LinkClicked);
             // 
             // lnkEDMC
             // 
@@ -2255,23 +2513,13 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
-            // lnkZNSCompanionAPI
-            // 
-            this.lnkZNSCompanionAPI.AutoSize = true;
-            this.lnkZNSCompanionAPI.Location = new System.Drawing.Point(341, 56);
-            this.lnkZNSCompanionAPI.Name = "lnkZNSCompanionAPI";
-            this.lnkZNSCompanionAPI.Size = new System.Drawing.Size(155, 13);
-            this.lnkZNSCompanionAPI.TabIndex = 34;
-            this.lnkZNSCompanionAPI.TabStop = true;
-            this.lnkZNSCompanionAPI.Text = "ZNS C# \"Elite Companion API\"";
-            this.lnkZNSCompanionAPI.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkZNSCompanionAPI_LinkClicked);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 737);
+            this.Controls.Add(this.tlpData);
             this.Controls.Add(this.gbEvents);
             this.Controls.Add(this.msMainMenu);
             this.Controls.Add(this.cmdLoadCurrentSystem);
@@ -2299,6 +2547,23 @@
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).EndInit();
             this.gbEvents.ResumeLayout(false);
             this.gbEvents.PerformLayout();
+            this.tlpData.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardData)).EndInit();
+            this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingData)).EndInit();
+            this.panel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketData)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.paStatusDocked.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_IsLanded)).EndInit();
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
             this.tabCtrlMain.ResumeLayout(false);
@@ -2513,6 +2778,24 @@
         private System.Windows.Forms.ToolStripMenuItem commodityMappingsToolStripMenuItem;
         private System.Windows.Forms.LinkLabel lnkEDMC;
         private System.Windows.Forms.LinkLabel lnkZNSCompanionAPI;
+        private System.Windows.Forms.TableLayoutPanel tlpData;
+        private System.Windows.Forms.PictureBox pbStatus_IsLanded;
+        private System.Windows.Forms.Label lbStatusDocked;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel paStatusDocked;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.PictureBox pbStatus_OutfittingData;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.PictureBox pbStatus_MarketData;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.PictureBox pbStatus_ShipyardData;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox cbEDDNOverride;
     }
 }
 

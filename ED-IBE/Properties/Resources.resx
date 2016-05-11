@@ -139,4 +139,16 @@
   <data name="green_led_on_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\green-led-on-md.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ledgreen_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\ledgreen_off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ledgreen_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\ledgreen_on.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ledorange_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\ledorange_off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ledorange_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\ledorange_on.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

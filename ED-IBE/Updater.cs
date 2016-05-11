@@ -1296,8 +1296,32 @@ namespace IBE
                             Program.SplashScreen.InfoAdd("checking spell of commodity names once...<OK>");
                         else
                             Program.SplashScreen.InfoAppendLast("<OK>");
-                    }
 
+
+                        var wasOn = Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend", true.ToString(), false) &&
+                                    Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false);;
+                        if(wasOn)
+                        {
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend",                true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",         true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData",   true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault",    "Send");
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOutfittingData",  true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostShipyardData",    true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue",      true.ToString());
+                        }
+                        else
+                        { 
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend",                true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",         true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData",   true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault",    "Hold");
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOutfittingData",  true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostShipyardData",    true.ToString());
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue",      false.ToString());
+                        }
+
+                    }
                 }
             }
             catch (Exception ex)

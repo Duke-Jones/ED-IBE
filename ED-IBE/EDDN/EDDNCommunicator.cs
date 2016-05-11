@@ -150,6 +150,10 @@ bool disposed = false;
         private List<String>                        m_Relays    = new List<string>() { "tcp://eddn-relay.elite-markets.net:9500", 
                                                                                        "tcp://eddn-relay.ed-td.space:9500"};
 
+        private Tuple<String, DateTime>             m_ID_of_Commodity_Station = new Tuple<String, DateTime>("", new DateTime());
+        private Tuple<String, DateTime>             m_ID_of_Outfitting_Station = new Tuple<String, DateTime>("", new DateTime());
+        private Tuple<String, DateTime>             m_ID_of_Shipyard_Station = new Tuple<String, DateTime>("", new DateTime());
+
 
         public EDDNCommunicator()
         {
@@ -583,25 +587,47 @@ bool disposed = false;
         public void DeactivateSender()
         {
             m_SenderIsActivated = false;
+
+            SendingReset();
         }
 
         /// <summary>
         /// register everything for sending with this function.
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
-        /// <param name="commodityData"></param>
+        /// <param name="stationData"></param>
         public void SendMarketData(CsvRow CommodityData, enInterface usedInterface)
         {
-            if(m_SenderIsActivated)
+            if(m_SenderIsActivated && 
+               Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString()) &&
+                ((Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false) && (usedInterface == enInterface.API)) || 
+                 (Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",       true.ToString(), false) && (usedInterface == enInterface.OCR))))
             {
+
                 // register next data row
                 if(usedInterface == enInterface.API)
-                    _Send_MarketData_API.Enqueue(CommodityData);
+                {
+                    if((m_ID_of_Commodity_Station.Item1 != (CommodityData.SystemName + "|" + CommodityData.StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
+                    { 
+                        _Send_MarketData_API.Enqueue(CommodityData);
+
+                        // here we get only the id, the time will be set after sending
+                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(CommodityData.SystemName + "|" + CommodityData.StationName, DateTime.Now - new TimeSpan(0,65,0));
+
+                        // reset the timer
+                        _SendDelayTimer_Commodity.Start();
+
+                    }
+                }
                 else
+                { 
                     _Send_MarketData_OCR.Enqueue(CommodityData);
 
-                // reset the timer
-                _SendDelayTimer_Commodity.Start();
+                    // reset the timer
+                    _SendDelayTimer_Commodity.Start();
+                }
+
+
             }
         }
 
@@ -609,23 +635,36 @@ bool disposed = false;
         /// register everything for sending with this function.
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
-        /// <param name="commodityData"></param>
+        /// <param name="stationData"></param>
         public void SendMarketData(List<CsvRow> csvRowList, enInterface usedInterface)
         {
-            if(m_SenderIsActivated)
+            if(m_SenderIsActivated && 
+               Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString()) &&
+                ((Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false) && (usedInterface == enInterface.API)) || 
+                 (Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",       true.ToString(), false) && (usedInterface == enInterface.OCR))))
             {
-                // reset the timer
-                _SendDelayTimer_Commodity.Start();
+                if((m_ID_of_Commodity_Station.Item1 != (csvRowList[0].SystemName + "|" + csvRowList[0].StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60) || (usedInterface == enInterface.OCR))
+                { 
+                    // reset the timer
+                    _SendDelayTimer_Commodity.Start();
 
-                // register rows
-                foreach (CsvRow csvRowListItem in csvRowList)
+                    // register rows
+                    foreach (CsvRow csvRowListItem in csvRowList)
+                        if(usedInterface == enInterface.API)
+                            _Send_MarketData_API.Enqueue(csvRowListItem);
+                        else
+                            _Send_MarketData_OCR.Enqueue(csvRowListItem);
+
+                    // reset the timer
+                    _SendDelayTimer_Commodity.Start();
+
                     if(usedInterface == enInterface.API)
-                        _Send_MarketData_API.Enqueue(csvRowListItem);
-                    else
-                        _Send_MarketData_OCR.Enqueue(csvRowListItem);
+                    { 
+                        // here we get only the id, the time will be set after sending
+                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(csvRowList[0].SystemName + "|" + csvRowList[0].StationName, DateTime.Now - new TimeSpan(0,65,0));
+                    }
 
-                // reset the timer
-                _SendDelayTimer_Commodity.Start();
+                }
             }
         }
 
@@ -633,25 +672,37 @@ bool disposed = false;
         /// register everything for sending with this function.
         /// 2 seconds after the last registration all data will be sent automatically
         /// </summary>
-        /// <param name="commodityData"></param>
+        /// <param name="stationData"></param>
         public void SendMarketData(String[] csv_Strings, enInterface usedInterface)
         {
-            if(m_SenderIsActivated)
+            if(m_SenderIsActivated && 
+               Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString()) &&
+                ((Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false) && (usedInterface == enInterface.API)) || 
+                 (Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",       true.ToString(), false) && (usedInterface == enInterface.OCR))))
             {
-                foreach (String csvString in csv_Strings)
-                {
+                CsvRow testRow = new CsvRow(csv_Strings[0]);
+
+                if((m_ID_of_Commodity_Station.Item1 != (testRow.SystemName + "|" + testRow.StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60) || (usedInterface == enInterface.OCR))
+                { 
                     // reset the timer
                     _SendDelayTimer_Commodity.Start();
 
                     // register rows
                     foreach (String csvRowString in csv_Strings)
                         if(usedInterface == enInterface.API)
-                            _Send_MarketData_API.Enqueue(new CsvRow(csvString));
+                            _Send_MarketData_API.Enqueue(new CsvRow(csvRowString));
                         else
-                            _Send_MarketData_OCR.Enqueue(new CsvRow(csvString));
+                            _Send_MarketData_OCR.Enqueue(new CsvRow(csvRowString));
 
                     // reset the timer
                     _SendDelayTimer_Commodity.Start();
+
+                    if(usedInterface == enInterface.API)
+                    { 
+                        // here we get only the id, the time will be set after sending
+                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(testRow.SystemName + "|" + testRow.StationName, DateTime.Now - new TimeSpan(0,65,0));
+                    }
+
                 }
             }
         }
@@ -659,7 +710,7 @@ bool disposed = false;
         /// <summary>
         /// send the outfitting data of this station
         /// </summary>
-        /// <param name="commodityData">json object with companion data</param>
+        /// <param name="stationData">json object with companion data</param>
         public void SendOutfittingData(JObject dataObject)
         {
             Int32 objectCount = 0;
@@ -669,93 +720,98 @@ bool disposed = false;
 
             try
             {
-                if(m_SenderIsActivated)
+                if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOutfittingData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
-                    String systeName   = dataObject.SelectToken("lastSystem.name").ToString();
+                    String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
                     String stationName = dataObject.SelectToken("lastStarport.name").ToString();
 
-                    StringBuilder outfittingStringEDDN = new StringBuilder();
-
-                    outfittingStringEDDN.Append(String.Format("\"message\": {{"));
-
-                    outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
-                    outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
-
-                    outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
-
-                    outfittingStringEDDN.Append(String.Format("\"modules\": ["));
-
-                    if(writeToFile)
+                    if((m_ID_of_Outfitting_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Outfitting_Station.Item2).TotalMinutes >= 60))
                     { 
-                        if(File.Exists(debugFile))
-                            File.Delete(debugFile);
+                        m_ID_of_Outfitting_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
 
-                        writer = new StreamWriter(File.OpenWrite(debugFile));
-                    }
+                        StringBuilder outfittingStringEDDN = new StringBuilder();
 
+                        outfittingStringEDDN.Append(String.Format("\"message\": {{"));
 
-                    foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
-                    {
-                        OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
+                        outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
 
-                        if(outfitting != null)
+                        outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+
+                        outfittingStringEDDN.Append(String.Format("\"modules\": ["));
+
+                        if(writeToFile)
                         { 
-                            if(objectCount > 0)
-                                outfittingStringEDDN.Append(", {");
-                            else
-                                outfittingStringEDDN.Append("{");
+                            if(File.Exists(debugFile))
+                                File.Delete(debugFile);
 
-                            if(writeToFile)
-                            {
-                                writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
-                                    systeName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
-                                    outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
-                                    DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
-                            }
-
-                            outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfitting.Category));
-                            outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfitting.Name));
-                            outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfitting.Class));
-                            outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfitting.Rating));
-
-                            switch (outfitting.Category)
-                            {
-                                case EDDN.OutfittingObject.Cat_Hardpoint:
-
-                                    outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfitting.Mount));
-                                    if(outfitting.Guidance != null)
-                                        outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfitting.Guidance));
-                                    break;
-
-                                case EDDN.OutfittingObject.Cat_Standard:
-
-                                    if(outfitting.Ship != null)
-                                        outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfitting.Ship));
-                                    break;
-                            }
-
-                            outfittingStringEDDN.Remove(outfittingStringEDDN.Length-1, 1);
-                            outfittingStringEDDN.Replace(",", "}", outfittingStringEDDN.Length-1, 1);
-
-                            objectCount++;
+                            writer = new StreamWriter(File.OpenWrite(debugFile));
                         }
-                    } 
 
-                    outfittingStringEDDN.Append("]}");
 
-                    if(objectCount > 0)
-                    { 
-                        _Send_Outfitting.Enqueue(outfittingStringEDDN);
-                        _SendDelayTimer_Outfitting.Start();
+                        foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
+                        {
+                            OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
+
+                            if(outfitting != null)
+                            { 
+                                if(objectCount > 0)
+                                    outfittingStringEDDN.Append(", {");
+                                else
+                                    outfittingStringEDDN.Append("{");
+
+                                if(writeToFile)
+                                {
+                                    writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                                        systemName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
+                                        outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
+                                        DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                }
+
+                                outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfitting.Category));
+                                outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfitting.Name));
+                                outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfitting.Class));
+                                outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfitting.Rating));
+
+                                switch (outfitting.Category)
+                                {
+                                    case EDDN.OutfittingObject.Cat_Hardpoint:
+
+                                        outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfitting.Mount));
+                                        if(outfitting.Guidance != null)
+                                            outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfitting.Guidance));
+                                        break;
+
+                                    case EDDN.OutfittingObject.Cat_Standard:
+
+                                        if(outfitting.Ship != null)
+                                            outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfitting.Ship));
+                                        break;
+                                }
+
+                                outfittingStringEDDN.Remove(outfittingStringEDDN.Length-1, 1);
+                                outfittingStringEDDN.Replace(",", "}", outfittingStringEDDN.Length-1, 1);
+
+                                objectCount++;
+                            }
+                        } 
+
+                        outfittingStringEDDN.Append("]}");
+
+                        if(objectCount > 0)
+                        { 
+                            _Send_Outfitting.Enqueue(outfittingStringEDDN);
+                            _SendDelayTimer_Outfitting.Start();
+                            m_ID_of_Outfitting_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                        }
+
+                        if(writeToFile)
+                        {
+                            writer.Close();
+                            writer.Dispose();
+                        }
                     }
-
-                    if(writeToFile)
-                    {
-                        writer.Close();
-                        writer.Dispose();
-                    }
-
                 }
             }
             catch (Exception ex)
@@ -767,7 +823,7 @@ bool disposed = false;
         /// <summary>
         /// send the shipyard data of this station
         /// </summary>
-        /// <param name="commodityData">json object with companion data</param>
+        /// <param name="stationData">json object with companion data</param>
         public void SendShipyardData(JObject dataObject)
         {
             Int32 objectCount = 0;
@@ -777,72 +833,75 @@ bool disposed = false;
 
             try
             {
-                if(m_SenderIsActivated)
+                if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostShipyardData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
 
-                    String systeName   = dataObject.SelectToken("lastSystem.name").ToString();
+                    String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
                     String stationName = dataObject.SelectToken("lastStarport.name").ToString();
 
-                    StringBuilder shipyardStringEDDN = new StringBuilder();
-
-                    shipyardStringEDDN.Append(String.Format("\"message\": {{"));
-
-                    shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
-                    shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
-
-                    shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
-
-                    shipyardStringEDDN.Append(String.Format("\"ships\": ["));
-
-                    if(writeToFile)
+                    if((m_ID_of_Shipyard_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Shipyard_Station.Item2).TotalMinutes >= 60))
                     { 
-                        if(File.Exists(debugFile))
-                            File.Delete(debugFile);
+                        StringBuilder shipyardStringEDDN = new StringBuilder();
 
-                        writer = new StreamWriter(File.OpenWrite(debugFile));
-                    }
+                        shipyardStringEDDN.Append(String.Format("\"message\": {{"));
 
-                    if(dataObject.SelectToken("lastStarport.ships", false) != null)
-                    { 
-                        List<JToken> allShips = dataObject.SelectTokens("lastStarport.ships.shipyard_list.*").ToList();
-                        allShips.AddRange(dataObject.SelectTokens("lastStarport.ships.unavailable_list.[*]").ToList());
+                        shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
+                        shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
 
-                        foreach (JToken outfittingItem in allShips)
-                        {
-                            ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
+                        shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
 
-                            if(shipyardItem != null)
-                            { 
-                                if(writeToFile)
-                                {
-                                    writer.WriteLine(String.Format("{0},{1},{2},{3}", 
-                                        systeName, stationName, shipyardItem.Name, 
-                                        DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
-                                }
-
-                                shipyardStringEDDN.Append(String.Format("\"{0}\", ", shipyardItem.Name));
-
-                                objectCount++;
-                            }
-                        } 
-
-                        shipyardStringEDDN.Remove(shipyardStringEDDN.Length-2, 2);
-                        shipyardStringEDDN.Append("]}");
-
-                        if(objectCount > 0)
-                        { 
-                            _Send_Shipyard.Enqueue(shipyardStringEDDN);
-                            _SendDelayTimer_Shipyard.Start();
-                        }
+                        shipyardStringEDDN.Append(String.Format("\"ships\": ["));
 
                         if(writeToFile)
-                        {
-                            writer.Close();
-                            writer.Dispose();
+                        { 
+                            if(File.Exists(debugFile))
+                                File.Delete(debugFile);
+
+                            writer = new StreamWriter(File.OpenWrite(debugFile));
+                        }
+
+                        if(dataObject.SelectToken("lastStarport.ships", false) != null)
+                        { 
+                            List<JToken> allShips = dataObject.SelectTokens("lastStarport.ships.shipyard_list.*").ToList();
+                            allShips.AddRange(dataObject.SelectTokens("lastStarport.ships.unavailable_list.[*]").ToList());
+
+                            foreach (JToken outfittingItem in allShips)
+                            {
+                                ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
+
+                                if(shipyardItem != null)
+                                { 
+                                    if(writeToFile)
+                                    {
+                                        writer.WriteLine(String.Format("{0},{1},{2},{3}", 
+                                            systemName, stationName, shipyardItem.Name, 
+                                            DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                    }
+
+                                    shipyardStringEDDN.Append(String.Format("\"{0}\", ", shipyardItem.Name));
+
+                                    objectCount++;
+                                }
+                            } 
+
+                            shipyardStringEDDN.Remove(shipyardStringEDDN.Length-2, 2);
+                            shipyardStringEDDN.Append("]}");
+
+                            if(objectCount > 0)
+                            { 
+                                _Send_Shipyard.Enqueue(shipyardStringEDDN);
+                                _SendDelayTimer_Shipyard.Start();
+                                m_ID_of_Shipyard_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                            }
+
+                            if(writeToFile)
+                            {
+                                writer.Close();
+                                writer.Dispose();
+                            }
                         }
                     }
-
                 }
             }
             catch (Exception ex)
@@ -983,6 +1042,13 @@ bool disposed = false;
                         {
                             client.Dispose();
                         }
+
+                        if(activeQueue == _Send_MarketData_API)
+                        { 
+                            // data over api sent, set cooldown time
+                            m_ID_of_Commodity_Station = new Tuple<String, DateTime>(m_ID_of_Commodity_Station.Item1, DateTime.Now);
+                        }
+
                     }
 
                     // retry, if the ocr-queue has entries and the last queue was then api-queue
@@ -1287,6 +1353,12 @@ bool disposed = false;
             }
         }
 
+        public void SendingReset()
+        {
+            m_ID_of_Commodity_Station  =  new Tuple<String, DateTime>("", new DateTime());
+            m_ID_of_Outfitting_Station =  new Tuple<String, DateTime>("", new DateTime());
+            m_ID_of_Shipyard_Station   = new Tuple<String, DateTime>("", new DateTime());
+        }
 #endregion
     }
 }

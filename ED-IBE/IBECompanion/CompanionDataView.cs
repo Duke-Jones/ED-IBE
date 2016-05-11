@@ -65,7 +65,7 @@ namespace IBE.IBECompanion
                     {
                         Program.DBCon.setIniValue(DB_GROUPNAME, "EmailAddress", txtEmail.Text);
 
-                        var response = Program.CompanionIO.GetProfileData();
+                        var response = Program.CompanionIO.GetProfileData(false);
                         var json = "";
 
                         switch (response.LoginStatus)
