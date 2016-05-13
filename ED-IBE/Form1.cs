@@ -3543,14 +3543,14 @@ namespace IBE
                         if(Program.CompanionIO.StationHasOutfittingData())
                             pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_on;
                         else if((stationID != null) && (Program.DBCon.Execute<Boolean>("select has_outfitting from tbStations where id = " + stationID)))
-                            pbStatus_MarketData.Image       = Properties.Resources.ledred_on;
+                            pbStatus_OutfittingData.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_off;
 
                         if(Program.CompanionIO.StationHasShipyardData())
                             pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_on;
                         else if((stationID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + stationID)))
-                            pbStatus_MarketData.Image       = Properties.Resources.ledred_on;
+                            pbStatus_ShipyardData.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_off;
 

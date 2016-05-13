@@ -1179,8 +1179,7 @@ namespace IBE
         {
             try
             {
-
-                if(m_OldDBVersion < m_NewDBVersion)
+                if(Program.Data.InitImportDone && (m_OldDBVersion < m_NewDBVersion))
                 { 
                     if(m_NewDBVersion == new Version(0,3,0,0))
                     {

@@ -12,6 +12,7 @@ Content:
 		2. Start
 		3. First steps and results
 			3.1. enter your own data
+			3.1.1 what do the leds mean
 			3.2. Starters Kit
 			3.3. find profitable route
 			3.4. find the next station that sells a particular commodity
@@ -96,8 +97,13 @@ see in the lower status bar a message about the operating readiness of the inter
 Now you can deal with the interface by pressing "Landed" to get your current location
 or "Market Data" to import the current prices.
 
-* "Landed"       also generates a "Landed" event in the Commander's Log
-* "Market Data"  also generates a "Market Data Collected" event in the Commander's Log
+* "Landed/Station Data"   - recieves the data from the FD servers
+                          - creates a "Landed"-Event in the Commander's Log
+						  - send outfitting and shipyard data to the EDDN (if activated)
+						  
+* "Market Data"           - creates a "Market Data Collected"-Event in the Commander's Log
+                          - integrates the market data of the current station to your local database
+						  - sends market data to the EDDN if "Send To EDDN" is checked
 
 The "cached" timer shows how long you will get the data from a internal cache of the interface.
 The next request to the ED server will not send until the timer is 0 again. For example 
@@ -105,6 +111,17 @@ you can press "Landed" and you will get the whole bunch of data from the server.
 After this (while the timer is counting) you press "Market Data".
 Conclusion: Even if the counter is running you have cached data and need not to wait.
 
+3.1.1 what do the leds mean
+* Docked: IBE knows that you are docked
+* Market Data: (left LED ) the market data of this station are saved into your local database
+               (right LED ) IBE has transmitted the market data of this station to EDDN
+* Outfitting Data : (left LED ) IBE has recieved the outfitting data of this station (no IBE support yet)
+                    (right LED ) IBE has transmitted the outfitting data of this station to EDDN
+* Shipyard Data :   (left LED ) IBE has recieved the shipyard data of this station (no IBE support yet)
+                    (right LED ) IBE has transmitted the the shipyard data  of this station to EDDN
+
+a led is red: this data was awaited (due to EDDB data) but not recieved from the FD servers
+					
 3.2. Starters Kit
 If you do not rigidly insists on want to collect only your own data, I recommend
 the import of the "Starters Kit": "Data" -> "Import & Export" -> "EDDB imports").

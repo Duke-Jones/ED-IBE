@@ -8,6 +8,7 @@ Inhalt:
 		2. Starten
 		3. Erste Schritte und Ergebnisse
 			3.1. eigene Daten erfassen
+			3.1.1 was sind das für LED-anzeigen
 			3.2. Starters Kit
 			3.3. profitable Route finden
 			3.4. die nächste Station finden, die eine bestimmte Ware verkauft
@@ -88,17 +89,33 @@ Diesen in das betreffende Feld eingeben und mit "Verify absenden.
 Einen Augenblick später sollte die untere Statuszeile die Bereitschaft der 
 Schnittstelle melden.
 
-Jetzt sollte man auf mit den Tasten "Landed" und "Market Data" die aktuellen 
+Jetzt sollte man auf mit den Tasten ""Landed/Station Data" und "Market Data" die aktuellen 
 Daten der Station erfassen können.
 
-* "Landed"            erzeugt gleichzeitig ein "Landed"-Event im Commander's Log
-* "Market Data"       erzeugt gleichzeitig ein "Market Data Collected"-Event im Commander's Log
+* "Landed/Station Data"   - empfängt die Daten von den FD-Servern 
+                          - erzeugt ein "Landed"-Event im Commander's Log
+						  - sendet Schiffwerft- und Austattungsdaten in das EDDN (wenn aktiv)
+						  
+* "Market Data"           - erzeugt gleichzeitig ein "Market Data Collected"-Event im Commander's Log
+                          - lädt die aktuellen Markpreise der Station in die lokale Datenbank
+						  - sendet die Marktdaten in das EDDN, wenn der Haken bei "Send To EDDN" gesetzt ist
 
 Der "cached"-Timer zeigt an, wie lange weitere Datenanfragen noch aus einem Cache 
 bedient werden. Erst wenn der Timer wieder auf 0 steht werden die internen Daten bei der 
 nächsten Anfrage aktualisiert. So wird zum Beispiel nach einem Klick auf "Landed"
 der kurz darauf folgende Klick auf "Market Data" mit den selben Daten bedient, die bereits 
 beim Klick auf "Landed" von den ED-Servern abgefragt wurden.
+
+3.1.1 was sind das für LED-anzeigen
+* Docked: zeigt an, das IBE das Schiff als gelandet ansieht
+* Market Data: (linke LED ) die Daten der aktuellen Station wurden in die lokale Datenbank übertragen
+               (rechte LED ) die Daten der aktuellen Station wurden an das EDDN übermittelt
+* Outfitting Data : (linke LED ) die Ausstattungsdaten der aktuellen Station wurden empfangen (noch keine weitere Unterstützung durch IBE)
+                    (rechte LED ) die Ausstattungsdaten der aktuellen Station wurden an das EDDN übermittelt
+* Shipyard Data :   (linke LED ) die Werftdaten der aktuellen Station wurden empfangen (noch keine weitere Unterstützung durch IBE)
+                    (rechte LED ) die Werftdaten der aktuellen Station wurden an das EDDN übermittelt
+
+Ein Anzeige ist rot : diese Daten wurden erwartet (aufgrund der Daten von EDDB) aber nicht empfangen von den FD-Servern
 
 3.2. Starters Kit
 Wenn man nicht starr darauf beharrt, nur eigene Preise sammeln zu wollen, empfehle ich

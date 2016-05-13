@@ -16,6 +16,11 @@ Default
 
 done:
    
+v0.3.0
+   * small fixes 
+   * updated installer script
+   * updated StarterTips  : 3.1 / 3.1.1
+-------------------------------------------------------------------------------------         
    * first version of a color control
 -------------------------------------------------------------------------------------         
    * current balance shown in every new log entry by default
