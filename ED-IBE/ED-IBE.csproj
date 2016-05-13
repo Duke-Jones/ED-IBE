@@ -143,6 +143,12 @@
     <Compile Include="EDDN\OutfittingObject.cs" />
     <Compile Include="EDDN\ShipyardObject.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
+    <Compile Include="GUIColorsView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIColorsView.Designer.cs">
+      <DependentUpon>GUIColorsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="IBECompanion\CompanionConverter.cs" />
     <Compile Include="IBECompanion\CompanionData.cs" />
     <Compile Include="IBECompanion\CompanionDataView.cs">
@@ -447,6 +453,9 @@
     <EmbeddedResource Include="CommoditySelector.resx">
       <DependentUpon>CommoditySelector.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIColorsView.resx">
+      <DependentUpon>GUIColorsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IBECompanion\CompanionDataView.resx">
       <DependentUpon>CompanionDataView.cs</DependentUpon>

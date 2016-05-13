@@ -52,11 +52,18 @@
             this.cmdEventMarketData = new System.Windows.Forms.Button();
             this.cmdEventLanded = new System.Windows.Forms.Button();
             this.tlpData = new System.Windows.Forms.TableLayoutPanel();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.pbStatus_ShipyardDataEDDN = new System.Windows.Forms.PictureBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.pbStatus_ShipyardData = new System.Windows.Forms.PictureBox();
             this.panel6 = new System.Windows.Forms.Panel();
             this.pbStatus_OutfittingData = new System.Windows.Forms.PictureBox();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.pbStatus_OutfittingDataEDDN = new System.Windows.Forms.PictureBox();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.pbStatus_MarketDataEDDN = new System.Windows.Forms.PictureBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pbStatus_MarketData = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -77,6 +84,7 @@
             this.createJumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eDDNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,8 +99,6 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
-            this.cmdResetColors = new System.Windows.Forms.Button();
-            this.cmdActivateColors = new System.Windows.Forms.Button();
             this.label93 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
             this.label91 = new System.Windows.Forms.Label();
@@ -117,13 +123,6 @@
             this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             this.linkLabel6 = new System.Windows.Forms.LinkLabel();
             this.linkLabel7 = new System.Windows.Forms.LinkLabel();
-            this.BackgroundSet = new System.Windows.Forms.Label();
-            this.ForegroundSet = new System.Windows.Forms.Label();
-            this.cmdDeactivateColors = new System.Windows.Forms.Button();
-            this.label47 = new System.Windows.Forms.Label();
-            this.label46 = new System.Windows.Forms.Label();
-            this.pbBackgroundColour = new System.Windows.Forms.PictureBox();
-            this.pbForegroundColour = new System.Windows.Forms.PictureBox();
             this.button23 = new System.Windows.Forms.Button();
             this.button22 = new System.Windows.Forms.Button();
             this.lblSubtitle = new System.Windows.Forms.Label();
@@ -237,24 +236,23 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
-            this.pbStatus_MarketDataEDDN = new System.Windows.Forms.PictureBox();
-            this.pbStatus_ShipyardDataEDDN = new System.Windows.Forms.PictureBox();
-            this.pbStatus_OutfittingDataEDDN = new System.Windows.Forms.PictureBox();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.panel12 = new System.Windows.Forms.Panel();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.gbEvents.SuspendLayout();
             this.tlpData.SuspendLayout();
+            this.panel12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardDataEDDN)).BeginInit();
             this.panel7.SuspendLayout();
             this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardData)).BeginInit();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingData)).BeginInit();
+            this.panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingDataEDDN)).BeginInit();
+            this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketDataEDDN)).BeginInit();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketData)).BeginInit();
             this.panel4.SuspendLayout();
@@ -266,20 +264,12 @@
             this.tabCtrlMain.SuspendLayout();
             this.tabHelpAndChangeLog.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).BeginInit();
             this.tabSystemData.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.paEconomies.SuspendLayout();
             this.gbSystemSystemData.SuspendLayout();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketDataEDDN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardDataEDDN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingDataEDDN)).BeginInit();
-            this.panel8.SuspendLayout();
-            this.panel10.SuspendLayout();
-            this.panel12.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -429,7 +419,6 @@
             this.gbEvents.TabIndex = 63;
             this.gbEvents.TabStop = false;
             this.gbEvents.Text = "Events";
-            this.gbEvents.Enter += new System.EventHandler(this.gbEvents_Enter);
             // 
             // cbEDDNOverride
             // 
@@ -501,7 +490,28 @@
             this.tlpData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpData.Size = new System.Drawing.Size(121, 82);
             this.tlpData.TabIndex = 65;
-            this.tlpData.Paint += new System.Windows.Forms.PaintEventHandler(this.tlpData_Paint);
+            // 
+            // panel12
+            // 
+            this.panel12.Controls.Add(this.pbStatus_ShipyardDataEDDN);
+            this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel12.Location = new System.Drawing.Point(101, 60);
+            this.panel12.Margin = new System.Windows.Forms.Padding(0);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(20, 22);
+            this.panel12.TabIndex = 76;
+            // 
+            // pbStatus_ShipyardDataEDDN
+            // 
+            this.pbStatus_ShipyardDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_ShipyardDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_ShipyardDataEDDN.Image")));
+            this.pbStatus_ShipyardDataEDDN.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_ShipyardDataEDDN.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_ShipyardDataEDDN.Name = "pbStatus_ShipyardDataEDDN";
+            this.pbStatus_ShipyardDataEDDN.Size = new System.Drawing.Size(20, 22);
+            this.pbStatus_ShipyardDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_ShipyardDataEDDN.TabIndex = 68;
+            this.pbStatus_ShipyardDataEDDN.TabStop = false;
             // 
             // panel7
             // 
@@ -555,6 +565,59 @@
             this.pbStatus_OutfittingData.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbStatus_OutfittingData.TabIndex = 1;
             this.pbStatus_OutfittingData.TabStop = false;
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.pbStatus_OutfittingDataEDDN);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel10.Location = new System.Drawing.Point(101, 40);
+            this.panel10.Margin = new System.Windows.Forms.Padding(0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(20, 20);
+            this.panel10.TabIndex = 74;
+            // 
+            // pbStatus_OutfittingDataEDDN
+            // 
+            this.pbStatus_OutfittingDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_OutfittingDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_OutfittingDataEDDN.Image")));
+            this.pbStatus_OutfittingDataEDDN.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_OutfittingDataEDDN.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_OutfittingDataEDDN.Name = "pbStatus_OutfittingDataEDDN";
+            this.pbStatus_OutfittingDataEDDN.Size = new System.Drawing.Size(20, 20);
+            this.pbStatus_OutfittingDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_OutfittingDataEDDN.TabIndex = 67;
+            this.pbStatus_OutfittingDataEDDN.TabStop = false;
+            // 
+            // panel11
+            // 
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel11.Location = new System.Drawing.Point(101, 0);
+            this.panel11.Margin = new System.Windows.Forms.Padding(0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(20, 20);
+            this.panel11.TabIndex = 75;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.pbStatus_MarketDataEDDN);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(101, 20);
+            this.panel8.Margin = new System.Windows.Forms.Padding(0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(20, 20);
+            this.panel8.TabIndex = 74;
+            // 
+            // pbStatus_MarketDataEDDN
+            // 
+            this.pbStatus_MarketDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbStatus_MarketDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_MarketDataEDDN.Image")));
+            this.pbStatus_MarketDataEDDN.Location = new System.Drawing.Point(0, 0);
+            this.pbStatus_MarketDataEDDN.Margin = new System.Windows.Forms.Padding(0);
+            this.pbStatus_MarketDataEDDN.Name = "pbStatus_MarketDataEDDN";
+            this.pbStatus_MarketDataEDDN.Size = new System.Drawing.Size(20, 20);
+            this.pbStatus_MarketDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbStatus_MarketDataEDDN.TabIndex = 66;
+            this.pbStatus_MarketDataEDDN.TabStop = false;
             // 
             // panel5
             // 
@@ -721,7 +784,8 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem1});
+            this.settingsToolStripMenuItem1,
+            this.colorsToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -729,9 +793,16 @@
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
+            // 
+            // colorsToolStripMenuItem
+            // 
+            this.colorsToolStripMenuItem.Name = "colorsToolStripMenuItem";
+            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.colorsToolStripMenuItem.Text = "Colors";
+            this.colorsToolStripMenuItem.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click);
             // 
             // iOToolStripMenuItem
             // 
@@ -868,8 +939,6 @@
             // 
             // tabHelpAndChangeLog
             // 
-            this.tabHelpAndChangeLog.Controls.Add(this.cmdResetColors);
-            this.tabHelpAndChangeLog.Controls.Add(this.cmdActivateColors);
             this.tabHelpAndChangeLog.Controls.Add(this.label93);
             this.tabHelpAndChangeLog.Controls.Add(this.label92);
             this.tabHelpAndChangeLog.Controls.Add(this.label91);
@@ -882,13 +951,6 @@
             this.tabHelpAndChangeLog.Controls.Add(this.cmdDonate);
             this.tabHelpAndChangeLog.Controls.Add(this.lblDonate);
             this.tabHelpAndChangeLog.Controls.Add(this.panel2);
-            this.tabHelpAndChangeLog.Controls.Add(this.BackgroundSet);
-            this.tabHelpAndChangeLog.Controls.Add(this.ForegroundSet);
-            this.tabHelpAndChangeLog.Controls.Add(this.cmdDeactivateColors);
-            this.tabHelpAndChangeLog.Controls.Add(this.label47);
-            this.tabHelpAndChangeLog.Controls.Add(this.label46);
-            this.tabHelpAndChangeLog.Controls.Add(this.pbBackgroundColour);
-            this.tabHelpAndChangeLog.Controls.Add(this.pbForegroundColour);
             this.tabHelpAndChangeLog.Controls.Add(this.button23);
             this.tabHelpAndChangeLog.Controls.Add(this.button22);
             this.tabHelpAndChangeLog.Controls.Add(this.lblSubtitle);
@@ -899,28 +961,6 @@
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
-            // 
-            // cmdResetColors
-            // 
-            this.cmdResetColors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdResetColors.Location = new System.Drawing.Point(935, 100);
-            this.cmdResetColors.Name = "cmdResetColors";
-            this.cmdResetColors.Size = new System.Drawing.Size(102, 44);
-            this.cmdResetColors.TabIndex = 49;
-            this.cmdResetColors.Text = "Reset colors\r\nto defaults";
-            this.cmdResetColors.UseVisualStyleBackColor = true;
-            this.cmdResetColors.Click += new System.EventHandler(this.cmdResetColors_Click);
-            // 
-            // cmdActivateColors
-            // 
-            this.cmdActivateColors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdActivateColors.Location = new System.Drawing.Point(1043, 100);
-            this.cmdActivateColors.Name = "cmdActivateColors";
-            this.cmdActivateColors.Size = new System.Drawing.Size(102, 44);
-            this.cmdActivateColors.TabIndex = 48;
-            this.cmdActivateColors.Text = "Activate\r\nColor Setting";
-            this.cmdActivateColors.UseVisualStyleBackColor = true;
-            this.cmdActivateColors.Click += new System.EventHandler(this.cmdActivateColors_Click);
             // 
             // label93
             // 
@@ -1017,12 +1057,11 @@
             // 
             // cmdDonate
             // 
-            this.cmdDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdDonate.BackColor = System.Drawing.Color.PaleGreen;
             this.cmdDonate.BackgroundImage = global::IBE.Properties.Resources.PayPalDonate;
             this.cmdDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.cmdDonate.FlatAppearance.BorderSize = 0;
-            this.cmdDonate.Location = new System.Drawing.Point(876, 330);
+            this.cmdDonate.Location = new System.Drawing.Point(876, 140);
             this.cmdDonate.Name = "cmdDonate";
             this.cmdDonate.Size = new System.Drawing.Size(161, 43);
             this.cmdDonate.TabIndex = 37;
@@ -1031,11 +1070,10 @@
             // 
             // lblDonate
             // 
-            this.lblDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDonate.BackColor = System.Drawing.Color.Transparent;
             this.lblDonate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDonate.ForeColor = System.Drawing.Color.Green;
-            this.lblDonate.Location = new System.Drawing.Point(777, 235);
+            this.lblDonate.Location = new System.Drawing.Point(777, 45);
             this.lblDonate.Name = "lblDonate";
             this.lblDonate.Size = new System.Drawing.Size(352, 139);
             this.lblDonate.TabIndex = 38;
@@ -1195,83 +1233,6 @@
             this.linkLabel7.Text = "System Location information kindly provided by Biteketkergetek at http://starchar" +
     "t.club/map/";
             this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
-            // 
-            // BackgroundSet
-            // 
-            this.BackgroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BackgroundSet.AutoSize = true;
-            this.BackgroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackgroundSet.Location = new System.Drawing.Point(1111, 69);
-            this.BackgroundSet.Name = "BackgroundSet";
-            this.BackgroundSet.Size = new System.Drawing.Size(18, 20);
-            this.BackgroundSet.TabIndex = 30;
-            this.BackgroundSet.Text = "?";
-            this.BackgroundSet.Click += new System.EventHandler(this.pbBackgroundColour_Click);
-            // 
-            // ForegroundSet
-            // 
-            this.ForegroundSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ForegroundSet.AutoSize = true;
-            this.ForegroundSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForegroundSet.Location = new System.Drawing.Point(1111, 31);
-            this.ForegroundSet.Name = "ForegroundSet";
-            this.ForegroundSet.Size = new System.Drawing.Size(18, 20);
-            this.ForegroundSet.TabIndex = 29;
-            this.ForegroundSet.Text = "?";
-            this.ForegroundSet.Click += new System.EventHandler(this.pbForegroundColour_Click);
-            // 
-            // cmdDeactivateColors
-            // 
-            this.cmdDeactivateColors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdDeactivateColors.Location = new System.Drawing.Point(966, 150);
-            this.cmdDeactivateColors.Name = "cmdDeactivateColors";
-            this.cmdDeactivateColors.Size = new System.Drawing.Size(148, 44);
-            this.cmdDeactivateColors.TabIndex = 28;
-            this.cmdDeactivateColors.Text = "Reset to system colors -\r\nrequires app restart";
-            this.cmdDeactivateColors.UseVisualStyleBackColor = true;
-            this.cmdDeactivateColors.Click += new System.EventHandler(this.cmdDeactivateColors_Click);
-            // 
-            // label47
-            // 
-            this.label47.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(1004, 71);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(98, 13);
-            this.label47.TabIndex = 27;
-            this.label47.Text = "Background Colour";
-            // 
-            // label46
-            // 
-            this.label46.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(1004, 32);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(94, 13);
-            this.label46.TabIndex = 26;
-            this.label46.Text = "Foreground Colour";
-            // 
-            // pbBackgroundColour
-            // 
-            this.pbBackgroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbBackgroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbBackgroundColour.Location = new System.Drawing.Point(1104, 63);
-            this.pbBackgroundColour.Name = "pbBackgroundColour";
-            this.pbBackgroundColour.Size = new System.Drawing.Size(32, 32);
-            this.pbBackgroundColour.TabIndex = 25;
-            this.pbBackgroundColour.TabStop = false;
-            this.pbBackgroundColour.Click += new System.EventHandler(this.pbBackgroundColour_Click);
-            // 
-            // pbForegroundColour
-            // 
-            this.pbForegroundColour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbForegroundColour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbForegroundColour.Location = new System.Drawing.Point(1104, 25);
-            this.pbForegroundColour.Name = "pbForegroundColour";
-            this.pbForegroundColour.Size = new System.Drawing.Size(32, 32);
-            this.pbForegroundColour.TabIndex = 24;
-            this.pbForegroundColour.TabStop = false;
-            this.pbForegroundColour.Click += new System.EventHandler(this.pbForegroundColour_Click);
             // 
             // button23
             // 
@@ -2558,81 +2519,6 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
-            // pbStatus_MarketDataEDDN
-            // 
-            this.pbStatus_MarketDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbStatus_MarketDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_MarketDataEDDN.Image")));
-            this.pbStatus_MarketDataEDDN.Location = new System.Drawing.Point(0, 0);
-            this.pbStatus_MarketDataEDDN.Margin = new System.Windows.Forms.Padding(0);
-            this.pbStatus_MarketDataEDDN.Name = "pbStatus_MarketDataEDDN";
-            this.pbStatus_MarketDataEDDN.Size = new System.Drawing.Size(20, 20);
-            this.pbStatus_MarketDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus_MarketDataEDDN.TabIndex = 66;
-            this.pbStatus_MarketDataEDDN.TabStop = false;
-            // 
-            // pbStatus_ShipyardDataEDDN
-            // 
-            this.pbStatus_ShipyardDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbStatus_ShipyardDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_ShipyardDataEDDN.Image")));
-            this.pbStatus_ShipyardDataEDDN.Location = new System.Drawing.Point(0, 0);
-            this.pbStatus_ShipyardDataEDDN.Margin = new System.Windows.Forms.Padding(0);
-            this.pbStatus_ShipyardDataEDDN.Name = "pbStatus_ShipyardDataEDDN";
-            this.pbStatus_ShipyardDataEDDN.Size = new System.Drawing.Size(20, 22);
-            this.pbStatus_ShipyardDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus_ShipyardDataEDDN.TabIndex = 68;
-            this.pbStatus_ShipyardDataEDDN.TabStop = false;
-            // 
-            // pbStatus_OutfittingDataEDDN
-            // 
-            this.pbStatus_OutfittingDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbStatus_OutfittingDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_OutfittingDataEDDN.Image")));
-            this.pbStatus_OutfittingDataEDDN.Location = new System.Drawing.Point(0, 0);
-            this.pbStatus_OutfittingDataEDDN.Margin = new System.Windows.Forms.Padding(0);
-            this.pbStatus_OutfittingDataEDDN.Name = "pbStatus_OutfittingDataEDDN";
-            this.pbStatus_OutfittingDataEDDN.Size = new System.Drawing.Size(20, 20);
-            this.pbStatus_OutfittingDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus_OutfittingDataEDDN.TabIndex = 67;
-            this.pbStatus_OutfittingDataEDDN.TabStop = false;
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.pbStatus_MarketDataEDDN);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(101, 20);
-            this.panel8.Margin = new System.Windows.Forms.Padding(0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(20, 20);
-            this.panel8.TabIndex = 74;
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.pbStatus_OutfittingDataEDDN);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(101, 40);
-            this.panel10.Margin = new System.Windows.Forms.Padding(0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(20, 20);
-            this.panel10.TabIndex = 74;
-            // 
-            // panel11
-            // 
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel11.Location = new System.Drawing.Point(101, 0);
-            this.panel11.Margin = new System.Windows.Forms.Padding(0);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(20, 20);
-            this.panel11.TabIndex = 75;
-            // 
-            // panel12
-            // 
-            this.panel12.Controls.Add(this.pbStatus_ShipyardDataEDDN);
-            this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel12.Location = new System.Drawing.Point(101, 60);
-            this.panel12.Margin = new System.Windows.Forms.Padding(0);
-            this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(20, 22);
-            this.panel12.TabIndex = 76;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2668,12 +2554,18 @@
             this.gbEvents.ResumeLayout(false);
             this.gbEvents.PerformLayout();
             this.tlpData.ResumeLayout(false);
+            this.panel12.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardDataEDDN)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardData)).EndInit();
             this.panel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingData)).EndInit();
+            this.panel10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingDataEDDN)).EndInit();
+            this.panel8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketDataEDDN)).EndInit();
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketData)).EndInit();
             this.panel4.ResumeLayout(false);
@@ -2691,8 +2583,6 @@
             this.tabHelpAndChangeLog.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBackgroundColour)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbForegroundColour)).EndInit();
             this.tabSystemData.ResumeLayout(false);
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
@@ -2703,12 +2593,6 @@
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketDataEDDN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardDataEDDN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingDataEDDN)).EndInit();
-            this.panel8.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            this.panel12.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2872,13 +2756,6 @@
         private System.Windows.Forms.LinkLabel linkLabel5;
         private System.Windows.Forms.LinkLabel linkLabel6;
         private System.Windows.Forms.LinkLabel linkLabel7;
-        private System.Windows.Forms.Label BackgroundSet;
-        private System.Windows.Forms.Label ForegroundSet;
-        private System.Windows.Forms.Button cmdDeactivateColors;
-        private System.Windows.Forms.Label label47;
-        private System.Windows.Forms.Label label46;
-        private System.Windows.Forms.PictureBox pbBackgroundColour;
-        private System.Windows.Forms.PictureBox pbForegroundColour;
         private System.Windows.Forms.Button button23;
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.Label lblSubtitle;
@@ -2922,8 +2799,6 @@
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox cbEDDNOverride;
-        private System.Windows.Forms.Button cmdActivateColors;
-        private System.Windows.Forms.Button cmdResetColors;
         private System.Windows.Forms.PictureBox pbStatus_MarketDataEDDN;
         private System.Windows.Forms.PictureBox pbStatus_ShipyardDataEDDN;
         private System.Windows.Forms.PictureBox pbStatus_OutfittingDataEDDN;
@@ -2931,6 +2806,7 @@
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.Panel panel12;
+        private System.Windows.Forms.ToolStripMenuItem colorsToolStripMenuItem;
     }
 }
 

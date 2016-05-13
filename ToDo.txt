@@ -15,7 +15,9 @@ todo:
 Default
 
 done:
-
+   
+   * first version of a color control
+-------------------------------------------------------------------------------------         
    * current balance shown in every new log entry by default
    * red led if data awaited nut not recieved
    * current system and station are marked in the price analysis results

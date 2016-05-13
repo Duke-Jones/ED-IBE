@@ -626,8 +626,6 @@ namespace IBE
             if (Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "WebserverIpAddress") != "") 
                 cbInterfaces.Text = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "WebserverIpAddress");
             
-            ShowSelectedUiColours();
-
             if (Program.DBCon.getIniValue<Boolean>(IBE.IBESettingsView.DB_GROUPNAME, "StartWebserverOnLoad", false.ToString(), false, true))
             {
                 cbStartWebserverOnLoad.Checked = true;
@@ -2889,113 +2887,6 @@ namespace IBE
             Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "StartWebserverOnLoad", cbStartWebserverOnLoad.Checked.ToString());
         }
 
-
-        #region Theming
-        private void pbForegroundColour_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ColorDialog c = new ColorDialog();
-                if (c.ShowDialog() == DialogResult.OK)
-                {
-                    Program.Colors.SetColor(GUIColors.ColorNames.Default_ForeColor, c.Color);
-                    ShowSelectedUiColours();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in pbForegroundColour_Click");
-            }
-        }
-
-        private void pbBackgroundColour_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ColorDialog c = new ColorDialog();
-                if (c.ShowDialog() == DialogResult.OK)
-                {
-                    Program.Colors.SetColor(GUIColors.ColorNames.Default_BackColor, c.Color);
-                    ShowSelectedUiColours();
-                }
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex,"Error in pbBackgroundColour_Click");
-            }
-        }
-
-        private void ShowSelectedUiColours()
-        {
-            try
-            {
-                if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
-                if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
-
-                ForegroundSet.Visible = false;
-                Bitmap b = new Bitmap(32, 32);
-                using (var g = Graphics.FromImage(b))
-                {
-                    g.Clear(Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor));
-                }
-                pbForegroundColour.Image = b;
-
-
-                BackgroundSet.Visible = false;
-                b = new Bitmap(32, 32);
-                using (var g = Graphics.FromImage(b))
-                {
-                    g.Clear(Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor));
-                }
-                pbBackgroundColour.Image = b;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in ShowSelectedUiColours", ex);
-            }
-        }
-
-        private void cmdDeactivateColors_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.Colors.UseColors = false;
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in cmdResetColors_Click");
-            }
-        }
-
-        private void cmdActivateColors_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.Colors.UseColors = true;
-                Retheme();
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in cmdActivateColors_Click");
-            }
-        }
-
-        private void cmdResetColors_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.Colors.ResetColors();
-                Retheme();
-            }
-            catch (Exception ex)
-            {
-                cErr.processError(ex, "Error in cmdActivateColors_Click");
-            }
-        }
-
-        #endregion
-
-
         /// <summary>
         /// opens the data import dialog
         /// </summary>
@@ -3768,14 +3659,24 @@ namespace IBE
             }
         }
 
-        private void gbEvents_Enter(object sender, EventArgs e)
+        private void colorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                var ToolForm = new GUIColorsView();
 
-        }
+                ToolForm.ShowDialog(this);
 
-        private void tlpData_Paint(object sender, PaintEventArgs e)
-        {
-
+                if(ToolForm.DialogResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    Retheme();
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in colorsToolStripMenuItem_Click");
+            }
         }
 
     }

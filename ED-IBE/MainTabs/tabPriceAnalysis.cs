@@ -1835,7 +1835,7 @@ namespace IBE.MTPriceAnalysis
 
                     if(stationInfo[0].StationID == (Program.actualCondition.Location_ID ?? 0))
                     {
-                        Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_BackColor1, GUIColors.ColorNames.Marked_ForeColor1, true);
+                        Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_ForeColor1, GUIColors.ColorNames.Marked_BackColor1, true);
                     }
                     else
                     {
@@ -1904,7 +1904,7 @@ namespace IBE.MTPriceAnalysis
 
                         if(stationInfo[0].StationID == (Program.actualCondition.Location_ID ?? 0))
                         {
-                            Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_BackColor1, GUIColors.ColorNames.Marked_ForeColor1, true);
+                            Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_ForeColor1, GUIColors.ColorNames.Marked_BackColor1, true);
                         }
                         else
                         {

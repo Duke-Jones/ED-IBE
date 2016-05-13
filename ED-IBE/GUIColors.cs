@@ -18,34 +18,38 @@ namespace IBE
 
         public enum ColorNames
         {
-            Default_BackColor,
             Default_ForeColor,
+            Default_BackColor,
             Marked_ForeColor,
             Marked_BackColor,
             Marked_ForeColor1,
-            Marked_BackColor1,
-            Marked_ForeColor2,
-            Marked_BackColor2,
-            Marked_ForeColor3,
-            Marked_BackColor3,
+            Marked_BackColor1
         }
 
-        private Dictionary<ColorNames, Color> defaultColors = new Dictionary<ColorNames,Color>() { {ColorNames.Default_ForeColor  ,  Color.FromArgb(0xff, 0x80, 0x00)}, 
-                                                                                                   {ColorNames.Default_BackColor  ,  Color.Black}, 
-                                                                                                   {ColorNames.Marked_ForeColor   ,  Color.Black}, 
-                                                                                                   {ColorNames.Marked_BackColor   ,  Color.FromArgb(0xE3, 0x72, 0x00)},
-                                                                                                   {ColorNames.Marked_ForeColor1  ,  Color.Black}, 
-                                                                                                   {ColorNames.Marked_BackColor1  ,  Color.FromArgb(0xFF, 0xD8, 0x00)}, 
-                                                                                                   {ColorNames.Marked_ForeColor2  ,  Color.FromArgb(0xff, 0x80, 0x00)}, 
-                                                                                                   {ColorNames.Marked_BackColor2  ,  Color.Black},
-                                                                                                   {ColorNames.Marked_ForeColor3  ,  Color.FromArgb(0xff, 0x80, 0x00)}, 
-                                                                                                   {ColorNames.Marked_BackColor3  ,  Color.Black}};
+        private Dictionary<ColorNames, Color> defaultColors = new Dictionary<ColorNames,Color>() { {ColorNames.Default_ForeColor  ,  Color.FromKnownColor(KnownColor.ControlText)}, 
+                                                                                                   {ColorNames.Default_BackColor  ,  Color.FromKnownColor(KnownColor.Control)}, 
+                                                                                                   {ColorNames.Marked_ForeColor   ,  Color.FromKnownColor(KnownColor.ControlText)}, 
+                                                                                                   {ColorNames.Marked_BackColor   ,  Color.FromArgb(0xFF, 0x80, 0x00)},
+                                                                                                   {ColorNames.Marked_ForeColor1  ,  Color.FromKnownColor(KnownColor.ControlText)}, 
+                                                                                                   {ColorNames.Marked_BackColor1  ,  Color.FromArgb(0xFF, 0xD8, 0x00)}  };
+
+        private Dictionary<ColorNames, Color> defaultColors_Pr1 = new Dictionary<ColorNames,Color>() { {ColorNames.Default_ForeColor  ,  Color.FromArgb(0xFF, 0x80, 0x00)}, 
+                                                                                                       {ColorNames.Default_BackColor  ,  Color.Black}, 
+                                                                                                       {ColorNames.Marked_ForeColor   ,  Color.Black}, 
+                                                                                                       {ColorNames.Marked_BackColor   ,  Color.FromArgb(0xFF, 0x80, 0x00)},
+                                                                                                       {ColorNames.Marked_ForeColor1  ,  Color.Black}, 
+                                                                                                       {ColorNames.Marked_BackColor1  ,  Color.FromArgb(0xFF, 0xD8, 0x00)}  };
+
+        private Dictionary<ColorNames, Color> usedPresets;
 
         public GUIColors()
         {
             try
             {
-
+                if(UsePreset == 1)
+                    usedPresets = defaultColors;
+                else
+                    usedPresets = defaultColors_Pr1;
             }
             catch (Exception ex)
             {
@@ -70,6 +74,27 @@ namespace IBE
         }
 
         /// <summary>
+        /// gets or sets the used preset dictionary
+        /// </summary>
+        public Int32 UsePreset
+        {
+            get
+            {
+                return Program.DBCon.getIniValue<Int32>(DB_GROUPNAME, "UsedPreset", "1", false);
+            }
+            set
+            {
+                Program.DBCon.setIniValue(DB_GROUPNAME, "UsedPreset", value.ToString());
+
+                if(value == 1)
+                    usedPresets = defaultColors;
+                else
+                    usedPresets = defaultColors_Pr1;
+
+            }
+        }
+
+        /// <summary>
         ///  resets all colors the the default values
         /// </summary>
         public void ResetColors()
@@ -78,8 +103,9 @@ namespace IBE
             {
                 foreach (ColorNames colorName in Enum.GetValues(typeof(ColorNames)))
 	            {
-		            Program.DBCon.setIniValue(DB_GROUPNAME, colorName.ToString(), ((Color)(defaultColors[colorName])).ToArgb().ToString());
-                    m_DataCache.Add(colorName.ToString(), ((Color)(defaultColors[colorName])).ToArgb().ToString(), DateTimeOffset.Now.AddMinutes(10));
+		            Program.DBCon.setIniValue(DB_GROUPNAME, colorName.ToString(), ((Color)(usedPresets[colorName])).ToArgb().ToString());
+                    m_DataCache.Remove(colorName.ToString());
+                    m_DataCache.Add(colorName.ToString(), ((Color)(usedPresets[colorName])), DateTimeOffset.Now.AddMinutes(10));
 	            }
             }
             catch (Exception ex)
@@ -101,7 +127,7 @@ namespace IBE
 
                 if(m_DataCache.Get(currentColor.ToString()) == null)
                 { 
-                    retValue = Color.FromArgb(Program.DBCon.getIniValue<int>(DB_GROUPNAME, currentColor.ToString(), ((Color)(defaultColors[currentColor])).ToArgb().ToString()));
+                    retValue = Color.FromArgb(Program.DBCon.getIniValue<int>(DB_GROUPNAME, currentColor.ToString(), ((Color)(usedPresets[currentColor])).ToArgb().ToString()));
                     m_DataCache.Add(currentColor.ToString(), retValue, DateTimeOffset.Now.AddMinutes(10));
                 }
                 else
@@ -129,8 +155,9 @@ namespace IBE
             {
                 Program.DBCon.setIniValue(DB_GROUPNAME, currentColor.ToString(), colorValue.ToArgb().ToString());
                 
-                m_DataCache.Add(currentColor.ToString(), colorValue.ToArgb().ToString(), DateTimeOffset.Now.AddMinutes(10));
-                
+                m_DataCache.Remove(currentColor.ToString());
+                m_DataCache.Add(currentColor.ToString(), colorValue, DateTimeOffset.Now.AddMinutes(10));
+                           
             }
             catch (Exception ex)
             {
