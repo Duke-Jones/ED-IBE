@@ -117,6 +117,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -409,10 +410,14 @@
     </Content>
     <Content Include="Resources\green-led-off-md.png" />
     <Content Include="Resources\green-led-on-md.png" />
+    <Content Include="Resources\ledblue_off.png" />
+    <Content Include="Resources\ledblue_on.png" />
     <Content Include="Resources\ledgreen_off.png" />
     <Content Include="Resources\ledgreen_on.png" />
     <Content Include="Resources\ledorange_off.png" />
     <Content Include="Resources\ledorange_on.png" />
+    <Content Include="Resources\ledred_off.png" />
+    <Content Include="Resources\ledred_on.png" />
     <Content Include="x64\liblept168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

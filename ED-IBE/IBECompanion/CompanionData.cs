@@ -329,7 +329,8 @@ namespace IBE.IBECompanion
                     }
                 } 
 
-                Program.Data.ImportPricesFromCSVStrings(csvStrings.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
+                if(csvStrings.Count > 0)
+                    Program.Data.ImportPricesFromCSVStrings(csvStrings.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
 
                 return commditCount;
             }
@@ -540,6 +541,8 @@ namespace IBE.IBECompanion
                     String json = response.Json ?? "{}";
 
                     m_joCompanion = JsonConvert.DeserializeObject<JObject>(json);
+
+                    CompanionStatus = response.LoginStatus;
                 }
 
                 m_cachedResponse = response;
@@ -551,6 +554,27 @@ namespace IBE.IBECompanion
             {
                 cErr.processError(ex, "Error in m_reGetTimer_Elapsed");
             }
+        }
+
+        /// <summary>
+        /// gets the current credits *save*
+        /// save means, returns "0" if somethings wrong
+        /// </summary>
+        /// <returns></returns>
+        public Int32 SGetCreditsTotal()
+        {
+            Int32 creditsTotal = 0;
+
+            try
+            {
+                if (CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
+                    creditsTotal = GetValue<Int32>("commander.credits");
+            }
+            catch (Exception)
+            {
+            }
+
+            return creditsTotal;
         }
     }
 }

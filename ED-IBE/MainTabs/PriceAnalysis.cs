@@ -238,6 +238,11 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
+                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
+                {
+                    GUI.RefreshColors();
+                }
+
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
                     GUI.setFilterHasChanged(true);

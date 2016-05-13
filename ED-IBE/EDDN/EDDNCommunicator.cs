@@ -124,6 +124,35 @@ bool disposed = false;
         }
 
 
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<DataTransmittedEventArgs> DataTransmittedEvent;
+
+        protected virtual void OnLocationChanged(DataTransmittedEventArgs e)
+        {
+            EventHandler<DataTransmittedEventArgs> myEvent = DataTransmittedEvent;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class DataTransmittedEventArgs : EventArgs
+        {
+            public DataTransmittedEventArgs(enTransmittedTypes tType)
+            {
+                DataType = tType;    
+            }
+
+            public enTransmittedTypes DataType               { get; set; }
+        }
+
+        public enum enTransmittedTypes
+        {
+            Commodity_V2        =  0,
+            Shipyard_V1         =  1,
+            Outfitting_V1       =  2    
+        }
+
  #endregion
 
         private Thread                              _Spool2EDDN_Commodity;   
@@ -1016,6 +1045,14 @@ bool disposed = false;
                             Debug.Print(JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
 
                             client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
+
+                            if(activeQueue == _Send_MarketData_API)
+                            { 
+                                // data over api sent, set cooldown time
+                                m_ID_of_Commodity_Station = new Tuple<String, DateTime>(m_ID_of_Commodity_Station.Item1, DateTime.Now);
+                            }
+
+                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2));
                         }
                         catch (WebException ex)
                         {
@@ -1041,12 +1078,6 @@ bool disposed = false;
                         finally
                         {
                             client.Dispose();
-                        }
-
-                        if(activeQueue == _Send_MarketData_API)
-                        { 
-                            // data over api sent, set cooldown time
-                            m_ID_of_Commodity_Station = new Tuple<String, DateTime>(m_ID_of_Commodity_Station.Item1, DateTime.Now);
                         }
 
                     }
@@ -1113,6 +1144,8 @@ bool disposed = false;
                         Debug.Print(outfittingMessage.ToString());
 
                         client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
+
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1));
                     }
                     catch (WebException ex)
                     {
@@ -1201,6 +1234,8 @@ bool disposed = false;
                         Debug.Print(shipyardMessage.ToString());
 
                         client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", shipyardMessage.ToString());
+
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1));
                     }
                     catch (WebException ex)
                     {
@@ -1320,7 +1355,7 @@ bool disposed = false;
         /// <summary>
         /// checks and gets the EDDN id
         /// </summary>
-        private String UserIdentification()
+        public String UserIdentification()
         {
             String retValue = "";
             String userName = "";
@@ -1360,5 +1395,11 @@ bool disposed = false;
             m_ID_of_Shipyard_Station   = new Tuple<String, DateTime>("", new DateTime());
         }
 #endregion
+
+        public bool CommodityDataTransmitted { get { return (DateTime.Now - (DateTime)(m_ID_of_Commodity_Station.Item2)).TotalMinutes <= 60; }}
+
+        public bool OutfittingDataTransmitted { get { return (DateTime.Now - (DateTime)(m_ID_of_Outfitting_Station.Item2)).TotalMinutes <= 60; }}
+
+        public bool ShipyardDataTransmitted { get { return (DateTime.Now - (DateTime)(m_ID_of_Shipyard_Station.Item2)).TotalMinutes <= 60; }}
     }
 }

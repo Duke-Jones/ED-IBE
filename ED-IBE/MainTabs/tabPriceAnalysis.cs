@@ -240,11 +240,9 @@ namespace IBE.MTPriceAnalysis
             {
                 if(setMarked)
                 {
-                    cmdFilter.ForeColor                     = Program.Colors.Marked_ForeColor;
-                    cmdFilter.BackColor                     = Program.Colors.Marked_BackColor;
-                                                                                             
-                    cmdRoundTripCaclulation.ForeColor       = Program.Colors.Marked_ForeColor;
-                    cmdRoundTripCaclulation.BackColor       = Program.Colors.Marked_BackColor;
+                    Program.Colors.SetColorToObject(cmdFilter, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
+
+                    Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
 
                     m_IsRefreshed[BASE_DATA]                = false;
                     m_IsRefreshed["tpAllCommodities"]       = false;
@@ -254,13 +252,11 @@ namespace IBE.MTPriceAnalysis
 
                 }                                                                        
                 else                                                                     
-                {                                                                        
-                    cmdFilter.ForeColor                 = Program.Colors.Default_ForeColor;
-                    cmdFilter.BackColor                 = Program.Colors.Default_BackColor;
-                      
+                {                                                           
+                    Program.Colors.SetColorToObject(cmdFilter, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor);
                     // commented out: this is doing the button itself 
-                    // cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
-                    // cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
+                    // cmdRoundTripCaclulation.ForeColor   = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
+                    // cmdRoundTripCaclulation.BackColor   = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
                 }
 
             }
@@ -565,7 +561,7 @@ namespace IBE.MTPriceAnalysis
 
                     VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettingsView.DB_GROUPNAME,
                                                                                         "VisitedFilter",
-                                                                                        ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
+                                                                                        ((Int32)Program.enVisitedFilter.showAll).ToString(),
                                                                                         false);
 
                     m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter, locationType);
@@ -662,7 +658,7 @@ namespace IBE.MTPriceAnalysis
                 cText = cmbSystemBase.Text;
                 VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettingsView.DB_GROUPNAME, 
                                                                                     "VisitedFilter", 
-                                                                                    ((Int32)Program.enVisitedFilter.showOnlyVistedSystems).ToString(),
+                                                                                    ((Int32)Program.enVisitedFilter.showAll).ToString(),
                                                                                     false);
 
                 //m_DataSource.loadSystems(m_DGVTables[cmbSystemBase.Name], VFilter);/
@@ -727,15 +723,13 @@ namespace IBE.MTPriceAnalysis
                 {
                     if (((CheckBox)sender).Equals(cbMaxTripDistance))
                     {
-                        cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
-                        cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+                        Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
                     }
                     else if (((CheckBox)sender).Equals(cbFixedStation) && m_InitDone)
                     {                                       
                         UpdateFixedStation();
 
-                        cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
-                        cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+                        Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
                     }
                     else
                     {
@@ -984,8 +978,7 @@ namespace IBE.MTPriceAnalysis
                 if(((ComboBoxInt32)sender).checkValue())
                     if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
                     {
-                        cmdRoundTripCaclulation.ForeColor   = Program.Colors.Marked_ForeColor;
-                        cmdRoundTripCaclulation.BackColor   = Program.Colors.Marked_BackColor;
+                        Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
                     }
                 else
                     m_GUIInterface.loadSetting(sender);
@@ -1210,8 +1203,7 @@ namespace IBE.MTPriceAnalysis
 
                     m_IsRefreshed["tpStationToStation"] = true;
 
-                    cmdRoundTripCaclulation.ForeColor   = Program.Colors.Default_ForeColor;
-                    cmdRoundTripCaclulation.BackColor   = Program.Colors.Default_BackColor;
+                    Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor);
 
                     SetComboBoxEventsActive(true);
 
@@ -1729,8 +1721,7 @@ namespace IBE.MTPriceAnalysis
                 else
                     m_DataSource.FixedStation = 0;
 
-                cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
-                cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+                Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
             
             }
             catch (Exception ex)
@@ -1765,8 +1756,7 @@ namespace IBE.MTPriceAnalysis
 
                     SetFilterButtonText((Button)sender, cList);
 
-                    cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
-                    cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
+                    Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
                 }
             }
             catch (Exception ex)
@@ -1787,9 +1777,7 @@ namespace IBE.MTPriceAnalysis
                 SetFilterButtonText(cmdCommodityFilter1, m_DataSource.CommoditiesSend);
                 SetFilterButtonText(cmdCommodityFilter2, m_DataSource.CommoditiesReturn);
 
-                cmdRoundTripCaclulation.ForeColor = Program.Colors.Marked_ForeColor;
-                cmdRoundTripCaclulation.BackColor = Program.Colors.Marked_BackColor;
-
+                Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
            }
             catch (Exception ex)
             {
@@ -1815,6 +1803,7 @@ namespace IBE.MTPriceAnalysis
             Label detailStation;
             Label detailCommodity;
             Label detailProfit;
+            Panel detailPanel;
             Int32 intValue = 0;
 
             try
@@ -1824,12 +1813,14 @@ namespace IBE.MTPriceAnalysis
                     detailStation     = lbDetailStation1;
                     detailCommodity   = lbDetailCommodity1;
                     detailProfit      = lbDetailProfit1;     
+                    detailPanel       = paStationDetail1;
                 }
                 else
                 {
                     detailStation     = lbDetailStation2;
                     detailCommodity   = lbDetailCommodity2;
-                    detailProfit      = lbDetailProfit2;     
+                    detailProfit      = lbDetailProfit2;
+                    detailPanel       = paStationDetail2;
                 }
 
 
@@ -1841,12 +1832,23 @@ namespace IBE.MTPriceAnalysis
                     detailStation.Text    = String.Format("{0} / {1}", stationInfo[0].SystemName, stationInfo[0].StationName);
                     detailCommodity.Text  = commodityInfo.Commodity;
                     detailProfit.Text     = commodityInfo.Profit.ToString();
+
+                    if(stationInfo[0].StationID == (Program.actualCondition.Location_ID ?? 0))
+                    {
+                        Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_BackColor1, GUIColors.ColorNames.Marked_ForeColor1, true);
+                    }
+                    else
+                    {
+                        Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
+                    }
                }
                 else
                 {
                     detailStation.Text    =  "-";
                     detailCommodity.Text  =  "-";
                     detailProfit.Text     =  "0";
+
+                    Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
                 }
 
                 if(Int32.TryParse(lbDetailProfit1.Text, out intValue))
@@ -1861,6 +1863,122 @@ namespace IBE.MTPriceAnalysis
             catch (Exception ex)
             {
                 cErr.processError(ex, "Error in dgvStation_RowEnter");
+            }
+        }
+
+        private void RefreshDetailColors()
+        {
+            SQL.Datasets.dsEliteDB.visystemsandstationsRow[] stationInfo;
+            SQL.Datasets.dsEliteDB.tmpa_s2s_stationdataRow commodityInfo;
+            DataGridViewExt currentDGV;
+            Label detailStation;
+            Label detailCommodity;
+            Label detailProfit;
+            Panel detailPanel;
+
+            try
+            {
+                for (int i = 0; i < 2; i++)
+			    {
+                    if(i == 0)
+                    {
+                        currentDGV        = dgvStation1;
+                        detailStation     = lbDetailStation1;
+                        detailCommodity   = lbDetailCommodity1;
+                        detailProfit      = lbDetailProfit1;     
+                        detailPanel       = paStationDetail1;
+                    }
+                    else
+                    {
+                        currentDGV        = dgvStation2;
+                        detailStation     = lbDetailStation2;
+                        detailCommodity   = lbDetailCommodity2;
+                        detailProfit      = lbDetailProfit2;
+                        detailPanel       = paStationDetail2;
+                    }
+
+                    if(currentDGV.RowCount > 0)
+                    {
+                        commodityInfo = (SQL.Datasets.dsEliteDB.tmpa_s2s_stationdataRow)((DataRowView)currentDGV.CurrentRow.DataBoundItem).Row;
+                        stationInfo   = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])Program.Data.BaseData.visystemsandstations.Select("StationID=" + commodityInfo.Station_ID);
+
+                        if(stationInfo[0].StationID == (Program.actualCondition.Location_ID ?? 0))
+                        {
+                            Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_BackColor1, GUIColors.ColorNames.Marked_ForeColor1, true);
+                        }
+                        else
+                        {
+                            Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
+                        }
+                   }
+                    else
+                    {
+                        Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
+                    }
+			    }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in dgvStation_RowEnter", ex);
+            }
+        }
+
+        private void dgvStationToStationRoutes_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            try
+            {
+                if((e.RowIndex >= 0) && (e.ColumnIndex >= 0))
+                { 
+                    if(e.ColumnIndex == dgvStationToStationRoutes.Columns["systemName1DataGridViewTextBoxColumn"].Index)
+                    {
+                        if(Program.actualCondition.System_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["systemID1DataGridViewTextBoxColumn"].Value)
+                        {
+                            e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
+                            e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);
+                        }
+                    }
+                    else if(e.ColumnIndex == dgvStationToStationRoutes.Columns["stationName1DataGridViewTextBoxColumn"].Index)
+                    {
+                        if(Program.actualCondition.Location_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["stationID1DataGridViewTextBoxColumn"].Value)
+                        {
+                            e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
+                            e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);
+                        }
+                    }
+                    else if(e.ColumnIndex == dgvStationToStationRoutes.Columns["systemName2DataGridViewTextBoxColumn"].Index)
+                    {
+                        if(Program.actualCondition.System_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["systemID2DataGridViewTextBoxColumn"].Value)
+                        {
+                            e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
+                            e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);
+                        }
+                    }
+                    else if(e.ColumnIndex == dgvStationToStationRoutes.Columns["stationName2DataGridViewTextBoxColumn"].Index)
+                    {
+                        if(Program.actualCondition.Location_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["stationID2DataGridViewTextBoxColumn"].Value)
+                        {
+                            e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
+                            e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in dgvStationToStationRoutes_CellPainting");
+            }
+        }
+
+        internal void RefreshColors()
+        {
+            if(this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(RefreshColors));
+            }
+            else
+            {
+                dgvStationToStationRoutes.Refresh();
+                RefreshDetailColors();
             }
         }
     }

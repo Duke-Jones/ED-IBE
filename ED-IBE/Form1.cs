@@ -258,6 +258,7 @@ namespace IBE
                 Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
                 Program.CompanionIO.ExternalDataEvent  += ExternalDataInterface_ExternalDataEvent;
                 Program.EDDNComm.DataChangedEvent      += EDDNComm_DataChangedEvent;
+                Program.EDDNComm.DataTransmittedEvent  += EDDNComm_DataTransmittedEvent;
 
 
                 // until this is working again 
@@ -276,6 +277,7 @@ namespace IBE
                 throw new Exception("Error in main-init-routine", ex);
             }
         }
+
 
         private string EscapeLikeValue(string value)
         {
@@ -1303,7 +1305,7 @@ namespace IBE
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
-                if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", false.ToString(), false))
+                if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", true.ToString(), false))
                     Program.EDDNComm.ActivateSender();
 
                 SetQuickDecisionSwitch();
@@ -2891,100 +2893,103 @@ namespace IBE
         #region Theming
         private void pbForegroundColour_Click(object sender, EventArgs e)
         {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
+            try
             {
-                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2"));
-
-                ShowSelectedUiColours();
-                Retheme();
+                ColorDialog c = new ColorDialog();
+                if (c.ShowDialog() == DialogResult.OK)
+                {
+                    Program.Colors.SetColor(GUIColors.ColorNames.Default_ForeColor, c.Color);
+                    ShowSelectedUiColours();
+                }
             }
-
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in pbForegroundColour_Click");
+            }
         }
 
         private void pbBackgroundColour_Click(object sender, EventArgs e)
         {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
+            try
             {
-                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2"));
-                ShowSelectedUiColours();
-                Retheme();
+                ColorDialog c = new ColorDialog();
+                if (c.ShowDialog() == DialogResult.OK)
+                {
+                    Program.Colors.SetColor(GUIColors.ColorNames.Default_BackColor, c.Color);
+                    ShowSelectedUiColours();
+                }
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex,"Error in pbBackgroundColour_Click");
             }
         }
 
         private void ShowSelectedUiColours()
         {
-            if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
-            if (Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour") != "")
+            try
             {
+                if (pbForegroundColour.Image != null) pbForegroundColour.Image.Dispose();
+                if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
+
                 ForegroundSet.Visible = false;
                 Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(1, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(3, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(5, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-
                 using (var g = Graphics.FromImage(b))
                 {
-                    g.Clear(Color.FromArgb(red, green, blue));
+                    g.Clear(Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor));
                 }
                 pbForegroundColour.Image = b;
-            }
-            else ForegroundSet.Visible = true;
 
-            if (Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour", "") != "")
-            {
+
                 BackgroundSet.Visible = false;
-                if (pbBackgroundColour.Image != null) pbBackgroundColour.Image.Dispose();
-                Bitmap b = new Bitmap(32, 32);
-                int red = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(1, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int green = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(3, 2),
-                    System.Globalization.NumberStyles.HexNumber);
-                int blue = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(5, 2),
-                    System.Globalization.NumberStyles.HexNumber);
+                b = new Bitmap(32, 32);
                 using (var g = Graphics.FromImage(b))
                 {
-                    g.Clear(Color.FromArgb(red, green, blue));
+                    g.Clear(Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor));
                 }
                 pbBackgroundColour.Image = b;
             }
-            else BackgroundSet.Visible = true;
-        }
-
-        private void button20_Click(object sender, EventArgs e)
-        {
-            Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour", "");
-            Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour", "");
-        }
-
-        private void ForegroundSet_Click(object sender, EventArgs e)
-        {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
+            catch (Exception ex)
             {
-                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                                          c.Color.B.ToString("X2"));
-
-                ShowSelectedUiColours();
-                Retheme();
+                throw new Exception("Error in ShowSelectedUiColours", ex);
             }
         }
 
-        private void BackgroundSet_Click(object sender, EventArgs e)
+        private void cmdDeactivateColors_Click(object sender, EventArgs e)
         {
-            ColorDialog c = new ColorDialog();
-            if (c.ShowDialog() == DialogResult.OK)
+            try
             {
-                Program.DBCon.setIniValue(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour", "#" + c.Color.R.ToString("X2") + c.Color.G.ToString("X2") +
-                                          c.Color.B.ToString("X2"));
-                ShowSelectedUiColours();
+                Program.Colors.UseColors = false;
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdResetColors_Click");
+            }
+        }
+
+        private void cmdActivateColors_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.Colors.UseColors = true;
                 Retheme();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdActivateColors_Click");
+            }
+        }
+
+        private void cmdResetColors_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.Colors.ResetColors();
+                Retheme();
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error in cmdActivateColors_Click");
             }
         }
 
@@ -3392,6 +3397,19 @@ namespace IBE
             }
         }
 
+        void EDDNComm_DataTransmittedEvent(object sender, EDDN.EDDNCommunicator.DataTransmittedEventArgs e)
+        {
+            try
+            {
+                ShowStatus();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the EDDNComm_DataTransmittedEvent", ex);
+            }
+        }
+
+
 #endregion
 
 
@@ -3472,7 +3490,23 @@ namespace IBE
             try
             {
                 var newForm = new IBECompanion.CompanioDataView();
-                newForm.Show(this);
+                newForm.ShowDialog(this);
+
+                if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok))
+                {
+                    // set the commanders name if not already set
+                    if ((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserName") == "useUserID") && 
+                        String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName")))
+                    {
+                        String userName = (String)Program.CompanionIO.GetData().SelectToken("commander.name", false) ?? "";
+
+                        if(!String.IsNullOrEmpty(userName))
+                        {
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName", userName);
+                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserName");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -3587,32 +3621,78 @@ namespace IBE
                     this.Invoke(new MethodInvoker(ShowStatus));
                 else
                 {
-                    if(Program.CompanionIO.IsLanded())
+                    if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok) && Program.CompanionIO.IsLanded())
                     {
-                        pbStatus_IsLanded.Image = Properties.Resources.ledorange_on;
+                        int? stationID = Program.actualCondition.Location_ID;
+
+                        if(stationID == null)
+                        {
+                            var extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
+                            var extStation = Program.CompanionIO.GetValue("lastStarport.name");
+
+                            String sqlString = String.Format("select St.id from tbSystems Sy, tbStations St" +
+                                                             " where Sy.id = St.System_id" +
+                                                             " and   Sy.systemname = {0}" +
+                                                             " and   St.stationname = {1}",
+                                                             DBConnector.SQLAEscape(extSystem), 
+                                                             DBConnector.SQLAEscape(extStation));
+
+                            stationID = Program.DBCon.Execute<int?>(sqlString);
+                        }
+
+                        pbStatus_IsLanded.Image = Properties.Resources.ledgreen_on;
 
                         if(Program.CompanionIO.StationHasMarketData())
                             pbStatus_MarketData.Image       = Properties.Resources.ledorange_on;
+                        else if((stationID != null) && (Program.DBCon.Execute<Boolean>("select has_market from tbStations where id = " + stationID)))
+                            pbStatus_MarketData.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_MarketData.Image       = Properties.Resources.ledorange_off;
 
                         if(Program.CompanionIO.StationHasOutfittingData())
                             pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_on;
+                        else if((stationID != null) && (Program.DBCon.Execute<Boolean>("select has_outfitting from tbStations where id = " + stationID)))
+                            pbStatus_MarketData.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_off;
 
                         if(Program.CompanionIO.StationHasShipyardData())
                             pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_on;
+                        else if((stationID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + stationID)))
+                            pbStatus_MarketData.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_off;
 
+                        if(Program.EDDNComm.CommodityDataTransmitted)
+                            pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_on;
+                        else
+                            pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
+                        
+                        if(Program.EDDNComm.OutfittingDataTransmitted)
+                            pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledorange_on;
+                        else
+                            pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledorange_off;
+
+                        if(Program.EDDNComm.ShipyardDataTransmitted)
+                            pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_on;
+                        else
+                            pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_off;
+
+                        // can only collect market data if landed andn confirmed
+                        cmdEventMarketData.Enabled = (Program.actualCondition.Location_ID != null);
                     }
                     else
                     { 
-                        pbStatus_IsLanded.Image         = Properties.Resources.ledorange_off;
-                        pbStatus_MarketData.Image       = Properties.Resources.ledorange_off;
-                        pbStatus_OutfittingData.Image   = Properties.Resources.ledorange_off;
-                        pbStatus_ShipyardData.Image     = Properties.Resources.ledorange_off;
+                        pbStatus_IsLanded.Image             = Properties.Resources.ledgreen_off;
+                        pbStatus_MarketData.Image           = Properties.Resources.ledorange_off;
+                        pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_off;
+                        pbStatus_ShipyardData.Image         = Properties.Resources.ledorange_off;
+
+                        pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
+                        pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
+                        pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
+
+                        cmdEventMarketData.Enabled      = false;
                     }
                 }
             }
@@ -3630,12 +3710,18 @@ namespace IBE
                 { 
                     txtEventInfo.Text             = "getting market data...";                        
 
-                    Int32 count = Program.CompanionIO.getMarketData();
-                    
-                    if(count > 0)
-                        txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
+                    if(Program.CompanionIO.StationHasMarketData())
+                    { 
+                        Int32 count = Program.CompanionIO.getMarketData();
+
+                        if(count > 0)
+                            txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
+                        else
+                            txtEventInfo.Text             = String.Format("getting market data...no market data available !");                        
+                    }
                     else
-                        txtEventInfo.Text             = String.Format("getting market data...no market data available !");                        
+                        txtEventInfo.Text             = String.Format("...no market data available !");                        
+                    
                 }
                 else
                 {
@@ -3687,6 +3773,10 @@ namespace IBE
 
         }
 
+        private void tlpData_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
 
     }
 }

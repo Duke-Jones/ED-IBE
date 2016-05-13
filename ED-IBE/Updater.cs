@@ -1172,8 +1172,54 @@ namespace IBE
         /// <summary>
         /// 
         /// this sub starts special things to do if this version runs
-        /// for the first time
+        /// for the first time before any gui runs
         /// </summary>
+        /// <param name="parent"></param>
+        internal static void DoSpecial_Early()
+        {
+            try
+            {
+
+                if(m_OldDBVersion < m_NewDBVersion)
+                { 
+                    if(m_NewDBVersion == new Version(0,3,0,0))
+                    {
+                        System.Drawing.Color foreGround = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
+                        System.Drawing.Color backGround = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
+
+                        if (!(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour", "") == "") || (Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour", "") == ""))
+                        {
+                            int redF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                            int greenF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                            int blueF = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ForegroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+
+                            int redB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                            int greenB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                            int blueB = int.Parse(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "BackgroundColour").Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+
+                            foreGround = System.Drawing.Color.FromArgb(redF, greenF, blueF);
+                            backGround = System.Drawing.Color.FromArgb(redB, greenB, blueB);
+
+                            Program.Colors.UseColors = true;
+                        }
+
+                        Program.Colors.SetColor(GUIColors.ColorNames.Default_ForeColor, foreGround);
+                        Program.Colors.SetColor(GUIColors.ColorNames.Default_BackColor, backGround);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while doing special things (1)", ex);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// this sub starts special things to do if this version runs
+        /// for the first time 
+        /// 
         /// <param name="parent"></param>
         internal static void DoSpecial(Form parent)
         {
@@ -1195,8 +1241,6 @@ namespace IBE
 
                         DataIO.StartMasterImport(Program.GetDataPath("Data"));
 
-                        Program.Data.PrepareBaseTables("tbcommoditymapping");
-                            
                         if(!Program.SplashScreen.IsDisposed)
                             Program.SplashScreen.TopMost = false;
 
@@ -1326,7 +1370,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while doing special things", ex);
+                throw new Exception("Error while doing special things (2)", ex);
             }
         }
 

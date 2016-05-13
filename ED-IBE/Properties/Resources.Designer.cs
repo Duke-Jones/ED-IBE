@@ -83,6 +83,26 @@ namespace IBE.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ledblue_off {
+            get {
+                object obj = ResourceManager.GetObject("ledblue_off", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ledblue_on {
+            get {
+                object obj = ResourceManager.GetObject("ledblue_on", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ledgreen_off {
             get {
                 object obj = ResourceManager.GetObject("ledgreen_off", resourceCulture);
@@ -116,6 +136,26 @@ namespace IBE.Properties {
         internal static System.Drawing.Bitmap ledorange_on {
             get {
                 object obj = ResourceManager.GetObject("ledorange_on", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ledred_off {
+            get {
+                object obj = ResourceManager.GetObject("ledred_off", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ledred_on {
+            get {
+                object obj = ResourceManager.GetObject("ledred_on", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

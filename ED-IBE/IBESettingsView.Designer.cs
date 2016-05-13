@@ -437,6 +437,7 @@
             this.button6.TabIndex = 2;
             this.button6.Text = "Edit Commodity Price Warn levels";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Visible = false;
             this.button6.Click += new System.EventHandler(this.cmdWarnLevels_Click);
             // 
             // toolTip1
@@ -466,7 +467,7 @@
             this.cmbVisitedFilter.Name = "cmbVisitedFilter";
             this.cmbVisitedFilter.Size = new System.Drawing.Size(192, 21);
             this.cmbVisitedFilter.TabIndex = 63;
-            this.cmbVisitedFilter.Tag = "VisitedFilter;1";
+            this.cmbVisitedFilter.Tag = "VisitedFilter;0";
             this.toolTip1.SetToolTip(this.cmbVisitedFilter, "Here you can select, if you want to see in all analysis\r\n- all stations (independ" +
         "ent if you\'ve visted them or not)\r\n- only stations in systems you\'ve visited \r\n-" +
         " only stations you\'ve directly visted");

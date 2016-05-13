@@ -352,7 +352,7 @@ namespace IBE.MTCommandersLog
                 cbLogSystemName.Text            = Program.actualCondition.System;
                 cbLogStationName.Text           = Program.actualCondition.Location;
                 nbTransactionAmount.Text        = "0";
-                nbCurrentCredits.Text           = "0";
+                nbCurrentCredits.Text           = Program.CompanionIO.SGetCreditsTotal().ToString();
                 cbLogCargoName.Text             = "";
                 cbLogCargoAction.Text            = "";
                 nbLogQuantity.Text              = "0";

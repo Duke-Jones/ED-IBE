@@ -717,7 +717,8 @@ namespace IBE.MTCommandersLog
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
                     double? Distance = Program.Data.getDistanceBetween(e.System, e.OldSystem);
-                    SaveEvent(DateTime.UtcNow, e.System, "", "", "", 0, 0, 0, "Jumped To", "", Distance);
+
+                    SaveEvent(DateTime.UtcNow, e.System, "", "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Jumped To", "", Distance);
                 }
             }
             catch (Exception ex)
@@ -733,7 +734,7 @@ namespace IBE.MTCommandersLog
                 if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) > 0)
                 {
                   
-                    SaveEvent(DateTime.UtcNow, e.System, e.Location, "", "", 0, 0, 0, "Visited", "");
+                    SaveEvent(DateTime.UtcNow, e.System, e.Location, "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
                 }
 
                 if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.DataCollected) > 0)

@@ -396,6 +396,9 @@ namespace IBE
                     // EDDN Interface
                     EDDNComm = new IBE.EDDN.EDDNCommunicator();
 
+                    /// early variant of DoSpecial();
+                    Updater.DoSpecial_Early();
+
                     Program.SplashScreen.InfoAppendLast("<OK>");
 
                     m_initDone = true;

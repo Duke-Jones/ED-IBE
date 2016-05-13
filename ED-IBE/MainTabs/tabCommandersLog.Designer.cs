@@ -554,11 +554,12 @@
             // 
             this.credits_total.DataPropertyName = "credits_total";
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = null;
             this.credits_total.DefaultCellStyle = dataGridViewCellStyle4;
             this.credits_total.HeaderText = "Cr. total";
             this.credits_total.Name = "credits_total";
             this.credits_total.ReadOnly = true;
-            this.credits_total.Width = 70;
             // 
             // distance
             // 

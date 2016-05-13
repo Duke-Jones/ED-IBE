@@ -271,7 +271,7 @@ namespace IBE.Enums_and_Utility_Classes
                     b = MakeGrayscale(b);
                     b = MakeBrighter(b, .20f);
 
-                    //b= RNGraphics.adjustBitmap(b, 1.0f, 5.0f, 1.0f);
+                    //backGround= RNGraphics.adjustBitmap(backGround, 1.0f, 5.0f, 1.0f);
                     b = Contrast(b, 100);
             		
             		break;

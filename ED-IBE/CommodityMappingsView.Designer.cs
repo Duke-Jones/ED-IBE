@@ -159,12 +159,11 @@ namespace IBE
         private System.Windows.Forms.Button cmdCancel;
         private System.Windows.Forms.Button cmdOK;
         private SQL.Datasets.dsEliteDB dsEliteDB;
-        private System.Windows.Forms.BindingSource tbcommoditymappingBindingSource;
-        private SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter tbcommoditymappingTableAdapter;
+        private System.Windows.Forms.BindingSource tbdnmap_commodityBindingSource;
+        private SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter tbdnmap_commodityTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn mappedNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource tbdnmapcommodityBindingSource;
-        private SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter tbdnmap_commodityTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn companionNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn companionAdditionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn gameNameDataGridViewTextBoxColumn;

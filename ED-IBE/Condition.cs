@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IBE.EDDB_Data;
+using System.Runtime.Caching;
 using System.Data;
 
 namespace IBE
@@ -13,7 +11,15 @@ namespace IBE
     /// </summary>
     public class Condition
     {
-        public const String        DB_GROUPNAME                    = "Condition";
+        public const String        DB_GROUPNAME                     = "Condition";
+        private const string       STR_CurrentSystem_ID             = "CurrentSystem";
+        private const string       STR_CurrentStation_ID            = "CurrentStation";
+        private MemoryCache        m_DataCache                      = MemoryCache.Default;
+
+        public Condition()
+        {
+
+        }
 
         /// <summary>
         /// the actual system
@@ -22,13 +28,15 @@ namespace IBE
         {
             get
             {
-                return Program.DBCon.getIniValue(DB_GROUPNAME, "CurrentSystem", "");
+            return Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentSystem_ID, "");
             }
             set
             {
-                if(Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentSystem", value) &&
+                if(Program.DBCon.setIniValue(DB_GROUPNAME, STR_CurrentSystem_ID, value) &&
                   (!String.IsNullOrEmpty(value)))
                     Program.Data.checkPotentiallyNewSystemOrStation(value, "");
+
+                m_DataCache.Remove(STR_CurrentSystem_ID);
             }
         }
 
@@ -39,13 +47,15 @@ namespace IBE
         {
             get
             {
-                return Program.DBCon.getIniValue(DB_GROUPNAME, "CurrentStation", "");
+                return Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentStation_ID, "");
             }
             set
             {
-                if(Program.DBCon.setIniValue(DB_GROUPNAME, "CurrentStation", value) &&
+                if(Program.DBCon.setIniValue(DB_GROUPNAME, STR_CurrentStation_ID, value) &&
                   (!String.IsNullOrEmpty(value)))
                     Program.Data.checkPotentiallyNewSystemOrStation(System, value);
+
+                m_DataCache.Remove(STR_CurrentStation_ID);
             }
         }
 
@@ -56,12 +66,27 @@ namespace IBE
         {
             get
             {
-                String sqlString    = "select ID from tbSystems where Systemname = " + SQL.DBConnector.SQLAEscape(this.System);
-                DataTable Data      = new DataTable();
-                int? retValue       = null;
+                int? retValue       = (int?)m_DataCache.Get(STR_CurrentSystem_ID);;
 
-                if(Program.DBCon.Execute(sqlString, Data) > 0)
-                    retValue = (Int32)(Data.Rows[0]["ID"]);
+                if(retValue == null)
+                { 
+                    String sqlString    = "select ID from tbSystems where Systemname = " + SQL.DBConnector.SQLAEscape(this.System);
+                    DataTable Data      = new DataTable();
+                
+
+                    if(Program.DBCon.Execute(sqlString, Data) > 0)
+                        retValue = (Int32)(Data.Rows[0]["ID"]);
+
+                    
+                    if(retValue == null)
+                        m_DataCache.Set(STR_CurrentSystem_ID, 0, DateTimeOffset.Now.AddSeconds(10));
+                    else
+                        m_DataCache.Set(STR_CurrentSystem_ID, retValue, DateTimeOffset.Now.AddSeconds(10));
+                }
+                else if(retValue == 0)
+                {
+                    retValue = null;
+                }
 
                 return retValue;
             }
@@ -74,16 +99,29 @@ namespace IBE
         {
             get
             {
-                String sqlString    = "select St.ID from tbSystems Sy, tbStations St" +
-                                      " where Sy.ID = St. System_ID" +
-                                      " and   Sy.Systemname  = " + SQL.DBConnector.SQLAEscape(this.System) +
-                                      " and   St.Stationname = " + SQL.DBConnector.SQLAEscape(this.Location);
+                int? retValue       = (int?)m_DataCache.Get(STR_CurrentStation_ID);
 
-                DataTable Data      = new DataTable();
-                int? retValue       = null;
+                if(retValue == null)
+                { 
+                    String sqlString    = "select St.ID from tbSystems Sy, tbStations St" +
+                                          " where Sy.ID = St. System_ID" +
+                                          " and   Sy.Systemname  = " + SQL.DBConnector.SQLAEscape(this.System) +
+                                          " and   St.Stationname = " + SQL.DBConnector.SQLAEscape(this.Location);
 
-                if(Program.DBCon.Execute(sqlString, Data) > 0)
-                    retValue = (Int32)(Data.Rows[0]["ID"]);
+                    DataTable Data      = new DataTable();
+
+                    if(Program.DBCon.Execute(sqlString, Data) > 0)
+                        retValue = (Int32)(Data.Rows[0]["ID"]);
+
+                    if(retValue == null)
+                        m_DataCache.Set(STR_CurrentStation_ID, 0, DateTimeOffset.Now.AddSeconds(10));
+                    else
+                        m_DataCache.Set(STR_CurrentStation_ID, retValue, DateTimeOffset.Now.AddSeconds(10));
+                }
+                else if(retValue == 0)
+                {
+                    retValue = null;
+                }
 
                 return retValue;
             }

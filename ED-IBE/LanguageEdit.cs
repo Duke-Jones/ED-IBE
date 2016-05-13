@@ -548,8 +548,8 @@ namespace IBE
 
                 if(currentDataRow.RowState != DataRowState.Unchanged)
                 {
-                    e.CellStyle.BackColor = Program.Colors.Marked_BackColor;
-                    e.CellStyle.ForeColor = Program.Colors.Marked_ForeColor;
+                    e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor);
+                    e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);
                 }
             }
             catch (Exception ex)

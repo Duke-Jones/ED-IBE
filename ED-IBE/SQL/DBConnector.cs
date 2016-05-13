@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using IBE.Enums_and_Utility_Classes;
 using System.Data;
 using System.Collections;
+using System.Diagnostics;
 
 namespace IBE.SQL
 {
@@ -33,6 +34,7 @@ namespace IBE.SQL
             desc
         }
 
+        private Dictionary<Int32, Int32>                m_lockCounters = new Dictionary<int,int>();  
         private ConnectionParams                        m_ConfigData;
         private DbConnection                            m_Connection;
         private DbCommand                               m_Command;
@@ -277,10 +279,20 @@ namespace IBE.SQL
         /// <param name="Target"></param>
         /// <param name="msTimeOut"></param>
         /// <returns></returns>
-        private bool MonitorTryEnter(object Target, Int32 msTimeOut) 
+        private bool MonitorTryEnter(object Target, Int32 msTimeOut, String debugInfo = "n/a") 
         {
             bool retValue;
             retValue = Monitor.TryEnter(Target, msTimeOut);
+
+            if(retValue)
+            {
+                if(m_lockCounters.ContainsKey(Thread.CurrentThread.ManagedThreadId))
+                    m_lockCounters[Thread.CurrentThread.ManagedThreadId] += 1;
+                else
+                    m_lockCounters.Add(Thread.CurrentThread.ManagedThreadId, 1);
+
+                //Debug.Print(string.Format("locked by thread {0} (layer {2}) : {1}", Thread.CurrentThread.ManagedThreadId, debugInfo, m_lockCounters[Thread.CurrentThread.ManagedThreadId]));
+            }
             return retValue;
         }
 
@@ -288,18 +300,21 @@ namespace IBE.SQL
         /// removes the signal for the current thread from the object monitor
         /// </summary>
         /// <param name="Target"></param>
-        private void MonitorExit(object Target) 
+        private void MonitorExit(object Target, String debugInfo = "n/a") 
         {
             Monitor.Exit(Target);
+            m_lockCounters[Thread.CurrentThread.ManagedThreadId] -= 1;
+            //Debug.Print(string.Format("------ by thread {0} (layer {2} : {1}", Thread.CurrentThread.ManagedThreadId, debugInfo, m_lockCounters[Thread.CurrentThread.ManagedThreadId]));
         }
     
         /// <summary>
         /// signals a pulse to the monitor object
         /// </summary>
         /// <param name="Target"></param>
-        private void MonitorPulse(object Target) 
+        private void MonitorPulse(object Target, String debugInfo = "n/a") 
         {
             Monitor.Pulse(Target);
+            //Debug.Print("p----- by thread " + Thread.CurrentThread.ManagedThreadId.ToString() + " : " + debugInfo);
         }
 
         /// <summary>
@@ -311,10 +326,10 @@ namespace IBE.SQL
         {
             Int32 retValue = 0;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut))
-                throw new Exception("Timeout while waiting for Monitor-Lock");
-
             try {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut))
+                    throw new Exception("Timeout while waiting for Monitor-Lock");
+
                 DbCommand Command       = new MySqlCommand();
                 Command.CommandText     = CommandText;
                 Command.Connection      = m_Connection;
@@ -351,10 +366,11 @@ namespace IBE.SQL
         {
             Int32 retValue = 0;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
-                throw new Exception("Timeout while waiting for Monitor-Lock");
-
             try {
+
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Timeout while waiting for Monitor-Lock");
+
                 DbCommand Command               = new MySqlCommand();
                 DbDataAdapter DataAdapter       = new MySqlDataAdapter();
                 Command.CommandText             = CommandText;
@@ -395,10 +411,10 @@ namespace IBE.SQL
         public Int32 Execute(string CommandText, System.Data.DataTable Data) {
             Int32 retValue;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
-                throw new Exception("Timeout while waiting for Monitor-Lock");
-
             try {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Timeout while waiting for Monitor-Lock");
+
                 DbCommand Command = new MySqlCommand();
                 DbDataAdapter DataAdapter = new MySqlDataAdapter();
 
@@ -432,11 +448,11 @@ namespace IBE.SQL
 
             Object DataObject = null;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
-                throw new Exception("Timeout while waiting for Monitor-Lock");
-            }
             // LogFile.Write("Execute 7, <" & CommandText & ">") 
             try {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Timeout while waiting for Monitor-Lock");
+
                 DbCommand Command = new MySqlCommand();
                 Command.CommandText = CommandText;
                 Command.Connection = m_Connection;
@@ -449,10 +465,15 @@ namespace IBE.SQL
 
                 if(DataObject != null)
                 {
-                    retValue = (T)Convert.ChangeType(DataObject, typeof(T));
+                    if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        Type answer = Nullable.GetUnderlyingType(typeof(T));
+                        retValue = (T)Convert.ChangeType(DataObject, answer);
+                    }
+                    else
+                        retValue = (T)Convert.ChangeType(DataObject, typeof(T));
                 }
                 
-                return retValue;
             }
             catch (Exception ex) {
                 MonitorExit(this);
@@ -461,6 +482,8 @@ namespace IBE.SQL
                                 + (m_ConfigData.Name + ")"))))), ex);
             }
             MonitorExit(this);
+
+            return retValue;
         }
 
         /// <summary>
@@ -495,11 +518,11 @@ namespace IBE.SQL
         {
             Int32 retValue = 0;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
-                throw new Exception("Timeout while waiting for monitor-lock for TableRead()");
-            }
 
             try {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Timeout while waiting for monitor-lock for TableRead()");
+
                 if (!m_UpdateObjects.ContainsKey(Tablename)) {
                     //  loading data first time
                     if (string.IsNullOrEmpty(CommandText)) 
@@ -564,11 +587,10 @@ namespace IBE.SQL
         {
             Int32 retValue = 0;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) {
-                throw new Exception("Timeout while waiting for monitor-lock for TableRead()");
-            }
-
             try {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Timeout while waiting for monitor-lock for TableRead()");
+
                 if (dataAdapter == null) {
                     //  loading data first time
                     if (string.IsNullOrEmpty(CommandText)) 
@@ -657,10 +679,11 @@ namespace IBE.SQL
             Int32         retValue = 0;
             DbDataAdapter lDataAdapter;
 
-            if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
-                throw new Exception("Timeout while waiting for monitor-lock for TableUpdate()");
-
             try{
+
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+                    throw new Exception("Timeout while waiting for monitor-lock for TableUpdate()");
+
                 if ((DataAdapter == null) && !m_UpdateObjects.ContainsKey(Tablename)){
                     //  table is unknown
                     throw new Exception(string.Format("Table {0} is not existing", Tablename));
@@ -922,45 +945,58 @@ namespace IBE.SQL
         /// <returns></returns>
         public T getIniValue<T>(string Group, string Key, string DefaultValue = "", bool AllowEmptyValue = true, bool RewriteOnBadCast = true)
         {
-	        T functionReturnValue = default(T);
-	        try {
+            T functionReturnValue = default(T);
 
-                if(typeof(T).BaseType.Name.Equals("Enum"))
-                {
-                    String value    = getIniValue(Group, Key, DefaultValue, AllowEmptyValue);
-                    functionReturnValue = (T)Enum.Parse(typeof(T), value, true);
-                }
-                else if (!typeof(T).IsValueType)
-                {
-                    String value    = getIniValue(Group, Key, DefaultValue, AllowEmptyValue);
-                    var parse       = typeof(T).GetMethod("Parse", new[] { typeof(string) });
+            try
+            {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+	                throw new Exception("Timeout while waiting for Monitor-Lock");
 
-                    if (parse != null) 
-                        functionReturnValue = (T)parse.Invoke(null, new object[] { value });
+	            try {
+
+                    if(typeof(T).BaseType.Name.Equals("Enum"))
+                    {
+                        String value    = getIniValue(Group, Key, DefaultValue, AllowEmptyValue);
+                        functionReturnValue = (T)Enum.Parse(typeof(T), value, true);
+                    }
+                    else if (!typeof(T).IsValueType)
+                    {
+                        String value    = getIniValue(Group, Key, DefaultValue, AllowEmptyValue);
+                        var parse       = typeof(T).GetMethod("Parse", new[] { typeof(string) });
+
+                        if (parse != null) 
+                            functionReturnValue = (T)parse.Invoke(null, new object[] { value });
+                        else
+                            functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
+                    }
                     else
                         functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
-                }
-                else
-                    functionReturnValue = (T)Convert.ChangeType(getIniValue(Group, Key, DefaultValue, AllowEmptyValue), typeof(T));
 
-	        } catch (ArgumentNullException ex) {
-		        throw new Exception("conversionType ist Nothing", ex);
-	        } catch (Exception ex) {
-		        if (RewriteOnBadCast) {
-			        // Versuchen, den Defaultwert einzutragen
-			        try {
-				        setIniValue(Group, Key, DefaultValue);
-				        functionReturnValue = getIniValue<T>(Group, Key, DefaultValue, AllowEmptyValue, false);
-			        } catch {
-				        // Defaultwert ist ebenfalls ungültig -> Abbruch
-				        throw new Exception("Diese Konvertierung wird nicht unterstützt oder der Wert ist Nothing und conversionType ist ein Werttyp (Value-Rewrite done), R", ex);
-			        }
-		        } else {
-			        // direkter Abbruch
-			        throw new Exception("Diese Konvertierung wird nicht unterstützt oder der Wert ist Nothing und conversionType ist ein Werttyp", ex);
-		        }
-	        }
-	        return functionReturnValue;
+	            } catch (ArgumentNullException ex) {
+		            throw new Exception("conversionType ist Nothing", ex);
+	            } catch (Exception ex) {
+		            if (RewriteOnBadCast) {
+			            // Versuchen, den Defaultwert einzutragen
+			            try {
+				            setIniValue(Group, Key, DefaultValue);
+				            functionReturnValue = getIniValue<T>(Group, Key, DefaultValue, AllowEmptyValue, false);
+			            } catch {
+				            // Defaultwert ist ebenfalls ungültig -> Abbruch
+				            throw new Exception("Diese Konvertierung wird nicht unterstützt oder der Wert ist Nothing und conversionType ist ein Werttyp (Value-Rewrite done), R", ex);
+			            }
+		            } else {
+			            // direkter Abbruch
+			            throw new Exception("Diese Konvertierung wird nicht unterstützt oder der Wert ist Nothing und conversionType ist ein Werttyp", ex);
+		            }
+	            }
+            }
+            catch (Exception ex) {
+	            MonitorExit(this);
+	            throw new Exception("Error in GetIniValue", ex);
+            }
+            MonitorExit(this);
+
+            return functionReturnValue;
 
         }
 
@@ -975,54 +1011,68 @@ namespace IBE.SQL
         /// <remarks></remarks>
         public string getIniValue(string Group, string Key, string DefaultValue = "", bool AllowEmptyValue = true)
         {
-	        string functionReturnValue = null;
+            string functionReturnValue = null;
 
-	        DataTable Data = new DataTable();
-	        string sqlString = null;
-	        string Result = null;
+            try
+            {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+	                throw new Exception("Timeout while waiting for Monitor-Lock");
 
-	        functionReturnValue = string.Empty;
-	        Result = string.Empty;
 
-	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+	            DataTable Data = new DataTable();
+	            string sqlString = null;
+	            string Result = null;
 
-	        Execute(sqlString, Data);
+	            functionReturnValue = string.Empty;
+	            Result = string.Empty;
 
-	        if (Data.Rows.Count > 0) {
-		        // Datum gefunden
-		        Result = Data.Rows[0]["InitValue"].ToString();
-	        }
+	            sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 
-	        if ((Data.Rows.Count == 0)) {
-		        // Wert gar nicht vorhanden
+	            Execute(sqlString, Data);
 
-		        if (!AllowEmptyValue & string.IsNullOrEmpty(DefaultValue)) {
-			        // Leerwert nicht erlaubt aber kein Wert vorhanden
-			        throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (1): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")>");
-		        }
-                else if(!AllowEmptyValue)
-                {
-		            // Defaultwert eintragen
-		            sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAEscape(DefaultValue) + ")";
+	            if (Data.Rows.Count > 0) {
+		            // Datum gefunden
+		            Result = Data.Rows[0]["InitValue"].ToString();
+	            }
+
+	            if ((Data.Rows.Count == 0)) {
+		            // Wert gar nicht vorhanden
+
+		            if (!AllowEmptyValue & string.IsNullOrEmpty(DefaultValue)) {
+			            // Leerwert nicht erlaubt aber kein Wert vorhanden
+			            throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (1): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")>");
+		            }
+                    else if(!AllowEmptyValue)
+                    {
+		                // Defaultwert eintragen
+		                sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAEscape(DefaultValue) + ")";
+		                Execute(sqlString);
+                    }
+
+		            Result = DefaultValue;
+	            } else if (string.IsNullOrEmpty(Result) & !AllowEmptyValue) {
+		            // Wert ist leer, Leerwerte sind aber nicht erlaubt
+
+		            if (string.IsNullOrEmpty(DefaultValue)) {
+			            // Leerwert nicht erlaubt aber kein Wert vorhanden
+			            throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (2): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")");
+		            }
+
+		            sqlString = "update tbInitValue" + " set InitValue = " + SQLAEscape(DefaultValue);
 		            Execute(sqlString);
-                }
 
-		        Result = DefaultValue;
-	        } else if (string.IsNullOrEmpty(Result) & !AllowEmptyValue) {
-		        // Wert ist leer, Leerwerte sind aber nicht erlaubt
+		            Result = DefaultValue;
+	            }
 
-		        if (string.IsNullOrEmpty(DefaultValue)) {
-			        // Leerwert nicht erlaubt aber kein Wert vorhanden
-			        throw new Exception("Leerwert nicht erlaubt, aber kein Wert vorhanden (2): <getIniValue(" + Group + ", " + Key + ", " + DefaultValue + ", " + AllowEmptyValue + ")");
-		        }
+	            functionReturnValue = Result;
 
-		        sqlString = "update tbInitValue" + " set InitValue = " + SQLAEscape(DefaultValue);
-		        Execute(sqlString);
+            }
+            catch (Exception ex) {
+	            MonitorExit(this);
+	            throw new Exception("Error in GetIniValue", ex);
+            }
+            MonitorExit(this);
 
-		        Result = DefaultValue;
-	        }
-
-	        functionReturnValue = Result;
 	        return functionReturnValue;
 
         }
@@ -1036,27 +1086,39 @@ namespace IBE.SQL
         /// <returns>"false" if value was not changed (same value as before); true if the value was changed</returns>
         public Boolean setIniValue(string Group, string Key, string Value)
         {
-
-	        DataTable Data = new DataTable();
-	        string sqlString = null;
             Boolean retValue  = false;
 
-	        sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+            try
+            {
+                if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
+	                throw new Exception("Timeout while waiting for Monitor-Lock");
 
-	        Execute(sqlString, Data);
+                DataTable Data = new DataTable();
+	            string sqlString = null;
 
-	        if ((Data.Rows.Count == 0)) {
-		        // Wert gar nicht vorhanden
+	            sqlString = "select InitValue from tbInitValue" + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
 
-		        // Wert eintragen
-		        sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAEscape(Value) + ")";
-		        retValue = (Execute(sqlString) != 0);
+	            Execute(sqlString, Data);
 
-	        } else {
-		        // Wert bereits vorhanden
-		        sqlString = "update tbInitValue" + " set InitValue   = " + SQLAEscape(Value) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
-		        retValue = (Execute(sqlString) != 0);
-	        }
+	            if ((Data.Rows.Count == 0)) {
+		            // Wert gar nicht vorhanden
+
+		            // Wert eintragen
+		            sqlString = "insert into tbInitValue (InitGroup, InitKey, InitValue) values (" + SQLAString(Group) + "," + SQLAString(Key) + "," + SQLAEscape(Value) + ")";
+		            retValue = (Execute(sqlString) != 0);
+
+	            } else {
+		            // Wert bereits vorhanden
+		            sqlString = "update tbInitValue" + " set InitValue   = " + SQLAEscape(Value) + " where InitGroup = " + SQLAString(Group) + " and   InitKey   = " + SQLAString(Key);
+		            retValue = (Execute(sqlString) != 0);
+	            }
+
+            }
+            catch (Exception ex) {
+	            MonitorExit(this);
+	            throw new Exception("Error in GetIniValue", ex);
+            }
+            MonitorExit(this);
 
             return retValue;
         }

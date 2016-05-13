@@ -954,6 +954,210 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbTrustedSenders` (
   PRIMARY KEY (`Name`))
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Commodity`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Commodity` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Armour`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Armour` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Weapon`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Weapon` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_MissileType`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_MissileType` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_WeaponMount`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_WeaponMount` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_WeaponClass`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_WeaponClass` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_WeaponRating`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_WeaponRating` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_OldVariant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_OldVariant` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_CounterMeasure`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_CounterMeasure` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Utility`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Utility` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Rating`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Rating` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_RatingPlanet`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_RatingPlanet` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Standard`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Standard` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Internal`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Internal` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Internal_Misc`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Internal_Misc` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Category` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbDNMap_Ships`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Ships` (
+  `CompanionName` VARCHAR(255) NOT NULL,
+  `CompanionAddition` VARCHAR(255) NOT NULL,
+  `GameName` VARCHAR(255) NOT NULL,
+  `GameAddition` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CompanionName`, `CompanionAddition`))
+ENGINE = InnoDB;
+
 USE `elite_db` ;
 
 -- -----------------------------------------------------
@@ -1191,7 +1395,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.2.3.0');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.3.0');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');
 
 COMMIT;
@@ -1253,6 +1457,379 @@ INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('E:D Market Connector
 INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EDAPI Trade Dangerous Plugin');
 INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('E:D Market Connector [Mac OS]');
 INSERT INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('ED-IBE (API)');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Commodity`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Agricultural Medicines', '', 'Agri-Medicines', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Ai Relics', '', 'AI Relics', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Atmospheric Extractors', '', 'Atmospheric Processors', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Auto Fabricators', '', 'Auto-Fabricators', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Basic Narcotics', '', 'Narcotics', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Bio Reducing Lichen', '', 'Bioreducing Lichen', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Comercial Samples', '', 'Commercial Samples', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Drones', '', 'Limpet', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Encripted Data Storage', '', 'Encrypted Data Storage', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Hafnium178', '', 'Hafnium 178', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Hazardous Environment Suits', '', 'H.E. Suits', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Heliostatic Furnaces', '', 'Microbial Furnaces', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Marine Supplies', '', 'Marine Equipment', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Meta Alloys', '', 'Meta-Alloys', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Mu Tom Imager', '', 'Muon Imager', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Non Lethal Weapons', '', 'Non-Lethal Weapons', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('S A P8 Core Container', '', 'SAP 8 Core Container', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Skimer Components', '', 'Skimmer Components', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Terrain Enrichment Systems', '', 'Land Enrichment Systems', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Trinkets Of Fortune', '', 'Trinkets Of Hidden Fortune', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Unknown Artifact', '', 'Unknown Artefact', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Ancient Artefact', '', 'Ancient Artefact', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Experimental Chemicals', '', 'Experimental Chemicals', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Military Plans', '', 'Military Plans', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Prototype Tech', '', 'Prototype Tech', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Rebel Transmissions', '', 'Rebel Transmissions', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Technical Blueprints', '', 'Technical Blueprints', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Trade Data', '', 'Trade Data', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Wreckage Components', '', 'Salvageable Wreckage', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Armour`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Armour` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('grade1', '', 'Lightweight Alloy', '');
+INSERT INTO `elite_db`.`tbDNMap_Armour` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('grade2', '', 'Reinforced Alloy', '');
+INSERT INTO `elite_db`.`tbDNMap_Armour` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('grade3', '', 'Military Grade Composite', '');
+INSERT INTO `elite_db`.`tbDNMap_Armour` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('mirrored', '', 'Mirrored Surface Composite', '');
+INSERT INTO `elite_db`.`tbDNMap_Armour` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('reactive', '', 'Reactive Surface Composite', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Weapon`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('advancedtorppylon', '', 'Torpedo Pylon', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('basicmissilerack', '', 'Missile Rack', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('beamlaser', '', 'Beam Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('beamlaser', 'heat', 'Retributor Beam Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cannon', '', 'Cannon', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('drunkmissilerack', '', 'Pack-Hound Missile Rack', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('dumbfiremissilerack', '', 'Missile Rack', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('minelauncher', '', 'Mine Launcher', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('minelauncher', 'impulse', 'Shock Mine Launcher', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('mininglaser', '', 'Mining Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('mininglaser', 'advanced', 'Mining Lance Beam Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('multicannon', '', 'Multi-Cannon', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('multicannon', 'strong', 'Enforcer Cannon', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('plasmaaccelerator', '', 'Plasma Accelerator', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('plasmaaccelerator', 'advanced', 'Advanced Plasma Accelerator', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('pulselaser', '', 'Pulse Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('pulselaser', 'disruptor', 'Pulse Disruptor Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('pulselaserburst', '', 'Burst Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('pulselaserburst', 'scatter', 'Cytoscrambler Burst Laser', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('railgun', '', 'Rail Gun', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('railgun', 'burst', 'Imperial Hammer Rail Gun', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('slugshot', '', 'Fragment Cannon', '');
+INSERT INTO `elite_db`.`tbDNMap_Weapon` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('slugshot', 'range', 'Pacifier Frag-Cannon', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_MissileType`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_MissileType` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('advancedtorppylon', '', 'Seeker', '');
+INSERT INTO `elite_db`.`tbDNMap_MissileType` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('basicmissilerack', '', 'Seeker', '');
+INSERT INTO `elite_db`.`tbDNMap_MissileType` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('drunkmissilerack', '', 'Swarm', '');
+INSERT INTO `elite_db`.`tbDNMap_MissileType` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('dumbfiremissilerack', '', 'Dumbfire', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_WeaponMount`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_WeaponMount` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('fixed', '', 'Fixed', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponMount` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('gimbal', '', 'Gimballed', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponMount` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('turret', '', 'Turreted', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_WeaponClass`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_WeaponClass` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('tiny', '', '0', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponClass` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('small', '', '1', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponClass` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('medium', '', '2', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponClass` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('large', '', '3', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponClass` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('huge', '', '4', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_WeaponRating`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_advancedtorppylon_fixed_small', '', 'I', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_advancedtorppylon_fixed_medium', '', 'I', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_basicmissilerack_fixed_small', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_basicmissilerack_fixed_medium', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_fixed_small', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_fixed_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_fixed_large', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_gimbal_small', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_gimbal_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_gimbal_large', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_turret_small', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_turret_medium', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_beamlaser_turret_large', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_fixed_small', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_fixed_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_fixed_large', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_fixed_huge', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_gimbal_small', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_gimbal_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_gimbal_large', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_gimbal_huge', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_turret_small', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_turret_medium', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_cannon_turret_large', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_drunkmissilerack_fixed_medium', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_dumbfiremissilerack_fixed_small', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_dumbfiremissilerack_fixed_medium', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_minelauncher_fixed_small', '', 'I', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_minelauncher_fixed_medium', '', 'I', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_mininglaser_fixed_small', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_mininglaser_fixed_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_multicannon_fixed_small', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_multicannon_fixed_medium', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_multicannon_gimbal_small', '', 'G', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_multicannon_gimbal_medium', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_multicannon_turret_small', '', 'G', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_multicannon_turret_medium', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_plasmaaccelerator_fixed_medium', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_plasmaaccelerator_fixed_large', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_plasmaaccelerator_fixed_huge', '', 'A', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_fixed_small', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_fixed_medium', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_fixed_large', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_gimbal_small', '', 'G', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_gimbal_medium', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_gimbal_large', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_turret_small', '', 'G', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_turret_medium', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaser_turret_large', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_fixed_small', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_fixed_medium', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_fixed_large', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_gimbal_small', '', 'G', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_gimbal_medium', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_gimbal_large', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_turret_small', '', 'G', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_turret_medium', '', 'F', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_pulselaserburst_turret_large', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_railgun_fixed_small', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_railgun_fixed_medium', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_fixed_small', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_fixed_medium', '', 'A', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_fixed_large', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_gimbal_small', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_gimbal_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_gimbal_large', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_turret_small', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_turret_medium', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_WeaponRating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hpt_slugshot_turret_large', '', 'C', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_OldVariant`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_OldVariant` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('f', '', 'Focussed', '');
+INSERT INTO `elite_db`.`tbDNMap_OldVariant` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hi', '', 'High Impact', '');
+INSERT INTO `elite_db`.`tbDNMap_OldVariant` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('lh', '', 'Low Heat', '');
+INSERT INTO `elite_db`.`tbDNMap_OldVariant` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('oc', '', 'Overcharged', '');
+INSERT INTO `elite_db`.`tbDNMap_OldVariant` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('ss', '', 'Scatter Spray', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_CounterMeasure`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_CounterMeasure` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('chafflauncher', '', 'Chaff Launcher', 'I');
+INSERT INTO `elite_db`.`tbDNMap_CounterMeasure` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('electroniccountermeasure', '', 'Electronic Countermeasure', 'F');
+INSERT INTO `elite_db`.`tbDNMap_CounterMeasure` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('heatsinklauncher', '', 'Heat Sink Launcher', 'I');
+INSERT INTO `elite_db`.`tbDNMap_CounterMeasure` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('plasmapointdefence', '', 'Point Defence', 'I');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Utility`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Utility` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cargoscanner', '', 'Cargo Scanner', '');
+INSERT INTO `elite_db`.`tbDNMap_Utility` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cloudscanner', '', 'Frame Shift Wake Scanner', '');
+INSERT INTO `elite_db`.`tbDNMap_Utility` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('crimescanner', '', 'Kill Warrant Scanner', '');
+INSERT INTO `elite_db`.`tbDNMap_Utility` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('shieldbooster', '', 'Shield Booster', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Rating`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Rating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('1', '', 'E', '');
+INSERT INTO `elite_db`.`tbDNMap_Rating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('2', '', 'D', '');
+INSERT INTO `elite_db`.`tbDNMap_Rating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('3', '', 'C', '');
+INSERT INTO `elite_db`.`tbDNMap_Rating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('4', '', 'B', '');
+INSERT INTO `elite_db`.`tbDNMap_Rating` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('5', '', 'A', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_RatingPlanet`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_RatingPlanet` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('1', '', 'H', '');
+INSERT INTO `elite_db`.`tbDNMap_RatingPlanet` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('2', '', 'G', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Standard`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('engine', '', 'Thrusters', '');
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('fueltank', '', 'Fuel Tank', '');
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hyperdrive', '', 'Frame Shift Drive', '');
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('lifesupport', '', 'Life Support', '');
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('powerdistributor', '', 'Power Distributor', '');
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('powerplant', '', 'Power Plant', '');
+INSERT INTO `elite_db`.`tbDNMap_Standard` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('sensors', '', 'Sensors', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Internal`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('buggybay', '', 'Planetary Vehicle Hangar', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cargorack', '', 'Cargo Rack', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('collection', '', 'Collector Limpet Controller', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('fsdinterdictor', '', 'Frame Shift Drive Interdictor', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('fuelscoop', '', 'Fuel Scoop', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('fueltransfer', '', 'Fuel Transfer Limpet Controller', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hullreinforcement', '', 'Hull Reinforcement Package', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('prospector', '', 'Prospector Limpet Controller', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('refinery', '', 'Refinery', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('repairer', '', 'Auto Field-Maintenance Unit', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('resourcesiphon', '', 'Hatch Breaker Limpet Controller', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('shieldcellbank', '', 'Shield Cell Bank', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('shieldgenerator', '', 'Shield Generator', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('shieldgenerator', 'fast', 'Bi-Weave Shield Generator', '');
+INSERT INTO `elite_db`.`tbDNMap_Internal` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('shieldgenerator', 'strong', 'Prismatic Shield Generator', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Internal_Misc`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Internal_Misc` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('detailedsurfacescanner', 'tiny', 'Detailed Surface Scanner', 'C');
+INSERT INTO `elite_db`.`tbDNMap_Internal_Misc` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('dockingcomputer', 'standard', 'Standard Docking Computer', 'E');
+INSERT INTO `elite_db`.`tbDNMap_Internal_Misc` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('stellarbodydiscoveryscanner', 'standard', 'Basic Discovery Scanner', 'E');
+INSERT INTO `elite_db`.`tbDNMap_Internal_Misc` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('stellarbodydiscoveryscanner', 'intermediate', 'Intermediate Discovery Scanner', 'D');
+INSERT INTO `elite_db`.`tbDNMap_Internal_Misc` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('stellarbodydiscoveryscanner', 'advanced', 'Advanced Discovery Scanner', 'C');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Category`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Category` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Narcotics', '', 'Legal Drugs', '');
+INSERT INTO `elite_db`.`tbDNMap_Category` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Slaves', '', 'Slavery', '');
+INSERT INTO `elite_db`.`tbDNMap_Category` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Waste', '', 'Waste', '');
+INSERT INTO `elite_db`.`tbDNMap_Category` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('NonMarketable', '', '', '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbDNMap_Ships`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('adder', '', 'Adder', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('anaconda', '', 'Anaconda', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('asp', '', 'Asp Explorer', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('asp_scout', '', 'Asp Scout', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cobramkiii', '', 'Cobra MkIII', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cobramkiv', '', 'Cobra MkIV', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('cutter', '', 'Imperial Cutter', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('diamondback', '', 'Diamondback Scout', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('diamondbackxl', '', 'Diamondback Explorer', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('eagle', '', 'Eagle', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('empire_courier', '', 'Imperial Courier', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('empire_eagle', '', 'Imperial Eagle', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('empire_fighter', '', 'Imperial Fighter', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('empire_trader', '', 'Imperial Clipper', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('federation_corvette', '', 'Federal Corvette', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('federation_dropship', '', 'Federal Dropship', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('federation_dropship_mkii', '', 'Federal Assault Ship', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('federation_gunship', '', 'Federal Gunship', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('federation_fighter', '', 'F63 Condor', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('ferdelance', '', 'Fer-de-Lance', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('hauler', '', 'Hauler', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('independant_trader', '', 'Keelback', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('orca', '', 'Orca', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('python', '', 'Python', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('sidewinder', '', 'Sidewinder', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('type6', '', 'Type-6 Transporter', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('type7', '', 'Type-7 Transporter', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('type9', '', 'Type-9 Heavy', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('viper', '', 'Viper MkIII', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('viper_mkiv', '', 'Viper MkIV', '');
+INSERT INTO `elite_db`.`tbDNMap_Ships` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('vulture', '', 'Vulture', '');
 
 COMMIT;
 
