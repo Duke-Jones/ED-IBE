@@ -259,20 +259,25 @@ for run by selecting its text.
 
 _________________________________________________________________________
 9. EDDN
-The EDDN interface is disabled by default. 
-At "Settings"->"EDDN Interface" you can enable the reciever and/or the sender. 
-To receive EDDN data automatically at the next start you have to check
+By default the EDDN interface is sending only outfitting data and shipyard data to the EDDN.
+The market data is only transmitted, if the checkbox "Send To EDDN" (below the "Import Market Data" Button)
+is checked. In the EDDN settings you can set a default behaviour of the checkbox 
+("default is checked" / "default is unchecked" / "hold last setting").
+You can find the description of the LEDs in section 3.1.1. 
+
+The recieving of EDDN market data is off by default, but you can activate this at any time will 
+in "IO"->"EDDN Interface". To receive EDDN data automatically at the next start you have to check
 "Import received data into database" and "auto start listening on program start".
-Please consider also section 9 for understand, why not all stations are shown by default. 
 
 To filter out garbage the time window of valid data is +- 5 minutes. 
 The time of your own computer should therefore be well adjusted. 
 Multiple incoming data from EDDN  is also be filtered within a 5-minute period.
 
 _________________________________________________________________________
-10. Consideration of systems/stations !!!!!!!
+10. Consideration of systems/stations 
 For the people who like to reduce the data strictly to the self-visited 
-systems (even only self-visited stations) there is a datafilter active by default.
+systems (even only self-visited stations) there is the possibility to 
+activate a datafilter .
 
 This means even if you get tons of data from somewhere (eg. EDDN or csv-files),
 you will not see them - until you have visit the systems OR you deactivate 
@@ -298,12 +303,11 @@ FAQ:
 Q: price analysis shows no or not enough stations
 
 A1: For the people who like to reduce the data strictly by the self-visited systems 
-(even only self-visited stations) there is a datafilter active by default 
-(this is also one of the base ideas of this tool - in cause of this it is active by default - yet)
+(even only self-visited stations) there can be activated a datafilter 
 This means even if you get tons of data from anywhere you will not see them - 
 until you have visit the systems OR you deactivate the datafilter in the settings.
 (Settings => Datafilter)
-See also "9. Consideration of systems/stations"
+See also "10. Consideration of systems/stations"
 
 
 A2: You have bad filter settings (eg. "Distance To Star" or timefilter etc.)

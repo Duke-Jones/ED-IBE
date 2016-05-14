@@ -259,23 +259,23 @@ zum Ausführen auswählen.
 
 _________________________________________________________________________
 9. EDDN
-Das EDDN-Interface ist standardmäßig deaktiviert. Über Settings->EDDN-Interface
-kann der Empfang und/oder das Senden von EDDN-Nachrichten aktiviert werden.
-Um EDDN-Daten automatisch beim nächsten Start zu empfangen, müssen
-"import received data into database" und "autostart listening on program start"
-aktiviert werden. Bitte hierzu auch Punkt 9. berücksichtigen
-Für das Senden von Daten in das EDDN gilt das gleiche.
+Das EDDN-Interface sendet standardmäßig nur die Daten der Schiffswerft und die Ausstattungsdaten
+in das EDDN. Die Marktpreise werden nur übermittelt, wenn der Haken bei "Send To EDDN" unterhalb des
+"Import Market Data" Buttons gesetzt ist. In den EDDN-Einstellungen kann das Rücksetzverhalten
+dieser Checkbox eingestellt werden ("standard an"/"standard aus"/"Einstellung beibehalten").
+Die Beschreibung der Datenanzeige-LEDs ist unter Abschnitt 3.1.1 zu finden.
 
-Um Datenmüll auszufiltern beträgt das Zeitfenster für gültige Daten +- 5 Minuten - 
+Das Empfangen der Daten aus dem EDDN ist standardmäßig ausgeschaltet, kann aber jederzeit aktiviert.
+Um Datenmüll auszufiltern beträgt das Zeitfenster für gültige EDDN-Daten +- 5 Minuten - 
 die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach eingehende
 Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
 
 _________________________________________________________________________
-10. Berücksichtigung der Systeme/Stationen !!!!!!!
-ED-IBE berücksichtigt im Normalfall nur Daten von Systeme, die bereits selbst besucht wurden !
-Es können jedoch weitere Daten vorhanden sein (über den manuellen CSV-Import oder über das EDDN-Interface).
-Über diesen Mechanismus kann man sich bewußt gegen das Sammeln von Preisdaten unbekannter Systeme entscheiden,
-aber trotzdem Aktualisierungen von Preisen der besuchten Systeme über EDDN empfangen.
+10. Berücksichtigung der Systeme/Stationen
+ED-IBE bietet die Möglichkeit, nur Daten von Systeme, die bereits selbst besucht wurden, zu berücksichtigen
+(Settings->Datafilter). Über diesen Mechanismus kann man sich bewußt gegen das Sammeln 
+von Preisdaten unbekannter Systeme entscheiden, aber trotzdem Aktualisierungen von Preisen 
+der besuchten Systeme über EDDN empfangen.
 
 Hinweis: Wer seine alten RN-Daten importiert, fügt auch die Einträge in die Liste der besuchten Systeme hinzu.
 Grundlage hierfür ist beim Import das "Commander's Log" sowie die "StationHistory" von "RegulatedNoise DJ".
@@ -287,11 +287,11 @@ FAQ:
 *************************************************************************
 Q: bei der Preisanalyse werden keine/zu wenig Stationen angezeigt
 
-A1: Als Standard ist ein Filter aktiv, der nur Daten von bereits besuchten 
+A1: Es ist ein Filter aktiv, der nur Daten von bereits besuchten 
 Systemen berücksichtigt. Um mehr Systeme zu berücksichtigen (z.B. von EDDN oder EDDB), 
 müssen die Systeme bereist werden (der Normalfall, wenn man selber die Daten sammeln möchte)
 oder der Filter muss in den Settings deaktiviert werden (-> Datafilter)
-Siehe auch "9. Berücksichtigung der Systeme/Stationen"
+Siehe auch "10. Berücksichtigung der Systeme/Stationen"
 
 A2: Die Filterreinstellungen sind falsch gewählt (z.B "Distance To Star" oder der Zeitfilter etc.)
 
