@@ -236,6 +236,12 @@
             this.bStart = new System.Windows.Forms.Button();
             this.bStop = new System.Windows.Forms.Button();
             this.lblURL = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtPosition_X = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtPosition_Y = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtPosition_Z = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -793,14 +799,14 @@
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
             // 
             // colorsToolStripMenuItem
             // 
             this.colorsToolStripMenuItem.Name = "colorsToolStripMenuItem";
-            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.colorsToolStripMenuItem.Text = "Colors";
             this.colorsToolStripMenuItem.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click);
             // 
@@ -2519,12 +2525,84 @@
             this.lblURL.Text = "http://";
             this.lblURL.Click += new System.EventHandler(this.lblURL_Click);
             // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(843, 89);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.TabIndex = 67;
+            this.label4.Text = "System X:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtPosition_X
+            // 
+            this.txtPosition_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosition_X.Location = new System.Drawing.Point(903, 86);
+            this.txtPosition_X.Name = "txtPosition_X";
+            this.txtPosition_X.ReadOnly = true;
+            this.txtPosition_X.Size = new System.Drawing.Size(86, 20);
+            this.txtPosition_X.TabIndex = 66;
+            this.txtPosition_X.Text = "000000000.000";
+            this.txtPosition_X.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(880, 111);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(17, 13);
+            this.label5.TabIndex = 69;
+            this.label5.Text = "Y:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtPosition_Y
+            // 
+            this.txtPosition_Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosition_Y.Location = new System.Drawing.Point(903, 108);
+            this.txtPosition_Y.Name = "txtPosition_Y";
+            this.txtPosition_Y.ReadOnly = true;
+            this.txtPosition_Y.Size = new System.Drawing.Size(86, 20);
+            this.txtPosition_Y.TabIndex = 68;
+            this.txtPosition_Y.Text = "000000000.000";
+            this.txtPosition_Y.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(880, 133);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(17, 13);
+            this.label7.TabIndex = 71;
+            this.label7.Text = "Z:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtPosition_Z
+            // 
+            this.txtPosition_Z.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosition_Z.Location = new System.Drawing.Point(903, 130);
+            this.txtPosition_Z.Name = "txtPosition_Z";
+            this.txtPosition_Z.ReadOnly = true;
+            this.txtPosition_Z.Size = new System.Drawing.Size(86, 20);
+            this.txtPosition_Z.TabIndex = 70;
+            this.txtPosition_Z.Text = "000000000.000";
+            this.txtPosition_Z.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 737);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtPosition_Z);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtPosition_Y);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtPosition_X);
             this.Controls.Add(this.tlpData);
             this.Controls.Add(this.gbEvents);
             this.Controls.Add(this.msMainMenu);
@@ -2807,6 +2885,12 @@
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.ToolStripMenuItem colorsToolStripMenuItem;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtPosition_X;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtPosition_Y;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtPosition_Z;
     }
 }
 

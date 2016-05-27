@@ -80,6 +80,7 @@ namespace IBE.IBECompanion
                         break;
 
                     case LoginStatus.Ok:
+                    case LoginStatus.NotAccessible:
                         var profileExists = Program.CompanionIO.LoadProfile(Program.DBCon.getIniValue(CompanioDataView.DB_GROUPNAME, "EmailAddress"));
                         if (profileExists)
                         {
@@ -310,12 +311,12 @@ namespace IBE.IBECompanion
                         csvData.Supply              = commodity.Value<Int32>("stock");
                         csvData.SampleDate          = DateTime.Now;
 
-                        if(commodity.Value<Int32>("demandBracket") > 0)
+                        if((!String.IsNullOrEmpty(commodity.Value<String>("demandBracket"))) && (commodity.Value<Int32>("demandBracket") > 0))
                             csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
                         else
                             csvData.DemandLevel = null;
 
-                        if(commodity.Value<Int32>("stockBracket") > 0)
+                        if((!String.IsNullOrEmpty(commodity.Value<String>("stockBracket"))) && (commodity.Value<Int32>("stockBracket") > 0))
                             csvData.SupplyLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("stockBracket") - 1, "level");
                         else
                             csvData.SupplyLevel = null;

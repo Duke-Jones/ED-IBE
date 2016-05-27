@@ -142,6 +142,7 @@
     <Compile Include="EDDN\MessageHeader.cs" />
     <Compile Include="EDDN\OutfittingObject.cs" />
     <Compile Include="EDDN\ShipyardObject.cs" />
+    <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="GUIColorsView.cs">
       <SubType>Form</SubType>
@@ -1046,6 +1047,10 @@
     <ProjectReference Include="..\EDCompanionAPI\EDCompanionAPI.csproj">
       <Project>{50546805-f69d-4c2e-b2c5-2442864ab465}</Project>
       <Name>EDCompanionAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NVNC\NVNCServer.csproj">
+      <Project>{a749de42-b732-4541-86be-2ff3cbcb5ec4}</Project>
+      <Name>NVNCServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

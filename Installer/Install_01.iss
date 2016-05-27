@@ -53,6 +53,7 @@ Source: "..\ED-IBE\bin\Release\Tesseract.dll"; DestDir: "{app}"; Flags: ignoreve
 Source: "..\ED-IBE\bin\Release\Tesseract.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\EDCompanionAPI.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\EDCompanionAPI.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ED-IBE\bin\Release\NVNCServer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\clrzmq.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\clrzmq.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ED-IBE\bin\Release\clrzmq.xml"; DestDir: "{app}"; Flags: ignoreversion

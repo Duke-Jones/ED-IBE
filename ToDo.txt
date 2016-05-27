@@ -9,13 +9,20 @@ todo:
 * show all systems around another system with infos
 
 * wrong data in sell-date of S2S detailgrid
-
-
+* check : non-existing game path from registry
+						   1
 
 Default
 
 done:
    
+v0.3.1
+   * changes for ED 2.1
+   * crash if companion interface delivers no data fixed
+   * shows system coordinates from log
+   * transmission errors to eddn are marked as red leds (due to yet unknown size 4 lasers etc.)
+   * experimental : integrated VNC-server, port 5900 (alpha-state)
+-------------------------------------------------------------------------------------         
 v0.3.0
    * small fixes 
    * updated installer script

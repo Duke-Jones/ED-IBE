@@ -28,6 +28,7 @@ namespace IBE.FileScanner
             public enLogEvents EventType    { get; set; }
             public String      Value        { get; set; }
             public DateTime    Time         { get; set; }
+            public Point3Dbl   Position     { get; set; }
         }
 
         #endregion
@@ -52,7 +53,8 @@ namespace IBE.FileScanner
             {
                 Changed     = enLogEvents.Location;
                 System      = "";
-                Location     = "";
+                Location    = "";
+                Position    = new Point3Dbl();
             }
 
             public String System            { get; set; }
@@ -60,6 +62,7 @@ namespace IBE.FileScanner
             public String OldSystem         { get; set; }
             public String OldLocation       { get; set; }
             public enLogEvents Changed      { get; set; }
+            public Point3Dbl   Position     { get; set; }
         }
 
         [System.ComponentModel.Browsable(true)]
@@ -79,11 +82,13 @@ namespace IBE.FileScanner
             public LocationInfoEventArgs()
             {
                 System      = "";
-                Location     = "";
+                Location    = "";
+                Position    = new Point3Dbl();
             }
 
             public String System            { get; set; }
             public String Location          { get; set; }
+            public Point3Dbl   Position     { get; set; }
         }
 
         #endregion
@@ -447,10 +452,44 @@ namespace IBE.FileScanner
                                                                 logger.Log("Systemstring:" + currentLogString.Replace("\n", "").Replace("\r", ""));
                                                             #endif
 
-                                                            Systemname = currentLogString.Substring(currentLogString.IndexOf("(", StringComparison.Ordinal) + 1);
-                                                            Systemname = Systemname.Substring(0, Systemname.IndexOf(")", StringComparison.Ordinal));
+                                                            // before 2.1 :
+                                                            // Systemname = currentLogString.Substring(currentLogString.IndexOf("(", StringComparison.Ordinal) + 1);
+                                                            // Systemname = Systemname.Substring(0, Systemname.IndexOf(")", StringComparison.Ordinal));
 
-                                                            LoggedEvents.Add(new LogEvent() { EventType = enLogEvents.System, Value = Systemname, Time = TimestampCurrentLine});
+                                                            // since 2.1 :
+                                                            currentLogString = currentLogString.Replace("\r", "").Replace("\n", "").Replace(@"\\", "");
+                                                            MatchCollection matchCollection = Regex.Matches(currentLogString, @"(?<match>[^""\s]+)|\""(?<match>[^""]*)""");
+                                                            Point3Dbl systemPosition = new Point3Dbl();
+
+                                                            for (int i = 0; i < matchCollection.Count; i++)
+                                                            {
+                                                                if ((matchCollection[i].ToString().Equals("System:")) && (matchCollection.Count > i))
+                                                                {
+                                                                    Systemname = matchCollection[i+1].ToString().Replace("\"", "");
+                                                                }
+                                                                else if ((matchCollection[i].ToString().StartsWith("System:")) && (matchCollection[i].ToString().Length > "System:".Length))
+                                                                {
+                                                                    Systemname = matchCollection[i].ToString().Substring("System:".Length).Replace("\"", "");
+                                                                }
+                                                                else if (matchCollection[i].ToString().StartsWith("StarPos:("))
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        var posParts = matchCollection[i].ToString().Replace("StarPos:(", "").Replace(")ly", "").Replace(")", "").Split(new char[] {','});    
+
+                                                                        systemPosition.X = Double.Parse(posParts[0], System.Globalization.CultureInfo.InvariantCulture);
+                                                                        systemPosition.Y = Double.Parse(posParts[1], System.Globalization.CultureInfo.InvariantCulture);
+                                                                        systemPosition.Z = Double.Parse(posParts[2], System.Globalization.CultureInfo.InvariantCulture);
+                                                                    }
+                                                                    catch (Exception)
+                                                                    {
+                                                                    }
+                                                                }
+
+                                                            }
+
+
+                                                            LoggedEvents.Add(new LogEvent() { EventType = enLogEvents.System, Value = Systemname, Time = TimestampCurrentLine, Position = systemPosition});
 
                                                             #if extScanLog
                                                                 Debug.Print("System: " + systemName);
@@ -669,6 +708,7 @@ namespace IBE.FileScanner
             String OldSystemString;
             String OldLocationString;
             enLogEvents EventFlags = enLogEvents.None;
+            Point3Dbl usePosition = null;
 
             try
             {
@@ -714,6 +754,7 @@ namespace IBE.FileScanner
                                 { 
                                     EventFlags |= enLogEvents.System;
                                     Program.actualCondition.System  = Event.Value;
+                                    usePosition = Event.Position;
 
                                     // after a jump we are no longer on a station
                                     if(!String.IsNullOrEmpty(Program.actualCondition.Location))
@@ -743,7 +784,8 @@ namespace IBE.FileScanner
                         // something has changed -> fire events
 
                         var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
-                                                               Location      = Program.actualCondition.Location};
+                                                               Location      = Program.actualCondition.Location,
+                                                               Position      = usePosition};
                         LocationInfo.Raise(this, LI);
 
 
@@ -751,7 +793,8 @@ namespace IBE.FileScanner
                                                                   Location      = Program.actualCondition.Location,
                                                                   OldSystem     = OldSystemString,  
                                                                   OldLocation   = OldLocationString,
-                                                                  Changed       = EventFlags};
+                                                                  Changed       = EventFlags,
+                                                                  Position      = usePosition};
                         LocationChanged.Raise(this, EA);
                     }
                 }

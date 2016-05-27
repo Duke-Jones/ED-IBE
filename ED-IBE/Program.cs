@@ -17,6 +17,7 @@ using IBE.MTPriceAnalysis;
 using IBE.FileScanner;
 using IBE.Enums_and_Utility_Classes;
 using EDCompanionAPI;
+using NVNC;
 
 namespace IBE
 {
@@ -71,6 +72,7 @@ namespace IBE
 
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
+
 
                         Init();
 
@@ -265,7 +267,8 @@ namespace IBE
         public static EDDN.EDDNCommunicator                 EDDNComm;
         public static PlausibiltyChecker                    PlausibiltyCheck;
         public static GameSettings                          GameSettings;
-
+        public static VncServer                             VNCAppServer;
+        public static System.Threading.Thread               VNCServerThread;
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -445,6 +448,12 @@ namespace IBE
                     EliteDBProcess.Dispose();
                     EliteDBProcess = null;
                 }
+
+                if(VNCAppServer != null)
+                    VNCAppServer.Stop();
+
+                //VNCServerThread = new System.Threading.Thread(new System.Threading.ThreadStart(s.Start));
+
             }
             catch (Exception ex)
             {
@@ -534,5 +543,25 @@ namespace IBE
     #endregion //global objects
 
 
+
+        internal static void StartVNCServer(Form form1)
+        {
+            try
+            {
+                if(Program.DBCon.getIniValue<Boolean>("Settings", "ActivateVNC", false.ToString(), false))
+                {
+                    VNCAppServer = new NVNC.VncServer("", "", 5901, 5900, "ED-IBE Remote", form1);
+
+                    VNCServerThread = new System.Threading.Thread(new System.Threading.ThreadStart(VNCAppServer.Start));
+                    VNCServerThread.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.DBCon.setIniValue("Settings", "ActivateVNC", false.ToString());
+                throw new Exception("Error while starting VNC server", ex);
+            }
+            
+        }
     }
 }

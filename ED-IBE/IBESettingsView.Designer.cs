@@ -67,6 +67,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.cmdChangeSQLPort = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbActivateVNC = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
@@ -90,6 +92,7 @@
             this.groupBox8.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -494,7 +497,7 @@
             this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
             this.groupBox4.Location = new System.Drawing.Point(9, 542);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(635, 135);
+            this.groupBox4.Size = new System.Drawing.Size(329, 135);
             this.groupBox4.TabIndex = 71;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "SQL-Server";
@@ -521,6 +524,33 @@
             this.label7.TabIndex = 18;
             this.label7.Text = "Port :";
             this.toolTip1.SetToolTip(this.label7, "To resolve conflicts with other tools you can change ");
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox2.Controls.Add(this.cbActivateVNC);
+            this.groupBox2.Location = new System.Drawing.Point(344, 542);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(300, 135);
+            this.groupBox2.TabIndex = 72;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "NVC-Server";
+            this.toolTip1.SetToolTip(this.groupBox2, "To resolve conflicts with other tools you can change \r\nthe port for the sql-commu" +
+        "nication. Restart is required!");
+            // 
+            // cbActivateVNC
+            // 
+            this.cbActivateVNC.AutoSize = true;
+            this.cbActivateVNC.Location = new System.Drawing.Point(41, 56);
+            this.cbActivateVNC.Name = "cbActivateVNC";
+            this.cbActivateVNC.Size = new System.Drawing.Size(65, 17);
+            this.cbActivateVNC.TabIndex = 1;
+            this.cbActivateVNC.Tag = "ActivateVNC;false";
+            this.cbActivateVNC.Text = "Activate";
+            this.toolTip1.SetToolTip(this.cbActivateVNC, "If you switch this you should restart IBE to take effect.");
+            this.cbActivateVNC.UseVisualStyleBackColor = true;
+            this.cbActivateVNC.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -710,6 +740,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1164, 689);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);
@@ -735,6 +766,8 @@
             this.groupBox12.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox13.ResumeLayout(false);
@@ -804,6 +837,8 @@
         private System.Windows.Forms.GroupBox groupBox13;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox cbActivateVNC;
 
     }
 }

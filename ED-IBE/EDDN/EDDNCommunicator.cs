@@ -138,12 +138,15 @@ bool disposed = false;
 
         public class DataTransmittedEventArgs : EventArgs
         {
-            public DataTransmittedEventArgs(enTransmittedTypes tType)
+            public DataTransmittedEventArgs(enTransmittedTypes tType, enTransmittedStates tState)
             {
-                DataType = tType;    
+                DataType  = tType;   
+                DataState = tState;
+ 
             }
 
-            public enTransmittedTypes DataType               { get; set; }
+            public enTransmittedTypes  DataType               { get; set; }
+            public enTransmittedStates DataState              { get; set; }
         }
 
         public enum enTransmittedTypes
@@ -153,6 +156,12 @@ bool disposed = false;
             Outfitting_V1       =  2    
         }
 
+        public enum enTransmittedStates
+        {
+            Sent        =  0,
+            Error       =  1
+        }
+        
  #endregion
 
         private Thread                              _Spool2EDDN_Commodity;   
@@ -182,6 +191,11 @@ bool disposed = false;
         private Tuple<String, DateTime>             m_ID_of_Commodity_Station = new Tuple<String, DateTime>("", new DateTime());
         private Tuple<String, DateTime>             m_ID_of_Outfitting_Station = new Tuple<String, DateTime>("", new DateTime());
         private Tuple<String, DateTime>             m_ID_of_Shipyard_Station = new Tuple<String, DateTime>("", new DateTime());
+
+        private Boolean                             m_CommoditySendingError { get; set; }
+        private Boolean                             m_OutfittingSendingError { get; set; }
+        private Boolean                             m_ShipyardSendingError { get; set; }
+  
 
 
         public EDDNCommunicator()
@@ -1052,7 +1066,8 @@ bool disposed = false;
                                 m_ID_of_Commodity_Station = new Tuple<String, DateTime>(m_ID_of_Commodity_Station.Item1, DateTime.Now);
                             }
 
-                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2));
+                            m_CommoditySendingError  = false;
+                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Sent));
                         }
                         catch (WebException ex)
                         {
@@ -1070,7 +1085,9 @@ bool disposed = false;
                                     if (data != null)
                                     {
                                         StreamReader sr = new StreamReader(data);
-                                        MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (v2)");
+                                        m_CommoditySendingError  = true;
+                                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Error));
+                                        _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd() , true);
                                     }
                                 }
                             }
@@ -1145,7 +1162,8 @@ bool disposed = false;
 
                         client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
 
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1));
+                        m_OutfittingSendingError = false;
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1, enTransmittedStates.Sent));
                     }
                     catch (WebException ex)
                     {
@@ -1163,7 +1181,9 @@ bool disposed = false;
                                 if (data != null)
                                 {
                                     StreamReader sr = new StreamReader(data);
-                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (outfitting)");
+                                    m_OutfittingSendingError = true;
+                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1, enTransmittedStates.Error));
+                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd() , true);
                                 }
                             }
                         }
@@ -1235,7 +1255,8 @@ bool disposed = false;
 
                         client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", shipyardMessage.ToString());
 
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1));
+                        m_ShipyardSendingError   = false;
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Sent));
                     }
                     catch (WebException ex)
                     {
@@ -1253,7 +1274,9 @@ bool disposed = false;
                                 if (data != null)
                                 {
                                     StreamReader sr = new StreamReader(data);
-                                    MsgBox.Show(sr.ReadToEnd(), "Error while uploading to EDDN (shipyard)");
+                                    m_ShipyardSendingError   = true;
+                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Error));
+                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd() , true);
                                 }
                             }
                         }
@@ -1393,13 +1416,63 @@ bool disposed = false;
             m_ID_of_Commodity_Station  =  new Tuple<String, DateTime>("", new DateTime());
             m_ID_of_Outfitting_Station =  new Tuple<String, DateTime>("", new DateTime());
             m_ID_of_Shipyard_Station   = new Tuple<String, DateTime>("", new DateTime());
+
+            m_CommoditySendingError  = false;
+            m_OutfittingSendingError = false;
+            m_ShipyardSendingError   = false;
         }
 #endregion
 
-        public bool CommodityDataTransmitted { get { return (DateTime.Now - (DateTime)(m_ID_of_Commodity_Station.Item2)).TotalMinutes <= 60; }}
+        public enum SendingState
+        {
+            NotSend  = 0,
+            Send     = 1,
+            Error    = 2
+        }
 
-        public bool OutfittingDataTransmitted { get { return (DateTime.Now - (DateTime)(m_ID_of_Outfitting_Station.Item2)).TotalMinutes <= 60; }}
+        public SendingState CommodityDataTransmitted 
+        { 
+            get 
+            { 
+                SendingState retValue = SendingState.NotSend;
+ 
+                if(m_CommoditySendingError)
+                    retValue = SendingState.Error;
+                else if ((DateTime.Now - (DateTime)(m_ID_of_Commodity_Station.Item2)).TotalMinutes <= 60)
+                    retValue = SendingState.Send;
 
-        public bool ShipyardDataTransmitted { get { return (DateTime.Now - (DateTime)(m_ID_of_Shipyard_Station.Item2)).TotalMinutes <= 60; }}
+                return retValue;
+            }
+        }
+
+        public SendingState OutfittingDataTransmitted
+        {
+            get 
+            { 
+                SendingState retValue = SendingState.NotSend;
+ 
+                if(m_OutfittingSendingError)
+                    retValue = SendingState.Error;
+                else if ((DateTime.Now - (DateTime)(m_ID_of_Outfitting_Station.Item2)).TotalMinutes <= 60)
+                    retValue = SendingState.Send;
+
+                return retValue;
+            }
+        }
+
+        public SendingState ShipyardDataTransmitted
+        {
+            get 
+            { 
+                SendingState retValue = SendingState.NotSend;
+ 
+                if(m_ShipyardSendingError)
+                    retValue = SendingState.Error;
+                else if ((DateTime.Now - (DateTime)(m_ID_of_Shipyard_Station.Item2)).TotalMinutes <= 60)
+                    retValue = SendingState.Send;
+
+                return retValue;
+            }
+        }
     }
 }

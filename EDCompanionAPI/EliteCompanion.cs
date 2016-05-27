@@ -309,7 +309,13 @@ namespace EDCompanionAPI
                         profileResponse.Json = sr.ReadToEnd();
                     }
                 }
+                else
+                {
+                    profileResponse.LoginStatus = LoginStatus.NotAccessible;
+                    profileResponse.Json        = "{}";
+                }
             }
+
             _Cache.Set(Constants.CACHE_PROFILEJSON, profileResponse.Json, DateTimeOffset.Now.AddSeconds(Constants.CACHE_PROFILE_SECONDS));
 
             _sWatch.Restart();

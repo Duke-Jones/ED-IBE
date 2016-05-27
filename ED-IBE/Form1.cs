@@ -1280,6 +1280,10 @@ namespace IBE
 
                 this.tbCurrentSystemFromLogs.Text       = Program.actualCondition.System;
                 this.tbCurrentStationinfoFromLogs.Text  = Program.actualCondition.Location;
+                setText(txtPosition_X, "n/a");
+                setText(txtPosition_Y, "n/a");
+                setText(txtPosition_Z, "n/a");
+
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Debug.Print("Zeit (8) : " + st.ElapsedMilliseconds);
@@ -1333,9 +1337,10 @@ namespace IBE
                         Program.CompanionIO.ReGet_StationData();
                     }
                 }
-
                 
                 this.Enabled = true;
+
+                Program.StartVNCServer(this);
                 
             }
             catch (Exception ex)
@@ -3238,6 +3243,20 @@ namespace IBE
 
                     /// after a system jump you can get data immediately
                     Program.CompanionIO.RestTimeReset();
+
+                    if(e.Position != null && e.Position.Valid)
+                    {
+                        setText(txtPosition_X, e.Position.X.Value.ToString("f3"));
+                        setText(txtPosition_Y, e.Position.Y.Value.ToString("f3"));
+                        setText(txtPosition_Z, e.Position.Z.Value.ToString("f3"));
+                    }
+                    else
+                    {
+                        setText(txtPosition_X, "n/a");
+                        setText(txtPosition_Y, "n/a");
+                        setText(txtPosition_Z, "n/a");
+                    }
+                    
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Location) > 0)
@@ -3554,25 +3573,31 @@ namespace IBE
                         else
                             pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_off;
 
-                        if(Program.EDDNComm.CommodityDataTransmitted)
+                        if(Program.EDDNComm.CommodityDataTransmitted == EDDN.EDDNCommunicator.SendingState.Send)
                             pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_on;
+                        else if(Program.EDDNComm.CommodityDataTransmitted == EDDN.EDDNCommunicator.SendingState.Error)
+                            pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
                         
-                        if(Program.EDDNComm.OutfittingDataTransmitted)
+                        if(Program.EDDNComm.OutfittingDataTransmitted == EDDN.EDDNCommunicator.SendingState.Send)
                             pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledorange_on;
+                        else if(Program.EDDNComm.OutfittingDataTransmitted == EDDN.EDDNCommunicator.SendingState.Error)
+                            pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledorange_off;
 
-                        if(Program.EDDNComm.ShipyardDataTransmitted)
+                        if(Program.EDDNComm.ShipyardDataTransmitted == EDDN.EDDNCommunicator.SendingState.Send)
                             pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_on;
+                        else if(Program.EDDNComm.ShipyardDataTransmitted == EDDN.EDDNCommunicator.SendingState.Error)
+                            pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledred_on;
                         else
                             pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_off;
 
                         // can only collect market data if landed andn confirmed
                         cmdEventMarketData.Enabled = (Program.actualCondition.Location_ID != null);
                     }
-                    else
+                    else if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok))
                     { 
                         pbStatus_IsLanded.Image             = Properties.Resources.ledgreen_off;
                         pbStatus_MarketData.Image           = Properties.Resources.ledorange_off;
@@ -3582,6 +3607,21 @@ namespace IBE
                         pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
                         pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
                         pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
+
+                        cmdEventMarketData.Enabled      = false;
+                    }
+                    else
+                    { 
+                        pbStatus_IsLanded.Image             = Properties.Resources.ledred_on;
+                        pbStatus_MarketData.Image           = Properties.Resources.ledred_on;
+                        pbStatus_OutfittingData.Image       = Properties.Resources.ledred_on;
+                        pbStatus_ShipyardData.Image         = Properties.Resources.ledred_on;
+
+                        pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
+                        pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
+                        pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
+
+                        txtEventInfo.Text                   = "No data recieved, servers may in maintenance mode !";
 
                         cmdEventMarketData.Enabled      = false;
                     }
