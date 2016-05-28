@@ -4257,5 +4257,36 @@ namespace IBE.SQL
             }
         }
 
+        /// <summary>
+        /// returns the coordinates of the system
+        /// </summary>
+        /// <param name="systemName"></param>
+        /// <returns></returns>
+        internal Point3Dbl GetCoordinates(String systemName)
+        {
+            Point3Dbl retValue = new Point3Dbl();;
+            String sqlString;
+            DataTable data = new DataTable();
+
+            try
+            {
+                sqlString = "select x, y, z from tbSystems where SystemName = " + DBConnector.SQLAEscape(systemName);
+
+                Program.DBCon.Execute(sqlString, data);
+
+                if(data.Rows.Count > 0)
+                {
+                    retValue.X = ((data.Rows[0]["x"] == DBNull.Value) ? null : (double?)data.Rows[0]["x"]);
+                    retValue.Y = ((data.Rows[0]["y"] == DBNull.Value) ? null : (double?)data.Rows[0]["y"]);
+                    retValue.Z = ((data.Rows[0]["z"] == DBNull.Value) ? null : (double?)data.Rows[0]["z"]);
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retrieving system coordinates from database", ex);
+            }
+        }
     }
 }

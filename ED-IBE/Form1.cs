@@ -1278,12 +1278,7 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("init main gui");
                 SetupGui();
 
-                this.tbCurrentSystemFromLogs.Text       = Program.actualCondition.System;
-                this.tbCurrentStationinfoFromLogs.Text  = Program.actualCondition.Location;
-                setText(txtPosition_X, "n/a");
-                setText(txtPosition_Y, "n/a");
-                setText(txtPosition_Z, "n/a");
-
+                ShowLocationData();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Debug.Print("Zeit (8) : " + st.ElapsedMilliseconds);
@@ -3221,7 +3216,6 @@ namespace IBE
                     setText(txtEventInfo,             "...jump recognized...");
 
                     Program.actualCondition.Location = e.Location;
-                    setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
 
                     // can't be docked anymore
                     Program.CompanionIO.SetDocked(false);
@@ -3229,8 +3223,8 @@ namespace IBE
                     // from now it is allowed to send data to eddn immediately again
                     Program.EDDNComm.SendingReset();
 
+                    ShowLocationData();
                     ShowStatus();
-
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
@@ -3238,32 +3232,20 @@ namespace IBE
                     // the location has changed -> the reference for all distances has changed  
                     Program.PriceAnalysis.GUI.SignalizeChangedData();
 
-                    Program.actualCondition.System   = e.System;
-                    setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
+                    Program.actualCondition.System      = e.System;
+                    Program.actualCondition.Coordinates = e.Position;
 
                     /// after a system jump you can get data immediately
                     Program.CompanionIO.RestTimeReset();
 
-                    if(e.Position != null && e.Position.Valid)
-                    {
-                        setText(txtPosition_X, e.Position.X.Value.ToString("f3"));
-                        setText(txtPosition_Y, e.Position.Y.Value.ToString("f3"));
-                        setText(txtPosition_Z, e.Position.Z.Value.ToString("f3"));
-                    }
-                    else
-                    {
-                        setText(txtPosition_X, "n/a");
-                        setText(txtPosition_Y, "n/a");
-                        setText(txtPosition_Z, "n/a");
-                    }
-                    
+                    ShowLocationData();
+
                 }
 
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Location) > 0)
                 {
                     Program.actualCondition.Location   = e.Location;
-                    setText(tbCurrentStationinfoFromLogs,  Program.actualCondition.Location);
-
+                    ShowLocationData();   
                 }
 
 
@@ -3280,8 +3262,7 @@ namespace IBE
             {
                 if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) != 0)
                 {
-                    setText(tbCurrentSystemFromLogs,      Program.actualCondition.System);
-                    setText(tbCurrentStationinfoFromLogs, Program.actualCondition.Location);
+                    ShowLocationData();
                 }
 
             }
@@ -3518,7 +3499,60 @@ namespace IBE
         }
 
         
+        /// <summary>
+        /// shows location data like system/station/ccordinates on gui
+        /// </summary>
+      
+        private void ShowLocationData()
+        {
+            try
+            {
+                if(this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(ShowLocationData));
+                else
+                {
+                    Point3Dbl coords        = new Point3Dbl();
+                    String currentSystem    = Program.actualCondition.System;
+                    String currentLocation  = Program.actualCondition.Location;
 
+                    this.tbCurrentSystemFromLogs.Text       = currentSystem;
+                    this.tbCurrentStationinfoFromLogs.Text  = currentLocation;
+
+                    coords = Program.actualCondition.Coordinates;
+                    if(coords.Valid)
+                    {
+                        txtPosition_X.Text = coords.X.Value.ToString("f3");
+                        txtPosition_Y.Text = coords.Y.Value.ToString("f3");
+                        txtPosition_Z.Text = coords.Z.Value.ToString("f3");
+                    }
+                    else
+                    {
+                        txtPosition_X.Text = "n/a";
+                        txtPosition_Y.Text = "n/a";
+                        txtPosition_Z.Text = "n/a";
+                    }
+
+
+                    coords = Program.Data.GetCoordinates(currentSystem);
+                    if (coords.Valid)
+                    {
+                        txtPosition_X_DB.Text = coords.X.Value.ToString("f3");
+                        txtPosition_Y_DB.Text = coords.Y.Value.ToString("f3");
+                        txtPosition_Z_DB.Text = coords.Z.Value.ToString("f3");
+                    }
+                    else
+                    {
+                        txtPosition_X.Text = "n/a";
+                        txtPosition_Y.Text = "n/a";
+                        txtPosition_Z.Text = "n/a";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while showing location infos", ex);
+            }
+        }
         
         /// <summary>
         /// update the status information of companion io
@@ -3718,6 +3752,5 @@ namespace IBE
                 cErr.processError(ex, "Error in colorsToolStripMenuItem_Click");
             }
         }
-
     }
 }

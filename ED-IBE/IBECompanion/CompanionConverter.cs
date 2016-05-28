@@ -96,6 +96,17 @@ namespace IBE.IBECompanion
                                 // # no obvious rule - needs lookup table
                                 outfitting.Name     = Program.Data.GetMapping("weapon", nameParts[1]);
                                 outfitting.Rating   = Program.Data.GetMapping("weaponrating", nameFull, false) ?? "?";
+                                if(outfitting.Rating == "?")
+                                {
+                                    outfitting.Rating = addRating(nameFull);
+                                    if(outfitting.Rating == "?")
+                                    { 
+                                        using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(System.IO.Path.Combine(Program.GetDataPath("temp"), "missing_weapons.txt"))) 
+                                        {
+                                            writetext.WriteLine(nameFull);
+                                        }
+                                    }
+                                }
                             }
 
                             outfitting.Mount = Program.Data.GetMapping("weaponmount", nameParts[2]);
@@ -331,6 +342,111 @@ namespace IBE.IBECompanion
 
             return null;
             
+        }
+
+        private string addRating(string nameFull)
+        {
+            String sqlString;
+            String weaponType;
+            String weaponSize;
+            System.Data.DataTable data = new System.Data.DataTable();
+            String retValue = "?";
+            List<String> order  = new List<string>() {"_small", "_medium", "_large", "_huge"};
+            List<Int32> values = new List<Int32>() {-1, -1, -1, -1};
+            Int32 count = 0;
+            Boolean plausible = true;
+            Int32 neededSizeIndex = -1;
+            String newRating;
+
+            try
+            {
+
+                weaponType      = nameFull.Substring(0, nameFull.LastIndexOf("_"));
+                weaponSize      = nameFull.Substring(nameFull.LastIndexOf("_"));
+                neededSizeIndex = order.FindIndex(x => x.Equals(weaponSize));
+
+                sqlString = "select * from tbdnmap_weaponrating" +
+                            " where CompanionName like " + IBE.SQL.DBConnector.SQLAString(weaponType + "%");
+
+                if(Program.DBCon.Execute(sqlString, data) > 0)
+                {
+                    foreach (System.Data.DataRow dRow in data.Rows)
+                    {
+                        if(dRow["CompanionName"].ToString().Contains(order[0]))    
+                        {
+                            values[0] = System.Text.Encoding.ASCII.GetBytes(dRow["GameName"].ToString())[0];
+                            count++;
+                        }
+                        else if(dRow["CompanionName"].ToString().Contains(order[1]))    
+                        {
+                            values[1] = System.Text.Encoding.ASCII.GetBytes(dRow["GameName"].ToString())[0];
+                            count++;
+                        }
+                        else if(dRow["CompanionName"].ToString().Contains(order[2]))    
+                        {
+                            values[2] = System.Text.Encoding.ASCII.GetBytes(dRow["GameName"].ToString())[0];
+                            count++;
+                        }
+                        else if(dRow["CompanionName"].ToString().Contains(order[3]))    
+                        {
+                            values[3] = System.Text.Encoding.ASCII.GetBytes(dRow["GameName"].ToString())[0];
+                            count++;
+                        }
+                    }
+
+                    if(count > 1)
+                    {
+                        // only if we've more than one. otherwise it's seems to risky to automate this
+                        Int32 firstValue = -1;
+                        Int32 firstPos   = -1;
+
+                        for (int i = 0; i < order.Count(); i++)
+                        {
+                            if(values[i] > 0)
+                            { 
+                                if((values[i] > 0) && (firstValue == -1))
+                                {
+                                    firstValue = values[i];
+                                    firstPos   = i;
+                                }
+                                else if(firstValue - (i + firstPos) != values[i])
+                                {
+                                    plausible = false;
+                                }
+                            }
+                        }
+
+                        if(plausible)
+                        {
+                            newRating = (System.Text.Encoding.ASCII.GetChars(new byte[] {(byte)(values[firstPos] - (neededSizeIndex - firstPos))})[0]).ToString(); 
+
+                            sqlString = "insert ignore into tbdnmap_weaponrating(CompanionName, CompanionAddition, GameName, GameAddition) values (" +
+                                        IBE.SQL.DBConnector.SQLAString(nameFull) + ", " +
+                                        IBE.SQL.DBConnector.SQLAString("") + ", " +
+                                        IBE.SQL.DBConnector.SQLAString(newRating) + ", " +
+                                        IBE.SQL.DBConnector.SQLAString("") + ")";
+
+                            Program.DBCon.Execute(sqlString);
+                            Program.Data.PrepareBaseTables("tbdnmap_weaponrating");
+
+
+                            retValue = newRating;
+                        }
+
+                    }
+                    else
+                    {
+                        plausible = false;
+                    }
+                }
+
+                
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while trying to add missing weapon rating", ex);
+            }
         }
     }
 }

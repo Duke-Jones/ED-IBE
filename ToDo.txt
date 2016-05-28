@@ -16,6 +16,10 @@ Default
 
 done:
 
+   * centralized view of current systemdata (system, station, coordinates)
+   * debug function to compare system coordinates from database and ED log
+   * added a function to add automatically missing weaponratings to database (e.g. for the new "hpt_pulselaser_gimbal_HUGE" and other)
+-------------------------------------------------------------------------------------         
 v0.3.2
    * companion IO: fixed crash when previous logged in but profile is not accessible
    * fixed scalar operation on database if returned value is DBNull 

@@ -242,6 +242,9 @@
             this.txtPosition_Y = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtPosition_Z = new System.Windows.Forms.TextBox();
+            this.txtPosition_Z_DB = new System.Windows.Forms.TextBox();
+            this.txtPosition_Y_DB = new System.Windows.Forms.TextBox();
+            this.txtPosition_X_DB = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -2591,12 +2594,48 @@
             this.txtPosition_Z.Text = "000000000.000";
             this.txtPosition_Z.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // txtPosition_Z_DB
+            // 
+            this.txtPosition_Z_DB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosition_Z_DB.Location = new System.Drawing.Point(998, 130);
+            this.txtPosition_Z_DB.Name = "txtPosition_Z_DB";
+            this.txtPosition_Z_DB.ReadOnly = true;
+            this.txtPosition_Z_DB.Size = new System.Drawing.Size(86, 20);
+            this.txtPosition_Z_DB.TabIndex = 74;
+            this.txtPosition_Z_DB.Text = "000000000.000";
+            this.txtPosition_Z_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtPosition_Y_DB
+            // 
+            this.txtPosition_Y_DB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosition_Y_DB.Location = new System.Drawing.Point(998, 108);
+            this.txtPosition_Y_DB.Name = "txtPosition_Y_DB";
+            this.txtPosition_Y_DB.ReadOnly = true;
+            this.txtPosition_Y_DB.Size = new System.Drawing.Size(86, 20);
+            this.txtPosition_Y_DB.TabIndex = 73;
+            this.txtPosition_Y_DB.Text = "000000000.000";
+            this.txtPosition_Y_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtPosition_X_DB
+            // 
+            this.txtPosition_X_DB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPosition_X_DB.Location = new System.Drawing.Point(998, 86);
+            this.txtPosition_X_DB.Name = "txtPosition_X_DB";
+            this.txtPosition_X_DB.ReadOnly = true;
+            this.txtPosition_X_DB.Size = new System.Drawing.Size(86, 20);
+            this.txtPosition_X_DB.TabIndex = 72;
+            this.txtPosition_X_DB.Text = "000000000.000";
+            this.txtPosition_X_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 737);
+            this.Controls.Add(this.txtPosition_Z_DB);
+            this.Controls.Add(this.txtPosition_Y_DB);
+            this.Controls.Add(this.txtPosition_X_DB);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtPosition_Z);
             this.Controls.Add(this.label5);
@@ -2891,6 +2930,9 @@
         private System.Windows.Forms.TextBox txtPosition_Y;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtPosition_Z;
+        private System.Windows.Forms.TextBox txtPosition_Z_DB;
+        private System.Windows.Forms.TextBox txtPosition_Y_DB;
+        private System.Windows.Forms.TextBox txtPosition_X_DB;
     }
 }
 

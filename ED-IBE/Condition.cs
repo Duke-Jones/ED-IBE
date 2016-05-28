@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Data;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE
 {
@@ -11,9 +12,11 @@ namespace IBE
     /// </summary>
     public class Condition
     {
+        private Point3Dbl _Coordinates;
         public const String        DB_GROUPNAME                     = "Condition";
         private const string       STR_CurrentSystem_ID             = "CurrentSystem";
         private const string       STR_CurrentStation_ID            = "CurrentStation";
+        private const string       STR_CurrentSystemCoords          = "CurrentCoordinates";
         private MemoryCache        m_DataCache                      = MemoryCache.Default;
 
         public Condition()
@@ -28,7 +31,7 @@ namespace IBE
         {
             get
             {
-            return Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentSystem_ID, "");
+                return Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentSystem_ID, "");
             }
             set
             {
@@ -56,6 +59,24 @@ namespace IBE
                     Program.Data.checkPotentiallyNewSystemOrStation(System, value);
 
                 m_DataCache.Remove(STR_CurrentStation_ID);
+            }
+        }
+
+        /// <summary>
+        /// the actual system coordinates in space
+        /// </summary>
+        public Point3Dbl Coordinates
+        {
+            get
+            {
+                Point3Dbl retValue = new Point3Dbl();
+                Point3Dbl.TryParse(Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentSystemCoords, ""), out retValue);
+
+                return retValue;
+            }
+            set
+            {
+                Program.DBCon.setIniValue(DB_GROUPNAME, STR_CurrentSystemCoords, value.ToString());
             }
         }
 
