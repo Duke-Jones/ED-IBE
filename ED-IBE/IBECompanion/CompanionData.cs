@@ -106,6 +106,10 @@ namespace IBE.IBECompanion
                                 retValue = true;
                             }
                         }
+                        else
+                        {
+                            CompanionStatus = LoginStatus.NotSet;
+                        }
                         break;
 
                     case LoginStatus.PendingVerification:

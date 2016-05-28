@@ -463,7 +463,7 @@ namespace IBE.SQL
 
                 DataObject = Command.ExecuteScalar();
 
-                if(DataObject != null)
+                if((DataObject != null) && (DataObject != System.DBNull.Value))
                 {
                     if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Nullable<>))
                     {

@@ -15,7 +15,11 @@ todo:
 Default
 
 done:
-   
+
+v0.3.2
+   * companion IO: fixed crash when previous logged in but profile is not accessible
+   * fixed scalar operation on database if returned value is DBNull 
+-------------------------------------------------------------------------------------         
 v0.3.1
    * changes for ED 2.1
    * crash if companion interface delivers no data fixed
