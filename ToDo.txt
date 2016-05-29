@@ -16,6 +16,7 @@ Default
 
 done:
 
+v0.3.3
    * centralized view of current systemdata (system, station, coordinates)
    * debug function to compare system coordinates from database and ED log
    * added a function to add automatically missing weaponratings to database (e.g. for the new "hpt_pulselaser_gimbal_HUGE" and other)

@@ -2604,6 +2604,7 @@
             this.txtPosition_Z_DB.TabIndex = 74;
             this.txtPosition_Z_DB.Text = "000000000.000";
             this.txtPosition_Z_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPosition_Z_DB.Visible = false;
             // 
             // txtPosition_Y_DB
             // 
@@ -2615,6 +2616,7 @@
             this.txtPosition_Y_DB.TabIndex = 73;
             this.txtPosition_Y_DB.Text = "000000000.000";
             this.txtPosition_Y_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPosition_Y_DB.Visible = false;
             // 
             // txtPosition_X_DB
             // 
@@ -2626,6 +2628,7 @@
             this.txtPosition_X_DB.TabIndex = 72;
             this.txtPosition_X_DB.Text = "000000000.000";
             this.txtPosition_X_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPosition_X_DB.Visible = false;
             // 
             // Form1
             // 
