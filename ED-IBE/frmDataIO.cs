@@ -24,12 +24,19 @@ namespace IBE
         private ProgressView        m_ProgressView;
         private String              m_DownloadInfo;
         private Int32               m_lastFileSize;
+        private String              m_lastFileSizeUnit;
         private Boolean             m_DownloadFinished;
-        private String              m_TempPath = Path.Combine(Path.GetTempPath(), "ED-IBE");
-        private List<String>        m_DL_Files = new List<string> {"systems.json", 
-                                                                   "stations.json", 
-                                                                   "commodities.json"};
-        private List<String>        m_DL_FilesPrice = new List<string> {"listings.csv"};
+        private String              m_DataPath          = Program.GetDataPath("data");
+
+        private List<String>        m_DL_Files          = new List<string> {"systems.json", 
+                                                                            "stations.json", 
+                                                                            "commodities.json"};
+
+        private List<String>        m_DL_FilesPrice     = new List<string> {"listings.csv"};
+
+        private List<String>        m_DL_Files_EDCD     = new List<string> {"commodity.csv",
+                                                                            "outfitting.csv",
+                                                                            "shipyard.csv"};
 
         [Flags] enum enImportTypes
         {
@@ -728,113 +735,15 @@ namespace IBE
 
         private void cmdDownloadSystemsAndStations_Click(object sender, EventArgs e)
         {
-            String baseUrl = "https://eddb.io/archive/v4/";
-            List<DateTime> filesTimes = new List<DateTime>();
-
-            Boolean download;
-            String currentDestinationFile;
-
-            List<String>        filesList = new List<string>(m_DL_Files);
-                                              
             try
             {
-                if(true || !rbImportPrices_No.Checked)
-                    filesList.AddRange(m_DL_FilesPrice);
+                String baseUrl         = "https://eddb.io/archive/v4/";
+                String savePrefix      = "";
+                String infoString      = "connecting to eddb.io...";
+                List<String> filesList = new List<string>(m_DL_Files);
+                filesList.AddRange(m_DL_FilesPrice);
 
-                if(!Directory.Exists(m_TempPath))
-                    Directory.CreateDirectory(m_TempPath);
-
-                SetButtons(false);
-                lbProgess.Items.Clear();   
-
-                m_ProgressView = new ProgressView(this, false);
-                m_ProgressView.progressStart("connecting to eddb.io...");
-
-                // get the timestamps from the webfiles
-                for (int i = 0; i < filesList.Count; i++)
-                {
-                    HttpWebRequest request      = (HttpWebRequest)WebRequest.Create(baseUrl + filesList[i]);
-                    request.Method              = "HEAD";
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                        filesTimes.Add(response.LastModified);    
-                }
-
-                WebClient downLoader                    = new WebClient();
-                downLoader.DownloadFileCompleted       += new AsyncCompletedEventHandler (webClient_DownloadFileCompleted);
-                downLoader.DownloadProgressChanged     += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
-                                                       
-                // download file if newer
-                for (int i = 0; i < filesList.Count; i++)
-                {
-                    download = false;
-                    currentDestinationFile = Path.Combine(m_TempPath, filesList[i]);
-
-                    if(File.Exists(currentDestinationFile))
-                    { 
-                        var localFileTime = File.GetCreationTime(currentDestinationFile);
-
-                        if(filesTimes[i] != localFileTime)
-                        { 
-                            download = true;
-                            File.Delete(currentDestinationFile);
-                        }
-                    }
-                    else 
-                        download = true;
-
-                    if(download)
-                    { 
-                        m_ProgressView.progressUpdate(0, 100);
-                        m_DownloadInfo = String.Format("downloading file {0} of {1}: {2}...", i+1, filesList.Count, filesList[i]);
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
-
-                        m_ProgressView.progressInfo(m_DownloadInfo);
-                        
-                        m_DownloadFinished = false;
-                        Debug.Print("in");
-                        downLoader.DownloadFileAsync(new Uri(baseUrl + filesList[i]), Path.Combine(m_TempPath, filesList[i]));
-
-                        do
-                        {
-                            System.Threading.Thread.Sleep(100);    
-                            Application.DoEvents();
-                        } while (!m_DownloadFinished);
-
-                        Debug.Print("out");
-                        if(!m_ProgressView.Cancelled)
-                        { 
-                            File.SetCreationTime(currentDestinationFile, filesTimes[i]);
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 1, Total = 1 });
-                        }
-                        else
-                        {
-                            if(File.Exists(currentDestinationFile))
-                                File.Delete(currentDestinationFile);
-                            lbProgess.Items.Add("");
-                            lbProgess.Items.Add("download cancelled !!! ");
-                        }
-                    }
-                    else
-                    { 
-                        m_DownloadInfo = String.Format("skipping download, newest version already existing: {0} of {1}: {2}...", i+1, filesList.Count, filesList[i]);
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
-
-                        m_ProgressView.progressInfo(m_DownloadInfo);                    
-                        m_ProgressView.progressUpdate(1,1);
-
-                        System.Threading.Thread.Sleep(500);
-                    }
-
-                    if(m_ProgressView.Cancelled)
-                        break;
-                }
-
-                if(StopProgress())
-                    MessageBox.Show(this, "Download was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                else
-                    MessageBox.Show(this, "Download has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                SetButtons(true);
+                DownloadFiles(baseUrl, savePrefix, infoString, filesList);
 
             }
             catch (Exception ex)
@@ -863,7 +772,7 @@ namespace IBE
 
                 for (int i = 0; i < filesList.Count; i++)
                 {
-                    currentDestinationFile = Path.Combine(m_TempPath, filesList[i]);
+                    currentDestinationFile = Path.Combine(m_DataPath, filesList[i]);
 
                     if(!File.Exists(currentDestinationFile))
                     { 
@@ -882,15 +791,11 @@ namespace IBE
 
         private void cmdImportSystemsAndStationsFromDownload_Click(object sender, EventArgs e)
         {
-            String tempPath = Path.Combine(Path.GetTempPath(), "ED-IBE");
             PriceImportParameters importParams = null;
             Boolean cantImport = false;
                                   
             try
             {
-                if(!Directory.Exists(tempPath))
-                    Directory.CreateDirectory(tempPath);
-
                 SetButtons(false);
                 lbProgess.Items.Clear();
 
@@ -924,7 +829,7 @@ namespace IBE
                     m_ProgressView = new ProgressView(this, false);
                     m_ProgressView.progressStart("importing EDDN data...");
 
-                    ImportData(null, importFlags, null, tempPath, false, importParams);
+                    ImportData(null, importFlags, null, m_DataPath, false, importParams);
 
                     if(StopProgress())
                         MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -947,24 +852,34 @@ namespace IBE
 
         private void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            Int32 factor = 1024;
+            m_lastFileSizeUnit = " kbyte";
+
             if(!m_DownloadFinished)
             { 
                 if(m_ProgressView != null)
                 {
-                    m_lastFileSize = (Int32)(e.TotalBytesToReceive / (1024));
-                    m_ProgressView.progressUpdate((Int32)(e.BytesReceived / (1024)), m_lastFileSize);
-                                    
-                    if(m_ProgressView.Cancelled)
+                    if (e.TotalBytesToReceive < (10 * 1024))
+                    {
+                        factor = 1;
+                        m_lastFileSizeUnit = " byte";
+                    }
+
+                    m_lastFileSize = (Int32)(e.TotalBytesToReceive / (factor));
+                    m_ProgressView.progressUpdate((Int32)(e.BytesReceived / (factor)), m_lastFileSize);
+
+                    if (m_ProgressView.Cancelled)
                         ((WebClient)sender).CancelAsync();
                 }
 
-                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = (Int32)(e.BytesReceived / (1024)), Total = m_lastFileSize, Unit = " kByte"});
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = (Int32)(e.BytesReceived / (factor)), Total = m_lastFileSize, Unit = m_lastFileSizeUnit });
                 Debug.Print("1");
             }
         }
 
         private void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
+
             m_DownloadFinished = true;
             
             if(!e.Cancelled)
@@ -973,7 +888,8 @@ namespace IBE
                 {
                     m_ProgressView.progressUpdate(1,1);
                 }
-                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = m_lastFileSize, Total = m_lastFileSize, Unit = " kByte"});
+
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = m_lastFileSize, Total = m_lastFileSize, Unit = m_lastFileSizeUnit });
             }
             Debug.Print("2");
         }
@@ -1404,6 +1320,141 @@ namespace IBE
                 retValue = true;
 
             return retValue;
+        }
+
+        /// <summary>
+        /// starts download of the files
+        /// </summary>
+        /// <param name="baseUrl">download url of the files</param>
+        /// <param name="savePrefix">name prefix for download files, takes original name if empty</param>
+        /// <param name="infoString">infostring for messages</param>
+        /// <param name="filesList">list of files to download to</param>
+        private void DownloadFiles(String baseUrl, String savePrefix, String infoString, List<String> filesList)
+        {
+            List<DateTime> filesTimes = new List<DateTime>();
+
+            Boolean download;
+            String currentDestinationFile;
+
+            try
+            {
+                SetButtons(false);
+                lbProgess.Items.Clear();
+
+                m_ProgressView = new ProgressView(this, false);
+                m_ProgressView.progressStart(infoString);
+
+                // get the timestamps from the webfiles
+                for (int i = 0; i < filesList.Count; i++)
+                {
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + filesList[i]);
+                    request.Method = "HEAD";
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        filesTimes.Add(response.LastModified);
+                }
+
+                WebClient downLoader = new WebClient();
+                downLoader.DownloadFileCompleted += new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
+                downLoader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+
+                // download file if newer
+                for (int i = 0; i < filesList.Count; i++)
+                {
+                    download = false;
+
+                    currentDestinationFile = Path.Combine(m_DataPath, savePrefix + filesList[i]);
+
+                    if (File.Exists(currentDestinationFile))
+                    {
+                        var localFileTime = File.GetCreationTime(currentDestinationFile);
+
+                        if (filesTimes[i] != localFileTime)
+                        {
+                            download = true;
+                            File.Delete(currentDestinationFile);
+                        }
+                    }
+                    else
+                        download = true;
+
+                    if (download)
+                    {
+                        m_ProgressView.progressUpdate(0, 100);
+                        m_DownloadInfo = String.Format("downloading file {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
+
+                        m_ProgressView.progressInfo(m_DownloadInfo);
+
+                        m_DownloadFinished = false;
+                        Debug.Print("in");
+                        downLoader.DownloadFileAsync(new Uri(baseUrl + filesList[i]), currentDestinationFile);
+
+                        do
+                        {
+                            System.Threading.Thread.Sleep(100);
+                            Application.DoEvents();
+                        } while (!m_DownloadFinished);
+
+                        Debug.Print("out");
+                        if (!m_ProgressView.Cancelled)
+                        {
+                            File.SetCreationTime(currentDestinationFile, filesTimes[i]);
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 1, Total = 1 });
+                        }
+                        else
+                        {
+                            if (File.Exists(currentDestinationFile))
+                                File.Delete(currentDestinationFile);
+                            lbProgess.Items.Add("");
+                            lbProgess.Items.Add("download cancelled !!! ");
+                        }
+                    }
+                    else
+                    {
+                        m_DownloadInfo = String.Format("skipping download, newest version already existing: {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
+
+                        m_ProgressView.progressInfo(m_DownloadInfo);
+                        m_ProgressView.progressUpdate(1, 1);
+
+                        System.Threading.Thread.Sleep(500);
+                    }
+
+                    if (m_ProgressView.Cancelled)
+                        break;
+                }
+
+                if (StopProgress())
+                    MessageBox.Show(this, "Download was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                else
+                    MessageBox.Show(this, "Download has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                SetButtons(true);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void cmdEDCDDownloadID_Click(object sender, EventArgs e)
+        {
+            try
+            { 
+                String baseUrl         = "https://raw.githubusercontent.com/EDCD/FDevIDs/master/";
+                String savePrefix      = "EDCD_";
+                String infoString      = "connecting to github.com...";
+                List<String> filesList = new List<string>(m_DL_Files_EDCD);
+
+                DownloadFiles(baseUrl, savePrefix, infoString, filesList);
+
+            }
+            catch (Exception ex)
+            {
+                StopProgress();
+                SetButtons(true);
+                cErr.processError(ex, "Error while downloading files with EDCD-IDs");
+            }
         }
     }
 }

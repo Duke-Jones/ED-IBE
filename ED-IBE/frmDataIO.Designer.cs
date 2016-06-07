@@ -66,6 +66,9 @@
             this.rbImportNewer = new System.Windows.Forms.RadioButton();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
             this.lbProgess = new System.Windows.Forms.ListBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.cmdEDCDImportID = new System.Windows.Forms.Button();
+            this.cmdEDCDDownloadID = new System.Windows.Forms.Button();
             this.gbRepeat.SuspendLayout();
             this.gbPriceImport.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -78,6 +81,7 @@
             this.groupBox3.SuspendLayout();
             this.groupboxImport.SuspendLayout();
             this.gbFirstTime.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // ttToolTip
@@ -489,10 +493,48 @@
             this.lbProgess.Size = new System.Drawing.Size(696, 186);
             this.lbProgess.TabIndex = 1;
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.cmdEDCDImportID);
+            this.groupBox8.Controls.Add(this.cmdEDCDDownloadID);
+            this.groupBox8.Location = new System.Drawing.Point(1053, 224);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(177, 120);
+            this.groupBox8.TabIndex = 67;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Tag = "Schema;Real";
+            this.groupBox8.Text = "Companion IDs";
+            this.ttToolTip.SetToolTip(this.groupBox8, "These IDs are used to identify the recieved data from the companion interface una" +
+        "mbiguous.\r\nYou should update them if there are changes due to udates in ED.");
+            // 
+            // cmdEDCDImportID
+            // 
+            this.cmdEDCDImportID.Location = new System.Drawing.Point(10, 68);
+            this.cmdEDCDImportID.Name = "cmdEDCDImportID";
+            this.cmdEDCDImportID.Size = new System.Drawing.Size(153, 41);
+            this.cmdEDCDImportID.TabIndex = 6;
+            this.cmdEDCDImportID.Text = "Import from downloaded EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdEDCDImportID, "Import the latest information of the used IDs by the companion interface\r\nfrom th" +
+        "e data folder.\r\n(EDCD_commodities.csv, EDCD_outfitting_csv, EDCD_shipyard.csv)\r\n" +
+        "");
+            this.cmdEDCDImportID.UseVisualStyleBackColor = true;
+            // 
+            // cmdEDCDDownloadID
+            // 
+            this.cmdEDCDDownloadID.Location = new System.Drawing.Point(10, 19);
+            this.cmdEDCDDownloadID.Name = "cmdEDCDDownloadID";
+            this.cmdEDCDDownloadID.Size = new System.Drawing.Size(153, 41);
+            this.cmdEDCDDownloadID.TabIndex = 5;
+            this.cmdEDCDDownloadID.Text = "Download latest EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdEDCDDownloadID, resources.GetString("cmdEDCDDownloadID.ToolTip"));
+            this.cmdEDCDDownloadID.UseVisualStyleBackColor = true;
+            this.cmdEDCDDownloadID.Click += new System.EventHandler(this.cmdEDCDDownloadID_Click);
+            // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1238, 468);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox2);
@@ -525,6 +567,7 @@
             this.groupboxImport.ResumeLayout(false);
             this.groupboxImport.PerformLayout();
             this.gbFirstTime.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -567,5 +610,8 @@
         private System.Windows.Forms.RadioButton rbImportPrices_All;
         private System.Windows.Forms.RadioButton rbImportPrices_Bubble;
         private System.Windows.Forms.RadioButton rbImportPrices_No;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button cmdEDCDImportID;
+        private System.Windows.Forms.Button cmdEDCDDownloadID;
     }
 }

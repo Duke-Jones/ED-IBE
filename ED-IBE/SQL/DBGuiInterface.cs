@@ -450,7 +450,7 @@ namespace IBE.SQL
                             }
                         }
 
-                        if(!Found)
+                        if((!Found) && (firstRadioButton != null))
                             firstRadioButton.Checked = true;
 
                     }

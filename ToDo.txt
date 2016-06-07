@@ -16,6 +16,10 @@ Default
 
 done:
 
+
+   * downloading of the files with FDevIDs is working (https://github.com/EDCD/FDevIDs)
+   * using "\ED-IBE\Data\" for save downloaded EDDB files instead of a temporary user path
+-------------------------------------------------------------------------------------         
 v0.3.3
    * centralized view of current systemdata (system, station, coordinates)
    * debug function to compare system coordinates from database and ED log
