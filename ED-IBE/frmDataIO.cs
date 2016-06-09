@@ -18,6 +18,7 @@ namespace IBE
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
         public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
+        private Boolean m_SingleNoReUse{ get; set; }                  // allows to redirect the progress info to another listbox
         private Boolean m_DataImportHappened = false; 
         
         private DBGuiInterface      m_GUIInterface;
@@ -38,31 +39,35 @@ namespace IBE
                                                                             "outfitting.csv",
                                                                             "shipyard.csv"};
 
-        [Flags] enum enImportTypes
+        [Flags] public enum enImportTypes
         {
-            Undefiend                       = 0x0000,
-            EDDB_Commodities                = 0x0001,           /* default is "commodities.json" */  
-            RN_Localizations_Commodities    = 0x0002,           /* default is "newCommodityClassification.xml" */
-            RN_Localizations_EcoLevels      = 0x0004,           /* default is "newCommodityClassification.xml" */
-            RN_SelfAddedLocalizations       = 0x0008,           /* default is "Commodities_Own.xml" */
-            RN_Pricewarnlevels              = 0x0010,           /* default is "Commodities_RN.json" */
-            EDDB_Systems                    = 0x0020,           /* default is "systems.json" */  
-            EDDB_Stations                   = 0x0040,           /* default is "stations.json" */  
-            RN_Systems                      = 0x0080,           /* default is "systems_own.json" */  
-            RN_Stations                     = 0x0100,           /* default is "stations_own.json" */  
-            RN_CommandersLog                = 0x0200,           /* default is "CommandersLogAutoSave.xml" */  
-            RN_StationHistory               = 0x0400,           /* default is "StationHistory.json" */  
-            RN_MarketData                   = 0x0800,           /* default is "AutoSave.csv" */  
-            IBE_Localizations_Commodities   = 0x1000,           /* default is "commodities.csv"  */ 
-            EDDB_MarketData                 = 0x2000            /* default is "listings.csv"  */
+            Undefiend                       = 0x00000000,
+            EDDB_Commodities                = 0x00000001,           /* default is "commodities.json" */  
+            RN_Localizations_Commodities    = 0x00000002,           /* default is "newCommodityClassification.xml" */
+            RN_Localizations_EcoLevels      = 0x00000004,           /* default is "newCommodityClassification.xml" */
+            RN_SelfAddedLocalizations       = 0x00000008,           /* default is "Commodities_Own.xml" */
+            RN_Pricewarnlevels              = 0x00000010,           /* default is "Commodities_RN.json" */
+            EDDB_Systems                    = 0x00000020,           /* default is "systems.json" */  
+            EDDB_Stations                   = 0x00000040,           /* default is "stations.json" */  
+            RN_Systems                      = 0x00000080,           /* default is "systems_own.json" */  
+            RN_Stations                     = 0x00000100,           /* default is "stations_own.json" */  
+            RN_CommandersLog                = 0x00000200,           /* default is "CommandersLogAutoSave.xml" */  
+            RN_StationHistory               = 0x00000400,           /* default is "StationHistory.json" */  
+            RN_MarketData                   = 0x00000800,           /* default is "AutoSave.csv" */  
+            IBE_Localizations_Commodities   = 0x00001000,           /* default is "commodities.csv"  */ 
+            EDDB_MarketData                 = 0x00002000,           /* default is "listings.csv"  */
+            EDCD_Commodity                  = 0x00004000,           /* default is "EDCD_commodity.csv"  */
+            EDCD_Outfitting                 = 0x00008000,           /* default is "EDCD_outfitting.csv"  */
+            EDCD_Shipyard                   = 0x00010000,           /* default is "EDCD_shipyard.csv"  */
         }
 
         public frmDataIO()
         {
             InitializeComponent();
-            this.Load          += frmDataIO_Load;
-            this.InfoTarget     = null;
-            this.ReUseLine      = true;
+            this.Load           += frmDataIO_Load;
+            this.InfoTarget      = null;
+            this.ReUseLine       = true;
+            this.m_SingleNoReUse = false;
         }
 
         private void frmDataIO_Load(object sender, EventArgs e)
@@ -283,7 +288,7 @@ namespace IBE
                     }
                     else
                     {
-                        if (ReUseLine && (destination.Items.Count > 0))
+                        if ((!m_SingleNoReUse) && ReUseLine && (destination.Items.Count > 0))
                         {
                             if(e.Total != 0)
                             {
@@ -307,6 +312,11 @@ namespace IBE
                 }
 
 
+                m_SingleNoReUse = false;
+
+                if (e.Single_NoReuse)
+                    m_SingleNoReUse = true;
+
                 destination.TopIndex = destination.Items.Count - 1;
 
                 destination.Refresh();
@@ -321,8 +331,7 @@ namespace IBE
         /// <summary>
         /// main working routine for importing data
         /// </summary>
-        /// <param name="importInfo">if this is set a FolderDialog will ask with this text for a import directory.
-        /// If this is not set, the path from "General"->"Path_Import" or from "optionalPath" will be taken</param>
+        /// <param name="importInfo">if this is set a FolderDialog will ask with this text for a        /// If this is not set, the path from "General"->"Path_Import" or from "optionalPath" will be taken</param>
         /// <param name="importFlags">flags what to import</param>
         /// <param name="optionalFilter">filefilter (only for importing Commander's Log multiple times)</param>
         /// <param name="optionalPath">preset for the import path. Also taken by the FolderDialog if importInfo is set</param>
@@ -336,6 +345,7 @@ namespace IBE
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
             Boolean retValue = false;
             Boolean restartEDDN = false;
+            Boolean stationOrCommodityImport = false;
 
             try
             {
@@ -391,6 +401,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -413,6 +424,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -435,6 +447,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -457,6 +470,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tblevellocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbeconomylevel.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -480,6 +494,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -501,6 +516,7 @@ namespace IBE
                                 Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -523,6 +539,7 @@ namespace IBE
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -544,6 +561,7 @@ namespace IBE
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -566,6 +584,7 @@ namespace IBE
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -587,6 +606,7 @@ namespace IBE
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -625,6 +645,7 @@ namespace IBE
                                 Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
 
                                 m_DataImportHappened = true;              
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -647,6 +668,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -665,6 +687,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -685,6 +708,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import EDDN price data...", Index = 1, Total = 1 });
+                                stationOrCommodityImport = true;
                             }
                             else
                             {
@@ -692,21 +716,38 @@ namespace IBE
                             }
                         }
 
-                        // update the visited information
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 0, Total = 0 });
-                        Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
-                        Program.Data.updateVisitedFlagsFromBase();
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 1, Total = 1 });
+                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDCD_Outfitting))
+                        {
+                            //import the outfitting data from EDCD
+                            FileName = "EDCD_outfitting.csv";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportEDCDData(enImportTypes.EDCD_Outfitting, Path.Combine(sourcePath, FileName));
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
 
-                        // insert missing localization entries
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "insert missing translation of commodities", Index = 0, Total = 0 });
-                        Program.Data.AddMissingLocalizationEntries();
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "insert missing translation of commodities...", Index = 1, Total = 1 });
+                        if(stationOrCommodityImport)
+                        {
+                            // update the visited information
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 0, Total = 0 });
+                            Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
+                            Program.Data.updateVisitedFlagsFromBase();
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 1, Total = 1 });
 
-                        // update localization of all commodities
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating active localization of commodities", Index = 0, Total = 0 });
-                        Program.Data.updateTranslation();
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating active localization of commodities...", Index = 1, Total = 1 });
+                            // insert missing localization entries
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "insert missing translation of commodities", Index = 0, Total = 0 });
+                            Program.Data.AddMissingLocalizationEntries();
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "insert missing translation of commodities...", Index = 1, Total = 1 });
+
+                            // update localization of all commodities
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating active localization of commodities", Index = 0, Total = 0 });
+                            Program.Data.updateTranslation();
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating active localization of commodities...", Index = 1, Total = 1 });
+                        }
 
                         Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "finished", Index = 1, Total = 1 });
 
@@ -1455,6 +1496,65 @@ namespace IBE
                 SetButtons(true);
                 cErr.processError(ex, "Error while downloading files with EDCD-IDs");
             }
+        }
+
+        private void cmdEDCDImportID_Click(object sender, EventArgs e)
+        {
+            PriceImportParameters importParams = null;
+
+            try
+            {
+                SetButtons(false);
+                lbProgess.Items.Clear();
+
+                enImportTypes importFlags = enImportTypes.EDCD_Outfitting;
+
+                m_ProgressView = new ProgressView(this, false);
+                m_ProgressView.progressStart("importing ids of known things from EDCD...");
+
+                ImportData(null, importFlags, null, m_DataPath, false, null);
+
+                if (StopProgress())
+                    MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                else
+                    MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                SetButtons(true);
+
+            }
+            catch (Exception ex)
+            {
+                StopProgress();
+                cErr.processError(ex, "Error while downloading files with EDCD-IDs");
+            }
+        }
+
+        private void lbProgess_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.C)
+                CopySelectedValuesToClipboard();
+        }
+
+        private void CopySelectedValuesToClipboard()
+        {
+            var builder = new System.Text.StringBuilder();
+
+            if (lbProgess.SelectedItems.Count > 0)
+            {
+                foreach (String item in lbProgess.SelectedItems)
+                    builder.AppendLine(item);
+            }
+            else
+            {
+                builder.Append(lbProgess.Text);
+            }
+                
+            Debug.Print("CtC");
+
+            if(builder.Length > 0)
+                Clipboard.SetText(builder.ToString());
+            else
+                Clipboard.Clear();
         }
     }
 }

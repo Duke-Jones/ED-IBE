@@ -133,6 +133,7 @@ namespace IBE.SQL
             public Int32  Total { get; set; }
             public String Unit { get; set; }
             public ProgressView progressObject;
+            public Boolean Single_NoReuse{ get; set; }
             
         }
 
@@ -142,7 +143,7 @@ namespace IBE.SQL
         /// <param name="Tablename"></param>
         /// <param name="Index"></param>
         /// <param name="Total"></param>
-        private Boolean sendProgressEvent(String Tablename, Int32 Index, Int32 Total, Boolean noSuppress = false)
+        private Boolean sendProgressEvent(String Tablename, Int32 Index, Int32 Total, Boolean noSuppress = false, Boolean nextNoReuse = false)
         {
             Int32   ProgressSendLevel;
             ProgressEventArgs pEArgs    = null;
@@ -154,7 +155,7 @@ namespace IBE.SQL
 		        if((m_EventTimer.currentMeasuring() > m_TimeSlice_ms) || noSuppress)
                 {
                     // time is reason
-                    pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total};
+                    pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total, Single_NoReuse = nextNoReuse};
                     Progress.Raise(this, pEArgs);
 
                     if(Total > 0)
@@ -182,7 +183,7 @@ namespace IBE.SQL
                        (ProgressSendLevel != m_lastProgress))
                     { 
                         // time is reason
-                        pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total};
+                        pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total, Single_NoReuse = nextNoReuse};
                         Progress.Raise(this, pEArgs);
 
                         m_EventTimer.startMeasuring();
@@ -3414,7 +3415,6 @@ namespace IBE.SQL
 
 #endregion
 
-
 #region general
 
         /// <summary>
@@ -4005,7 +4005,152 @@ namespace IBE.SQL
 
 
 
-#endregion
+        #endregion
+
+        #region handling of EDCD data
+
+        public void ImportEDCDData(frmDataIO.enImportTypes enImportTypes, String importFile)
+        {
+            try
+            {
+                String sqlBaseString = "";
+                String sqlString = "";
+                Int32 dataParts = 0;
+                List<String> CSV_Strings = new List<String>();
+                String headerDefinition = "";
+                Int32 changed = 0;
+                Int32 errors = 0;
+                Int32 counter = 0;
+                Int32 counter2 = 0;
+
+
+                switch (enImportTypes)
+                {
+                    case frmDataIO.enImportTypes.EDCD_Commodity:
+                        headerDefinition = "id,category,name,average";
+                        break;
+
+                    case frmDataIO.enImportTypes.EDCD_Outfitting:
+                        headerDefinition = "id,category,name,mount,guidance,ship,class,rating,entitlement";
+                        dataParts        = headerDefinition.Split(new char[] { ',' }).ToList().Count;
+                        sqlBaseString        = "INSERT INTO tbOutfittingBase" +
+                                           " (id, category, name, mount, guidance, ship, class, rating, entitlement)" +
+                                           " VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}) " +
+                                           " ON DUPLICATE KEY UPDATE " +
+                                           " id          = Values(id)," +
+                                           " category    = Values(category)," +
+                                           " name        = Values(name)," +
+                                           " mount       = Values(mount)," +
+                                           " guidance    = Values(guidance)," +
+                                           " ship        = Values(ship)," +
+                                           " class       = Values(class)," +
+                                           " rating      = Values(rating)," +
+                                           " entitlement = Values(entitlement);";
+                        break;
+
+                    case frmDataIO.enImportTypes.EDCD_Shipyard:
+                        headerDefinition = "id,name";
+                        break;
+
+                    default:
+                        break;
+                }
+
+                var reader = new StreamReader(File.OpenRead(importFile));
+
+                string header = reader.ReadLine();
+
+                sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", 0, 0);
+
+                if (header.StartsWith(headerDefinition))
+                {
+                    
+                    do
+                    {
+                        CSV_Strings.Add(reader.ReadLine());
+                        counter++;
+
+                        sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", counter, 0);
+
+                        if (m_ProgressCancelled)
+                            break;
+
+                    } while (!reader.EndOfStream);
+
+                    sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", counter, counter);
+                    sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", 1, 1);
+
+                    reader.Close();
+
+                    if(!m_ProgressCancelled)
+                    {
+                        // gettin' some freaky performance
+                        Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+
+                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", 0, 0);
+
+                        foreach (String csvString in CSV_Strings)
+                        {
+                            List<String> csvParts = csvString.Split(new char[] {','}).ToList();
+
+                            counter2++;
+
+                            if(csvParts.Count == dataParts)
+                            {
+                                try
+                                {
+                                    sqlString = String.Format(sqlBaseString, 
+                                                                csvParts[0], 
+                                                                DBConnector.SQLAEscape(csvParts[1]), 
+                                                                DBConnector.SQLAEscape(csvParts[2]), 
+                                                                DBConnector.SQLAEscape(csvParts[3]), 
+                                                                DBConnector.SQLAEscape(csvParts[4]), 
+                                                                DBConnector.SQLAEscape(csvParts[5]), 
+                                                                DBConnector.SQLAEscape(csvParts[6]), 
+                                                                DBConnector.SQLAEscape(csvParts[7]), 
+                                                                DBConnector.SQLAEscape(csvParts[8]));
+
+                                    changed += Program.DBCon.Execute(sqlString);
+                                }
+                                catch (Exception ex)
+                                {
+                                    errors++;
+                                    sendProgressEvent("error while importing line <" + counter2 + "> : " + csvString, -1, -1, true, true);
+                                }
+                            }
+                            else
+                            {
+                                    errors++;
+                                    sendProgressEvent("error while importing line <" + counter2 + "> : " + csvString, -1, -1, true, true);
+                            }
+
+                            sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", counter2, counter);
+
+                            if (m_ProgressCancelled)
+                                break;
+                        }
+
+                        // gettin' some freaky performance
+                        Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", counter2, counter);
+                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", 1, 1);
+                        sendProgressEvent("new entries = " + changed + ", errors = " + errors, -1, -1);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // gettin' some freaky performance
+                Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                throw new Exception("Error while importing EDCD data", ex);
+            }
+                    
+        }
+
+        #endregion
 
         public void ExportLocalizationDataToCSV(string fileName, enLocalizationType activeSetting)
         {

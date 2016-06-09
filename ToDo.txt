@@ -12,11 +12,18 @@ todo:
 * check : non-existing game path from registry
 						   1
 
-Default
+* optimize error log
+* import of id data 
+* delete wrong data from auto function
+* import new data from EDMC
+* avoid resizing of fonts
+* EDSM interface
+* VoiceAttack interface
 
 done:
 
-
+   * import of the FDevIDs (outfitting only) is working
+-------------------------------------------------------------------------------------         
    * downloading of the files with FDevIDs is working (https://github.com/EDCD/FDevIDs)
    * using "\ED-IBE\Data\" for save downloaded EDDB files instead of a temporary user path
 -------------------------------------------------------------------------------------         

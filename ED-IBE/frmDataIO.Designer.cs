@@ -31,22 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDataIO));
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.rbFormatSimple = new System.Windows.Forms.RadioButton();
-            this.rbFormatExtended = new System.Windows.Forms.RadioButton();
-            this.cmdExportCSV = new System.Windows.Forms.Button();
-            this.cmdImportFromCSV = new System.Windows.Forms.Button();
-            this.gbRepeat = new System.Windows.Forms.GroupBox();
-            this.gbPriceImport = new System.Windows.Forms.GroupBox();
-            this.rbImportPrices_All = new System.Windows.Forms.RadioButton();
-            this.rbImportPrices_Bubble = new System.Windows.Forms.RadioButton();
-            this.rbImportPrices_No = new System.Windows.Forms.RadioButton();
-            this.cmdImportSystemsAndStationsFromDownload = new System.Windows.Forms.Button();
-            this.cmdDownloadSystemsAndStations = new System.Windows.Forms.Button();
-            this.cmdImportSystemsAndStations = new System.Windows.Forms.Button();
-            this.cmdImportCommandersLog = new System.Windows.Forms.Button();
-            this.cmdImportOldData = new System.Windows.Forms.Button();
             this.fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.cmdEDCDImportID = new System.Windows.Forms.Button();
+            this.cmdEDCDDownloadID = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.label89 = new System.Windows.Forms.Label();
@@ -58,19 +47,29 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupboxExport = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.rbFormatSimple = new System.Windows.Forms.RadioButton();
+            this.rbFormatExtended = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rbUserLanguage = new System.Windows.Forms.RadioButton();
             this.rbDefaultLanguage = new System.Windows.Forms.RadioButton();
+            this.cmdExportCSV = new System.Windows.Forms.Button();
             this.groupboxImport = new System.Windows.Forms.GroupBox();
             this.rbImportSame = new System.Windows.Forms.RadioButton();
+            this.cmdImportFromCSV = new System.Windows.Forms.Button();
             this.rbImportNewer = new System.Windows.Forms.RadioButton();
+            this.gbRepeat = new System.Windows.Forms.GroupBox();
+            this.gbPriceImport = new System.Windows.Forms.GroupBox();
+            this.rbImportPrices_All = new System.Windows.Forms.RadioButton();
+            this.rbImportPrices_Bubble = new System.Windows.Forms.RadioButton();
+            this.rbImportPrices_No = new System.Windows.Forms.RadioButton();
+            this.cmdImportSystemsAndStationsFromDownload = new System.Windows.Forms.Button();
+            this.cmdDownloadSystemsAndStations = new System.Windows.Forms.Button();
+            this.cmdImportSystemsAndStations = new System.Windows.Forms.Button();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
+            this.cmdImportCommandersLog = new System.Windows.Forms.Button();
+            this.cmdImportOldData = new System.Windows.Forms.Button();
             this.lbProgess = new System.Windows.Forms.ListBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.cmdEDCDImportID = new System.Windows.Forms.Button();
-            this.cmdEDCDDownloadID = new System.Windows.Forms.Button();
-            this.gbRepeat.SuspendLayout();
-            this.gbPriceImport.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
             this.groupBox5.SuspendLayout();
@@ -80,8 +79,9 @@
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupboxImport.SuspendLayout();
+            this.gbRepeat.SuspendLayout();
+            this.gbPriceImport.SuspendLayout();
             this.gbFirstTime.SuspendLayout();
-            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // ttToolTip
@@ -90,185 +90,47 @@
             this.ttToolTip.InitialDelay = 500;
             this.ttToolTip.ReshowDelay = 100;
             // 
-            // rbFormatSimple
-            // 
-            this.rbFormatSimple.AutoSize = true;
-            this.rbFormatSimple.Location = new System.Drawing.Point(155, 17);
-            this.rbFormatSimple.Name = "rbFormatSimple";
-            this.rbFormatSimple.Size = new System.Drawing.Size(124, 17);
-            this.rbFormatSimple.TabIndex = 1;
-            this.rbFormatSimple.Text = "Simple Export Format";
-            this.ttToolTip.SetToolTip(this.rbFormatSimple, "Simple export format. Useful if you want to import the data to other tools\r\n(they" +
-        " don\'t know the extended data from ED-IBE)\r\n\r\n");
-            this.rbFormatSimple.UseVisualStyleBackColor = true;
-            // 
-            // rbFormatExtended
-            // 
-            this.rbFormatExtended.AutoSize = true;
-            this.rbFormatExtended.Checked = true;
-            this.rbFormatExtended.Location = new System.Drawing.Point(9, 17);
-            this.rbFormatExtended.Name = "rbFormatExtended";
-            this.rbFormatExtended.Size = new System.Drawing.Size(109, 17);
-            this.rbFormatExtended.TabIndex = 0;
-            this.rbFormatExtended.TabStop = true;
-            this.rbFormatExtended.Text = "Full Export Format";
-            this.ttToolTip.SetToolTip(this.rbFormatExtended, "Export with all informations from ED-IBE, e.g. with datasource.\r\nUseful if you wa" +
-        "nt to re-import the data into ED-IBE. Otherwise \r\nyou will lose information like" +
-        " e.g. datasource.");
-            this.rbFormatExtended.UseVisualStyleBackColor = true;
-            // 
-            // cmdExportCSV
-            // 
-            this.cmdExportCSV.Location = new System.Drawing.Point(15, 16);
-            this.cmdExportCSV.Name = "cmdExportCSV";
-            this.cmdExportCSV.Size = new System.Drawing.Size(276, 34);
-            this.cmdExportCSV.TabIndex = 0;
-            this.cmdExportCSV.Text = "Export Marketdata to CSV";
-            this.ttToolTip.SetToolTip(this.cmdExportCSV, "Exports all marketdata into a csv-file");
-            this.cmdExportCSV.UseVisualStyleBackColor = true;
-            this.cmdExportCSV.Click += new System.EventHandler(this.cmdExportCSV_Click);
-            // 
-            // cmdImportFromCSV
-            // 
-            this.cmdImportFromCSV.Location = new System.Drawing.Point(15, 12);
-            this.cmdImportFromCSV.Name = "cmdImportFromCSV";
-            this.cmdImportFromCSV.Size = new System.Drawing.Size(276, 34);
-            this.cmdImportFromCSV.TabIndex = 3;
-            this.cmdImportFromCSV.Text = "Import Marketdata from CSV";
-            this.ttToolTip.SetToolTip(this.cmdImportFromCSV, "Exports all marketdata into a csv-file");
-            this.cmdImportFromCSV.UseVisualStyleBackColor = true;
-            this.cmdImportFromCSV.Click += new System.EventHandler(this.cmdImportFromCSV_Click);
-            // 
-            // gbRepeat
-            // 
-            this.gbRepeat.Controls.Add(this.gbPriceImport);
-            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStationsFromDownload);
-            this.gbRepeat.Controls.Add(this.cmdDownloadSystemsAndStations);
-            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
-            this.gbRepeat.Location = new System.Drawing.Point(363, 12);
-            this.gbRepeat.Name = "gbRepeat";
-            this.gbRepeat.Size = new System.Drawing.Size(345, 250);
-            this.gbRepeat.TabIndex = 4;
-            this.gbRepeat.TabStop = false;
-            this.gbRepeat.Text = "EDDB imports";
-            this.ttToolTip.SetToolTip(this.gbRepeat, "Upating the master data.\r\nGet dumpfiles from EDDB (https://eddb.io/api)\r\nand upda" +
-        "te master data for systems, stations and other.");
-            // 
-            // gbPriceImport
-            // 
-            this.gbPriceImport.Controls.Add(this.rbImportPrices_All);
-            this.gbPriceImport.Controls.Add(this.rbImportPrices_Bubble);
-            this.gbPriceImport.Controls.Add(this.rbImportPrices_No);
-            this.gbPriceImport.Location = new System.Drawing.Point(45, 120);
-            this.gbPriceImport.Name = "gbPriceImport";
-            this.gbPriceImport.Size = new System.Drawing.Size(253, 123);
-            this.gbPriceImport.TabIndex = 5;
-            this.gbPriceImport.TabStop = false;
-            this.gbPriceImport.Tag = "PriceImport;ImportPricesNo";
-            this.gbPriceImport.Text = "Import prices from EDDB ";
-            this.ttToolTip.SetToolTip(this.gbPriceImport, "Do you want to import prices from EDDB");
-            // 
-            // rbImportPrices_All
-            // 
-            this.rbImportPrices_All.AutoSize = true;
-            this.rbImportPrices_All.Location = new System.Drawing.Point(25, 76);
-            this.rbImportPrices_All.Name = "rbImportPrices_All";
-            this.rbImportPrices_All.Size = new System.Drawing.Size(191, 43);
-            this.rbImportPrices_All.TabIndex = 2;
-            this.rbImportPrices_All.Tag = "ImportPricesAll";
-            this.rbImportPrices_All.Text = "Yeah, gimme all prices I can get \r\n(can take long time if the database \r\nis alrea" +
-    "dy filled - up to a few hours )";
-            this.rbImportPrices_All.UseVisualStyleBackColor = true;
-            // 
-            // rbImportPrices_Bubble
-            // 
-            this.rbImportPrices_Bubble.AutoSize = true;
-            this.rbImportPrices_Bubble.Location = new System.Drawing.Point(25, 40);
-            this.rbImportPrices_Bubble.Name = "rbImportPrices_Bubble";
-            this.rbImportPrices_Bubble.Size = new System.Drawing.Size(214, 30);
-            this.rbImportPrices_Bubble.TabIndex = 1;
-            this.rbImportPrices_Bubble.Tag = "ImportPricesBubble";
-            this.rbImportPrices_Bubble.Text = "Ok, give me a starter kit out of a bubble \r\naround of 20 ly of my current positio" +
-    "n";
-            this.rbImportPrices_Bubble.UseVisualStyleBackColor = true;
-            // 
-            // rbImportPrices_No
-            // 
-            this.rbImportPrices_No.AutoSize = true;
-            this.rbImportPrices_No.Checked = true;
-            this.rbImportPrices_No.Location = new System.Drawing.Point(25, 19);
-            this.rbImportPrices_No.Name = "rbImportPrices_No";
-            this.rbImportPrices_No.Size = new System.Drawing.Size(176, 17);
-            this.rbImportPrices_No.TabIndex = 0;
-            this.rbImportPrices_No.TabStop = true;
-            this.rbImportPrices_No.Tag = "ImportPricesNo";
-            this.rbImportPrices_No.Text = "No, I want to collect data myself";
-            this.rbImportPrices_No.UseVisualStyleBackColor = true;
-            this.rbImportPrices_No.CheckedChanged += new System.EventHandler(this.Radiobutton_CheckedChanged);
-            // 
-            // cmdImportSystemsAndStationsFromDownload
-            // 
-            this.cmdImportSystemsAndStationsFromDownload.Location = new System.Drawing.Point(14, 72);
-            this.cmdImportSystemsAndStationsFromDownload.Name = "cmdImportSystemsAndStationsFromDownload";
-            this.cmdImportSystemsAndStationsFromDownload.Size = new System.Drawing.Size(153, 41);
-            this.cmdImportSystemsAndStationsFromDownload.TabIndex = 4;
-            this.cmdImportSystemsAndStationsFromDownload.Text = "Import from downloaded EDDB dumpfiles";
-            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStationsFromDownload, "Imports the dumpfiles downloaded from https://eddb.io/api \r\n(\"system.json\", \"stat" +
-        "ions.json\", \"commodities.json\", optional \"listings.csv\").\r\n");
-            this.cmdImportSystemsAndStationsFromDownload.UseVisualStyleBackColor = true;
-            this.cmdImportSystemsAndStationsFromDownload.Click += new System.EventHandler(this.cmdImportSystemsAndStationsFromDownload_Click);
-            // 
-            // cmdDownloadSystemsAndStations
-            // 
-            this.cmdDownloadSystemsAndStations.Location = new System.Drawing.Point(14, 23);
-            this.cmdDownloadSystemsAndStations.Name = "cmdDownloadSystemsAndStations";
-            this.cmdDownloadSystemsAndStations.Size = new System.Drawing.Size(153, 41);
-            this.cmdDownloadSystemsAndStations.TabIndex = 3;
-            this.cmdDownloadSystemsAndStations.Text = "Download latest EDDB dumpfiles";
-            this.ttToolTip.SetToolTip(this.cmdDownloadSystemsAndStations, "Downloads the latest dumpfiles of systems, stations and commodities from \r\nhttps:" +
-        "//eddb.io/api (\"system.json\", \"stations.json\", \"commodities.json\", \"listings.csv" +
-        "\").\r\n\r\n");
-            this.cmdDownloadSystemsAndStations.UseVisualStyleBackColor = true;
-            this.cmdDownloadSystemsAndStations.Click += new System.EventHandler(this.cmdDownloadSystemsAndStations_Click);
-            // 
-            // cmdImportSystemsAndStations
-            // 
-            this.cmdImportSystemsAndStations.Location = new System.Drawing.Point(179, 73);
-            this.cmdImportSystemsAndStations.Name = "cmdImportSystemsAndStations";
-            this.cmdImportSystemsAndStations.Size = new System.Drawing.Size(153, 41);
-            this.cmdImportSystemsAndStations.TabIndex = 0;
-            this.cmdImportSystemsAndStations.Text = "Import from manual selected EDDB dumpfiles";
-            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, resources.GetString("cmdImportSystemsAndStations.ToolTip"));
-            this.cmdImportSystemsAndStations.UseVisualStyleBackColor = true;
-            this.cmdImportSystemsAndStations.Click += new System.EventHandler(this.cmdImportSystemsAndStations_Click);
-            // 
-            // cmdImportCommandersLog
-            // 
-            this.cmdImportCommandersLog.Location = new System.Drawing.Point(33, 72);
-            this.cmdImportCommandersLog.Name = "cmdImportCommandersLog";
-            this.cmdImportCommandersLog.Size = new System.Drawing.Size(276, 41);
-            this.cmdImportCommandersLog.TabIndex = 3;
-            this.cmdImportCommandersLog.Text = "Import RN-CommandersLog-files";
-            this.ttToolTip.SetToolTip(this.cmdImportCommandersLog, "The old RN had perfomance problems with too big Commander\'s Logs\r\nIf you have spl" +
-        "itted the old log in multiple files you can import the with this function.\r\n");
-            this.cmdImportCommandersLog.UseVisualStyleBackColor = true;
-            this.cmdImportCommandersLog.Click += new System.EventHandler(this.cmdImportCommandersLog_Click);
-            // 
-            // cmdImportOldData
-            // 
-            this.cmdImportOldData.Location = new System.Drawing.Point(33, 23);
-            this.cmdImportOldData.Name = "cmdImportOldData";
-            this.cmdImportOldData.Size = new System.Drawing.Size(276, 41);
-            this.cmdImportOldData.TabIndex = 0;
-            this.cmdImportOldData.Text = "Import Old Datafiles";
-            this.ttToolTip.SetToolTip(this.cmdImportOldData, "Imports the whole data structure from the existing old RegulatedNoise version.\r\nY" +
-        "ou can start this function only one time. ");
-            this.cmdImportOldData.UseVisualStyleBackColor = true;
-            this.cmdImportOldData.Click += new System.EventHandler(this.cmdImportOldData_Click);
-            // 
             // ofdFileDialog
             // 
             this.ofdFileDialog.FileName = "openFileDialog1";
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.cmdEDCDImportID);
+            this.groupBox8.Controls.Add(this.cmdEDCDDownloadID);
+            this.groupBox8.Location = new System.Drawing.Point(1053, 224);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(177, 120);
+            this.groupBox8.TabIndex = 67;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Tag = "Schema;Real";
+            this.groupBox8.Text = "Companion IDs";
+            this.ttToolTip.SetToolTip(this.groupBox8, "These IDs are used to identify unambiguous the recieved data from the companion i" +
+        "nterface .\r\nYou should update them if there are changes due to udates in ED.");
+            // 
+            // cmdEDCDImportID
+            // 
+            this.cmdEDCDImportID.Location = new System.Drawing.Point(10, 68);
+            this.cmdEDCDImportID.Name = "cmdEDCDImportID";
+            this.cmdEDCDImportID.Size = new System.Drawing.Size(153, 41);
+            this.cmdEDCDImportID.TabIndex = 6;
+            this.cmdEDCDImportID.Text = "Import from downloaded EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdEDCDImportID, "Import the latest information of the used IDs by the companion interface\r\nfrom th" +
+        "e data folder.\r\n(EDCD_commodities.csv, EDCD_outfitting_csv, EDCD_shipyard.csv)\r\n" +
+        "");
+            this.cmdEDCDImportID.UseVisualStyleBackColor = true;
+            this.cmdEDCDImportID.Click += new System.EventHandler(this.cmdEDCDImportID_Click);
+            // 
+            // cmdEDCDDownloadID
+            // 
+            this.cmdEDCDDownloadID.Location = new System.Drawing.Point(10, 19);
+            this.cmdEDCDDownloadID.Name = "cmdEDCDDownloadID";
+            this.cmdEDCDDownloadID.Size = new System.Drawing.Size(153, 41);
+            this.cmdEDCDDownloadID.TabIndex = 5;
+            this.cmdEDCDDownloadID.Text = "Download latest EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdEDCDDownloadID, resources.GetString("cmdEDCDDownloadID.ToolTip"));
+            this.cmdEDCDDownloadID.UseVisualStyleBackColor = true;
+            this.cmdEDCDDownloadID.Click += new System.EventHandler(this.cmdEDCDDownloadID_Click);
             // 
             // groupBox6
             // 
@@ -405,6 +267,33 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Format";
             // 
+            // rbFormatSimple
+            // 
+            this.rbFormatSimple.AutoSize = true;
+            this.rbFormatSimple.Location = new System.Drawing.Point(155, 17);
+            this.rbFormatSimple.Name = "rbFormatSimple";
+            this.rbFormatSimple.Size = new System.Drawing.Size(124, 17);
+            this.rbFormatSimple.TabIndex = 1;
+            this.rbFormatSimple.Text = "Simple Export Format";
+            this.ttToolTip.SetToolTip(this.rbFormatSimple, "Simple export format. Useful if you want to import the data to other tools\r\n(they" +
+        " don\'t know the extended data from ED-IBE)\r\n\r\n");
+            this.rbFormatSimple.UseVisualStyleBackColor = true;
+            // 
+            // rbFormatExtended
+            // 
+            this.rbFormatExtended.AutoSize = true;
+            this.rbFormatExtended.Checked = true;
+            this.rbFormatExtended.Location = new System.Drawing.Point(9, 17);
+            this.rbFormatExtended.Name = "rbFormatExtended";
+            this.rbFormatExtended.Size = new System.Drawing.Size(109, 17);
+            this.rbFormatExtended.TabIndex = 0;
+            this.rbFormatExtended.TabStop = true;
+            this.rbFormatExtended.Text = "Full Export Format";
+            this.ttToolTip.SetToolTip(this.rbFormatExtended, "Export with all informations from ED-IBE, e.g. with datasource.\r\nUseful if you wa" +
+        "nt to re-import the data into ED-IBE. Otherwise \r\nyou will lose information like" +
+        " e.g. datasource.");
+            this.rbFormatExtended.UseVisualStyleBackColor = true;
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.rbUserLanguage);
@@ -438,6 +327,17 @@
             this.rbDefaultLanguage.Text = "export names in base language (english)";
             this.rbDefaultLanguage.UseVisualStyleBackColor = true;
             // 
+            // cmdExportCSV
+            // 
+            this.cmdExportCSV.Location = new System.Drawing.Point(15, 16);
+            this.cmdExportCSV.Name = "cmdExportCSV";
+            this.cmdExportCSV.Size = new System.Drawing.Size(276, 34);
+            this.cmdExportCSV.TabIndex = 0;
+            this.cmdExportCSV.Text = "Export Marketdata to CSV";
+            this.ttToolTip.SetToolTip(this.cmdExportCSV, "Exports all marketdata into a csv-file");
+            this.cmdExportCSV.UseVisualStyleBackColor = true;
+            this.cmdExportCSV.Click += new System.EventHandler(this.cmdExportCSV_Click);
+            // 
             // groupboxImport
             // 
             this.groupboxImport.Controls.Add(this.rbImportSame);
@@ -459,6 +359,17 @@
             this.rbImportSame.Text = "only import data if timestamp is equal or newer";
             this.rbImportSame.UseVisualStyleBackColor = true;
             // 
+            // cmdImportFromCSV
+            // 
+            this.cmdImportFromCSV.Location = new System.Drawing.Point(15, 12);
+            this.cmdImportFromCSV.Name = "cmdImportFromCSV";
+            this.cmdImportFromCSV.Size = new System.Drawing.Size(276, 34);
+            this.cmdImportFromCSV.TabIndex = 3;
+            this.cmdImportFromCSV.Text = "Import Marketdata from CSV";
+            this.ttToolTip.SetToolTip(this.cmdImportFromCSV, "Exports all marketdata into a csv-file");
+            this.cmdImportFromCSV.UseVisualStyleBackColor = true;
+            this.cmdImportFromCSV.Click += new System.EventHandler(this.cmdImportFromCSV_Click);
+            // 
             // rbImportNewer
             // 
             this.rbImportNewer.AutoSize = true;
@@ -471,6 +382,109 @@
             this.rbImportNewer.Text = "only import data if timestamp is newer";
             this.rbImportNewer.UseVisualStyleBackColor = true;
             // 
+            // gbRepeat
+            // 
+            this.gbRepeat.Controls.Add(this.gbPriceImport);
+            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStationsFromDownload);
+            this.gbRepeat.Controls.Add(this.cmdDownloadSystemsAndStations);
+            this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
+            this.gbRepeat.Location = new System.Drawing.Point(363, 12);
+            this.gbRepeat.Name = "gbRepeat";
+            this.gbRepeat.Size = new System.Drawing.Size(345, 250);
+            this.gbRepeat.TabIndex = 4;
+            this.gbRepeat.TabStop = false;
+            this.gbRepeat.Text = "EDDB imports";
+            this.ttToolTip.SetToolTip(this.gbRepeat, "Upating the master data.\r\nGet dumpfiles from EDDB (https://eddb.io/api)\r\nand upda" +
+        "te master data for systems, stations and other.");
+            // 
+            // gbPriceImport
+            // 
+            this.gbPriceImport.Controls.Add(this.rbImportPrices_All);
+            this.gbPriceImport.Controls.Add(this.rbImportPrices_Bubble);
+            this.gbPriceImport.Controls.Add(this.rbImportPrices_No);
+            this.gbPriceImport.Location = new System.Drawing.Point(45, 120);
+            this.gbPriceImport.Name = "gbPriceImport";
+            this.gbPriceImport.Size = new System.Drawing.Size(253, 123);
+            this.gbPriceImport.TabIndex = 5;
+            this.gbPriceImport.TabStop = false;
+            this.gbPriceImport.Tag = "PriceImport;ImportPricesNo";
+            this.gbPriceImport.Text = "Import prices from EDDB ";
+            this.ttToolTip.SetToolTip(this.gbPriceImport, "Do you want to import prices from EDDB");
+            // 
+            // rbImportPrices_All
+            // 
+            this.rbImportPrices_All.AutoSize = true;
+            this.rbImportPrices_All.Location = new System.Drawing.Point(25, 76);
+            this.rbImportPrices_All.Name = "rbImportPrices_All";
+            this.rbImportPrices_All.Size = new System.Drawing.Size(191, 43);
+            this.rbImportPrices_All.TabIndex = 2;
+            this.rbImportPrices_All.Tag = "ImportPricesAll";
+            this.rbImportPrices_All.Text = "Yeah, gimme all prices I can get \r\n(can take long time if the database \r\nis alrea" +
+    "dy filled - up to a few hours )";
+            this.rbImportPrices_All.UseVisualStyleBackColor = true;
+            // 
+            // rbImportPrices_Bubble
+            // 
+            this.rbImportPrices_Bubble.AutoSize = true;
+            this.rbImportPrices_Bubble.Location = new System.Drawing.Point(25, 40);
+            this.rbImportPrices_Bubble.Name = "rbImportPrices_Bubble";
+            this.rbImportPrices_Bubble.Size = new System.Drawing.Size(214, 30);
+            this.rbImportPrices_Bubble.TabIndex = 1;
+            this.rbImportPrices_Bubble.Tag = "ImportPricesBubble";
+            this.rbImportPrices_Bubble.Text = "Ok, give me a starter kit out of a bubble \r\naround of 20 ly of my current positio" +
+    "n";
+            this.rbImportPrices_Bubble.UseVisualStyleBackColor = true;
+            // 
+            // rbImportPrices_No
+            // 
+            this.rbImportPrices_No.AutoSize = true;
+            this.rbImportPrices_No.Checked = true;
+            this.rbImportPrices_No.Location = new System.Drawing.Point(25, 19);
+            this.rbImportPrices_No.Name = "rbImportPrices_No";
+            this.rbImportPrices_No.Size = new System.Drawing.Size(176, 17);
+            this.rbImportPrices_No.TabIndex = 0;
+            this.rbImportPrices_No.TabStop = true;
+            this.rbImportPrices_No.Tag = "ImportPricesNo";
+            this.rbImportPrices_No.Text = "No, I want to collect data myself";
+            this.rbImportPrices_No.UseVisualStyleBackColor = true;
+            this.rbImportPrices_No.CheckedChanged += new System.EventHandler(this.Radiobutton_CheckedChanged);
+            // 
+            // cmdImportSystemsAndStationsFromDownload
+            // 
+            this.cmdImportSystemsAndStationsFromDownload.Location = new System.Drawing.Point(14, 72);
+            this.cmdImportSystemsAndStationsFromDownload.Name = "cmdImportSystemsAndStationsFromDownload";
+            this.cmdImportSystemsAndStationsFromDownload.Size = new System.Drawing.Size(153, 41);
+            this.cmdImportSystemsAndStationsFromDownload.TabIndex = 4;
+            this.cmdImportSystemsAndStationsFromDownload.Text = "Import from downloaded EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStationsFromDownload, "Imports the dumpfiles downloaded from https://eddb.io/api \r\n(\"system.json\", \"stat" +
+        "ions.json\", \"commodities.json\", optional \"listings.csv\").\r\n");
+            this.cmdImportSystemsAndStationsFromDownload.UseVisualStyleBackColor = true;
+            this.cmdImportSystemsAndStationsFromDownload.Click += new System.EventHandler(this.cmdImportSystemsAndStationsFromDownload_Click);
+            // 
+            // cmdDownloadSystemsAndStations
+            // 
+            this.cmdDownloadSystemsAndStations.Location = new System.Drawing.Point(14, 23);
+            this.cmdDownloadSystemsAndStations.Name = "cmdDownloadSystemsAndStations";
+            this.cmdDownloadSystemsAndStations.Size = new System.Drawing.Size(153, 41);
+            this.cmdDownloadSystemsAndStations.TabIndex = 3;
+            this.cmdDownloadSystemsAndStations.Text = "Download latest EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdDownloadSystemsAndStations, "Downloads the latest dumpfiles of systems, stations and commodities from \r\nhttps:" +
+        "//eddb.io/api (\"system.json\", \"stations.json\", \"commodities.json\", \"listings.csv" +
+        "\").\r\n\r\n");
+            this.cmdDownloadSystemsAndStations.UseVisualStyleBackColor = true;
+            this.cmdDownloadSystemsAndStations.Click += new System.EventHandler(this.cmdDownloadSystemsAndStations_Click);
+            // 
+            // cmdImportSystemsAndStations
+            // 
+            this.cmdImportSystemsAndStations.Location = new System.Drawing.Point(179, 73);
+            this.cmdImportSystemsAndStations.Name = "cmdImportSystemsAndStations";
+            this.cmdImportSystemsAndStations.Size = new System.Drawing.Size(153, 41);
+            this.cmdImportSystemsAndStations.TabIndex = 0;
+            this.cmdImportSystemsAndStations.Text = "Import from manual selected EDDB dumpfiles";
+            this.ttToolTip.SetToolTip(this.cmdImportSystemsAndStations, resources.GetString("cmdImportSystemsAndStations.ToolTip"));
+            this.cmdImportSystemsAndStations.UseVisualStyleBackColor = true;
+            this.cmdImportSystemsAndStations.Click += new System.EventHandler(this.cmdImportSystemsAndStations_Click);
+            // 
             // gbFirstTime
             // 
             this.gbFirstTime.Controls.Add(this.cmdImportCommandersLog);
@@ -482,6 +496,30 @@
             this.gbFirstTime.TabStop = false;
             this.gbFirstTime.Text = "Import data from \"RegulatedNoise\"";
             // 
+            // cmdImportCommandersLog
+            // 
+            this.cmdImportCommandersLog.Location = new System.Drawing.Point(33, 72);
+            this.cmdImportCommandersLog.Name = "cmdImportCommandersLog";
+            this.cmdImportCommandersLog.Size = new System.Drawing.Size(276, 41);
+            this.cmdImportCommandersLog.TabIndex = 3;
+            this.cmdImportCommandersLog.Text = "Import RN-CommandersLog-files";
+            this.ttToolTip.SetToolTip(this.cmdImportCommandersLog, "The old RN had perfomance problems with too big Commander\'s Logs\r\nIf you have spl" +
+        "itted the old log in multiple files you can import the with this function.\r\n");
+            this.cmdImportCommandersLog.UseVisualStyleBackColor = true;
+            this.cmdImportCommandersLog.Click += new System.EventHandler(this.cmdImportCommandersLog_Click);
+            // 
+            // cmdImportOldData
+            // 
+            this.cmdImportOldData.Location = new System.Drawing.Point(33, 23);
+            this.cmdImportOldData.Name = "cmdImportOldData";
+            this.cmdImportOldData.Size = new System.Drawing.Size(276, 41);
+            this.cmdImportOldData.TabIndex = 0;
+            this.cmdImportOldData.Text = "Import Old Datafiles";
+            this.ttToolTip.SetToolTip(this.cmdImportOldData, "Imports the whole data structure from the existing old RegulatedNoise version.\r\nY" +
+        "ou can start this function only one time. ");
+            this.cmdImportOldData.UseVisualStyleBackColor = true;
+            this.cmdImportOldData.Click += new System.EventHandler(this.cmdImportOldData_Click);
+            // 
             // lbProgess
             // 
             this.lbProgess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -490,45 +528,10 @@
             this.lbProgess.FormattingEnabled = true;
             this.lbProgess.Location = new System.Drawing.Point(12, 270);
             this.lbProgess.Name = "lbProgess";
+            this.lbProgess.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbProgess.Size = new System.Drawing.Size(696, 186);
             this.lbProgess.TabIndex = 1;
-            // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.cmdEDCDImportID);
-            this.groupBox8.Controls.Add(this.cmdEDCDDownloadID);
-            this.groupBox8.Location = new System.Drawing.Point(1053, 224);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(177, 120);
-            this.groupBox8.TabIndex = 67;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Tag = "Schema;Real";
-            this.groupBox8.Text = "Companion IDs";
-            this.ttToolTip.SetToolTip(this.groupBox8, "These IDs are used to identify the recieved data from the companion interface una" +
-        "mbiguous.\r\nYou should update them if there are changes due to udates in ED.");
-            // 
-            // cmdEDCDImportID
-            // 
-            this.cmdEDCDImportID.Location = new System.Drawing.Point(10, 68);
-            this.cmdEDCDImportID.Name = "cmdEDCDImportID";
-            this.cmdEDCDImportID.Size = new System.Drawing.Size(153, 41);
-            this.cmdEDCDImportID.TabIndex = 6;
-            this.cmdEDCDImportID.Text = "Import from downloaded EDDB dumpfiles";
-            this.ttToolTip.SetToolTip(this.cmdEDCDImportID, "Import the latest information of the used IDs by the companion interface\r\nfrom th" +
-        "e data folder.\r\n(EDCD_commodities.csv, EDCD_outfitting_csv, EDCD_shipyard.csv)\r\n" +
-        "");
-            this.cmdEDCDImportID.UseVisualStyleBackColor = true;
-            // 
-            // cmdEDCDDownloadID
-            // 
-            this.cmdEDCDDownloadID.Location = new System.Drawing.Point(10, 19);
-            this.cmdEDCDDownloadID.Name = "cmdEDCDDownloadID";
-            this.cmdEDCDDownloadID.Size = new System.Drawing.Size(153, 41);
-            this.cmdEDCDDownloadID.TabIndex = 5;
-            this.cmdEDCDDownloadID.Text = "Download latest EDDB dumpfiles";
-            this.ttToolTip.SetToolTip(this.cmdEDCDDownloadID, resources.GetString("cmdEDCDDownloadID.ToolTip"));
-            this.cmdEDCDDownloadID.UseVisualStyleBackColor = true;
-            this.cmdEDCDDownloadID.Click += new System.EventHandler(this.cmdEDCDDownloadID_Click);
+            this.lbProgess.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbProgess_KeyDown);
             // 
             // frmDataIO
             // 
@@ -550,9 +553,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDataIO_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDataIO_FormClosed);
             this.Shown += new System.EventHandler(this.frmDataIO_Shown);
-            this.gbRepeat.ResumeLayout(false);
-            this.gbPriceImport.ResumeLayout(false);
-            this.gbPriceImport.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
@@ -566,8 +567,10 @@
             this.groupBox3.PerformLayout();
             this.groupboxImport.ResumeLayout(false);
             this.groupboxImport.PerformLayout();
+            this.gbRepeat.ResumeLayout(false);
+            this.gbPriceImport.ResumeLayout(false);
+            this.gbPriceImport.PerformLayout();
             this.gbFirstTime.ResumeLayout(false);
-            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
