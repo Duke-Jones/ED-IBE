@@ -13,15 +13,23 @@ todo:
 						   1
 
 * optimize error log
-* import of id data 
 * delete wrong data from auto function
-* import new data from EDMC
 * avoid resizing of fonts
 * EDSM interface
 * VoiceAttack interface
 
+* add info for
+  - updating FDevIDs
+  - download directory for eddb data is changed
+  - 
+
 done:
 
+   * sending of commodity data, outfitting data and shipyard data now uses the FDevIDs from EDCD
+   * check of committing timestamp of downloadable github files (eg. FDevIDs) 
+     to avoid multiple download of the same old files
+   * import of the FDevIDs (outfitting, shipyard, commodity) is working
+-------------------------------------------------------------------------------------         
    * import of the FDevIDs (outfitting only) is working
 -------------------------------------------------------------------------------------         
    * downloading of the files with FDevIDs is working (https://github.com/EDCD/FDevIDs)

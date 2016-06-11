@@ -164,15 +164,18 @@ bool disposed = false;
         
  #endregion
 
+        private Thread                              _Spool2EDDN_Market;   
         private Thread                              _Spool2EDDN_Commodity;   
         private Thread                              _Spool2EDDN_Outfitting;   
         private Thread                              _Spool2EDDN_Shipyard;   
-        private Queue                               _Send_MarketData_API = new Queue(100,10);
-        private Queue                               _Send_MarketData_OCR = new Queue(100,10);
-        private Queue                               _Send_Outfitting     = new Queue(100,10);
-        private Queue                               _Send_Shipyard       = new Queue(100,10);
+        private Queue                               _Send_MarketData_API     = new Queue(100,10);
+        private Queue                               _Send_MarketData_OCR     = new Queue(100,10);
+        private Queue                               _Send_Commodity         = new Queue(100,10);
+        private Queue                               _Send_Outfitting         = new Queue(100,10);
+        private Queue                               _Send_Shipyard           = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer_Commodity;
+        private System.Timers.Timer                 _SendDelayTimer_Market;
         private System.Timers.Timer                 _SendDelayTimer_Outfitting;
         private System.Timers.Timer                 _SendDelayTimer_Shipyard;
         private StreamWriter                        m_EDDNSpooler = null;
@@ -202,6 +205,10 @@ bool disposed = false;
         {
 
             m_Reciever = new Dictionary<String, EDDNReciever>();
+
+            _SendDelayTimer_Market                = new System.Timers.Timer(2000);
+            _SendDelayTimer_Market.AutoReset      = false;
+            _SendDelayTimer_Market.Elapsed        += new System.Timers.ElapsedEventHandler(this.SendDelayTimerMarket_Elapsed);
 
             _SendDelayTimer_Commodity             = new System.Timers.Timer(2000);
             _SendDelayTimer_Commodity.AutoReset   = false;
@@ -634,6 +641,10 @@ bool disposed = false;
             SendingReset();
         }
 
+#if false
+
+        /// these functions should not used anymore
+
         /// <summary>
         /// register everything for sending with this function.
         /// 2 seconds after the last registration all data will be sent automatically
@@ -658,7 +669,7 @@ bool disposed = false;
                         m_ID_of_Commodity_Station = new Tuple<String, DateTime>(CommodityData.SystemName + "|" + CommodityData.StationName, DateTime.Now - new TimeSpan(0,65,0));
 
                         // reset the timer
-                        _SendDelayTimer_Commodity.Start();
+                        _SendDelayTimer_Market.Start();
 
                     }
                 }
@@ -667,7 +678,7 @@ bool disposed = false;
                     _Send_MarketData_OCR.Enqueue(CommodityData);
 
                     // reset the timer
-                    _SendDelayTimer_Commodity.Start();
+                    _SendDelayTimer_Market.Start();
                 }
 
 
@@ -689,7 +700,7 @@ bool disposed = false;
                 if((m_ID_of_Commodity_Station.Item1 != (csvRowList[0].SystemName + "|" + csvRowList[0].StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60) || (usedInterface == enInterface.OCR))
                 { 
                     // reset the timer
-                    _SendDelayTimer_Commodity.Start();
+                    _SendDelayTimer_Market.Start();
 
                     // register rows
                     foreach (CsvRow csvRowListItem in csvRowList)
@@ -699,7 +710,7 @@ bool disposed = false;
                             _Send_MarketData_OCR.Enqueue(csvRowListItem);
 
                     // reset the timer
-                    _SendDelayTimer_Commodity.Start();
+                    _SendDelayTimer_Market.Start();
 
                     if(usedInterface == enInterface.API)
                     { 
@@ -728,7 +739,7 @@ bool disposed = false;
                 if((m_ID_of_Commodity_Station.Item1 != (testRow.SystemName + "|" + testRow.StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60) || (usedInterface == enInterface.OCR))
                 { 
                     // reset the timer
-                    _SendDelayTimer_Commodity.Start();
+                    _SendDelayTimer_Market.Start();
 
                     // register rows
                     foreach (String csvRowString in csv_Strings)
@@ -738,7 +749,7 @@ bool disposed = false;
                             _Send_MarketData_OCR.Enqueue(new CsvRow(csvRowString));
 
                     // reset the timer
-                    _SendDelayTimer_Commodity.Start();
+                    _SendDelayTimer_Market.Start();
 
                     if(usedInterface == enInterface.API)
                     { 
@@ -750,16 +761,145 @@ bool disposed = false;
             }
         }
 
+#endif
+        /// <summary>
+        /// send the commodity data of this station
+        /// </summary>
+        /// <param name="stationData">json object with companion data</param>
+        public void SendCommodityData(JObject dataObject)
+        {
+            Int32 objectCount = 0;
+            Boolean writeToFile = false;
+            StreamWriter writer = null;
+            String debugFile = @"C:\temp\commodity_ibe.csv";
+            SQL.Datasets.dsEliteDB.tbcommoditybaseDataTable baseData;
+
+            try
+            {
+                if(m_SenderIsActivated && 
+                   Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false))
+                {
+                    IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
+                    String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
+                    String stationName  = dataObject.SelectToken("lastStarport.name").ToString();
+
+                    if((m_ID_of_Commodity_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
+                    { 
+                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+
+                        StringBuilder commodityStringEDDN = new StringBuilder();
+
+                        commodityStringEDDN.Append(String.Format("\"message\": {{"));
+
+                        commodityStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("lastSystem.name").ToString()));
+                        //commodityStringEDDN.Append(String.Format("\"systemId\":\"{0}\", "      , dataObject.SelectToken("lastSystem.id").ToString()));
+                        //commodityStringEDDN.Append(String.Format("\"systemAddress\":\"{0}\", " , dataObject.SelectToken("lastSystem.address").ToString()));
+                        
+
+                        commodityStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
+                        //commodityStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
+
+                        commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+
+                        commodityStringEDDN.Append(String.Format("\"commodities\": ["));
+
+                        if(writeToFile)
+                        { 
+                            if(File.Exists(debugFile))
+                                File.Delete(debugFile);
+
+                            writer = new StreamWriter(File.OpenWrite(debugFile));
+                        }
+
+                        baseData = new SQL.Datasets.dsEliteDB.tbcommoditybaseDataTable();
+                        Program.DBCon.Execute("select * from tbcommodityBase;", (System.Data.DataTable)baseData);
+
+                        foreach (JToken commodityItem in dataObject.SelectTokens("lastStarport.commodities[*]"))
+                        {
+
+                            if(!commodityItem.Value<String>("categoryname").Equals("NonMarketable", StringComparison.InvariantCultureIgnoreCase))
+                            {
+
+                                CommodityObject commodity = cmpConverter.GetCommodityFromFDevIDs(baseData, commodityItem, false);
+                                //commodityObject commodity = cmpConverter.GetcommodityFromCompanion(commodityItem, false);
+
+                                if(commodity != null)
+                                { 
+                                    if(objectCount > 0)
+                                        commodityStringEDDN.Append(", {");
+                                    else
+                                        commodityStringEDDN.Append("{");
+
+                                    if(writeToFile)
+                                    {
+                                        writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                                            systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Average, 
+                                            DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                    }
+
+                                    commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ",        commodity.Name));
+                                    //commodityStringEDDN.Append(String.Format("\"id\":\"{0}\", ",          commodity.Id));
+                                    commodityStringEDDN.Append(String.Format("\"buyPrice\":{0}, ",    commodityItem.Value<Int32>("buyPrice")));
+                                    commodityStringEDDN.Append(String.Format("\"supply\":{0}, ",      commodityItem.Value<Int32>("stock")));
+                                    commodityStringEDDN.Append(String.Format("\"sellPrice\":{0}, ",   commodityItem.Value<Int32>("sellPrice")));
+                                    commodityStringEDDN.Append(String.Format("\"demand\":{0}, ",      commodityItem.Value<Int32>("demand")));
+                                    
+                                    if((!String.IsNullOrEmpty(commodityItem.Value<String>("demandBracket"))) && (commodityItem.Value<Int32>("demandBracket") > 0))
+                                    {
+                                        String demandLevel = (String)Program.Data.BaseTableIDToName("economylevel", commodityItem.Value<Int32>("demandBracket") - 1, "level");
+                                        demandLevel = char.ToUpper(demandLevel[0]) + demandLevel.Substring(1);
+                                        commodityStringEDDN.Append(String.Format("\"demandLevel\":\"{0}\", ", demandLevel));
+                                    }
+
+                                    if((!String.IsNullOrEmpty(commodityItem.Value<String>("stockBracket"))) && (commodityItem.Value<Int32>("stockBracket") > 0))
+                                    {
+                                        String supplyLevel = (String)Program.Data.BaseTableIDToName("economylevel", commodityItem.Value<Int32>("stockBracket") - 1, "level");
+                                        supplyLevel = char.ToUpper(supplyLevel[0]) + supplyLevel.Substring(1);
+                                        commodityStringEDDN.Append(String.Format("\"supplyLevel\":\"{0}\", ", supplyLevel));
+                                    }
+
+                                    commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);
+                                    commodityStringEDDN.Replace(",", "}", commodityStringEDDN.Length-1, 1);
+
+                                    objectCount++;
+                                }
+                            }
+                        } 
+
+                        commodityStringEDDN.Append("]}");
+
+                        if(objectCount > 0)
+                        { 
+                            _Send_Commodity.Enqueue(commodityStringEDDN);
+                            _SendDelayTimer_Commodity.Start();
+                            m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                        }
+
+                        if(writeToFile)
+                        {
+                            writer.Close();
+                            writer.Dispose();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while extracting commodity data for eddn", ex);
+            }
+        }
+
         /// <summary>
         /// send the outfitting data of this station
         /// </summary>
         /// <param name="stationData">json object with companion data</param>
-        public void SendOutfittingData(JObject dataObject)
+        public void SendOutfittingData_V1(JObject dataObject)
         {
             Int32 objectCount = 0;
             Boolean writeToFile = false;
             StreamWriter writer = null;
             String debugFile = @"C:\temp\outfitting_ibe.csv";
+            SQL.Datasets.dsEliteDB.tboutfittingbaseDataTable baseData;
 
             try
             {
@@ -767,7 +907,7 @@ bool disposed = false;
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
                     String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
-                    String stationName = dataObject.SelectToken("lastStarport.name").ToString();
+                    String stationName  = dataObject.SelectToken("lastStarport.name").ToString();
 
                     if((m_ID_of_Outfitting_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Outfitting_Station.Item2).TotalMinutes >= 60))
                     { 
@@ -777,8 +917,13 @@ bool disposed = false;
 
                         outfittingStringEDDN.Append(String.Format("\"message\": {{"));
 
-                        outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
-                        outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("lastSystem.name").ToString()));
+                        //outfittingStringEDDN.Append(String.Format("\"systemId\":\"{0}\", "      , dataObject.SelectToken("lastSystem.id").ToString()));
+                        //outfittingStringEDDN.Append(String.Format("\"systemAddress\":\"{0}\", " , dataObject.SelectToken("lastSystem.address").ToString()));
+                        
+
+                        outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
+                        //outfittingStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
                         outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
 
@@ -792,10 +937,15 @@ bool disposed = false;
                             writer = new StreamWriter(File.OpenWrite(debugFile));
                         }
 
+                        baseData = new SQL.Datasets.dsEliteDB.tboutfittingbaseDataTable();
+                        Program.DBCon.Execute("select * from tbOutfittingBase;", (System.Data.DataTable)baseData);
 
                         foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
                         {
-                            OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
+
+                            OutfittingObject outfitting = cmpConverter.GetOutfittingFromFDevIDs(baseData, outfittingItem, false);
+
+                            //OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
 
                             if(outfitting != null)
                             { 
@@ -812,10 +962,11 @@ bool disposed = false;
                                         DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                 }
 
+                                //outfittingStringEDDN.Append(String.Format("\"id\":\"{0}\", ",       outfitting.Id));
                                 outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfitting.Category));
-                                outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ", outfitting.Name));
-                                outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ", outfitting.Class));
-                                outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ", outfitting.Rating));
+                                outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ",     outfitting.Name));
+                                outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ",    outfitting.Class));
+                                outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ",   outfitting.Rating));
 
                                 switch (outfitting.Category)
                                 {
@@ -873,6 +1024,7 @@ bool disposed = false;
             Boolean writeToFile = false;
             StreamWriter writer = null;
             String debugFile = @"C:\temp\shipyard_ibe.csv";
+            SQL.Datasets.dsEliteDB.tbshipyardbaseDataTable baseData;
 
             try
             {
@@ -906,12 +1058,16 @@ bool disposed = false;
 
                         if(dataObject.SelectToken("lastStarport.ships", false) != null)
                         { 
+                            baseData = new SQL.Datasets.dsEliteDB.tbshipyardbaseDataTable();
+                            Program.DBCon.Execute("select * from tbShipyardBase;", (System.Data.DataTable)baseData);
+
                             List<JToken> allShips = dataObject.SelectTokens("lastStarport.ships.shipyard_list.*").ToList();
                             allShips.AddRange(dataObject.SelectTokens("lastStarport.ships.unavailable_list.[*]").ToList());
 
                             foreach (JToken outfittingItem in allShips)
                             {
-                                ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
+                                ShipyardObject shipyardItem = cmpConverter.GetShipFromFDevIDs(baseData, outfittingItem, false);
+                                //ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
 
                                 if(shipyardItem != null)
                                 { 
@@ -1213,6 +1369,98 @@ bool disposed = false;
         /// internal send routine for registered data:
         /// It's called by the delay-timer "_SendDelayTimer_Commodity"
         /// </summary>
+        private void SendCommodityData_i()
+        {
+            try
+            {
+                MessageHeader header;
+                String schema;
+                StringBuilder commodityMessage = new StringBuilder();
+
+                // fill the header
+                header = new MessageHeader()
+                {
+                    SoftwareName        = "ED-IBE (API)",
+                    SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
+                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    UploaderID          = UserIdentification()
+                };
+
+                // fill the schema : test or real ?
+                if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                    schema = "http://schemas.elite-markets.net/eddn/commodity/2/test";
+                else
+                    schema = "http://schemas.elite-markets.net/eddn/commodity/2";
+
+                // create full message
+                commodityMessage.Append(String.Format("{{" +
+                                                      " \"header\" : {0}," +
+                                                      " \"$schemaRef\": \"{1}\","+
+                                                      " {2}" +
+                                                      "}}", 
+                                                      JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
+                                                      schema,
+                                                      _Send_Commodity.Dequeue().ToString()));
+
+
+                using (var client = new WebClient())
+                {
+                    try
+                    {
+                        Debug.Print(commodityMessage.ToString());
+
+                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityMessage.ToString());
+
+                        m_CommoditySendingError = false;
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Sent));
+                    }
+                    catch (WebException ex)
+                    {
+                        _logger.Log("Error uploading json (commodity)", true);
+                        _logger.Log(ex.ToString(), true);
+                        _logger.Log(ex.Message, true);
+                        _logger.Log(ex.StackTrace, true);
+                        if (ex.InnerException != null)
+                            _logger.Log(ex.InnerException.ToString(), true);
+
+                        using (WebResponse response = ex.Response)
+                        {
+                            using (Stream data = response.GetResponseStream())
+                            {
+                                if (data != null)
+                                {
+                                    StreamReader sr = new StreamReader(data);
+                                    m_CommoditySendingError = true;
+                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Error));
+                                    _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd() , true);
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        client.Dispose();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Error uploading Json (commodity)", true);
+                _logger.Log(ex.ToString(), true);
+                _logger.Log(ex.Message, true);
+                _logger.Log(ex.StackTrace, true);
+                if (ex.InnerException != null)
+                    _logger.Log(ex.InnerException.ToString(), true);
+
+                cErr.processError(ex, "Error in EDDN-Sending-Thread (commodity)");
+            }
+
+        }
+        /// <summary>
+        /// internal send routine for registered data:
+        /// It's called by the delay-timer "_SendDelayTimer_Commodity"
+        /// </summary>
         private void SendShipyardData_i()
         {
             try
@@ -1308,14 +1556,38 @@ bool disposed = false;
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
+        private void SendDelayTimerMarket_Elapsed(object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+
+                // it's time to start the EDDN transmission
+                _Spool2EDDN_Market = new Thread(new ThreadStart(SendMarketData_i));
+                _Spool2EDDN_Market.Name = "Spool2EDDN Market";
+                _Spool2EDDN_Market.IsBackground = true;
+
+                _Spool2EDDN_Market.Start();
+
+            }
+            catch (Exception ex)
+            {
+                cErr.processError(ex, "Error while sending EDDN data (commodity)");
+            }
+        }
+
+        /// <summary>
+        /// timer routine for sending all registered commoditydata to EDDN
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private void SendDelayTimerCommodity_Elapsed(object source, System.Timers.ElapsedEventArgs e)
         {
             try
             {
 
                 // it's time to start the EDDN transmission
-                _Spool2EDDN_Commodity = new Thread(new ThreadStart(SendMarketData_i));
-                _Spool2EDDN_Commodity.Name = "Spool2EDDN Comodity";
+                _Spool2EDDN_Commodity = new Thread(new ThreadStart(SendCommodityData_i));
+                _Spool2EDDN_Commodity.Name = "Spool2EDDN Commodity";
                 _Spool2EDDN_Commodity.IsBackground = true;
 
                 _Spool2EDDN_Commodity.Start();

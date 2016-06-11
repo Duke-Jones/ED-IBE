@@ -3457,7 +3457,7 @@ namespace IBE
                             }
 
                             if(Program.CompanionIO.StationHasOutfittingData())
-                                Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+                                Program.EDDNComm.SendOutfittingData_V1(Program.CompanionIO.GetData());
                             
                         }
                         else
@@ -3703,6 +3703,9 @@ namespace IBE
                     if(Program.CompanionIO.StationHasMarketData())
                     { 
                         Int32 count = Program.CompanionIO.getMarketData();
+
+                        if(cbEDDNOverride.Checked)
+                            Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
 
                         if(count > 0)
                             txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        

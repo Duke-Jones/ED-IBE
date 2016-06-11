@@ -72,3 +72,14 @@ RegulatedNoise/Data/stations_own.json
 /ED-IBE/Data/EDCD_outfitting.csv
 /ED-IBE/Data/EDCD_shipyard.csv
 /ED-IBE/Data/commodity.csv
+/Data/EDCD_commodity.csv
+/Data/EDCD_outfitting.csv
+/Data/EDCD_shipyard.csv
+/LED/ledblue_off.png
+/LED/ledblue_on.png
+/LED/ledgreen_off.png
+/LED/ledgreen_on.png
+/LED/ledorange_off.png
+/LED/ledorange_on.png
+/LED/ledred_off.png
+/LED/ledred_on.png

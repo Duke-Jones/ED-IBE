@@ -1222,6 +1222,8 @@ namespace IBE
         /// <param name="parent"></param>
         internal static void DoSpecial(Form parent)
         {
+            Boolean didUpdate = false;
+
             try
             {
 
@@ -1271,7 +1273,7 @@ namespace IBE
                     if(!Program.SplashScreen.IsDisposed)
                         Program.SplashScreen.TopMost = false;
 
-                    var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied EDDB dump files ?", 
+                    var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied files ?", 
                                                           "Update master data", 
                                                           MessageBoxButtons.YesNo, 
                                                           MessageBoxIcon.Question, 
@@ -1295,6 +1297,8 @@ namespace IBE
                         DataIO.Close();
                         DataIO.Dispose();
                         
+                        didUpdate = true;
+
                         Program.SplashScreen.InfoAdd("updating master data...<OK>");
                     }
 
@@ -1364,6 +1368,29 @@ namespace IBE
                             Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue",      false.ToString());
                         }
 
+                    }
+
+                    if (m_NewDBVersion == new Version(0,3,4,0))
+                    {
+                        if(!didUpdate)
+                        {
+                            // at least one time this data has to be imported
+                            var DataIO = new frmDataIO();
+
+                            Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...");
+
+                            DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                            DataIO.ReUseLine  = true;
+
+                            DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
+
+                            DataIO.Close();
+                            DataIO.Dispose();
+                        
+                            didUpdate = true;
+
+                            Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...<OK>");
+                        }
                     }
                 }
             }

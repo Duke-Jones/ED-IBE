@@ -2782,10 +2782,11 @@ namespace IBE.SQL
                     ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
                 }
 
-                if(dataSource == enDataSource.fromIBE)
-                    Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
-                else if(dataSource == enDataSource.fromIBE_OCR)
-                    Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
+                // import on a higher level
+                //if(dataSource == enDataSource.fromIBE)
+                //    Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
+                //else if(dataSource == enDataSource.fromIBE_OCR)
+                //    Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
 
                 // now import the prices
                 ImportPrices(StationData, importBehaviour, dataSource);
@@ -4028,12 +4029,19 @@ namespace IBE.SQL
                 {
                     case frmDataIO.enImportTypes.EDCD_Commodity:
                         headerDefinition = "id,category,name,average";
+                        sqlBaseString    = "INSERT INTO tbCommodityBase" +
+                                           " (id, category, name, average)" +
+                                           " VALUES ({0}, {1}, {2}, {3}) " +
+                                           " ON DUPLICATE KEY UPDATE " +
+                                           " id          = Values(id)," +
+                                           " category    = Values(category)," +
+                                           " name        = Values(name)," +
+                                           " average     = Values(average);";
                         break;
 
                     case frmDataIO.enImportTypes.EDCD_Outfitting:
                         headerDefinition = "id,category,name,mount,guidance,ship,class,rating,entitlement";
-                        dataParts        = headerDefinition.Split(new char[] { ',' }).ToList().Count;
-                        sqlBaseString        = "INSERT INTO tbOutfittingBase" +
+                        sqlBaseString    = "INSERT INTO tbOutfittingBase" +
                                            " (id, category, name, mount, guidance, ship, class, rating, entitlement)" +
                                            " VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}) " +
                                            " ON DUPLICATE KEY UPDATE " +
@@ -4050,17 +4058,23 @@ namespace IBE.SQL
 
                     case frmDataIO.enImportTypes.EDCD_Shipyard:
                         headerDefinition = "id,name";
+                        sqlBaseString    = "INSERT INTO tbShipyardBase" +
+                                           " (id, name)" +
+                                           " VALUES ({0}, {1}) " +
+                                           " ON DUPLICATE KEY UPDATE " +
+                                           " id          = Values(id)," +
+                                           " name        = Values(name);";
                         break;
 
                     default:
                         break;
                 }
 
-                var reader = new StreamReader(File.OpenRead(importFile));
+                dataParts      = headerDefinition.Split(new char[] { ',' }).ToList().Count;
+                var reader     = new StreamReader(File.OpenRead(importFile));
+                string header  = reader.ReadLine();
 
-                string header = reader.ReadLine();
-
-                sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", 0, 0);
+                sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", 0, 0, true);
 
                 if (header.StartsWith(headerDefinition))
                 {
@@ -4099,16 +4113,36 @@ namespace IBE.SQL
                             {
                                 try
                                 {
-                                    sqlString = String.Format(sqlBaseString, 
-                                                                csvParts[0], 
-                                                                DBConnector.SQLAEscape(csvParts[1]), 
-                                                                DBConnector.SQLAEscape(csvParts[2]), 
-                                                                DBConnector.SQLAEscape(csvParts[3]), 
-                                                                DBConnector.SQLAEscape(csvParts[4]), 
-                                                                DBConnector.SQLAEscape(csvParts[5]), 
-                                                                DBConnector.SQLAEscape(csvParts[6]), 
-                                                                DBConnector.SQLAEscape(csvParts[7]), 
-                                                                DBConnector.SQLAEscape(csvParts[8]));
+                                    switch (enImportTypes)
+                                    {
+                                        case frmDataIO.enImportTypes.EDCD_Commodity:
+                                            sqlString = String.Format(sqlBaseString, 
+                                                                        csvParts[0], 
+                                                                        DBConnector.SQLAEscape(csvParts[1]), 
+                                                                        DBConnector.SQLAEscape(csvParts[2]), 
+                                                                        String.IsNullOrEmpty(csvParts[3]) ? "null" : csvParts[3]);
+                                            break;
+
+                                        case frmDataIO.enImportTypes.EDCD_Outfitting:
+                                            sqlString = String.Format(sqlBaseString, 
+                                                                        csvParts[0], 
+                                                                        DBConnector.SQLAEscape(csvParts[1]), 
+                                                                        DBConnector.SQLAEscape(csvParts[2]), 
+                                                                        DBConnector.SQLAEscape(csvParts[3]), 
+                                                                        DBConnector.SQLAEscape(csvParts[4]), 
+                                                                        DBConnector.SQLAEscape(csvParts[5]), 
+                                                                        DBConnector.SQLAEscape(csvParts[6]), 
+                                                                        DBConnector.SQLAEscape(csvParts[7]), 
+                                                                        DBConnector.SQLAEscape(csvParts[8]));
+                                            break;
+
+                                        case frmDataIO.enImportTypes.EDCD_Shipyard:
+                                            sqlString = String.Format(sqlBaseString, 
+                                                                        csvParts[0], 
+                                                                        DBConnector.SQLAEscape(csvParts[1]));
+                                            break;
+                                    }
+
 
                                     changed += Program.DBCon.Execute(sqlString);
                                 }
@@ -4133,9 +4167,9 @@ namespace IBE.SQL
                         // gettin' some freaky performance
                         Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
-                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", counter2, counter);
-                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", 1, 1);
-                        sendProgressEvent("new entries = " + changed + ", errors = " + errors, -1, -1);
+                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", counter2, counter, true);
+                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", 1, 1, true);
+                        sendProgressEvent("new entries = " + changed + ", errors = " + errors, -1, -1, true);
                     }
                 }
 

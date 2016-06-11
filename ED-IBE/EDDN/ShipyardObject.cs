@@ -9,7 +9,7 @@ namespace IBE.EDDN
     class ShipyardObject
     {
         public String Name { get; set; }
-        public String Id { get; set; }
+        public Int32 Id { get; set; }
         public String BaseValue { get; set; }
         public String Sku { get; set; }
         public String FactionID { get; set; }

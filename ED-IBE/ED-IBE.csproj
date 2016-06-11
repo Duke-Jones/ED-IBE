@@ -141,6 +141,7 @@
       <DependentUpon>CommodityMappingsView.cs</DependentUpon>
     </Compile>
     <Compile Include="EDDN\MessageHeader.cs" />
+    <Compile Include="EDDN\CommodityObject.cs" />
     <Compile Include="EDDN\OutfittingObject.cs" />
     <Compile Include="EDDN\ShipyardObject.cs" />
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
@@ -878,6 +879,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\commodities.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\EDCD_commodity.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\EDCD_outfitting.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\EDCD_shipyard.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\listings.csv">

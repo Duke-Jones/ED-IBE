@@ -23,7 +23,7 @@ namespace IBE.EDDN
         public String Entitlement { get; set; }
         public String Enabled { get; set; }
         public String Priority { get; set; }
-        public String Id { get; set; }
+        public Int32 Id { get; set; }
 
     }
 }

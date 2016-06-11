@@ -7,6 +7,7 @@ using IBE.SQL;
 using System.Net;
 using System.ComponentModel;
 using System.Diagnostics;
+using Newtonsoft.Json.Linq;
 
 namespace IBE
 {
@@ -132,7 +133,10 @@ namespace IBE
                                                 enImportTypes.EDDB_Systems | 
                                                 enImportTypes.EDDB_Stations |
                                                 enImportTypes.IBE_Localizations_Commodities |
-                                                enImportTypes.RN_Localizations_EcoLevels;
+                                                enImportTypes.RN_Localizations_EcoLevels | 
+                                                enImportTypes.EDCD_Outfitting | 
+                                                enImportTypes.EDCD_Commodity | 
+                                                enImportTypes.EDCD_Shipyard;
 
                     ImportData(null, importFlags, null, path);
                 }
@@ -160,7 +164,38 @@ namespace IBE
                 {
                     enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
                                                 enImportTypes.EDDB_Systems | 
-                                                enImportTypes.EDDB_Stations;
+                                                enImportTypes.EDDB_Stations | 
+                                                enImportTypes.EDCD_Outfitting | 
+                                                enImportTypes.EDCD_Commodity | 
+                                                enImportTypes.EDCD_Shipyard;
+
+                    ImportData(null, importFlags, null, path);
+                }
+                catch (Exception ex)
+                {
+                    cErr.processError(ex, "Error while starting master import");
+                }
+            }
+        }
+
+        /// <summary>
+        /// start the master update (data for systems/stations/commoditynames ...)
+        /// </summary>
+        public void StartFDevIDImport(String path)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new DelTextParam(StartFDevIDImport), new Object[] {path});
+            }
+            else
+            {
+                this.Visible = false;
+
+                try
+                {
+                    enImportTypes importFlags = enImportTypes.EDCD_Outfitting | 
+                                                enImportTypes.EDCD_Commodity | 
+                                                enImportTypes.EDCD_Shipyard;
 
                     ImportData(null, importFlags, null, path);
                 }
@@ -730,7 +765,35 @@ namespace IBE
                             }
                         }
 
-                        if(stationOrCommodityImport)
+                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDCD_Shipyard))
+                        {
+                            //import the shipyard data from EDCD
+                            FileName = "EDCD_shipyard.csv";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportEDCDData(enImportTypes.EDCD_Shipyard, Path.Combine(sourcePath, FileName));
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDCD_Commodity))
+                        {
+                            //import the commodity data from EDCD
+                            FileName = "EDCD_commodity.csv";
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportEDCDData(enImportTypes.EDCD_Commodity, Path.Combine(sourcePath, FileName));
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                            }
+                        }
+
+                        if (stationOrCommodityImport)
                         {
                             // update the visited information
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 0, Total = 0 });
@@ -782,9 +845,14 @@ namespace IBE
                 String savePrefix      = "";
                 String infoString      = "connecting to eddb.io...";
                 List<String> filesList = new List<string>(m_DL_Files);
+                String specialDestiationFolder = "";
+
                 filesList.AddRange(m_DL_FilesPrice);
 
-                DownloadFiles(baseUrl, savePrefix, infoString, filesList);
+                if(Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
+                    specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
+
+                DownloadFiles(baseUrl, savePrefix, infoString, filesList, "", specialDestiationFolder);
 
             }
             catch (Exception ex)
@@ -1370,29 +1438,68 @@ namespace IBE
         /// <param name="savePrefix">name prefix for download files, takes original name if empty</param>
         /// <param name="infoString">infostring for messages</param>
         /// <param name="filesList">list of files to download to</param>
-        private void DownloadFiles(String baseUrl, String savePrefix, String infoString, List<String> filesList)
+        /// <param name="gitCheckPath">if not empty assuming download grom github with a special age-check </param>
+        private void DownloadFiles(String baseUrl, String savePrefix, String infoString, List<String> filesList, String gitCheckPath = "", String specialDestiationFolder = "")
         {
             List<DateTime> filesTimes = new List<DateTime>();
 
             Boolean download;
             String currentDestinationFile;
+            String lDataPath = m_DataPath;
 
             try
             {
+                if(!String.IsNullOrEmpty(specialDestiationFolder))
+                    lDataPath = specialDestiationFolder;                    
+
                 SetButtons(false);
                 lbProgess.Items.Clear();
 
                 m_ProgressView = new ProgressView(this, false);
                 m_ProgressView.progressStart(infoString);
 
+
                 // get the timestamps from the webfiles
                 for (int i = 0; i < filesList.Count; i++)
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + filesList[i]);
-                    request.Method = "HEAD";
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                        filesTimes.Add(response.LastModified);
+                    if (String.IsNullOrEmpty(gitCheckPath))
+                    {
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + filesList[i]);
+                        request.Method = "HEAD";
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                            filesTimes.Add(response.LastModified);
+                    }
+                    else
+                    {
+                        String releaseData;
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(gitCheckPath + "commits?" + filesList[i]);
+                        request.Method = "GET";
+                        request.UserAgent = "ED-IBE";
+                        request.ServicePoint.Expect100Continue = false;
+                        using (StreamReader responseReader = new StreamReader(request.GetResponse().GetResponseStream()))
+                        {
+                            releaseData      = responseReader.ReadToEnd();
+                            JObject data     = (JObject)(Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(releaseData).First);
+                            JToken dateValue = data.SelectToken("commit.committer.date");
+
+                            if(dateValue != null)
+                            {
+                                DateTime parsed = DateTime.UtcNow;
+
+                                if(DateTime.TryParse(dateValue.ToString(), out parsed))
+                                    filesTimes.Add(parsed);
+                                else
+                                    filesTimes.Add(DateTime.UtcNow);
+                            }
+                            else
+                            {
+                                filesTimes.Add(DateTime.UtcNow);
+                            }
+                        }
+                    }
                 }
+
+                // https://api.github.com/repos/EDCD/FDevIDs/commits?commodity.csv
 
                 WebClient downLoader = new WebClient();
                 downLoader.DownloadFileCompleted += new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
@@ -1403,7 +1510,7 @@ namespace IBE
                 {
                     download = false;
 
-                    currentDestinationFile = Path.Combine(m_DataPath, savePrefix + filesList[i]);
+                    currentDestinationFile = Path.Combine(lDataPath, savePrefix + filesList[i]);
 
                     if (File.Exists(currentDestinationFile))
                     {
@@ -1452,7 +1559,7 @@ namespace IBE
                     }
                     else
                     {
-                        m_DownloadInfo = String.Format("skipping download, newest version already existing: {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
+                        m_DownloadInfo = String.Format("skipping download, newest version already existing: {0} of {1}: {2}...", i + 1, filesList.Count, savePrefix + filesList[i]);
                         Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
 
                         m_ProgressView.progressInfo(m_DownloadInfo);
@@ -1478,16 +1585,22 @@ namespace IBE
             }
         }
 
+
         private void cmdEDCDDownloadID_Click(object sender, EventArgs e)
         {
             try
             { 
                 String baseUrl         = "https://raw.githubusercontent.com/EDCD/FDevIDs/master/";
+                String gitCheckUrl     = "https://api.github.com/repos/EDCD/FDevIDs/";
                 String savePrefix      = "EDCD_";
                 String infoString      = "connecting to github.com...";
                 List<String> filesList = new List<string>(m_DL_Files_EDCD);
+                String specialDestiationFolder = "";
 
-                DownloadFiles(baseUrl, savePrefix, infoString, filesList);
+                if(Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
+                    specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
+
+                DownloadFiles(baseUrl, savePrefix, infoString, filesList, gitCheckUrl, specialDestiationFolder);
 
             }
             catch (Exception ex)
@@ -1507,7 +1620,7 @@ namespace IBE
                 SetButtons(false);
                 lbProgess.Items.Clear();
 
-                enImportTypes importFlags = enImportTypes.EDCD_Outfitting;
+                enImportTypes importFlags = enImportTypes.EDCD_Outfitting | enImportTypes.EDCD_Commodity | enImportTypes.EDCD_Shipyard;
 
                 m_ProgressView = new ProgressView(this, false);
                 m_ProgressView.progressStart("importing ids of known things from EDCD...");
