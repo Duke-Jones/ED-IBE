@@ -39,7 +39,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in Load event");
+                CErr.processError(ex, "Error in Load event");
             }
         }
 
@@ -172,7 +172,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while refreshing the display, refreshing disabled.");
+                CErr.processError(ex, "Error while refreshing the display, refreshing disabled.");
             }            
         }
 
@@ -209,7 +209,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in ComboBox_CheckedChanged");
+                CErr.processError(ex, "Error in ComboBox_CheckedChanged");
             }
         }
 
@@ -231,7 +231,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdStartListening_Click");
+                CErr.processError(ex, "Error in cmdStartListening_Click");
             }
         }
 
@@ -243,7 +243,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdStopListening_Click");
+                CErr.processError(ex, "Error in cmdStopListening_Click");
             }
         }
 
@@ -263,7 +263,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdStartSender_Click");
+                CErr.processError(ex, "Error in cmdStartSender_Click");
             }
         }
 
@@ -275,7 +275,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdStopSender_Click");
+                CErr.processError(ex, "Error in cmdStopSender_Click");
             }
         }
 
@@ -332,7 +332,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while adding a trusted sender");
+                CErr.processError(ex, "Error while adding a trusted sender");
             }
         }
 
@@ -356,7 +356,7 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while removing a trusted sender");
+                CErr.processError(ex, "Error while removing a trusted sender");
             }
         }
 

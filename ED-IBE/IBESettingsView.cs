@@ -95,7 +95,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while loading settings");
+                CErr.processError(ex, "Error while loading settings");
             }
         }
 
@@ -158,7 +158,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in m_GUIInterface_DataSavedEvent");
+                CErr.processError(ex, "Error in m_GUIInterface_DataSavedEvent");
             }
             
         }
@@ -176,7 +176,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in m_DataSource_DataChanged");
+                CErr.processError(ex, "Error in m_DataSource_DataChanged");
             }
         }
 
@@ -309,7 +309,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while showing warnlevels from settingstab");
+                CErr.processError(ex, "Error while showing warnlevels from settingstab");
             }
         }
 
@@ -359,7 +359,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in ComboBox_CheckedChanged");
+                CErr.processError(ex, "Error in ComboBox_CheckedChanged");
             }
         }
 
@@ -378,7 +378,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtOCRPixelThreshold_KeyDown");
+                CErr.processError(ex, "Error in txtOCRPixelThreshold_KeyDown");
             }
         }
 
@@ -396,7 +396,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtOCRPixelThreshold_Leave");
+                CErr.processError(ex, "Error in txtOCRPixelThreshold_Leave");
             }
         }
 
@@ -415,7 +415,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtOCRPixelAmount_KeyDown");
+                CErr.processError(ex, "Error in txtOCRPixelAmount_KeyDown");
             }
         }
 
@@ -433,7 +433,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtOCRPixelAmount_Leave");
+                CErr.processError(ex, "Error in txtOCRPixelAmount_Leave");
             }
         }
 
@@ -452,7 +452,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtGUIColorCutoffLevel_KeyDown");
+                CErr.processError(ex, "Error in txtGUIColorCutoffLevel_KeyDown");
             }
         }
 
@@ -470,7 +470,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtGUIColorCutoffLevel_Leave");
+                CErr.processError(ex, "Error in txtGUIColorCutoffLevel_Leave");
             }
         }
 
@@ -488,7 +488,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmbLanguage_SelectedIndexChanged");
+                CErr.processError(ex, "Error in cmbLanguage_SelectedIndexChanged");
             }
         }
 
@@ -525,7 +525,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in rbOrderByStation_CheckedChanged");
+                CErr.processError(ex, "Error in rbOrderByStation_CheckedChanged");
             }
         }
 
@@ -542,7 +542,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdGamePath_Click");
+                CErr.processError(ex, "Error in cmdGamePath_Click");
             }
         }
 
@@ -633,7 +633,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while changing the tcp-port of the sql-server");
+                CErr.processError(ex, "Error while changing the tcp-port of the sql-server");
             }
         }
 

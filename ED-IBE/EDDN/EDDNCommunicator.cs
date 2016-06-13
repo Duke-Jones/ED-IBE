@@ -1227,12 +1227,12 @@ bool disposed = false;
                         }
                         catch (WebException ex)
                         {
-                            _logger.Log("Error uploading json (commodity)", true);
-                            _logger.Log(ex.ToString(), true);
-                            _logger.Log(ex.Message, true);
-                            _logger.Log(ex.StackTrace, true);
+                            _logger.Log("Error uploading json (commodity)");
+                            _logger.Log(ex.ToString());
+                            _logger.Log(ex.Message);
+                            _logger.Log(ex.StackTrace);
                             if (ex.InnerException != null)
-                                _logger.Log(ex.InnerException.ToString(), true);
+                                _logger.Log(ex.InnerException.ToString());
 
                             using (WebResponse response = ex.Response)
                             {
@@ -1243,7 +1243,7 @@ bool disposed = false;
                                         StreamReader sr = new StreamReader(data);
                                         m_CommoditySendingError  = true;
                                         DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Error));
-                                        _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd() , true);
+                                        _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd());
                                     }
                                 }
                             }
@@ -1260,14 +1260,14 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                _logger.Log("Error uploading json (commodity)", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
+                _logger.Log("Error uploading json (commodity)");
+                _logger.Log(ex.ToString());
+                _logger.Log(ex.Message);
+                _logger.Log(ex.StackTrace);
                 if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
+                    _logger.Log(ex.InnerException.ToString());
 
-                cErr.processError(ex, "Error in EDDN-Sending-Thread (commodity)");
+                CErr.processError(ex, "Error in EDDN-Sending-Thread (commodity)");
             }
 
         }
@@ -1323,12 +1323,12 @@ bool disposed = false;
                     }
                     catch (WebException ex)
                     {
-                        _logger.Log("Error uploading json (outfitting)", true);
-                        _logger.Log(ex.ToString(), true);
-                        _logger.Log(ex.Message, true);
-                        _logger.Log(ex.StackTrace, true);
+                        _logger.Log("Error uploading json (outfitting)");
+                        _logger.Log(ex.ToString());
+                        _logger.Log(ex.Message);
+                        _logger.Log(ex.StackTrace);
                         if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString(), true);
+                            _logger.Log(ex.InnerException.ToString());
 
                         using (WebResponse response = ex.Response)
                         {
@@ -1339,7 +1339,7 @@ bool disposed = false;
                                     StreamReader sr = new StreamReader(data);
                                     m_OutfittingSendingError = true;
                                     DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1, enTransmittedStates.Error));
-                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd() , true);
+                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
                                 }
                             }
                         }
@@ -1353,14 +1353,14 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                _logger.Log("Error uploading Json (outfitting)", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
+                _logger.Log("Error uploading Json (outfitting)");
+                _logger.Log(ex.ToString());
+                _logger.Log(ex.Message);
+                _logger.Log(ex.StackTrace);
                 if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
+                    _logger.Log(ex.InnerException.ToString());
 
-                cErr.processError(ex, "Error in EDDN-Sending-Thread (outfitting)");
+                CErr.processError(ex, "Error in EDDN-Sending-Thread (outfitting)");
             }
 
         }
@@ -1416,12 +1416,12 @@ bool disposed = false;
                     }
                     catch (WebException ex)
                     {
-                        _logger.Log("Error uploading json (commodity)", true);
-                        _logger.Log(ex.ToString(), true);
-                        _logger.Log(ex.Message, true);
-                        _logger.Log(ex.StackTrace, true);
+                        _logger.Log("Error uploading json (commodity)");
+                        _logger.Log(ex.ToString());
+                        _logger.Log(ex.Message);
+                        _logger.Log(ex.StackTrace);
                         if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString(), true);
+                            _logger.Log(ex.InnerException.ToString());
 
                         using (WebResponse response = ex.Response)
                         {
@@ -1432,7 +1432,7 @@ bool disposed = false;
                                     StreamReader sr = new StreamReader(data);
                                     m_CommoditySendingError = true;
                                     DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Error));
-                                    _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd() , true);
+                                    _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd());
                                 }
                             }
                         }
@@ -1446,14 +1446,14 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                _logger.Log("Error uploading Json (commodity)", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
+                _logger.Log("Error uploading Json (commodity)");
+                _logger.Log(ex.ToString());
+                _logger.Log(ex.Message);
+                _logger.Log(ex.StackTrace);
                 if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
+                    _logger.Log(ex.InnerException.ToString());
 
-                cErr.processError(ex, "Error in EDDN-Sending-Thread (commodity)");
+                CErr.processError(ex, "Error in EDDN-Sending-Thread (commodity)");
             }
 
         }
@@ -1508,12 +1508,12 @@ bool disposed = false;
                     }
                     catch (WebException ex)
                     {
-                        _logger.Log("Error uploading json (shipyard)", true);
-                        _logger.Log(ex.ToString(), true);
-                        _logger.Log(ex.Message, true);
-                        _logger.Log(ex.StackTrace, true);
+                        _logger.Log("Error uploading json (shipyard)");
+                        _logger.Log(ex.ToString());
+                        _logger.Log(ex.Message);
+                        _logger.Log(ex.StackTrace);
                         if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString(), true);
+                            _logger.Log(ex.InnerException.ToString());
 
                         using (WebResponse response = ex.Response)
                         {
@@ -1524,7 +1524,7 @@ bool disposed = false;
                                     StreamReader sr = new StreamReader(data);
                                     m_ShipyardSendingError   = true;
                                     DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Error));
-                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd() , true);
+                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
                                 }
                             }
                         }
@@ -1538,14 +1538,14 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                _logger.Log("Error uploading Json (shipyard)", true);
-                _logger.Log(ex.ToString(), true);
-                _logger.Log(ex.Message, true);
-                _logger.Log(ex.StackTrace, true);
+                _logger.Log("Error uploading Json (shipyard)");
+                _logger.Log(ex.ToString());
+                _logger.Log(ex.Message);
+                _logger.Log(ex.StackTrace);
                 if (ex.InnerException != null)
-                    _logger.Log(ex.InnerException.ToString(), true);
+                    _logger.Log(ex.InnerException.ToString());
 
-                cErr.processError(ex, "Error in EDDN-Sending-Thread (shipyard)");
+                CErr.processError(ex, "Error in EDDN-Sending-Thread (shipyard)");
             }
 
         }
@@ -1571,7 +1571,7 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while sending EDDN data (commodity)");
+                CErr.processError(ex, "Error while sending EDDN data (commodity)");
             }
         }
 
@@ -1595,7 +1595,7 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while sending EDDN data (commodity)");
+                CErr.processError(ex, "Error while sending EDDN data (commodity)");
             }
         }
 
@@ -1619,7 +1619,7 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while sending EDDN data (outfitting)");
+                CErr.processError(ex, "Error while sending EDDN data (outfitting)");
             }
         }
 
@@ -1643,7 +1643,7 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while sending EDDN data (shipyard)");
+                CErr.processError(ex, "Error while sending EDDN data (shipyard)");
             }
         }
 

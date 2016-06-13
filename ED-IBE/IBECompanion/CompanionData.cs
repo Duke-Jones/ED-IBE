@@ -289,60 +289,7 @@ namespace IBE.IBECompanion
         /// <returns></returns>
         protected override int ImportPrices()
         {
-            String system;
-            String starPort;
-            Int32 commditCount = 0;
-            List<String> csvStrings = new List<string>();
-
-            try
-            {
-                system   = GetValue("lastSystem.name");
-                starPort = GetValue("lastStarport.name");
-
-                foreach (JToken commodity in GetData().SelectTokens("lastStarport.commodities[*]"))
-                {                                                  
-                    if(!commodity.Value<String>("categoryname").Equals("NonMarketable", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        CsvRow csvData = new CsvRow();
-
-                        csvData.SystemName          = system;
-                        csvData.StationName         = starPort;
-                        csvData.StationID           = String.Format("{0} [{1}]", starPort, system);
-                        csvData.CommodityName       = commodity.Value<String>("name");
-                        csvData.SellPrice           = commodity.Value<Int32>("sellPrice");
-                        csvData.BuyPrice            = commodity.Value<Int32>("buyPrice");
-                        csvData.Demand              = commodity.Value<Int32>("demand");
-                        csvData.Supply              = commodity.Value<Int32>("stock");
-                        csvData.SampleDate          = DateTime.Now;
-
-                        if((!String.IsNullOrEmpty(commodity.Value<String>("demandBracket"))) && (commodity.Value<Int32>("demandBracket") > 0))
-                            csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
-                        else
-                            csvData.DemandLevel = null;
-
-                        if((!String.IsNullOrEmpty(commodity.Value<String>("stockBracket"))) && (commodity.Value<Int32>("stockBracket") > 0))
-                            csvData.SupplyLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("stockBracket") - 1, "level");
-                        else
-                            csvData.SupplyLevel = null;
-
-                        csvData.SourceFileName      = "";
-                        csvData.DataSource          = "";
-
-                        csvStrings.Add(csvData.ToString());
-
-                        commditCount++;
-                    }
-                } 
-
-                if(csvStrings.Count > 0)
-                    Program.Data.ImportPricesFromCSVStrings(csvStrings.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
-
-                return commditCount;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while importing prices from companion interface", ex);
-            }
+            return Program.Data.ImportPrices(GetData());
         }
 
         /// <summary>
@@ -557,7 +504,7 @@ namespace IBE.IBECompanion
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in m_reGetTimer_Elapsed");
+                CErr.processError(ex, "Error in m_reGetTimer_Elapsed");
             }
         }
 

@@ -6,19 +6,38 @@ namespace IBE
     public class SingleThreadLogger
     {
         private readonly string _logPathName;
+        private Int32 maxFileSize = 10 * 1024 * 1024; // max. file size in MB
 
-        public SingleThreadLogger(ThreadLoggerType threadLoggerType)
+        public SingleThreadLogger(ThreadLoggerType threadLoggerType, String destPath = "", Boolean reuseLog = false)
         {
-            String destPath = Program.GetDataPath("Logs");
+            if(String.IsNullOrEmpty(destPath))
+                destPath = Program.GetDataPath("Logs");
+
             if (!Directory.Exists(destPath))
                 Directory.CreateDirectory(destPath);
 
-            _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}.log", threadLoggerType, DateTime.Now));
+            if(reuseLog)
+                _logPathName = Path.Combine(destPath, string.Format("{0}.log", threadLoggerType));
+            else
+                _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}.log", threadLoggerType, DateTime.Now));
+                
         }
 
-        public void Log(string logMessage, bool error = false)
+        public void Log(string logMessage)
         {
-            File.AppendAllText(_logPathName,DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + (error ? ": ERROR: " : ": ") + logMessage + Environment.NewLine);
+            File.AppendAllText(_logPathName, string.Format("{0:dd.MM.yyyy HH:mm:ss} : {1}{2}", DateTime.Now, logMessage, Environment.NewLine));
+
+            if(new FileInfo(_logPathName).Length > maxFileSize)
+            {
+                try
+                {
+                    File.Copy(_logPathName, _logPathName+".old", true);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
         }
 
         public string logPathName
@@ -28,6 +47,5 @@ namespace IBE
                 return _logPathName;
             }
         }
-
     }
 }

@@ -249,7 +249,7 @@ namespace IBE.SQL
             catch (Exception ex)
             {
                 m_SavingLevel -=1;
-                cErr.processError(ex, "Error in saveSetting");
+                CErr.processError(ex, "Error in saveSetting");
             }
 
             if (retValue && (m_SavingLevel ==0))
@@ -563,7 +563,7 @@ namespace IBE.SQL
             {
                 m_inloadSetting--;
                 m_currentLoadingObject = null;
-                cErr.processError(ex, "Error in loadSetting");
+                CErr.processError(ex, "Error in loadSetting");
             }
         }
 

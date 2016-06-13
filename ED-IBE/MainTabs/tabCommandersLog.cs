@@ -145,7 +145,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommandersLog_Paint");
+                CErr.processError(ex, "Error in dgvCommandersLog_Paint");
             }
         }
 
@@ -167,7 +167,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommandersLog_RowPrePaint");
+                CErr.processError(ex, "Error in dgvCommandersLog_RowPrePaint");
             }
         }
 
@@ -185,7 +185,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommandersLog_CellValuePushed");
+                CErr.processError(ex, "Error in dgvCommandersLog_CellValuePushed");
             }
         }
 
@@ -222,7 +222,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommandersLog_CellValueNeeded");
+                CErr.processError(ex, "Error in dgvCommandersLog_CellValueNeeded");
             }
         }
 
@@ -239,7 +239,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cbLogSystemName_SelectedIndexChanged");
+                CErr.processError(ex, "Error in cbLogSystemName_SelectedIndexChanged");
             }
         }
 
@@ -256,7 +256,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in m_DataSource_DataChanged");
+                CErr.processError(ex, "Error in m_DataSource_DataChanged");
             }
         }
 
@@ -330,7 +330,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while start editing entry");
+                CErr.processError(ex, "Error while start editing entry");
             }
         }
 
@@ -361,7 +361,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while preparing new entry");
+                CErr.processError(ex, "Error while preparing new entry");
             }
         }
 
@@ -378,7 +378,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while saving log entry");
+                CErr.processError(ex, "Error while saving log entry");
             }
         }
 
@@ -430,7 +430,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while saving entry");
+                CErr.processError(ex, "Error while saving entry");
             }
 
         }
@@ -447,7 +447,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while cancel editing entry");
+                CErr.processError(ex, "Error while cancel editing entry");
             }
         }
 
@@ -462,7 +462,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while dgvCommandersLog_RowEnter-event");
+                CErr.processError(ex, "Error while dgvCommandersLog_RowEnter-event");
             }
         }
 
@@ -547,7 +547,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in setCLFieldsEditable()");
+                CErr.processError(ex, "Error in setCLFieldsEditable()");
             }
         }
 
@@ -565,7 +565,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-               cErr.processError(ex, "Error in cmdCL_ShowHide_Click");    
+               CErr.processError(ex, "Error in cmdCL_ShowHide_Click");    
             }
         }
 
@@ -663,7 +663,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while changing the sort order (all CmdrsLog)");
+                CErr.processError(ex, "Error while changing the sort order (all CmdrsLog)");
             }
         }
 
@@ -700,7 +700,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommandersLog_SelectionChanged");
+                CErr.processError(ex, "Error in dgvCommandersLog_SelectionChanged");
             }
         }
 
@@ -727,7 +727,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while deleting rows from the commanders log");
+                CErr.processError(ex, "Error while deleting rows from the commanders log");
             }
         }
         
@@ -744,7 +744,7 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cbLogSystemName_TextChanged");
+                CErr.processError(ex, "Error in cbLogSystemName_TextChanged");
             }
         }
 

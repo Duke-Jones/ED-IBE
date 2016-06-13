@@ -151,7 +151,7 @@ namespace IBE.IBECompanion
         /// <summary>
         /// collects the marketdata from a external tool
         /// </summary>
-        public Int32 getMarketData()
+        public Int32 ImportMarketData()
         {
             Int32 DataCount = 0;
 

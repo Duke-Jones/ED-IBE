@@ -190,7 +190,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in AppData_Changed()");
+                CErr.processError(ex, "Error in AppData_Changed()");
             }
         }
 
@@ -239,7 +239,7 @@ namespace IBE
 
                                 if (MBResult == DialogResult.Abort)
                                 {
-                                    cErr.processError(ex, "Error in AppData_Changed()", true);
+                                    CErr.processError(ex, "Error in AppData_Changed()");
                                 }
                                 lastTry_Displaydata = DateTime.Now;
                             }
@@ -267,7 +267,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while loading displaysettigns from event");
+                CErr.processError(ex, "Error while loading displaysettigns from event");
             }
         }
 

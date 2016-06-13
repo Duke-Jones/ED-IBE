@@ -36,7 +36,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in CommodityMappingsView_Load");
+                CErr.processError(ex, "Error in CommodityMappingsView_Load");
             }
         }
 
@@ -59,7 +59,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdOK_Click");
+                CErr.processError(ex, "Error in cmdOK_Click");
             }
         }
 
@@ -78,7 +78,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdCancel_Click");
+                CErr.processError(ex, "Error in cmdCancel_Click");
             }
         }
 

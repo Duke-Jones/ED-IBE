@@ -25,6 +25,8 @@ todo:
 
 done:
 
+   * new GUI for errors, improved logging
+-------------------------------------------------------------------------------------         
    * sending of commodity data, outfitting data and shipyard data now uses the FDevIDs from EDCD
    * check of committing timestamp of downloadable github files (eg. FDevIDs) 
      to avoid multiple download of the same old files

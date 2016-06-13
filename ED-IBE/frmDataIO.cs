@@ -83,7 +83,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in Load-Event");
+                CErr.processError(ex, "Error in Load-Event");
             }
         }
 
@@ -142,7 +142,7 @@ namespace IBE
                 }
                 catch (Exception ex)
                 {
-                    cErr.processError(ex, "Error while starting master import");
+                    CErr.processError(ex, "Error while starting master import");
                 }
             }
         }
@@ -173,7 +173,7 @@ namespace IBE
                 }
                 catch (Exception ex)
                 {
-                    cErr.processError(ex, "Error while starting master import");
+                    CErr.processError(ex, "Error while starting master import");
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace IBE
                 }
                 catch (Exception ex)
                 {
-                    cErr.processError(ex, "Error while starting master import");
+                    CErr.processError(ex, "Error while starting master import");
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace IBE
                 {
                     StopProgress();
                     SetButtons(true);
-                    cErr.processError(ex, "Error while getting the starters kit");
+                    CErr.processError(ex, "Error while getting the starters kit");
                 }
             }
         }
@@ -359,7 +359,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while reporting progress");
+                CErr.processError(ex, "Error while reporting progress");
             }
         }
 
@@ -859,7 +859,7 @@ namespace IBE
             {
                 StopProgress();
                 SetButtons(true);
-                cErr.processError(ex, "Error while downloading system/station data from EDDB");
+                CErr.processError(ex, "Error while downloading system/station data from EDDB");
             }
         }
 
@@ -955,7 +955,7 @@ namespace IBE
             {
                 StopProgress();
                 SetButtons(true);
-                cErr.processError(ex, "Error while importing downloaded system/station data from EDDB");
+                CErr.processError(ex, "Error while importing downloaded system/station data from EDDB");
             }
         }
 
@@ -1042,7 +1042,7 @@ namespace IBE
             {
                 StopProgress();
                 SetButtons(true);
-                cErr.processError(ex, "Error while importing system/station data from EDDB");
+                CErr.processError(ex, "Error while importing system/station data from EDDB");
             }
         }
 
@@ -1065,7 +1065,7 @@ namespace IBE
             catch (Exception ex)
             {
                 SetButtons(true);
-                cErr.processError(ex, "Error while importing system/station data from EDDN");
+                CErr.processError(ex, "Error while importing system/station data from EDDN");
             }
         }
 
@@ -1133,7 +1133,7 @@ namespace IBE
             {
                 SetButtons(true);
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error while importing the existing RN-data");
+                CErr.processError(ex, "Error while importing the existing RN-data");
             }
         }
 
@@ -1191,7 +1191,7 @@ namespace IBE
                 StopProgress();
                 SetButtons(true);
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error while exporting to csv");
+                CErr.processError(ex, "Error while exporting to csv");
             }
         }
 
@@ -1260,7 +1260,7 @@ namespace IBE
                 StopProgress();
                 SetButtons(true);
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error while importing from csv");
+                CErr.processError(ex, "Error while importing from csv");
             }       
         }
 
@@ -1277,7 +1277,7 @@ namespace IBE
             catch (Exception ex)
             {
                 SetButtons(true);
-                cErr.processError(ex);
+                CErr.processError(ex);
             }
         }
 
@@ -1293,7 +1293,7 @@ namespace IBE
 	        }
 	        catch (Exception ex)
 	        {
-		        cErr.processError(ex, "Error in frmDataIO_FormClosed");
+		        CErr.processError(ex, "Error in frmDataIO_FormClosed");
 	        }
         }
 
@@ -1305,7 +1305,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdExit_Click");   
+                CErr.processError(ex, "Error in cmdExit_Click");   
             }
         }
 
@@ -1333,7 +1333,7 @@ namespace IBE
             catch (Exception ex)
             {
                 SetButtons(true);
-                cErr.processError(ex, "Error in cmdPurgeOldData_Click");
+                CErr.processError(ex, "Error in cmdPurgeOldData_Click");
             }
         }
 
@@ -1349,7 +1349,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in nudPurgeOldDataDays_KeyDown");
+                CErr.processError(ex, "Error in nudPurgeOldDataDays_KeyDown");
             }
         }
 
@@ -1364,7 +1364,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
+                CErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
             }
         }
 
@@ -1376,7 +1376,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in Shown event");
+                CErr.processError(ex, "Error in Shown event");
             }
         }
 
@@ -1394,7 +1394,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in Radiobutton_CheckedChanged");
+                CErr.processError(ex, "Error in Radiobutton_CheckedChanged");
             }
         }
 
@@ -1607,7 +1607,7 @@ namespace IBE
             {
                 StopProgress();
                 SetButtons(true);
-                cErr.processError(ex, "Error while downloading files with EDCD-IDs");
+                CErr.processError(ex, "Error while downloading files with EDCD-IDs");
             }
         }
 
@@ -1638,7 +1638,7 @@ namespace IBE
             catch (Exception ex)
             {
                 StopProgress();
-                cErr.processError(ex, "Error while downloading files with EDCD-IDs");
+                CErr.processError(ex, "Error while downloading files with EDCD-IDs");
             }
         }
 

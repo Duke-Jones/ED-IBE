@@ -88,12 +88,12 @@ namespace IBE
                                 try { clientSocket.Close(); }
                                 catch (Exception ex2)
                                 {
-                                _logger.Log("Error in webserver start 2:", true);
-                                _logger.Log(ex2.ToString(), true);
-                                _logger.Log(ex2.Message, true);
-                                _logger.Log(ex2.StackTrace, true);
+                                _logger.Log("Error in webserver start 2:");
+                                _logger.Log(ex2.ToString());
+                                _logger.Log(ex2.Message);
+                                _logger.Log(ex2.StackTrace);
                                 if (ex2.InnerException != null)
-                                    _logger.Log(ex2.InnerException.ToString(), true);
+                                    _logger.Log(ex2.InnerException.ToString());
 
                                 }
                             }
@@ -102,12 +102,12 @@ namespace IBE
                     }
                     catch (Exception ex)
                     {
-                        _logger.Log("Error in webserver start 1:", true);
-                        _logger.Log(ex.ToString(), true);
-                        _logger.Log(ex.Message, true);
-                        _logger.Log(ex.StackTrace, true);
+                        _logger.Log("Error in webserver start 1:");
+                        _logger.Log(ex.ToString());
+                        _logger.Log(ex.Message);
+                        _logger.Log(ex.StackTrace);
                         if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString(), true);
+                            _logger.Log(ex.InnerException.ToString());
                     }
                 }
             });
@@ -127,12 +127,12 @@ namespace IBE
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log("Error in webserver start 1:", true);
-                    _logger.Log(ex.ToString(), true);
-                    _logger.Log(ex.Message, true);
-                    _logger.Log(ex.StackTrace, true);
+                    _logger.Log("Error in webserver start 1:");
+                    _logger.Log(ex.ToString());
+                    _logger.Log(ex.Message);
+                    _logger.Log(ex.StackTrace);
                     if (ex.InnerException != null)
-                        _logger.Log(ex.InnerException.ToString(), true);
+                        _logger.Log(ex.InnerException.ToString());
                 }
                 _serverSocket = null;
                 if(_requestListenerT != null)
@@ -438,12 +438,12 @@ namespace IBE
         }
         catch (Exception ex)
         {
-            _logger.Log("Error in webserver start 1:", true);
-            _logger.Log(ex.ToString(), true);
-            _logger.Log(ex.Message, true);
-            _logger.Log(ex.StackTrace, true);
+            _logger.Log("Error in webserver start 1:");
+            _logger.Log(ex.ToString());
+            _logger.Log(ex.Message);
+            _logger.Log(ex.StackTrace);
             if (ex.InnerException != null)
-                _logger.Log(ex.InnerException.ToString(), true);
+                _logger.Log(ex.InnerException.ToString());
         }
     }
 

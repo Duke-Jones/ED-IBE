@@ -34,7 +34,7 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while creating object");
+                CErr.processError(ex, "Error while creating object");
             }
         }
 

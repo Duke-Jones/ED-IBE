@@ -518,7 +518,6 @@ namespace IBE.SQL
         {
             Int32 retValue = 0;
 
-
             try {
                 if (!MonitorTryEnter(this, m_ConfigData.TimeOut)) 
                     throw new Exception("Timeout while waiting for monitor-lock for TableRead()");

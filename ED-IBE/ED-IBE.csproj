@@ -146,6 +146,12 @@
     <Compile Include="EDDN\ShipyardObject.cs" />
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
+    <Compile Include="ErrorHandling\ErrorViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErrorHandling\ErrorViewer.Designer.cs">
+      <DependentUpon>ErrorViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUIColorsView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,7 +262,7 @@
     </Compile>
     <Compile Include="Enums and Utility Classes\CsvRow.cs" />
     <Compile Include="Enums and Utility Classes\Extensions.cs" />
-    <Compile Include="Enums and Utility Classes\centralizedErrorhandler.cs" />
+    <Compile Include="ErrorHandling\CErr.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
     </Compile>
@@ -416,7 +422,6 @@
     <Content Include="libzmq.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="PresentationCore.dll" />
     <Content Include="Resources\green-led-off-md.png" />
     <Content Include="Resources\green-led-on-md.png" />
     <Content Include="Resources\ledblue_off.png" />
@@ -456,6 +461,9 @@
     <EmbeddedResource Include="CommoditySelector.resx">
       <DependentUpon>CommoditySelector.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErrorHandling\ErrorViewer.resx">
+      <DependentUpon>ErrorViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIColorsView.resx">
       <DependentUpon>GUIColorsView.cs</DependentUpon>

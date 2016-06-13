@@ -83,7 +83,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in CommoditySelector_Load");
+                CErr.processError(ex, "Error in CommoditySelector_Load");
             }
         }
 
@@ -98,7 +98,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cbOnlySelected_CheckedChanged");
+                CErr.processError(ex, "Error in cbOnlySelected_CheckedChanged");
             }
         }
 
@@ -118,7 +118,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtSearchString_TextChanged");
+                CErr.processError(ex, "Error in txtSearchString_TextChanged");
             }
         }
 
@@ -137,7 +137,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtSearchString_TextChanged");
+                CErr.processError(ex, "Error in txtSearchString_TextChanged");
             }
         }
 
@@ -152,7 +152,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
+                CErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
             }
         }
 
@@ -164,7 +164,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
+                CErr.processError(ex, "Error in dgvCommodities_CurrentCellDirtyStateChanged");
             }
         }
 
@@ -177,7 +177,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in tmrAutoClear_Tick");
+                CErr.processError(ex, "Error in tmrAutoClear_Tick");
             }
         }
     }

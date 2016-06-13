@@ -238,12 +238,12 @@ namespace IBE.Ocr
             catch (Exception ex)
             {
                 Debug.WriteLine("Doh!");
-                Program.MainLog.Log("Exception in UpdateOriginalImage", true);
-                Program.MainLog.Log(ex.ToString(), true);
-                Program.MainLog.Log(ex.Message, true);
-                Program.MainLog.Log(ex.StackTrace, true);
+                Program.MainLog.Log("Exception in UpdateOriginalImage");
+                Program.MainLog.Log(ex.ToString());
+                Program.MainLog.Log(ex.Message);
+                Program.MainLog.Log(ex.StackTrace);
                 if (ex.InnerException != null)
-                    Program.MainLog.Log(ex.InnerException.ToString(), true);
+                    Program.MainLog.Log(ex.InnerException.ToString());
                 return new Point[12];
             }
         }
@@ -278,7 +278,7 @@ namespace IBE.Ocr
             }
             catch (Exception ex)
             {
-                cErr.processError(ex);
+                CErr.processError(ex);
             }
         }
 
@@ -299,7 +299,7 @@ namespace IBE.Ocr
             }
             catch (Exception ex)
             {
-                cErr.processError(ex);
+                CErr.processError(ex);
                 return null;
             }
         }
@@ -746,7 +746,7 @@ namespace IBE.Ocr
             }
             catch (Exception ex)
             {
-                cErr.processError(ex);
+                CErr.processError(ex);
             }
         }
 
@@ -894,7 +894,7 @@ namespace IBE.Ocr
             }
             catch (Exception ex)
             {
-                cErr.processError(ex);
+                CErr.processError(ex);
             }
 
         }

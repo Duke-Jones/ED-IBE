@@ -42,7 +42,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while loading form");
+                CErr.processError(ex, "Error while loading form");
             }
         }
 
@@ -517,7 +517,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in rbType_CheckedChanged");
+                CErr.processError(ex, "Error in rbType_CheckedChanged");
             }
         }   
 
@@ -554,7 +554,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvData_CellFormatting");
+                CErr.processError(ex, "Error in dgvData_CellFormatting");
             }
         }
 
@@ -567,7 +567,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in clbLanguageFilter_ItemCheck");
+                CErr.processError(ex, "Error in clbLanguageFilter_ItemCheck");
             }
         }
 
@@ -582,7 +582,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvData_CellValueChanged");   
+                CErr.processError(ex, "Error in dgvData_CellValueChanged");   
             }
         }
 
@@ -597,7 +597,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvDataOwn_RowsRemoved");
+                CErr.processError(ex, "Error in dgvDataOwn_RowsRemoved");
             }       
         }
 
@@ -615,7 +615,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error in cmdSave_Click");   
+                CErr.processError(ex, "Error in cmdSave_Click");   
             }
         }
 
@@ -643,7 +643,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error in LanguageEdit_FormClosing");   
+                CErr.processError(ex, "Error in LanguageEdit_FormClosing");   
             }
         }
 
@@ -655,7 +655,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdExit_Click");   
+                CErr.processError(ex, "Error in cmdExit_Click");   
             }
         }
 
@@ -670,7 +670,7 @@ namespace IBE
             }            
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvDataOwn_MouseMove");   
+                CErr.processError(ex, "Error in dgvDataOwn_MouseMove");   
             }
         }
 
@@ -685,7 +685,7 @@ namespace IBE
             }            
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvData_DragEnter");   
+                CErr.processError(ex, "Error in dgvData_DragEnter");   
             }
         }
 
@@ -716,7 +716,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvData_DragDrop");   
+                CErr.processError(ex, "Error in dgvData_DragDrop");   
             }
         }
 
@@ -737,7 +737,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvData_SelectionChanged");        
+                CErr.processError(ex, "Error in dgvData_SelectionChanged");        
             }
         }
 
@@ -809,7 +809,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdConfirm_Click");        
+                CErr.processError(ex, "Error in cmdConfirm_Click");        
             }
         }
 
@@ -839,7 +839,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdConfirm_Click");        
+                CErr.processError(ex, "Error in cmdConfirm_Click");        
             }
         }
 
@@ -896,7 +896,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error while exporting to csv");
+                CErr.processError(ex, "Error while exporting to csv");
             }
         }
 
@@ -964,7 +964,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error while importing from csv");
+                CErr.processError(ex, "Error while importing from csv");
             }
         }
 
@@ -976,7 +976,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in dgvDataOwn_UserDeletingRow");
+                CErr.processError(ex, "Error in dgvDataOwn_UserDeletingRow");
             }
         }
 
@@ -995,7 +995,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdMappings_Click");
+                CErr.processError(ex, "Error in cmdMappings_Click");
             }
         }
     }

@@ -1011,7 +1011,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error when selecting a new tab on main tabcontrol");
+                CErr.processError(ex, "Error when selecting a new tab on main tabcontrol");
             }
         }
 
@@ -1345,7 +1345,7 @@ namespace IBE
             catch (Exception ex)
             {
                 this.Enabled = true;
-                cErr.processError(ex, "Error in Form_Shown");
+                CErr.processError(ex, "Error in Form_Shown");
             }
         }
 
@@ -1405,7 +1405,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cbEDDNOverride_CheckedChanged");
+                CErr.processError(ex, "Error in cbEDDNOverride_CheckedChanged");
             }
         }
 
@@ -2134,7 +2134,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtSystem_GotFocus-Event");                
+                CErr.processError(ex, "Error in txtSystem_GotFocus-Event");                
             }
         }
 
@@ -2164,7 +2164,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in txtSystem_GotFocus-Event");                
+                CErr.processError(ex, "Error in txtSystem_GotFocus-Event");                
             }
         }
 
@@ -2777,7 +2777,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error when starting station edit");
+                CErr.processError(ex, "Error when starting station edit");
             }
         }
 
@@ -2807,7 +2807,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error when starting station edit");
+                CErr.processError(ex, "Error when starting station edit");
             }
         }
 
@@ -2908,7 +2908,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while opening import tool");
+                CErr.processError(ex, "Error while opening import tool");
             }
         }
 
@@ -2959,12 +2959,12 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                Program.MainLog.Log("Error starting webserver", true);
-                Program.MainLog.Log(ex.ToString(), true);
-                Program.MainLog.Log(ex.Message, true);
-                Program.MainLog.Log(ex.StackTrace, true);
+                Program.MainLog.Log("Error starting webserver");
+                Program.MainLog.Log(ex.ToString());
+                Program.MainLog.Log(ex.Message);
+                Program.MainLog.Log(ex.StackTrace);
                 if (ex.InnerException != null)
-                    Program.MainLog.Log(ex.InnerException.ToString(), true);
+                    Program.MainLog.Log(ex.InnerException.ToString());
                 MsgBox.Show(
                     "Couldn't start webserver.  Maybe something is already using port 8080...?");
             }
@@ -3320,7 +3320,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while opening localization editing tool");
+                CErr.processError(ex, "Error while opening localization editing tool");
             }
         }
 
@@ -3334,7 +3334,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex);
+                CErr.processError(ex);
             }
         }
 
@@ -3349,7 +3349,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while opening direct data-access tool");
+                CErr.processError(ex, "Error while opening direct data-access tool");
             }
         }
 
@@ -3363,7 +3363,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while opening direct data-access tool");
+                CErr.processError(ex, "Error while opening direct data-access tool");
             }
         }
 
@@ -3376,7 +3376,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while opening EDDN interface");
+                CErr.processError(ex, "Error while opening EDDN interface");
             }
         }
 
@@ -3405,7 +3405,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while opening Companion interface");
+                CErr.processError(ex, "Error while opening Companion interface");
             }
         }
 
@@ -3483,7 +3483,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdEventLanded_Click");
+                CErr.processError(ex, "Error in cmdEventLanded_Click");
             }
         }
 
@@ -3498,7 +3498,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in CompanionIO_AsyncDataRecievedEvent");
+                CErr.processError(ex, "Error in CompanionIO_AsyncDataRecievedEvent");
             }    
         }
 
@@ -3702,10 +3702,12 @@ namespace IBE
 
                     if(Program.CompanionIO.StationHasMarketData())
                     { 
-                        Int32 count = Program.CompanionIO.getMarketData();
+                        Int32 count = Program.CompanionIO.ImportMarketData();
 
                         if(cbEDDNOverride.Checked)
+                        {
                             Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
+                        }
 
                         if(count > 0)
                             txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
@@ -3729,7 +3731,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdEventMarketData_Click");
+                CErr.processError(ex, "Error in cmdEventMarketData_Click");
             }
         }
 
@@ -3757,7 +3759,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in commodityMappingsToolStripMenuItem_Click");
+                CErr.processError(ex, "Error in commodityMappingsToolStripMenuItem_Click");
             }
         }
 
@@ -3777,7 +3779,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in colorsToolStripMenuItem_Click");
+                CErr.processError(ex, "Error in colorsToolStripMenuItem_Click");
             }
         }
     }

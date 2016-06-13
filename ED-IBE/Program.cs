@@ -92,7 +92,7 @@ namespace IBE
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                cErr.processError(ex, "Error in main routine !");
+                CErr.processError(ex, "Error in main routine !");
             }
         }
 
@@ -120,7 +120,7 @@ namespace IBE
             if(!Program.SplashScreen.IsDisposed)
                 Program.SplashScreen.TopMost = false;
 
-            cErr.processError(ex, "Unhandled Exception", true);
+            CErr.processError(ex, "Unhandled Exception");
             // ExceptionPolicy.HandleException(ex, "Default Policy");
             CreateMiniDump(FileName);
             MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"" + FileName + "\" has been created in your data directory.  \r\n\r\nPlease place this in a file-sharing service such as SendSpace, Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive or send e mail to Duke.Jones@gmx.de.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
@@ -410,7 +410,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error while initializing the program object", true);
+                CErr.processError(ex, "Error while initializing the program object");
             }
 
         }

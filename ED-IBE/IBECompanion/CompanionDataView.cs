@@ -39,7 +39,7 @@ namespace IBE.IBECompanion
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error in CompanioDataView_Load");
+                CErr.processError(ex, "Error in CompanioDataView_Load");
             }
         }
 
@@ -177,7 +177,7 @@ namespace IBE.IBECompanion
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error in cmdConnect_Click");
+                CErr.processError(ex, "Error in cmdConnect_Click");
             }
         }
 
@@ -196,7 +196,7 @@ namespace IBE.IBECompanion
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "Error in cmdVerify_Click");
+                CErr.processError(ex, "Error in cmdVerify_Click");
             }
         }
 
@@ -219,7 +219,7 @@ namespace IBE.IBECompanion
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "cmdClear_Click");
+                CErr.processError(ex, "cmdClear_Click");
             }
         }
 
@@ -237,7 +237,7 @@ namespace IBE.IBECompanion
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                cErr.processError(ex, "cmdToClipBoard_Click");
+                CErr.processError(ex, "cmdToClipBoard_Click");
             }
         }
 

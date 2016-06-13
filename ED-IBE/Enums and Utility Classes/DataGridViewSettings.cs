@@ -126,7 +126,7 @@ namespace IBE.Enums_and_Utility_Classes
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in DataGridViewSettings_Load");
+                CErr.processError(ex, "Error in DataGridViewSettings_Load");
             }
 
         }

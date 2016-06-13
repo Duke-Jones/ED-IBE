@@ -2782,12 +2782,6 @@ namespace IBE.SQL
                     ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
                 }
 
-                // import on a higher level
-                //if(dataSource == enDataSource.fromIBE)
-                //    Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.API);
-                //else if(dataSource == enDataSource.fromIBE_OCR)
-                //    Program.EDDNComm.SendMarketData(csvRowList, EDDN.EDDNCommunicator.enInterface.OCR);
-
                 // now import the prices
                 ImportPrices(StationData, importBehaviour, dataSource);
 
@@ -2808,6 +2802,69 @@ namespace IBE.SQL
             catch (Exception ex)
             {
                 throw new Exception("Error while importing self collected price data", ex);
+            }
+        }
+
+        /// <summary>
+        /// imports prices from a JSON companion data object 
+        /// </summary>
+        /// <param name="companionData">JSON object with companion data</param>
+        /// <returns></returns>
+        public Int32 ImportPrices(Newtonsoft.Json.Linq.JObject companionData)
+        {
+            String system;
+            String starPort;
+            Int32 commodityCount = 0;
+            List<String> csvStrings = new List<string>();
+
+            try
+            {
+                system   = companionData.GetValue("lastSystem.name").ToString();
+                starPort = companionData.GetValue("lastStarport.name").ToString();
+
+                foreach (Newtonsoft.Json.Linq.JToken commodity in companionData.SelectTokens("lastStarport.commodities[*]"))
+                {                                                  
+                    if(!commodity.Value<String>("categoryname").Equals("NonMarketable", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        CsvRow csvData = new CsvRow();
+
+                        csvData.SystemName          = system;
+                        csvData.StationName         = starPort;
+                        csvData.StationID           = String.Format("{0} [{1}]", starPort, system);
+                        csvData.CommodityName       = commodity.Value<String>("name");
+                        csvData.SellPrice           = commodity.Value<Int32>("sellPrice");
+                        csvData.BuyPrice            = commodity.Value<Int32>("buyPrice");
+                        csvData.Demand              = commodity.Value<Int32>("demand");
+                        csvData.Supply              = commodity.Value<Int32>("stock");
+                        csvData.SampleDate          = DateTime.Now;
+
+                        if((!String.IsNullOrEmpty(commodity.Value<String>("demandBracket"))) && (commodity.Value<Int32>("demandBracket") > 0))
+                            csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
+                        else
+                            csvData.DemandLevel = null;
+
+                        if((!String.IsNullOrEmpty(commodity.Value<String>("stockBracket"))) && (commodity.Value<Int32>("stockBracket") > 0))
+                            csvData.SupplyLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("stockBracket") - 1, "level");
+                        else
+                            csvData.SupplyLevel = null;
+
+                        csvData.SourceFileName      = "";
+                        csvData.DataSource          = "";
+
+                        csvStrings.Add(csvData.ToString());
+
+                        commodityCount++;
+                    }
+                } 
+
+                if(csvStrings.Count > 0)
+                    ImportPricesFromCSVStrings(csvStrings.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
+
+                return commodityCount;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while importing prices from companion interface", ex);
             }
         }
 

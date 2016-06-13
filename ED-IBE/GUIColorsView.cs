@@ -43,7 +43,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in GUIColorsView_Load");
+                CErr.processError(ex, "Error in GUIColorsView_Load");
             }
             
         }
@@ -157,7 +157,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in pbColor_0_Click");
+                CErr.processError(ex, "Error in pbColor_0_Click");
             }
         }
 
@@ -189,7 +189,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cmdActivateColors_Click");
+                CErr.processError(ex, "Error in cmdActivateColors_Click");
             }
         }
 
@@ -205,7 +205,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cbActivated_CheckedChanged");
+                CErr.processError(ex, "Error in cbActivated_CheckedChanged");
             }
         }
 
@@ -223,7 +223,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                cErr.processError(ex, "Error in cbActivated_CheckedChanged");
+                CErr.processError(ex, "Error in cbActivated_CheckedChanged");
             }
         }
 
