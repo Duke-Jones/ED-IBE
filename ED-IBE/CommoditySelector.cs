@@ -122,25 +122,6 @@ namespace IBE
             }
         }
 
-        private void dgvCommodities_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                
-                //if((e.RowIndex >= 0) && (e.ColumnIndex == dgvCommodities.Columns["is_Selected"].Index) && (!String.IsNullOrEmpty(txtSearchString.Text.Trim())) && (dgvCommodities.RowCount == 1))
-                //{
-                //    if((Boolean)(dgvCommodities[e.ColumnIndex, e.RowIndex].Value) == true)
-                //    {               
-                //        tmrAutoClear.Start();
-                //    }
-                //}
-            }
-            catch (Exception ex)
-            {
-                CErr.processError(ex, "Error in txtSearchString_TextChanged");
-            }
-        }
-
         private void dgvCommodities_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             try
@@ -168,17 +149,49 @@ namespace IBE
             }
         }
 
-        private void tmrAutoClear_Tick(object sender, EventArgs e)
+        private void CommoditySelector_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void cmdClearAll_Click(object sender, EventArgs e)
         {
             try
             {
-                //tmrAutoClear.Stop();
-                //txtSearchString.Text = "";            
+                foreach (SQL.Datasets.dsEliteDB.tbcommodityRow dRow in m_Table.Rows)
+                    dRow["is_selected"] = false;
             }
             catch (Exception ex)
             {
-                CErr.processError(ex, "Error in tmrAutoClear_Tick");
+                CErr.processError(ex, "Error in cmdClearAll_Click");
             }
         }
+
+        private void cmdInvert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (SQL.Datasets.dsEliteDB.tbcommodityRow dRow in m_Table.Rows)
+                {
+                    if((Boolean)dRow["is_selected"])
+                    {
+                        dRow["is_selected"] = false;
+                    }
+                    else
+                    {
+                        dRow["is_selected"] = true;
+                    }
+
+                }
+                
+
+                    
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmdClearAll_Click");
+            }
+        }
+
     }
 }

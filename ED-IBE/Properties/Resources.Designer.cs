@@ -81,6 +81,16 @@ namespace IBE.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
+        /// </summary>
+        internal static System.Drawing.Icon IBE {
+            get {
+                object obj = ResourceManager.GetObject("IBE", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap ledblue_off {
@@ -167,16 +177,6 @@ namespace IBE.Properties {
             get {
                 object obj = ResourceManager.GetObject("PayPalDonate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
-        /// </summary>
-        internal static System.Drawing.Icon RegulatedNoise {
-            get {
-                object obj = ResourceManager.GetObject("RegulatedNoise", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         

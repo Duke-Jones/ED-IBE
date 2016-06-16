@@ -88,7 +88,7 @@
     <StartupObject>IBE.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\RegulatedNoise.ico</ApplicationIcon>
+    <ApplicationIcon>IBE.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug ep|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -265,6 +265,7 @@
     <Compile Include="ErrorHandling\CErr.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\dsCommodities.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -419,6 +420,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Content Include="Data\_readme_ifmissing.txt" />
+    <Content Include="IBE.ico" />
     <Content Include="libzmq.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

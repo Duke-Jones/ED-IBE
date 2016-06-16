@@ -1158,6 +1158,45 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Ships` (
   PRIMARY KEY (`CompanionName`, `CompanionAddition`))
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbOutfittingBase`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbOutfittingBase` (
+  `id` INT NOT NULL,
+  `category` VARCHAR(80) NOT NULL,
+  `name` VARCHAR(80) NOT NULL,
+  `mount` VARCHAR(80) NULL,
+  `guidance` VARCHAR(80) NULL,
+  `ship` VARCHAR(80) NULL,
+  `class` CHAR(1) NOT NULL,
+  `rating` CHAR(1) NOT NULL,
+  `entitlement` VARCHAR(80) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbCommodityBase`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityBase` (
+  `id` INT NOT NULL,
+  `category` VARCHAR(80) NULL,
+  `name` VARCHAR(80) NULL,
+  `average` INT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbShipyardBase`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbShipyardBase` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(80) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
 USE `elite_db` ;
 
 -- -----------------------------------------------------
@@ -1395,7 +1434,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.3.0');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.3.4');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'True');
 
 COMMIT;

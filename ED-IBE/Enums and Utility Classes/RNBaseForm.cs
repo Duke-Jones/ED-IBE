@@ -26,6 +26,10 @@ namespace IBE.Enums_and_Utility_Classes
         {
             DoPositioning = true;
             ParentControl = null;
+
+            // Make the GUI ignore the DPI setting
+            //Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+
             InitializeComponent();
         }
 
@@ -110,7 +114,7 @@ namespace IBE.Enums_and_Utility_Classes
                 Retheme();
             }
 
-            this.Icon = Properties.Resources.RegulatedNoise;
+            this.Icon = Properties.Resources.IBE;
         }
 
         /// <summary>

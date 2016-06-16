@@ -12,19 +12,24 @@ todo:
 * check : non-existing game path from registry
 						   1
 
-* optimize error log
-* delete wrong data from auto function
+* delete wrong data from auto function (not required, tables seem to be obsolete)
+
 * avoid resizing of fonts
 * EDSM interface
 * VoiceAttack interface
+* inverting selection in commodity filter
+
+
 
 * add info for
   - updating FDevIDs
   - download directory for eddb data is changed
-  - 
 
 done:
-
+   * added a new IBE icon
+   * added "inverting" and "clearing" to filter commodity selection 
+   * maximum size for "InitValue"-strings in tbInitValue resized from 1000 to 10000
+-------------------------------------------------------------------------------------         
    * new GUI for errors, improved logging
 -------------------------------------------------------------------------------------         
    * sending of commodity data, outfitting data and shipyard data now uses the FDevIDs from EDCD
