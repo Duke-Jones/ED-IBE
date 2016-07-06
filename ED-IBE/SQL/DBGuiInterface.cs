@@ -11,14 +11,15 @@ using System.Diagnostics;
 
 namespace IBE.SQL
 {
-    class DBGuiInterface
+    public class DBGuiInterface
     {
-        private String      m_InitGroup;
-        private Object      m_currentLoadingObject   = null;        
-        private Int32       m_inloadAllSettings      = 0;
-        private Int32       m_inloadSetting          = 0;
-        private DBConnector m_DBCon                  = null;
-        private Int32       m_SavingLevel            = 0;
+        private String                                  m_InitGroup;
+        private Object                                  m_currentLoadingObject   = null;        
+        private Int32                                   m_inloadAllSettings      = 0;
+        private Int32                                   m_inloadSetting          = 0;
+        private DBConnector                             m_DBCon                  = null;
+        private Int32                                   m_SavingLevel            = 0;
+        private System.Runtime.Caching.MemoryCache      m_SettingsCache;
 
 #region  TagParts
 
@@ -57,11 +58,43 @@ namespace IBE.SQL
             {
                 m_DBCon     = useDBCon;
                 m_InitGroup = InitGroup;
+                m_SettingsCache = System.Runtime.Caching.MemoryCache.Default;
             }
             catch (Exception ex)
             {
                 throw new Exception("Error while creating object", ex);
             }
+        }
+
+        public void SetIniValue(string initKey, string initValue)
+        {
+            m_DBCon.setIniValue(m_InitGroup, initKey, initValue);
+            m_SettingsCache.Remove(initKey + "|" + initValue);
+        }
+
+        public T GetIniValue<T>(string initKey, string defaultValue = "", bool allowEmptyValue = true, bool rewriteOnBadCast = true, Boolean cached = true)
+        {
+            T retValue;
+
+            if(cached)
+            {
+                if (m_SettingsCache.Contains(m_InitGroup + "|" + initKey))
+                {
+                    retValue = (T)m_SettingsCache.Get(m_InitGroup + "|" + initKey);
+                }
+                else
+                {
+                    retValue = m_DBCon.getIniValue<T>(m_InitGroup, initKey, defaultValue, allowEmptyValue, rewriteOnBadCast);
+                    m_SettingsCache.Add(m_InitGroup + "|" + initKey, retValue, DateTime.Now + new TimeSpan(0,0,1,0));
+                }
+            }
+            else
+            {
+                retValue = m_DBCon.getIniValue<T>(m_InitGroup, initKey, defaultValue, allowEmptyValue, rewriteOnBadCast);
+                m_SettingsCache.Add(m_InitGroup + "|" + initKey, retValue, DateTime.Now + new TimeSpan(0,0,1,0));
+            }
+
+            return retValue;
         }
 
         /// <summary>
@@ -73,6 +106,18 @@ namespace IBE.SQL
             Boolean retValue = false;
             m_SavingLevel +=1;
 
+            
+            try
+            {
+                // delete cache if needed
+                var cPartsIdString    = (splitTag(((Control)sender).Tag))?.IDString;    
+                if(!String.IsNullOrEmpty(cPartsIdString))
+                    m_SettingsCache.Remove(m_InitGroup + "|" + cPartsIdString);
+            }
+            catch (Exception)
+            {
+            }
+
             try
             {
                 if((m_inloadAllSettings == 0) && (m_currentLoadingObject != sender))
@@ -83,7 +128,10 @@ namespace IBE.SQL
                         var Parts    = splitTag(cbSender.Tag);    
 
                         if(Parts != null)
+                        {
+                            
                             retValue = m_DBCon.setIniValue(m_InitGroup, Parts.IDString, cbSender.Checked.ToString());
+                        }
                     }
                     else if((sender.GetType() == typeof(ComboBox)) || (sender.GetType() == typeof(ComboBoxInt32)))
                     {
@@ -624,16 +672,16 @@ namespace IBE.SQL
             }
         }
 
-        public static class Foo
+        /// <summary>
+        /// returns the used DBConnector of this object
+        /// </summary>
+        public DBConnector DBConnection
         {
-            public static void Bar<T>(string test)
+            get
             {
-                MessageBox.Show(typeof(T).Name);
+                return m_DBCon;
             }
         }
-
-//...
-
 
     }
 }

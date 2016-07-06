@@ -144,6 +144,14 @@
     <Compile Include="EDDN\CommodityObject.cs" />
     <Compile Include="EDDN\OutfittingObject.cs" />
     <Compile Include="EDDN\ShipyardObject.cs" />
+    <Compile Include="EDSM\EDStarmapInterface.cs" />
+    <Compile Include="EDSM\EDStarmapInterfaceView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EDSM\EDStarmapInterfaceView.Designer.cs">
+      <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EDSM\ServerStatus.cs" />
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="ErrorHandling\ErrorViewer.cs">
@@ -265,7 +273,6 @@
     <Compile Include="ErrorHandling\CErr.cs" />
     <Compile Include="Enums and Utility Classes\dsCommodities.cs">
       <DependentUpon>dsCommodities.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\dsCommodities.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -463,6 +470,9 @@
     <EmbeddedResource Include="CommoditySelector.resx">
       <DependentUpon>CommoditySelector.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EDSM\EDStarmapInterfaceView.resx">
+      <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ErrorHandling\ErrorViewer.resx">
       <DependentUpon>ErrorViewer.cs</DependentUpon>

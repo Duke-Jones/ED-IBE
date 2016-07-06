@@ -26,7 +26,7 @@ namespace IBE.MTPriceAnalysis
             Edit,
             Add
 	    }
-
+                    
 
         public const String                             DB_GROUPNAME                    = "PriceAnalysis";
         public const String                             CURRENT_SYSTEM                  = "<current system>";

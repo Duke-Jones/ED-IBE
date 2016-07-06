@@ -94,7 +94,6 @@ namespace IBE
                 // Not a disaster if we can't do the version check...
                 return false;
             }
-
         }
 
         /// <summary>

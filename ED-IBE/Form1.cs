@@ -256,6 +256,7 @@ namespace IBE
 
                 // register events for getting new location- and data infos for the gui
                 Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+                
                 Program.CompanionIO.ExternalDataEvent  += ExternalDataInterface_ExternalDataEvent;
                 Program.EDDNComm.DataChangedEvent      += EDDNComm_DataChangedEvent;
                 Program.EDDNComm.DataTransmittedEvent  += EDDNComm_DataTransmittedEvent;
@@ -1336,6 +1337,9 @@ namespace IBE
                 txtPosition_X_DB.Visible = Debugger.IsAttached;
                 txtPosition_Y_DB.Visible = Debugger.IsAttached;
                 txtPosition_Z_DB.Visible = Debugger.IsAttached;
+
+                // inform GUI from EDSM
+                Program.EDSMComm.DataTransmittedEvent += EDSMComm_DataTransmittedEvent;
 
                 this.Enabled = true;
 
@@ -3501,12 +3505,29 @@ namespace IBE
                 CErr.processError(ex, "Error in CompanionIO_AsyncDataRecievedEvent");
             }    
         }
+        private void EDSMComm_DataTransmittedEvent(object sender, EventArgs e)
+        {
+            try
+            {
+                if(this.InvokeRequired)
+                    this.Invoke(new EventDelegate(EDSMComm_DataTransmittedEvent), sender, e);
+                else
+                {
+                    Int32 inQueue = ((EDSM.EDStarmapInterface.DataTransmittedEventArgs)e).InQueue;
+
+                    tsEDSMQueue.Text = "EDSM messages in send-queue : " + inQueue;
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in EDSMComm_DataTransmittedEvent");
+            }    
+        }
 
         
         /// <summary>
         /// shows location data like system/station/ccordinates on gui
         /// </summary>
-      
         private void ShowLocationData()
         {
             try
@@ -3578,7 +3599,23 @@ namespace IBE
                 throw new Exception("Error while showing location infos", ex);
             }
         }
-        
+
+        private delegate void EventDelegate(Object sender, EventArgs e);
+
+
+        private void eDSMToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var newForm = new EDSM.EDStarmapInterfaceView(Program.EDSMComm);
+                newForm.Show(this);
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while opening EDSM interface");
+            }
+        }
+
         /// <summary>
         /// update the status information of companion io
         /// </summary>

@@ -265,6 +265,7 @@ namespace IBE
         public static EDLogfileScanner                      LogfileScanner;
         public static SplashScreenForm                      SplashScreen;
         public static EDDN.EDDNCommunicator                 EDDNComm;
+        public static EDSM.EDStarmapInterface               EDSMComm;
         public static PlausibiltyChecker                    PlausibiltyCheck;
         public static GameSettings                          GameSettings;
         public static VncServer                             VNCAppServer;
@@ -381,6 +382,11 @@ namespace IBE
                     // initializing the LogfileScanner
                     LogfileScanner                              = new EDLogfileScanner();
 
+                    // EDDN Interface
+                    EDDNComm = new IBE.EDDN.EDDNCommunicator();
+
+                    // EDSMComm Interface
+                    EDSMComm = new IBE.EDSM.EDStarmapInterface(Program.DBCon);
 
                     // forwards a potentially new system or station information to database
                     Program.LogfileScanner.LocationInfo += LogfileScanner_LocationInfo;
@@ -393,11 +399,10 @@ namespace IBE
                     PriceAnalysis.registerLogFileScanner(LogfileScanner);
                     PriceAnalysis.registerExternalTool(CompanionIO);
 
+                    EDSMComm.registerLogFileScanner(LogfileScanner);
+
                     // Plausibility-Checker
                     PlausibiltyCheck = new PlausibiltyChecker();
-
-                    // EDDN Interface
-                    EDDNComm = new IBE.EDDN.EDDNCommunicator();
 
                     /// early variant of DoSpecial();
                     Updater.DoSpecial_Early();

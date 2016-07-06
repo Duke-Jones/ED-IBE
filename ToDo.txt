@@ -18,14 +18,22 @@ todo:
 * EDSM interface
 * VoiceAttack interface
 * inverting selection in commodity filter
+* update hint for new FDevIDs while starting
+* check permarefresh while downloading EDDB files
 
 
-
+todo for StarterTips:
 * add info for
   - updating FDevIDs
   - download directory for eddb data is changed
+  - right mouse click on cmdrs-log for edsm/ recalculate distances
+  
+*************************************************************************************
 
 done:
+
+   * basic interface to EDSM implemented 
+-------------------------------------------------------------------------------------         
    * added a new IBE icon
    * added "inverting" and "clearing" to filter commodity selection 
    * maximum size for "InitValue"-strings in tbInitValue resized from 1000 to 10000

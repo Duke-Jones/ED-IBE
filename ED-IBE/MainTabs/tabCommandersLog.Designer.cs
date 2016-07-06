@@ -78,11 +78,15 @@
             this.credits_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmsLog = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiRecalcJumpDistance = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiSendToEDSM = new System.Windows.Forms.ToolStripMenuItem();
             this.gbCL_LogEdit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).BeginInit();
+            this.cmsLog.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbCL_LogEdit
@@ -583,6 +587,27 @@
             this.notes.Name = "notes";
             this.notes.ReadOnly = true;
             // 
+            // cmsLog
+            // 
+            this.cmsLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiRecalcJumpDistance,
+            this.tsmiSendToEDSM});
+            this.cmsLog.Name = "cmsLog";
+            this.cmsLog.Size = new System.Drawing.Size(185, 48);
+            // 
+            // tsmiRecalcJumpDistance
+            // 
+            this.tsmiRecalcJumpDistance.Name = "tsmiRecalcJumpDistance";
+            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(184, 22);
+            this.tsmiRecalcJumpDistance.Text = "recalculate jump distance";
+            // 
+            // tsmiSendToEDSM
+            // 
+            this.tsmiSendToEDSM.Name = "tsmiSendToEDSM";
+            this.tsmiSendToEDSM.Size = new System.Drawing.Size(184, 22);
+            this.tsmiSendToEDSM.Text = "send log entry(s) to EDSM";
+            this.tsmiSendToEDSM.Click += new System.EventHandler(this.tsmiSendToEDSM_Click);
+            // 
             // tabCommandersLog
             // 
             this.Controls.Add(this.gbCL_LogEdit);
@@ -596,6 +621,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).EndInit();
+            this.cmsLog.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -644,5 +670,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn distance;
         private System.Windows.Forms.DataGridViewTextBoxColumn notes;
+        private System.Windows.Forms.ContextMenuStrip cmsLog;
+        private System.Windows.Forms.ToolStripMenuItem tsmiRecalcJumpDistance;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSendToEDSM;
     }
 }

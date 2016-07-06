@@ -4524,5 +4524,42 @@ namespace IBE.SQL
                 throw new Exception("Error while retrieving system coordinates from database", ex);
             }
         }
+       
+        /// <summary>
+        /// sends the log entries with the given timestamps to EDSM
+        /// </summary>
+        /// <param name="timeStamps"></param>
+        public void SendLogToEDSM(List<DateTime> timeStamps)
+        {
+            String sqlString    = "";
+            DataTable data      = new DataTable();
+
+            try
+            {
+                if(timeStamps.Count > 0)
+                {
+                    sqlString = String.Format("select L.time, Sy.Systemname" +
+                                              " from tbLog L, tbSystems Sy" +
+                                              " where L.system_id = Sy.id" +
+                                              " and L.time >= {0}" +
+                                              " and   L.time <= {1}" +
+                                              " and   event_id = {2};",
+                                              DBConnector.SQLDateTime(timeStamps.Min()),
+                                              DBConnector.SQLDateTime(timeStamps.Max()), 
+                                              BaseTableNameToID("eventtype", "Jumped To"));
+
+                    Program.DBCon.Execute(sqlString, data);
+
+                    foreach (DataRow dRow in data.Rows)
+                    {
+                        Program.EDSMComm.TransmitLogEntry((String)dRow["Systemname"], null, null, null, (DateTime)dRow["time"]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while collecting data for transmission to EDSM", ex);
+            }
+        }
     }
 }

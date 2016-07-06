@@ -55,6 +55,7 @@ namespace IBE.FileScanner
                 System      = "";
                 Location    = "";
                 Position    = new Point3Dbl();
+                TimeStamp   = new DateTime(1900, 1, 1, 0, 0, 0);
             }
 
             public String System            { get; set; }
@@ -63,6 +64,7 @@ namespace IBE.FileScanner
             public String OldLocation       { get; set; }
             public enLogEvents Changed      { get; set; }
             public Point3Dbl   Position     { get; set; }
+            public DateTime   TimeStamp     { get; set; }
         }
 
         [System.ComponentModel.Browsable(true)]
@@ -84,11 +86,13 @@ namespace IBE.FileScanner
                 System      = "";
                 Location    = "";
                 Position    = new Point3Dbl();
+                TimeStamp   = new DateTime(1900, 1, 1, 0, 0, 0);
             }
 
             public String System            { get; set; }
             public String Location          { get; set; }
             public Point3Dbl   Position     { get; set; }
+            public DateTime   TimeStamp     { get; set; }
         }
 
         #endregion
@@ -707,6 +711,8 @@ namespace IBE.FileScanner
             //Boolean LocationHasChanged = false;
             String OldSystemString;
             String OldLocationString;
+            String foundSystemString;
+            String foundLocationString;
             enLogEvents EventFlags = enLogEvents.None;
             Point3Dbl usePosition = null;
 
@@ -714,15 +720,19 @@ namespace IBE.FileScanner
             {
                 if(LoggedEvents.Count() > 0)
                 { 
-                    OldSystemString   = Program.actualCondition.System;
-                    OldLocationString = Program.actualCondition.Location;
-
                     // order by date
                     LoggedEvents = LoggedEvents.OrderBy(x => x.Time).ToList();
 
                     // scan sequence
                     foreach (LogEvent Event in LoggedEvents)
                     {
+                        OldSystemString     = Program.actualCondition.System;
+                        OldLocationString   = Program.actualCondition.Location;
+                        EventFlags          = enLogEvents.None;
+                        usePosition         = null;
+                        foundSystemString   = "";
+                        foundLocationString = "";
+
                         switch (Event.EventType)
                         {
                             case enLogEvents.Jump:
@@ -736,10 +746,10 @@ namespace IBE.FileScanner
                                 }
                                 else
                                 { 
-                                    if(!String.IsNullOrEmpty(Program.actualCondition.Location))
+                                    if(!String.IsNullOrEmpty(OldLocationString))
                                     { 
                                         EventFlags |= enLogEvents.Location;
-                                        Program.actualCondition.Location  = Event.Value;
+                                        foundLocationString  = Event.Value;
                                     }
                                     
                                     EventFlags |= enLogEvents.Jump;
@@ -750,17 +760,17 @@ namespace IBE.FileScanner
 
                             case enLogEvents.System:
                                 // a new system is everytime valid, check if the system has changed
-                                if((Event.Value != "") && (!Event.Value.Equals(Program.actualCondition.System, StringComparison.InvariantCultureIgnoreCase)))
+                                if((Event.Value != "") && (!Event.Value.Equals(OldSystemString, StringComparison.InvariantCultureIgnoreCase)))
                                 { 
                                     EventFlags |= enLogEvents.System;
-                                    Program.actualCondition.System  = Event.Value;
+                                    foundSystemString  = Event.Value;
                                     usePosition = Event.Position;
 
                                     // after a jump we are no longer on a station
-                                    if(!String.IsNullOrEmpty(Program.actualCondition.Location))
+                                    if(!String.IsNullOrEmpty(OldLocationString))
                                     { 
                                         EventFlags |= enLogEvents.Location;
-                                        Program.actualCondition.Location  = "";
+                                        foundLocationString  = "";
                                     }
                                     Debug.Print("log - scanning : system found : " + Event.Value);
                                 }
@@ -768,37 +778,38 @@ namespace IBE.FileScanner
 
                             case enLogEvents.Location:
                                 // a new station is everytime valid, check if the station has changed
-                                if((Event.Value != "") && (!Event.Value.Equals(Program.actualCondition.Location, StringComparison.InvariantCultureIgnoreCase)))
+                                if((Event.Value != "") && (!Event.Value.Equals(OldLocationString, StringComparison.InvariantCultureIgnoreCase)))
                                 { 
                                     EventFlags |= enLogEvents.Location;
-                                    Program.actualCondition.Location  = Event.Value;
+                                    foundLocationString  = Event.Value;
                                 }
                                 Debug.Print("log - scanning : location found : " + Event.Value);
                                 break;
 
                         }    
-                    }
 
-                    if(EventFlags != enLogEvents.None)
-                    {
-                        // something has changed -> fire events
+                        if(EventFlags != enLogEvents.None)
+                        {
+                            // something has changed -> fire events
 
-                        var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
-                                                               Location      = Program.actualCondition.Location,
-                                                               Position      = usePosition};
-                        LocationInfo.Raise(this, LI);
+                            var LI = new LocationInfoEventArgs() { System        = foundSystemString,  
+                                                                   Location      = foundLocationString,
+                                                                   Position      = usePosition};
+                            LocationInfo.Raise(this, LI);
 
 
-                        var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
-                                                                  Location      = Program.actualCondition.Location,
-                                                                  OldSystem     = OldSystemString,  
-                                                                  OldLocation   = OldLocationString,
-                                                                  Changed       = EventFlags,
-                                                                  Position      = usePosition};
-                        LocationChanged.Raise(this, EA);
+                            var EA = new LocationChangedEventArgs() { System        = foundSystemString,  
+                                                                      Location      = foundLocationString,
+                                                                      OldSystem     = OldSystemString,  
+                                                                      OldLocation   = OldLocationString,
+                                                                      Changed       = EventFlags,
+                                                                      Position      = usePosition, 
+                                                                      TimeStamp     = Event.Time};
+                            LocationChanged.Raise(this, EA);
+                        }
+
                     }
                 }
-
             }
             catch (Exception ex)
             {

@@ -37,7 +37,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtVerficationCode = new System.Windows.Forms.TextBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.cmdConnect = new System.Windows.Forms.Button();
             this.cmdVerify = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -115,15 +114,6 @@
             this.txtStatus.TabIndex = 6;
             this.txtStatus.TabStop = false;
             this.txtStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(320, 203);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Status";
             // 
             // cmdConnect
             // 
@@ -225,7 +215,6 @@
             this.Controls.Add(this.cmdClose);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.txtStatus);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -253,7 +242,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtVerficationCode;
         private System.Windows.Forms.TextBox txtStatus;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button cmdConnect;
         private System.Windows.Forms.Button cmdVerify;
         private System.Windows.Forms.GroupBox groupBox1;

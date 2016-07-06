@@ -644,6 +644,10 @@ namespace IBE.MTCommandersLog
                             m_GUIInterface.saveSetting(dgv);
                         }
                     }
+                    else if (hit.Type == DataGridViewHitTestType.Cell)
+                    {
+                        cmsLog.Show(dgv, args.Location);
+                    }
                 }
             }
             catch (Exception ex)
@@ -789,5 +793,31 @@ namespace IBE.MTCommandersLog
             dgvCommandersLog.CellValueNeeded          += new DataGridViewCellValueEventHandler(dgvCommandersLog_CellValueNeeded);
         }
 
+        private void tsmiSendToEDSM_Click(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection rowColl;
+            List<DateTime> timeStamps = new List<DateTime>();
+
+            try
+            {
+                if(dgvCommandersLog.SelectedRows.Count > 0)
+                {
+                    foreach (DataGridViewRow dgvRow in dgvCommandersLog.SelectedRows)
+                    {
+                        dgvCommandersLog.CurrentCell = dgvRow.Cells[dgvCommandersLog.Columns["time"].Index];
+                        timeStamps.Add((DateTime)dgvRow.Cells[dgvCommandersLog.Columns["time"].Index].Value);
+                    }
+                }
+                else
+                    timeStamps.Add((DateTime)dgvCommandersLog.CurrentRow.Cells[dgvCommandersLog.Columns["time"].Index].Value);
+
+                Program.Data.SendLogToEDSM(timeStamps);
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while sending selected log rows to EDSM");
+            }
+        }
     }
 }

@@ -87,6 +87,7 @@
             this.colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eDDNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eDSMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
@@ -245,6 +246,8 @@
             this.txtPosition_Z_DB = new System.Windows.Forms.TextBox();
             this.txtPosition_Y_DB = new System.Windows.Forms.TextBox();
             this.txtPosition_X_DB = new System.Windows.Forms.TextBox();
+            this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -279,6 +282,7 @@
             this.gbSystemSystemData.SuspendLayout();
             this.tabWebserver.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.StatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -371,12 +375,12 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copySystenmameToClipboardToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(68, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(66, 26);
             // 
             // copySystenmameToClipboardToolStripMenuItem
             // 
             this.copySystenmameToClipboardToolStripMenuItem.Name = "copySystenmameToClipboardToolStripMenuItem";
-            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(67, 22);
+            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(65, 22);
             // 
             // contextMenuStrip2
             // 
@@ -384,18 +388,18 @@
             this.toolStripMenuItem1,
             this.removeEconomyToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(168, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(149, 48);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem1.Text = "add Economy";
             // 
             // removeEconomyToolStripMenuItem
             // 
             this.removeEconomyToolStripMenuItem.Name = "removeEconomyToolStripMenuItem";
-            this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.removeEconomyToolStripMenuItem.Text = "remove Economy";
             // 
             // dsCommodities
@@ -720,13 +724,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(85, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // dataToolStripMenuItem
@@ -739,39 +743,39 @@
             this.directDBAccessToolStripMenuItem,
             this.testToolStripMenuItem});
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
-            this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.dataToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.dataToolStripMenuItem.Text = "&Data";
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.importToolStripMenuItem.Text = "&Import && Export";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // editLocalizationsToolStripMenuItem
             // 
             this.editLocalizationsToolStripMenuItem.Name = "editLocalizationsToolStripMenuItem";
-            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
             this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
             // 
             // commodityMappingsToolStripMenuItem
             // 
             this.commodityMappingsToolStripMenuItem.Name = "commodityMappingsToolStripMenuItem";
-            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.commodityMappingsToolStripMenuItem.Text = "Commodity Mappings";
             this.commodityMappingsToolStripMenuItem.Click += new System.EventHandler(this.commodityMappingsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(191, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(166, 6);
             // 
             // directDBAccessToolStripMenuItem
             // 
             this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
-            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
             this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
             // 
@@ -780,13 +784,13 @@
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createJumpToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.testToolStripMenuItem.Text = "Test";
             // 
             // createJumpToolStripMenuItem
             // 
             this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
-            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.createJumpToolStripMenuItem.Text = "create Jump";
             this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
             // 
@@ -796,20 +800,20 @@
             this.settingsToolStripMenuItem1,
             this.colorsToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
             // 
             // colorsToolStripMenuItem
             // 
             this.colorsToolStripMenuItem.Name = "colorsToolStripMenuItem";
-            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
             this.colorsToolStripMenuItem.Text = "Colors";
             this.colorsToolStripMenuItem.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click);
             // 
@@ -817,22 +821,30 @@
             // 
             this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.eDDNToolStripMenuItem,
+            this.eDSMToolStripMenuItem,
             this.companionToolStripMenuItem});
             this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
-            this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
+            this.iOToolStripMenuItem.Size = new System.Drawing.Size(28, 20);
             this.iOToolStripMenuItem.Text = "IO";
             // 
             // eDDNToolStripMenuItem
             // 
             this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
-            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.eDDNToolStripMenuItem.Text = "EDDN";
             this.eDDNToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
+            // 
+            // eDSMToolStripMenuItem
+            // 
+            this.eDSMToolStripMenuItem.Name = "eDSMToolStripMenuItem";
+            this.eDSMToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.eDSMToolStripMenuItem.Text = "EDSM";
+            this.eDSMToolStripMenuItem.Click += new System.EventHandler(this.eDSMToolStripMenuItem_Click);
             // 
             // companionToolStripMenuItem
             // 
             this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
-            this.companionToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.companionToolStripMenuItem.Text = "ED Companion";
             this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
             // 
@@ -942,7 +954,7 @@
             this.tabCtrlMain.Location = new System.Drawing.Point(3, 141);
             this.tabCtrlMain.Name = "tabCtrlMain";
             this.tabCtrlMain.SelectedIndex = 0;
-            this.tabCtrlMain.Size = new System.Drawing.Size(1159, 595);
+            this.tabCtrlMain.Size = new System.Drawing.Size(1159, 580);
             this.tabCtrlMain.TabIndex = 4;
             this.tabCtrlMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -966,7 +978,7 @@
             this.tabHelpAndChangeLog.Controls.Add(this.lblRegulatedNoise);
             this.tabHelpAndChangeLog.Location = new System.Drawing.Point(4, 22);
             this.tabHelpAndChangeLog.Name = "tabHelpAndChangeLog";
-            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1151, 569);
+            this.tabHelpAndChangeLog.Size = new System.Drawing.Size(1151, 554);
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
@@ -1061,7 +1073,7 @@
             this.lblUpdateDetail.Multiline = true;
             this.lblUpdateDetail.Name = "lblUpdateDetail";
             this.lblUpdateDetail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lblUpdateDetail.Size = new System.Drawing.Size(739, 182);
+            this.lblUpdateDetail.Size = new System.Drawing.Size(739, 167);
             this.lblUpdateDetail.TabIndex = 39;
             // 
             // cmdDonate
@@ -1105,7 +1117,7 @@
             this.panel2.Controls.Add(this.linkLabel5);
             this.panel2.Controls.Add(this.linkLabel6);
             this.panel2.Controls.Add(this.linkLabel7);
-            this.panel2.Location = new System.Drawing.Point(33, 485);
+            this.panel2.Location = new System.Drawing.Point(33, 470);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1079, 80);
             this.panel2.TabIndex = 33;
@@ -1291,7 +1303,7 @@
             this.tabSystemData.Controls.Add(this.gbSystemSystemData);
             this.tabSystemData.Location = new System.Drawing.Point(4, 22);
             this.tabSystemData.Name = "tabSystemData";
-            this.tabSystemData.Size = new System.Drawing.Size(1151, 569);
+            this.tabSystemData.Size = new System.Drawing.Size(1151, 554);
             this.tabSystemData.TabIndex = 13;
             this.tabSystemData.Text = "System Data";
             this.tabSystemData.UseVisualStyleBackColor = true;
@@ -1344,7 +1356,7 @@
             this.groupBox14.Controls.Add(this.cmbStationMaxLandingPadSize);
             this.groupBox14.Location = new System.Drawing.Point(506, 49);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(558, 543);
+            this.groupBox14.Size = new System.Drawing.Size(558, 528);
             this.groupBox14.TabIndex = 0;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Station Data";
@@ -1955,7 +1967,7 @@
             this.gbSystemSystemData.Controls.Add(this.cmbSystemGovernment);
             this.gbSystemSystemData.Location = new System.Drawing.Point(14, 49);
             this.gbSystemSystemData.Name = "gbSystemSystemData";
-            this.gbSystemSystemData.Size = new System.Drawing.Size(486, 543);
+            this.gbSystemSystemData.Size = new System.Drawing.Size(486, 528);
             this.gbSystemSystemData.TabIndex = 0;
             this.gbSystemSystemData.TabStop = false;
             this.gbSystemSystemData.Text = "System Data";
@@ -2352,7 +2364,7 @@
             this.tabWebserver.Controls.Add(this.groupBox1);
             this.tabWebserver.Location = new System.Drawing.Point(4, 22);
             this.tabWebserver.Name = "tabWebserver";
-            this.tabWebserver.Size = new System.Drawing.Size(1151, 569);
+            this.tabWebserver.Size = new System.Drawing.Size(1151, 554);
             this.tabWebserver.TabIndex = 3;
             this.tabWebserver.Text = "Webserver";
             this.tabWebserver.UseVisualStyleBackColor = true;
@@ -2379,7 +2391,7 @@
             this.groupBox1.Controls.Add(this.lblURL);
             this.groupBox1.Location = new System.Drawing.Point(10, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1055, 578);
+            this.groupBox1.Size = new System.Drawing.Size(1055, 563);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Webserver";
@@ -2630,12 +2642,29 @@
             this.txtPosition_X_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtPosition_X_DB.Visible = false;
             // 
+            // StatusStrip1
+            // 
+            this.StatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsEDSMQueue});
+            this.StatusStrip1.Location = new System.Drawing.Point(0, 724);
+            this.StatusStrip1.Name = "StatusStrip1";
+            this.StatusStrip1.Size = new System.Drawing.Size(1164, 22);
+            this.StatusStrip1.TabIndex = 75;
+            this.StatusStrip1.Text = "statusStrip1";
+            // 
+            // tsEDSMQueue
+            // 
+            this.tsEDSMQueue.Name = "tsEDSMQueue";
+            this.tsEDSMQueue.Size = new System.Drawing.Size(95, 17);
+            this.tsEDSMQueue.Text = "toolStripStatusLabel1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1164, 737);
+            this.ClientSize = new System.Drawing.Size(1164, 746);
+            this.Controls.Add(this.StatusStrip1);
             this.Controls.Add(this.txtPosition_Z_DB);
             this.Controls.Add(this.txtPosition_Y_DB);
             this.Controls.Add(this.txtPosition_X_DB);
@@ -2713,6 +2742,8 @@
             this.tabWebserver.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.StatusStrip1.ResumeLayout(false);
+            this.StatusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2936,6 +2967,9 @@
         private System.Windows.Forms.TextBox txtPosition_Z_DB;
         private System.Windows.Forms.TextBox txtPosition_Y_DB;
         private System.Windows.Forms.TextBox txtPosition_X_DB;
+        private System.Windows.Forms.ToolStripMenuItem eDSMToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip StatusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel tsEDSMQueue;
     }
 }
 

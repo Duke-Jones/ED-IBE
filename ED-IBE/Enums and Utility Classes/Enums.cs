@@ -21,7 +21,8 @@ namespace IBE
         EddnSubscriber,
         App, 
         Exception,
-        FileScanner
+        FileScanner,
+        EDSMInterface
     }
 
     public enum StationHasBlackMarket
