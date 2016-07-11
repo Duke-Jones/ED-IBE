@@ -4,11 +4,13 @@ using System.IO;
 using System.Net;
 using IBE.SQL;
 using IBE.Enums_and_Utility_Classes;
+using System.Collections.Generic;
 
 namespace IBE.EDSM
 {
     public class EDStarmapInterface
     {
+
 #region event handler
 
         [System.ComponentModel.Browsable(true)]
@@ -36,6 +38,15 @@ namespace IBE.EDSM
         }
         
  #endregion
+        
+        const String REPLACESTRING_OLD_COMMENT = "!$!OC!$!";
+
+        public enum TransmissionType
+        {
+            Visit               = 0, 
+            CommentExtension    = 1
+        }
+
 
         public enum ErrorCodes
         {
@@ -63,26 +74,26 @@ namespace IBE.EDSM
 
         String m_BaseURL                 = @"https://www.edsm.net";
 
-        public const String                                     DB_GROUPNAME                    = "EDSM_API";
-        private DBGuiInterface                                  m_GUIInterface;
-        private FileScanner.EDLogfileScanner                    m_LogfileScanner;
-        private String                                          m_CurrentVersion;
-        private SingleThreadLogger                              m_LogFile;
-        private System.Collections.Generic.Queue<String>        m_SendQueue;
-        private System.Timers.Timer                             m_SendTimer;
+        public const String                              DB_GROUPNAME                    = "EDSM_API";
+        private DBGuiInterface                           m_GUIInterface;
+        private FileScanner.EDLogfileScanner             m_LogfileScanner;
+        private String                                   m_CurrentVersion;
+        private SingleThreadLogger                       m_LogFile;
+        private Queue<EDSMTransmissionData>              m_SendQueue;
+        private System.Timers.Timer                      m_SendTimer;
 
         public EDStarmapInterface(DBConnector dbConnection)
         {
             try
             {
-                m_SendQueue             = new System.Collections.Generic.Queue<String>(100);
+                m_SendQueue             = new Queue<EDSMTransmissionData>(100);
                 m_LogFile               = new SingleThreadLogger(ThreadLoggerType.EDSMInterface, null, true);
                 m_CurrentVersion        = Enums_and_Utility_Classes.VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
                 m_GUIInterface          = new DBGuiInterface(DB_GROUPNAME, dbConnection);
 
                 m_SendTimer             = new System.Timers.Timer();
                 m_SendTimer.AutoReset   = false;
-                m_SendTimer.Elapsed    += i_TransmitLogEntry;
+                m_SendTimer.Elapsed    += i_TransmitQueuedData;
                 m_SendTimer.Start();
             }
             catch (Exception ex)
@@ -156,9 +167,9 @@ namespace IBE.EDSM
                 if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
                 {
                     if(e.Position.Valid)
-                        TransmitLogEntry(e.System, e.Position.X.Value, e.Position.Y.Value, e.Position.Z.Value, e.TimeStamp);
+                        TransmitVisit(e.System, e.Position.X.Value, e.Position.Y.Value, e.Position.Z.Value, e.TimeStamp);
                     else
-                        TransmitLogEntry(e.System, null, null, null, e.TimeStamp);
+                        TransmitVisit(e.System, null, null, null, e.TimeStamp);
 
                 }
             }
@@ -263,56 +274,33 @@ namespace IBE.EDSM
             }
         }
 
-        public void TransmitLogEntry(String systemName, Double? x, Double? y, Double? z, DateTime dateVisited)
+        public void TransmitCommentExtension(String systemName, string commentExtension)
         {
-            dynamic answer = null; 
-            ErrorCodes retValue = ErrorCodes.No_Answer;
-            String request;
+            String transmissionString;
 
             try
             {
-                if(x.HasValue && y.HasValue && z.HasValue)
-                {
-                    request = String.Format("/api-logs-v1/set-log" +
-                                            "?commanderName={0}" +
-                                            "&apiKey={1}" +
-                                            "&systemName={2}" +
-                                            "&x={3}" +
-                                            "&y={4}" +
-                                            "&z={5}" +
-                                            "&fromSoftware={6}" +
-                                            "&fromSoftwareVersion={7}" +
-                                            "&dateVisited={8:yyyy-MM-dd HH:mm:ss}",
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
-                                            systemName, 
-                                            x.ToString().Replace(",","."), 
-                                            y.ToString().Replace(",","."), 
-                                            z.ToString().Replace(",","."),
-                                            "ED-IBE",
-                                            m_CurrentVersion, 
-                                            dateVisited.ToUniversalTime());
-                }
-                else
-                {
-                    request = String.Format("/api-logs-v1/set-log" +
-                                            "?commanderName={0}" +
-                                            "&apiKey={1}" +
-                                            "&systemName={2}" +
-                                            "&fromSoftware={3}" +
-                                            "&fromSoftwareVersion={4}" +
-                                            "&dateVisited={5:yyyy-MM-dd HH:mm:ss}",
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
-                                            systemName, 
-                                            "ED-IBE",
-                                            m_CurrentVersion, 
-                                            dateVisited.ToUniversalTime());
+                //transmissionString = String.Format("/api-logs-v1/set-comment" +
+                //                        "?commanderName={0}" +
+                //                        "&apiKey={1}" +
+                //                        "&systemName={2}" +
+                //                        "&fromSoftware={3}" +
+                //                        "&fromSoftwareVersion={4}" +
+                //                        "&comment={4}{5}",
+                //                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                //                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
+                //                        systemName, 
+                //                        "ED-IBE",
+                //                        m_CurrentVersion, 
+                //                        REPLACESTRING_OLD_COMMENT, 
+                //                        commentExtension);
 
-                }
+                //m_SendQueue.Enqueue(new Tuple<TransmissionType, String, String>(TransmissionType.CommentExtension, transmissionString, systemName));
 
+                m_SendQueue.Enqueue(new EDSMTransmissionData() { TType          = TransmissionType.CommentExtension,
+                                                                 SystemName     = systemName,
+                                                                 Comment        = commentExtension});
 
-                m_SendQueue.Enqueue(request);
             }
             catch (Exception ex)
             {
@@ -320,11 +308,86 @@ namespace IBE.EDSM
             }
         }
 
-        public void i_TransmitLogEntry(object sender, System.Timers.ElapsedEventArgs e)
+        public class EDSMTransmissionData
         {
-            dynamic answer = null; 
-            ErrorCodes retValue = ErrorCodes.No_Answer;
-            String request;
+            public TransmissionType    TType;
+            public String              SystemName;
+            public Double?             X;
+            public Double?             Y;
+            public Double?             Z;
+            public DateTime            DateVisited;
+            public String              Comment;
+        }
+        
+
+        public void TransmitVisit(String systemName, Double? x, Double? y, Double? z, DateTime dateVisited)
+        {
+            String transmissionString;
+
+            try
+            {
+
+                //if(x.HasValue && y.HasValue && z.HasValue)
+                //{
+                //    transmissionString = String.Format("/api-logs-v1/set-log" +
+                //                            "?commanderName={0}" +
+                //                            "&apiKey={1}" +
+                //                            "&systemName={2}" +
+                //                            "&x={3}" +
+                //                            "&y={4}" +
+                //                            "&z={5}" +
+                //                            "&fromSoftware={6}" +
+                //                            "&fromSoftwareVersion={7}" +
+                //                            "&dateVisited={8:yyyy-MM-dd HH:mm:ss}",
+                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
+                //                            systemName, 
+                //                            x.ToString().Replace(",","."), 
+                //                            y.ToString().Replace(",","."), 
+                //                            z.ToString().Replace(",","."),
+                //                            "ED-IBE",
+                //                            m_CurrentVersion, 
+                //                            dateVisited.ToUniversalTime());
+                //}
+                //else
+                //{
+                //    transmissionString = String.Format("/api-logs-v1/set-log" +
+                //                            "?commanderName={0}" +
+                //                            "&apiKey={1}" +
+                //                            "&systemName={2}" +
+                //                            "&fromSoftware={3}" +
+                //                            "&fromSoftwareVersion={4}" +
+                //                            "&dateVisited={5:yyyy-MM-dd HH:mm:ss}",
+                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
+                //                            systemName, 
+                //                            "ED-IBE",
+                //                            m_CurrentVersion, 
+                //                            dateVisited.ToUniversalTime());
+
+                //}
+
+
+                //m_SendQueue.Enqueue(new Tuple<TransmissionType, String, String>(TransmissionType.Visit, transmissionString, ""));
+
+                m_SendQueue.Enqueue(new EDSMTransmissionData() { TType          = TransmissionType.Visit,
+                                                                 SystemName     = systemName,
+                                                                 X              = x,
+                                                                 Y              = y,
+                                                                 Z              = z,
+                                                                 DateVisited    = dateVisited,
+                                                                 Comment        = ""});
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while login test", ex);
+            }
+        }
+
+        public void i_TransmitQueuedData(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            EDSMTransmissionData currentData; 
+
             try
             {
 
@@ -334,30 +397,25 @@ namespace IBE.EDSM
                 {
                     while (m_SendQueue.Count > 0)
                     {
-                        retValue = ErrorCodes.No_Answer;
-
-                        request = m_SendQueue.Dequeue();
-
-                        if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
-                        {
-                            m_LogFile.Log(RemoveApiKey(request));
-                        }
+                        currentData     = m_SendQueue.Dequeue();
 
                         if(m_GUIInterface.GetIniValue<Boolean>("SendToEDSM", true.ToString(), false))
-                            answer = GetDataFromServer(request);
-
-                        if(answer != null)
                         {
-                            if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
-                                m_LogFile.Log(RemoveApiKey(answer.ToString()));
-
-                            retValue = answer.msgnum;
+                            switch (currentData.TType)
+                            {
+                                case TransmissionType.Visit:
+                                    i_TransmitVisit(currentData);
+                                    break;
+                                case TransmissionType.CommentExtension:
+                                    String oldComment = GetSystemComment(currentData.SystemName);
+                                    currentData.Comment = oldComment + "\r\n" + currentData.Comment;
+                                    i_TransmitComment(currentData);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            
                         }
-
-                        if(retValue == ErrorCodes.OK)
-                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
-                        else
-                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Error, m_SendQueue.Count));
 
                         System.Threading.Thread.Sleep(25);
                     }
@@ -377,6 +435,184 @@ namespace IBE.EDSM
                 DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Error, m_SendQueue.Count));
                 m_SendTimer.Start();         
                 m_LogFile.Log("Exception: /n/d" + ex.Message + "/n/d" + ex.StackTrace);
+            }
+        }
+
+        private void i_TransmitVisit(EDSMTransmissionData data)
+        {
+            dynamic answer = null; 
+            ErrorCodes retValue = ErrorCodes.No_Answer;
+            String transmissionString;
+
+            try
+            {
+
+                if (data.X.HasValue && data.Y.HasValue && data.Z.HasValue)
+                {
+                    transmissionString = String.Format("/api-logs-v1/set-log" +
+                                            "?commanderName={0}" +
+                                            "&apiKey={1}" +
+                                            "&systemName={2}" +
+                                            "&x={3}" +
+                                            "&y={4}" +
+                                            "&z={5}" +
+                                            "&fromSoftware={6}" +
+                                            "&fromSoftwareVersion={7}" +
+                                            "&dateVisited={8:yyyy-MM-dd HH:mm:ss}",
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
+                                            data.SystemName,
+                                            data.X.ToString().Replace(",", "."),
+                                            data.Y.ToString().Replace(",", "."),
+                                            data.Z.ToString().Replace(",", "."),
+                                            "ED-IBE",
+                                            m_CurrentVersion,
+                                            data.DateVisited.ToUniversalTime());
+                }
+                else
+                {
+                    transmissionString = String.Format("/api-logs-v1/set-log" +
+                                            "?commanderName={0}" +
+                                            "&apiKey={1}" +
+                                            "&systemName={2}" +
+                                            "&fromSoftware={3}" +
+                                            "&fromSoftwareVersion={4}" +
+                                            "&dateVisited={5:yyyy-MM-dd HH:mm:ss}",
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
+                                            data.SystemName,
+                                            "ED-IBE",
+                                            m_CurrentVersion,
+                                            data.DateVisited.ToUniversalTime());
+
+                }
+
+                if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
+                    m_LogFile.Log(RemoveApiKey(transmissionString));
+
+                answer = GetDataFromServer(transmissionString);
+
+                if(answer != null)
+                {
+                    if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
+                        m_LogFile.Log(RemoveApiKey(answer.ToString()));
+
+                    retValue = answer.msgnum;
+                }
+
+                if(retValue == ErrorCodes.OK)
+                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
+                else
+                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Error, m_SendQueue.Count));
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while transmitting visit", ex);
+            }
+        }
+
+        public String GetSystemComment(String systemName)
+        {
+            dynamic answer = null; 
+            ErrorCodes retValue = ErrorCodes.No_Answer;
+            String transmissionString;
+            String commentString;
+
+            try
+            {
+
+                transmissionString = String.Format("/api-logs-v1/get-comment" +
+                                        "?commanderName={0}" +
+                                        "&apiKey={1}" +
+                                        "&systemName={2}",
+                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
+                                        systemName);
+
+                if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
+                    m_LogFile.Log(RemoveApiKey(transmissionString));
+
+                answer = GetDataFromServer(transmissionString);
+
+                if(answer != null)
+                {
+                    if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
+                        m_LogFile.Log(RemoveApiKey(answer.ToString()));
+
+                    retValue = answer.msgnum;
+                }
+
+                switch (retValue)
+                {
+                    case ErrorCodes.OK:
+                        commentString = answer.comment;
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
+                        break;
+                    case ErrorCodes.OK_NoData:
+                        commentString = "";
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
+                        break;
+                    default:
+                        commentString = null;
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Error, m_SendQueue.Count));
+                        break;
+                }
+
+                return commentString;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while recieving comment", ex);
+            }
+        }
+
+        private void i_TransmitComment(EDSMTransmissionData data)
+        {
+            dynamic answer = null; 
+            ErrorCodes retValue = ErrorCodes.No_Answer;
+            String transmissionString;
+
+            try
+            {
+
+                transmissionString = String.Format("/api-logs-v1/set-comment" +
+                                        "?commanderName={0}" +
+                                        "&apiKey={1}" +
+                                        "&systemName={2}" +
+                                        "&fromSoftware={3}" +
+                                        "&fromSoftwareVersion={4}" +
+                                        "&comment={5}" +
+                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
+                                        data.SystemName,
+                                        "ED-IBE",
+                                        m_CurrentVersion,
+                                        data.Comment);
+
+
+                if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
+                    m_LogFile.Log(RemoveApiKey(transmissionString));
+
+                answer = GetDataFromServer(transmissionString);
+
+                if(answer != null)
+                {
+                    if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
+                        m_LogFile.Log(RemoveApiKey(answer.ToString()));
+
+                    retValue = answer.msgnum;
+                }
+
+                if(retValue == ErrorCodes.OK)
+                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
+                else
+                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Error, m_SendQueue.Count));
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while transmitting comment", ex);
             }
         }
 

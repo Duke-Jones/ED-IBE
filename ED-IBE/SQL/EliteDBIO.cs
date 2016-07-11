@@ -4065,7 +4065,7 @@ namespace IBE.SQL
 
         #endregion
 
-        #region handling of EDCD data
+#region handling of EDCD data
 
         public void ImportEDCDData(frmDataIO.enImportTypes enImportTypes, String importFile)
         {
@@ -4241,7 +4241,7 @@ namespace IBE.SQL
                     
         }
 
-        #endregion
+#endregion
 
         public void ExportLocalizationDataToCSV(string fileName, enLocalizationType activeSetting)
         {
@@ -4524,15 +4524,18 @@ namespace IBE.SQL
                 throw new Exception("Error while retrieving system coordinates from database", ex);
             }
         }
-       
+
         /// <summary>
         /// sends the log entries with the given timestamps to EDSM
         /// </summary>
         /// <param name="timeStamps"></param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeRush", "Try statement without catch or finally")]
         public void SendLogToEDSM(List<DateTime> timeStamps)
         {
-            String sqlString    = "";
-            DataTable data      = new DataTable();
+            String sqlString        = "";
+            DataTable data          = new DataTable();
+            StringBuilder logData   = new StringBuilder();
+            String lastSystemname   = "";
 
             try
             {
@@ -4541,9 +4544,10 @@ namespace IBE.SQL
                     sqlString = String.Format("select L.time, Sy.Systemname" +
                                               " from tbLog L, tbSystems Sy" +
                                               " where L.system_id = Sy.id" +
-                                              " and L.time >= {0}" +
+                                              " and   L.time >= {0}" +
                                               " and   L.time <= {1}" +
-                                              " and   event_id = {2};",
+                                              " and   event_id = {2}" +
+                                              " order by l.time asc;",
                                               DBConnector.SQLDateTime(timeStamps.Min()),
                                               DBConnector.SQLDateTime(timeStamps.Max()), 
                                               BaseTableNameToID("eventtype", "Jumped To"));
@@ -4552,7 +4556,50 @@ namespace IBE.SQL
 
                     foreach (DataRow dRow in data.Rows)
                     {
-                        Program.EDSMComm.TransmitLogEntry((String)dRow["Systemname"], null, null, null, (DateTime)dRow["time"]);
+                        Program.EDSMComm.TransmitVisit((String)dRow["Systemname"], null, null, null, (DateTime)dRow["time"]);
+                    }
+
+
+
+                    sqlString = String.Format("select L.time, Sy.Systemname, Sy.id, L.notes" +
+                                              " from tbLog L, tbSystems Sy" +
+                                              " where L.system_id = Sy.id" +
+                                              " and   L.time >= {0}" +
+                                              " and   L.time <= {1}" +
+                                              " and   L.notes Is Not null" +
+                                              " and   Length(Trim(L.notes)) > 0" +
+                                              " order by Sy.id asc, l.time asc;",
+                                              DBConnector.SQLDateTime(timeStamps.Min()),
+                                              DBConnector.SQLDateTime(timeStamps.Max()));
+
+                    Program.DBCon.Execute(sqlString, data);
+
+
+                    for (int i = 0; i <= data.Rows.Count; i++)
+                    {
+                        if(i < data.Rows.Count)
+                        {
+                            DataRow dRow = data.Rows[i];
+
+                            if ((((String)dRow["Systemname"]) != lastSystemname) && (!String.IsNullOrEmpty(lastSystemname)))
+                            {
+                                // send comment
+                                Program.EDSMComm.TransmitCommentExtension(lastSystemname, logData.ToString());
+                                logData.Clear();
+                            }
+
+                            // extend comment
+                            logData.AppendLine(String.Format("{0:G}:", dRow["time"]));
+                            logData.AppendLine((String)dRow["notes"]);
+
+                            lastSystemname = (String)dRow["Systemname"];
+                        }
+                        else if(!String.IsNullOrEmpty(lastSystemname))
+                        {
+                            // send comment
+                            Program.EDSMComm.TransmitCommentExtension(lastSystemname, logData.ToString());
+                            logData.Clear();
+                        }
                     }
                 }
             }

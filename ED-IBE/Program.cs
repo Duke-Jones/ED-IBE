@@ -17,7 +17,10 @@ using IBE.MTPriceAnalysis;
 using IBE.FileScanner;
 using IBE.Enums_and_Utility_Classes;
 using EDCompanionAPI;
+
+#if useVNC 
 using NVNC;
+#endif
 
 namespace IBE
 {
@@ -268,7 +271,9 @@ namespace IBE
         public static EDSM.EDStarmapInterface               EDSMComm;
         public static PlausibiltyChecker                    PlausibiltyCheck;
         public static GameSettings                          GameSettings;
+#if useVNC 
         public static VncServer                             VNCAppServer;
+#endif
         public static System.Threading.Thread               VNCServerThread;
 
         /// <summary>
@@ -454,8 +459,10 @@ namespace IBE
                     EliteDBProcess = null;
                 }
 
+#if useVNC 
                 if(VNCAppServer != null)
                     VNCAppServer.Stop();
+#endif
 
                 //VNCServerThread = new System.Threading.Thread(new System.Threading.ThreadStart(s.Start));
 
@@ -553,6 +560,9 @@ namespace IBE
         {
             try
             {
+
+#if useVNC 
+
                 if(Program.DBCon.getIniValue<Boolean>("Settings", "ActivateVNC", false.ToString(), false))
                 {
                     VNCAppServer = new NVNC.VncServer("", "", 5901, 5900, "ED-IBE Remote", form1);
@@ -560,6 +570,8 @@ namespace IBE
                     VNCServerThread = new System.Threading.Thread(new System.Threading.ThreadStart(VNCAppServer.Start));
                     VNCServerThread.Start();
                 }
+
+#endif
             }
             catch (Exception ex)
             {

@@ -67,7 +67,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.cmdChangeSQLPort = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbVNCTest = new System.Windows.Forms.GroupBox();
             this.cbActivateVNC = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
@@ -92,7 +92,7 @@
             this.groupBox8.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.gbVNCTest.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -525,18 +525,18 @@
             this.label7.Text = "Port :";
             this.toolTip1.SetToolTip(this.label7, "To resolve conflicts with other tools you can change ");
             // 
-            // groupBox2
+            // gbVNCTest
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.gbVNCTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox2.Controls.Add(this.cbActivateVNC);
-            this.groupBox2.Location = new System.Drawing.Point(344, 542);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(300, 135);
-            this.groupBox2.TabIndex = 72;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "NVC-Server";
-            this.toolTip1.SetToolTip(this.groupBox2, "To resolve conflicts with other tools you can change \r\nthe port for the sql-commu" +
+            this.gbVNCTest.Controls.Add(this.cbActivateVNC);
+            this.gbVNCTest.Location = new System.Drawing.Point(344, 542);
+            this.gbVNCTest.Name = "gbVNCTest";
+            this.gbVNCTest.Size = new System.Drawing.Size(300, 135);
+            this.gbVNCTest.TabIndex = 72;
+            this.gbVNCTest.TabStop = false;
+            this.gbVNCTest.Text = "NVC-Server";
+            this.toolTip1.SetToolTip(this.gbVNCTest, "To resolve conflicts with other tools you can change \r\nthe port for the sql-commu" +
         "nication. Restart is required!");
             // 
             // cbActivateVNC
@@ -740,7 +740,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1164, 689);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.gbVNCTest);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);
@@ -766,8 +766,8 @@
             this.groupBox12.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbVNCTest.ResumeLayout(false);
+            this.gbVNCTest.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox13.ResumeLayout(false);
@@ -837,7 +837,7 @@
         private System.Windows.Forms.GroupBox groupBox13;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbVNCTest;
         private System.Windows.Forms.CheckBox cbActivateVNC;
 
     }

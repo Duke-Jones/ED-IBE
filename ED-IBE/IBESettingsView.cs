@@ -92,6 +92,10 @@ namespace IBE
             try
             {
                 Init();
+
+#if !useVNC 
+     gbVNCTest.Visible = false;
+#endif
             }
             catch (Exception ex)
             {

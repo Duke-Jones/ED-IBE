@@ -193,12 +193,6 @@
     <Compile Include="EDDN\EDDNRecievedArgs.cs" />
     <Compile Include="Enums and Utility Classes\PriceImportParameters.cs" />
     <Compile Include="Enums and Utility Classes\Settings\STA_INIFile.cs" />
-    <Compile Include="Enums and Utility Classes\TabControlExt.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Enums and Utility Classes\TabControlExt.Designer.cs">
-      <DependentUpon>TabControlExt.cs</DependentUpon>
-    </Compile>
     <Compile Include="Enums and Utility Classes\VersionExt.cs" />
     <Compile Include="Enums and Utility Classes\WindowData.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.cs">
@@ -1078,10 +1072,6 @@
     <ProjectReference Include="..\EDCompanionAPI\EDCompanionAPI.csproj">
       <Project>{50546805-f69d-4c2e-b2c5-2442864ab465}</Project>
       <Name>EDCompanionAPI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NVNC\NVNCServer.csproj">
-      <Project>{a749de42-b732-4541-86be-2ff3cbcb5ec4}</Project>
-      <Name>NVNCServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

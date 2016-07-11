@@ -20,6 +20,7 @@ todo:
 * inverting selection in commodity filter
 * update hint for new FDevIDs while starting
 * check permarefresh while downloading EDDB files
+* replace "monitor" with "lock
 
 
 todo for StarterTips:
@@ -32,6 +33,10 @@ todo for StarterTips:
 
 done:
 
+   * removed "VNC server" for the moment
+   * removed unnecessary reference to "TabControlExt" 
+   * optimizations on EDSM interface, sending of comments (needs more testing!)
+-------------------------------------------------------------------------------------         
    * basic interface to EDSM implemented 
 -------------------------------------------------------------------------------------         
    * added a new IBE icon
