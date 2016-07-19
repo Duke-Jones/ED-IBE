@@ -34,7 +34,8 @@ namespace IBE.EDSM
         public enum enTransmittedStates
         {
             Sent        =  0,
-            Error       =  1
+            Recieved    =  1,
+            Error       =  2
         }
         
  #endregion
@@ -274,33 +275,17 @@ namespace IBE.EDSM
             }
         }
 
-        public void TransmitCommentExtension(String systemName, string commentExtension)
+        public void TransmitCommentExtension(String systemName, String stationName, string commentExtension, DateTime dateVisited)
         {
             String transmissionString;
 
             try
             {
-                //transmissionString = String.Format("/api-logs-v1/set-comment" +
-                //                        "?commanderName={0}" +
-                //                        "&apiKey={1}" +
-                //                        "&systemName={2}" +
-                //                        "&fromSoftware={3}" +
-                //                        "&fromSoftwareVersion={4}" +
-                //                        "&comment={4}{5}",
-                //                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                //                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
-                //                        systemName, 
-                //                        "ED-IBE",
-                //                        m_CurrentVersion, 
-                //                        REPLACESTRING_OLD_COMMENT, 
-                //                        commentExtension);
-
-                //m_SendQueue.Enqueue(new Tuple<TransmissionType, String, String>(TransmissionType.CommentExtension, transmissionString, systemName));
-
                 m_SendQueue.Enqueue(new EDSMTransmissionData() { TType          = TransmissionType.CommentExtension,
                                                                  SystemName     = systemName,
-                                                                 Comment        = commentExtension});
-
+                                                                 Comment        = commentExtension,
+                                                                 StationName    = stationName,
+                                                                 DateVisited    = dateVisited});
             }
             catch (Exception ex)
             {
@@ -312,6 +297,7 @@ namespace IBE.EDSM
         {
             public TransmissionType    TType;
             public String              SystemName;
+            public String              StationName;
             public Double?             X;
             public Double?             Y;
             public Double?             Z;
@@ -322,54 +308,8 @@ namespace IBE.EDSM
 
         public void TransmitVisit(String systemName, Double? x, Double? y, Double? z, DateTime dateVisited)
         {
-            String transmissionString;
-
             try
             {
-
-                //if(x.HasValue && y.HasValue && z.HasValue)
-                //{
-                //    transmissionString = String.Format("/api-logs-v1/set-log" +
-                //                            "?commanderName={0}" +
-                //                            "&apiKey={1}" +
-                //                            "&systemName={2}" +
-                //                            "&x={3}" +
-                //                            "&y={4}" +
-                //                            "&z={5}" +
-                //                            "&fromSoftware={6}" +
-                //                            "&fromSoftwareVersion={7}" +
-                //                            "&dateVisited={8:yyyy-MM-dd HH:mm:ss}",
-                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
-                //                            systemName, 
-                //                            x.ToString().Replace(",","."), 
-                //                            y.ToString().Replace(",","."), 
-                //                            z.ToString().Replace(",","."),
-                //                            "ED-IBE",
-                //                            m_CurrentVersion, 
-                //                            dateVisited.ToUniversalTime());
-                //}
-                //else
-                //{
-                //    transmissionString = String.Format("/api-logs-v1/set-log" +
-                //                            "?commanderName={0}" +
-                //                            "&apiKey={1}" +
-                //                            "&systemName={2}" +
-                //                            "&fromSoftware={3}" +
-                //                            "&fromSoftwareVersion={4}" +
-                //                            "&dateVisited={5:yyyy-MM-dd HH:mm:ss}",
-                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                //                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""), 
-                //                            systemName, 
-                //                            "ED-IBE",
-                //                            m_CurrentVersion, 
-                //                            dateVisited.ToUniversalTime());
-
-                //}
-
-
-                //m_SendQueue.Enqueue(new Tuple<TransmissionType, String, String>(TransmissionType.Visit, transmissionString, ""));
-
                 m_SendQueue.Enqueue(new EDSMTransmissionData() { TType          = TransmissionType.Visit,
                                                                  SystemName     = systemName,
                                                                  X              = x,
@@ -407,8 +347,13 @@ namespace IBE.EDSM
                                     i_TransmitVisit(currentData);
                                     break;
                                 case TransmissionType.CommentExtension:
-                                    String oldComment = GetSystemComment(currentData.SystemName);
-                                    currentData.Comment = oldComment + "\r\n" + currentData.Comment;
+                                    String oldComment = GetSystemComment(currentData.SystemName, currentData.DateVisited);
+
+                                    if(!String.IsNullOrWhiteSpace(oldComment))
+                                    {
+                                        currentData.Comment = oldComment + "\r\n" + currentData.Comment;
+                                    }
+                                    
                                     i_TransmitComment(currentData);
                                     break;
                                 default:
@@ -514,6 +459,11 @@ namespace IBE.EDSM
 
         public String GetSystemComment(String systemName)
         {
+            return GetSystemComment(systemName, new DateTime(1900,1,1,0,0,0));
+        }
+
+        public String GetSystemComment(String systemName, DateTime timestamp)
+        {
             dynamic answer = null; 
             ErrorCodes retValue = ErrorCodes.No_Answer;
             String transmissionString;
@@ -522,13 +472,28 @@ namespace IBE.EDSM
             try
             {
 
-                transmissionString = String.Format("/api-logs-v1/get-comment" +
-                                        "?commanderName={0}" +
-                                        "&apiKey={1}" +
-                                        "&systemName={2}",
-                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
-                                        systemName);
+                if(timestamp.Year > 1970)
+                {
+                    transmissionString = String.Format("/api-logs-v1/get-comment" +
+                                            "?commanderName={0}" +
+                                            "&apiKey={1}" +
+                                            "&systemName={2}" +
+                                            "&dateVisited={3:yyyy-MM-dd HH:mm:ss}",
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
+                                            systemName, 
+                                            timestamp.ToUniversalTime());
+                }
+                else
+                {
+                    transmissionString = String.Format("/api-logs-v1/get-comment" +
+                                            "?commanderName={0}" +
+                                            "&apiKey={1}" +
+                                            "&systemName={2}",
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
+                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
+                                            systemName);
+                }
 
                 if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
                     m_LogFile.Log(RemoveApiKey(transmissionString));
@@ -547,11 +512,11 @@ namespace IBE.EDSM
                 {
                     case ErrorCodes.OK:
                         commentString = answer.comment;
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Recieved, m_SendQueue.Count));
                         break;
                     case ErrorCodes.OK_NoData:
                         commentString = "";
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Sent, m_SendQueue.Count));
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedStates.Recieved, m_SendQueue.Count));
                         break;
                     default:
                         commentString = null;
@@ -582,12 +547,14 @@ namespace IBE.EDSM
                                         "&systemName={2}" +
                                         "&fromSoftware={3}" +
                                         "&fromSoftwareVersion={4}" +
-                                        "&comment={5}" +
+                                        "&dateVisited={5:yyyy-MM-dd HH:mm:ss}" +
+                                        "&comment={6}",
                                         m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
                                         m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
                                         data.SystemName,
                                         "ED-IBE",
                                         m_CurrentVersion,
+                                        data.DateVisited.ToUniversalTime(),
                                         data.Comment);
 
 

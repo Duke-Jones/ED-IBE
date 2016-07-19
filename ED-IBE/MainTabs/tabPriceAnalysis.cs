@@ -42,6 +42,8 @@ namespace IBE.MTPriceAnalysis
         private Dictionary<String, Boolean>             m_IsRefreshed;                  // shows, which tabs already refreshed after a new filtering
         private Int32                                   m_ActiveCounter;                  
         private Boolean                                 m_InitDone                      = false;
+        private DataGridView                            m_ClickedDGV;
+        private MouseEventArgs                          m_ClickedDGVArgs;
 
         /// <summary>
         /// Constructor
@@ -1538,38 +1540,51 @@ namespace IBE.MTPriceAnalysis
 
         private void DataGridView_Click(object sender, EventArgs e)
         {
-            MouseEventArgs args;
-            DataGridView dgv1;
             DataGridView dgv2 = null;
             DataGridView.HitTestInfo hit;
 
             try
             {
-                args   = (MouseEventArgs)e;
+                m_ClickedDGVArgs   = (MouseEventArgs)e;
 
-                if(args.Button == System.Windows.Forms.MouseButtons.Right)
+                if(m_ClickedDGVArgs.Button == System.Windows.Forms.MouseButtons.Right)
                 { 
-                    dgv1   = (DataGridView)sender;
-                    hit   = dgv1.HitTest(args.X, args.Y);
-
+                    m_ClickedDGV   = (DataGridView)sender;
+                    hit   = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+                    
                     if (hit.Type == DataGridViewHitTestType.TopLeftHeader)
                     {
                         DataGridViewSettings Tool = new DataGridViewSettings();
 
-                        if(dgv1.Equals(dgvStation1))
+                        if(m_ClickedDGV.Equals(dgvStation1))
                             dgv2 = dgvStation2;
-                        else if(dgv1.Equals(dgvStation2))
+                        else if(m_ClickedDGV.Equals(dgvStation2))
                             dgv2 = dgvStation1;
 
-                        if(Tool.setVisibility(dgv1) == DialogResult.OK)
+                        if(Tool.setVisibility(m_ClickedDGV) == DialogResult.OK)
                         {
-                            m_GUIInterface.saveSetting(dgv1);
+                            m_GUIInterface.saveSetting(m_ClickedDGV);
 
                             if(dgv2 != null)
                             { 
-                                DataGridViewSettings.CloneSettings(ref dgv1, ref dgv2);
+                                DataGridViewSettings.CloneSettings(ref m_ClickedDGV, ref dgv2);
                                 m_GUIInterface.saveSetting(dgv2);
                             }
+                        }
+                    }
+                    else if (hit.Type == DataGridViewHitTestType.Cell)
+                    {
+                        if(m_ClickedDGV.Equals(dgvStationToStationRoutes))
+                        {
+                            contextMenuStrip2.Show(m_ClickedDGV, m_ClickedDGVArgs.Location);
+                        }
+                        else if(m_ClickedDGV.Equals(dgvAllCommodities))
+                        {
+                            contextMenuStrip3.Show(m_ClickedDGV, m_ClickedDGVArgs.Location);
+                        }
+                        else
+                        {
+                            contextMenuStrip1.Show(m_ClickedDGV, m_ClickedDGVArgs.Location);
                         }
                     }
                 }
@@ -1981,5 +1996,116 @@ namespace IBE.MTPriceAnalysis
                 RefreshDetailColors();
             }
         }
+
+        private void copySystemnameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo hit;
+            String resultString = "";
+            
+            try
+            {
+                hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+
+                if(m_ClickedDGV.Equals(dgvStation1) || m_ClickedDGV.Equals(dgvStation2))
+                {
+                    Int32 stationID = ((dsEliteDB.tmpa_s2s_stationdataRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Station_ID;
+                    resultString    = Program.Data.GetSystemnameFromStation(stationID);
+
+                }
+                else if(m_ClickedDGV.Equals(dgvStationToStationRoutes))
+                {
+                    if (((((ToolStripMenuItem)sender).Tag).ToString()) == "1")
+                        resultString = ((dsEliteDB.tmpa_s2s_besttripsRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).SystemName_1;
+                    else
+                        resultString = ((dsEliteDB.tmpa_s2s_besttripsRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).SystemName_2;
+
+                }
+                else if(m_ClickedDGV.Equals(dgvByStation))
+                {
+                    Int32 stationID = ((dsEliteDB.tmpa_bystationRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Station_ID;
+                    resultString    = Program.Data.GetSystemnameFromStation(stationID);
+
+                }
+                else if(m_ClickedDGV.Equals(dgvByCommodity))
+                {
+                    Int32 stationID = ((dsEliteDB.tmpa_bycommodityRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Station_ID;
+                    resultString    = Program.Data.GetSystemnameFromStation(stationID);
+
+                }
+                else if(m_ClickedDGV.Equals(dgvAllCommodities))
+                {
+                    Int32 stationID;
+
+                    if (((((ToolStripMenuItem)sender).Tag).ToString()) == "1")
+                        resultString = ((dsEliteDB.tmpa_allcommoditiesRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Buy_System;
+                    else
+                        resultString = ((dsEliteDB.tmpa_allcommoditiesRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Sell_System;
+
+                }
+
+                Clipboard.SetText(resultString);
+                Debug.Print(resultString);
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in copySystemnameToClipboardToolStripMenuItem_Click");
+            }
+        }
+
+        private void copyStationnameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo hit;
+            String resultString = "";
+            
+            try
+            {
+                hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+
+                if(m_ClickedDGV.Equals(dgvStation1) || m_ClickedDGV.Equals(dgvStation2))
+                {
+                    Int32 stationID = ((dsEliteDB.tmpa_s2s_stationdataRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Station_ID;
+                    resultString    = Program.Data.GetStationnameFromStationID(stationID);
+
+                }
+                else if(m_ClickedDGV.Equals(dgvStationToStationRoutes))
+                {
+                    if (((((ToolStripMenuItem)sender).Tag).ToString()) == "1")
+                        resultString = ((dsEliteDB.tmpa_s2s_besttripsRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).StationName_1;
+                    else
+                        resultString = ((dsEliteDB.tmpa_s2s_besttripsRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).StationName_2;
+
+                }
+                else if(m_ClickedDGV.Equals(dgvByStation))
+                {
+                    Int32 stationID = ((dsEliteDB.tmpa_bystationRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Station_ID;
+                    resultString    = Program.Data.GetStationnameFromStationID(stationID);
+
+                }
+                else if(m_ClickedDGV.Equals(dgvByCommodity))
+                {
+                    Int32 stationID = ((dsEliteDB.tmpa_bycommodityRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Station_ID;
+                    resultString    = Program.Data.GetStationnameFromStationID(stationID);
+
+                }
+                else if(m_ClickedDGV.Equals(dgvAllCommodities))
+                {
+                    Int32 stationID;
+
+                    if (((((ToolStripMenuItem)sender).Tag).ToString()) == "1")
+                        resultString = ((dsEliteDB.tmpa_allcommoditiesRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Buy_Station;
+                    else
+                        resultString = ((dsEliteDB.tmpa_allcommoditiesRow)((DataRowView)m_ClickedDGV.Rows[hit.RowIndex].DataBoundItem).Row).Sell_Station;
+
+                }
+
+                Clipboard.SetText(resultString);
+                Debug.Print(resultString);
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in copyStationnameToClipboardToolStripMenuItem_Click");
+            }
+        }
+
     }
 }

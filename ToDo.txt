@@ -15,9 +15,7 @@ todo:
 * delete wrong data from auto function (not required, tables seem to be obsolete)
 
 * avoid resizing of fonts
-* EDSM interface
 * VoiceAttack interface
-* inverting selection in commodity filter
 * update hint for new FDevIDs while starting
 * check permarefresh while downloading EDDB files
 * replace "monitor" with "lock
@@ -28,12 +26,17 @@ todo for StarterTips:
   - updating FDevIDs
   - download directory for eddb data is changed
   - right mouse click on cmdrs-log for edsm/ recalculate distances
+  - right mouse click on price analysis tabs for getting systemname
   
 *************************************************************************************
 
 done:
 
-   * removed "VNC server" for the moment
+   * added context menus for recalulation of jump distances in CommandersLog 
+   * added context menus "copy system/statiom name to clipboard" to CommandersLog grid
+   * added context menus "copy system/station name to clipboard" to all Price Analysis grids
+-------------------------------------------------------------------------------------         
+   * removed "VNC server" for the moment 
    * removed unnecessary reference to "TabControlExt" 
    * optimizations on EDSM interface, sending of comments (needs more testing!)
 -------------------------------------------------------------------------------------         

@@ -35,6 +35,8 @@ namespace IBE.MTCommandersLog
         private Boolean             m_CellValueNeededIsRegistered   = false;        // true if the event is already registred
         private Boolean             m_FirstRowShown                 = false;        // true after first time shown
         private DBGuiInterface      m_GUIInterface;
+        private DataGridView        m_ClickedDGV;
+        private MouseEventArgs      m_ClickedDGVArgs;
 
         /// <summary>
         /// Constructor
@@ -622,31 +624,29 @@ namespace IBE.MTCommandersLog
 
         private void dgvCommandersLog_Click(object sender, EventArgs e)
         {
-            MouseEventArgs args;
-            DataGridView dgv;
             DataGridView.HitTestInfo hit;
 
             try
             {
-                args   = (MouseEventArgs)e;
+                m_ClickedDGVArgs = (MouseEventArgs)e;
 
-                if(args.Button == System.Windows.Forms.MouseButtons.Right)
+                if(m_ClickedDGVArgs.Button == System.Windows.Forms.MouseButtons.Right)
                 { 
-                    dgv   = (DataGridView)sender;
-                    hit   = dgv.HitTest(args.X, args.Y);
+                    m_ClickedDGV    = (DataGridView)sender;
+                    hit             = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
 
                     if (hit.Type == DataGridViewHitTestType.TopLeftHeader)
                     {
                         DataGridViewSettings Tool = new DataGridViewSettings();
 
-                        if(Tool.setVisibility(dgv) == DialogResult.OK)
+                        if(Tool.setVisibility(m_ClickedDGV) == DialogResult.OK)
                         {
-                            m_GUIInterface.saveSetting(dgv);
+                            m_GUIInterface.saveSetting(m_ClickedDGV);
                         }
                     }
                     else if (hit.Type == DataGridViewHitTestType.Cell)
                     {
-                        cmsLog.Show(dgv, args.Location);
+                        cmsLog.Show(m_ClickedDGV, m_ClickedDGVArgs.Location);
                     }
                 }
             }
@@ -797,6 +797,8 @@ namespace IBE.MTCommandersLog
         {
             DataGridViewSelectedRowCollection rowColl;
             List<DateTime> timeStamps = new List<DateTime>();
+            DataGridView.HitTestInfo hit;
+            String resultString = "";
 
             try
             {
@@ -809,7 +811,10 @@ namespace IBE.MTCommandersLog
                     }
                 }
                 else
-                    timeStamps.Add((DateTime)dgvCommandersLog.CurrentRow.Cells[dgvCommandersLog.Columns["time"].Index].Value);
+                {
+                    hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+                    timeStamps.Add((DateTime)m_ClickedDGV.Rows[hit.RowIndex].Cells[dgvCommandersLog.Columns["time"].Index].Value);
+                }
 
                 Program.Data.SendLogToEDSM(timeStamps);
 
@@ -819,5 +824,94 @@ namespace IBE.MTCommandersLog
                 CErr.processError(ex, "Error while sending selected log rows to EDSM");
             }
         }
+
+        private void tsmiRecalcJumpDistance_Click(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection rowColl;
+            List<DateTime> timeStamps = new List<DateTime>();
+            DataGridView.HitTestInfo hit;
+            String resultString = "";
+
+            try
+            {
+                if(dgvCommandersLog.SelectedRows.Count > 0)
+                {
+                    foreach (DataGridViewRow dgvRow in dgvCommandersLog.SelectedRows)
+                    {
+                        dgvCommandersLog.CurrentCell = dgvRow.Cells[dgvCommandersLog.Columns["time"].Index];
+                        timeStamps.Add((DateTime)dgvRow.Cells[dgvCommandersLog.Columns["time"].Index].Value);
+                    }
+                }
+                else
+                {
+                    hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+                    timeStamps.Add((DateTime)m_ClickedDGV.Rows[hit.RowIndex].Cells[dgvCommandersLog.Columns["time"].Index].Value);
+                }
+
+                Program.Data.RecalcJumpDistancesInLog(timeStamps.Min(), timeStamps.Max());
+                RefreshData();
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while sending selected log rows to EDSM");
+            }
+        }
+
+        private void copySystemnameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo hit;
+            String resultString = "";
+            
+            try
+            {
+                hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+
+                if(m_ClickedDGV.Equals(dgvCommandersLog))
+                {
+                    var timeStamp = (DateTime)m_ClickedDGV.Rows[hit.RowIndex].Cells[dgvCommandersLog.Columns["time"].Index].Value;
+
+                    dsEliteDB.vilogRow data = Program.Data.GetLogByTimestamp(timeStamp);
+
+                    if(data != null)
+                        resultString = data.systemname;
+                }
+
+                Clipboard.SetText(resultString);
+                Debug.Print(resultString);
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in copySystemnameToClipboardToolStripMenuItem_Click");
+            }
+        }
+
+        private void copyStationnameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo hit;
+            String resultString = "";
+            
+            try
+            {
+                hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+
+                if(m_ClickedDGV.Equals(dgvCommandersLog))
+                {
+                    var timeStamp = (DateTime)m_ClickedDGV.Rows[hit.RowIndex].Cells[dgvCommandersLog.Columns["time"].Index].Value;
+
+                    dsEliteDB.vilogRow data = Program.Data.GetLogByTimestamp(timeStamp);
+
+                    if(data != null)
+                        resultString = data.stationname;
+                }
+
+                Clipboard.SetText(resultString);
+                Debug.Print(resultString);
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in copyStationnameToClipboardToolStripMenuItem_Click");
+            }
+        }
+
     }
 }

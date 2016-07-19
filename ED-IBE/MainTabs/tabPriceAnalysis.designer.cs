@@ -298,6 +298,21 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.cmbStationLightSeconds = new System.Windows.Forms.ComboBoxInt32();
             this.cmbSystemLightYears = new System.Windows.Forms.ComboBoxInt32();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copySystemnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStationname1ToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.copySystemname2ToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStationname2ToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copybuyStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copysellStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.tpAllCommodities.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scAllCommodities_1)).BeginInit();
@@ -340,6 +355,9 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTimeFilterDays)).BeginInit();
             this.groupBox4.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
+            this.contextMenuStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbOnlyStationsWithin
@@ -2699,6 +2717,125 @@
             this.cmbSystemLightYears.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbSystemLightYears_KeyDown);
             this.cmbSystemLightYears.Leave += new System.EventHandler(this.cmbSystemLightYears_Leave);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copySystemnameToClipboardToolStripMenuItem,
+            this.copyStationnameToClipboardToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 48);
+            this.contextMenuStrip1.Tag = "";
+            // 
+            // copySystemnameToClipboardToolStripMenuItem
+            // 
+            this.copySystemnameToClipboardToolStripMenuItem.Name = "copySystemnameToClipboardToolStripMenuItem";
+            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copySystemnameToClipboardToolStripMenuItem.Text = "Copy systemname to clipboard";
+            this.copySystemnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
+            // 
+            // copyStationnameToClipboardToolStripMenuItem
+            // 
+            this.copyStationnameToClipboardToolStripMenuItem.Name = "copyStationnameToClipboardToolStripMenuItem";
+            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copyStationnameToClipboardToolStripMenuItem.Text = "Copy stationname to clipboard";
+            this.copyStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.copyStationname1ToClipboardToolStripMenuItem1,
+            this.toolStripMenuItem4,
+            this.copySystemname2ToClipboardToolStripMenuItem,
+            this.copyStationname2ToClipboardToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip1";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(216, 98);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItem1.Tag = "1";
+            this.toolStripMenuItem1.Text = "Copy systemname 1 to clipboard";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
+            // 
+            // copyStationname1ToClipboardToolStripMenuItem1
+            // 
+            this.copyStationname1ToClipboardToolStripMenuItem1.Name = "copyStationname1ToClipboardToolStripMenuItem1";
+            this.copyStationname1ToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(215, 22);
+            this.copyStationname1ToClipboardToolStripMenuItem1.Tag = "1";
+            this.copyStationname1ToClipboardToolStripMenuItem1.Text = "Copy stationname 1 to clipboard";
+            this.copyStationname1ToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(212, 6);
+            // 
+            // copySystemname2ToClipboardToolStripMenuItem
+            // 
+            this.copySystemname2ToClipboardToolStripMenuItem.Name = "copySystemname2ToClipboardToolStripMenuItem";
+            this.copySystemname2ToClipboardToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.copySystemname2ToClipboardToolStripMenuItem.Tag = "2";
+            this.copySystemname2ToClipboardToolStripMenuItem.Text = "Copy systemname 2 to clipboard";
+            this.copySystemname2ToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
+            // 
+            // copyStationname2ToClipboardToolStripMenuItem
+            // 
+            this.copyStationname2ToClipboardToolStripMenuItem.Name = "copyStationname2ToClipboardToolStripMenuItem";
+            this.copyStationname2ToClipboardToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.copyStationname2ToClipboardToolStripMenuItem.Tag = "2";
+            this.copyStationname2ToClipboardToolStripMenuItem.Text = "Copy stationname 2 to clipboard";
+            this.copyStationname2ToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
+            // contextMenuStrip3
+            // 
+            this.contextMenuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.copybuyStationnameToClipboardToolStripMenuItem,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem3,
+            this.copysellStationnameToClipboardToolStripMenuItem});
+            this.contextMenuStrip3.Name = "contextMenuStrip1";
+            this.contextMenuStrip3.Size = new System.Drawing.Size(232, 120);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(231, 22);
+            this.toolStripMenuItem2.Tag = "1";
+            this.toolStripMenuItem2.Text = "Copy \'buy\' systemname to clipboard";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
+            // 
+            // copybuyStationnameToClipboardToolStripMenuItem
+            // 
+            this.copybuyStationnameToClipboardToolStripMenuItem.Name = "copybuyStationnameToClipboardToolStripMenuItem";
+            this.copybuyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.copybuyStationnameToClipboardToolStripMenuItem.Tag = "1";
+            this.copybuyStationnameToClipboardToolStripMenuItem.Text = "Copy \'buy\' stationname to clipboard";
+            this.copybuyStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(228, 6);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(231, 22);
+            this.toolStripMenuItem3.Tag = "2";
+            this.toolStripMenuItem3.Text = "Copy \'sell\' systemname to clipboard";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
+            // 
+            // copysellStationnameToClipboardToolStripMenuItem
+            // 
+            this.copysellStationnameToClipboardToolStripMenuItem.Name = "copysellStationnameToClipboardToolStripMenuItem";
+            this.copysellStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.copysellStationnameToClipboardToolStripMenuItem.Tag = "2";
+            this.copysellStationnameToClipboardToolStripMenuItem.Text = "Copy \'sell\' stationname to clipboard";
+            this.copysellStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
             // tabPriceAnalysis
             // 
             this.Controls.Add(this.groupBox4);
@@ -2767,6 +2904,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudTimeFilterDays)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
+            this.contextMenuStrip3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2975,7 +3115,20 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn profitDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Source;
-
-
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem copySystemnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem copySystemname2ToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem copyStationnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyStationname1ToClipboardToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem copyStationname2ToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copybuyStationnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem copysellStationnameToClipboardToolStripMenuItem;
     }
 }

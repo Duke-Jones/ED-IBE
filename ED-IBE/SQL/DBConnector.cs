@@ -444,7 +444,13 @@ namespace IBE.SQL
 
         public T Execute <T>(string CommandText) 
         {
-            T retValue = Activator.CreateInstance<T>(); 
+            T retValue;
+
+            if (typeof(T) == typeof(String))
+                retValue = (T)Convert.ChangeType("", typeof(T));
+            else
+                retValue = Activator.CreateInstance<T>();
+            
 
             Object DataObject = null;
 

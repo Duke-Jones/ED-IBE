@@ -2819,8 +2819,8 @@ namespace IBE.SQL
 
             try
             {
-                system   = companionData.GetValue("lastSystem.name").ToString();
-                starPort = companionData.GetValue("lastStarport.name").ToString();
+                system   = companionData["lastSystem"]["name"].ToString();
+                starPort = companionData["lastStarport"]["name"].ToString();
 
                 foreach (Newtonsoft.Json.Linq.JToken commodity in companionData.SelectTokens("lastStarport.commodities[*]"))
                 {                                                  
@@ -3840,10 +3840,27 @@ namespace IBE.SQL
         }
 
         /// <summary>
-        /// adds missing distances in the tbLog-table
+        /// recalculates distances in the tbLog-table
         /// </summary>
-        /// <param name="maxAge">considers only entrys, if they are younger or equal than ..</param>
-        internal void addMissingDistancesInLog(DateTime maxAge)
+        /// <param name="startTime">considers only entries, if they are younger or equal than ..</param>
+        internal void RecalcJumpDistancesInLog(DateTime maxAge)
+        {
+            try
+            {
+                RecalcJumpDistancesInLog(maxAge, DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while recalcing jump distances with 'maxage'", ex);
+            }
+        }
+
+        /// <summary>
+        /// recalculates distances in the tbLog-table
+        /// </summary>
+        /// <param name="startTime">considers only entries, if they are younger or equal than ..</param>
+        /// <param name="endTime">considers only entries, if they are older or equal than ..</param>
+        internal void RecalcJumpDistancesInLog(DateTime startTime, DateTime endTime)
         {
             String sqlString;
             Dictionary<string, string> retValue = new  Dictionary<string, string>();
@@ -3863,14 +3880,18 @@ namespace IBE.SQL
                              "     and ((L1.x <> 0.0 AND L1.y <> 0.0 AND L1.Z <> 0.0) Or (L1.Systemname = 'Sol'))" +
                              "     and ((L2.x <> 0.0 AND L2.y <> 0.0 AND L2.Z <> 0.0) Or (L2.Systemname = 'Sol'))" +
                              "     and L1.time >= {0}" +
+                             "     and L1.time <= {1}" +
                              " order by L1.time desc) c" +
                              " set Lg.distance = c.Distance_Between" +
                              " where Lg.time = c.T1", 
-                             DBConnector.SQLDateTime(maxAge));
+                             DBConnector.SQLDateTime(startTime), 
+                             DBConnector.SQLDateTime(endTime));
+
+                Program.DBCon.Execute(sqlString);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while getting dictionary of all economylevels", ex);
+                throw new Exception("Error while recalcing jump distances", ex);
             }
         }
 
@@ -4561,45 +4582,81 @@ namespace IBE.SQL
 
 
 
-                    sqlString = String.Format("select L.time, Sy.Systemname, Sy.id, L.notes" +
-                                              " from tbLog L, tbSystems Sy" +
-                                              " where L.system_id = Sy.id" +
+                    //sqlString = String.Format("select L.time, Sy.Systemname, Sy.id, L.notes" +
+                    //                          " from tbLog L, tbSystems Sy" +
+                    //                          " where L.system_id = Sy.id" +
+                    //                          " and   L.time >= {0}" +
+                    //                          " and   L.time <= {1}" +
+                    //                          " and   L.notes Is Not null" +
+                    //                          " and   Length(Trim(L.notes)) > 0" +
+                    //                          " order by Sy.id asc, l.time asc;",
+                    //                          DBConnector.SQLDateTime(timeStamps.Min()),
+                    //                          DBConnector.SQLDateTime(timeStamps.Max()));
+
+                    //Program.DBCon.Execute(sqlString, data);
+
+
+                    //for (int i = 0; i <= data.Rows.Count; i++)
+                    //{
+                    //    if(i < data.Rows.Count)
+                    //    {
+                    //        DataRow dRow = data.Rows[i];
+
+                    //        if ((((String)dRow["Systemname"]) != lastSystemname) && (!String.IsNullOrEmpty(lastSystemname)))
+                    //        {
+                    //            // send comment
+                    //            Program.EDSMComm.TransmitCommentExtension(lastSystemname, logData.ToString());
+                    //            logData.Clear();
+                    //        }
+
+                    //        // extend comment
+                    //        logData.AppendLine(String.Format("{0:G}:", dRow["time"]));
+                    //        logData.AppendLine((String)dRow["notes"]);
+
+                    //        lastSystemname = (String)dRow["Systemname"];
+                    //    }
+                    //    else if(!String.IsNullOrEmpty(lastSystemname))
+                    //    {
+                    //        // send comment
+                    //        Program.EDSMComm.TransmitCommentExtension(lastSystemname, logData.ToString());
+                    //        logData.Clear();
+                    //    }
+                    //}
+
+
+                    sqlString = String.Format("select L.time, Sy.Systemname, St.Stationname, Sy.id, L.notes" +
+                                              " from tbSystems Sy, tbLog L left join tbStations St on L.station_id = St.id" +
+                                              " where L.system_id  = Sy.id" +
                                               " and   L.time >= {0}" +
                                               " and   L.time <= {1}" +
                                               " and   L.notes Is Not null" +
                                               " and   Length(Trim(L.notes)) > 0" +
-                                              " order by Sy.id asc, l.time asc;",
+                                              " order by l.time asc;",
                                               DBConnector.SQLDateTime(timeStamps.Min()),
                                               DBConnector.SQLDateTime(timeStamps.Max()));
 
                     Program.DBCon.Execute(sqlString, data);
 
 
-                    for (int i = 0; i <= data.Rows.Count; i++)
+                    for (int i = 0; i < data.Rows.Count; i++)
                     {
-                        if(i < data.Rows.Count)
-                        {
-                            DataRow dRow = data.Rows[i];
+                        DataRow dRow = data.Rows[i];
 
-                            if ((((String)dRow["Systemname"]) != lastSystemname) && (!String.IsNullOrEmpty(lastSystemname)))
-                            {
-                                // send comment
-                                Program.EDSMComm.TransmitCommentExtension(lastSystemname, logData.ToString());
-                                logData.Clear();
-                            }
+                        String stationName = dRow["Stationname"].ToString();
 
-                            // extend comment
-                            logData.AppendLine(String.Format("{0:G}:", dRow["time"]));
-                            logData.AppendLine((String)dRow["notes"]);
+                        if(!String.IsNullOrWhiteSpace(stationName))
+                            logData.AppendLine(String.Format("{0:G} - {1} :", dRow["time"], stationName));
+                        else
+                            logData.AppendLine(String.Format("{0:G} :", dRow["time"]));
 
-                            lastSystemname = (String)dRow["Systemname"];
-                        }
-                        else if(!String.IsNullOrEmpty(lastSystemname))
-                        {
-                            // send comment
-                            Program.EDSMComm.TransmitCommentExtension(lastSystemname, logData.ToString());
-                            logData.Clear();
-                        }
+                        
+                        logData.AppendLine((String)dRow["notes"]);
+                        // send comment
+
+                        Program.EDSMComm.TransmitCommentExtension((String)dRow["Systemname"], stationName, 
+                                                                  System.Text.RegularExpressions.Regex.Replace(logData.ToString(), "(?<!\r)\n", "\r\n"), 
+                                                                  (DateTime)dRow["time"]);
+                        logData.Clear();
                     }
                 }
             }
@@ -4608,5 +4665,78 @@ namespace IBE.SQL
                 throw new Exception("Error while collecting data for transmission to EDSM", ex);
             }
         }
+
+        /// <summary>
+        /// returns the name of a system through a given station-id
+        /// </summary>
+        /// <param name="stationID"></param>
+        /// <returns></returns>
+        public String GetSystemnameFromStation(int stationID)
+        {
+            try
+            {
+                return Program.DBCon.Execute<String>("select systemname from tbSystems Sy, tbStations St" +
+                                                     " where Sy.id = St.System_id" +
+                                                     " and   St.id = " + stationID).ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting a systemname from a station id", ex);
+            }
+        }
+
+        /// <summary>
+        /// returns the name of a system through a given station-id
+        /// </summary>
+        /// <param name="stationID"></param>
+        /// <returns></returns>
+        public String GetStationnameFromStationID(int stationID)
+        {
+            try
+            {
+                return Program.DBCon.Execute<String>("select stationname from tbSystems Sy, tbStations St" +
+                                                     " where Sy.id = St.System_id" +
+                                                     " and   St.id = " + stationID).ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting a stationname from a station id", ex);
+            }
+        }
+
+        /// <summary>
+        /// returns a single log entry identified by its timestamp
+        /// </summary>
+        /// <param name="timeStamp"></param>
+        /// <returns></returns>
+        public dsEliteDB.vilogRow GetLogByTimestamp(DateTime timeStamp)
+        {
+            try
+            {
+                dsEliteDB.vilogDataTable data = new dsEliteDB.vilogDataTable();
+
+                // the query is the vilog, but with the added 'where' clause to improve the query speed
+                String sqlString = "select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eevent`,`c`.`cargoaction`" +
+                                   " AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` " +
+                                   " AS `credits_transaction`,`l`.`credits_total` AS `credits_total`, `l`.`distance` AS `distance`, `l`.`notes` AS `notes` from (((((`tblog` `l` " +
+                                   " left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) " +
+                                   " left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) " +
+                                   " left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`))) " +
+                                   " where time = " + DBConnector.SQLDateTime(timeStamp);
+
+                if(Program.DBCon.Execute(sqlString, data) > 0)
+                    return (dsEliteDB.vilogRow)data.Rows[0];
+                else
+                    return null;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting a stationname from a station id", ex);
+            }
+        }
+
+
     }
 }

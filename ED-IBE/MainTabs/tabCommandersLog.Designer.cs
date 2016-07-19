@@ -66,6 +66,13 @@
             this.nbCurrentCredits = new System.Windows.Forms.NumericUpDown_ro();
             this.label1 = new System.Windows.Forms.Label();
             this.cb_ShowEditField = new System.Windows.Forms.CheckBox();
+            this.cmsLog = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copySystemnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiRecalcJumpDistance = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiSendToEDSM = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvCommandersLog = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -78,15 +85,12 @@
             this.credits_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cmsLog = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiRecalcJumpDistance = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiSendToEDSM = new System.Windows.Forms.ToolStripMenuItem();
             this.gbCL_LogEdit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).BeginInit();
             this.cmsLog.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).BeginInit();
             this.SuspendLayout();
             // 
             // gbCL_LogEdit
@@ -445,6 +449,56 @@
             this.cb_ShowEditField.UseVisualStyleBackColor = true;
             this.cb_ShowEditField.CheckedChanged += new System.EventHandler(this.cmdCL_ShowHide_CheckedChanged);
             // 
+            // cmsLog
+            // 
+            this.cmsLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copySystemnameToClipboardToolStripMenuItem,
+            this.copyStationnameToClipboardToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.tsmiRecalcJumpDistance,
+            this.toolStripMenuItem2,
+            this.tsmiSendToEDSM});
+            this.cmsLog.Name = "cmsLog";
+            this.cmsLog.Size = new System.Drawing.Size(208, 104);
+            // 
+            // copySystemnameToClipboardToolStripMenuItem
+            // 
+            this.copySystemnameToClipboardToolStripMenuItem.Name = "copySystemnameToClipboardToolStripMenuItem";
+            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copySystemnameToClipboardToolStripMenuItem.Text = "Copy systemname to clipboard";
+            this.copySystemnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
+            // 
+            // copyStationnameToClipboardToolStripMenuItem
+            // 
+            this.copyStationnameToClipboardToolStripMenuItem.Name = "copyStationnameToClipboardToolStripMenuItem";
+            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copyStationnameToClipboardToolStripMenuItem.Text = "Copy stationname to clipboard";
+            this.copyStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 6);
+            // 
+            // tsmiRecalcJumpDistance
+            // 
+            this.tsmiRecalcJumpDistance.Name = "tsmiRecalcJumpDistance";
+            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(207, 22);
+            this.tsmiRecalcJumpDistance.Text = "recalculate jump distance";
+            this.tsmiRecalcJumpDistance.Click += new System.EventHandler(this.tsmiRecalcJumpDistance_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 6);
+            // 
+            // tsmiSendToEDSM
+            // 
+            this.tsmiSendToEDSM.Name = "tsmiSendToEDSM";
+            this.tsmiSendToEDSM.Size = new System.Drawing.Size(207, 22);
+            this.tsmiSendToEDSM.Text = "send log entry(s) to EDSM";
+            this.tsmiSendToEDSM.Click += new System.EventHandler(this.tsmiSendToEDSM_Click);
+            // 
             // dgvCommandersLog
             // 
             this.dgvCommandersLog.AllowUserToAddRows = false;
@@ -587,27 +641,6 @@
             this.notes.Name = "notes";
             this.notes.ReadOnly = true;
             // 
-            // cmsLog
-            // 
-            this.cmsLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiRecalcJumpDistance,
-            this.tsmiSendToEDSM});
-            this.cmsLog.Name = "cmsLog";
-            this.cmsLog.Size = new System.Drawing.Size(185, 48);
-            // 
-            // tsmiRecalcJumpDistance
-            // 
-            this.tsmiRecalcJumpDistance.Name = "tsmiRecalcJumpDistance";
-            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(184, 22);
-            this.tsmiRecalcJumpDistance.Text = "recalculate jump distance";
-            // 
-            // tsmiSendToEDSM
-            // 
-            this.tsmiSendToEDSM.Name = "tsmiSendToEDSM";
-            this.tsmiSendToEDSM.Size = new System.Drawing.Size(184, 22);
-            this.tsmiSendToEDSM.Text = "send log entry(s) to EDSM";
-            this.tsmiSendToEDSM.Click += new System.EventHandler(this.tsmiSendToEDSM_Click);
-            // 
             // tabCommandersLog
             // 
             this.Controls.Add(this.gbCL_LogEdit);
@@ -620,8 +653,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbCurrentCredits)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).EndInit();
             this.cmsLog.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommandersLog)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -673,5 +706,9 @@
         private System.Windows.Forms.ContextMenuStrip cmsLog;
         private System.Windows.Forms.ToolStripMenuItem tsmiRecalcJumpDistance;
         private System.Windows.Forms.ToolStripMenuItem tsmiSendToEDSM;
+        private System.Windows.Forms.ToolStripMenuItem copySystemnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyStationnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     }
 }

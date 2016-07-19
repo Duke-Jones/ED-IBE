@@ -677,7 +677,7 @@ namespace IBE
                                 }
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 1, Total = 1 });
 
-                                Program.Data.addMissingDistancesInLog(new DateTime(1970, 01, 01));
+                                Program.Data.RecalcJumpDistancesInLog(new DateTime(1970, 01, 01));
 
                                 m_DataImportHappened = true;              
                                 stationOrCommodityImport = true;

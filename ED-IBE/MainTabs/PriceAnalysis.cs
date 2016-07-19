@@ -1142,7 +1142,7 @@ namespace IBE.MTPriceAnalysis
             String sqlString;
             try
             {
-                sqlString = String.Format("select Cd.Commodity_ID, Co.LocCommodity As Commodity, " +
+                sqlString = String.Format("select St.ID as Station_ID, Cd.Commodity_ID, Co.LocCommodity As Commodity, " +
                                           "        Cd.Buy, Cd.Supply, Cd.SupplyLevel, " +
                                           "        Cd.Sell, Cd.Demand, Cd.DemandLevel, " +
                                           "        Cd.Timestamp, BB.Best_Buy, BS.Best_Sell, " +
