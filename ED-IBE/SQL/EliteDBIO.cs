@@ -85,8 +85,7 @@ namespace IBE.SQL
         private const Int32 m_TimeSlice_ms      = 500;
         private const Int32 m_PercentSlice      = 10;
         private PerformanceTimer m_EventTimer   = new PerformanceTimer();
-        private Int32 m_lastProgress            = 0;
-        private Boolean m_ProgressCancelled     = false;
+        private long m_lastProgress             = 0;
 
         /// <summary>
         /// checks if the import of old data is done or sets the value
@@ -115,6 +114,29 @@ namespace IBE.SQL
             }
         }
 
+        //public event EventHandler<ProgressEventArgs_OLD> Progress;
+
+        //protected virtual void OnProgress(ProgressEventArgs_OLD e)
+        //{
+        //    EventHandler<ProgressEventArgs_OLD> myEvent = Progress;
+        //    if (myEvent != null)
+        //    {
+        //        myEvent(this, e);
+        //    }
+        //}
+
+        //public class ProgressEventArgs_OLD : EventArgs
+        //{
+        //    public String Tablename { get; set; }
+        //    public Int32  Index { get; set; }
+        //    public Int32  Total { get; set; }
+        //    public String Unit { get; set; }
+        //    public ProgressView progressObject;
+        //    public Boolean Single_NoReuse{ get; set; }
+        //    public Boolean Clear { get; set; }
+            
+        //}
+
         public event EventHandler<ProgressEventArgs> Progress;
 
         protected virtual void OnProgress(ProgressEventArgs e)
@@ -128,38 +150,52 @@ namespace IBE.SQL
 
         public class ProgressEventArgs : EventArgs
         {
-            public String Tablename { get; set; }
-            public Int32  Index { get; set; }
-            public Int32  Total { get; set; }
+            public String Info { get; set; }
+            public Int64  CurrentValue { get; set; }
+            public Int64  TotalValue { get; set; }
             public String Unit { get; set; }
-            public ProgressView progressObject;
-            public Boolean Single_NoReuse{ get; set; }
-            
+            public Boolean NewLine{ get; set; }
+            public Boolean Clear { get; set; }
+            public Boolean AddSeparator { get; set; }
+            public Boolean ForceRefresh { get; set; }
+            public Boolean Cancelled { get; set; }
+
+         
+            public ProgressEventArgs()
+            {
+                Info            = null;
+                CurrentValue    = -1;
+                TotalValue      = -1;
+                Unit            = null;
+                NewLine         = false;
+                Clear           = false;
+                AddSeparator    = false;
+                ForceRefresh    = false;
+                Cancelled       = false;
+            }
+               
         }
 
         /// <summary>
         /// fires the progress event if necessary
         /// </summary>
-        /// <param name="Tablename"></param>
-        /// <param name="Index"></param>
-        /// <param name="Total"></param>
-        private Boolean sendProgressEvent(String Tablename, Int32 Index, Int32 Total, Boolean noSuppress = false, Boolean nextNoReuse = false)
+        /// <param name="pEArgs"></param>
+        /// <returns>"true", if the process should be cancelled, otherwise "false"</returns>
+        private Boolean sendProgressEvent(ProgressEventArgs pEArgs)
         {
-            Int32   ProgressSendLevel;
-            ProgressEventArgs pEArgs    = null;
+            long   ProgressSendLevel;
             Boolean retValue            = false;
 
             try 
 	        {	        
                
-		        if((m_EventTimer.currentMeasuring() > m_TimeSlice_ms) || noSuppress)
+		        if((m_EventTimer.currentMeasuring() > m_TimeSlice_ms) || pEArgs.ForceRefresh || pEArgs.NewLine || pEArgs.AddSeparator)
                 {
                     // time is reason
-                    pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total, Single_NoReuse = nextNoReuse};
                     Progress.Raise(this, pEArgs);
 
-                    if(Total > 0)
-                        ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
+                    if(pEArgs.TotalValue > 0)
+                        ProgressSendLevel =  ((100 * pEArgs.CurrentValue/pEArgs.TotalValue) / 10) * 10;
                     else
                         ProgressSendLevel =  -1;
 
@@ -170,20 +206,16 @@ namespace IBE.SQL
                 }
                 else
                 { 
-                    if(Index == 2 && Total == 8)
-                        Debug.Print("!");
-
                     // progress is reason
-                    if(Total > 0)
-                        ProgressSendLevel =  ((100 * Index/Total) / 10) * 10;
+                    if(pEArgs.TotalValue > 0)
+                        ProgressSendLevel =  ((100 * pEArgs.CurrentValue/pEArgs.TotalValue) / 10) * 10;
                     else
                         ProgressSendLevel =  -1;
                     
-                    if(((Total != 0) && (((100 * Index/Total) % m_PercentSlice) == 0) && (ProgressSendLevel != m_lastProgress)) || 
+                    if(((pEArgs.TotalValue != 0) && (((100 * pEArgs.CurrentValue/pEArgs.TotalValue) % m_PercentSlice) == 0) && (ProgressSendLevel != m_lastProgress)) || 
                        (ProgressSendLevel != m_lastProgress))
                     { 
                         // time is reason
-                        pEArgs = new ProgressEventArgs() { Tablename = Tablename, Index = Index, Total = Total, Single_NoReuse = nextNoReuse};
                         Progress.Raise(this, pEArgs);
 
                         m_EventTimer.startMeasuring();
@@ -192,10 +224,7 @@ namespace IBE.SQL
                     }
                 }
 
-                if((pEArgs != null) && (pEArgs.progressObject != null) && pEArgs.progressObject.Cancelled)
-                    m_ProgressCancelled = true;
-                else
-                    m_ProgressCancelled = false;
+                retValue = pEArgs.Cancelled ;
 
                 return retValue;
 	        }
@@ -471,7 +500,7 @@ namespace IBE.SQL
 
                 lDBCon.TransBegin();
                 
-                sendProgressEvent("import commodities", 0, Commodities.Count);
+                sendProgressEvent(new ProgressEventArgs() { Info="import commodities", CurrentValue=0, TotalValue=Commodities.Count });
 
                 // insert or update all commodities
                 foreach (EDCommodities Commodity in Commodities)
@@ -501,9 +530,10 @@ namespace IBE.SQL
                     lDBCon.Execute(sqlString);
 
                     Counter++;
-                    sendProgressEvent("import commodities", Counter, Commodities.Count);
 
-                    if(m_ProgressCancelled)
+                    
+                    
+                    if(sendProgressEvent(new ProgressEventArgs() { Info="import commodities", CurrentValue=Counter, TotalValue=Commodities.Count }))
                         break;
                 }
 
@@ -598,7 +628,7 @@ namespace IBE.SQL
 
                 if(DataNames.Tables["Names"] != null)
                 { 
-                    sendProgressEvent("import commodity localization", Counter, DataNames.Tables["Names"].Rows.Count);
+                    sendProgressEvent(new ProgressEventArgs() {Info="import commodity localization", CurrentValue=Counter, TotalValue=DataNames.Tables["Names"].Rows.Count });
 
                     // first check if there's a new language
                     foreach (DataColumn LanguageFromFile in DataNames.Tables["Names"].Columns)
@@ -708,7 +738,7 @@ namespace IBE.SQL
                         }
 
                         Counter++;
-                        sendProgressEvent("import commodity localization", Counter, DataNames.Tables["Names"].Rows.Count);
+                        sendProgressEvent(new ProgressEventArgs() {Info="import commodity localization", CurrentValue=Counter, TotalValue=DataNames.Tables["Names"].Rows.Count });
 
                         //if((Counter % 50) == 0)
                         //    lDBCon.TableUpdate(Data.tbcommoditylocalization);
@@ -771,7 +801,7 @@ namespace IBE.SQL
 
                 if(DataNames.Tables["Levels"] != null)
                 { 
-                    sendProgressEvent("import economy level localization", Counter, DataNames.Tables["Levels"].Rows.Count);
+                    sendProgressEvent(new ProgressEventArgs() {Info="import economy level localization", CurrentValue=Counter, TotalValue=DataNames.Tables["Levels"].Rows.Count });
 
                     // first check if there's a new language
                     foreach (DataColumn LanguageFromFile in DataNames.Tables["Levels"].Columns)
@@ -830,7 +860,7 @@ namespace IBE.SQL
 	                    }
 
                         Counter++;
-                        sendProgressEvent("import economy level localization", Counter, DataNames.Tables["Levels"].Rows.Count);
+                        sendProgressEvent(new ProgressEventArgs() {Info="import economy level localization", CurrentValue=Counter,  TotalValue=DataNames.Tables["Levels"].Rows.Count });
                     }
                 }
                 // submit changes
@@ -870,7 +900,7 @@ namespace IBE.SQL
 
                 Program.DBCon.TableRead("select * from tbCommodity", Data.tbcommodity);
 
-                sendProgressEvent("import warnlevels", Counter, WarnLevels.Count);
+                sendProgressEvent(new ProgressEventArgs() {Info="import warnlevels", CurrentValue=Counter, TotalValue=WarnLevels.Count });
 
                 // first check if there's a new language
                 foreach (EDCommoditiesWarningLevels Warnlevel in WarnLevels)
@@ -890,7 +920,7 @@ namespace IBE.SQL
                     }
 
                     Counter++;
-                    sendProgressEvent("import warnlevels", Counter, WarnLevels.Count);
+                    sendProgressEvent(new ProgressEventArgs() { Info="import warnlevels", CurrentValue=Counter, TotalValue=WarnLevels.Count });
                 }
                 
                 // submit changes (tbLanguage)
@@ -1004,122 +1034,164 @@ namespace IBE.SQL
         {
             String sqlString;
             List<EDSystem> Systems;
+            EDSystem importSystem;
             dsEliteDB.tbsystemsRow[] FoundRows;
             dsEliteDB.tbsystems_orgRow[] FoundRows_org;
             DateTime Timestamp_new, Timestamp_old;
             Int32 ImportCounter = 0;
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<Int32, Int32>();
-            dsEliteDB Data;
-            Int32 Counter = 0;
+            dsEliteDB localDataSet;
+            Int32 counter = 0;
             DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
-
-            Data = new dsEliteDB();
+            Boolean dataChanged;
+            localDataSet = new dsEliteDB();
+            Int32 updated = 0;
+            Int32 added = 0;
+            MySql.Data.MySqlClient.MySqlDataAdapter dataAdapter_sys = null;
+            MySql.Data.MySqlClient.MySqlDataAdapter dataAdapter_sysorg = null;
+            Int32 systemsTotal=0;
 
             try
             {
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
+                StreamReader rawDataStream;
+                JsonTextReader jsonReader;
+                JsonSerializer serializer = new JsonSerializer();
 
-                Systems = JsonConvert.DeserializeObject<List<EDSystem>>(File.ReadAllText(Filename));
+                rawDataStream = new StreamReader(Filename);
+                jsonReader = new JsonTextReader(rawDataStream);
 
-                lDBCon.TransBegin();
+                sendProgressEvent(new ProgressEventArgs() {  Info="import systems...", NewLine = true } );
 
-                sqlString = "select * from tbSystems lock in share mode";
-                lDBCon.TableRead(sqlString, Data.tbsystems);
+                while (jsonReader.Read())
+                    if(jsonReader.TokenType == JsonToken.StartObject)
+                        systemsTotal++;
 
-                sqlString = "select * from tbSystems_org lock in share mode";
-                lDBCon.TableRead(sqlString, Data.tbsystems_org);
+                jsonReader.Close();
+                rawDataStream.Close();
+                rawDataStream.Dispose();
 
-                sendProgressEvent("import systems", Counter, Systems.Count);
+                rawDataStream = new StreamReader(Filename);
+                jsonReader = new JsonTextReader(rawDataStream);
 
-                foreach (EDSystem System in Systems)
+                while(jsonReader.Read())
                 {
-                    FoundRows = (dsEliteDB.tbsystemsRow[])Data.tbsystems.Select("id=" + System.Id.ToString());
-
-                    if ((FoundRows != null) && (FoundRows.Count() > 0))
+                    if(jsonReader.TokenType == JsonToken.StartObject)
                     {
-                        // system is existing
+                        dataChanged = false;
 
-                        if ((bool)(FoundRows[0]["is_changed"]))
+                        importSystem = serializer.Deserialize<EDSystem>(jsonReader);
+
+                        localDataSet.Clear();
+                        if(dataAdapter_sys != null)
                         {
-                            // data is changed by user - hold it ...
+                            dataAdapter_sys.Dispose();
+                            dataAdapter_sys = null;
+                        }
 
-                            // ...and check table "tbSystems_org" for the original data
-                            FoundRows_org = (dsEliteDB.tbsystems_orgRow[])Data.tbsystems_org.Select("id=" + System.Id.ToString());
+                        if(dataAdapter_sysorg != null)
+                        {
+                            dataAdapter_sysorg.Dispose();
+                            dataAdapter_sysorg = null;
+                        }
 
-                            if ((FoundRows_org != null) && (FoundRows_org.Count() > 0))
+                        lDBCon.TableRead(String.Format("select * from tbSystems where id = {0} lock in share mode;", importSystem.Id), localDataSet.tbsystems, ref dataAdapter_sys);
+
+                        //sqlString = "select * from tbSystems_org lock in share mode";
+                        //lDBCon.TableRead(sqlString, Data.tbsystems_org);
+
+                        if (localDataSet.tbsystems.Rows.Count > 0)
+                        {
+                            // system is existing
+
+                            if ((bool)(localDataSet.tbsystems.Rows[0]["is_changed"]))
                             {
-                                // system is in "tbSystems_org" existing - keep the newer version 
-                                Timestamp_old = (DateTime)(FoundRows_org[0]["updated_at"]);
-                                Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(System.UpdatedAt).DateTime;
+                                // data is changed by user - hold it ...
+
+                                // ...and check table "tbSystems_org" for the original data
+                                lDBCon.TableRead(String.Format("select * from tbSystems_org where id = {0} lock in share mode;", importSystem.Id), localDataSet.tbsystems_org, ref dataAdapter_sysorg);
+
+                                if (localDataSet.tbsystems_org.Rows.Count > 0)
+                                {
+                                    // system is in "tbSystems_org" existing - keep the newer version 
+                                    Timestamp_old = (DateTime)(localDataSet.tbsystems_org.Rows[0]["updated_at"]);
+                                    Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(importSystem.UpdatedAt).DateTime;
+
+                                    if (Timestamp_new > Timestamp_old)
+                                    {
+                                        // data from file is newer
+                                        CopyEDSystemToDataRow(importSystem, (DataRow)localDataSet.tbsystems_org.Rows[0], false, null, true);
+                                        ImportCounter += 1;
+                                        dataChanged = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // system is existing - keep the newer version 
+                                Timestamp_old = (DateTime)(localDataSet.tbsystems.Rows[0]["updated_at"]);
+                                Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(importSystem.UpdatedAt).DateTime;
 
                                 if (Timestamp_new > Timestamp_old)
                                 {
                                     // data from file is newer
-                                    CopyEDSystemToDataRow(System, (DataRow)FoundRows_org[0], false, null, true);
+                                    CopyEDSystemToDataRow(importSystem, localDataSet.tbsystems.Rows[0], false, null, true);
                                     ImportCounter += 1;
+                                    dataChanged = true;
+                                    updated += 1;
                                 }
                             }
                         }
                         else
                         {
-                            // system is existing - keep the newer version 
-                            Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                            Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(System.UpdatedAt).DateTime;
-
-                            if (Timestamp_new > Timestamp_old)
+                            if(dataAdapter_sys != null)
                             {
-                                // data from file is newer
-                                CopyEDSystemToDataRow(System, FoundRows[0], false, null, true);
-                                ImportCounter += 1;
+                                dataAdapter_sys.Dispose();
+                                dataAdapter_sys = null;
                             }
-                        }
-                    }
-                    else
-                    {
-                        // check if theres a user generated system
-                        // self-created systems don't have the correct id so it must be identified by name    
-                        FoundRows = (dsEliteDB.tbsystemsRow[])Data.tbsystems.Select("     systemname = " + DBConnector.SQLAString(DBConnector.DTEscape(System.Name.ToString())) +
-                                                                    " and id         < 0");
 
-                        if (FoundRows.Count() > 0)
+                            // check if there's a user generated system
+                            // self-created systems don't have the correct id so it must be identified by name    
+                            lDBCon.TableRead(String.Format("select * from tbSystems where systemname = {0} and id < 0 lock in share mode;", DBConnector.SQLAEscape(importSystem.Name.ToString()) ), localDataSet.tbsystems, ref dataAdapter_sys);
+
+                            if (localDataSet.tbsystems.Rows.Count > 0)
+                            {
+                                // self created systems is existing -> correct id and get new data from EDDB
+                                // (changed system_id in tbStations are automatically internal updated by the database itself)
+                                CopyEDSystemToDataRow(importSystem, (DataRow)localDataSet.tbsystems.Rows[0], false, null, true);
+                                dataChanged = true;
+                            }
+                            else
+                            {
+                                // add a new system
+                                dsEliteDB.tbsystemsRow newRow = (dsEliteDB.tbsystemsRow)localDataSet.tbsystems.NewRow();
+                                CopyEDSystemToDataRow(importSystem, (DataRow)newRow, false, null, true);
+                                localDataSet.tbsystems.Rows.Add(newRow);
+                                dataChanged = true;
+                            }
+
+                            added += 1;
+                            ImportCounter += 1;
+                        }
+
+                        if(dataChanged)
                         {
-                            // self created systems is existing -> correct id and get new data from EDDB
-                            // (changed system_id in tbStations are automatically internal updated by the database itself)
-                            CopyEDSystemToDataRow(System, (DataRow)FoundRows[0], false, null, true);
-                        }
-                        else
-                        {
-                            // add a new system
-                            dsEliteDB.tbsystemsRow newRow = (dsEliteDB.tbsystemsRow)Data.tbsystems.NewRow();
-                            CopyEDSystemToDataRow(System, (DataRow)newRow, false, null, true);
-                            Data.tbsystems.Rows.Add(newRow);
+                            if(localDataSet.tbsystems.Rows.Count > 0)
+                                lDBCon.TableUpdate(localDataSet.tbsystems, dataAdapter_sys);
+
+                            if(localDataSet.tbsystems_org.Rows.Count > 0)
+                                lDBCon.TableUpdate(localDataSet.tbsystems_org, dataAdapter_sysorg);
+
+                            dataChanged = false;
                         }
 
-                        ImportCounter += 1;
+                        counter++;
+                        
+                        if(sendProgressEvent(new ProgressEventArgs() { Info = String.Format("import systems : analysed={0}, updated={1}, added={2}", counter, ImportCounter-added, added), CurrentValue=counter, TotalValue=systemsTotal}))
+                            break;
                     }
-
-                    if ((ImportCounter > 0) && ((ImportCounter % 100) == 0))
-                    {
-                        // save changes
-                        Debug.Print("added Systems : " + ImportCounter.ToString());
-
-                        lDBCon.TableUpdate(Data.tbsystems);
-                        lDBCon.TableUpdate(Data.tbsystems_org);
-                    }
-
-                    Counter++;
-                    sendProgressEvent("import systems", Counter, Systems.Count);
-
-                    if(m_ProgressCancelled)
-                        break;
                 }
-
-                // save changes
-                lDBCon.TableUpdate(Data.tbsystems, true);
-                lDBCon.TableUpdate(Data.tbsystems_org, true);
-
-                lDBCon.TransCommit();
 
                 // reset freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
@@ -1137,8 +1209,8 @@ namespace IBE.SQL
                     // reset freaky performance
                     lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
-                    lDBCon.TableReadRemove(Data.tbsystems);
-                    lDBCon.TableReadRemove(Data.tbsystems_org);
+                    lDBCon.TableReadRemove(Program.Data.BaseData.tbsystems);
+                    lDBCon.TableReadRemove(Program.Data.BaseData.tbsystems_org);
 
                     lDBCon.Dispose();
                 }
@@ -1217,7 +1289,7 @@ namespace IBE.SQL
 
                 currentSelfCreatedIndex = getNextOwnSystemIndex();
 
-                sendProgressEvent("import self-added systems", Counter, Systems.Count);
+                sendProgressEvent(new ProgressEventArgs() { Info="import self-added systems", CurrentValue=Counter, TotalValue=Systems.Count });
 
                 foreach (EDSystem System in Systems)
                 {
@@ -1299,7 +1371,7 @@ namespace IBE.SQL
                     }
 
                     Counter++;
-                    sendProgressEvent("import self-added systems", Counter, Systems.Count);
+                    sendProgressEvent(new ProgressEventArgs() { Info="import self-added systems", CurrentValue=Counter, TotalValue=Systems.Count });
                 }
 
                 // save changes
@@ -1429,6 +1501,9 @@ namespace IBE.SQL
             dsEliteDB Data;
             Int32 Counter = 0;
             UInt32 currentComodityClassificationID=0;
+            Int32 updated = 0;
+            Int32 added = 0;
+
 
             Data = new dsEliteDB();
 
@@ -1442,7 +1517,7 @@ namespace IBE.SQL
 
                 Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename));
 
-                sendProgressEvent("import stations", Counter, Stations.Count);
+                sendProgressEvent(new ProgressEventArgs() { Info="import systems", NewLine = true });
 
                 lDBCon.TransBegin();
 
@@ -1574,9 +1649,8 @@ namespace IBE.SQL
                     }
 
                     Counter++;
-                    sendProgressEvent("import stations", Counter, Stations.Count);
 
-                    if(m_ProgressCancelled)
+                    if(sendProgressEvent(new ProgressEventArgs() { Info = String.Format("import stations : analysed={0}, updated={1}, added={2}", Counter, ImportCounter-added, added), CurrentValue=Counter, TotalValue=Stations.Count}))
                         break;
                 }
 
@@ -1720,7 +1794,7 @@ namespace IBE.SQL
                         currentSelfCreatedIndex = -1;
                 }
 
-                sendProgressEvent("import self-added stations", Counter, Stations.Count);
+                sendProgressEvent(new ProgressEventArgs() { Info="import self-added stations", CurrentValue=Counter,  TotalValue=Stations.Count });
 
                 foreach (EDStation Station in Stations)
                 {
@@ -1828,7 +1902,7 @@ namespace IBE.SQL
 
 
                     Counter++;
-                    sendProgressEvent("import self-added stations", Counter, Stations.Count);
+                    sendProgressEvent(new ProgressEventArgs() { Info="import self-added stations", CurrentValue=Counter, TotalValue=Stations.Count });
 
                 }
 
@@ -2124,7 +2198,7 @@ namespace IBE.SQL
 
                 lDBCon.TransBegin("ImportVisitedStations");
 
-                sendProgressEvent("import visited stations", Counter, History.Count);
+                sendProgressEvent(new ProgressEventArgs() { Info="import visited stations", CurrentValue=Counter,  TotalValue=History.Count });
 
                 foreach(StationVisit VisitEvent in History)
                 {
@@ -2169,7 +2243,7 @@ namespace IBE.SQL
                     };
                     
                     Counter++;
-                    sendProgressEvent("import visited stations", Counter, History.Count);
+                    sendProgressEvent(new ProgressEventArgs() { Info="import visited stations", CurrentValue=Counter,  TotalValue=History.Count });
                 }
 
                 lDBCon.TransCommit();
@@ -2260,7 +2334,7 @@ namespace IBE.SQL
 
                 if(Data.Tables.Contains("CommandersLogEvent"))
                 { 
-                    sendProgressEvent("import log", Counter, Data.Tables["CommandersLogEvent"].Rows.Count);
+                    sendProgressEvent(new ProgressEventArgs() { Info="import log", CurrentValue=Counter, TotalValue=Data.Tables["CommandersLogEvent"].Rows.Count });
 
                     foreach(DataRow Event in Data.Tables["CommandersLogEvent"].AsEnumerable())
                     {
@@ -2325,7 +2399,7 @@ namespace IBE.SQL
                             Debug.Print(added.ToString());
 
                         Counter++;
-                        sendProgressEvent("import log", Counter, Data.Tables["CommandersLogEvent"].Rows.Count);
+                        sendProgressEvent(new ProgressEventArgs() { Info="import log", CurrentValue=Counter, TotalValue=Data.Tables["CommandersLogEvent"].Rows.Count });
                     }
 
                 }
@@ -2400,6 +2474,7 @@ namespace IBE.SQL
         private void ImportPrices(List<EDStation> Stations, enImportBehaviour importBehaviour, enDataSource dataSource)
         {
             DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
+            ProgressEventArgs eva;
 
             try
             { 
@@ -2426,7 +2501,7 @@ namespace IBE.SQL
                     priceCountTotal += Station.Listings.Count();
 
                 Counter = 0;
-                sendProgressEvent("updating prices", -1, -1);
+                sendProgressEvent(new ProgressEventArgs() { Info="updating prices", NewLine=true });
 
                 Boolean AddComma = false;
                 int?  DemandLevel = null;
@@ -2539,9 +2614,8 @@ namespace IBE.SQL
                         AddComma = false;
                         Counter++;
 
-                        sendProgressEvent("updating prices", priceCount, priceCountTotal);
-
-                        if(m_ProgressCancelled)
+                        eva = new ProgressEventArgs() { Info="updating prices", CurrentValue=priceCount, TotalValue=priceCountTotal };
+                        if(sendProgressEvent(eva))
                             break;
 
                         currentListing = missedListings.ToArray();
@@ -2549,11 +2623,11 @@ namespace IBE.SQL
                         
                     } while (!currentListingDone);
 
-                    if(m_ProgressCancelled)
+                    if(eva.Cancelled)
                         break;
                 }
 
-                sendProgressEvent("updating prices", 1, 1);
+                sendProgressEvent(new ProgressEventArgs() { Info="updating prices", CurrentValue=1, TotalValue=1 });
 
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
@@ -2586,14 +2660,14 @@ namespace IBE.SQL
             try
             {
                 List<String> CSV_Strings    = new List<string>();
+                ProgressEventArgs eva;
 
                 var reader              = new StreamReader(File.OpenRead(filename));
                 Int32 counter           = 0;
 
                 string header = reader.ReadLine();
 
-                sendProgressEvent("reading data from file ...", 0, 0);
-
+                sendProgressEvent(new ProgressEventArgs() { Info="reading data from file ...", NewLine = true });
               
                 if(header.StartsWith("System;Station;Commodity;Sell;Buy;Demand;;Supply"))
                 {
@@ -2602,19 +2676,18 @@ namespace IBE.SQL
                     {
                         CSV_Strings.Add(reader.ReadLine());
                         counter ++;
-                        sendProgressEvent("reading data from file ...", counter, 0);
 
-                        if(m_ProgressCancelled)
+
+                        if(sendProgressEvent(new ProgressEventArgs() { Info="reading data from file ...", CurrentValue=counter}))
                             break;
 
                     } while (!reader.EndOfStream);
 
-                    sendProgressEvent("reading data from file ...", counter, counter);
-                    sendProgressEvent("reading data from file ...", 1, 1);
-
                     reader.Close();
 
-                    ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour, dataSource);
+                    if(!sendProgressEvent(new ProgressEventArgs() { Info="reading data from file ...", CurrentValue=counter, TotalValue=counter, ForceRefresh = true})) 
+                       ImportPricesFromCSVStrings(CSV_Strings.ToArray(), importBehaviour, dataSource);
+
                 }
                 else if(header.StartsWith("id,station_id,commodity_id,supply,buy_price,sell_price,demand"))
                 {
@@ -2623,19 +2696,16 @@ namespace IBE.SQL
                     {
                         CSV_Strings.Add(reader.ReadLine());
                         counter ++;
-                        sendProgressEvent("reading data from file ...", counter, 0);
 
-                        if(m_ProgressCancelled)
+                        if(sendProgressEvent(new ProgressEventArgs() { Info="reading data from file ...", CurrentValue=counter}))
                             break;
 
                     } while (!reader.EndOfStream);
 
-                    sendProgressEvent("reading data from file ...", counter, counter);
-                    sendProgressEvent("reading data from file ...", 1, 1);
-
                     reader.Close();
 
-                    ImportPricesFromEDDBStrings(CSV_Strings.ToArray(), importBehaviour, dataSource, importParams);
+                    if(!sendProgressEvent(new ProgressEventArgs() { Info="reading data from file ...", CurrentValue=counter, TotalValue=counter, ForceRefresh = true}))
+                        ImportPricesFromEDDBStrings(CSV_Strings.ToArray(), importBehaviour, dataSource, importParams);
                 }
                 return CSV_Strings.Count();
             }
@@ -2660,6 +2730,7 @@ namespace IBE.SQL
             List<EDStation> StationData;
             List<EDSystem> SystemData = null;
             List<CsvRow> csvRowList = new List<CsvRow>();
+            ProgressEventArgs eva;
 
             Int32 counter = 0;
             Dictionary<String, String> foundNames = new Dictionary<string,string>();            // quick cache for finding commodity names
@@ -2676,7 +2747,8 @@ namespace IBE.SQL
                 if(currentLanguage != Program.BASE_LANGUAGE)
                     newData.Columns.Add(currentLanguage, typeof(String));
 
-                sendProgressEvent("analysing data...", -1, -1);
+                eva = new ProgressEventArgs() { Info="analysing data...", AddSeparator = true};
+                sendProgressEvent(eva);
 
                 for (int i = 0; i < CSV_Strings.Length; i++)
                 {
@@ -2710,14 +2782,17 @@ namespace IBE.SQL
                         }
                     }
                     counter++;
-                    sendProgressEvent("analysing data...", counter, CSV_Strings.GetUpperBound(0) + 1);
-                    if (m_ProgressCancelled)
+
+                    eva = new ProgressEventArgs() { Info="analysing data...", CurrentValue=counter, TotalValue=CSV_Strings.GetUpperBound(0) + 1 };
+                    sendProgressEvent(eva);
+                    if(eva.Cancelled)
                         break;
                 }
 
-                sendProgressEvent("analysing data...", 1, 1);
+                eva = new ProgressEventArgs() { Info="analysing data...", CurrentValue=counter, TotalValue=counter, ForceRefresh=true };
+                sendProgressEvent(eva);
 
-                if (!m_ProgressCancelled)
+                if (!eva.Cancelled)
                     if(newData.Rows.Count > 0)
                     {
                         // add found unknown commodities
@@ -2736,13 +2811,17 @@ namespace IBE.SQL
                 // END : section for automatically add unknown commodities
                 // *****************************************************************
 
-                sendProgressEvent("converting data...", -1, -1);
+                eva = new ProgressEventArgs() { Info="converting data...",  NewLine=true };
+                sendProgressEvent(eva);
+
                 // convert csv-strings to EDStation-objects
                 StationData = fromCSV(CSV_Strings, ref SystemData, ref csvRowList);
-                sendProgressEvent("converting data...", 1, 1);
+
+                eva = new ProgressEventArgs() { Info="converting data...", CurrentValue = 1, TotalValue=1, ForceRefresh=true };
+                sendProgressEvent(eva);
 
                 // check if we've unknown systems or stations
-                if(!m_ProgressCancelled)
+                if(!eva.Cancelled)
                     foreach (EDStation Station in StationData)
                     {
                         if (Station.SystemId == 0)
@@ -2752,13 +2831,13 @@ namespace IBE.SQL
                     }
 
 
-                if ((!m_ProgressCancelled) && MissingSystem)
+                if ((!eva.Cancelled) && MissingSystem)
                 {
                     // add unknown systems
                     ImportSystems_Own(ref SystemData, true);
                 }
 
-                if (!m_ProgressCancelled && (MissingSystem || MissingStation))
+                if (!eva.Cancelled && (MissingSystem || MissingStation))
                 {
                     // add unknown stations
                     foreach (EDStation Station in StationData)
@@ -2775,8 +2854,6 @@ namespace IBE.SQL
                             }
                         }
 
-                        if(m_ProgressCancelled)
-                            break;
                     }
 
                     ImportStations_Own(StationData, new Dictionary<Int32, Int32>(), true);
@@ -2878,65 +2955,89 @@ namespace IBE.SQL
         {
             List<EDStation> StationData;
             Boolean updateTables = false;
-
+            ProgressEventArgs eva=null;
+            Int32 initialSize=0;
             try
             {
                 StationData = fromCSV_EDDB(CSV_Strings);
 
-                if((importParams != null) && (!m_ProgressCancelled))
+                if(importParams != null)
                 {
                     DataTable data = Program.Data.GetNeighbourSystems(importParams.SystemID, importParams.Radius);
+
                     String info = "filter data to the bubble (radius " + importParams.Radius+ " ly) : " + data.Rows.Count +" systems...";
+                    eva = new ProgressEventArgs() { Info=info, NewLine=true};      
 
-                    sendProgressEvent(info, -1,-1);
-
-                    if(data.Rows.Count > 0)
+                    if(!sendProgressEvent(eva))
                     {
-                        updateTables = true;
+                       if(data.Rows.Count > 0)
+                       {
+                           updateTables = true;
 
-                        Int32 initialSize = StationData.Count();
+                            initialSize = StationData.Count();
 
-                        for (int i = StationData.Count()-1 ; i >= 0 ; i--)
-                        {
-                            if(data.Rows.Find(StationData[i].SystemId) == null)    
-                            {
-                                // system is not in the bubble
-                                StationData.Remove(StationData[i]);
-                            }
-                            else
-                            { 
-                                   // system is in the bubble - set as visited
-                                Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, true, false);
-                            }
+                            for (int i = StationData.Count()-1 ; i >= 0 ; i--)
+                           {
+                               if(data.Rows.Find(StationData[i].SystemId) == null)    
+                               {
+                                   // system is not in the bubble
+                                   StationData.Remove(StationData[i]);
+                               }
+                               else
+                               { 
+                                      // system is in the bubble - set as visited
+                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, true, false);
+                               }
 
-                            sendProgressEvent(info, initialSize-i, initialSize);
-                            
-                            if(m_ProgressCancelled)
-                                break;
-                        }
+                               eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize-i, TotalValue=initialSize };
+                               sendProgressEvent(eva);
+                               if(eva.Cancelled)
+                                   break;
 
+                           }
+
+                       }
+                       else
+                           StationData.Clear();
                     }
-                    else
-                        StationData.Clear();
 
-                    sendProgressEvent(info, 1, 1);
+                    eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize, TotalValue=initialSize, ForceRefresh=true };
+                    sendProgressEvent(eva);
                 }
 
-                if(updateTables)
+                if((!eva.Cancelled) && (updateTables))
                 { 
-                    sendProgressEvent("refreshing basetables in memory...", -1,-1);
-                    Program.Data.updateVisitedFlagsFromBase();
-                    sendProgressEvent("refreshing basetables in memory...", 25, 100);
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-                    sendProgressEvent("refreshing basetables in memory...", 50, 100);
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                    sendProgressEvent("refreshing basetables in memory...", 75, 100);
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
-                    sendProgressEvent("refreshing basetables in memory...", 1 , 1);
+                    eva = new ProgressEventArgs() { Info = "refreshing basetables in memory...", NewLine=true };
+                    sendProgressEvent(eva);
+
+                    if(!eva.Cancelled)
+                    {
+                        Program.Data.updateVisitedFlagsFromBase();
+                        eva = new ProgressEventArgs() { Info = "refreshing basetables in memory...", CurrentValue=25, TotalValue=100, ForceRefresh=true };
+                        sendProgressEvent(eva);
+                    }
+                    if(!eva.Cancelled)
+                    {
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                        eva = new ProgressEventArgs() { Info = "refreshing basetables in memory...", CurrentValue=50, TotalValue=100, ForceRefresh=true };
+                        sendProgressEvent(eva);
+                    }
+                    if(!eva.Cancelled)
+                    {
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                        eva = new ProgressEventArgs() { Info = "refreshing basetables in memory...", CurrentValue=75, TotalValue=100, ForceRefresh=true };
+                        sendProgressEvent(eva);
+                    }
+                    if(!eva.Cancelled)
+                    {
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
+                        eva = new ProgressEventArgs() { Info = "refreshing basetables in memory...", CurrentValue=100, TotalValue=100, ForceRefresh=true };
+                        sendProgressEvent(eva);
+                    }
                 }
 
                 // now import the prices
-                if(!m_ProgressCancelled)
+                if((eva != null) && (!eva.Cancelled))
                 { 
                    ImportPrices(StationData, importBehaviour, dataSource);
                 }
@@ -2970,11 +3071,12 @@ namespace IBE.SQL
             Int32 Index                                     = 0;
             Dictionary<String, Int32> commodityIDCache      = new Dictionary<string,Int32>();            // quick cache for finding commodity names
             Int32 currentItem                               = 0;
+            ProgressEventArgs eva;
 
             try
             {
-                sendProgressEvent("converting data...", -1,-1);
-                sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+                eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=currentItem, TotalValue=CSV_Strings.GetUpperBound(0), AddSeparator=true };
+                sendProgressEvent(eva);
 
                 if(foundSystems != null)
                     foundSystems.Clear();
@@ -3035,10 +3137,12 @@ namespace IBE.SQL
                         currentStation.addListing(currentRow, ref commodityIDCache);
                     }
 
-                    sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+                    eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=currentItem, TotalValue=CSV_Strings.GetUpperBound(0)};
+                    sendProgressEvent(eva);
 
-                    if(m_ProgressCancelled)
+                    if(eva.Cancelled)
                         break;
+
                     currentItem++;
 
 	            }
@@ -3046,7 +3150,8 @@ namespace IBE.SQL
                 if(currentStation != null)
                     currentStation.ListingExtendMode = false;
 
-                sendProgressEvent("converting data...", 1,1);
+                eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=1, TotalValue=1, ForceRefresh=true};
+                sendProgressEvent(eva);
 
                 return foundValues;
 
@@ -3076,11 +3181,12 @@ namespace IBE.SQL
             Int32 Index                                     = 0;
             Dictionary<String, Int32> commodityIDCache      = new Dictionary<string,Int32>();            // quick cache for finding commodity names
             Int32 currentItem                               = 0;
+            ProgressEventArgs eva;
 
             try
             {
-                sendProgressEvent("converting data...", -1,-1);
-                sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+                eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=currentItem, TotalValue=CSV_Strings.GetUpperBound(0), NewLine= true};
+                sendProgressEvent(eva);
 
                 foreach (String CSV_String in CSV_Strings)
 	            {
@@ -3114,17 +3220,20 @@ namespace IBE.SQL
                         currentStation.addListing(currentRow);
                     }
                 
-                    sendProgressEvent("converting data...", currentItem, CSV_Strings.GetUpperBound(0));
+                    eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=currentItem, TotalValue=CSV_Strings.GetUpperBound(0)};
+                    sendProgressEvent(eva);
 
-                    if(m_ProgressCancelled)
+                    if(eva.Cancelled)
                         break;
+
                     currentItem++;
 	            }
 
                 if(currentStation != null)
                     currentStation.ListingExtendMode = false;
 
-                sendProgressEvent("converting data...", 1,1);
+                eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=currentItem, TotalValue=CSV_Strings.GetUpperBound(0), ForceRefresh=true};
+                sendProgressEvent(eva);
 
                 return foundValues;
 
@@ -3221,8 +3330,9 @@ namespace IBE.SQL
             DataTable data;
             Int32 Counter;
             StringBuilder sBuilder = new StringBuilder();
-            Char filterCharacter;
+            Char filterCharacter=(char)(48);
             Int32 totalDataCount = 0;
+            ProgressEventArgs eva;
 
             try
             {
@@ -3276,10 +3386,13 @@ namespace IBE.SQL
                                                   filterCharacter); 
                     }
 
-                    sendProgressEvent(String.Format("collecting data '{0}'...", filterCharacter), Counter, totalDataCount);
+                    eva = new ProgressEventArgs() { Info=String.Format("collecting data '{0}'...", filterCharacter), CurrentValue=Counter, TotalValue=totalDataCount, NewLine=true};
+                    sendProgressEvent(eva);
+
                     Program.DBCon.Execute(sqlString, data);
 
-                    sendProgressEvent(String.Format("export prices '{0}'...", filterCharacter), Counter, totalDataCount);
+                    eva = new ProgressEventArgs() { Info=String.Format("export prices '{0}'...", filterCharacter), CurrentValue=Counter, TotalValue=totalDataCount, NewLine=true};
+                    sendProgressEvent(eva);
 
                     foreach (DataRow row in data.Rows)
                     {
@@ -3320,17 +3433,20 @@ namespace IBE.SQL
                         sBuilder.Clear();
 
                         Counter++;
-                        sendProgressEvent(String.Format("export prices '{0}'...", filterCharacter), Counter, totalDataCount);
 
-                        if(m_ProgressCancelled)
+                        eva = new ProgressEventArgs() { Info=String.Format("export prices '{0}'...", filterCharacter), CurrentValue=Counter, TotalValue=totalDataCount};
+                        sendProgressEvent(eva);
+                        if(eva.Cancelled)
                             break;
                     }
-                    if(m_ProgressCancelled)
+
+                    if(eva.Cancelled)
                         break;
 
                 }
 
-                sendProgressEvent("export prices...", 1, 1);
+                eva = new ProgressEventArgs() { Info=String.Format("export prices '{0}'...", filterCharacter), CurrentValue=1, TotalValue=1, ForceRefresh=true};
+                sendProgressEvent(eva);
 
                 writer.Close();
                 writer.Dispose();
@@ -3355,18 +3471,18 @@ namespace IBE.SQL
                                       " where timestamp <= (NOW() - INTERVAL {0} DAY)" +
                                       " limit 10000", 
                                       days);
-            sendProgressEvent(String.Format("deleting prices older than {0} days from database...", days), 0, 0);
+            sendProgressEvent(new ProgressEventArgs() { Info=String.Format("deleting prices older than {0} days from database...", days), CurrentValue=0, TotalValue=0, AddSeparator=true });
 
             do
             {
                 deletedRows = Program.DBCon.Execute(sqlString);    
                 deletedRowsSum += deletedRows;
 
-                sendProgressEvent(String.Format("deleting prices older than {0} days from database...", days), deletedRowsSum, 0);
+                sendProgressEvent(new ProgressEventArgs() { Info=String.Format("deleting prices older than {0} days from database...", days), CurrentValue=deletedRowsSum });
 
             } while (deletedRows > 0);
 
-            sendProgressEvent(String.Format("deleting prices older than {0} days from database...", days), 1, 1);
+            sendProgressEvent(new ProgressEventArgs() { Info=String.Format("deleting prices older than {0} days from database...", days), CurrentValue=1, TotalValue=1, ForceRefresh=true });
         }
 
 #endregion
@@ -3665,12 +3781,12 @@ namespace IBE.SQL
                                                           "tbSystems"};
 
            
-                sendProgressEvent("clearing database...", 0, 0);
+                sendProgressEvent(new ProgressEventArgs() { Info="clearing database...", CurrentValue=0, TotalValue=0, AddSeparator=true });
 
                 foreach (String Table in Tables)       
 	            {
                     Debug.Print("deleting " + Table + "...");
-                    sendProgressEvent("deleting " + Table + "...", Counter + 1, Tables.Count, true);
+                    sendProgressEvent(new ProgressEventArgs() { Info="deleting " + Table + "...", CurrentValue=Counter + 1, TotalValue=Tables.Count, ForceRefresh=true });
 
 		            Program.DBCon.Execute("delete from " + Table);
 
@@ -3678,7 +3794,7 @@ namespace IBE.SQL
         	    }
                 
 
-                sendProgressEvent("clearing database...<done>", 1, 1);
+                sendProgressEvent(new ProgressEventArgs() { Info="clearing database...<done>", CurrentValue=1, TotalValue=1, ForceRefresh=true });
 
             }
             catch (Exception ex)
@@ -4101,7 +4217,7 @@ namespace IBE.SQL
                 Int32 errors = 0;
                 Int32 counter = 0;
                 Int32 counter2 = 0;
-
+                ProgressEventArgs eva;
 
                 switch (enImportTypes)
                 {
@@ -4152,7 +4268,7 @@ namespace IBE.SQL
                 var reader     = new StreamReader(File.OpenRead(importFile));
                 string header  = reader.ReadLine();
 
-                sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", 0, 0, true);
+                sendProgressEvent(new ProgressEventArgs() { Info="reading data from file " + Path.GetFileName(importFile) + " ...", AddSeparator=true });
 
                 if (header.StartsWith(headerDefinition))
                 {
@@ -4162,24 +4278,19 @@ namespace IBE.SQL
                         CSV_Strings.Add(reader.ReadLine());
                         counter++;
 
-                        sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", counter, 0);
-
-                        if (m_ProgressCancelled)
+                        if(sendProgressEvent(new ProgressEventArgs() { Info="reading data from file " + Path.GetFileName(importFile) + " ...",  CurrentValue=counter }))
                             break;
 
                     } while (!reader.EndOfStream);
 
-                    sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", counter, counter);
-                    sendProgressEvent("reading data from file " + Path.GetFileName(importFile) + " ...", 1, 1);
-
                     reader.Close();
 
-                    if(!m_ProgressCancelled)
+                    if(!sendProgressEvent(new ProgressEventArgs() { Info="reading data from file " + Path.GetFileName(importFile) + " ...",  CurrentValue=counter, TotalValue=counter, ForceRefresh=true }))
                     {
                         // gettin' some freaky performance
                         Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
-                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", 0, 0);
+                        sendProgressEvent(new ProgressEventArgs() { Info="importing data from file " + Path.GetFileName(importFile) + " ...", CurrentValue=0, TotalValue=0 });
 
                         foreach (String csvString in CSV_Strings)
                         {
@@ -4227,27 +4338,24 @@ namespace IBE.SQL
                                 catch (Exception ex)
                                 {
                                     errors++;
-                                    sendProgressEvent("error while importing line <" + counter2 + "> : " + csvString, -1, -1, true, true);
+                                    sendProgressEvent(new ProgressEventArgs() { Info="error while importing line <" + counter2 + "> : " + csvString, CurrentValue=-1, TotalValue=-1, NewLine=true });
                                 }
                             }
                             else
                             {
                                     errors++;
-                                    sendProgressEvent("error while importing line <" + counter2 + "> : " + csvString, -1, -1, true, true);
+                                    sendProgressEvent(new ProgressEventArgs() { Info="error while importing line <" + counter2 + "> : " + csvString, CurrentValue=-1, TotalValue=-1, NewLine=true });
                             }
 
-                            sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", counter2, counter);
-
-                            if (m_ProgressCancelled)
+                            if(sendProgressEvent(new ProgressEventArgs() {Info="importing data from file " + Path.GetFileName(importFile) + " ...", CurrentValue=counter2, TotalValue=counter }))
                                 break;
                         }
 
                         // gettin' some freaky performance
                         Program.DBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
-                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", counter2, counter, true);
-                        sendProgressEvent("importing data from file " + Path.GetFileName(importFile) + " ...", 1, 1, true);
-                        sendProgressEvent("new entries = " + changed + ", errors = " + errors, -1, -1, true);
+                        sendProgressEvent(new ProgressEventArgs() {Info="importing data from file " + Path.GetFileName(importFile) + " ...", CurrentValue=counter2, TotalValue=counter, ForceRefresh=true,NewLine=true });
+                        sendProgressEvent(new ProgressEventArgs() {Info="new entries = " + changed + ", errors = " + errors, NewLine = true });
                     }
                 }
 
@@ -4312,7 +4420,7 @@ namespace IBE.SQL
 
                 Program.DBCon.Execute(sqlString, data);
 
-                sendProgressEvent("export prices...", 0, 0);
+                sendProgressEvent(new ProgressEventArgs() { Info="export prices...", NewLine=true });
 
                 var writer = new StreamWriter(File.OpenWrite(fileName));
                 writer.WriteLine(idString);
@@ -4324,10 +4432,10 @@ namespace IBE.SQL
                                      row["language"] + ";" + 
                                      row["locname"] );
                     counter++;
-                    sendProgressEvent("export prices...", counter, data.Rows.Count);
+                    sendProgressEvent(new ProgressEventArgs() { Info="export prices...", CurrentValue=counter, TotalValue=data.Rows.Count });
                 }
 
-                sendProgressEvent("export prices...", 1, 1);
+                sendProgressEvent(new ProgressEventArgs() {Info="export prices...", CurrentValue=1, TotalValue=1, ForceRefresh=true });
 
                 writer.Close();
                 writer.Dispose();
@@ -4451,7 +4559,7 @@ namespace IBE.SQL
                 }
                 else
                 {
-                    sendProgressEvent("abort: file has wrong header", 1, 1);
+                    sendProgressEvent(new ProgressEventArgs() { Info="abort: file has wrong header", CurrentValue=1, TotalValue=1, ForceRefresh=true });
                 }
 
                 dataLines.Clear();

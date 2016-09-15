@@ -32,6 +32,9 @@ todo for StarterTips:
 
 done:
 
+   * first steps of re-design the import of EDDB data
+   * re-creation of download of files, should solve "not responding" problem while downloading new data files
+-------------------------------------------------------------------------------------         
    * added context menus for recalulation of jump distances in CommandersLog 
    * added context menus "copy system/statiom name to clipboard" to CommandersLog grid
    * added context menus "copy system/station name to clipboard" to all Price Analysis grids

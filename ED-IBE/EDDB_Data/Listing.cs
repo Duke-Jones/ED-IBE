@@ -90,7 +90,7 @@ namespace IBE.EDDB_Data
             {
                 String[] Parts = CsvString.Split(',');
 
-                if(Parts.GetUpperBound(0) == 8)
+                if(Parts.GetUpperBound(0) >= 7)
                 {
                     Id              = Int32.Parse(Parts[0]);
                     StationId       = Int32.Parse(Parts[1]);
@@ -100,6 +100,10 @@ namespace IBE.EDDB_Data
                     SellPrice       = Int32.Parse(Parts[5]);
                     Demand          = Int32.Parse(Parts[6]);
                     CollectedAt     = long.Parse(Parts[7]);
+                }
+
+                if(Parts.GetUpperBound(0) >= 8)
+                {
                     UpdateCount     = Int32.Parse(Parts[8]);
                 }
             }

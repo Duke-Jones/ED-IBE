@@ -8,6 +8,7 @@ using System.Net;
 using System.ComponentModel;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace IBE
 {
@@ -24,13 +25,15 @@ namespace IBE
         
         private DBGuiInterface      m_GUIInterface;
         private ProgressView        m_ProgressView;
-        private String              m_DownloadInfo;
-        private Int32               m_lastFileSize;
-        private String              m_lastFileSizeUnit;
         private Boolean             m_DownloadFinished;
         private String              m_DataPath          = Program.GetDataPath("data");
 
+
         private List<String>        m_DL_Files          = new List<string> {"systems.json", 
+                                                                            "stations.json", 
+                                                                            "commodities.json"};
+
+        private List<String>        m_DL_Files_Pop      = new List<string> {"systems_populated.json", 
                                                                             "stations.json", 
                                                                             "commodities.json"};
 
@@ -39,6 +42,13 @@ namespace IBE
         private List<String>        m_DL_Files_EDCD     = new List<string> {"commodity.csv",
                                                                             "outfitting.csv",
                                                                             "shipyard.csv"};
+
+        private Boolean m_CancelAction = false;
+        private System.Collections.Queue m_DownloadQueue;
+        private WebClient m_DownLoader;
+        private DownloadData m_CurrentDownloadInfo; 
+        private PerformanceTimer m_PerfTimer;
+
 
         [Flags] public enum enImportTypes
         {
@@ -60,6 +70,7 @@ namespace IBE
             EDCD_Commodity                  = 0x00004000,           /* default is "EDCD_commodity.csv"  */
             EDCD_Outfitting                 = 0x00008000,           /* default is "EDCD_outfitting.csv"  */
             EDCD_Shipyard                   = 0x00010000,           /* default is "EDCD_shipyard.csv"  */
+            EDDB_Systems_Populated          = 0x00020000,           /* default is "systems.json" */  
         }
 
         public frmDataIO()
@@ -69,6 +80,12 @@ namespace IBE
             this.InfoTarget      = null;
             this.ReUseLine       = true;
             this.m_SingleNoReUse = false;
+
+            // https://api.github.com/repos/EDCD/FDevIDs/commits?commodity.csv
+            m_DownLoader = new WebClient();
+            m_DownLoader.DownloadFileCompleted   += new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
+            m_DownLoader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+            m_PerfTimer = new PerformanceTimer();
         }
 
         private void frmDataIO_Load(object sender, EventArgs e)
@@ -79,6 +96,8 @@ namespace IBE
                 m_GUIInterface              = new DBGuiInterface(DB_GROUPNAME, Program.DBCon);
 
                 m_GUIInterface.loadAllSettings(this);
+
+                m_DownloadQueue = new System.Collections.Queue();
 
             }
             catch (Exception ex)
@@ -94,7 +113,7 @@ namespace IBE
                 cmdImportOldData.Enabled                        = (!Program.Data.OldDataImportDone) && setEnabled;
                 cmdImportCommandersLog.Enabled                  = setEnabled;
                 cmdDownloadSystemsAndStations.Enabled           = setEnabled;
-                cmdImportSystemsAndStationsFromDownload.Enabled = setEnabled && EDDBDownloadComplete();
+                cmdImportSystemsAndStationsFromDownload.Enabled = setEnabled;
                 cmdImportSystemsAndStations.Enabled             = setEnabled;
                 cmdExportCSV.Enabled                            = setEnabled;
                 rbDefaultLanguage.Enabled                       = setEnabled;
@@ -106,7 +125,12 @@ namespace IBE
                 cmdPurgeOldData.Enabled                         = setEnabled;
                 rbFormatExtended.Enabled                        = setEnabled;
                 rbFormatSimple.Enabled                          = setEnabled;
-                cmdExit.Enabled                                 = setEnabled;    
+                cmdExit.Enabled                                 = setEnabled; 
+                cmdEDCDDownloadID.Enabled                       = setEnabled;
+                cmdEDCDImportID.Enabled                         = setEnabled;
+
+                if(!setEnabled)
+                    m_CancelAction = false;
             }
             catch (Exception ex)
             {
@@ -240,7 +264,6 @@ namespace IBE
                 }
                 catch (Exception ex)
                 {
-                    StopProgress();
                     SetButtons(true);
                     CErr.processError(ex, "Error while getting the starters kit");
                 }
@@ -262,7 +285,7 @@ namespace IBE
                     retValue = true;
                 else 
                 {
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "Skipping <" + FileName + "> - file not found.", Index = 1, Total = 1});
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="Skipping <" + FileName + "> - file not found.", CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                     retValue = false;
                 }
 
@@ -279,12 +302,99 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Data_Progress(object sender, SQL.EliteDBIO.ProgressEventArgs e)
+        //private void Data_Progress_OLD(object sender, SQL.EliteDBIO.ProgressEventArgs_OLD e)
+        //{
+        //    try
+        //    {
+        //        e.progressObject = m_ProgressView;
+
+        //        ListBox destination;
+
+        //        if (InfoTarget != null)
+        //        {
+        //            destination = InfoTarget;
+        //        }
+        //        else
+        //        {
+        //            destination = lbProgess;
+        //        }
+        //        if (e.Index == 0 && e.Total == 0)
+        //        {
+        //            destination.Items.Add("-------------------------------");
+        //            destination.Items.Add(String.Format("{0}", e.Tablename));
+
+        //            if(m_ProgressView != null)
+        //                m_ProgressView.progressUpdate(0,1, e.Tablename);
+
+        //        }
+        //        else if (e.Index == -1 && e.Total == -1)
+        //        {
+        //            destination.Items.Add(String.Format("{0}", e.Tablename));
+
+        //            if(m_ProgressView != null)
+        //                m_ProgressView.progressUpdate(0,1, e.Tablename);
+
+        //        }
+        //        else
+        //        {
+        //            if (e.Index == 1 && e.Total == 1)
+        //            {
+        //                destination.Items.Add(String.Format("{0} : 100%", e.Tablename));
+
+        //                if(m_ProgressView != null)
+        //                    m_ProgressView.progressUpdate(1,1, e.Tablename);
+        //            }
+        //            else
+        //            {
+        //                if ((!m_SingleNoReUse) && ReUseLine && (destination.Items.Count > 0))
+        //                {
+        //                    if(e.Total != 0)
+        //                    {
+        //                        destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit);
+
+        //                        if(m_ProgressView != null)
+        //                            m_ProgressView.progressUpdate(e.Index, e.Total, e.Tablename);
+        //                    }
+        //                    else
+        //                        destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{3}", e.Tablename, 0, e.Index, 0, e.Unit);
+        //                }
+        //                else
+        //                {
+        //                    destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit));
+
+        //                    if(m_ProgressView != null)
+        //                        m_ProgressView.progressUpdate(e.Index, e.Total, e.Tablename);
+
+        //                }
+        //            }
+        //        }
+
+
+        //        m_SingleNoReUse = false;
+
+        //        if (e.Single_NoReuse)
+        //            m_SingleNoReUse = true;
+
+        //        destination.TopIndex = destination.Items.Count - 1;
+
+        //        destination.Refresh();
+        //        //Application.DoEvents();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CErr.processError(ex, "Error while reporting progress");
+        //    }
+        //}
+
+        /// <summary>
+        /// shows the data progress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Data_Progress(object sender, EliteDBIO.ProgressEventArgs e)
         {
             try
             {
-                e.progressObject = m_ProgressView;
-
                 ListBox destination;
 
                 if (InfoTarget != null)
@@ -295,71 +405,64 @@ namespace IBE
                 {
                     destination = lbProgess;
                 }
-                if (e.Index == 0 && e.Total == 0)
+
+                
+                if(e.Clear)
+                    destination.Items.Clear();
+
+                if (e.AddSeparator)
                 {
                     destination.Items.Add("-------------------------------");
-                    destination.Items.Add(String.Format("{0}", e.Tablename));
-
-                    if(m_ProgressView != null)
-                        m_ProgressView.progressUpdate(0,1, e.Tablename);
-
+                    destination.Items.Add("");
                 }
-                else if (e.Index == -1 && e.Total == -1)
+                
+                if(e.CurrentValue >= 0)
                 {
-                    destination.Items.Add(String.Format("{0}", e.Tablename));
-
-                    if(m_ProgressView != null)
-                        m_ProgressView.progressUpdate(0,1, e.Tablename);
-
-                }
-                else
-                {
-                    if (e.Index == 1 && e.Total == 1)
+                    if (e.NewLine || (destination.Items.Count <= 0))
                     {
-                        destination.Items.Add(String.Format("{0} : 100%", e.Tablename));
-
-                        if(m_ProgressView != null)
-                            m_ProgressView.progressUpdate(1,1, e.Tablename);
+                        if(e.TotalValue != 0)
+                            destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", e.Info, 100 * e.CurrentValue / e.TotalValue, e.CurrentValue, e.TotalValue, e.Unit));
+                        else
+                            destination.Items.Add(String.Format("{0} : {2}{3}", e.Info, 0, e.CurrentValue, 0, e.Unit));
+                    
                     }
                     else
                     {
-                        if ((!m_SingleNoReUse) && ReUseLine && (destination.Items.Count > 0))
-                        {
-                            if(e.Total != 0)
-                            {
-                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit);
-
-                                if(m_ProgressView != null)
-                                    m_ProgressView.progressUpdate(e.Index, e.Total, e.Tablename);
-                            }
-                            else
-                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{3}", e.Tablename, 0, e.Index, 0, e.Unit);
-                        }
+                        if(e.TotalValue != 0)
+                            destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", e.Info, 100 * e.CurrentValue / e.TotalValue, e.CurrentValue, e.TotalValue, e.Unit);
                         else
-                        {
-                            destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit));
-
-                            if(m_ProgressView != null)
-                                m_ProgressView.progressUpdate(e.Index, e.Total, e.Tablename);
-
-                        }
+                            destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{3}", e.Info, 0, e.CurrentValue, 0, e.Unit);
                     }
+
+                    if(destination.TopIndex != (destination.Items.Count - 1))
+                        destination.TopIndex = destination.Items.Count - 1;
+
+                    destination.Refresh();
+                }
+                else if(e.Info != null)
+                {
+                    if (e.NewLine || (destination.Items.Count <= 0))
+                    {
+                        destination.Items.Add(e.Info);
+                    }
+                    else
+                    {
+                        destination.Items[destination.Items.Count - 1] = e.Info;
+                    }
+
+                    if (destination.TopIndex != (destination.Items.Count - 1))
+                        destination.TopIndex = destination.Items.Count - 1;
+
+                    destination.Refresh();
                 }
 
+                if(m_CancelAction)
+                    e.Cancelled = true;
 
-                m_SingleNoReUse = false;
-
-                if (e.Single_NoReuse)
-                    m_SingleNoReUse = true;
-
-                destination.TopIndex = destination.Items.Count - 1;
-
-                destination.Refresh();
-                Application.DoEvents();
             }
             catch (Exception ex)
             {
-                CErr.processError(ex, "Error while reporting progress");
+                CErr.processError(ex, "Error while reporting progress (new)");
             }
         }
 
@@ -421,10 +524,10 @@ namespace IBE
                         Application.DoEvents();
 
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDDB_Commodities))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDDB_Commodities))
                         {
                             // import the commodities from EDDB
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodities...", AddSeparator=true});
                             FileName = "commodities.json";
                             
                             if(RNData)
@@ -435,19 +538,19 @@ namespace IBE
                                 Program.Data.ImportCommoditiesFromFile(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodities...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodities...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_Localizations_Commodities))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_Localizations_Commodities))
                         {
                             // import the localizations (commodities) from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...", AddSeparator=true});
                             FileName = "Commodities.xml";
 
                             if(RNData)
@@ -458,19 +561,19 @@ namespace IBE
                                 Program.Data.ImportCommodityLocalizations(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.IBE_Localizations_Commodities))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.IBE_Localizations_Commodities))
                         {
                             // import the new localizations (commodities) from csv-fileName
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...", AddSeparator=true});
                             FileName = "commodities.csv";
 
                             if(RNData)
@@ -481,19 +584,19 @@ namespace IBE
                                 Program.Data.ImportLocalizationDataFromCSV(Path.Combine(sourcePath, FileName), SQL.EliteDBIO.enLocalizationType.Commodity, SQL.EliteDBIO.enLocalisationImportType.overwriteNonBase);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commodity localizations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_Localizations_EcoLevels))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_Localizations_EcoLevels))
                         {
                             // import the localizations (economy levels) from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import economy level localizations...", AddSeparator=true});
                             FileName = "Commodities.xml";
 
                             if(RNData)
@@ -504,20 +607,20 @@ namespace IBE
                                 Program.Data.ImportEconomyLevelLocalizations(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tblevellocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbeconomylevel.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import economy level localizations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import economy level localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_SelfAddedLocalizations))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_SelfAddedLocalizations))
                         {
                             // import the self added localizations from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added commodity localizations...", AddSeparator=true});
                             FileName = "Commodities_Own.xml";
 
                             if(RNData)
@@ -528,19 +631,19 @@ namespace IBE
                                 Program.Data.ImportCommodityLocalizations(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added commodity localizations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_Pricewarnlevels))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_Pricewarnlevels))
                         {
                             // import the pricewarnlevels from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import pricewarnlevels...", AddSeparator=true});
                             FileName = "Commodities_RN.json";
 
                             if(RNData)
@@ -550,19 +653,19 @@ namespace IBE
                             {
                                 Program.Data.ImportCommodityPriceWarnLevels(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import pricewarnlevels...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import pricewarnlevels...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDDB_Systems))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDDB_Systems))
                         {
                             // import the systems and stations from EDDB
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import systems...", AddSeparator=true});
                             FileName = "systems.json";
 
                             if(RNData)
@@ -573,18 +676,41 @@ namespace IBE
                                 Program.Data.ImportSystems(Path.Combine(sourcePath, FileName));
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import systems...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import systems...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDDB_Stations))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDDB_Systems_Populated))
                         {
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 0, Total = 0 });
+                            // import the systems and stations from EDDB
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import populated systems...", AddSeparator=true});
+                            FileName = "systems_populated.json";
+
+                            if(RNData)
+                                FileName = @"Data\" + FileName;
+
+                            if (FileExistsOrMessage(sourcePath, FileName))
+                            {
+                                Program.Data.ImportSystems(Path.Combine(sourcePath, FileName));
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import populated systems...<OK>", NewLine = true});
+                                stationOrCommodityImport = true;
+                            }
+                            else
+                            {
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
+                            }
+                        }
+
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDDB_Stations))
+                        {
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import stations...", AddSeparator=true});
                             FileName = "stations.json";
 
                             if(RNData)
@@ -595,19 +721,19 @@ namespace IBE
                                 Program.Data.ImportStations(Path.Combine(sourcePath, FileName), false);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import stations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import stations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_Systems))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_Systems))
                         {
                             // import the self-changed or added systems and stations
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added systems...", AddSeparator=true});
                             FileName = "systems_own.json";
 
                             if(RNData)
@@ -618,18 +744,18 @@ namespace IBE
                                 changedSystemIDs = Program.Data.ImportSystems_Own(Path.Combine(sourcePath, FileName));
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added systems...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added systems...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_Stations))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_Stations))
                         {
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added stations...", AddSeparator=true});
                             FileName = "stations_own.json";
 
                             if(RNData)
@@ -640,19 +766,19 @@ namespace IBE
                                 Program.Data.ImportStations_Own(Path.Combine(sourcePath, FileName), changedSystemIDs);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
                                 //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import self-added stations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added stations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_CommandersLog))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_CommandersLog))
                         {
                             // import the Commander's Log from the old RN files
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commander's log...", AddSeparator=true});
                             string[] files;
                             string Filter;
 
@@ -667,15 +793,15 @@ namespace IBE
                             {
                                 foreach (String importFile in files)
                                 {
-                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "importing " + importFile + "...", Index = 0, Total = 0 });
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "importing " + importFile + "...", AddSeparator=true });
 
                                     Int32 added = Program.Data.ImportCommandersLog(Path.Combine(sourcePath, importFile));
                                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
                                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-
-                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "importing " + importFile + "... (" + added + " new entries)", Index = 1, Total = 1 });
+                                    
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "importing " + importFile + "... (" + added + " new entries)", CurrentValue = 1, TotalValue = 1, ForceRefresh = true });
                                 }
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import commander's log...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commander's log...<OK>", NewLine = true});
 
                                 Program.Data.RecalcJumpDistancesInLog(new DateTime(1970, 01, 01));
 
@@ -684,14 +810,14 @@ namespace IBE
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + Filter, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + Filter, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_StationHistory))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_StationHistory))
                         {
                             //import the history of visited stations
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import visited stations...", AddSeparator=true});
                             FileName = "StationHistory.json";
 
                             if(RNData)
@@ -702,38 +828,38 @@ namespace IBE
                                 Program.Data.ImportVisitedStations(Path.Combine(sourcePath, FileName));
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import visited stations...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import visited stations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.RN_MarketData))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.RN_MarketData))
                         {
                             //import the self collected price data
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import collected price data...", AddSeparator=true});
                             FileName = "AutoSave.csv";
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName), EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromRN);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import collected price data...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import collected price data...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDDB_MarketData))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDDB_MarketData))
                         {
                             //import the self collected price data
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import EDDN price data...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import EDDN price data...", AddSeparator=true});
                             //import the price data from EDDB
                             FileName = "listings.csv";
                             if (FileExistsOrMessage(sourcePath, FileName))
@@ -742,16 +868,16 @@ namespace IBE
                                 Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName), EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromFILE, importParams);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import EDDN price data...", Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import EDDN price data...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDCD_Outfitting))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDCD_Outfitting))
                         {
                             //import the outfitting data from EDCD
                             FileName = "EDCD_outfitting.csv";
@@ -761,11 +887,11 @@ namespace IBE
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDCD_Shipyard))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDCD_Shipyard))
                         {
                             //import the shipyard data from EDCD
                             FileName = "EDCD_shipyard.csv";
@@ -775,11 +901,11 @@ namespace IBE
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
-                        if ((!ProgressCancelled()) && importFlags.HasFlag(enImportTypes.EDCD_Commodity))
+                        if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDCD_Commodity))
                         {
                             //import the commodity data from EDCD
                             FileName = "EDCD_commodity.csv";
@@ -789,30 +915,30 @@ namespace IBE
                             }
                             else
                             {
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "File not found: " + FileName, Index = 1, Total = 1 });
+                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File not found: " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                         }
 
                         if (stationOrCommodityImport)
                         {
                             // update the visited information
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating visited systems and stations...", AddSeparator=true});
                             Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
                             Program.Data.updateVisitedFlagsFromBase();
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating visited systems and stations...", Index = 1, Total = 1 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating visited systems and stations...<OK>", NewLine = true});
 
                             // insert missing localization entries
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "insert missing translation of commodities", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="insert missing translation of commodities", AddSeparator=true});
                             Program.Data.AddMissingLocalizationEntries();
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "insert missing translation of commodities...", Index = 1, Total = 1 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="insert missing translation of commodities...<OK>", NewLine = true});
 
                             // update localization of all commodities
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating active localization of commodities", Index = 0, Total = 0 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating active localization of commodities", AddSeparator=true});
                             Program.Data.updateTranslation();
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "updating active localization of commodities...", Index = 1, Total = 1 });
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating active localization of commodities...<OK>", NewLine = true});
                         }
 
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "finished", Index = 1, Total = 1 });
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="FINISHED", CurrentValue=1, TotalValue=1, ForceRefresh=true, AddSeparator=true});
 
                         Cursor = Cursors.Default;
 
@@ -839,25 +965,44 @@ namespace IBE
 
         private void cmdDownloadSystemsAndStations_Click(object sender, EventArgs e)
         {
+            Debug.Print("start function base call");
+            SetButtons(false);
+            DownloadSystemsAndStations();
+            Debug.Print("end function base call");
+        }
+
+        private void DownloadSystemsAndStations()
+        {
             try
             {
-                String baseUrl         = "https://eddb.io/archive/v4/";
-                String savePrefix      = "";
-                String infoString      = "connecting to eddb.io...";
-                List<String> filesList = new List<string>(m_DL_Files);
+                String baseUrl = "https://eddb.io/archive/v4/";
+                String savePrefix = "";
+                String infoString = "connecting to eddb.io...";
+                List<String> filesList;
+
+                if (false)
+                {
+                    filesList = new List<string>(m_DL_Files);
+                }
+                else
+                {
+                    filesList = new List<string>(m_DL_Files_Pop);
+                }
+
                 String specialDestiationFolder = "";
 
                 filesList.AddRange(m_DL_FilesPrice);
 
-                if(Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
+                if (Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
                     specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
+
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Clear = true });
 
                 DownloadFiles(baseUrl, savePrefix, infoString, filesList, "", specialDestiationFolder);
 
             }
             catch (Exception ex)
             {
-                StopProgress();
                 SetButtons(true);
                 CErr.processError(ex, "Error while downloading system/station data from EDDB");
             }
@@ -902,15 +1047,26 @@ namespace IBE
         {
             PriceImportParameters importParams = null;
             Boolean cantImport = false;
+            enImportTypes importFlags;
                                   
             try
             {
                 SetButtons(false);
                 lbProgess.Items.Clear();
 
-                enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
-                                            enImportTypes.EDDB_Systems | 
-                                            enImportTypes.EDDB_Stations;
+                if (false)
+                {
+                    importFlags = enImportTypes.EDDB_Commodities |
+                                  enImportTypes.EDDB_Systems |
+                                  enImportTypes.EDDB_Stations;
+                }
+                else
+                {
+                    importFlags = enImportTypes.EDDB_Commodities | 
+                                  enImportTypes.EDDB_Systems_Populated | 
+                                  enImportTypes.EDDB_Stations;
+
+                }
 
                 if(!rbImportPrices_No.Checked)
                 {
@@ -935,12 +1091,11 @@ namespace IBE
 
                 if(!cantImport)
                 { 
-                    m_ProgressView = new ProgressView(this, false);
-                    m_ProgressView.progressStart("importing EDDN data...");
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info = "importing EDDN data...", Clear = true });
 
                     ImportData(null, importFlags, null, m_DataPath, false, importParams);
 
-                    if(StopProgress())
+                    if(m_CancelAction)
                         MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     else
                         MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -953,56 +1108,10 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                StopProgress();
                 SetButtons(true);
                 CErr.processError(ex, "Error while importing downloaded system/station data from EDDB");
             }
         }
-
-        private void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            Int32 factor = 1024;
-            m_lastFileSizeUnit = " kbyte";
-
-            if(!m_DownloadFinished)
-            { 
-                if(m_ProgressView != null)
-                {
-                    if (e.TotalBytesToReceive < (10 * 1024))
-                    {
-                        factor = 1;
-                        m_lastFileSizeUnit = " byte";
-                    }
-
-                    m_lastFileSize = (Int32)(e.TotalBytesToReceive / (factor));
-                    m_ProgressView.progressUpdate((Int32)(e.BytesReceived / (factor)), m_lastFileSize);
-
-                    if (m_ProgressView.Cancelled)
-                        ((WebClient)sender).CancelAsync();
-                }
-
-                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = (Int32)(e.BytesReceived / (factor)), Total = m_lastFileSize, Unit = m_lastFileSizeUnit });
-                Debug.Print("1");
-            }
-        }
-
-        private void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-
-            m_DownloadFinished = true;
-            
-            if(!e.Cancelled)
-            { 
-                if(m_ProgressView != null)
-                {
-                    m_ProgressView.progressUpdate(1,1);
-                }
-
-                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = m_lastFileSize, Total = m_lastFileSize, Unit = m_lastFileSizeUnit });
-            }
-            Debug.Print("2");
-        }
-
         private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
         {
             PriceImportParameters importParams = null;
@@ -1029,7 +1138,7 @@ namespace IBE
 
                 ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "", "", false, importParams);
 
-                if(StopProgress())
+                if(m_CancelAction)
                     MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
                     MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1040,7 +1149,6 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                StopProgress();
                 SetButtons(true);
                 CErr.processError(ex, "Error while importing system/station data from EDDB");
             }
@@ -1168,16 +1276,16 @@ namespace IBE
 
                     Program.Data.Progress += Data_Progress;
 
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 0, Total = 0 });
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "export prices to csv...", CurrentValue = 0, TotalValue = 0, AddSeparator=true });
 
                     Application.DoEvents();
 
                     Program.Data.ExportMarketDataToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked, rbFormatExtended.Checked);
 
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "export prices to csv...", Index = 1, Total = 1 });
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "export prices to csv...", CurrentValue = 1, TotalValue = 1, ForceRefresh=true });
                     Program.Data.Progress -= Data_Progress;
 
-                    if(StopProgress())
+                    if(m_CancelAction)
                         MessageBox.Show(this, "Export was cancelled and is unfinished!", "Data export", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     else
                         MessageBox.Show(this, "Export has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1188,7 +1296,6 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                StopProgress();
                 SetButtons(true);
                 Cursor = Cursors.Default;
                 CErr.processError(ex, "Error while exporting to csv");
@@ -1230,7 +1337,7 @@ namespace IBE
 
                     Program.Data.Progress += Data_Progress;
 
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 0, Total = 0 });
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "import price data from csv...", CurrentValue = 0, TotalValue = 0 });
 
                     SQL.EliteDBIO.enImportBehaviour importBehaviour = SQL.EliteDBIO.enImportBehaviour.OnlyNewer;
                     if(rbImportSame.Checked)
@@ -1239,11 +1346,11 @@ namespace IBE
                     Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour, EliteDBIO.enDataSource.fromFILE);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = "import price data from csv...", Index = 1, Total = 1 });
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "import price data from csv...", CurrentValue = 1, TotalValue = 1 });
 
                     Program.Data.Progress -= Data_Progress;
 
-                    if(StopProgress())
+                    if(m_CancelAction)
                         MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     else
                         MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1257,12 +1364,12 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                StopProgress();
                 SetButtons(true);
                 Cursor = Cursors.Default;
                 CErr.processError(ex, "Error while importing from csv");
             }       
         }
+
 
         private void cmdTest_Click(object sender, EventArgs e)
         {
@@ -1399,39 +1506,6 @@ namespace IBE
         }
 
         /// <summary>
-        /// quits the progressview an returns true if the progress was cancelled
-        /// </summary>
-        /// <returns></returns>
-        private Boolean StopProgress()
-        {
-            Boolean retValue = ProgressCancelled();
-                                         
-            if (m_ProgressView != null)
-            { 
-                try
-                {
-                    m_ProgressView.progressStop();
-                }
-                catch (Exception)
-                {
-                }
-            }
-            m_ProgressView = null;
-
-            return retValue;
-        }
-
-        private Boolean ProgressCancelled()
-        {
-            Boolean retValue = false;
-
-            if ((m_ProgressView != null) && m_ProgressView.Cancelled)
-                retValue = true;
-
-            return retValue;
-        }
-
-        /// <summary>
         /// starts download of the files
         /// </summary>
         /// <param name="baseUrl">download url of the files</param>
@@ -1451,13 +1525,6 @@ namespace IBE
             {
                 if(!String.IsNullOrEmpty(specialDestiationFolder))
                     lDataPath = specialDestiationFolder;                    
-
-                SetButtons(false);
-                lbProgess.Items.Clear();
-
-                m_ProgressView = new ProgressView(this, false);
-                m_ProgressView.progressStart(infoString);
-
 
                 // get the timestamps from the webfiles
                 for (int i = 0; i < filesList.Count; i++)
@@ -1499,11 +1566,7 @@ namespace IBE
                     }
                 }
 
-                // https://api.github.com/repos/EDCD/FDevIDs/commits?commodity.csv
-
-                WebClient downLoader = new WebClient();
-                downLoader.DownloadFileCompleted += new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
-                downLoader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+                m_CancelAction                      = false;
 
                 // download file if newer
                 for (int i = 0; i < filesList.Count; i++)
@@ -1527,66 +1590,200 @@ namespace IBE
 
                     if (download)
                     {
-                        m_ProgressView.progressUpdate(0, 100);
-                        m_DownloadInfo = String.Format("downloading file {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
+                        var downloadInfo = String.Format("downloading file {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
 
-                        m_ProgressView.progressInfo(m_DownloadInfo);
-
-                        m_DownloadFinished = false;
-                        Debug.Print("in");
-                        downLoader.DownloadFileAsync(new Uri(baseUrl + filesList[i]), currentDestinationFile);
-
-                        do
-                        {
-                            System.Threading.Thread.Sleep(100);
-                            Application.DoEvents();
-                        } while (!m_DownloadFinished);
-
-                        Debug.Print("out");
-                        if (!m_ProgressView.Cancelled)
-                        {
-                            File.SetCreationTime(currentDestinationFile, filesTimes[i]);
-                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 1, Total = 1 });
-                        }
-                        else
-                        {
-                            if (File.Exists(currentDestinationFile))
-                                File.Delete(currentDestinationFile);
-                            lbProgess.Items.Add("");
-                            lbProgess.Items.Add("download cancelled !!! ");
-                        }
+                        m_DownloadQueue.Enqueue(new DownloadData() { DownloadUri = new Uri(baseUrl + filesList[i]),
+                                                                     LocalFileName = currentDestinationFile,
+                                                                     BelongingFileTime = filesTimes[i],
+                                                                     InfoString = downloadInfo,
+                                                                     TotalDownloadBytes = 0,
+                                                                     UsedUnit = "" });
                     }
                     else
                     {
-                        m_DownloadInfo = String.Format("skipping download, newest version already existing: {0} of {1}: {2}...", i + 1, filesList.Count, savePrefix + filesList[i]);
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Tablename = m_DownloadInfo, Index = 0, Total = 0 });
-
-                        m_ProgressView.progressInfo(m_DownloadInfo);
-                        m_ProgressView.progressUpdate(1, 1);
-
-                        System.Threading.Thread.Sleep(500);
+                        var downloadInfo = String.Format("skipping download {0} of {1}: {2} - newest version already existing...", i + 1, filesList.Count, savePrefix + filesList[i]);
+                        m_DownloadQueue.Enqueue(new DownloadData() { InfoString = downloadInfo});
                     }
+                    tmrDownload.Start();
 
-                    if (m_ProgressView.Cancelled)
+                    if (m_CancelAction)
                         break;
                 }
 
-                if (StopProgress())
-                    MessageBox.Show(this, "Download was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                else
-                    MessageBox.Show(this, "Download has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                SetButtons(true);
             }
             catch (Exception ex)
             {
+                throw new Exception("Error while initiating the download of files", ex);
+            }
+        }
 
+        private void tmrDownload_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                Debug.Print("check for downloads...");
+                tmrDownload.Stop();
+
+                if (m_CancelAction)
+                {
+                    tmrDownload.Stop();
+                    m_DownloadQueue.Clear();
+                    m_CurrentDownloadInfo = null;
+                    SetButtons(true);
+                }
+                else
+                {
+                    if(m_DownloadQueue.Count > 0)
+                    {
+                        tmrDownload.Stop();
+                        if(m_CurrentDownloadInfo != null)
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { AddSeparator = true });
+
+                        m_CurrentDownloadInfo = (DownloadData)m_DownloadQueue.Dequeue();
+
+                        if(m_CurrentDownloadInfo.DownloadUri != null)
+                        {
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "downloading " + System.IO.Path.GetFileName(m_CurrentDownloadInfo.LocalFileName) + "..." });
+                            Debug.Print("Download Found: {0} to {1}", m_CurrentDownloadInfo.DownloadUri, m_CurrentDownloadInfo.LocalFileName);
+                            m_PerfTimer.startMeasuring();
+                            m_DownLoader.DownloadFileAsync(m_CurrentDownloadInfo.DownloadUri, m_CurrentDownloadInfo.LocalFileName);
+                        }
+                        else
+                        {
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = m_CurrentDownloadInfo.InfoString });
+
+                            if(m_DownloadQueue.Count > 0)
+                            {
+                                tmrDownload.Start();
+                            }
+                            else
+                            {
+                                m_CurrentDownloadInfo = null;
+                                SetButtons(true);
+                            }
+                        }
+                    }
+                    else
+                        SetButtons(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while initiating the asynchronous download of files");
+            }
+        }
+
+       /// <summary>
+       /// returns the best unit and it's factor for the view of bytes to download
+       /// </summary>
+       /// <param name="bytesTotal"></param>
+       /// <param name="usedPrefix"></param>
+       /// <returns></returns>
+        private Int32 GetPrefix(Int64 bytesTotal, ref String usedPrefix)
+        {
+            Int32 factor;
+            if (bytesTotal > (10 * 1024))
+            {
+                if (bytesTotal > (10 * 1024 * 1024))
+                {
+                    factor = 1024 * 1024;
+                    usedPrefix = " Mbyte";
+
+                }
+                else
+                {
+                    factor = 1024;
+                    usedPrefix = " kbyte";
+                }
+            }
+            else
+            {
+                factor = 1;
+                usedPrefix = " byte";
+            }
+
+            return factor;
+        }
+
+        private void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            
+
+            try
+            {
+                m_CurrentDownloadInfo.TotalDownloadBytes = e.TotalBytesToReceive;
+
+                if(m_CancelAction)
+                {
+                    ((WebClient)sender).CancelAsync();
+                }
+                else
+                {
+                    if(!m_DownloadFinished)
+                    { 
+                        if(m_PerfTimer.currentMeasuring() > 50)
+                        {
+                    
+                            var uUnit = m_CurrentDownloadInfo.UsedUnit;
+                            var factor = GetPrefix(e.TotalBytesToReceive, ref uUnit);
+                            m_CurrentDownloadInfo.UsedUnit = uUnit;
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = m_CurrentDownloadInfo.InfoString,
+                                                                                  CurrentValue = (Int32)(e.BytesReceived / (factor)),
+                                                                                  TotalValue = (Int32)(e.TotalBytesToReceive / (factor)),
+                                                                                  Unit = m_CurrentDownloadInfo.UsedUnit });
+                            m_PerfTimer.startMeasuring();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in webClient_DownloadProgressChanged");
+            }
+        }
+
+        private void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            try
+            {
+                if (!m_CancelAction)
+                {
+                    File.SetCreationTime(m_CurrentDownloadInfo.LocalFileName, m_CurrentDownloadInfo.BelongingFileTime);
+                    var uUnit = m_CurrentDownloadInfo.UsedUnit;
+                    Int32 factor = GetPrefix(m_CurrentDownloadInfo.TotalDownloadBytes, ref uUnit);
+                    m_CurrentDownloadInfo.UsedUnit = uUnit;
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = m_CurrentDownloadInfo.InfoString,
+                                                                          CurrentValue = (Int32)(m_CurrentDownloadInfo.TotalDownloadBytes / (factor)),
+                                                                          TotalValue = (Int32)(m_CurrentDownloadInfo.TotalDownloadBytes / (factor)),
+                                                                          Unit = m_CurrentDownloadInfo.UsedUnit });
+
+                }
+                else
+                {
+                    if (File.Exists(m_CurrentDownloadInfo.LocalFileName))
+                        File.Delete(m_CurrentDownloadInfo.LocalFileName);
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "download cancelled !!! ", NewLine = true,  AddSeparator = true });
+                }
+
+                if(m_DownloadQueue.Count > 0)
+                {
+                    tmrDownload.Start();
+                }
+                else
+                {
+                    m_CurrentDownloadInfo = null;
+                    SetButtons(true);
+                }
+        
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in webClient_DownloadFileCompleted");
             }
         }
 
 
-        private void cmdEDCDDownloadID_Click(object sender, EventArgs e)
+        private async void cmdEDCDDownloadID_Click(object sender, EventArgs e)
         {
             try
             { 
@@ -1597,15 +1794,17 @@ namespace IBE
                 List<String> filesList = new List<string>(m_DL_Files_EDCD);
                 String specialDestiationFolder = "";
 
+                SetButtons(false);
+
                 if(Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
                     specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
 
-                DownloadFiles(baseUrl, savePrefix, infoString, filesList, gitCheckUrl, specialDestiationFolder);
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Clear = true });
 
+                DownloadFiles(baseUrl, savePrefix, infoString, filesList, gitCheckUrl, specialDestiationFolder);
             }
             catch (Exception ex)
             {
-                StopProgress();
                 SetButtons(true);
                 CErr.processError(ex, "Error while downloading files with EDCD-IDs");
             }
@@ -1627,7 +1826,7 @@ namespace IBE
 
                 ImportData(null, importFlags, null, m_DataPath, false, null);
 
-                if (StopProgress())
+                if (m_CancelAction)
                     MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 else
                     MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1637,7 +1836,6 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                StopProgress();
                 CErr.processError(ex, "Error while downloading files with EDCD-IDs");
             }
         }
@@ -1669,5 +1867,23 @@ namespace IBE
             else
                 Clipboard.Clear();
         }
+
+        private void cmdCancel_Click(object sender, EventArgs e)
+        {
+            m_CancelAction = true;
+        }
+
+    }
+
+    internal class DownloadData
+    {
+        public Uri DownloadUri { get; set; } 
+        public String LocalFileName { get; set; } 
+        public DateTime BelongingFileTime { get; set; } 
+        public String InfoString { get; set; } 
+        public Int64 TotalDownloadBytes { get; set; } 
+        public String UsedUnit { get; set; } 
+
+
     }
 }

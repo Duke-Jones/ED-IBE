@@ -38,7 +38,10 @@ namespace IBE
             this.Show();
             progressUpdate(0);
             progressInfo(Info);
-            if(m_SelfDoEvents) Application.DoEvents();
+
+            if(m_SelfDoEvents)
+                    Application.DoEvents();
+
             this.TopMost = true;
         }
         catch (Exception ex) {
@@ -101,7 +104,9 @@ namespace IBE
 
                 lblProgress.Text = string.Format("{0}%", Percent);
                 ProgressBar1.Refresh();
-                if(m_SelfDoEvents) Application.DoEvents();
+
+                if(m_SelfDoEvents)
+                        Application.DoEvents();
             }
         }
         catch (Exception ex) {
@@ -129,7 +134,8 @@ namespace IBE
                         this.Height = 161;
                     }
                     lblInfotext.Text = Info;
-                    if(m_SelfDoEvents) Application.DoEvents();
+                    if(m_SelfDoEvents)
+                            Application.DoEvents();
                 }
             }
         }

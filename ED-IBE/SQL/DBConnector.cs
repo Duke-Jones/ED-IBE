@@ -515,6 +515,12 @@ namespace IBE.SQL
             return TableRefresh(TypifiedTable.TableName, TypifiedTable.DataSet);
         }
 
+
+        public Int32 TableRead(string CommandText, System.Data.DataTable Data, ref MySqlDataAdapter dataAdapter) 
+        {
+            return TableRead(CommandText, Data.TableName, Data.DataSet, ref dataAdapter);
+        }
+
         public Int32 TableRead(string CommandText, System.Data.DataTable Data) 
         {
             return TableRead(CommandText, Data.TableName, Data.DataSet);
@@ -665,6 +671,10 @@ namespace IBE.SQL
         public Int32 TableUpdate(System.Data.DataTable TypifiedTable)
         {
             return TableUpdate(TypifiedTable.TableName, TypifiedTable.DataSet, false, null);
+        }
+        public Int32 TableUpdate(System.Data.DataTable TypifiedTable, DbDataAdapter DataAdapter)
+        {
+            return TableUpdate(TypifiedTable.TableName, TypifiedTable.DataSet, false, DataAdapter);
         }
 
         public Int32 TableUpdate(System.Data.DataTable TypifiedTable, bool removeTableReadObject)

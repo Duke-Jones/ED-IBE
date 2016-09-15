@@ -3616,6 +3616,11 @@ namespace IBE
             }
         }
 
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         /// <summary>
         /// update the status information of companion io
         /// </summary>
