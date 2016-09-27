@@ -18,7 +18,7 @@ todo:
 * VoiceAttack interface
 * update hint for new FDevIDs while starting
 * check permarefresh while downloading EDDB files
-* replace "monitor" with "lock
+* when visit a system and its coordinates are unknown then set them
 
 
 todo for StarterTips:
@@ -32,6 +32,10 @@ todo for StarterTips:
 
 done:
 
+
+  * fixed errors after EDCD changed format of definition files
+  * fixed errors after EDDB changed format of dump files (v4.5 / 2016-09-11)
+-------------------------------------------------------------------------------------         
    * first steps of re-design the import of EDDB data
    * re-creation of download of files, should solve "not responding" problem while downloading new data files
 -------------------------------------------------------------------------------------         

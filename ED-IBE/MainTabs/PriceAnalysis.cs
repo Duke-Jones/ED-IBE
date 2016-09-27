@@ -849,7 +849,7 @@ namespace IBE.MTPriceAnalysis
 
                         if((Data.Tables["minProfit"].Rows.Count > 0) && (!Convert.IsDBNull(Data.Tables["MinProfit"])))
                             currentMinValue = (Int32)Data.Tables["MinProfit"].Rows[0]["Min_Profit"];
-                        Clipboard.SetText(sqlString);
+
                         Current += 1;
 
                         PV.progressUpdate(Current,  Data.Tables["StartStations"].Rows.Count);

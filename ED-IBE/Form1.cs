@@ -1675,7 +1675,7 @@ namespace IBE
                 txtSystemFaction.Text = m_loadedSystemdata.Faction.NToString();
                 txtSystemPopulation.Text = m_loadedSystemdata.Population.ToNString("#,##0.", CultureInfo.CurrentCulture);
                 txtSystemUpdatedAt.Text = DateTimeOffset.FromUnixTimeSeconds(m_loadedSystemdata.UpdatedAt).DateTime.ToString(CultureInfo.CurrentUICulture);
-                cbSystemNeedsPermit.CheckState = m_loadedSystemdata.NeedsPermit.toCheckState();
+                cbSystemNeedsPermit.Checked = m_loadedSystemdata.NeedsPermit;
                 cmbSystemPrimaryEconomy.Text = m_loadedSystemdata.PrimaryEconomy.NToString();
                 cmbSystemSecurity.Text = m_loadedSystemdata.Security.NToString();
                 cmbSystemState.Text = m_loadedSystemdata.State.NToString();
@@ -1798,13 +1798,13 @@ namespace IBE
                 foreach (string Economy in m_loadedStationdata.Economies)
                     lbStationEconomies.Items.Add(Economy);
 
-                cbStationHasMarket.CheckState = m_loadedStationdata.HasMarket.toCheckState();
-                cbStationHasBlackmarket.CheckState = m_loadedStationdata.HasBlackmarket.toCheckState();
-                cbStationHasOutfitting.CheckState = m_loadedStationdata.HasOutfitting.toCheckState();
-                cbStationHasShipyard.CheckState = m_loadedStationdata.HasShipyard.toCheckState();
-                cbStationHasRearm.CheckState = m_loadedStationdata.HasRearm.toCheckState();
-                cbStationHasRefuel.CheckState = m_loadedStationdata.HasRefuel.toCheckState();
-                cbStationHasRepair.CheckState = m_loadedStationdata.HasRepair.toCheckState();
+                cbStationHasMarket.Checked = m_loadedStationdata.HasMarket;
+                cbStationHasBlackmarket.Checked = m_loadedStationdata.HasBlackmarket;
+                cbStationHasOutfitting.Checked = m_loadedStationdata.HasOutfitting;
+                cbStationHasShipyard.Checked = m_loadedStationdata.HasShipyard;
+                cbStationHasRearm.Checked = m_loadedStationdata.HasRearm;
+                cbStationHasRefuel.Checked = m_loadedStationdata.HasRefuel;
+                cbStationHasRepair.Checked = m_loadedStationdata.HasRepair;
 
                 setStationEditable(isNew);
 
@@ -2216,7 +2216,7 @@ namespace IBE
 
                     break;
                 case "cbSystemNeedsPermit":
-                    m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.toNInt();
+                    m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.Checked;
 
                     break;
                 case "cmbSystemPrimaryEconomy":
@@ -2310,35 +2310,35 @@ namespace IBE
             switch (((Control)sender).Name)
             {
                 case "cbSystemNeedsPermit":
-                    m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.toNInt();
+                    m_currentSystemdata.NeedsPermit = cbSystemNeedsPermit.Checked;
                     break;
 
                 case "cbStationHasCommodities":
-                    m_currentStationdata.HasMarket = cbStationHasMarket.toNInt();
+                    m_currentStationdata.HasMarket = cbStationHasMarket.Checked;
                     break;
 
                 case "cbStationHasBlackmarket":
-                    m_currentStationdata.HasBlackmarket = cbStationHasBlackmarket.toNInt();
+                    m_currentStationdata.HasBlackmarket = cbStationHasBlackmarket.Checked;
                     break;
 
                 case "cbStationHasOutfitting":
-                    m_currentStationdata.HasOutfitting = cbStationHasOutfitting.toNInt();
+                    m_currentStationdata.HasOutfitting = cbStationHasOutfitting.Checked;
                     break;
 
                 case "cbStationHasShipyard":
-                    m_currentStationdata.HasShipyard = cbStationHasShipyard.toNInt();
+                    m_currentStationdata.HasShipyard = cbStationHasShipyard.Checked;
                     break;
 
                 case "cbStationHasRearm":
-                    m_currentStationdata.HasRearm = cbStationHasRearm.toNInt();
+                    m_currentStationdata.HasRearm = cbStationHasRearm.Checked;
                     break;
 
                 case "cbStationHasRefuel":
-                    m_currentStationdata.HasRefuel = cbStationHasRefuel.toNInt();
+                    m_currentStationdata.HasRefuel = cbStationHasRefuel.Checked;
                     break;
 
                 case "cbStationHasRepair":
-                    m_currentStationdata.HasRepair = cbStationHasRepair.toNInt();
+                    m_currentStationdata.HasRepair = cbStationHasRepair.Checked;
                     break;
             }
 

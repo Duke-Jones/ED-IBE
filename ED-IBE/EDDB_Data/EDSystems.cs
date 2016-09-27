@@ -57,7 +57,7 @@ namespace IBE.EDDB_Data
         public string PowerState { get; set; }
 
         [JsonProperty("needs_permit")]
-        public int? NeedsPermit { get; set; }
+        public bool NeedsPermit { get; set; }
 
         [JsonProperty("updated_at")]
         public int UpdatedAt { get; set; }
@@ -165,7 +165,7 @@ namespace IBE.EDDB_Data
             PrimaryEconomy  = null;
             Power           = null;
             PowerState      = null;
-            NeedsPermit     = null;
+            NeedsPermit     = false;
             UpdatedAt       = 0;
             Simbad_Ref      = null;
 

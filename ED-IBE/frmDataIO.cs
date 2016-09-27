@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace IBE
 {
@@ -17,6 +18,7 @@ namespace IBE
         public const String        DB_GROUPNAME                    = "DataIO";
 
         public delegate void DelTextParam(String text);
+        private readonly SynchronizationContext synchronizationContext;
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
         public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
@@ -24,7 +26,6 @@ namespace IBE
         private Boolean m_DataImportHappened = false; 
         
         private DBGuiInterface      m_GUIInterface;
-        private ProgressView        m_ProgressView;
         private Boolean             m_DownloadFinished;
         private String              m_DataPath          = Program.GetDataPath("data");
 
@@ -76,10 +77,12 @@ namespace IBE
         public frmDataIO()
         {
             InitializeComponent();
-            this.Load           += frmDataIO_Load;
-            this.InfoTarget      = null;
-            this.ReUseLine       = true;
-            this.m_SingleNoReUse = false;
+            synchronizationContext = SynchronizationContext.Current;
+
+            this.Load             += frmDataIO_Load;
+            this.InfoTarget        = null;
+            this.ReUseLine         = true;
+            this.m_SingleNoReUse   = false;
 
             // https://api.github.com/repos/EDCD/FDevIDs/commits?commodity.csv
             m_DownLoader = new WebClient();
@@ -110,38 +113,43 @@ namespace IBE
         {
             try
             {
-                cmdImportOldData.Enabled                        = (!Program.Data.OldDataImportDone) && setEnabled;
-                cmdImportCommandersLog.Enabled                  = setEnabled;
-                cmdDownloadSystemsAndStations.Enabled           = setEnabled;
-                cmdImportSystemsAndStationsFromDownload.Enabled = setEnabled;
-                cmdImportSystemsAndStations.Enabled             = setEnabled;
-                cmdExportCSV.Enabled                            = setEnabled;
-                rbDefaultLanguage.Enabled                       = setEnabled;
-                rbUserLanguage.Enabled                          = setEnabled;
-                cmdImportFromCSV.Enabled                        = setEnabled;
-                rbImportNewer.Enabled                           = setEnabled;
-                rbImportSame.Enabled                            = setEnabled;
-                cmdTest.Enabled                                 = setEnabled;
-                cmdPurgeOldData.Enabled                         = setEnabled;
-                rbFormatExtended.Enabled                        = setEnabled;
-                rbFormatSimple.Enabled                          = setEnabled;
-                cmdExit.Enabled                                 = setEnabled; 
-                cmdEDCDDownloadID.Enabled                       = setEnabled;
-                cmdEDCDImportID.Enabled                         = setEnabled;
 
-                if(!setEnabled)
+                synchronizationContext.Send(new SendOrPostCallback(o =>
+                {
+                    cmdImportOldData.Enabled                        = (!Program.Data.OldDataImportDone) && (Boolean)o;
+                    cmdImportCommandersLog.Enabled                  = (Boolean)o;
+                    cmdDownloadSystemsAndStations.Enabled           = (Boolean)o;
+                    cmdImportSystemsAndStationsFromDownload.Enabled = (Boolean)o;
+                    cmdImportSystemsAndStations.Enabled             = (Boolean)o;
+                    cmdExportCSV.Enabled                            = (Boolean)o;
+                    rbDefaultLanguage.Enabled                       = (Boolean)o;
+                    rbUserLanguage.Enabled                          = (Boolean)o;
+                    cmdImportFromCSV.Enabled                        = (Boolean)o;
+                    rbImportNewer.Enabled                           = (Boolean)o;
+                    rbImportSame.Enabled                            = (Boolean)o;
+                    cmdTest.Enabled                                 = (Boolean)o;
+                    cmdPurgeOldData.Enabled                         = (Boolean)o;
+                    rbFormatExtended.Enabled                        = (Boolean)o;
+                    rbFormatSimple.Enabled                          = (Boolean)o;
+                    cmdExit.Enabled                                 = (Boolean)o; 
+                    cmdEDCDDownloadID.Enabled                       = (Boolean)o;
+                    cmdEDCDImportID.Enabled                         = (Boolean)o;
+                }), setEnabled);
+
+                if (!setEnabled)
                     m_CancelAction = false;
+
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while dis/enabling buttons", ex);
+                CErr.processError(ex, "Error while dis/enabling buttons");
             }
         }
 
         /// <summary>
         /// start the master import (master data for systems/station/commoditynames ...)
         /// </summary>
-        public void StartMasterImport(String path)
+        public async void StartMasterImport(String path)
         {
             if (this.InvokeRequired)
             {
@@ -162,7 +170,10 @@ namespace IBE
                                                 enImportTypes.EDCD_Commodity | 
                                                 enImportTypes.EDCD_Shipyard;
 
-                    ImportData(null, importFlags, null, path);
+                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
+                    t.Start();
+                    await t;
+
                 }
                 catch (Exception ex)
                 {
@@ -174,7 +185,7 @@ namespace IBE
         /// <summary>
         /// start the master update (data for systems/stations/commoditynames ...)
         /// </summary>
-        public void StartMasterUpdate(String path)
+        public async void StartMasterUpdate(String path)
         {
             if (this.InvokeRequired)
             {
@@ -193,7 +204,10 @@ namespace IBE
                                                 enImportTypes.EDCD_Commodity | 
                                                 enImportTypes.EDCD_Shipyard;
 
-                    ImportData(null, importFlags, null, path);
+                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
+                    t.Start();
+                    await t;
+
                 }
                 catch (Exception ex)
                 {
@@ -205,7 +219,7 @@ namespace IBE
         /// <summary>
         /// start the master update (data for systems/stations/commoditynames ...)
         /// </summary>
-        public void StartFDevIDImport(String path)
+        public async void StartFDevIDImport(String path)
         {
             if (this.InvokeRequired)
             {
@@ -221,7 +235,10 @@ namespace IBE
                                                 enImportTypes.EDCD_Commodity | 
                                                 enImportTypes.EDCD_Shipyard;
 
-                    ImportData(null, importFlags, null, path);
+                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
+                    t.Start();
+                    await t;
+
                 }
                 catch (Exception ex)
                 {
@@ -230,7 +247,7 @@ namespace IBE
             }
         }
 
-        public void GetStartersKit(String path)
+        public async void GetStartersKit(String path)
         {
             if (this.InvokeRequired)
             {
@@ -246,16 +263,17 @@ namespace IBE
                 try
                 {
                     SetButtons(false);
-                    lbProgess.Items.Clear();
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
 
                     importFlags = enImportTypes.EDDB_MarketData;
 
                     importParams = new PriceImportParameters() { Radius = 20, SystemID = Program.actualCondition.System_ID.Value};
                 
-                    m_ProgressView = new ProgressView(this, false);
-                    m_ProgressView.progressStart("importing starters kit...");
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing starters kit..."});
 
-                    ImportData(null, importFlags, null, path, false, importParams);
+                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path, false, importParams));
+                    t.Start();
+                    await t;
 
                     SetButtons(true);
 
@@ -397,64 +415,68 @@ namespace IBE
             {
                 ListBox destination;
 
-                if (InfoTarget != null)
+                synchronizationContext.Send(new SendOrPostCallback(o =>
                 {
-                    destination = InfoTarget;
-                }
-                else
-                {
-                    destination = lbProgess;
-                }
-
-                
-                if(e.Clear)
-                    destination.Items.Clear();
-
-                if (e.AddSeparator)
-                {
-                    destination.Items.Add("-------------------------------");
-                    destination.Items.Add("");
-                }
-                
-                if(e.CurrentValue >= 0)
-                {
-                    if (e.NewLine || (destination.Items.Count <= 0))
+                    if (InfoTarget != null)
                     {
-                        if(e.TotalValue != 0)
-                            destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", e.Info, 100 * e.CurrentValue / e.TotalValue, e.CurrentValue, e.TotalValue, e.Unit));
-                        else
-                            destination.Items.Add(String.Format("{0} : {2}{3}", e.Info, 0, e.CurrentValue, 0, e.Unit));
+                        destination = InfoTarget;
+                    }
+                    else
+                    {
+                        destination = lbProgess;
+                    }
+
+                
+                    if(((EliteDBIO.ProgressEventArgs)o).Clear)
+                        destination.Items.Clear();
+
+                    if (((EliteDBIO.ProgressEventArgs)o).AddSeparator)
+                    {
+                        destination.Items.Add("-------------------------------");
+                        destination.Items.Add("");
+                    }
+                
+                    if(((EliteDBIO.ProgressEventArgs)o).CurrentValue > 0)
+                    {
+                        if (((EliteDBIO.ProgressEventArgs)o).NewLine || (destination.Items.Count <= 0))
+                        {
+                            if(((EliteDBIO.ProgressEventArgs)o).TotalValue >= 0)
+                                destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", ((EliteDBIO.ProgressEventArgs)o).Info, 100 * ((EliteDBIO.ProgressEventArgs)o).CurrentValue / ((EliteDBIO.ProgressEventArgs)o).TotalValue, ((EliteDBIO.ProgressEventArgs)o).CurrentValue, ((EliteDBIO.ProgressEventArgs)o).TotalValue, ((EliteDBIO.ProgressEventArgs)o).Unit));
+                            else
+                                destination.Items.Add(String.Format("{0} : {2}{4}", ((EliteDBIO.ProgressEventArgs)o).Info, 0, ((EliteDBIO.ProgressEventArgs)o).CurrentValue, 0, ((EliteDBIO.ProgressEventArgs)o).Unit));
                     
-                    }
-                    else
-                    {
-                        if(e.TotalValue != 0)
-                            destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", e.Info, 100 * e.CurrentValue / e.TotalValue, e.CurrentValue, e.TotalValue, e.Unit);
+                        }
                         else
-                            destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{3}", e.Info, 0, e.CurrentValue, 0, e.Unit);
+                        {
+                            if(((EliteDBIO.ProgressEventArgs)o).TotalValue > 0)
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", ((EliteDBIO.ProgressEventArgs)o).Info, 100 * ((EliteDBIO.ProgressEventArgs)o).CurrentValue / ((EliteDBIO.ProgressEventArgs)o).TotalValue, ((EliteDBIO.ProgressEventArgs)o).CurrentValue, ((EliteDBIO.ProgressEventArgs)o).TotalValue, ((EliteDBIO.ProgressEventArgs)o).Unit);
+                            else
+                                destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{4}", ((EliteDBIO.ProgressEventArgs)o).Info, 0, ((EliteDBIO.ProgressEventArgs)o).CurrentValue, 0, ((EliteDBIO.ProgressEventArgs)o).Unit);
+                        }
+
+                        if(destination.TopIndex != (destination.Items.Count - 1))
+                            destination.TopIndex = destination.Items.Count - 1;
+
+                        destination.Refresh();
                     }
-
-                    if(destination.TopIndex != (destination.Items.Count - 1))
-                        destination.TopIndex = destination.Items.Count - 1;
-
-                    destination.Refresh();
-                }
-                else if(e.Info != null)
-                {
-                    if (e.NewLine || (destination.Items.Count <= 0))
+                    else if(((EliteDBIO.ProgressEventArgs)o).Info != null)
                     {
-                        destination.Items.Add(e.Info);
-                    }
-                    else
-                    {
-                        destination.Items[destination.Items.Count - 1] = e.Info;
+                        if (((EliteDBIO.ProgressEventArgs)o).NewLine || (destination.Items.Count <= 0))
+                        {
+                            destination.Items.Add(((EliteDBIO.ProgressEventArgs)o).Info);
+                        }
+                        else
+                        {
+                            destination.Items[destination.Items.Count - 1] = ((EliteDBIO.ProgressEventArgs)o).Info;
+                        }
+
+                        if (destination.TopIndex != (destination.Items.Count - 1))
+                            destination.TopIndex = destination.Items.Count - 1;
+
+                        destination.Refresh();
                     }
 
-                    if (destination.TopIndex != (destination.Items.Count - 1))
-                        destination.TopIndex = destination.Items.Count - 1;
-
-                    destination.Refresh();
-                }
+                }), e);
 
                 if(m_CancelAction)
                     e.Cancelled = true;
@@ -476,7 +498,7 @@ namespace IBE
         /// <param name="RNData">causes to look for some files in the "/data/" subdirectory (for importing old RN data) </param>
         /// <param name="RNData">for control type of import EDDB price data (only for enImportTypes.EDDB_MarketData) </param>
         /// <returns></returns>
-        private Boolean ImportData(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "", Boolean RNData = false, PriceImportParameters importParams = null)
+        private async Task<Boolean> ImportDataAsync(string importInfo, enImportTypes importFlags, String optionalFilter = "", String optionalPath = "", Boolean RNData = false, PriceImportParameters importParams = null)
         {
             String FileName;
             String sourcePath;
@@ -484,6 +506,9 @@ namespace IBE
             Boolean retValue = false;
             Boolean restartEDDN = false;
             Boolean stationOrCommodityImport = false;
+            FolderBrowserDialog fbFolderDialog = new FolderBrowserDialog();
+            OpenFileDialog foDialog = new OpenFileDialog();
+            DialogResult dlgResult= DialogResult.None;
 
             try
             {
@@ -495,11 +520,15 @@ namespace IBE
                 if (!String.IsNullOrEmpty(importInfo))
                 {
                     fbFolderDialog.RootFolder   = Environment.SpecialFolder.MyComputer;
-                    fbFolderDialog.Description  = importInfo;
                     fbFolderDialog.SelectedPath = sourcePath;
+                    fbFolderDialog.Description  = importInfo;
+                    
+
+                    dlgResult = ShowInvokedDialog((CommonDialog)fbFolderDialog);
+
                 }
 
-                if ((importInfo == null) || (fbFolderDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK))
+                if ((importInfo == null) || (dlgResult == System.Windows.Forms.DialogResult.OK))
                 {
                     if (importInfo != null)
                         sourcePath = fbFolderDialog.SelectedPath.Trim();
@@ -517,9 +546,6 @@ namespace IBE
                             Program.DBCon.setIniValue("General", "Path_Import", sourcePath);
 
                         Program.Data.Progress += Data_Progress;
-                        Cursor = Cursors.WaitCursor;
-
-                        lbProgess.Items.Clear();
 
                         Application.DoEvents();
 
@@ -938,9 +964,7 @@ namespace IBE
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating active localization of commodities...<OK>", NewLine = true});
                         }
 
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="FINISHED", CurrentValue=1, TotalValue=1, ForceRefresh=true, AddSeparator=true});
-
-                        Cursor = Cursors.Default;
+                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="FINISHED", AddSeparator=true});
 
                         Program.Data.Progress -= Data_Progress;
 
@@ -958,7 +982,6 @@ namespace IBE
                 if(restartEDDN)
                     Program.EDDNComm.StartEDDNListening();
 
-                Cursor = Cursors.Default;
                 throw new Exception("Error while importing data to database", ex);
             }
         }
@@ -970,6 +993,24 @@ namespace IBE
             DownloadSystemsAndStations();
             Debug.Print("end function base call");
         }
+
+        /// <summary>
+        /// shows a dialog (auto-invoked)
+        /// </summary>
+        /// <param name="dialogObject"></param>
+        /// <returns></returns>
+        private DialogResult ShowInvokedDialog(CommonDialog dialogObject)
+        {
+            if(this.InvokeRequired)
+            {
+                return (DialogResult)this.Invoke(new Func<DialogResult>(() => ShowInvokedDialog(dialogObject)));
+            }
+            else
+            {
+                return dialogObject.ShowDialog(this);
+            }
+        }
+
 
         private void DownloadSystemsAndStations()
         {
@@ -1043,7 +1084,7 @@ namespace IBE
             }
         }
 
-        private void cmdImportSystemsAndStationsFromDownload_Click(object sender, EventArgs e)
+        private async void cmdImportSystemsAndStationsFromDownload_Click(object sender, EventArgs e)
         {
             PriceImportParameters importParams = null;
             Boolean cantImport = false;
@@ -1052,8 +1093,6 @@ namespace IBE
             try
             {
                 SetButtons(false);
-                lbProgess.Items.Clear();
-
                 if (false)
                 {
                     importFlags = enImportTypes.EDDB_Commodities |
@@ -1093,12 +1132,17 @@ namespace IBE
                 { 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info = "importing EDDN data...", Clear = true });
 
-                    ImportData(null, importFlags, null, m_DataPath, false, importParams);
+                    var t = new Task(() => ImportDataAsync(null, importFlags, null, m_DataPath, false, importParams));
+                    t.Start();
+                    await t;
 
-                    if(m_CancelAction)
-                        MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    else
-                        MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //synchronizationContext.Send(new SendOrPostCallback(o =>
+                    //{
+                        if(m_CancelAction)
+                            MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        else
+                            MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //}), null);
 
                     m_DataImportHappened = true;
                 }
@@ -1112,17 +1156,16 @@ namespace IBE
                 CErr.processError(ex, "Error while importing downloaded system/station data from EDDB");
             }
         }
-        private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
+
+        private async void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
         {
             PriceImportParameters importParams = null;
 
             try
             {
                 SetButtons(false);
-                lbProgess.Items.Clear();
-
                 enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
-                                            enImportTypes.EDDB_Systems | 
+                                            enImportTypes.EDDB_Systems_Populated | 
                                             enImportTypes.EDDB_Stations;
 
                 if(!rbImportPrices_No.Checked)
@@ -1133,10 +1176,12 @@ namespace IBE
                         importParams = new PriceImportParameters() { Radius = 20, SystemID = Program.actualCondition.System_ID.Value};
                 }
 
-                m_ProgressView = new ProgressView(this, false);
-                m_ProgressView.progressStart("importing EDDN data...");
+                Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing EDDN data...", Clear=true});
 
-                ImportData("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "", "", false, importParams);
+
+                var t = new Task(() => ImportDataAsync("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "", "", false, importParams));
+                t.Start();
+                await t;
 
                 if(m_CancelAction)
                     MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1154,16 +1199,69 @@ namespace IBE
             }
         }
 
-        private void cmdImportCommandersLog_Click(object sender, EventArgs e)
+        //private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        Task task = new Task(ImportSystemsAndStations_Async);
+        //        task.Start();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CErr.processError(ex, "Error while starting EDDB import");
+        //    }
+        //}
+
+        //private async void ImportSystemsAndStations_Async()
+        //{
+        //    PriceImportParameters importParams = null;
+
+        //    try
+        //    {
+        //        SetButtons(false);
+        //        enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+        //                                    enImportTypes.EDDB_Systems | 
+        //                                    enImportTypes.EDDB_Stations;
+
+        //        if(!rbImportPrices_No.Checked)
+        //        {
+        //            importFlags |= enImportTypes.EDDB_MarketData;
+
+        //            if(rbImportPrices_Bubble.Checked)
+        //                importParams = new PriceImportParameters() { Radius = 20, SystemID = Program.actualCondition.System_ID.Value};
+        //        }
+
+        //        Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing EDDN data...", Clear=true});
+
+        //        await ImportDataAsync("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "", "", false, importParams);
+
+        //        if(m_CancelAction)
+        //            MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        //        else
+        //            MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        //        SetButtons(true);
+
+        //        m_DataImportHappened = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        SetButtons(true);
+        //        CErr.processError(ex, "Error while importing system/station data from EDDB");
+        //    }
+        //}
+        private async void cmdImportCommandersLog_Click(object sender, EventArgs e)
         {
             try
             {
                 SetButtons(false);
 
-                lbProgess.Items.Clear();
+                Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
 
                 enImportTypes importFlags = enImportTypes.RN_CommandersLog;
-                ImportData("Select folder with your old Commander's Log data (accepted file pattern : CommandersLog*.xml)", importFlags, "CommandersLog*.xml");
+                var t = new Task(() => ImportDataAsync("Select folder with your old Commander's Log data (accepted file pattern : CommandersLog*.xml)", importFlags, "CommandersLog*.xml"));
+                t.Start();
+                await t;
 
                 SetButtons(true);
 
@@ -1182,10 +1280,11 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmdImportOldData_Click(object sender, EventArgs e)
+        private async void cmdImportOldData_Click(object sender, EventArgs e)
         {
             String RNPath;
-            
+            FolderBrowserDialog fbFolderDialog = new FolderBrowserDialog();
+
             try
             {
                 SetButtons(false);
@@ -1211,14 +1310,16 @@ namespace IBE
                     {
                         if (File.Exists(Path.Combine(RNPath, "RegulatedNoise.exe")))
                         {
-                            lbProgess.Items.Clear();
+                            Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
 
                             Program.Data.Progress += Data_Progress;
                             Cursor = Cursors.WaitCursor;
 
                             Application.DoEvents();
 
-                            ImportData(null, importFlags, null, RNPath, true);
+                            var t = new Task(() => ImportDataAsync(null, importFlags, null, RNPath, true));
+                            t.Start();
+                            await t;
 
                             Program.Data.OldDataImportDone = true;
                             cmdImportOldData.Enabled = false;
@@ -1250,12 +1351,11 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmdExportCSV_Click(object sender, EventArgs e)
+        private async void cmdExportCSV_Click(object sender, EventArgs e)
         {
             try
             {
                 SetButtons(false);
-                Cursor = Cursors.WaitCursor;
 
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
@@ -1263,26 +1363,24 @@ namespace IBE
                 saveFileDialog1.DefaultExt          = "csv";
                 saveFileDialog1.Title               = "Export market data";
                 saveFileDialog1.OverwritePrompt     = true;
-                saveFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                saveFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_CSVExport", Program.GetDataPath("data"), false);
 
 	            DialogResult result = saveFileDialog1.ShowDialog();
 
 		        if (result == DialogResult.OK)
                 {
-                    lbProgess.Items.Clear();
+                    Program.DBCon.setIniValue("General", "Path_CSVExport", Path.GetDirectoryName(saveFileDialog1.FileName));
 
-                    m_ProgressView = new ProgressView(this, false);
-                    m_ProgressView.progressStart("exporting data to csv...");
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="exporting data to csv...", Clear=true});
 
                     Program.Data.Progress += Data_Progress;
 
                     Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "export prices to csv...", CurrentValue = 0, TotalValue = 0, AddSeparator=true });
 
-                    Application.DoEvents();
+                    var t = new Task(() => Program.Data.ExportMarketDataToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked, rbFormatExtended.Checked));
+                    t.Start();
+                    await t;
 
-                    Program.Data.ExportMarketDataToCSV(saveFileDialog1.FileName, rbUserLanguage.Checked, rbFormatExtended.Checked);
-
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "export prices to csv...", CurrentValue = 1, TotalValue = 1, ForceRefresh=true });
                     Program.Data.Progress -= Data_Progress;
 
                     if(m_CancelAction)
@@ -1292,12 +1390,10 @@ namespace IBE
                 }
 
                 SetButtons(true);
-                Cursor = Cursors.Default;
             }
             catch (Exception ex)
             {
                 SetButtons(true);
-                Cursor = Cursors.Default;
                 CErr.processError(ex, "Error while exporting to csv");
             }
         }
@@ -1307,46 +1403,45 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmdImportFromCSV_Click(object sender, EventArgs e)
+        private async void cmdImportFromCSV_Click(object sender, EventArgs e)
         {
             String sourcePath;
             OpenFileDialog fbFileDialog;
             try
             {
-                Cursor = Cursors.WaitCursor;
                 SetButtons(false);
 
-                sourcePath = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                sourcePath = Program.DBCon.getIniValue("General", "Path_CSVImport", Program.GetDataPath("data"), false);
 
                 fbFileDialog = new OpenFileDialog();
                 fbFileDialog.InitialDirectory = sourcePath;
                 fbFileDialog.Title = "Select the csv-file with market data to import...";
                 fbFileDialog.CheckFileExists    = true;
                 fbFileDialog.Filter             = "CVS files (*.csv)|*.csv|Text documents (*.txt)|*.txt|All files (*.*)|*.*";
-                fbFileDialog.FilterIndex = 3;
+                fbFileDialog.FilterIndex = 1;
 
 
                 fbFileDialog.ShowDialog(this);
 
                 if ((!String.IsNullOrEmpty(fbFileDialog.FileName)) && System.IO.File.Exists(fbFileDialog.FileName))
                 {
-                    lbProgess.Items.Clear();
+                    
+                    Program.DBCon.setIniValue("General", "Path_CSVImport", Path.GetDirectoryName(fbFileDialog.FileName));
 
-                    m_ProgressView = new ProgressView(this, false);
-                    m_ProgressView.progressStart("importing data from csv...");
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing data from csv...", Clear=true});
 
                     Program.Data.Progress += Data_Progress;
-
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "import price data from csv...", CurrentValue = 0, TotalValue = 0 });
 
                     SQL.EliteDBIO.enImportBehaviour importBehaviour = SQL.EliteDBIO.enImportBehaviour.OnlyNewer;
                     if(rbImportSame.Checked)
                         importBehaviour = SQL.EliteDBIO.enImportBehaviour.NewerOrEqual;
 
-                    Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, fbFileDialog.FileName), importBehaviour, EliteDBIO.enDataSource.fromFILE);
+                    var t = new Task(() => Program.Data.ImportPricesFromCSVFile(fbFileDialog.FileName, importBehaviour, EliteDBIO.enDataSource.fromFILE));
+                    t.Start();
+                    await t;
+
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
-                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info = "import price data from csv...", CurrentValue = 1, TotalValue = 1 });
 
                     Program.Data.Progress -= Data_Progress;
 
@@ -1358,14 +1453,11 @@ namespace IBE
 
                 SetButtons(true);
 
-                Cursor = Cursors.Default;
-
                 m_DataImportHappened = true;
             }
             catch (Exception ex)
             {
                 SetButtons(true);
-                Cursor = Cursors.Default;
                 CErr.processError(ex, "Error while importing from csv");
             }       
         }
@@ -1416,13 +1508,13 @@ namespace IBE
             }
         }
 
-        private void cmdPurgeOldData_Click(object sender, EventArgs e)
+        private async void cmdPurgeOldData_Click(object sender, EventArgs e)
         {
             try
             {
                 if(MessageBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
                 {
-                    lbProgess.Items.Clear();
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
 
                     SetButtons(false);
 
@@ -1430,9 +1522,16 @@ namespace IBE
 
                     Program.Data.Progress += Data_Progress;
 
-                    Program.Data.DeleteMarketData((Int32)nudPurgeOldDataDays.Value);
+                    var t = new Task(() => Program.Data.DeleteMarketData((Int32)nudPurgeOldDataDays.Value));
+                    t.Start();
+                    await t;
 
                     Program.Data.Progress -= Data_Progress;
+
+                    if(m_CancelAction)
+                        MessageBox.Show(this, "Deleting was cancelled !", "Deleting old data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    else
+                        MessageBox.Show(this, "Deleting of old data finished !", "Deleting old data", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     SetButtons(true);
                 }
@@ -1810,21 +1909,20 @@ namespace IBE
             }
         }
 
-        private void cmdEDCDImportID_Click(object sender, EventArgs e)
+        private async void cmdEDCDImportID_Click(object sender, EventArgs e)
         {
             PriceImportParameters importParams = null;
 
             try
             {
                 SetButtons(false);
-                lbProgess.Items.Clear();
-
                 enImportTypes importFlags = enImportTypes.EDCD_Outfitting | enImportTypes.EDCD_Commodity | enImportTypes.EDCD_Shipyard;
 
-                m_ProgressView = new ProgressView(this, false);
-                m_ProgressView.progressStart("importing ids of known things from EDCD...");
+                Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing ids of known things from EDCD...", Clear=true });
 
-                ImportData(null, importFlags, null, m_DataPath, false, null);
+                var t = new Task(() => ImportDataAsync(null, importFlags, null, m_DataPath, false, null));
+                t.Start();
+                await t;
 
                 if (m_CancelAction)
                     MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1871,6 +1969,7 @@ namespace IBE
         private void cmdCancel_Click(object sender, EventArgs e)
         {
             m_CancelAction = true;
+            Debug.Print("cancelled !");
         }
 
     }

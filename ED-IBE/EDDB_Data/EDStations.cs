@@ -51,25 +51,25 @@ namespace IBE.EDDB_Data
         public string Type { get; set; }
 
         [JsonProperty("has_blackmarket")]
-        public int? HasBlackmarket { get; set; }
+        public bool HasBlackmarket { get; set; }
 
         [JsonProperty("has_market")]
-        public int? HasMarket { get; set; }
+        public bool HasMarket { get; set; }
 
         [JsonProperty("has_refuel")]
-        public int? HasRefuel { get; set; }
+        public bool HasRefuel { get; set; }
 
         [JsonProperty("has_repair")]
-        public int? HasRepair { get; set; }
+        public bool HasRepair { get; set; }
 
         [JsonProperty("has_rearm")]
-        public int? HasRearm { get; set; }
+        public bool HasRearm { get; set; }
 
         [JsonProperty("has_outfitting")]
-        public int? HasOutfitting { get; set; }
+        public bool HasOutfitting { get; set; }
 
         [JsonProperty("has_shipyard")]
-        public int? HasShipyard { get; set; }
+        public bool HasShipyard { get; set; }
 
         [JsonProperty("import_commodities")]
         public string[] ImportCommodities { get; set; }
@@ -104,10 +104,10 @@ namespace IBE.EDDB_Data
         public int? TypeID { get; set; }
 
         [JsonProperty("has_commodities")]
-        public int? HasCommodities { get; set; }
+        public bool HasCommodities { get; set; }
 
         [JsonProperty("is_planetary")]
-        public int? IsPlanetary { get; set; }
+        public bool IsPlanetary { get; set; }
 
         [JsonProperty("selling_ships")]
         public string[] SellingShips { get; set; }
@@ -176,13 +176,13 @@ namespace IBE.EDDB_Data
                 Allegiance            = null;
                 State                 = null;
                 Type                  = null;
-                HasBlackmarket        = null;
-                HasMarket             = null;
-                HasRefuel             = null;
-                HasRepair             = null;
-                HasRearm              = null;
-                HasOutfitting         = null;
-                HasShipyard           = null;
+                HasBlackmarket        = false;
+                HasMarket             = false;
+                HasRefuel             = false;
+                HasRepair             = false;
+                HasRearm              = false;
+                HasOutfitting         = false;
+                HasShipyard           = false;
 
                 ImportCommodities     = new String[0];
                 ExportCommodities     = new String[0];
@@ -196,8 +196,8 @@ namespace IBE.EDDB_Data
                 Outfitting_UpdatedAt  = 0;
                 Market_UpdatedAt      = 0;
                 TypeID                = null;
-                HasCommodities        = null; 
-                IsPlanetary           = null;
+                HasCommodities        = false; 
+                IsPlanetary           = false;
                 SellingShips          = new String[0];
                 SellingModules        = new Int32[0];
 
@@ -245,13 +245,13 @@ namespace IBE.EDDB_Data
                 Allegiance            = null;
                 State                 = null;
                 Type                  = null;
-                HasBlackmarket        = null;
-                HasMarket             = null;
-                HasRefuel             = null;
-                HasRepair             = null;
-                HasRearm              = null;
-                HasOutfitting         = null;
-                HasShipyard           = null;
+                HasBlackmarket        = false;
+                HasMarket             = false;
+                HasRefuel             = false;
+                HasRepair             = false;
+                HasRearm              = false;
+                HasOutfitting         = false;
+                HasShipyard           = false;
 
                 ImportCommodities     = new String[0];
                 ExportCommodities     = new String[0];
@@ -265,8 +265,8 @@ namespace IBE.EDDB_Data
                 Outfitting_UpdatedAt  = 0;
                 Market_UpdatedAt      = 0;
                 TypeID                = null;
-                HasCommodities        = null; 
-                IsPlanetary           = null;
+                HasCommodities        = false; 
+                IsPlanetary           = false;
                 SellingShips          = new String[0];
                 SellingModules        = new Int32[0];
 
@@ -290,13 +290,13 @@ namespace IBE.EDDB_Data
             Allegiance            = null;
             State                 = null;
             Type                  = null;
-            HasBlackmarket        = null;
-            HasMarket             = null;
-            HasRefuel             = null;
-            HasRepair             = null;
-            HasRearm              = null;
-            HasOutfitting         = null;
-            HasShipyard           = null;
+            HasBlackmarket        = false;
+            HasMarket             = false;
+            HasRefuel             = false;
+            HasRepair             = false;
+            HasRearm              = false;
+            HasOutfitting         = false;
+            HasShipyard           = false;
 
             ImportCommodities     = new String[0];
             ExportCommodities     = new String[0];
@@ -310,8 +310,8 @@ namespace IBE.EDDB_Data
             Outfitting_UpdatedAt  = 0;
             Market_UpdatedAt      = 0;
             TypeID                = null;
-            HasCommodities        = null; 
-            IsPlanetary           = null;
+            HasCommodities        = false; 
+            IsPlanetary           = false;
             SellingShips          = new String[0];
             SellingModules        = new Int32[0];
 

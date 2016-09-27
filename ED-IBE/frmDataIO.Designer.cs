@@ -48,7 +48,6 @@
             this.cmdImportSystemsAndStations = new System.Windows.Forms.Button();
             this.cmdImportCommandersLog = new System.Windows.Forms.Button();
             this.cmdImportOldData = new System.Windows.Forms.Button();
-            this.fbFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.cmdPurgeOldData = new System.Windows.Forms.Button();
@@ -112,10 +111,10 @@
             this.cmdEDCDImportID.Name = "cmdEDCDImportID";
             this.cmdEDCDImportID.Size = new System.Drawing.Size(153, 41);
             this.cmdEDCDImportID.TabIndex = 6;
-            this.cmdEDCDImportID.Text = "Import from downloaded EDDB dumpfiles";
-            this.ttToolTip.SetToolTip(this.cmdEDCDImportID, "Import the latest information of the used IDs by the companion interface\r\nfrom th" +
-        "e data folder.\r\n(EDCD_commodities.csv, EDCD_outfitting_csv, EDCD_shipyard.csv)\r\n" +
-        "");
+            this.cmdEDCDImportID.Text = "Import downloaded EDCD definitions";
+            this.ttToolTip.SetToolTip(this.cmdEDCDImportID, "Import the latest information about the used IDs by the companion interface\r\nfrom" +
+        " the data folder.\r\n(EDCD_commodities.csv, EDCD_outfitting_csv, EDCD_shipyard.csv" +
+        ")\r\n");
             this.cmdEDCDImportID.UseVisualStyleBackColor = true;
             this.cmdEDCDImportID.Click += new System.EventHandler(this.cmdEDCDImportID_Click);
             // 
@@ -125,7 +124,7 @@
             this.cmdEDCDDownloadID.Name = "cmdEDCDDownloadID";
             this.cmdEDCDDownloadID.Size = new System.Drawing.Size(153, 41);
             this.cmdEDCDDownloadID.TabIndex = 5;
-            this.cmdEDCDDownloadID.Text = "Download latest EDDB dumpfiles";
+            this.cmdEDCDDownloadID.Text = "Download latest EDCD definitions";
             this.ttToolTip.SetToolTip(this.cmdEDCDDownloadID, resources.GetString("cmdEDCDDownloadID.ToolTip"));
             this.cmdEDCDDownloadID.UseVisualStyleBackColor = true;
             this.cmdEDCDDownloadID.Click += new System.EventHandler(this.cmdEDCDDownloadID_Click);
@@ -526,6 +525,7 @@
             this.lbProgess.FormattingEnabled = true;
             this.lbProgess.Location = new System.Drawing.Point(12, 270);
             this.lbProgess.Name = "lbProgess";
+            this.lbProgess.ScrollAlwaysVisible = true;
             this.lbProgess.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbProgess.Size = new System.Drawing.Size(696, 186);
             this.lbProgess.TabIndex = 1;
@@ -533,7 +533,7 @@
             // 
             // cmdCancel
             // 
-            this.cmdCancel.Location = new System.Drawing.Point(548, 408);
+            this.cmdCancel.Location = new System.Drawing.Point(531, 409);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(153, 41);
             this.cmdCancel.TabIndex = 1;
@@ -592,7 +592,6 @@
          
         private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.Button cmdImportOldData;
-        private System.Windows.Forms.FolderBrowserDialog fbFolderDialog;
         private System.Windows.Forms.ListBox lbProgess;
         private System.Windows.Forms.GroupBox gbFirstTime;
         private System.Windows.Forms.GroupBox gbRepeat;
