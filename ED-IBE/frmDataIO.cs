@@ -1555,7 +1555,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                CErr.processError(ex, "Error in nudPurgeOldDataDays_KeyDown");
+                CErr.processError(ex, "Error in nud*****_KeyDown");
             }
         }
 
@@ -1570,7 +1570,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                CErr.processError(ex, "Error in nudPurgeOldDataDays_Leave");
+                CErr.processError(ex, "Error in nud*****_Leave");
             }
         }
 
@@ -1972,6 +1972,38 @@ namespace IBE
             Debug.Print("cancelled !");
         }
 
+        private async void cmdPurgeNotMoreExistingDataDays_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(MessageBox.Show(String.Format("Delete all data older than {0} days", nudPurgeOldDataDays.Value), "Delete old price data", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
+                {
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
+
+                    SetButtons(false);
+
+                    Program.Data.Progress += Data_Progress;
+
+                    var t = new Task(() => Program.Data.DeleteNoLongerExistingMarketData((Int32)nudPurgeNotMoreExistingDataDays.Value));
+                    t.Start();
+                    await t;
+
+                    Program.Data.Progress -= Data_Progress;
+
+                    if(m_CancelAction)
+                        MessageBox.Show(this, "Deleting was cancelled !", "Delete no longer existing data from stations", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    else
+                        MessageBox.Show(this, "Deleting of old data finished !", "Delete no longer existing data from station", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    SetButtons(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetButtons(true);
+                CErr.processError(ex, "Error in cmdPurgeOldData_Click");
+            }
+        }
     }
 
     internal class DownloadData

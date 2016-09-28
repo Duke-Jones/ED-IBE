@@ -112,6 +112,7 @@
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "OCR-Settings";
+            this.groupBox6.Visible = false;
             // 
             // gbTesseract
             // 
@@ -417,6 +418,7 @@
             this.cbAutoActivateSystemTab.Tag = "AutoActivateSystemTab;true";
             this.cbAutoActivateSystemTab.Text = "automatically activate the \"System Data\" tab after hyperjump";
             this.cbAutoActivateSystemTab.UseVisualStyleBackColor = true;
+            this.cbAutoActivateSystemTab.Visible = false;
             this.cbAutoActivateSystemTab.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoActivateOCRTab
@@ -429,6 +431,7 @@
             this.cbAutoActivateOCRTab.Tag = "AutoActivateOCRTab;true";
             this.cbAutoActivateOCRTab.Text = "Automatically activate the OCR-Tab when the recognition starts";
             this.cbAutoActivateOCRTab.UseVisualStyleBackColor = true;
+            this.cbAutoActivateOCRTab.Visible = false;
             this.cbAutoActivateOCRTab.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // button6
@@ -538,6 +541,7 @@
             this.gbVNCTest.Text = "NVC-Server";
             this.toolTip1.SetToolTip(this.gbVNCTest, "To resolve conflicts with other tools you can change \r\nthe port for the sql-commu" +
         "nication. Restart is required!");
+            this.gbVNCTest.Visible = false;
             // 
             // cbActivateVNC
             // 

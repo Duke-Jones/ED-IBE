@@ -48,11 +48,12 @@
             this.cmdImportSystemsAndStations = new System.Windows.Forms.Button();
             this.cmdImportCommandersLog = new System.Windows.Forms.Button();
             this.cmdImportOldData = new System.Windows.Forms.Button();
-            this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.cmdPurgeOldData = new System.Windows.Forms.Button();
             this.label89 = new System.Windows.Forms.Label();
             this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
+            this.cmdPurgeNotMoreExistingDataDays = new System.Windows.Forms.Button();
+            this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cmdExit = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -70,6 +71,10 @@
             this.lbProgess = new System.Windows.Forms.ListBox();
             this.cmdCancel = new System.Windows.Forms.Button();
             this.tmrDownload = new System.Windows.Forms.Timer(this.components);
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.cbCheckObsoleteOnRecieve = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.nudPurgeNotMoreExistingDataDays = new System.Windows.Forms.NumericUpDown();
             this.groupBox8.SuspendLayout();
             this.gbRepeat.SuspendLayout();
             this.gbPriceImport.SuspendLayout();
@@ -83,6 +88,8 @@
             this.groupBox3.SuspendLayout();
             this.groupboxImport.SuspendLayout();
             this.gbFirstTime.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeNotMoreExistingDataDays)).BeginInit();
             this.SuspendLayout();
             // 
             // ttToolTip
@@ -305,30 +312,28 @@
             this.cmdImportOldData.UseVisualStyleBackColor = true;
             this.cmdImportOldData.Click += new System.EventHandler(this.cmdImportOldData_Click);
             // 
-            // ofdFileDialog
-            // 
-            this.ofdFileDialog.FileName = "openFileDialog1";
-            // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.cmdPurgeOldData);
             this.groupBox6.Controls.Add(this.label89);
             this.groupBox6.Controls.Add(this.nudPurgeOldDataDays);
-            this.groupBox6.Location = new System.Drawing.Point(714, 387);
+            this.groupBox6.Location = new System.Drawing.Point(714, 350);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(323, 59);
+            this.groupBox6.Size = new System.Drawing.Size(516, 59);
             this.groupBox6.TabIndex = 66;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Delete marketdata to reduce database";
+            this.ttToolTip.SetToolTip(this.groupBox6, "All market data, older than <n> days will be deleted");
             // 
             // cmdPurgeOldData
             // 
             this.cmdPurgeOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmdPurgeOldData.Location = new System.Drawing.Point(32, 21);
             this.cmdPurgeOldData.Name = "cmdPurgeOldData";
-            this.cmdPurgeOldData.Size = new System.Drawing.Size(167, 23);
+            this.cmdPurgeOldData.Size = new System.Drawing.Size(208, 23);
             this.cmdPurgeOldData.TabIndex = 63;
             this.cmdPurgeOldData.Text = "Delete Marketdata Older Than";
+            this.ttToolTip.SetToolTip(this.cmdPurgeOldData, "All market data, older than <n> days will be deleted");
             this.cmdPurgeOldData.UseVisualStyleBackColor = true;
             this.cmdPurgeOldData.Click += new System.EventHandler(this.cmdPurgeOldData_Click);
             // 
@@ -336,7 +341,7 @@
             // 
             this.label89.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(254, 26);
+            this.label89.Location = new System.Drawing.Point(304, 26);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(31, 13);
             this.label89.TabIndex = 64;
@@ -345,7 +350,7 @@
             // nudPurgeOldDataDays
             // 
             this.nudPurgeOldDataDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(205, 23);
+            this.nudPurgeOldDataDays.Location = new System.Drawing.Point(255, 23);
             this.nudPurgeOldDataDays.Maximum = new decimal(new int[] {
             365,
             0,
@@ -361,6 +366,7 @@
             this.nudPurgeOldDataDays.TabIndex = 65;
             this.nudPurgeOldDataDays.Tag = "PurgeOldDataDays;30";
             this.nudPurgeOldDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ttToolTip.SetToolTip(this.nudPurgeOldDataDays, "All market data, older than <n> days will be deleted");
             this.nudPurgeOldDataDays.Value = new decimal(new int[] {
             180,
             0,
@@ -368,6 +374,22 @@
             0});
             this.nudPurgeOldDataDays.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nudPurgeOldDataDays_KeyDown);
             this.nudPurgeOldDataDays.Leave += new System.EventHandler(this.nudPurgeOldDataDays_Leave);
+            // 
+            // cmdPurgeNotMoreExistingDataDays
+            // 
+            this.cmdPurgeNotMoreExistingDataDays.Location = new System.Drawing.Point(32, 21);
+            this.cmdPurgeNotMoreExistingDataDays.Name = "cmdPurgeNotMoreExistingDataDays";
+            this.cmdPurgeNotMoreExistingDataDays.Size = new System.Drawing.Size(208, 23);
+            this.cmdPurgeNotMoreExistingDataDays.TabIndex = 63;
+            this.cmdPurgeNotMoreExistingDataDays.Text = "Delete no longer existing commodity data ";
+            this.ttToolTip.SetToolTip(this.cmdPurgeNotMoreExistingDataDays, "All market data that are older than <n> days, based on the latest update of the s" +
+        "tation will be deleted.\r\n");
+            this.cmdPurgeNotMoreExistingDataDays.UseVisualStyleBackColor = true;
+            this.cmdPurgeNotMoreExistingDataDays.Click += new System.EventHandler(this.cmdPurgeNotMoreExistingDataDays_Click);
+            // 
+            // ofdFileDialog
+            // 
+            this.ofdFileDialog.FileName = "openFileDialog1";
             // 
             // groupBox5
             // 
@@ -481,7 +503,7 @@
             this.groupboxImport.Controls.Add(this.rbImportSame);
             this.groupboxImport.Controls.Add(this.cmdImportFromCSV);
             this.groupboxImport.Controls.Add(this.rbImportNewer);
-            this.groupboxImport.Location = new System.Drawing.Point(10, 223);
+            this.groupboxImport.Location = new System.Drawing.Point(10, 225);
             this.groupboxImport.Name = "groupboxImport";
             this.groupboxImport.Size = new System.Drawing.Size(313, 96);
             this.groupboxImport.TabIndex = 7;
@@ -527,13 +549,13 @@
             this.lbProgess.Name = "lbProgess";
             this.lbProgess.ScrollAlwaysVisible = true;
             this.lbProgess.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbProgess.Size = new System.Drawing.Size(696, 186);
+            this.lbProgess.Size = new System.Drawing.Size(696, 225);
             this.lbProgess.TabIndex = 1;
             this.lbProgess.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbProgess_KeyDown);
             // 
             // cmdCancel
             // 
-            this.cmdCancel.Location = new System.Drawing.Point(531, 409);
+            this.cmdCancel.Location = new System.Drawing.Point(533, 449);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(153, 41);
             this.cmdCancel.TabIndex = 1;
@@ -547,10 +569,70 @@
             this.tmrDownload.Interval = 250;
             this.tmrDownload.Tick += new System.EventHandler(this.tmrDownload_Tick);
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.cbCheckObsoleteOnRecieve);
+            this.groupBox7.Controls.Add(this.cmdPurgeNotMoreExistingDataDays);
+            this.groupBox7.Controls.Add(this.label1);
+            this.groupBox7.Controls.Add(this.nudPurgeNotMoreExistingDataDays);
+            this.groupBox7.Location = new System.Drawing.Point(714, 415);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(516, 82);
+            this.groupBox7.TabIndex = 67;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Clean spacestations from no more existing commodities";
+            // 
+            // cbCheckObsoleteOnRecieve
+            // 
+            this.cbCheckObsoleteOnRecieve.AutoSize = true;
+            this.cbCheckObsoleteOnRecieve.Location = new System.Drawing.Point(32, 50);
+            this.cbCheckObsoleteOnRecieve.Name = "cbCheckObsoleteOnRecieve";
+            this.cbCheckObsoleteOnRecieve.Size = new System.Drawing.Size(348, 17);
+            this.cbCheckObsoleteOnRecieve.TabIndex = 66;
+            this.cbCheckObsoleteOnRecieve.Tag = "AutoPurgeNotMoreExistingDataDays;true";
+            this.cbCheckObsoleteOnRecieve.Text = "do this check every time for a station when getting new market data ";
+            this.cbCheckObsoleteOnRecieve.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(304, 26);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(31, 13);
+            this.label1.TabIndex = 64;
+            this.label1.Text = "Days";
+            // 
+            // nudPurgeNotMoreExistingDataDays
+            // 
+            this.nudPurgeNotMoreExistingDataDays.Location = new System.Drawing.Point(255, 23);
+            this.nudPurgeNotMoreExistingDataDays.Maximum = new decimal(new int[] {
+            365,
+            0,
+            0,
+            0});
+            this.nudPurgeNotMoreExistingDataDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudPurgeNotMoreExistingDataDays.Name = "nudPurgeNotMoreExistingDataDays";
+            this.nudPurgeNotMoreExistingDataDays.Size = new System.Drawing.Size(44, 20);
+            this.nudPurgeNotMoreExistingDataDays.TabIndex = 65;
+            this.nudPurgeNotMoreExistingDataDays.Tag = "PurgeNotMoreExistingDataDays;30";
+            this.nudPurgeNotMoreExistingDataDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.nudPurgeNotMoreExistingDataDays.Value = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.nudPurgeNotMoreExistingDataDays.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nudPurgeOldDataDays_KeyDown);
+            this.nudPurgeNotMoreExistingDataDays.Leave += new System.EventHandler(this.nudPurgeOldDataDays_Leave);
+            // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1238, 462);
+            this.ClientSize = new System.Drawing.Size(1238, 506);
+            this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.cmdCancel);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox6);
@@ -560,6 +642,7 @@
             this.Controls.Add(this.gbRepeat);
             this.Controls.Add(this.gbFirstTime);
             this.Controls.Add(this.lbProgess);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDataIO";
             this.Text = "Data Interface";
@@ -584,6 +667,9 @@
             this.groupboxImport.ResumeLayout(false);
             this.groupboxImport.PerformLayout();
             this.gbFirstTime.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudPurgeNotMoreExistingDataDays)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -630,5 +716,10 @@
         private System.Windows.Forms.Button cmdEDCDDownloadID;
         private System.Windows.Forms.Button cmdCancel;
         private System.Windows.Forms.Timer tmrDownload;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.CheckBox cbCheckObsoleteOnRecieve;
+        private System.Windows.Forms.Button cmdPurgeNotMoreExistingDataDays;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown nudPurgeNotMoreExistingDataDays;
     }
 }

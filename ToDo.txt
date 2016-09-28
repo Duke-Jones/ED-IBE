@@ -17,8 +17,6 @@ todo:
 * avoid resizing of fonts
 * VoiceAttack interface
 * update hint for new FDevIDs while starting
-* check permarefresh while downloading EDDB files
-* when visit a system and its coordinates are unknown then set them
 
 
 todo for StarterTips:
@@ -32,7 +30,11 @@ todo for StarterTips:
 
 done:
 
-
+  * no longer existing commodity data will automatically deleted when getting 
+    new data from companion interface or from trusted eddn senders (for current station only)
+  * new cleaning function in "Data->Import/Export": delete no longer existing commodity data 
+  * update system coordinates from logfile when they are unknown or wrong
+-------------------------------------------------------------------------------------         
   * fixed errors after EDCD changed format of definition files
   * fixed errors after EDDB changed format of dump files (v4.5 / 2016-09-11)
 -------------------------------------------------------------------------------------         

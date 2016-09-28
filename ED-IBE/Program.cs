@@ -483,7 +483,7 @@ namespace IBE
         {
             try
             {
-                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, false);
+                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, e.Position, false);
             }
             catch (Exception ex)
             {
@@ -500,7 +500,7 @@ namespace IBE
         {                                                       
             try
             {
-                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, false);
+                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, null, false);
             }
             catch (Exception ex)
             {

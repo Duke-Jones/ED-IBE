@@ -290,6 +290,7 @@ bool disposed = false;
             List<String> importData = new List<String>();
             enSchema ownSchema;
             enSchema dataSchema;
+            bool isTrusty = false;
 
             try
             {
@@ -381,13 +382,15 @@ bool disposed = false;
 
                 if (DataRows != null && DataRows.GetUpperBound(0) >= 0)
                 {
+                    isTrusty = (Program.Data.BaseData.tbtrustedsenders.Rows.Find(name) != null);
+
                     UpdateStatisticData(DataRows.GetUpperBound(0) + 1, nameAndVersion, e.Adress, uploaderID);
 
                     foreach (String DataRow in DataRows)
                     {
                         if(m_DuplicateFilter.DataAccepted(DataRow))
                         {
-                            bool isTrusty = (Program.Data.BaseData.tbtrustedsenders.Rows.Find(name) != null);
+                            
 
                             // data is plausible ?
                             if (isTrusty || (!Program.PlausibiltyCheck.CheckPricePlausibility(new string[] { DataRow }, SimpleEDDNCheck)))
@@ -431,7 +434,7 @@ bool disposed = false;
                     // have we collected importable data -> then import now
                     if (importData.Count() > 0)
                     {
-                        Program.Data.ImportPricesFromCSVStrings(importData.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromEDDN);
+                        Program.Data.ImportPricesFromCSVStrings(importData.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, (isTrusty ? SQL.EliteDBIO.enDataSource.fromEDDN_T : SQL.EliteDBIO.enDataSource.fromEDDN));
                         DataChangedEvent.Raise(this, new DataChangedEventArgs(enDataTypes.DataImported));
                     }
 

@@ -59,7 +59,8 @@ namespace IBE.SQL
             undefined           =  0,
             fromIBE             =  1,
             fromEDDN            =  2,
-            fromFILE            =  3
+            fromFILE            =  3,
+            fromEDDN_T          =  4
         }
 
 #endregion
@@ -2488,10 +2489,14 @@ namespace IBE.SQL
                 Int32 priceCountTotal = 0;
                 Int32 priceCount = 0;
                 Int32 SourceID;
+                enDataSource initialDataSource = dataSource;
                 
 
                 if ((dataSource == enDataSource.fromRN) || (dataSource == enDataSource.fromIBE_OCR))
                     dataSource = enDataSource.fromIBE;
+
+                if(dataSource == enDataSource.fromEDDN_T)
+                    dataSource = enDataSource.fromEDDN;
 
                 // for the prices is no transaction necessary, because we're changing
                 // only a single table
@@ -2623,6 +2628,13 @@ namespace IBE.SQL
                         
                     } while (!currentListingDone);
 
+                    if(((initialDataSource == enDataSource.fromIBE) || (initialDataSource == enDataSource.fromEDDN_T)) && 
+                        Program.DBCon.getIniValue<Boolean>(frmDataIO.DB_GROUPNAME, "AutoPurgeNotMoreExistingDataDays", true.ToString(), false))
+                    {
+                        // remove old prices if we got the data from ourself or from trusted eddn senders
+                        Program.Data.DeleteNoLongerExistingMarketData(Program.DBCon.getIniValue<Int32>(frmDataIO.DB_GROUPNAME, "PurgeNotMoreExistingDataDays", "30", false), Station.Id);
+                    }
+
                     if(eva.Cancelled)
                         break;
                 }
@@ -2721,7 +2733,8 @@ namespace IBE.SQL
         /// <param name="CSV_Strings">data to import</param>
         /// <param name="importBehaviour">filter, which prices to import</param>
         /// <param name="dataSource">if data has no information about the datasource, this setting will count</param>
-        public void ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour, enDataSource dataSource)
+        /// <returns>a list of converted station data (including correct station ids) </returns>
+        public List<EDStation> ImportPricesFromCSVStrings(String[] CSV_Strings, enImportBehaviour importBehaviour, enDataSource dataSource)
         {
             Boolean MissingSystem   = false;
             Boolean MissingStation  = false;
@@ -2869,6 +2882,8 @@ namespace IBE.SQL
 
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
                 }
+
+                return StationData;
             }
             catch (Exception ex)
             {
@@ -2887,6 +2902,7 @@ namespace IBE.SQL
             String starPort;
             Int32 commodityCount = 0;
             List<String> csvStrings = new List<string>();
+            List<EDStation> stationData = null;
 
             try
             {
@@ -2929,7 +2945,7 @@ namespace IBE.SQL
                 } 
 
                 if(csvStrings.Count > 0)
-                    ImportPricesFromCSVStrings(csvStrings.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
+                    stationData = ImportPricesFromCSVStrings(csvStrings.ToArray(), SQL.EliteDBIO.enImportBehaviour.OnlyNewer, SQL.EliteDBIO.enDataSource.fromIBE);
 
                 return commodityCount;
             }
@@ -2980,7 +2996,7 @@ namespace IBE.SQL
                                else
                                { 
                                       // system is in the bubble - set as visited
-                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, true, false);
+                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, null, true, false);
                                }
 
                                eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize-i, TotalValue=initialSize };
@@ -3490,6 +3506,94 @@ namespace IBE.SQL
             sendProgressEvent(new ProgressEventArgs() { Info=String.Format("deleting prices older than {0} days from database...", days), CurrentValue=deletedRowsSum, TotalValue = rowsToDelete, ForceRefresh=true });
         }
 
+
+        /// <summary>
+        /// delete all data for every station, older than "youngest update" - "n days"
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public void DeleteNoLongerExistingMarketData(int days, int? singleStationID=null)
+        {
+            String sqlString;
+            Int32 deletedRows = 0;
+            Int32 deletedRowsSum = 0;
+            Int32 stationsToCheck;
+            String sqlBaseString_Get;
+            String sqlBaseString_Delete;
+            DataTable data = new DataTable();
+            Int32 firstPosition = 0;
+            Int32 quantity      = 500;
+            Int32 deleted = 0;
+            Int32 checkedStations = 0;
+
+            try
+            {
+                sqlBaseString_Get = " select * from" + 
+                                    " 				(select * from tbStations) L1" + 
+                                    " 	left join " +
+                                    " 				(select id " +
+                                    " 				from " +
+                                    " 					(select * from tbStations) L3 " +
+                                    " 				order by L3.id asc" +
+                                    " 				limit {0}) L2 " +
+                                    " on L1.id = L2.id " +
+                                    " where L2.id is null " +
+                                    " order by L1.id asc" +
+                                    " limit {1}";
+
+                sqlBaseString_Delete =  " delete C2 from tbCommodityData C2 " +
+                                        "  where C2.station_id = {0}  " +
+                                        "  and   C2.timestamp <  " +
+                                        "      (select * from " +
+                                        "           (select Date_Add(max(timestamp), INTERVAL -{1} DAY)  " +
+                                        "             from tbCommodityData where station_id = {0} " +
+                                        "           ) D1  " +
+                                        " 	   ) ";
+
+
+                if(!singleStationID.HasValue)
+                    stationsToCheck = Program.DBCon.Execute<Int32>("select count(*) from tbstations"); 
+                else
+                    stationsToCheck = 1;   
+
+                sqlString = String.Format("select id from tbStations",days);
+                sendProgressEvent(new ProgressEventArgs() { Info=String.Format("delete prices of no longer existing commodities on stations...", days), CurrentValue=0, TotalValue=stationsToCheck, AddSeparator=true });
+
+                do
+                {
+                    if(singleStationID.HasValue)
+                    {
+                        deleted += Program.DBCon.Execute(String.Format(sqlBaseString_Delete, singleStationID.Value, days));
+                    }
+                    else
+                    {
+                        Program.DBCon.Execute(String.Format(sqlBaseString_Get, firstPosition, quantity), data);
+                
+                        foreach (DataRow stationID in data.Rows)
+                        {
+                            deleted += Program.DBCon.Execute(String.Format(sqlBaseString_Delete, stationID["id"], days));
+
+                            checkedStations++;
+
+                            if(sendProgressEvent(new ProgressEventArgs() { Info=String.Format("delete prices of no longer existing commodities on stations - deleted prices={0}...", deleted), CurrentValue=checkedStations, TotalValue = stationsToCheck, Unit=" stations" }))
+                                break;
+
+                        }
+
+                        firstPosition+=quantity;
+                    }
+
+                } while ((data.Rows.Count > 0) && (!singleStationID.HasValue));
+
+                sendProgressEvent(new ProgressEventArgs() { Info=String.Format("delete prices of no longer existing commodities on stations - deleted prices={0}...", deleted), CurrentValue=checkedStations, TotalValue = stationsToCheck, Unit=" stations", ForceRefresh=true });
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting no more existing commodities from stations", ex);
+            }
+        }
+
 #endregion
 
 #region localization
@@ -3815,36 +3919,37 @@ namespace IBE.SQL
         /// <param name="System"></param>
         /// <param name="Station"></param>
         /// <param name="setVisitedFlag"></param>
-        public void checkPotentiallyNewSystemOrStation(String System, String Station, Boolean setVisitedFlag = true, Boolean refreshBasetables = true)
+        /// <param name="name"></param>
+        public void checkPotentiallyNewSystemOrStation(String System, String Station, Point3Dbl coordinates = null, Boolean setVisitedFlag = true, Boolean refreshBasetables = true)
         {
             String sqlString;
             Int32 SystemID;
             Int32 LocationID;
-            Boolean systemFirstTimeVisited     = false;
-            Boolean stationFirstTimeVisited    = false;
-            Boolean isNewSystem                = false;
-            Boolean isNewStation               = false;
-            DataTable Data          = new DataTable();
+            Boolean systemFirstTimeVisited = false;
+            Boolean stationFirstTimeVisited = false;
+            Boolean isNewSystem = false;
+            Boolean isNewStation = false;
+            DataTable Data = new DataTable();
             Boolean Visited;
 
             try
             {
-                System  = System.Trim();
+                System = System.Trim();
                 Station = Station.Trim();
 
-                if(!String.IsNullOrEmpty(System))
-                { 
-                    sqlString       = "select id, visited from tbSystems where Systemname = " + DBConnector.SQLAEscape(System);
-                    if(Program.DBCon.Execute(sqlString, Data) > 0)
-                    { 
+                if (!String.IsNullOrEmpty(System))
+                {
+                    sqlString = "select id, visited from tbSystems where Systemname = " + DBConnector.SQLAEscape(System);
+                    if (Program.DBCon.Execute(sqlString, Data) > 0)
+                    {
                         // check or update the visited-flag
                         SystemID = (Int32)(Data.Rows[0]["ID"]);
-                        Visited  = (Boolean)(Data.Rows[0]["visited"]);
+                        Visited = (Boolean)(Data.Rows[0]["visited"]);
 
-                        if(!Visited)
-                        { 
+                        if (!Visited)
+                        {
                             sqlString = String.Format("insert ignore into tbVisitedSystems(system_id, time) values" +
-                                                      " ({0},{1})", SystemID.ToString(),  DBConnector.SQLDateTime(DateTime.UtcNow));
+                                                      " ({0},{1})", SystemID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
                             Program.DBCon.Execute(sqlString);
                             systemFirstTimeVisited = true;
                         }
@@ -3852,36 +3957,47 @@ namespace IBE.SQL
                     else
                     {
                         // add a new system
-                        EDSystem newSystem      = new EDSystem();
-                        newSystem.Name          = System;
+                        EDSystem newSystem = new EDSystem();
+                        newSystem.Name = System;
 
-                        var systemIDs           = ImportSystems_Own(newSystem, true, setVisitedFlag);
+                        var systemIDs = ImportSystems_Own(newSystem, true, setVisitedFlag);
 
-                        SystemID                = newSystem.Id;
+                        SystemID = newSystem.Id;
 
-                        isNewSystem             = true;
-                        systemFirstTimeVisited  = true;
+                        isNewSystem = true;
+                        systemFirstTimeVisited = true;
                     }
-                
-                
 
-                    if(!String.IsNullOrEmpty(Station))
-                    { 
+                    if((coordinates != null) && (coordinates.Valid))
+                    {
+                        sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = now()" +
+                                                  " where (x<>{0} or y<>{1} or z<>{2}) and id = {3}", 
+                                                  DBConnector.SQLDecimal(coordinates.X.Value), 
+                                                  DBConnector.SQLDecimal(coordinates.Y.Value), 
+                                                  DBConnector.SQLDecimal(coordinates.Z.Value), 
+                                                  SystemID);
+                        if(Program.DBCon.Execute(sqlString)>0)
+                            Debug.Print("system coordinates updated");
+                    }
+
+
+                    if (!String.IsNullOrEmpty(Station))
+                    {
                         Data.Clear();
 
-                        sqlString    = "select St.ID, St.visited from tbSystems Sy, tbStations St" +
+                        sqlString = "select St.ID, St.visited from tbSystems Sy, tbStations St" +
                                        " where Sy.ID = St. System_ID" +
                                        " and   Sy.ID          = " + SystemID +
                                        " and   St.Stationname = " + DBConnector.SQLAEscape(Station);
 
-                        if(Program.DBCon.Execute(sqlString, Data) > 0)
-                        { 
+                        if (Program.DBCon.Execute(sqlString, Data) > 0)
+                        {
                             // check or update the visited-flag
                             LocationID = (Int32)(Data.Rows[0]["ID"]);
-                            Visited    = (Boolean)(Data.Rows[0]["visited"]);
+                            Visited = (Boolean)(Data.Rows[0]["visited"]);
 
-                            if(!Visited)
-                            { 
+                            if (!Visited)
+                            {
                                 sqlString = String.Format("insert ignore into tbVisitedStations(station_id, time) values" +
                                                           " ({0},{1})", LocationID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
                                 Program.DBCon.Execute(sqlString);
@@ -3891,35 +4007,35 @@ namespace IBE.SQL
                         else
                         {
                             // add a new station
-                            EDStation newStation    = new EDStation();
-                            newStation.Name         = Station;
-                            newStation.SystemId     = SystemID;
+                            EDStation newStation = new EDStation();
+                            newStation.Name = Station;
+                            newStation.SystemId = SystemID;
 
                             ImportStations_Own(newStation, true, setVisitedFlag);
-                                         
-                            isNewStation              = true;
+
+                            isNewStation = true;
                             stationFirstTimeVisited = true;
                         }
                     }
 
 
-                    if(refreshBasetables)
-                    { 
-                        if(systemFirstTimeVisited || stationFirstTimeVisited)
+                    if (refreshBasetables)
+                    {
+                        if (systemFirstTimeVisited || stationFirstTimeVisited)
                         {
                             // if there's a new visitedflag set in the visited-tables
                             // then update the maintables
                             Program.Data.updateVisitedFlagsFromBase(systemFirstTimeVisited, stationFirstTimeVisited);
 
                             // last but not least reload the BaseTables with the new visited-information
-                            if(systemFirstTimeVisited)
+                            if (systemFirstTimeVisited)
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
 
-                            if(stationFirstTimeVisited)
+                            if (stationFirstTimeVisited)
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
                         }
 
-                        if(isNewSystem || isNewStation)
+                        if (isNewSystem || isNewStation)
                         {
                             Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
                         }
