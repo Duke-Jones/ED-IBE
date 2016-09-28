@@ -30,6 +30,8 @@ todo for StarterTips:
 
 done:
 
+  * removed obsolete sqltables
+-------------------------------------------------------------------------------------         
   * no longer existing commodity data will automatically deleted when getting 
     new data from companion interface or from trusted eddn senders (for current station only)
   * new cleaning function in "Data->Import/Export": delete no longer existing commodity data 
