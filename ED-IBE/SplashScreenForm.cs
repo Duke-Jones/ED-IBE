@@ -18,7 +18,7 @@ namespace IBE
         public SplashScreenForm()
         {
             InitializeComponent();
-            SplashInfo.Items.Add("");
+            SplashInfo.Items.Clear();
             SplashObject = this;
             lblVersion.Text = "v" + VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
         }
@@ -37,7 +37,7 @@ namespace IBE
 
         public void InfoAdd(string Info)
         { 
-            SplashInfo.Items.Insert(SplashInfo.Items.Count-1, Info);
+            SplashInfo.Items.Insert(SplashInfo.Items.Count, Info);
             SplashInfo.SelectedIndex = SplashInfo.Items.Count-1;
             SplashInfo.SelectedIndex = -1;
             this.Refresh();
@@ -48,7 +48,7 @@ namespace IBE
 
         public void InfoChange(string Info)
         { 
-            SplashInfo.Items[SplashInfo.Items.Count-2] = Info;
+            SplashInfo.Items[SplashInfo.Items.Count-1] = Info;
             SplashInfo.SelectedIndex = SplashInfo.Items.Count-1;
             SplashInfo.SelectedIndex = -1;
             this.Refresh();
@@ -59,7 +59,7 @@ namespace IBE
 
         public void InfoAppendLast(string Info)
         {
-            SplashInfo.Items[SplashInfo.Items.Count - 2] += Info;
+            SplashInfo.Items[SplashInfo.Items.Count - 1] += Info;
             SplashInfo.SelectedIndex = SplashInfo.Items.Count - 1;
             SplashInfo.SelectedIndex = -1;
             Refresh();

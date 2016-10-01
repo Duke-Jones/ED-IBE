@@ -264,22 +264,6 @@ namespace IBE.SQL
                                                             "tbpowerstate", 
                                                             "tblanguage", 
                                                             "tbtrustedsenders",
-                                                            "tbdnmap_armour",
-                                                            "tbdnmap_weapon",
-                                                            "tbdnmap_missiletype",
-                                                            "tbdnmap_weaponmount",
-                                                            "tbdnmap_weaponclass",
-                                                            "tbdnmap_weaponrating",
-                                                            "tbdnmap_oldvariant",
-                                                            "tbdnmap_countermeasure",
-                                                            "tbdnmap_utility",
-                                                            "tbdnmap_rating",
-                                                            "tbdnmap_ratingplanet",
-                                                            "tbdnmap_internal",
-                                                            "tbdnmap_standard",
-                                                            "tbdnmap_internal_misc",
-                                                            "tbdnmap_category",
-                                                            "tbdnmap_ships",
                                                             "tbdnmap_commodity"};
 
         // dataset with base data

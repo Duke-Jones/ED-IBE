@@ -97,8 +97,12 @@ namespace IBE.Enums_and_Utility_Classes
         {
             form.Left           = Position.X;
             form.Top            = Position.Y;
-            form.Width          = Position.Width;
-            form.Height         = Position.Height;
+
+            if((form.FormBorderStyle == FormBorderStyle.Sizable) || (form.FormBorderStyle == FormBorderStyle.SizableToolWindow))
+            {
+                form.Width          = Position.Width;
+                form.Height         = Position.Height;
+            }
 
             form.WindowState    = State;
         }

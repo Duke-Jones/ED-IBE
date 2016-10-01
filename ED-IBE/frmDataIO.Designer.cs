@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDataIO));
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.cbAutoImportEDCD = new System.Windows.Forms.CheckBox();
             this.cmdEDCDImportID = new System.Windows.Forms.Button();
             this.cmdEDCDDownloadID = new System.Windows.Forms.Button();
             this.rbFormatSimple = new System.Windows.Forms.RadioButton();
@@ -100,17 +101,32 @@
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.cbAutoImportEDCD);
             this.groupBox8.Controls.Add(this.cmdEDCDImportID);
             this.groupBox8.Controls.Add(this.cmdEDCDDownloadID);
-            this.groupBox8.Location = new System.Drawing.Point(1053, 224);
+            this.groupBox8.Location = new System.Drawing.Point(1053, 169);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(177, 120);
+            this.groupBox8.Size = new System.Drawing.Size(177, 175);
             this.groupBox8.TabIndex = 67;
             this.groupBox8.TabStop = false;
             this.groupBox8.Tag = "Schema;Real";
             this.groupBox8.Text = "Companion IDs";
             this.ttToolTip.SetToolTip(this.groupBox8, "These IDs are used to identify unambiguous the recieved data from the companion i" +
         "nterface .\r\nYou should update them if there are changes due to udates in ED.");
+            // 
+            // cbAutoImportEDCD
+            // 
+            this.cbAutoImportEDCD.AutoSize = true;
+            this.cbAutoImportEDCD.Location = new System.Drawing.Point(11, 121);
+            this.cbAutoImportEDCD.Name = "cbAutoImportEDCD";
+            this.cbAutoImportEDCD.Size = new System.Drawing.Size(158, 43);
+            this.cbAutoImportEDCD.TabIndex = 67;
+            this.cbAutoImportEDCD.Tag = "AutoImportEDCDData;true";
+            this.cbAutoImportEDCD.Text = "autocheck and import these\r\ndefinitions everytime IBE\r\nis starting";
+            this.ttToolTip.SetToolTip(this.cbAutoImportEDCD, "If checked IBE will look for new data on every start.\r\nIf there\'s something new I" +
+        "BE will download and import the data.\r\n");
+            this.cbAutoImportEDCD.UseVisualStyleBackColor = true;
+            this.cbAutoImportEDCD.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // cmdEDCDImportID
             // 
@@ -592,6 +608,7 @@
             this.cbCheckObsoleteOnRecieve.Tag = "AutoPurgeNotMoreExistingDataDays;true";
             this.cbCheckObsoleteOnRecieve.Text = "do this check every time for a station when getting new market data ";
             this.cbCheckObsoleteOnRecieve.UseVisualStyleBackColor = true;
+            this.cbCheckObsoleteOnRecieve.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // label1
             // 
@@ -650,6 +667,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDataIO_FormClosed);
             this.Shown += new System.EventHandler(this.frmDataIO_Shown);
             this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.gbRepeat.ResumeLayout(false);
             this.gbPriceImport.ResumeLayout(false);
             this.gbPriceImport.PerformLayout();
@@ -721,5 +739,6 @@
         private System.Windows.Forms.Button cmdPurgeNotMoreExistingDataDays;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudPurgeNotMoreExistingDataDays;
+        private System.Windows.Forms.CheckBox cbAutoImportEDCD;
     }
 }

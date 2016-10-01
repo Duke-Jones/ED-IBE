@@ -1313,8 +1313,22 @@ namespace IBE
                 Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
                 st.Start();
 
+                if(Program.DBCon.getIniValue<Boolean>(frmDataIO.DB_GROUPNAME, "AutoImportEDCDData", true.ToString(), false))
+                {
+                    // import new edcd data if available
+                    var DataIO = new frmDataIO();
 
-                Program.SplashScreen.InfoAdd("init sequence finished");
+                    DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+
+                    DataIO.StartEDCDCheck();
+
+                    DataIO.Close();
+                    DataIO.Dispose();
+
+                }
+
+
+                Program.SplashScreen.InfoAdd("init sequence finished !");
                 Program.SplashScreen.CloseDelayed();
 
                 Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);

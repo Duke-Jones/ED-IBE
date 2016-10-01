@@ -4,20 +4,18 @@ todo:
 * switch : enable disable history
 * hold rejected data
 * add marked color for datagrids
-* option for recalculate distances in log
 * mark datasource colorized
 * show all systems around another system with infos
 
 * wrong data in sell-date of S2S detailgrid
 * check : non-existing game path from registry
-						   1
-
-* delete wrong data from auto function (not required, tables seem to be obsolete)
-
 * avoid resizing of fonts
 * VoiceAttack interface
-* update hint for new FDevIDs while starting
+* consider commodity V3 
+* new interface for E:D-2.2-eventlog 
 
+
+* v2.2 event interface
 
 todo for StarterTips:
 * add info for
@@ -25,11 +23,14 @@ todo for StarterTips:
   - download directory for eddb data is changed
   - right mouse click on cmdrs-log for edsm/ recalculate distances
   - right mouse click on price analysis tabs for getting systemname
-  
+  - hint for new cleaning function
 *************************************************************************************
 
 done:
 
+  * autoupdate when new FDevIDs (EDCD) exists
+  * removed obsolete sqltables from basetables
+-------------------------------------------------------------------------------------         
   * removed obsolete sqltables
 -------------------------------------------------------------------------------------         
   * no longer existing commodity data will automatically deleted when getting 

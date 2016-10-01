@@ -1261,6 +1261,8 @@ namespace IBE
 
                     }
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -1292,7 +1294,6 @@ namespace IBE
                         Thread.Sleep(1500);
 
                         DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
-                        DataIO.ReUseLine  = true;
 
                         DataIO.StartMasterImport(Program.GetDataPath("Data"));
 
@@ -1344,7 +1345,6 @@ namespace IBE
                         Thread.Sleep(1500);
 
                         DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
-                        DataIO.ReUseLine  = true;
 
                         DataIO.StartMasterUpdate(Program.GetDataPath("Data"));
 
@@ -1434,7 +1434,6 @@ namespace IBE
                             Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...");
 
                             DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
-                            DataIO.ReUseLine  = true;
 
                             DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
 

@@ -21,9 +21,9 @@ namespace IBE
         private readonly SynchronizationContext synchronizationContext;
 
         public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
-        public Boolean ReUseLine { get; set; }                  // allows to redirect the progress info to another listbox
-        private Boolean m_SingleNoReUse{ get; set; }                  // allows to redirect the progress info to another listbox
         private Boolean m_DataImportHappened = false; 
+
+        private Boolean m_GotNewEDCDFiles;
         
         private DBGuiInterface      m_GUIInterface;
         private Boolean             m_DownloadFinished;
@@ -45,7 +45,7 @@ namespace IBE
                                                                             "shipyard.csv"};
 
         private Boolean m_CancelAction = false;
-        private System.Collections.Queue m_DownloadQueue;
+        private System.Collections.Queue m_DownloadQueue = new System.Collections.Queue();
         private WebClient m_DownLoader;
         private DownloadData m_CurrentDownloadInfo; 
         private PerformanceTimer m_PerfTimer;
@@ -81,8 +81,6 @@ namespace IBE
 
             this.Load             += frmDataIO_Load;
             this.InfoTarget        = null;
-            this.ReUseLine         = true;
-            this.m_SingleNoReUse   = false;
 
             // https://api.github.com/repos/EDCD/FDevIDs/commits?commodity.csv
             m_DownLoader = new WebClient();
@@ -99,8 +97,6 @@ namespace IBE
                 m_GUIInterface              = new DBGuiInterface(DB_GROUPNAME, Program.DBCon);
 
                 m_GUIInterface.loadAllSettings(this);
-
-                m_DownloadQueue = new System.Collections.Queue();
 
             }
             catch (Exception ex)
@@ -179,6 +175,53 @@ namespace IBE
                 {
                     CErr.processError(ex, "Error while starting master import");
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async void StartEDCDCheck()
+        {
+            try
+            { 
+                String baseUrl         = "https://raw.githubusercontent.com/EDCD/FDevIDs/master/";
+                String gitCheckUrl     = "https://api.github.com/repos/EDCD/FDevIDs/";
+                String savePrefix      = "EDCD_";
+                String infoString      = "connecting to github.com...";
+                List<String> filesList = new List<string>(m_DL_Files_EDCD);
+                String specialDestiationFolder = "";
+
+                if(Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
+                    specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
+
+                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info ="checking for new EDCD data..."});
+
+                DownloadFiles(baseUrl, savePrefix, infoString, filesList, gitCheckUrl, specialDestiationFolder, false);
+
+                if(m_GotNewEDCDFiles)
+                {
+                    PriceImportParameters importParams = null;
+
+                    enImportTypes importFlags = enImportTypes.EDCD_Outfitting | enImportTypes.EDCD_Commodity | enImportTypes.EDCD_Shipyard;
+
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing new ids from EDCD...", NewLine=true});
+
+                    ImportDataAsync(null, importFlags, null, m_DataPath, false, null);
+
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing new ids from EDCD...<OK>", ForceRefresh = true});
+
+                }
+                else
+                {
+                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info ="checking for new EDCD data...<OK>"});
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while downloading files with EDCD-IDs");
             }
         }
 
@@ -320,95 +363,6 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        //private void Data_Progress_OLD(object sender, SQL.EliteDBIO.ProgressEventArgs_OLD e)
-        //{
-        //    try
-        //    {
-        //        e.progressObject = m_ProgressView;
-
-        //        ListBox destination;
-
-        //        if (InfoTarget != null)
-        //        {
-        //            destination = InfoTarget;
-        //        }
-        //        else
-        //        {
-        //            destination = lbProgess;
-        //        }
-        //        if (e.Index == 0 && e.Total == 0)
-        //        {
-        //            destination.Items.Add("-------------------------------");
-        //            destination.Items.Add(String.Format("{0}", e.Tablename));
-
-        //            if(m_ProgressView != null)
-        //                m_ProgressView.progressUpdate(0,1, e.Tablename);
-
-        //        }
-        //        else if (e.Index == -1 && e.Total == -1)
-        //        {
-        //            destination.Items.Add(String.Format("{0}", e.Tablename));
-
-        //            if(m_ProgressView != null)
-        //                m_ProgressView.progressUpdate(0,1, e.Tablename);
-
-        //        }
-        //        else
-        //        {
-        //            if (e.Index == 1 && e.Total == 1)
-        //            {
-        //                destination.Items.Add(String.Format("{0} : 100%", e.Tablename));
-
-        //                if(m_ProgressView != null)
-        //                    m_ProgressView.progressUpdate(1,1, e.Tablename);
-        //            }
-        //            else
-        //            {
-        //                if ((!m_SingleNoReUse) && ReUseLine && (destination.Items.Count > 0))
-        //                {
-        //                    if(e.Total != 0)
-        //                    {
-        //                        destination.Items[destination.Items.Count - 1] = String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit);
-
-        //                        if(m_ProgressView != null)
-        //                            m_ProgressView.progressUpdate(e.Index, e.Total, e.Tablename);
-        //                    }
-        //                    else
-        //                        destination.Items[destination.Items.Count - 1] = String.Format("{0} : {2}{3}", e.Tablename, 0, e.Index, 0, e.Unit);
-        //                }
-        //                else
-        //                {
-        //                    destination.Items.Add(String.Format("{0} : {1}% ({2} of {3}{4})", e.Tablename, 100 * e.Index / e.Total, e.Index, e.Total, e.Unit));
-
-        //                    if(m_ProgressView != null)
-        //                        m_ProgressView.progressUpdate(e.Index, e.Total, e.Tablename);
-
-        //                }
-        //            }
-        //        }
-
-
-        //        m_SingleNoReUse = false;
-
-        //        if (e.Single_NoReuse)
-        //            m_SingleNoReUse = true;
-
-        //        destination.TopIndex = destination.Items.Count - 1;
-
-        //        destination.Refresh();
-        //        //Application.DoEvents();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        CErr.processError(ex, "Error while reporting progress");
-        //    }
-        //}
-
-        /// <summary>
-        /// shows the data progress
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Data_Progress(object sender, EliteDBIO.ProgressEventArgs e)
         {
             try
@@ -419,7 +373,8 @@ namespace IBE
                 {
                     if (InfoTarget != null)
                     {
-                        destination = InfoTarget;
+                        destination     = InfoTarget;
+                        e.AddSeparator  = false;
                     }
                     else
                     {
@@ -1612,7 +1567,7 @@ namespace IBE
         /// <param name="infoString">infostring for messages</param>
         /// <param name="filesList">list of files to download to</param>
         /// <param name="gitCheckPath">if not empty assuming download grom github with a special age-check </param>
-        private void DownloadFiles(String baseUrl, String savePrefix, String infoString, List<String> filesList, String gitCheckPath = "", String specialDestiationFolder = "")
+        private void DownloadFiles(String baseUrl, String savePrefix, String infoString, List<String> filesList, String gitCheckPath = "", String specialDestiationFolder = "", Boolean asyncDownload = true)
         {
             List<DateTime> filesTimes = new List<DateTime>();
 
@@ -1622,6 +1577,8 @@ namespace IBE
 
             try
             {
+                m_GotNewEDCDFiles = false;
+
                 if(!String.IsNullOrEmpty(specialDestiationFolder))
                     lDataPath = specialDestiationFolder;                    
 
@@ -1687,23 +1644,42 @@ namespace IBE
                     else
                         download = true;
 
-                    if (download)
+                    if(asyncDownload)
                     {
-                        var downloadInfo = String.Format("downloading file {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
+                        if (download)
+                        {
+                            var downloadInfo = String.Format("downloading file {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]);
 
-                        m_DownloadQueue.Enqueue(new DownloadData() { DownloadUri = new Uri(baseUrl + filesList[i]),
-                                                                     LocalFileName = currentDestinationFile,
-                                                                     BelongingFileTime = filesTimes[i],
-                                                                     InfoString = downloadInfo,
-                                                                     TotalDownloadBytes = 0,
-                                                                     UsedUnit = "" });
+                            m_DownloadQueue.Enqueue(new DownloadData() { DownloadUri = new Uri(baseUrl + filesList[i]),
+                                                                         LocalFileName = currentDestinationFile,
+                                                                         BelongingFileTime = filesTimes[i],
+                                                                         InfoString = downloadInfo,
+                                                                         TotalDownloadBytes = 0,
+                                                                         UsedUnit = "" });
+                            m_GotNewEDCDFiles = true;
+                        }
+                        else
+                        {
+                            var downloadInfo = String.Format("skipping download {0} of {1}: {2} - newest version already existing...", i + 1, filesList.Count, savePrefix + filesList[i]);
+                            m_DownloadQueue.Enqueue(new DownloadData() { InfoString = downloadInfo});
+                        }
+                        tmrDownload.Start();
                     }
                     else
                     {
-                        var downloadInfo = String.Format("skipping download {0} of {1}: {2} - newest version already existing...", i + 1, filesList.Count, savePrefix + filesList[i]);
-                        m_DownloadQueue.Enqueue(new DownloadData() { InfoString = downloadInfo});
+                        if (download)
+                        {
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info=String.Format("downloading file {0} of {1}: {2}...", i + 1, filesList.Count, filesList[i]), NewLine=true});
+
+                            WebClient webClient = new WebClient();
+                            webClient.DownloadFile(new Uri(baseUrl + filesList[i]), currentDestinationFile);
+                            File.SetCreationTime(currentDestinationFile, filesTimes[i]);
+
+                            Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info=String.Format("downloading file {0} of {1}: {2}...<OK>", i + 1, filesList.Count, filesList[i]), ForceRefresh=true});
+
+                            m_GotNewEDCDFiles = true;
+                        }
                     }
-                    tmrDownload.Start();
 
                     if (m_CancelAction)
                         break;
@@ -2002,6 +1978,18 @@ namespace IBE
             {
                 SetButtons(true);
                 CErr.processError(ex, "Error in cmdPurgeOldData_Click");
+            }
+        }
+
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                m_GUIInterface.saveSetting(sender);
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in CheckBox_CheckedChanged");
             }
         }
     }
