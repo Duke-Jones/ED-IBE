@@ -11,6 +11,7 @@ todo:
 * check : non-existing game path from registry
 * avoid resizing of fonts
 * VoiceAttack interface
+
 * consider commodity V3 
 * new interface for E:D-2.2-eventlog 
 
@@ -27,7 +28,14 @@ todo for StarterTips:
 *************************************************************************************
 
 done:
+  
 
+  * added update script for updating existing databases
+  * latest fixes on import data
+  * changed references from systems.json to systems_populated.json
+  * removed obsolete mapping files
+  * refreshed sql script for creating database
+-------------------------------------------------------------------------------------         
   * autoupdate when new FDevIDs (EDCD) exists
   * removed obsolete sqltables from basetables
 -------------------------------------------------------------------------------------         

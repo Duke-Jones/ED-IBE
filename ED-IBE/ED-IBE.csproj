@@ -910,7 +910,7 @@
     <None Include="Data\stations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\systems.json">
+    <None Include="Data\systems_populated.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ED-IBE.ini">

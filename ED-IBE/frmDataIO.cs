@@ -71,7 +71,7 @@ namespace IBE
             EDCD_Commodity                  = 0x00004000,           /* default is "EDCD_commodity.csv"  */
             EDCD_Outfitting                 = 0x00008000,           /* default is "EDCD_outfitting.csv"  */
             EDCD_Shipyard                   = 0x00010000,           /* default is "EDCD_shipyard.csv"  */
-            EDDB_Systems_Populated          = 0x00020000,           /* default is "systems.json" */  
+            EDDB_Systems_Populated          = 0x00020000,           /* default is "systems_populated.json" */  
         }
 
         public frmDataIO()
@@ -130,6 +130,19 @@ namespace IBE
                     cmdExit.Enabled                                 = (Boolean)o; 
                     cmdEDCDDownloadID.Enabled                       = (Boolean)o;
                     cmdEDCDImportID.Enabled                         = (Boolean)o;
+
+                    rbImportPrices_No.Enabled                       = (Boolean)o;
+                    rbImportPrices_Bubble.Enabled                   = (Boolean)o;
+                    rbImportPrices_All.Enabled                      = (Boolean)o;
+
+                    cmdPurgeNotMoreExistingDataDays.Enabled         = (Boolean)o;
+                    cbCheckObsoleteOnRecieve.Enabled                = (Boolean)o;
+                    cbAutoImportEDCD.Enabled                        = (Boolean)o;
+
+                    nudPurgeOldDataDays.Enabled                     = (Boolean)o;
+                    nudPurgeNotMoreExistingDataDays.Enabled         = (Boolean)o;
+
+
                 }), setEnabled);
 
                 if (!setEnabled)
@@ -139,42 +152,6 @@ namespace IBE
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error while dis/enabling buttons");
-            }
-        }
-
-        /// <summary>
-        /// start the master import (master data for systems/station/commoditynames ...)
-        /// </summary>
-        public async void StartMasterImport(String path)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new DelTextParam(StartMasterImport), new Object[] {path});
-            }
-            else
-            {
-                this.Visible = false;
-
-                try
-                {
-                    enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
-                                                enImportTypes.EDDB_Systems | 
-                                                enImportTypes.EDDB_Stations |
-                                                enImportTypes.IBE_Localizations_Commodities |
-                                                enImportTypes.RN_Localizations_EcoLevels | 
-                                                enImportTypes.EDCD_Outfitting | 
-                                                enImportTypes.EDCD_Commodity | 
-                                                enImportTypes.EDCD_Shipyard;
-
-                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
-                    t.Start();
-                    await t;
-
-                }
-                catch (Exception ex)
-                {
-                    CErr.processError(ex, "Error while starting master import");
-                }
             }
         }
 
@@ -226,108 +203,82 @@ namespace IBE
         }
 
         /// <summary>
-        /// start the master update (data for systems/stations/commoditynames ...)
+        /// start the master import (master data for systems/station/commoditynames ...)
         /// </summary>
-        public async void StartMasterUpdate(String path)
+        public async Task StartMasterImport(String path)
         {
-            if (this.InvokeRequired)
+            this.Visible = false;
+
+            try
             {
-                this.Invoke(new DelTextParam(StartMasterUpdate), new Object[] {path});
+                enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+                                            enImportTypes.EDDB_Systems_Populated | 
+                                            enImportTypes.EDDB_Stations |
+                                            enImportTypes.IBE_Localizations_Commodities |
+                                            enImportTypes.RN_Localizations_EcoLevels | 
+                                            enImportTypes.EDCD_Outfitting | 
+                                            enImportTypes.EDCD_Commodity | 
+                                            enImportTypes.EDCD_Shipyard;
+
+                var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
+                t.Start();
+                await t;
+
             }
-            else
+            catch (Exception ex)
             {
-                this.Visible = false;
-
-                try
-                {
-                    enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
-                                                enImportTypes.EDDB_Systems | 
-                                                enImportTypes.EDDB_Stations | 
-                                                enImportTypes.EDCD_Outfitting | 
-                                                enImportTypes.EDCD_Commodity | 
-                                                enImportTypes.EDCD_Shipyard;
-
-                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
-                    t.Start();
-                    await t;
-
-                }
-                catch (Exception ex)
-                {
-                    CErr.processError(ex, "Error while starting master import");
-                }
+                CErr.processError(ex, "Error while starting master import");
             }
         }
 
         /// <summary>
         /// start the master update (data for systems/stations/commoditynames ...)
         /// </summary>
-        public async void StartFDevIDImport(String path)
+        public async Task StartMasterUpdate(String path)
         {
-            if (this.InvokeRequired)
+            this.Visible = false;
+
+            try
             {
-                this.Invoke(new DelTextParam(StartFDevIDImport), new Object[] {path});
+                enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
+                                            enImportTypes.EDDB_Systems_Populated | 
+                                            enImportTypes.EDDB_Stations | 
+                                            enImportTypes.EDCD_Outfitting | 
+                                            enImportTypes.EDCD_Commodity | 
+                                            enImportTypes.EDCD_Shipyard;
+
+                var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
+                t.Start();
+                await t;
+
             }
-            else
+            catch (Exception ex)
             {
-                this.Visible = false;
-
-                try
-                {
-                    enImportTypes importFlags = enImportTypes.EDCD_Outfitting | 
-                                                enImportTypes.EDCD_Commodity | 
-                                                enImportTypes.EDCD_Shipyard;
-
-                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
-                    t.Start();
-                    await t;
-
-                }
-                catch (Exception ex)
-                {
-                    CErr.processError(ex, "Error while starting master import");
-                }
+                CErr.processError(ex, "Error while starting master update");
             }
         }
 
-        public async void GetStartersKit(String path)
+        /// <summary>
+        /// start the master update (data for systems/stations/commoditynames ...)
+        /// </summary>
+        public async Task StartFDevIDImport(String path)
         {
-            if (this.InvokeRequired)
+            this.Visible = false;
+
+            try
             {
-                this.Invoke(new DelTextParam(StartMasterImport), new Object[] {path});
+                enImportTypes importFlags = enImportTypes.EDCD_Outfitting | 
+                                            enImportTypes.EDCD_Commodity | 
+                                            enImportTypes.EDCD_Shipyard;
+
+                var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
+                t.Start();
+                await t;
+
             }
-            else
+            catch (Exception ex)
             {
-                this.Visible = false;
-
-                PriceImportParameters importParams = null;
-                enImportTypes importFlags;                                  
-
-                try
-                {
-                    SetButtons(false);
-                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
-
-                    importFlags = enImportTypes.EDDB_MarketData;
-
-                    importParams = new PriceImportParameters() { Radius = 20, SystemID = Program.actualCondition.System_ID.Value};
-                
-                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing starters kit..."});
-
-                    var t = new Task(() => ImportDataAsync(null, importFlags, null, path, false, importParams));
-                    t.Start();
-                    await t;
-
-                    SetButtons(true);
-
-                    m_DataImportHappened = true;
-                
-                }
-                catch (Exception ex)
-                {
-                    SetButtons(true);
-                    CErr.processError(ex, "Error while getting the starters kit");
-                }
+                CErr.processError(ex, "Error while starting FDevID import");
             }
         }
 
@@ -1154,57 +1105,7 @@ namespace IBE
             }
         }
 
-        //private void cmdImportSystemsAndStations_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        Task task = new Task(ImportSystemsAndStations_Async);
-        //        task.Start();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        CErr.processError(ex, "Error while starting EDDB import");
-        //    }
-        //}
 
-        //private async void ImportSystemsAndStations_Async()
-        //{
-        //    PriceImportParameters importParams = null;
-
-        //    try
-        //    {
-        //        SetButtons(false);
-        //        enImportTypes importFlags = enImportTypes.EDDB_Commodities | 
-        //                                    enImportTypes.EDDB_Systems | 
-        //                                    enImportTypes.EDDB_Stations;
-
-        //        if(!rbImportPrices_No.Checked)
-        //        {
-        //            importFlags |= enImportTypes.EDDB_MarketData;
-
-        //            if(rbImportPrices_Bubble.Checked)
-        //                importParams = new PriceImportParameters() { Radius = 20, SystemID = Program.actualCondition.System_ID.Value};
-        //        }
-
-        //        Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing EDDN data...", Clear=true});
-
-        //        await ImportDataAsync("Select folder with system/station datafiles (systems.json/stations.json/commodities.json)", importFlags, "", "", false, importParams);
-
-        //        if(m_CancelAction)
-        //            MessageBox.Show(this, "Import was cancelled and is unfinished!", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        //        else
-        //            MessageBox.Show(this, "Import has finished", "Data import", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-        //        SetButtons(true);
-
-        //        m_DataImportHappened = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        SetButtons(true);
-        //        CErr.processError(ex, "Error while importing system/station data from EDDB");
-        //    }
-        //}
         private async void cmdImportCommandersLog_Click(object sender, EventArgs e)
         {
             try

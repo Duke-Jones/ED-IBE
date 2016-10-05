@@ -1209,7 +1209,7 @@ namespace IBE
 
         System.Windows.Forms.Timer _timer;
 
-        private void Form_Shown(object sender, System.EventArgs e)
+        private async void Form_Shown_async(object sender, System.EventArgs e)
         {
             try
             {
@@ -1293,7 +1293,7 @@ namespace IBE
                 st.Start();
                 
                 // *******************************************************************
-                Updater.DoSpecial(this);
+                await Updater.DoSpecial(this);
                 // *******************************************************************
 
                 if (Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
@@ -1348,10 +1348,6 @@ namespace IBE
                     }
                 }
                 
-                txtPosition_X_DB.Visible = Debugger.IsAttached;
-                txtPosition_Y_DB.Visible = Debugger.IsAttached;
-                txtPosition_Z_DB.Visible = Debugger.IsAttached;
-
                 // inform GUI from EDSM
                 Program.EDSMComm.DataTransmittedEvent += EDSMComm_DataTransmittedEvent;
 
@@ -3569,42 +3565,6 @@ namespace IBE
                         txtPosition_X.Text = "n/a";
                         txtPosition_Y.Text = "n/a";
                         txtPosition_Z.Text = "n/a";
-                    }
-
-
-                    coords = Program.Data.GetCoordinates(currentSystem);
-                    if (coords.Valid)
-                    {
-                        txtPosition_X_DB.Text = coords.X.Value.ToString("f3");
-                        txtPosition_Y_DB.Text = coords.Y.Value.ToString("f3");
-                        txtPosition_Z_DB.Text = coords.Z.Value.ToString("f3");
-                    }
-                    else
-                    {
-                        txtPosition_X.Text = "n/a";
-                        txtPosition_Y.Text = "n/a";
-                        txtPosition_Z.Text = "n/a";
-                    }
-
-                    if((txtPosition_X.Text != txtPosition_X_DB.Text) ||
-                       (txtPosition_Y.Text != txtPosition_Y_DB.Text) ||
-                       (txtPosition_Z.Text != txtPosition_Z_DB.Text))
-                    {
-                        txtPosition_X.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor1);
-                        txtPosition_Y.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor1);
-                        txtPosition_Z.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor1);
-                        txtPosition_X.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
-                        txtPosition_Y.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
-                        txtPosition_Z.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
-                    }
-                    else
-                    {
-                        txtPosition_X.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
-                        txtPosition_Y.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
-                        txtPosition_Z.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
-                        txtPosition_X.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
-                        txtPosition_Y.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
-                        txtPosition_Z.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
                     }
                 }
             }

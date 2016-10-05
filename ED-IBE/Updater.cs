@@ -1153,14 +1153,48 @@ namespace IBE
             {
                 String sqlString;
 
-                Program.SplashScreen.InfoAdd("...updating structure of database to v0.3.0...");
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.4.0...");
                 Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
                 Program.SplashScreen.InfoAdd("...");
 
                 // add changes to the database
                 sqlString = "-- MySQL Workbench Synchronization \n" +
                             "-- Generated: 2016-05-09 12:39 \n" +
-                            " \n";
+                            "                                                                                                                    \n" +
+                            "ALTER TABLE `elite_db`.`tmPA_ByStation`                                                                             \n" +
+                            "ADD COLUMN `Station_ID` INT(11) NULL DEFAULT NULL FIRST;                                                            \n" +
+                            "                                                                                                                    \n" +
+                            "ALTER TABLE `elite_db`.`tbOutfittingBase`                                                                           \n" +
+                            "ADD COLUMN `symbol` VARCHAR(80) NOT NULL AFTER `id`;                                                                \n" +
+                            "                                                                                                                    \n" +
+                            "ALTER TABLE `elite_db`.`tbShipyardBase`                                                                             \n" +
+                            "ADD COLUMN `symbol` VARCHAR(80) NOT NULL AFTER `id`;                                                                \n" +
+                            "                                                                                                                    \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_weaponrating` ;                                                            \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_weaponmount` ;                                                             \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_weaponclass` ;                                                             \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_weapon` ;                                                                  \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_utility` ;                                                                 \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_standard` ;                                                                \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_ships` ;                                                                   \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_ratingplanet` ;                                                            \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_rating` ;                                                                  \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_oldvariant` ;                                                              \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_missiletype` ;                                                             \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_internal_misc` ;                                                           \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_internal` ;                                                                \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_countermeasure` ;                                                          \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_category` ;                                                                \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_armour` ;                                                                  \n" +
+                            "                                                                                                                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('E:D Market Connector [Windows]');                \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EDAPI Trade Dangerous Plugin');                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('E:D Market Connector [Mac OS]');                 \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('ED-IBE (API)');                                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EVA [iPad]');                                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EVA [iPhone]');                                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EVA [Android]');                                 \n";
+
 
                 var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
                 sqlScript.Query = sqlString;
@@ -1276,7 +1310,7 @@ namespace IBE
         /// for the first time 
         /// 
         /// <param name="parent"></param>
-        internal static void DoSpecial(Form parent)
+        internal async static System.Threading.Tasks.Task DoSpecial(Form parent)
         {
             Boolean didUpdate = false;
 
@@ -1295,7 +1329,7 @@ namespace IBE
 
                         DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
 
-                        DataIO.StartMasterImport(Program.GetDataPath("Data"));
+                        await DataIO.StartMasterImport(Program.GetDataPath("Data"));
 
                         if(!Program.SplashScreen.IsDisposed)
                             Program.SplashScreen.TopMost = false;
@@ -1346,7 +1380,7 @@ namespace IBE
 
                         DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
 
-                        DataIO.StartMasterUpdate(Program.GetDataPath("Data"));
+                        await DataIO.StartMasterUpdate(Program.GetDataPath("Data"));
 
                         DataIO.Close();
                         DataIO.Dispose();
@@ -1435,7 +1469,7 @@ namespace IBE
 
                             DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
 
-                            DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
+                            await DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
 
                             DataIO.Close();
                             DataIO.Dispose();

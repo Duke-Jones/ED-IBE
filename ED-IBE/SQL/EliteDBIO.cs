@@ -1612,6 +1612,7 @@ namespace IBE.SQL
 
                             CopyEDStationToDataRow(Station, (DataRow)newStationRow, false, null, true);
                             Data.tbstations.Rows.Add(newStationRow);
+                            added++;
                         }
 
                         CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);

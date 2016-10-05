@@ -243,9 +243,6 @@
             this.txtPosition_Y = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtPosition_Z = new System.Windows.Forms.TextBox();
-            this.txtPosition_Z_DB = new System.Windows.Forms.TextBox();
-            this.txtPosition_Y_DB = new System.Windows.Forms.TextBox();
-            this.txtPosition_X_DB = new System.Windows.Forms.TextBox();
             this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1.SuspendLayout();
@@ -730,7 +727,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(85, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -821,9 +818,9 @@
             // iOToolStripMenuItem
             // 
             this.iOToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.companionToolStripMenuItem,
             this.eDDNToolStripMenuItem,
-            this.eDSMToolStripMenuItem,
-            this.companionToolStripMenuItem});
+            this.eDSMToolStripMenuItem});
             this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
             this.iOToolStripMenuItem.Size = new System.Drawing.Size(28, 20);
             this.iOToolStripMenuItem.Text = "IO";
@@ -831,22 +828,22 @@
             // eDDNToolStripMenuItem
             // 
             this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
-            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.eDDNToolStripMenuItem.Text = "EDDN";
+            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.eDDNToolStripMenuItem.Text = "EDDN (E:D Data Network)";
             this.eDDNToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // eDSMToolStripMenuItem
             // 
             this.eDSMToolStripMenuItem.Name = "eDSMToolStripMenuItem";
-            this.eDSMToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.eDSMToolStripMenuItem.Text = "EDSM";
+            this.eDSMToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.eDSMToolStripMenuItem.Text = "EDSM (E.D Starmap)";
             this.eDSMToolStripMenuItem.Click += new System.EventHandler(this.eDSMToolStripMenuItem_Click);
             // 
             // companionToolStripMenuItem
             // 
             this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
-            this.companionToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.companionToolStripMenuItem.Text = "ED Companion";
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.companionToolStripMenuItem.Text = "E:D Companion (Frontier Data Interface)";
             this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
             // 
             // cmdLoadCurrentSystem
@@ -2545,17 +2542,17 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(843, 89);
+            this.label4.Location = new System.Drawing.Point(821, 73);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 67;
-            this.label4.Text = "System X:";
+            this.label4.Text = "Coordinates X:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtPosition_X
             // 
             this.txtPosition_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_X.Location = new System.Drawing.Point(903, 86);
+            this.txtPosition_X.Location = new System.Drawing.Point(903, 70);
             this.txtPosition_X.Name = "txtPosition_X";
             this.txtPosition_X.ReadOnly = true;
             this.txtPosition_X.Size = new System.Drawing.Size(86, 20);
@@ -2567,7 +2564,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(880, 111);
+            this.label5.Location = new System.Drawing.Point(880, 95);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(17, 13);
             this.label5.TabIndex = 69;
@@ -2577,7 +2574,7 @@
             // txtPosition_Y
             // 
             this.txtPosition_Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_Y.Location = new System.Drawing.Point(903, 108);
+            this.txtPosition_Y.Location = new System.Drawing.Point(903, 92);
             this.txtPosition_Y.Name = "txtPosition_Y";
             this.txtPosition_Y.ReadOnly = true;
             this.txtPosition_Y.Size = new System.Drawing.Size(86, 20);
@@ -2589,7 +2586,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(880, 133);
+            this.label7.Location = new System.Drawing.Point(880, 117);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(17, 13);
             this.label7.TabIndex = 71;
@@ -2599,49 +2596,13 @@
             // txtPosition_Z
             // 
             this.txtPosition_Z.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_Z.Location = new System.Drawing.Point(903, 130);
+            this.txtPosition_Z.Location = new System.Drawing.Point(903, 114);
             this.txtPosition_Z.Name = "txtPosition_Z";
             this.txtPosition_Z.ReadOnly = true;
             this.txtPosition_Z.Size = new System.Drawing.Size(86, 20);
             this.txtPosition_Z.TabIndex = 70;
             this.txtPosition_Z.Text = "000000000.000";
             this.txtPosition_Z.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtPosition_Z_DB
-            // 
-            this.txtPosition_Z_DB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_Z_DB.Location = new System.Drawing.Point(998, 130);
-            this.txtPosition_Z_DB.Name = "txtPosition_Z_DB";
-            this.txtPosition_Z_DB.ReadOnly = true;
-            this.txtPosition_Z_DB.Size = new System.Drawing.Size(86, 20);
-            this.txtPosition_Z_DB.TabIndex = 74;
-            this.txtPosition_Z_DB.Text = "000000000.000";
-            this.txtPosition_Z_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtPosition_Z_DB.Visible = false;
-            // 
-            // txtPosition_Y_DB
-            // 
-            this.txtPosition_Y_DB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_Y_DB.Location = new System.Drawing.Point(998, 108);
-            this.txtPosition_Y_DB.Name = "txtPosition_Y_DB";
-            this.txtPosition_Y_DB.ReadOnly = true;
-            this.txtPosition_Y_DB.Size = new System.Drawing.Size(86, 20);
-            this.txtPosition_Y_DB.TabIndex = 73;
-            this.txtPosition_Y_DB.Text = "000000000.000";
-            this.txtPosition_Y_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtPosition_Y_DB.Visible = false;
-            // 
-            // txtPosition_X_DB
-            // 
-            this.txtPosition_X_DB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_X_DB.Location = new System.Drawing.Point(998, 86);
-            this.txtPosition_X_DB.Name = "txtPosition_X_DB";
-            this.txtPosition_X_DB.ReadOnly = true;
-            this.txtPosition_X_DB.Size = new System.Drawing.Size(86, 20);
-            this.txtPosition_X_DB.TabIndex = 72;
-            this.txtPosition_X_DB.Text = "000000000.000";
-            this.txtPosition_X_DB.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtPosition_X_DB.Visible = false;
             // 
             // StatusStrip1
             // 
@@ -2666,9 +2627,6 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 746);
             this.Controls.Add(this.StatusStrip1);
-            this.Controls.Add(this.txtPosition_Z_DB);
-            this.Controls.Add(this.txtPosition_Y_DB);
-            this.Controls.Add(this.txtPosition_X_DB);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtPosition_Z);
             this.Controls.Add(this.label5);
@@ -2696,7 +2654,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "ED - Intelligent Boardcomputer Extension v";
             this.Load += new System.EventHandler(this.Form_Load);
-            this.Shown += new System.EventHandler(this.Form_Shown);
+            this.Shown += new System.EventHandler(this.Form_Shown_async);
             this.contextMenuStrip1.ResumeLayout(false);
             this.contextMenuStrip2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).EndInit();
@@ -2965,9 +2923,6 @@
         private System.Windows.Forms.TextBox txtPosition_Y;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtPosition_Z;
-        private System.Windows.Forms.TextBox txtPosition_Z_DB;
-        private System.Windows.Forms.TextBox txtPosition_Y_DB;
-        private System.Windows.Forms.TextBox txtPosition_X_DB;
         private System.Windows.Forms.ToolStripMenuItem eDSMToolStripMenuItem;
         private System.Windows.Forms.StatusStrip StatusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tsEDSMQueue;
