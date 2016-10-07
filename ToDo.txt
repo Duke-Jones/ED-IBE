@@ -14,22 +14,15 @@ todo:
 
 * consider commodity V3 
 * new interface for E:D-2.2-eventlog 
-
-
 * v2.2 event interface
 
-todo for StarterTips:
-* add info for
-  - updating FDevIDs
-  - download directory for eddb data is changed
-  - right mouse click on cmdrs-log for edsm/ recalculate distances
-  - right mouse click on price analysis tabs for getting systemname
-  - hint for new cleaning function
 *************************************************************************************
 
 done:
   
-
+v0.4.0
+  * updated updatescript for database
+-------------------------------------------------------------------------------------         
   * added update script for updating existing databases
   * latest fixes on import data
   * changed references from systems.json to systems_populated.json

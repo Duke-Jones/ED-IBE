@@ -22,7 +22,8 @@ Inhalt:
 		7. Comboboxen
 		8. Service-Formular SQL
 		9. EDDN
-		10. Berücksichtigung der Systeme/Stationen !!!!!!!
+       10. EDSM
+	   11. Berücksichtigung der Systeme/Stationen !!!!!!!
 
 	* FAQ
 		Q: bei der Preisanalyse werden keine/zu wenig Stationen angezeigt
@@ -192,6 +193,23 @@ Mehrfachimport wird durch Abgleich des Zeitstempels verhindert.
 Bietet die Ex- und Importmöglichkeit über CSV-Dateien.
 Gut geeignet zum Datenaustausch mit Freunden.
 
+"Delete Market Data Older than"
+Hier können pauschal Marktdaten gelöscht werden, die älter sind als x Tage.
+
+"Delete no longer existing commodity data"
+Löscht alle Preise, für die bei den letzten Updates für die Station keine neuen Preise vorlagen.
+Über diesen Automatismus können einzelne, nicht mehr gehandelte Waren aus den Marktdaten gelöscht werden.
+Preise werden gelöscht, wenn zwischen dem letzten Preisupdate der Station und dem Zeitpunkt des 
+letzte Updates es jeweiligen Einzelpreises mehr als x Tage liegen.
+Optional kann diese Filterung jedesmal automatisch erfolgen, wenn für eine Station neue Preise empfangen wurden.
+
+"Companion IDs"
+Die Erkennung der Waren und Ausrüstungen von und zum EDDN findet ab der v0.4.0 nicht mehr über den Namen, 
+sondern über die IDs des Companion-Interfaces statt. Die von ED-IBE benötigten IDs können hier von der 
+Seite https://github.com/EDCD/FDevIDs heruntergeladen und aktualisiert werden. 
+Optional kann diese Aktualisierung beim Programmstart automatisch erfolgen.
+
+
 _________________________________________________________________________
 5. Übersetzungen
 Unter "Data"->"Edit Localization" kann man die Übersetzungen ansehen, editieren, importieren und exportieren.
@@ -243,6 +261,14 @@ Durch einen Rechtsklick auf den Tabellenheader (linkes oberes kleines Feld)
 Die Breite der Spalten können auch per Drag'n'Drop angepasst werden.
 Durch ein kurzes Öffnen des Dialogs werden diese Spalteneinstellungen dann auch übernommen.
 
+In vielen Tabellen kann man mit der rechten Maustaste ein Kontextmenü aufrufen.
+Dieses bietet die Möglichkeit unter Anderem den Systemnamen in die Zwischen-
+ablage zu kopieren, um diesen dann in der E:D Systemmap einzufügen.
+
+Die Tabelle des Commander's Log bietet weitere Kontexteinträge, über die 
+Datensätze zum EDSM (Elite Dangerous Starmap, https://www.edsm.net/) übertragen
+oder die Distanzen der Sprünge neu berechnet werden können.
+
 _________________________________________________________________________
 7. Comboboxen
 Die ComboBoxen habe zwar feste Einträge. In vielen Fällen hat man aber die Möglichkeit 
@@ -271,7 +297,19 @@ die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach ein
 Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
 
 _________________________________________________________________________
-10. Berücksichtigung der Systeme/Stationen
+10. EDSM
+ED-IBE unterstützt die Übertragung des Reise-Logs zur EDSM
+(Elite Dangerous Starmap, https://www.edsm.net/).
+Nach jedem Sprung wird diese Information an das EDSM-Log weitergeleitet.
+Als Voraussetzung muss man einen EDSM-Account haben und die entsprechenden
+in das EDSM-Fenster eintragen (Menü "IO"->"EDSM")
+
+Um ältere Einträge aus dem Commander's Log hochzuladen,
+muss man auf den entsprechenden Einträgen der Commander's Logs
+das Kontext-Menü über die rechte Maustaste aufrufen und dort 
+den Upload auslösen. 
+_________________________________________________________________________
+11. Berücksichtigung der Systeme/Stationen
 ED-IBE bietet die Möglichkeit, nur Daten von Systeme, die bereits selbst besucht wurden, zu berücksichtigen
 (Settings->Datafilter). Über diesen Mechanismus kann man sich bewußt gegen das Sammeln 
 von Preisdaten unbekannter Systeme entscheiden, aber trotzdem Aktualisierungen von Preisen 

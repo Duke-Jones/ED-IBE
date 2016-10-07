@@ -870,8 +870,6 @@ namespace IBE
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating active localization of commodities...<OK>", NewLine = true});
                         }
 
-                        Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="FINISHED", AddSeparator=true});
-
                         Program.Data.Progress -= Data_Progress;
 
                         retValue = true;

@@ -1157,18 +1157,45 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
                 Program.SplashScreen.InfoAdd("...");
 
+
                 // add changes to the database
                 sqlString = "-- MySQL Workbench Synchronization \n" +
-                            "-- Generated: 2016-05-09 12:39 \n" +
+                            "-- Generated: 2016-10-05 21:13 \n" +
                             "                                                                                                                    \n" +
-                            "ALTER TABLE `elite_db`.`tmPA_ByStation`                                                                             \n" +
-                            "ADD COLUMN `Station_ID` INT(11) NULL DEFAULT NULL FIRST;                                                            \n" +
+                            "ALTER TABLE `elite_db`.`tbInitValue`                                                                                \n" +   
+                            "CHANGE COLUMN `InitValue` `InitValue` VARCHAR(10000) NULL DEFAULT NULL ;                                            \n" +
                             "                                                                                                                    \n" +
-                            "ALTER TABLE `elite_db`.`tbOutfittingBase`                                                                           \n" +
-                            "ADD COLUMN `symbol` VARCHAR(80) NOT NULL AFTER `id`;                                                                \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`tbOutfittingBase` (                                                          \n" +
+                            "  `id` INT(11) NOT NULL,                                                                                            \n" +
+                            "  `symbol` VARCHAR(80) NOT NULL,                                                                                    \n" +
+                            "  `category` VARCHAR(80) NOT NULL,                                                                                  \n" +
+                            "  `name` VARCHAR(80) NOT NULL,                                                                                      \n" +
+                            "  `mount` VARCHAR(80) NULL DEFAULT NULL,                                                                            \n" +
+                            "  `guidance` VARCHAR(80) NULL DEFAULT NULL,                                                                         \n" +
+                            "  `ship` VARCHAR(80) NULL DEFAULT NULL,                                                                             \n" +
+                            "  `class` CHAR(1) NOT NULL,                                                                                         \n" +
+                            "  `rating` CHAR(1) NOT NULL,                                                                                        \n" +
+                            "  `entitlement` VARCHAR(80) NULL DEFAULT NULL,                                                                      \n" +
+                            "  PRIMARY KEY (`id`))                                                                                               \n" +
+                            "ENGINE = InnoDB                                                                                                     \n" +
+                            "DEFAULT CHARACTER SET = utf8;                                                                                       \n" +
                             "                                                                                                                    \n" +
-                            "ALTER TABLE `elite_db`.`tbShipyardBase`                                                                             \n" +
-                            "ADD COLUMN `symbol` VARCHAR(80) NOT NULL AFTER `id`;                                                                \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityBase` (                                                           \n" +
+                            "  `id` INT(11) NOT NULL,                                                                                            \n" +
+                            "  `category` VARCHAR(80) NULL DEFAULT NULL,                                                                         \n" +
+                            "  `name` VARCHAR(80) NULL DEFAULT NULL,                                                                             \n" +
+                            "  `average` INT(11) NULL DEFAULT NULL,                                                                              \n" +
+                            "  PRIMARY KEY (`id`))                                                                                               \n" +
+                            "ENGINE = InnoDB                                                                                                     \n" +
+                            "DEFAULT CHARACTER SET = utf8;                                                                                       \n" +
+                            "                                                                                                                    \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`tbShipyardBase` (                                                            \n" +
+                            "  `id` INT(11) NOT NULL,                                                                                            \n" +
+                            "  `symbol` VARCHAR(80) NOT NULL,                                                                                    \n" +
+                            "  `name` VARCHAR(80) NULL DEFAULT NULL,                                                                             \n" +
+                            "  PRIMARY KEY (`id`))                                                                                               \n" +
+                            "ENGINE = InnoDB                                                                                                     \n" +
+                            "DEFAULT CHARACTER SET = utf8;                                                                                       \n" +
                             "                                                                                                                    \n" +
                             "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_weaponrating` ;                                                            \n" +
                             "DROP TABLE IF EXISTS `elite_db`.`tbdnmap_weaponmount` ;                                                             \n" +
@@ -1458,26 +1485,23 @@ namespace IBE
 
                     }
 
-                    if (m_NewDBVersion == new Version(0,3,4,0))
+                    if (m_NewDBVersion == new Version(0,4,0,0))
                     {
-                        if(!didUpdate)
-                        {
-                            // at least one time this data has to be imported
-                            var DataIO = new frmDataIO();
+                        // at least one time this data has to be imported
+                        var DataIO = new frmDataIO();
 
-                            Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...");
+                        Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...");
 
-                            DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
 
-                            await DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
+                        await DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
 
-                            DataIO.Close();
-                            DataIO.Dispose();
+                        DataIO.Close();
+                        DataIO.Dispose();
                         
-                            didUpdate = true;
+                        didUpdate = true;
 
-                            Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...<OK>");
-                        }
+                        Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...<OK>");
                     }
                 }
             }

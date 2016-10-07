@@ -1327,7 +1327,6 @@ namespace IBE
 
                 }
 
-
                 Program.SplashScreen.InfoAdd("init sequence finished !");
                 Program.SplashScreen.CloseDelayed();
 

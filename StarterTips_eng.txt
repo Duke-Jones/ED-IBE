@@ -26,7 +26,8 @@ Content:
 		7. ComboBoxes
 		8. Acessing sql tables directly
 		9. EDDN
-	   10. Consideration of systems/stations !!!!!!!
+       10. EDSM 
+	   11. Consideration of systems/stations !!!!!!!
 	* FAQ
 	        Q: price analysis shows no or not enough stations
 		Q: Crash when starting the app ?
@@ -192,6 +193,19 @@ With "Import RN CommandersLog Files" you can import splitted logfiles from the o
 The prerequisite is that the individual files are named like "CommandersLog*.xml".
 Multiple import is prevented internally by comparing the time stamp.
 
+"Delete Market Data Older than"
+Here you can delete old market data. 
+
+"Delete no longer existing commodity data"
+Here you can delete commodities from stations if they are not longer beeing traded.
+All market data who are older than <n> days  based on the latest update of the station will be deleted.
+This filtering will be done automatically  after every price import for a station, if you have checked the box.
+
+"Companion IDs"
+The identification of data from and to the EDDN is now based on the ids, coming from the companion interface.
+To get the latest version you can download and import these here.
+This update will be done automatically on every start of ED-IBE, if you have checked the box.
+
 _________________________________________________________________________
 5. Translations
 Under "Data" -> "Edit Localization" you can view translations, edit, import and export.
@@ -242,6 +256,13 @@ a dialog box opens. With this the table view can be customized.
 The width of the columns can also be customized by simple drag and drop.
 For save the widths open the dialog and simply confirm again.
 
+Most tables show a context menu if you click them with the right mouse button.
+There you can copy e. g. the system name into the clipboard to post it to the 
+E:D system map.
+
+The table of the commander's log has additional context menus.
+So you can upload old entries to the EDSM (Elite Dangerous Starmap, https://www.edsm.net/)
+or you can force a recalculation of jump distances.
 _________________________________________________________________________
 7. ComboBoxes
 Although the combo boxes have fixed items, in many cases
@@ -274,7 +295,19 @@ The time of your own computer should therefore be well adjusted.
 Multiple incoming data from EDDN  is also be filtered within a 5-minute period.
 
 _________________________________________________________________________
-10. Consideration of systems/stations 
+10. EDSM
+ED-IBE supports to feed your EDSM account with data 
+(Elite Dangerous Starmap, https://www.edsm.net/).
+After every jump you will see a new entry in your EDSM log.
+As premise you need to have a EDSM account and filled your 
+personal data in the EDSM window (menu "IO"->"EDSM")
+
+To upload your history from your ED-IBE commanders log
+open the context menu mit a rifght mouse click on the rows.
+
+
+_________________________________________________________________________
+11. Consideration of systems/stations 
 For the people who like to reduce the data strictly to the self-visited 
 systems (even only self-visited stations) there is the possibility to 
 activate a datafilter .
