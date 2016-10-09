@@ -2,48 +2,13 @@
 ####(ED-Intelligent Boardcomputer Extension)  
 for Elite Dangerous 
 
-    Trading Tool
+    Trading Tool (local database, no data sharing)
     Commanders Log
-    view of systemdata
     systemdata based on EDDB
-    built-in, quick OCR
-    plausibilitycheck for scanned marketdata
+    EDSM interface
+    E:D Companion interface
     optional connection to EDDN (export and/or import)
     open source
-
-ED-IBE is the successor of "**RegulatedNoise DJ-Version**".
-Reason for re-creating RegulatedNoise was the inefficient
-internal data structure. ED-IBE uses a minimized version 
-of a **MySQL** database which is **much** more powerful. 
-The database runs as a normal process (not as a service on you pc) 
-\- and only if ED-IBE is running.
-
-**Comparison to the old RegulatedNoise for the current release:**
-
-**working:**
-* PriceAnalysis
-* EDDN interface
-* Commanders Log
-* getting market data by EDMC (fully integrated by EDMC commandline version, but has to be installed manually)
-* overtaking existing data from the old RegulatedNoise
-* re-usable import and export of market data (csv-files -> for exchange with friends)
-
-**improvements:**
-* getting market data by EDMC (fully integrated by EDMC commandline version, but has to be installed manually)
-* filter for landingpad size
-* age of data in price analysis
-* dynamic sorting of data tables
-* data tables sortable by distance
-* adjustable data tables
-* much quicker
-* autoevents for "Visited" and "Market data Collected" working again (with EDMC)
-* supports multiple languages for commodities (also adding of new languages possible)
-
-**not working yet:**
-* view of systems and stations
-* ocr (take EDMC instead)
-* webserver
-
 
 **Installation:**  
 Get the latest release from  
@@ -68,7 +33,7 @@ Licensed under the [GNU Public License (GPL) v2](https://github.com/Duke-Jones/E
 
 ####Needed for development:
 
-- VS2013
+- VS2015
 - dotNet 4.6 (and 4.6 targeting pack) (http://getdotnet.azurewebsites.net/target-dotnet-platforms.html#)
 - MySQL for Visual Studio and MySQL Workbench (over MySQL Installer http://dev.mysql.com/tech-resources/articles/mysql-installer-for-windows.htmlvisual)
 - MySQL Connector (manual or also over MySQL Installer)
