@@ -19,7 +19,11 @@ todo:
 *************************************************************************************
 
 done:
-  
+
+  * support of EDDN commodity_v3 messages (send & recieve)
+  * support of EDDN shipyard_v2 messages (send)
+  * support of EDDN outfitting_v2 messages (send)
+-------------------------------------------------------------------------------------         
 v0.4.0
   * updated updatescript for database
 -------------------------------------------------------------------------------------         

@@ -119,8 +119,11 @@ bool disposed = false;
             unknown             =  0,
             Commodity_V1        =  1,
             Commodity_V2        =  2,
+            Commodity_V3        =  3,
             Shipyard_V1         =  11,
-            Outfitting_V1       =  21    
+            Shipyard_V2         =  12,
+            Outfitting_V1       =  21,    
+            Outfitting_V2       =  22    
         }
 
 
@@ -151,9 +154,9 @@ bool disposed = false;
 
         public enum enTransmittedTypes
         {
-            Commodity_V2        =  0,
+            Commodity_V3        =  0,
             Shipyard_V1         =  1,
-            Outfitting_V1       =  2    
+            Outfitting_V2       =  2    
         }
 
         public enum enTransmittedStates
@@ -312,54 +315,80 @@ bool disposed = false;
                 switch (e.InfoType)
                 {
 
-                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
 
-                        EDDN.EDDNCommodity_v2 DataObject = (EDDN.EDDNCommodity_v2)e.Data;
-
-                        if(m_DuplicateRelayFilter.DataAccepted(DataObject.Header.UploaderID, DataObject.Message.SystemName + "|" + DataObject.Message.StationName, DataObject.Message.Commodities.Count().ToString(), DateTime.Parse(DataObject.Message.Timestamp)))
-                        { 
-                            UpdateStatisticDataMsg(enMessageTypes.Commodity_V2);
-                            UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
-
-                            // process only if it's the correct schema
-                            dataSchema = ((EDDN.EDDNCommodity_v2)e.Data).isTest() ? enSchema.Test : enSchema.Real;
-
-                            if (ownSchema == dataSchema)
-                            {
-                                Debug.Print("handle v2 message");
-
-
-
-                                // Don't import our own uploads...
-                                if (DataObject.Header.UploaderID != UserIdentification())
-                                {
-                                    DataRows = DataObject.getEDDNCSVImportStrings();
-                                    nameAndVersion = String.Format("{0} / {1}", DataObject.Header.SoftwareName, DataObject.Header.SoftwareVersion);
-                                    name = String.Format("{0}", DataObject.Header.SoftwareName);
-                                    uploaderID = DataObject.Header.UploaderID;
-                                }
-                                else
-                                    Debug.Print("handle v2 rejected (it's our own message)");
-                            }
-                            else
-                                Debug.Print("handle v2 rejected (wrong schema)");
-                        }
-                        else
-                            Debug.Print("handle v2 rejected (double recieved)");
-
-                        break;
-
-                    case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
-
-                        UpdateStatisticDataMsg(enMessageTypes.Outfitting_V1);
-                        //UpdateRawData("recieved shipyard message ignored (coming feature)");
-                        Debug.Print("recieved shipyard message ignored");
+                        UpdateStatisticDataMsg(enMessageTypes.Commodity_V1);
+                        Debug.Print("recieved commodity message ignored");
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
                         break;
 
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
+
+                        UpdateStatisticDataMsg(enMessageTypes.Commodity_V2);
+                        Debug.Print("recieved commodity message ignored");
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
+
+                        break;
+
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v3_Recieved:
+
+                        JObject dataJObject = (JObject)e.Data;
+
+                        if(m_DuplicateRelayFilter.DataAccepted(dataJObject.SelectToken("header.uploaderID").ToString(), dataJObject.SelectToken("message.systemName") + "|" + dataJObject.SelectToken("message.stationName"), 
+                                              dataJObject.SelectToken("message.commodities").Count().ToString(), (DateTime)dataJObject.SelectToken("message.timestamp")))
+                        { 
+                            UpdateStatisticDataMsg(enMessageTypes.Commodity_V3);
+                            UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
+
+                            // process only if it's the correct schema
+                            dataSchema = dataJObject.SelectToken("$schemaRef").Contains("/test") ? enSchema.Test : enSchema.Real;
+
+                            if (ownSchema == dataSchema)
+                            {
+                                Debug.Print("handle v3 message");
+
+                                // Don't import our own uploads...
+                                if (dataJObject.SelectToken("header.uploaderID").ToString() != UserIdentification())
+                                {
+                                    DataRows = ConvertCommodityV3_To_CSVRows(dataJObject);
+                                    nameAndVersion = String.Format("{0} / {1}", dataJObject.SelectToken("header.softwareName"), dataJObject.SelectToken("header.softwareVersion"));
+                                    name = String.Format("{0}", dataJObject.SelectToken("header.softwareName"));
+                                    uploaderID = dataJObject.SelectToken("header.uploaderID").ToString();
+                                }
+                                else
+                                    Debug.Print("handle v3 rejected (it's our own message)");
+                            }
+                            else
+                                Debug.Print("handle v3 rejected (wrong schema)");
+                        }
+                        else
+                            Debug.Print("handle v3 rejected (double recieved)");
+
+                        break;
+
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
+                        UpdateStatisticDataMsg(enMessageTypes.Outfitting_V1);
+                        //UpdateRawData("recieved outfitting message ignored (coming feature)");
+                        Debug.Print("recieved outfitting message ignored");
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
+                        break;
+
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v2_Recieved:
+                        UpdateStatisticDataMsg(enMessageTypes.Outfitting_V2);
+                        //UpdateRawData("recieved outfitting message ignored (coming feature)");
+                        Debug.Print("recieved outfitting message ignored");
+                        UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
+                        break;
+
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved:
                         UpdateStatisticDataMsg(enMessageTypes.Shipyard_V1);
+                        //UpdateRawData("recieved shipyard message ignored (coming feature)");
+                        Debug.Print("recieved shipyard message ignored");
+                        break;
+
+                    case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v2_Recieved:
+                        UpdateStatisticDataMsg(enMessageTypes.Shipyard_V2);
                         //UpdateRawData("recieved shipyard message ignored (coming feature)");
                         Debug.Print("recieved shipyard message ignored");
                         break;
@@ -565,6 +594,60 @@ bool disposed = false;
             catch (Exception ex)
             {
                 throw new Exception("Error while updating statistics", ex);
+            }
+        }
+
+        private String[] ConvertCommodityV3_To_CSVRows(JObject commodityV3Data)
+        {
+            String system;
+            String starPort;
+            Int32 commodityCount = 0;
+            List<String> csvStrings = new List<string>();
+
+            try
+            {
+
+                system   = commodityV3Data["message"]["systemName"].ToString();
+                starPort = commodityV3Data["message"]["stationName"].ToString();
+
+                foreach (Newtonsoft.Json.Linq.JToken commodity in commodityV3Data.SelectTokens("message.commodities[*]"))
+                {                                                  
+                    CsvRow csvData = new CsvRow();
+
+                    csvData.SystemName          = system;
+                    csvData.StationName         = starPort;
+                    csvData.StationID           = String.Format("{0} [{1}]", starPort, system);
+                    csvData.CommodityName       = commodity.Value<String>("name");
+                    csvData.SellPrice           = commodity.Value<Int32>("sellPrice");
+                    csvData.BuyPrice            = commodity.Value<Int32>("buyPrice");
+                    csvData.Demand              = commodity.Value<Int32>("demand");
+                    csvData.Supply              = commodity.Value<Int32>("stock");
+                    csvData.SampleDate          = DateTime.Now;
+
+                    if((!String.IsNullOrEmpty(commodity.Value<String>("demandBracket"))) && (commodity.Value<Int32>("demandBracket") > 0))
+                        csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
+                    else
+                        csvData.DemandLevel = null;
+
+                    if((!String.IsNullOrEmpty(commodity.Value<String>("stockBracket"))) && (commodity.Value<Int32>("stockBracket") > 0))
+                        csvData.SupplyLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("stockBracket") - 1, "level");
+                    else
+                        csvData.SupplyLevel = null;
+
+                    csvData.SourceFileName      = "";
+                    csvData.DataSource          = "";
+
+                    csvStrings.Add(csvData.ToString());
+
+                    commodityCount++;
+                } 
+                
+                return csvStrings.ToArray();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while converting commodity v3 data to csv rows", ex);
             }
         }
 
@@ -826,9 +909,10 @@ bool disposed = false;
                                 CommodityObject commodity = cmpConverter.GetCommodityFromFDevIDs(baseData, commodityItem, false);
                                 //commodityObject commodity = cmpConverter.GetcommodityFromCompanion(commodityItem, false);
 
-                                if(commodity != null)
+                                if((commodity != null) && (commodityItem.Value<int?>("demandBracket").HasValue))
                                 { 
-                                    if(objectCount > 0)
+
+                                    if (objectCount > 0)
                                         commodityStringEDDN.Append(", {");
                                     else
                                         commodityStringEDDN.Append("{");
@@ -840,26 +924,28 @@ bool disposed = false;
                                             DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                     }
 
-                                    commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ",        commodity.Name));
-                                    //commodityStringEDDN.Append(String.Format("\"id\":\"{0}\", ",          commodity.Id));
+                                    commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ",    commodityItem.Value<String>("name")));
+                                    //commodityStringEDDN.Append(String.Format("\"id\":\"{0}\", ",    commodity.Id));
+                                    commodityStringEDDN.Append(String.Format("\"meanPrice\":{0}, ",   commodityItem.Value<Int32>("meanPrice")));
                                     commodityStringEDDN.Append(String.Format("\"buyPrice\":{0}, ",    commodityItem.Value<Int32>("buyPrice")));
-                                    commodityStringEDDN.Append(String.Format("\"supply\":{0}, ",      commodityItem.Value<Int32>("stock")));
                                     commodityStringEDDN.Append(String.Format("\"sellPrice\":{0}, ",   commodityItem.Value<Int32>("sellPrice")));
-                                    commodityStringEDDN.Append(String.Format("\"demand\":{0}, ",      commodityItem.Value<Int32>("demand")));
                                     
-                                    if((!String.IsNullOrEmpty(commodityItem.Value<String>("demandBracket"))) && (commodityItem.Value<Int32>("demandBracket") > 0))
-                                    {
-                                        String demandLevel = (String)Program.Data.BaseTableIDToName("economylevel", commodityItem.Value<Int32>("demandBracket") - 1, "level");
-                                        demandLevel = char.ToUpper(demandLevel[0]) + demandLevel.Substring(1);
-                                        commodityStringEDDN.Append(String.Format("\"demandLevel\":\"{0}\", ", demandLevel));
-                                    }
 
-                                    if((!String.IsNullOrEmpty(commodityItem.Value<String>("stockBracket"))) && (commodityItem.Value<Int32>("stockBracket") > 0))
-                                    {
-                                        String supplyLevel = (String)Program.Data.BaseTableIDToName("economylevel", commodityItem.Value<Int32>("stockBracket") - 1, "level");
-                                        supplyLevel = char.ToUpper(supplyLevel[0]) + supplyLevel.Substring(1);
-                                        commodityStringEDDN.Append(String.Format("\"supplyLevel\":\"{0}\", ", supplyLevel));
-                                    }
+                                    commodityStringEDDN.Append(String.Format("\"demandBracket\":{0}, ", commodityItem.Value<int?>("demandBracket")));
+
+                                    if (commodityItem.Value<int?>("demandBracket") == 0)
+                                        commodityStringEDDN.Append(String.Format("\"demand\":{0}, ",      0));
+                                    else
+                                        commodityStringEDDN.Append(String.Format("\"demand\":{0}, ",      commodityItem.Value<Int32>("demand")));
+
+
+                                    commodityStringEDDN.Append(String.Format("\"stockBracket\":{0}, ", commodityItem.Value<int?>("stockBracket")));
+
+                                    if (commodityItem.Value<int?>("stockBracket") == 0)
+                                        commodityStringEDDN.Append(String.Format("\"stock\":{0}, ",      0));
+                                    else
+                                        commodityStringEDDN.Append(String.Format("\"stock\":{0}, ",      commodityItem.Value<Int32>("demand")));
+
 
                                     commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);
                                     commodityStringEDDN.Replace(",", "}", commodityStringEDDN.Length-1, 1);
@@ -896,13 +982,14 @@ bool disposed = false;
         /// send the outfitting data of this station
         /// </summary>
         /// <param name="stationData">json object with companion data</param>
-        public void SendOutfittingData_V1(JObject dataObject)
+        public void SendOutfittingData(JObject dataObject)
         {
             Int32 objectCount = 0;
             Boolean writeToFile = false;
             StreamWriter writer = null;
             String debugFile = @"C:\temp\outfitting_ibe.csv";
             SQL.Datasets.dsEliteDB.tboutfittingbaseDataTable baseData;
+            System.Text.RegularExpressions.Regex allowedPattern = new System.Text.RegularExpressions.Regex("(^Hpt_|^Int_|_Armour_)");
 
             try
             {
@@ -942,20 +1029,16 @@ bool disposed = false;
 
                         baseData = new SQL.Datasets.dsEliteDB.tboutfittingbaseDataTable();
                         Program.DBCon.Execute("select * from tbOutfittingBase;", (System.Data.DataTable)baseData);
+                        
 
                         foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
                         {
-
-                            OutfittingObject outfitting = cmpConverter.GetOutfittingFromFDevIDs(baseData, outfittingItem, false);
-
-                            //OutfittingObject outfitting = cmpConverter.GetOutfittingFromCompanion(outfittingItem, false);
-
-                            if(outfitting != null)
+                            if(allowedPattern.IsMatch(outfittingItem.Value<String>("name")))
                             { 
+                                OutfittingObject outfitting = cmpConverter.GetOutfittingFromFDevIDs(baseData, outfittingItem, false);
+
                                 if(objectCount > 0)
-                                    outfittingStringEDDN.Append(", {");
-                                else
-                                    outfittingStringEDDN.Append("{");
+                                    outfittingStringEDDN.Append(", ");
 
                                 if(writeToFile)
                                 {
@@ -965,30 +1048,10 @@ bool disposed = false;
                                         DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                 }
 
-                                //outfittingStringEDDN.Append(String.Format("\"id\":\"{0}\", ",       outfitting.Id));
-                                outfittingStringEDDN.Append(String.Format("\"category\":\"{0}\", ", outfitting.Category));
-                                outfittingStringEDDN.Append(String.Format("\"name\":\"{0}\", ",     outfitting.Name));
-                                outfittingStringEDDN.Append(String.Format("\"class\":\"{0}\", ",    outfitting.Class));
-                                outfittingStringEDDN.Append(String.Format("\"rating\":\"{0}\", ",   outfitting.Rating));
-
-                                switch (outfitting.Category)
-                                {
-                                    case EDDN.OutfittingObject.Cat_Hardpoint:
-
-                                        outfittingStringEDDN.Append(String.Format("\"mount\":\"{0}\", ", outfitting.Mount));
-                                        if(outfitting.Guidance != null)
-                                            outfittingStringEDDN.Append(String.Format("\"guidance\":\"{0}\", ", outfitting.Guidance));
-                                        break;
-
-                                    case EDDN.OutfittingObject.Cat_Standard:
-
-                                        if(outfitting.Ship != null)
-                                            outfittingStringEDDN.Append(String.Format("\"ship\":\"{0}\", ", outfitting.Ship));
-                                        break;
-                                }
+                                outfittingStringEDDN.Append(String.Format("\"{0}\", ", outfittingItem.Value<String>("name")));
 
                                 outfittingStringEDDN.Remove(outfittingStringEDDN.Length-1, 1);
-                                outfittingStringEDDN.Replace(",", "}", outfittingStringEDDN.Length-1, 1);
+                                outfittingStringEDDN.Replace(",", "", outfittingStringEDDN.Length-1, 1);
 
                                 objectCount++;
                             }
@@ -1069,11 +1132,11 @@ bool disposed = false;
 
                             foreach (JToken outfittingItem in allShips)
                             {
-                                ShipyardObject shipyardItem = cmpConverter.GetShipFromFDevIDs(baseData, outfittingItem, false);
-                                //ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
+                                if(!String.IsNullOrWhiteSpace(outfittingItem.Value<String>("name")))
+                                {
+                                    ShipyardObject shipyardItem = cmpConverter.GetShipFromFDevIDs(baseData, outfittingItem, false);
+                                    //ShipyardObject shipyardItem = cmpConverter.GetShipFromCompanion(outfittingItem, false);
 
-                                if(shipyardItem != null)
-                                { 
                                     if(writeToFile)
                                     {
                                         writer.WriteLine(String.Format("{0},{1},{2},{3}", 
@@ -1081,9 +1144,10 @@ bool disposed = false;
                                             DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                     }
 
-                                    shipyardStringEDDN.Append(String.Format("\"{0}\", ", shipyardItem.Name));
+                                    shipyardStringEDDN.Append(String.Format("\"{0}\", ", outfittingItem.Value<String>("name")));
 
                                     objectCount++;
+                                    
                                 }
                             } 
 
@@ -1123,26 +1187,28 @@ bool disposed = false;
             {
                 Queue activeQueue = null; 
                 String UserID;
-                EDDNCommodity_v2 Data;
+                EDDNCommodity_v3 Data;
                 String TimeStamp;
                 String commodity;
+
+                throw new NotImplementedException("function SendMarketData_i ist not tested yet !!");
 
                 do{
 
                     TimeStamp   = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
                     UserID      = UserIdentification();
-                    Data        = new EDDNCommodity_v2();
+                    Data        = new EDDNCommodity_v3();
 
                     // test or real ?
                     if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
-                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2/test";
+                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                     else
-                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
+                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3";
 
                     if(_Send_MarketData_API.Count > 0)
                     {
                         // fill the header
-                        Data.Header = new EDDNCommodity_v2.Header_Class()
+                        Data.Header = new EDDNCommodity_v3.Header_Class()
                         {
                             SoftwareName = "ED-IBE (API)",
                             SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
@@ -1155,7 +1221,7 @@ bool disposed = false;
                     else
                     { 
                         // fill the header
-                        Data.Header = new EDDNCommodity_v2.Header_Class()
+                        Data.Header = new EDDNCommodity_v3.Header_Class()
                         {
                             SoftwareName = "ED-IBE (OCR)",
                             SoftwareVersion = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
@@ -1167,12 +1233,12 @@ bool disposed = false;
                     }
 
                     // prepare the message object
-                    Data.Message = new EDDNCommodity_v2.Message_Class()
+                    Data.Message = new EDDNCommodity_v3.Message_Class()
                     {
                         SystemName = "",
                         StationName = "",
                         Timestamp = TimeStamp,
-                        Commodities = new EDDNCommodity_v2.Commodity_Class[activeQueue.Count]
+                        Commodities = new EDDNCommodity_v3.Commodity_Class[activeQueue.Count]
                     };
 
                     // collect the commodity data
@@ -1186,27 +1252,21 @@ bool disposed = false;
                         if (commodity.Equals(Program.COMMODITY_NOT_SET))
                             commodity = Row.CommodityName;
 
-                        Data.Message.Commodities[i] = new EDDNCommodity_v2.Commodity_Class()
+                        Data.Message.Commodities[i] = new EDDNCommodity_v3.Commodity_Class()
                         {
-                            Name = commodity,
-                            BuyPrice = (Int32)Math.Floor(Row.BuyPrice),
-                            SellPrice = (Int32)Math.Floor(Row.SellPrice),
-                            Demand = (Int32)Math.Floor(Row.Demand),
-                            DemandLevel = (Row.DemandLevel == "") ? null : Row.DemandLevel,
-                            Supply = (Int32)Math.Floor(Row.Supply),
-                            SupplyLevel = (Row.SupplyLevel == "") ? null : Row.SupplyLevel,
+                            Name            = commodity,
+                            BuyPrice        = (Int32)Math.Floor(Row.BuyPrice),
+                            SellPrice       = (Int32)Math.Floor(Row.SellPrice),
+                            Demand          = (Int32)Math.Floor(Row.Demand),
+                            DemandBracket   = (Row.DemandLevel == "") ? (int?)null : Int32.Parse(Row.DemandLevel),
+                            Stock           = (Int32)Math.Floor(Row.Supply),
+                            StockBracket    = (Row.SupplyLevel == "") ? (int?)null : Int32.Parse(Row.SupplyLevel),
                         };
-
-                        if(!String.IsNullOrEmpty(Data.Message.Commodities[i].DemandLevel))
-                            Data.Message.Commodities[i].DemandLevel         = char.ToUpper(Data.Message.Commodities[i].DemandLevel[0]) + Data.Message.Commodities[i].DemandLevel.Substring(1);
-
-                        if(!String.IsNullOrEmpty(Data.Message.Commodities[i].SupplyLevel))
-                            Data.Message.Commodities[i].SupplyLevel         = char.ToUpper(Data.Message.Commodities[i].SupplyLevel[0]) + Data.Message.Commodities[i].SupplyLevel.Substring(1);
 
                         if (i == 0)
                         {
-                            Data.Message.SystemName = Row.SystemName;
-                            Data.Message.StationName = Row.StationName;
+                            Data.Message.SystemName     = Row.SystemName;
+                            Data.Message.StationName    = Row.StationName;
                         }
 
                     }
@@ -1226,7 +1286,7 @@ bool disposed = false;
                             }
 
                             m_CommoditySendingError  = false;
-                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Sent));
+                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V3, enTransmittedStates.Sent));
                         }
                         catch (WebException ex)
                         {
@@ -1245,7 +1305,7 @@ bool disposed = false;
                                     {
                                         StreamReader sr = new StreamReader(data);
                                         m_CommoditySendingError  = true;
-                                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Error));
+                                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V3, enTransmittedStates.Error));
                                         _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd());
                                     }
                                 }
@@ -1298,9 +1358,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
-                    schema = "http://schemas.elite-markets.net/eddn/outfitting/1/test";
+                    schema = "http://schemas.elite-markets.net/eddn/outfitting/2/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/outfitting/1";
+                    schema = "http://schemas.elite-markets.net/eddn/outfitting/2";
 
                 // create full message
                 outfittingMessage.Append(String.Format("{{" +
@@ -1322,7 +1382,7 @@ bool disposed = false;
                         client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
 
                         m_OutfittingSendingError = false;
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1, enTransmittedStates.Sent));
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Sent));
                     }
                     catch (WebException ex)
                     {
@@ -1341,7 +1401,7 @@ bool disposed = false;
                                 {
                                     StreamReader sr = new StreamReader(data);
                                     m_OutfittingSendingError = true;
-                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V1, enTransmittedStates.Error));
+                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Error));
                                     _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
                                 }
                             }
@@ -1391,9 +1451,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
-                    schema = "http://schemas.elite-markets.net/eddn/commodity/2/test";
+                    schema = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/commodity/2";
+                    schema = "http://schemas.elite-markets.net/eddn/commodity/3";
 
                 // create full message
                 commodityMessage.Append(String.Format("{{" +
@@ -1415,7 +1475,7 @@ bool disposed = false;
                         client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityMessage.ToString());
 
                         m_CommoditySendingError = false;
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Sent));
+                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V3, enTransmittedStates.Sent));
                     }
                     catch (WebException ex)
                     {
@@ -1434,7 +1494,7 @@ bool disposed = false;
                                 {
                                     StreamReader sr = new StreamReader(data);
                                     m_CommoditySendingError = true;
-                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V2, enTransmittedStates.Error));
+                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V3, enTransmittedStates.Error));
                                     _logger.Log("Error while uploading commodity data to EDDN : " + sr.ReadToEnd());
                                 }
                             }
@@ -1483,9 +1543,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
-                    schema = "http://schemas.elite-markets.net/eddn/shipyard/1/test";
+                    schema = "http://schemas.elite-markets.net/eddn/shipyard/2/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/shipyard/1";
+                    schema = "http://schemas.elite-markets.net/eddn/shipyard/2";
 
                 // create full message
                 shipyardMessage.Append(String.Format("{{" +

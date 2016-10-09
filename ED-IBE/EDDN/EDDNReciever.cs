@@ -180,6 +180,21 @@ namespace IBE.EDDN
             {
                 EDDNRecievedArgs ArgsObject;
 
+                if (RawData.Contains(@"commodity/1"))
+                {
+                    // new v2 schema
+                    Debug.Print("recieved v1 commodities message");
+
+                    ArgsObject = new EDDNRecievedArgs()
+                    {
+                        Message = "recieved data commodities message (v1)",
+                        InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved,
+                        RawData = RawData,
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
+                        Adress = m_Adress
+                    };
+
+                }
                 if (RawData.Contains(@"commodity/2"))
                 {
                     // new v2 schema
@@ -190,41 +205,84 @@ namespace IBE.EDDN
                         Message = "recieved data commodities message (v2)",
                         InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved,
                         RawData = RawData,
-                        Data = JsonConvert.DeserializeObject<EDDNCommodity_v2>(RawData),
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
+                        Adress = m_Adress
+                    };
+
+                }
+                else if (RawData.Contains(@"commodity/3"))
+                {
+                    // new v2 schema
+                    Debug.Print("recieved v3 commodities message");
+
+                    ArgsObject = new EDDNRecievedArgs()
+                    {
+                        Message = "recieved data commodities message (v3)",
+                        InfoType = EDDNRecievedArgs.enMessageInfo.Commodity_v3_Recieved,
+                        RawData = RawData,
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
                         Adress = m_Adress
                     };
                 }
                 else if (RawData.Contains(@"outfitting/1"))
                 {
                     // outfitting schema
-                    Debug.Print("recieved v1 outfitting message");
+                    Debug.Print("recieved outfitting v1 message");
                     
-                    ArgsObject = null;
+                    ArgsObject = new EDDNRecievedArgs()
+                    {
+                        Message = "recieved data outfitting message (v1)",
+                        InfoType = EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved,
+                        RawData = RawData,
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
+                        Adress = m_Adress
+                    };
 
-                    //ArgsObject = new EDDNRecievedArgs()
-                    //{
-                    //    Message = "recieved data outfitting message (v1)",
-                    //    InfoType = EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved,
-                    //    RawData = RawData,
-                    //    Data = null,
-                    //    Adress = m_Adress
-                    //};
+                }
+                else if (RawData.Contains(@"outfitting/2"))
+                {
+                    // outfitting schema
+                    Debug.Print("recieved outfitting v2 message");
+                    
+                    ArgsObject = new EDDNRecievedArgs()
+                    {
+                        Message = "recieved data outfitting message (v2)",
+                        InfoType = EDDNRecievedArgs.enMessageInfo.Outfitting_v2_Recieved,
+                        RawData = RawData,
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
+                        Adress = m_Adress
+                    };
+
                 }
                 else if (RawData.Contains(@"shipyard/1"))
                 {
                     // shipyardItem schema
-                    Debug.Print("recieved v1 shipyard message");
+                    Debug.Print("recieved shipyard v1 message");
 
-                    ArgsObject = null;
+                    ArgsObject = new EDDNRecievedArgs()
+                    {
+                        Message = "recieved data shipyard message (v1)",
+                        InfoType = EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved,
+                        RawData = RawData,
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
+                        Adress = m_Adress
+                    };
 
-                    //ArgsObject = new EDDNRecievedArgs()
-                    //{
-                    //    Message = "recieved data shipyard message (v1)",
-                    //    InfoType = EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved,
-                    //    RawData = RawData,
-                    //    Data = null,
-                    //    Adress = m_Adress
-                    //};
+                }
+                else if (RawData.Contains(@"shipyard/2"))
+                {
+                    // shipyardItem schema
+                    Debug.Print("recieved shipyard v2 message");
+
+                    ArgsObject = new EDDNRecievedArgs()
+                    {
+                        Message = "recieved data shipyard message (v2)",
+                        InfoType = EDDNRecievedArgs.enMessageInfo.Shipyard_v2_Recieved,
+                        RawData = RawData,
+                        Data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(RawData),
+                        Adress = m_Adress
+                    };
+
                 }
                 else
                 {
@@ -241,7 +299,7 @@ namespace IBE.EDDN
                 }
 
                 if(ArgsObject != null)
-                { 
+                {
                     // only for one listener per time this is allowed
                     lock (m_RecieveLocker)
                     { 
@@ -251,7 +309,6 @@ namespace IBE.EDDN
             }
             catch (Exception ex)
             {
-
                 DataRecieved(this, new EDDNRecievedArgs()
                 {
                     Message = "Error while parsing recieved EDDN data :" + Environment.NewLine + ex.GetBaseException().Message.ToString() + Environment.NewLine + ex.StackTrace,

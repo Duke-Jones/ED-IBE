@@ -69,8 +69,8 @@ namespace IBE.EDDN
         {
             String id = string.Format("{0}|{1}|{2}", system.ToUpper(), station.ToUpper(), commodity.ToUpper());
             Boolean retValue = true;
-            DateTime limit1 = (DateTime.Now + new TimeSpan(0, 5, 0)).Truncate(TimeSpan.FromSeconds(1));
-            DateTime limit2 = (DateTime.Now - new TimeSpan(0, 5, 0)).Truncate(TimeSpan.FromSeconds(1));
+            DateTime limit1 = (DateTime.UtcNow + new TimeSpan(0, 5, 0)).Truncate(TimeSpan.FromSeconds(1));
+            DateTime limit2 = (DateTime.UtcNow - new TimeSpan(0, 5, 0)).Truncate(TimeSpan.FromSeconds(1));
 
             lock (LockObject)
             {

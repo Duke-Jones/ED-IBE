@@ -12,9 +12,9 @@ namespace IBE.EDDN
     /// <summary>
     /// schema class,
     /// based on the structure from 
-    /// https://github.com/jamesremuscat/EDDN/blob/master/schemas/commodity-v2.0.json
+    /// https://github.com/jamesremuscat/EDDN/blob/master/schemas/commodity-v3.0.json
     /// </summary>
-    internal partial class EDDNCommodity_v2
+    internal partial class EDDNCommodity_v3
     {
         internal class Header_Class
         {
@@ -34,7 +34,8 @@ namespace IBE.EDDN
 
     }
 
-    internal partial class EDDNCommodity_v2
+
+    internal partial class EDDNCommodity_v3
     {
         internal class Commodity_Class
         {
@@ -42,27 +43,30 @@ namespace IBE.EDDN
             [JsonProperty("name")]
             public string Name { get; set; }
 
+            [JsonProperty("meanPrice")]
+            public int MeanPrice { get; set; }
+
             [JsonProperty("buyPrice")]
             public int BuyPrice { get; set; }
 
-            [JsonProperty("supplyLevel")]
-            public string SupplyLevel { get; set; }
+            [JsonProperty("stock")]
+            public int Stock { get; set; }
 
-            [JsonProperty("supply")]
-            public int Supply { get; set; }
-
-            [JsonProperty("demand")]
-            public int Demand { get; set; }
+            [JsonProperty("stockBracket")]
+            public int? StockBracket { get; set; }
 
             [JsonProperty("sellPrice")]
             public int SellPrice { get; set; }
 
-            [JsonProperty("demandLevel")]
-            public string DemandLevel { get; set; }
+            [JsonProperty("demand")]
+            public int Demand { get; set; }
+
+            [JsonProperty("demandBracket")]
+            public int? DemandBracket { get; set; }
         }
     }
 
-    internal partial class EDDNCommodity_v2
+    internal partial class EDDNCommodity_v3
     {
         internal class Message_Class
         {
@@ -81,7 +85,7 @@ namespace IBE.EDDN
         }
     }
 
-    internal partial class EDDNCommodity_v2
+    internal partial class EDDNCommodity_v3
     {
 
         [JsonProperty("header")]
@@ -110,9 +114,9 @@ namespace IBE.EDDN
                                   (Commodity.SellPrice == 0 ? "" : Commodity.SellPrice.ToString()) + ";" +
                                   (Commodity.BuyPrice == 0 ? "" : Commodity.BuyPrice.ToString()) + ";" +
                                   Commodity.Demand.ToString() + ";" +
-                                  Commodity.DemandLevel + ";" +
-                                  Commodity.Supply.ToString() + ";" +
-                                  Commodity.SupplyLevel + ";" +
+                                  Commodity.DemandBracket + ";" +
+                                  Commodity.Stock.ToString() + ";" +
+                                  Commodity.StockBracket + ";" +
                                   this.Message.Timestamp.ToString() + ";"
                                   +
                                   "EDDN" + ";";		 
