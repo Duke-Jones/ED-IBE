@@ -363,6 +363,10 @@ Create a second file "AppConfigLocal.xml" and insert following rows (or get the 
 A3: The data part of ED-IBE maybe is installed in a directory where IBE has no rights to write someting, e.g. "C:\Program Files\....".
 Solution is to install IBE's data part in another directory without restrictions like D:\Games\.." or in the suggested path by the installer.
 
+A4: The installation path is too long. 
+If the path to the sqlserver's ini file is too long, the server won't start.
+Already a length of 83 characters has turned out to be too long.
+
 *******************************************
 Q: Crash when grabbing a screenshot?
 

@@ -354,6 +354,9 @@ wie z. B. "C:\Programme\....". ED-IBE benötigt aber in jedem Fall Schreibzugrif
 Lösung : Den Datenteil von ED-IBE  in einem Verzeichnis installieren, in dem keinerlei Zugriffs-Restriktionen
 bestehen, wie dem vorgeschlagenen Standardpfad (Userverzecihnis) oder z. B. D:\Games\...."
 
+A4: Der Installationspfad ist zu lang. 
+Der MySQL-Server kann als Parameter für seine Ini-Datei nur ein Pfad bis zu einer gewissen Länge nutzen. 
+Pfade mit einer Länge von 83 (mit Ini-Dateiname) sind bereits zu lang.
 
 *************************************************************************
 Q: Absturz beim Verarbeiten der Screenshots?
