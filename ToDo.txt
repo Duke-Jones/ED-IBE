@@ -22,6 +22,8 @@ todo:
 
 done:
 
+-------------------------------------------------------------------------------------         
+v0.4.1
   * fixed a null reference bug when creating a commodity v3 messages 
   * corrections on item filter when creating outfitting_v2 messages
 -------------------------------------------------------------------------------------           
