@@ -83,3 +83,7 @@ RegulatedNoise/Data/stations_own.json
 /LED/ledorange_on.png
 /LED/ledred_off.png
 /LED/ledred_on.png
+/ED-IBE/Data/systems_populated.json
+/.cr/Settings.xml
+/.vs/config/applicationhost.config
+/RNDatabase/Database/install.log
