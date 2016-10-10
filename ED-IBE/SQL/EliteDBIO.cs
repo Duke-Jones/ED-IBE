@@ -2950,8 +2950,9 @@ namespace IBE.SQL
         {
             List<EDStation> StationData;
             Boolean updateTables = false;
-            ProgressEventArgs eva=null;
+            ProgressEventArgs eva=new ProgressEventArgs();
             Int32 initialSize=0;
+
             try
             {
                 StationData = fromCSV_EDDB(CSV_Strings);
