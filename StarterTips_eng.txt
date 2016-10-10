@@ -132,7 +132,7 @@ The option "Ok, give me a starter kit out of a bubble ..." must be activated.
 Result:
 1. you get the latest updates on systems and stations
 2. by the activating "starters kit" option you'll all available price data
-   out of a bubble around of 20 ly of your current system.
+   out of a bubble within 20 ly of your current system.
 
 3.3. find profitable route
 Go to the tab "Price Analysis" -> "Station-To_Station" and press "Start Calculation".

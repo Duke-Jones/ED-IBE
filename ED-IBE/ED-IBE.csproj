@@ -140,6 +140,7 @@
     <Compile Include="CommodityMappingsView.Designer.cs">
       <DependentUpon>CommodityMappingsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="EDDN\EDDNCommodity_v3.cs" />
     <Compile Include="EDDN\MessageHeader.cs" />
     <Compile Include="EDDN\CommodityObject.cs" />
     <Compile Include="EDDN\OutfittingObject.cs" />
@@ -176,7 +177,6 @@
     </Compile>
     <Compile Include="EDDN\EDDNDuplicateFilter.cs" />
     <Compile Include="EDDN\EDDNReciever.cs" />
-    <Compile Include="EDDN\EDDNCommodity_v2.cs" />
     <Compile Include="Elite Dangerous Specifics\AppConfig.cs" />
     <Compile Include="Brainerous Pixeltest\EBPixeltest.cs">
       <SubType>Form</SubType>

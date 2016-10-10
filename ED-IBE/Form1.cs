@@ -3470,7 +3470,7 @@ namespace IBE
                             }
 
                             if(Program.CompanionIO.StationHasOutfittingData())
-                                Program.EDDNComm.SendOutfittingData_V1(Program.CompanionIO.GetData());
+                                Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
                             
                         }
                         else
