@@ -2950,7 +2950,7 @@ namespace IBE.SQL
         {
             List<EDStation> StationData;
             Boolean updateTables = false;
-            ProgressEventArgs eva=null;
+            ProgressEventArgs eva = new ProgressEventArgs();
             Int32 initialSize=0;
             try
             {
@@ -3032,7 +3032,7 @@ namespace IBE.SQL
                 }
 
                 // now import the prices
-                if((eva != null) && (!eva.Cancelled))
+                if(!eva.Cancelled)
                 { 
                    ImportPrices(StationData, importBehaviour, dataSource);
                 }

@@ -909,7 +909,9 @@ bool disposed = false;
                                 CommodityObject commodity = cmpConverter.GetCommodityFromFDevIDs(baseData, commodityItem, false);
                                 //commodityObject commodity = cmpConverter.GetcommodityFromCompanion(commodityItem, false);
 
-                                if((commodity != null) && (commodityItem.Value<int?>("demandBracket").HasValue))
+                                int? dbValue = String.IsNullOrWhiteSpace(commodityItem.Value<String>("demandBracket")) ? null : commodityItem.Value<int?>("demandBracket");
+
+                                if((commodity != null) && (dbValue.HasValue))
                                 { 
 
                                     if (objectCount > 0)
@@ -946,6 +948,11 @@ bool disposed = false;
                                     else
                                         commodityStringEDDN.Append(String.Format("\"stock\":{0}, ",      commodityItem.Value<Int32>("demand")));
 
+                                    
+                                    foreach (JToken statusItem in commodityItem.SelectTokens("statusFlags[*]"))
+                                    {
+                                        Debug.Print("got it");
+                                    }
 
                                     commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);
                                     commodityStringEDDN.Replace(",", "}", commodityStringEDDN.Length-1, 1);
@@ -1033,7 +1040,10 @@ bool disposed = false;
 
                         foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
                         {
-                            if(allowedPattern.IsMatch(outfittingItem.Value<String>("name")))
+
+                            if(allowedPattern.IsMatch(outfittingItem.Value<String>("name")) && 
+                              ((outfittingItem.Value<String>("sku") == null) || (outfittingItem.Value<String>("sku").Equals("ELITE_HORIZONS_V_PLANETARY_LANDINGS"))) && 
+                              (!outfittingItem.Value<String>("name").Equals("Int_PlanetApproachSuite")))
                             { 
                                 OutfittingObject outfitting = cmpConverter.GetOutfittingFromFDevIDs(baseData, outfittingItem, false);
 
