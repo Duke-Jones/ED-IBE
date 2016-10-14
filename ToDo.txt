@@ -22,6 +22,8 @@ todo:
 
 done:
 
+  * forced encoding to "URL-Encoding" for EDSM data
+  * prevent communication with EDSM with empty login data
 -------------------------------------------------------------------------------------         
 v0.4.1
   * fixed a null reference bug when creating a commodity v3 messages 

@@ -201,12 +201,14 @@ namespace IBE.EDSM
             webRequest.Method           = "GET";
             webRequest.UserAgent        = "ED-IBE";
             webRequest.ServicePoint.Expect100Continue = false;
-                
+
             String responseData;
             dynamic data = null;
 
             try
             {
+                
+
                 using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
                     responseData = responseReader.ReadToEnd();
 
@@ -255,12 +257,17 @@ namespace IBE.EDSM
         {
             dynamic answer;
             ErrorCodes retValue = ErrorCodes.No_Answer;
+            String cmdrName = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", "");
+            String apiKey   = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", "");
 
             try
             {
+
+                if(String.IsNullOrWhiteSpace(cmdrName) || String.IsNullOrWhiteSpace(apiKey)) 
+                    throw new Exception("Invalid credentials for EDSM");
+
                 answer = GetDataFromServer(String.Format("/api-logs-v1/get-position?commanderName={0}&apiKey={1}",
-                                                          m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                                          m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", "")));
+                                                          System.Web.HttpUtility.UrlEncode(cmdrName), apiKey));
 
                 if(answer != null)
                 {
@@ -388,9 +395,14 @@ namespace IBE.EDSM
             dynamic answer = null; 
             ErrorCodes retValue = ErrorCodes.No_Answer;
             String transmissionString;
+            String cmdrName = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", "");
+            String apiKey   = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", "");
 
             try
             {
+
+                if(String.IsNullOrWhiteSpace(cmdrName) || String.IsNullOrWhiteSpace(apiKey)) 
+                    throw new Exception("Invalid credentials for EDSM");
 
                 if (data.X.HasValue && data.Y.HasValue && data.Z.HasValue)
                 {
@@ -404,9 +416,9 @@ namespace IBE.EDSM
                                             "&fromSoftware={6}" +
                                             "&fromSoftwareVersion={7}" +
                                             "&dateVisited={8:yyyy-MM-dd HH:mm:ss}",
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
-                                            data.SystemName,
+                                            System.Web.HttpUtility.UrlEncode(cmdrName),
+                                            apiKey,
+                                            System.Web.HttpUtility.UrlEncode(data.SystemName),
                                             data.X.ToString().Replace(",", "."),
                                             data.Y.ToString().Replace(",", "."),
                                             data.Z.ToString().Replace(",", "."),
@@ -423,9 +435,9 @@ namespace IBE.EDSM
                                             "&fromSoftware={3}" +
                                             "&fromSoftwareVersion={4}" +
                                             "&dateVisited={5:yyyy-MM-dd HH:mm:ss}",
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
-                                            data.SystemName,
+                                            System.Web.HttpUtility.UrlEncode(cmdrName),
+                                            apiKey,
+                                            System.Web.HttpUtility.UrlEncode(data.SystemName),
                                             "ED-IBE",
                                             m_CurrentVersion,
                                             data.DateVisited.ToUniversalTime());
@@ -468,9 +480,14 @@ namespace IBE.EDSM
             ErrorCodes retValue = ErrorCodes.No_Answer;
             String transmissionString;
             String commentString;
+            String cmdrName = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", "");
+            String apiKey   = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", "");
 
             try
             {
+
+                if(String.IsNullOrWhiteSpace(cmdrName) || String.IsNullOrWhiteSpace(apiKey)) 
+                    throw new Exception("Invalid credentials for EDSM");
 
                 if(timestamp.Year > 1970)
                 {
@@ -479,9 +496,9 @@ namespace IBE.EDSM
                                             "&apiKey={1}" +
                                             "&systemName={2}" +
                                             "&dateVisited={3:yyyy-MM-dd HH:mm:ss}",
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
-                                            systemName, 
+                                            System.Web.HttpUtility.UrlEncode(cmdrName),
+                                            apiKey,
+                                            System.Web.HttpUtility.UrlEncode(systemName), 
                                             timestamp.ToUniversalTime());
                 }
                 else
@@ -490,9 +507,9 @@ namespace IBE.EDSM
                                             "?commanderName={0}" +
                                             "&apiKey={1}" +
                                             "&systemName={2}",
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                            m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
-                                            systemName);
+                                            System.Web.HttpUtility.UrlEncode(cmdrName),
+                                            apiKey,
+                                            System.Web.HttpUtility.UrlEncode(systemName));
                 }
 
                 if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
@@ -537,9 +554,14 @@ namespace IBE.EDSM
             dynamic answer = null; 
             ErrorCodes retValue = ErrorCodes.No_Answer;
             String transmissionString;
+            String cmdrName = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", "");
+            String apiKey   = m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", "");
 
             try
             {
+
+                if(String.IsNullOrWhiteSpace(cmdrName) || String.IsNullOrWhiteSpace(apiKey)) 
+                    throw new Exception("Invalid credentials for EDSM");
 
                 transmissionString = String.Format("/api-logs-v1/set-comment" +
                                         "?commanderName={0}" +
@@ -549,13 +571,13 @@ namespace IBE.EDSM
                                         "&fromSoftwareVersion={4}" +
                                         "&dateVisited={5:yyyy-MM-dd HH:mm:ss}" +
                                         "&comment={6}",
-                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "CommandersName", ""),
-                                        m_GUIInterface.DBConnection.getIniValue(DB_GROUPNAME, "API_Key", ""),
-                                        data.SystemName,
+                                        System.Web.HttpUtility.UrlEncode(cmdrName),
+                                        apiKey,
+                                        System.Web.HttpUtility.UrlEncode(data.SystemName),
                                         "ED-IBE",
                                         m_CurrentVersion,
                                         data.DateVisited.ToUniversalTime(),
-                                        data.Comment);
+                                        System.Web.HttpUtility.UrlEncode(data.Comment));
 
 
                 if(m_GUIInterface.GetIniValue<Boolean>("SaveToFile", false.ToString(), false))
