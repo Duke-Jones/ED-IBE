@@ -77,7 +77,8 @@ namespace IBE.EDSM
 
         public const String                              DB_GROUPNAME                    = "EDSM_API";
         private DBGuiInterface                           m_GUIInterface;
-        private FileScanner.EDLogfileScanner             m_LogfileScanner;
+        //private FileScanner.EDLogfileScanner             m_LogfileScanner;
+        private FileScanner.EDJournalScanner             m_JournalScanner;
         private String                                   m_CurrentVersion;
         private SingleThreadLogger                       m_LogFile;
         private Queue<EDSMTransmissionData>              m_SendQueue;
@@ -136,15 +137,15 @@ namespace IBE.EDSM
         /// <summary>
         /// register the LogfileScanner in the CommandersLog for the DataEvent
         /// </summary>
-        /// <param name="LogfileScanner"></param>
-        public void registerLogFileScanner(FileScanner.EDLogfileScanner LogfileScanner)
+        /// <param name="JournalScanner"></param>
+        public void registerLogFileScanner(FileScanner.EDJournalScanner JournalScanner)
         {
             try
             {
-                if(m_LogfileScanner == null)
+                if(m_JournalScanner == null)
                 { 
-                    m_LogfileScanner = LogfileScanner;
-                    m_LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+                    m_JournalScanner = JournalScanner;
+                    m_JournalScanner.JournalEventRecieved += JournalEventRecieved;
                 }
                 else 
                     throw new Exception("LogfileScanner already registered");
@@ -157,26 +158,21 @@ namespace IBE.EDSM
         }
 
         /// <summary>
-        /// event-worker for DataSavedEvent-event
+        /// event-worker for JournalEventRecieved-event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
+        void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
         {
             try
             {
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
-                {
-                    if(e.Position.Valid)
-                        TransmitVisit(e.System, e.Position.X.Value, e.Position.Y.Value, e.Position.Z.Value, e.TimeStamp);
-                    else
-                        TransmitVisit(e.System, null, null, null, e.TimeStamp);
+                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
+                    TransmitVisit(e.Data.Value<String>("StarSystem"), e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[0]"), e.Data.Value<DateTime>("timestamp"));
 
-                }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while processing the LocationChanged-event", ex);
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
             }
         }
 

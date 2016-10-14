@@ -81,14 +81,13 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.directDBAccessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createJumpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eDDNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eDSMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.companionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
@@ -779,18 +778,9 @@
             // 
             // testToolStripMenuItem
             // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createJumpToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.testToolStripMenuItem.Text = "Test";
-            // 
-            // createJumpToolStripMenuItem
-            // 
-            this.createJumpToolStripMenuItem.Name = "createJumpToolStripMenuItem";
-            this.createJumpToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.createJumpToolStripMenuItem.Text = "create Jump";
-            this.createJumpToolStripMenuItem.Click += new System.EventHandler(this.createJumpToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -825,6 +815,13 @@
             this.iOToolStripMenuItem.Size = new System.Drawing.Size(28, 20);
             this.iOToolStripMenuItem.Text = "IO";
             // 
+            // companionToolStripMenuItem
+            // 
+            this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.companionToolStripMenuItem.Text = "E:D Companion (Frontier Data Interface)";
+            this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
+            // 
             // eDDNToolStripMenuItem
             // 
             this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
@@ -838,13 +835,6 @@
             this.eDSMToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.eDSMToolStripMenuItem.Text = "EDSM (E.D Starmap)";
             this.eDSMToolStripMenuItem.Click += new System.EventHandler(this.eDSMToolStripMenuItem_Click);
-            // 
-            // companionToolStripMenuItem
-            // 
-            this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
-            this.companionToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.companionToolStripMenuItem.Text = "E:D Companion (Frontier Data Interface)";
-            this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
             // 
             // cmdLoadCurrentSystem
             // 
@@ -2873,7 +2863,6 @@
         private System.Windows.Forms.TabControl tabCtrlMain;
         private System.Windows.Forms.ToolStripMenuItem editLocalizationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createJumpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem directDBAccessToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;

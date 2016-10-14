@@ -55,7 +55,7 @@ namespace IBE.MTPriceAnalysis
         private DataTable                           m_Datatable;
         private DataRetriever                       retriever;
         private Boolean                             m_NoGuiNotifyAfterSave;
-        private FileScanner.EDLogfileScanner        m_LogfileScanner;
+        private FileScanner.EDJournalScanner        m_JournalScanner;
         private IBE.IBECompanion.DataEventBase      m_ExternalDataInterface;
         private IBE.IBESettingsView                 m_Settings;
         private DBConnector                         m_lDBCon;
@@ -141,15 +141,15 @@ namespace IBE.MTPriceAnalysis
         /// <summary>
         /// register the LogfileScanner in the CommandersLog for the DataEvent
         /// </summary>
-        /// <param name="LogfileScanner"></param>
-        public void registerLogFileScanner(FileScanner.EDLogfileScanner LogfileScanner)
+        /// <param name="journalScanner"></param>
+        public void registerLogFileScanner(FileScanner.EDJournalScanner journalScanner)
         {
             try
             {
-                if(m_LogfileScanner == null)
+                if(m_JournalScanner == null)
                 { 
-                    m_LogfileScanner = LogfileScanner;
-                    m_LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+                    m_JournalScanner = journalScanner;
+                    m_JournalScanner.JournalEventRecieved += JournalEventRecieved;
                 }
                 else 
                     throw new Exception("LogfileScanner already registered");
@@ -230,27 +230,23 @@ namespace IBE.MTPriceAnalysis
         }
 
         /// <summary>
-        /// event-worker for LocationChangedEvent-event
+        /// event-worker for JournalEventRecieved-event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
+        void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
         {
             try
             {
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
+                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
                 {
                     GUI.RefreshColors();
-                }
-
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
-                {
                     GUI.setFilterHasChanged(true);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while processing the LocationChanged-event", ex);
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
             }
         }
 

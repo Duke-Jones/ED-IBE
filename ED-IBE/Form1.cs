@@ -255,11 +255,11 @@ namespace IBE
                     m_IsRefreshed.Add(MainTabPage.Name, false);
 
                 // register events for getting new location- and data infos for the gui
-                Program.LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+                Program.JournalScanner.JournalEventRecieved += JournalEventRecieved;
                 
-                Program.CompanionIO.ExternalDataEvent  += ExternalDataInterface_ExternalDataEvent;
-                Program.EDDNComm.DataChangedEvent      += EDDNComm_DataChangedEvent;
-                Program.EDDNComm.DataTransmittedEvent  += EDDNComm_DataTransmittedEvent;
+                Program.CompanionIO.ExternalDataEvent       += ExternalDataInterface_ExternalDataEvent;
+                Program.EDDNComm.DataChangedEvent           += EDDNComm_DataChangedEvent;
+                Program.EDDNComm.DataTransmittedEvent       += EDDNComm_DataTransmittedEvent;
 
 
                 // until this is working again 
@@ -1286,7 +1286,7 @@ namespace IBE
                 st.Start();
 
                 Program.SplashScreen.InfoAdd("starting logfile scanner");
-                Program.LogfileScanner.Start();
+                Program.JournalScanner.Start();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
@@ -3223,16 +3223,16 @@ namespace IBE
         }
 
 #endif
-
-        void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
+        
+        void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
         {
             try
             {
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Jump) > 0)
+                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
                 {
                     setText(txtEventInfo,             "...jump recognized...");
 
-                    Program.actualCondition.Location = e.Location;
+                    Program.actualCondition.Location = "";
 
                     // can't be docked anymore
                     Program.CompanionIO.SetDocked(false);
@@ -3240,29 +3240,17 @@ namespace IBE
                     // from now it is allowed to send data to eddn immediately again
                     Program.EDDNComm.SendingReset();
 
-                    ShowLocationData();
-                    ShowStatus();
-                }
-
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) >  0)
-                {
                     // the location has changed -> the reference for all distances has changed  
                     Program.PriceAnalysis.GUI.SignalizeChangedData();
 
-                    Program.actualCondition.System      = e.System;
-                    Program.actualCondition.Coordinates = e.Position;
+                    Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
+                    Program.actualCondition.Coordinates = new Point3Dbl(e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[1]"), e.Data.Value<Double>("StarPos[2]"));
 
                     /// after a system jump you can get data immediately
                     Program.CompanionIO.RestTimeReset();
 
                     ShowLocationData();
-
-                }
-
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.Location) > 0)
-                {
-                    Program.actualCondition.Location   = e.Location;
-                    ShowLocationData();   
+                    ShowStatus();
                 }
 
 
@@ -3336,22 +3324,6 @@ namespace IBE
                 CErr.processError(ex, "Error while opening localization editing tool");
             }
         }
-
-#region "Test"
-
-        private void createJumpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.LogfileScanner.RaiseTestEvent();
-            }
-            catch (Exception ex)
-            {
-                CErr.processError(ex);
-            }
-        }
-
-#endregion
 
         private void directDBAccessToolStripMenuItem_Click(object sender, EventArgs e)
         {

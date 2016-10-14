@@ -69,7 +69,8 @@ namespace IBE.MTCommandersLog
         private DataTable                               m_Datatable;
         private DataRetriever                           retriever;
         private Boolean                                 m_NoGuiNotifyAfterSave;
-        private FileScanner.EDLogfileScanner            m_LogfileScanner;
+        //private FileScanner.EDLogfileScanner            m_LogfileScanner;
+        private FileScanner.EDJournalScanner             m_JournalScanner;
         private IBE.IBECompanion.DataEventBase          m_DataEventObject;
         private Dictionary<Object, BindingSource>       m_BindingSources;
 
@@ -620,15 +621,15 @@ namespace IBE.MTCommandersLog
         /// <summary>
         /// register the LogfileScanner in the CommandersLog for the DataEvent
         /// </summary>
-        /// <param name="LogfileScanner"></param>
-        public void registerLogFileScanner(FileScanner.EDLogfileScanner LogfileScanner)
+        /// <param name="journalScanner"></param>
+        public void registerLogFileScanner(FileScanner.EDJournalScanner journalScanner)
         {
             try
             {
-                if(m_LogfileScanner == null)
+                if(m_JournalScanner == null)
                 { 
-                    m_LogfileScanner = LogfileScanner;
-                    m_LogfileScanner.LocationChanged += LogfileScanner_LocationChanged;
+                    m_JournalScanner = journalScanner;
+                    m_JournalScanner.JournalEventRecieved += JournalEventRecieved;
                 }
                 else 
                     throw new Exception("LogfileScanner already registered");
@@ -668,14 +669,14 @@ namespace IBE.MTCommandersLog
         /// unregister the LogfileScanner
         /// </summary>
         /// <param name="LogfileScanner"></param>
-        public void unregisterLogFileScanner()
+        public void UnregisterJournalScanner()
         {
             try
             {
-                if(m_LogfileScanner != null)
+                if(m_JournalScanner != null)
                 { 
-                    m_LogfileScanner.LocationChanged -= LogfileScanner_LocationChanged;
-                    m_LogfileScanner = null;
+                    m_JournalScanner.JournalEventRecieved -= JournalEventRecieved;
+                    m_JournalScanner = null;
                 }
             }
             catch (Exception ex)
@@ -706,24 +707,21 @@ namespace IBE.MTCommandersLog
 
 
         /// <summary>
-        /// event-worker for DataSavedEvent-event
+        /// event-worker for JournalEventRecieved-event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void LogfileScanner_LocationChanged(object sender, FileScanner.EDLogfileScanner.LocationChangedEventArgs e)
+        void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
         {
             try
             {
-                if((e.Changed & FileScanner.EDLogfileScanner.enLogEvents.System) > 0)
-                {
-                    double? Distance = Program.Data.getDistanceBetween(e.System, e.OldSystem);
+                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
+                    SaveEvent(e.Data.Value<DateTime>("timestamp"), e.Data.Value<String>("StarSystem"), "", "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Jumped To", "", e.Data.Value<Double>("JumpDist"));
 
-                    SaveEvent(DateTime.UtcNow, e.System, "", "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Jumped To", "", Distance);
-                }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while processing the LocationChanged-event", ex);
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
             }
         }
 

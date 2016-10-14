@@ -161,6 +161,7 @@
     <Compile Include="ErrorHandling\ErrorViewer.Designer.cs">
       <DependentUpon>ErrorViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileScanner\EDJournalScanner.cs" />
     <Compile Include="GUIColorsView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,7 +202,6 @@
     <Compile Include="Enums and Utility Classes\DataGridViewSettings.Designer.cs">
       <DependentUpon>DataGridViewSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileScanner\EDLogfileScanner.cs" />
     <Compile Include="CommoditySelector.cs">
       <SubType>Form</SubType>
     </Compile>

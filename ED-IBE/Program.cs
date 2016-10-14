@@ -265,7 +265,7 @@ namespace IBE
         public static PriceAnalysis                         PriceAnalysis;
         public static EliteDBIO                             Data;
         public static Condition                             actualCondition;
-        public static EDLogfileScanner                      LogfileScanner;
+        public static EDJournalScanner                      JournalScanner;
         public static SplashScreenForm                      SplashScreen;
         public static EDDN.EDDNCommunicator                 EDDNComm;
         public static EDSM.EDStarmapInterface               EDSMComm;
@@ -385,7 +385,9 @@ namespace IBE
                     actualCondition                             = new Condition();
 
                     // initializing the LogfileScanner
-                    LogfileScanner                              = new EDLogfileScanner();
+                    //LogfileScanner                              = new EDLogfileScanner();
+                    JournalScanner                              = new EDJournalScanner();
+                    JournalScanner.Start();
 
                     // EDDN Interface
                     EDDNComm = new IBE.EDDN.EDDNCommunicator();
@@ -394,17 +396,17 @@ namespace IBE
                     EDSMComm = new IBE.EDSM.EDStarmapInterface(Program.DBCon);
 
                     // forwards a potentially new system or station information to database
-                    Program.LogfileScanner.LocationInfo += LogfileScanner_LocationInfo;
-                    Program.CompanionIO.LocationInfo   += ExternalData_LocationInfo;
+                    Program.JournalScanner.JournalEventRecieved += JournalEventRecieved;
+                    Program.CompanionIO.LocationInfo            += ExternalData_LocationInfo;
 
                     // register the LogfileScanner in the CommandersLog for the DataSavedEvent-event
-                    CommandersLog.registerLogFileScanner(LogfileScanner);
+                    CommandersLog.registerLogFileScanner(JournalScanner);
                     CommandersLog.registerExternalTool(CompanionIO);
                     
-                    PriceAnalysis.registerLogFileScanner(LogfileScanner);
+                    PriceAnalysis.registerLogFileScanner(JournalScanner);
                     PriceAnalysis.registerExternalTool(CompanionIO);
 
-                    EDSMComm.registerLogFileScanner(LogfileScanner);
+                    EDSMComm.registerLogFileScanner(JournalScanner);
 
                     // Plausibility-Checker
                     PlausibiltyCheck = new PlausibiltyChecker();
@@ -435,10 +437,10 @@ namespace IBE
                     EDDNComm = null;
                 }
 
-                if(LogfileScanner != null)
+                if(JournalScanner != null)
                 {
-                    LogfileScanner.Dispose();
-                    LogfileScanner = null;
+                    JournalScanner.Dispose();
+                    JournalScanner = null;
                 }
 
                 if(DBCon != null)
@@ -479,15 +481,17 @@ namespace IBE
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void LogfileScanner_LocationInfo(object sender, EDLogfileScanner.LocationInfoEventArgs e)
+        static void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
         {
             try
             {
-                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, e.Position, false);
+                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
+                    Data.checkPotentiallyNewSystemOrStation(e.Data.Value<String>("StarSystem"), "", new Point3Dbl(e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[1]"), e.Data.Value<Double>("StarPos[2]")), false);
+
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while in LogfileScanner_LocationInfo", ex); 
+                throw new Exception("Error in JournalEventRecieved-event", ex); 
             }
         }
 
