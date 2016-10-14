@@ -949,9 +949,16 @@ bool disposed = false;
                                         commodityStringEDDN.Append(String.Format("\"stock\":{0}, ",      commodityItem.Value<Int32>("demand")));
 
                                     
-                                    foreach (JToken statusItem in commodityItem.SelectTokens("statusFlags[*]"))
+                                    if(commodityItem.SelectTokens("statusFlags.[*]").Count() > 0 )
                                     {
-                                        Debug.Print("got it");
+                                        commodityStringEDDN.Append(String.Format("\"statusFlags\": ["));
+                                        foreach (JToken statusItem in commodityItem.SelectTokens("statusFlags.[*]"))
+                                        {
+                                            commodityStringEDDN.Append(String.Format("\"{0}\", ",      statusItem.Value<String>()));
+                                        }
+
+                                        commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);
+                                        commodityStringEDDN.Replace(",", "], ", commodityStringEDDN.Length-1, 1);
                                     }
 
                                     commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);

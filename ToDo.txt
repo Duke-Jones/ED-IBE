@@ -12,9 +12,7 @@ todo:
 * avoid resizing of fonts
 * VoiceAttack interface
 
-* consider commodity V3 
 * new interface for E:D-2.2-eventlog 
-* v2.2 event interface
 
 
 * hint for problems with long installation paths
@@ -22,6 +20,10 @@ todo:
 
 done:
 
+
+v0.4.2
+  * EDDN interface now also sends "statusFlags" for commodities
+-------------------------------------------------------------------------------------         
   * forced encoding to "URL-Encoding" for EDSM data
   * prevent communication with EDSM with empty login data
 -------------------------------------------------------------------------------------         
