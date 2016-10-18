@@ -22,6 +22,10 @@ todo:
 
 done:
 
+
+
+  * optimized journal scanner
+-------------------------------------------------------------------------------------         
   * journal scanner optimized
   * fixed : bug in coordinate class
   * fixed : users with empty ID can send data to eddn

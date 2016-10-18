@@ -82,13 +82,6 @@ namespace IBE.FileScanner
             if (disposing)
             {
                 Stop();
-
-                do
-                {
-                    // wait until thread is not running anymore
-                    Thread.Sleep(25);
-                } while ((m_JournalScanner_Thread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0);
-
             }
             // Free your own state (unmanaged objects).
             // Set large fields to null.
@@ -152,9 +145,7 @@ namespace IBE.FileScanner
                 if (m_JournalScanner_Thread == null)
                 {
                     if (SHGetKnownFolderPath(SAVED_GAMES, 0, IntPtr.Zero, out m_SavedgamesPath) != 0)
-                    {
                         m_SavedgamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games");
-                    }
 
                     if(Directory.Exists(m_SavedgamesPath))
                         m_SavedgamesPath = Path.Combine(m_SavedgamesPath, @"Frontier Developments\Elite Dangerous");
@@ -172,10 +163,10 @@ namespace IBE.FileScanner
                     m_JournalScanner_Thread.IsBackground    = false;
                     m_JournalScanner_Thread.Start();
 
-                    m_FileWatcher                       = new FileSystemWatcher(m_SavedgamesPath, "*.log");
-                    m_FileWatcher.EnableRaisingEvents   = true;
+                    m_FileWatcher                           = new FileSystemWatcher(m_SavedgamesPath, "*.log");
+                    m_FileWatcher.EnableRaisingEvents       = true;
 
-                    m_FileWatcher.Created += FileWatcher_Created;
+                    m_FileWatcher.Created                  += FileWatcher_Created;
                 }
 
             }
@@ -195,16 +186,19 @@ namespace IBE.FileScanner
             {
                 m_Stop = true;
 
-                do
+                if(m_JournalScanner_Thread != null)
                 {
-                    // wait until thread is not running anymore
-                    Thread.Sleep(25);
-                } while ((m_JournalScanner_Thread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0);
+                    do
+                    {
+                        // wait until thread is not running anymore
+                        Thread.Sleep(25);
+                    } while ((m_JournalScanner_Thread.ThreadState & (System.Threading.ThreadState.Stopped | System.Threading.ThreadState.Unstarted)) == 0);
 
-                m_FileWatcher.Dispose();
-                m_FileWatcher = null;
+                    m_FileWatcher.Dispose();
+                    m_FileWatcher = null;
 
-                m_JournalScanner_Thread = null;
+                    m_JournalScanner_Thread = null;
+                }
             }
             catch (Exception ex)
             {
@@ -235,6 +229,8 @@ namespace IBE.FileScanner
             Boolean isFirstRun = true;
             Boolean gotLatestEvent = false;
             JToken latestLocationEvent = null;
+            String lastEvent = "";
+            DateTime lastEventTime = DateTime.MinValue;
 
             m_NewFileDetected = false;
 
@@ -264,17 +260,15 @@ namespace IBE.FileScanner
                         {
                             Debug.Print(newFile);
 
-                            // add every new file, but only if it's "timevalue" is newer than the "timevalue" of the current file
-                            if(GetTimeValueFromFilename(newFile) > GetTimeValueFromFilename(m_LastScan_JournalFile))
+                            // add every new file, but only if 
+                            //  - it's "timevalue" is newer than the "timevalue" of the current file
+                            //  - it's last write time is not longer than 24 hours ago
+                            if((GetTimeValueFromFilename(newFile) > GetTimeValueFromFilename(m_LastScan_JournalFile)) && ((DateTime.Now - File.GetLastWriteTime(newFile)).TotalHours < 24))
                             {
                                 if(!newFiles.Contains(newFile))
                                 {
-                                    var pos = newFiles.FindIndex(x => (GetTimeValueFromFilename(x) < GetTimeValueFromFilename(newFile)));
-                                    if(pos <= 0)
-                                        newFiles.Insert(0, newFile); 
-                                    else
-                                        newFiles.Insert(pos, newFile); 
-                                    Debug.Print(pos.ToString());
+                                    var pos = newFiles.FindIndex(x => (GetTimeValueFromFilename(x) > GetTimeValueFromFilename(newFile))) + 1;
+                                    newFiles.Insert(pos, newFile); 
                                 }
                             }
                             else
@@ -324,7 +318,7 @@ namespace IBE.FileScanner
                         {
                             Program.DBCon.setIniValue(DB_GROUPNAME,   "LastScan_JournalFile",  m_LastScan_JournalFile);
 
-                            journalFileStream       = File.Open(m_LastScan_JournalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            journalFileStream     = File.Open(m_LastScan_JournalFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                             journalStreamReader   = new StreamReader(journalFileStream);
                         }
 
@@ -354,8 +348,8 @@ namespace IBE.FileScanner
                                 if(gotLatestEvent)
                                 {
                                     // every recognized event is accepted as new
-                                    Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_Event",     rawEventName);
-                                    Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_TimeStamp", rawTimeStamp.ToString());
+                                    lastEvent       = rawEventName;
+                                    lastEventTime   = rawTimeStamp;
 
                                     if(latestLocationEvent != null)
                                     {
@@ -407,6 +401,16 @@ namespace IBE.FileScanner
                                 }
                             }
                         }
+
+                        if(lastEventTime > DateTime.MinValue)
+                        {
+                            // only rewrite if we've got a new event
+                            Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_Event",     lastEvent);
+                            Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_TimeStamp", lastEventTime.ToString());
+
+                            lastEventTime = DateTime.MinValue;
+                        }
+
 
                         if(latestLocationEvent != null)
                         {
