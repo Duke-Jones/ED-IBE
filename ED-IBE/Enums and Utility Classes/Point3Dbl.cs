@@ -18,8 +18,8 @@ namespace IBE.Enums_and_Utility_Classes
         public Point3Dbl(double? xValue, double? yValue, double? zValue)
         {
             X = xValue;   
-            Y = xValue;   
-            Z = xValue;   
+            Y = yValue;   
+            Z = zValue;   
         }
 
         public double? X { get; set; }

@@ -1286,7 +1286,7 @@ namespace IBE
                 st.Start();
 
                 Program.SplashScreen.InfoAdd("starting logfile scanner");
-                Program.JournalScanner.Start();
+                //Program.JournalScanner.Start();
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
@@ -3228,30 +3228,48 @@ namespace IBE
         {
             try
             {
-                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
+                switch (e.EventType)
                 {
-                    setText(txtEventInfo,             "...jump recognized...");
+                    case FileScanner.EDJournalScanner.JournalEvent.Location:
+                        setText(txtEventInfo,             "got new location");
 
-                    Program.actualCondition.Location = "";
+                        Program.actualCondition.System          = e.Data.Value<String>("StarSystem");
+                        Program.actualCondition.Coordinates     = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
 
-                    // can't be docked anymore
-                    Program.CompanionIO.SetDocked(false);
+                        if(e.Data.Value<Boolean>("Docked"))
+                        {
+                            Program.actualCondition.Location    = e.Data.Value<String>("StationName");
 
-                    // from now it is allowed to send data to eddn immediately again
-                    Program.EDDNComm.SendingReset();
+                            // from now it is allowed to send data to eddn immediately again
+                            Program.EDDNComm.SendingReset();
+                        }
+                        else
+                        {
+                            Program.actualCondition.Location    = "";
+                        }
 
-                    // the location has changed -> the reference for all distances has changed  
-                    Program.PriceAnalysis.GUI.SignalizeChangedData();
+                        ShowLocationData();
+                        ShowStatus();
+                        
+                        break;
 
-                    Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
-                    Program.actualCondition.Coordinates = new Point3Dbl(e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[1]"), e.Data.Value<Double>("StarPos[2]"));
+                    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
+                        setText(txtEventInfo,             "...jump recognized...");
 
-                    /// after a system jump you can get data immediately
-                    Program.CompanionIO.RestTimeReset();
+                        Program.actualCondition.Location = "";
 
-                    ShowLocationData();
-                    ShowStatus();
+                        // from now it is allowed to send data to eddn immediately again
+                        Program.EDDNComm.SendingReset();
+
+                        Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
+                        Program.actualCondition.Coordinates = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
+
+                        ShowLocationData();
+                        ShowStatus();
+                        
+                        break;
                 }
+
 
 
             }
@@ -3564,6 +3582,11 @@ namespace IBE
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Program.JournalScanner.Start();
         }
 
         /// <summary>

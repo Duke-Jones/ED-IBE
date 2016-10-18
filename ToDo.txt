@@ -13,14 +13,19 @@ todo:
 * VoiceAttack interface
 
 * new interface for E:D-2.2-eventlog 
-
-
 * hint for problems with long installation paths
+* hint "how to update"
+* rise MessageBox when found a new version 
+
+
 *************************************************************************************
 
 done:
 
-
+  * journal scanner optimized
+  * fixed : bug in coordinate class
+  * fixed : users with empty ID can send data to eddn
+-------------------------------------------------------------------------------------         
   * ED 2.2: use journal instead of logfile, first chunk of changes
 -------------------------------------------------------------------------------------         
 v0.4.2

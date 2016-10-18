@@ -142,7 +142,7 @@ namespace IBE.MTPriceAnalysis
         /// register the LogfileScanner in the CommandersLog for the DataEvent
         /// </summary>
         /// <param name="journalScanner"></param>
-        public void registerLogFileScanner(FileScanner.EDJournalScanner journalScanner)
+        public void registerJournalScanner(FileScanner.EDJournalScanner journalScanner)
         {
             try
             {
@@ -238,10 +238,13 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
-                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
+                switch (e.EventType)
                 {
-                    GUI.RefreshColors();
-                    GUI.setFilterHasChanged(true);
+                    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
+                        GUI.RefreshColors();
+                        GUI.setFilterHasChanged(true);
+                        
+                        break;
                 }
             }
             catch (Exception ex)

@@ -1734,12 +1734,13 @@ bool disposed = false;
         {
             String retValue = "";
             String userName = "";
+            Guid parsedGUID;
 
             try
             {
                 retValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID");
 
-                if(String.IsNullOrEmpty(retValue))
+                if((!Guid.TryParse(retValue, out parsedGUID)) || (!parsedGUID.ToString().Equals(retValue)))
                 {
                     retValue = Guid.NewGuid().ToString();
                     Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID", retValue);
@@ -1749,7 +1750,7 @@ bool disposed = false;
                 {
                     userName = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName");
 
-                    if (String.IsNullOrEmpty(userName))
+                    if (String.IsNullOrWhiteSpace(userName))
                         Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserID");
                     else
                         retValue = userName;

@@ -387,7 +387,6 @@ namespace IBE
                     // initializing the LogfileScanner
                     //LogfileScanner                              = new EDLogfileScanner();
                     JournalScanner                              = new EDJournalScanner();
-                    JournalScanner.Start();
 
                     // EDDN Interface
                     EDDNComm = new IBE.EDDN.EDDNCommunicator();
@@ -395,18 +394,15 @@ namespace IBE
                     // EDSMComm Interface
                     EDSMComm = new IBE.EDSM.EDStarmapInterface(Program.DBCon);
 
-                    // forwards a potentially new system or station information to database
-                    Program.JournalScanner.JournalEventRecieved += JournalEventRecieved;
-                    Program.CompanionIO.LocationInfo            += ExternalData_LocationInfo;
-
-                    // register the LogfileScanner in the CommandersLog for the DataSavedEvent-event
-                    CommandersLog.registerLogFileScanner(JournalScanner);
+                    CommandersLog.registerJournalScanner(JournalScanner);
                     CommandersLog.registerExternalTool(CompanionIO);
+
+                    CompanionIO.registerJournalScanner(JournalScanner);
                     
-                    PriceAnalysis.registerLogFileScanner(JournalScanner);
+                    PriceAnalysis.registerJournalScanner(JournalScanner);
                     PriceAnalysis.registerExternalTool(CompanionIO);
 
-                    EDSMComm.registerLogFileScanner(JournalScanner);
+                    EDSMComm.registerJournalScanner(JournalScanner);
 
                     // Plausibility-Checker
                     PlausibiltyCheck = new PlausibiltyChecker();
@@ -474,42 +470,6 @@ namespace IBE
                 throw new Exception("Error while cleaning up", ex);
             }
 
-        }
-
-        /// <summary>
-        /// forwards a potentially new system or station information to database
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
-        {
-            try
-            {
-                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
-                    Data.checkPotentiallyNewSystemOrStation(e.Data.Value<String>("StarSystem"), "", new Point3Dbl(e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[1]"), e.Data.Value<Double>("StarPos[2]")), false);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in JournalEventRecieved-event", ex); 
-            }
-        }
-
-        /// <summary>
-        /// forwards a potentially new system or station information to database
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void ExternalData_LocationInfo(object sender, IBE.IBECompanion.DataEventBase.LocationInfoEventArgs e)
-        {                                                       
-            try
-            {
-                Data.checkPotentiallyNewSystemOrStation(e.System, e.Location, null, false);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while in ExternalData_LocationInfo", ex); 
-            }
         }
 
         private static void PrepareDepFiles()

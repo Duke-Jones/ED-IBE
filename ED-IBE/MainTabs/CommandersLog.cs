@@ -622,7 +622,7 @@ namespace IBE.MTCommandersLog
         /// register the LogfileScanner in the CommandersLog for the DataEvent
         /// </summary>
         /// <param name="journalScanner"></param>
-        public void registerLogFileScanner(FileScanner.EDJournalScanner journalScanner)
+        public void registerJournalScanner(FileScanner.EDJournalScanner journalScanner)
         {
             try
             {
@@ -715,8 +715,15 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
-                    SaveEvent(e.Data.Value<DateTime>("timestamp"), e.Data.Value<String>("StarSystem"), "", "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Jumped To", "", e.Data.Value<Double>("JumpDist"));
+                switch (e.EventType)
+                {
+                    case FileScanner.EDJournalScanner.JournalEvent.Docked:
+                        SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
+                        break;
+                    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
+                        SaveEvent(e.Data.Value<DateTime>("timestamp"), e.Data.Value<String>("StarSystem"), "", "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Jumped To", "", e.Data.Value<Double>("JumpDist"));
+                        break;
+                }
 
             }
             catch (Exception ex)
@@ -729,12 +736,6 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) > 0)
-                {
-                  
-                    SaveEvent(DateTime.UtcNow, e.System, e.Location, "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
-                }
-
                 if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.DataCollected) > 0)
                 {
                     createMarketdataCollectedEvent();

@@ -12,15 +12,17 @@ using System.Diagnostics;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace IBE.IBECompanion
 {
     public class CompanionData : DataEventBase           
     {
-        private EliteCompanion                  m_CompanionIO;
-        private JObject                         m_joCompanion = new JObject();
-        private ProfileResponse                 m_cachedResponse;
-        private System.Timers.Timer             m_reGetTimer;
+        private EliteCompanion                          m_CompanionIO;
+        private JObject                                 m_joCompanion = new JObject();
+        private ProfileResponse                         m_cachedResponse;
+        private System.Timers.Timer                     m_reGetTimer;
+        private FileScanner.EDJournalScanner            m_JournalScanner;
 
         /// <summary>
         /// creates the interface object
@@ -528,5 +530,151 @@ namespace IBE.IBECompanion
 
             return creditsTotal;
         }
+
+        /// <summary>
+        /// register the LogfileScanner in the CommandersLog for the DataEvent
+        /// </summary>
+        /// <param name="JournalScanner"></param>
+        public void registerJournalScanner(FileScanner.EDJournalScanner JournalScanner)
+        {
+            try
+            {
+                if(m_JournalScanner == null)
+                { 
+                    m_JournalScanner = JournalScanner;
+                    m_JournalScanner.JournalEventRecieved += JournalEventRecievedAsync;
+                }
+                else 
+                    throw new Exception("LogfileScanner already registered");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while registering the LogfileScanner", ex);
+            }
+        }
+
+        /// <summary>
+        /// event-worker for JournalEventRecieved-event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public async void JournalEventRecievedAsync(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
+        {
+            try
+            {
+                switch (e.EventType)
+                {
+                    case  FileScanner.EDJournalScanner.JournalEvent.Docked:
+                        RestTimeReset();
+                        SetDocked(true);
+
+                        var t = new Task(() => GetData(e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName")));
+                        t.Start();
+                        await t;                        
+
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
+                        // can't be docked anymore
+                        SetDocked(false);
+
+                        /// after a system jump you can get data immediately
+                        RestTimeReset();
+
+                        break;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+            }
+        }
+
+        private void GetData(String systemName, String stationName)
+        {
+            String extSystem    = "";
+            String extStation   = "";
+            DialogResult MBResult;
+
+            try
+            {
+                if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
+                { 
+                    // delay to ensure companion io has got the landing information from the FD servers
+                    System.Threading.Thread.Sleep(2000);
+
+                    // allow refresh of companion data
+                    Program.CompanionIO.GetProfileData(false);
+
+                    if(Program.CompanionIO.IsLanded())
+                    {
+                        extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
+                        extStation = Program.CompanionIO.GetValue("lastStarport.name");
+
+                        if(!systemName.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            //MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
+                            //                                                        "Confirm even so ?", "Unexpected system retrieved !",
+                            //                                                        MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                        }
+                        else
+                        {
+                            Program.CompanionIO.ConfirmLocation(extSystem, extStation);
+                            //txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
+
+                            if(Program.CompanionIO.StationHasMarketData())
+                            {
+                                Int32 count = Program.CompanionIO.ImportMarketData();
+
+                                if(false) // && cbEDDNOverride.Checked)
+                                {
+                                    Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
+                                }
+
+                                //if(count > 0)
+                                //    txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
+                                //else
+                                //    txtEventInfo.Text             = String.Format("getting market data...no market data available !");                        
+                            }
+                            
+
+                            if(Program.CompanionIO.StationHasShipyardData())
+                            {
+                                Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                            }
+                            else if(Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Location_ID))
+                            {
+                                // probably companion error, try once again in 5 seconds
+                                Program.CompanionIO.ReGet_StationData();                                
+                            }
+
+                            if(Program.CompanionIO.StationHasOutfittingData())
+                                Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+                            
+                        }
+                    }
+                    else
+                    { 
+                        //txtEventInfo.Text             = "You're not docked";                        
+                    }
+
+                }
+                else
+                {
+                    //MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    //txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
+                }
+
+                //ShowStatus();
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmdEventLanded_Click");
+            }
+        }
+
     }
 }

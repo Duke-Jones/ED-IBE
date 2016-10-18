@@ -138,7 +138,7 @@ namespace IBE.EDSM
         /// register the LogfileScanner in the CommandersLog for the DataEvent
         /// </summary>
         /// <param name="JournalScanner"></param>
-        public void registerLogFileScanner(FileScanner.EDJournalScanner JournalScanner)
+        public void registerJournalScanner(FileScanner.EDJournalScanner JournalScanner)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace IBE.EDSM
             try
             {
                 if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
-                    TransmitVisit(e.Data.Value<String>("StarSystem"), e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[0]"), e.Data.Value<Double>("StarPos[0]"), e.Data.Value<DateTime>("timestamp"));
+                    TransmitVisit(e.Data.Value<String>("StarSystem"), (Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][0], e.Data.Value<DateTime>("timestamp"));
 
             }
             catch (Exception ex)

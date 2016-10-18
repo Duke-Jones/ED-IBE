@@ -472,6 +472,9 @@
     <EmbeddedResource Include="ErrorHandling\ErrorViewer.resx">
       <DependentUpon>ErrorViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmDataIO.de.resx">
+      <DependentUpon>frmDataIO.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUIColorsView.resx">
       <DependentUpon>GUIColorsView.cs</DependentUpon>
     </EmbeddedResource>
