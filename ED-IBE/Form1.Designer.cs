@@ -38,6 +38,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.cbEDDNOverride = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,9 +48,7 @@
             this.namesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.gbEvents = new System.Windows.Forms.GroupBox();
-            this.cbEDDNOverride = new System.Windows.Forms.CheckBox();
-            this.txtEventInfo = new System.Windows.Forms.TextBox();
-            this.cmdEventMarketData = new System.Windows.Forms.Button();
+            this.txtEventInfo = new System.Windows.Forms.ComboBox();
             this.cmdEventLanded = new System.Windows.Forms.Button();
             this.tlpData = new System.Windows.Forms.TableLayoutPanel();
             this.panel12 = new System.Windows.Forms.Panel();
@@ -244,7 +243,6 @@
             this.txtPosition_Z = new System.Windows.Forms.TextBox();
             this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
-            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -299,7 +297,7 @@
             // 
             this.txtRestTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRestTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRestTime.Location = new System.Drawing.Point(88, 42);
+            this.txtRestTime.Location = new System.Drawing.Point(196, 19);
             this.txtRestTime.Name = "txtRestTime";
             this.txtRestTime.ReadOnly = true;
             this.txtRestTime.Size = new System.Drawing.Size(26, 22);
@@ -312,7 +310,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(47, 46);
+            this.label6.Location = new System.Drawing.Point(155, 23);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(43, 13);
             this.label6.TabIndex = 64;
@@ -367,6 +365,19 @@
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.label3, "Until timer is running you\'ll work with cached data from the last call,");
             // 
+            // cbEDDNOverride
+            // 
+            this.cbEDDNOverride.AutoSize = true;
+            this.cbEDDNOverride.Location = new System.Drawing.Point(17, 45);
+            this.cbEDDNOverride.Name = "cbEDDNOverride";
+            this.cbEDDNOverride.Size = new System.Drawing.Size(154, 17);
+            this.cbEDDNOverride.TabIndex = 65;
+            this.cbEDDNOverride.Text = "send market data to EDDN";
+            this.toolTip1.SetToolTip(this.cbEDDNOverride, "Quick decision switch for \"send market data to EDDN\". \r\nWill be reset to it\'s pre" +
+        "set after collecting data next time.\r\nDoes not affect the settings for outfittin" +
+        "g and shipyard data.\r\n\r\n");
+            this.cbEDDNOverride.UseVisualStyleBackColor = true;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -417,12 +428,10 @@
             // 
             // gbEvents
             // 
-            this.gbEvents.Controls.Add(this.button1);
             this.gbEvents.Controls.Add(this.cbEDDNOverride);
             this.gbEvents.Controls.Add(this.txtRestTime);
             this.gbEvents.Controls.Add(this.label6);
             this.gbEvents.Controls.Add(this.txtEventInfo);
-            this.gbEvents.Controls.Add(this.cmdEventMarketData);
             this.gbEvents.Controls.Add(this.cmdEventLanded);
             this.gbEvents.Location = new System.Drawing.Point(12, 27);
             this.gbEvents.Name = "gbEvents";
@@ -431,36 +440,17 @@
             this.gbEvents.TabStop = false;
             this.gbEvents.Text = "Events";
             // 
-            // cbEDDNOverride
-            // 
-            this.cbEDDNOverride.AutoSize = true;
-            this.cbEDDNOverride.Location = new System.Drawing.Point(179, 45);
-            this.cbEDDNOverride.Name = "cbEDDNOverride";
-            this.cbEDDNOverride.Size = new System.Drawing.Size(101, 17);
-            this.cbEDDNOverride.TabIndex = 65;
-            this.cbEDDNOverride.Text = "Send To EDDN";
-            this.cbEDDNOverride.UseVisualStyleBackColor = true;
-            // 
             // txtEventInfo
             // 
             this.txtEventInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtEventInfo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtEventInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEventInfo.Location = new System.Drawing.Point(6, 81);
+            this.txtEventInfo.MaxDropDownItems = 10;
             this.txtEventInfo.Name = "txtEventInfo";
-            this.txtEventInfo.ReadOnly = true;
-            this.txtEventInfo.Size = new System.Drawing.Size(469, 22);
+            this.txtEventInfo.Size = new System.Drawing.Size(469, 24);
             this.txtEventInfo.TabIndex = 63;
-            this.txtEventInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // cmdEventMarketData
-            // 
-            this.cmdEventMarketData.Location = new System.Drawing.Point(162, 17);
-            this.cmdEventMarketData.Name = "cmdEventMarketData";
-            this.cmdEventMarketData.Size = new System.Drawing.Size(132, 25);
-            this.cmdEventMarketData.TabIndex = 62;
-            this.cmdEventMarketData.Text = "Import Market Data";
-            this.cmdEventMarketData.UseVisualStyleBackColor = true;
-            this.cmdEventMarketData.Click += new System.EventHandler(this.cmdEventMarketData_Click);
+            this.txtEventInfo.DropDownClosed += new System.EventHandler(this.txtEventInfo_DropDownClosed);
             // 
             // cmdEventLanded
             // 
@@ -468,7 +458,7 @@
             this.cmdEventLanded.Name = "cmdEventLanded";
             this.cmdEventLanded.Size = new System.Drawing.Size(132, 25);
             this.cmdEventLanded.TabIndex = 13;
-            this.cmdEventLanded.Text = "Landed / Station Data";
+            this.cmdEventLanded.Text = "Re-collect station data";
             this.cmdEventLanded.UseVisualStyleBackColor = true;
             this.cmdEventLanded.Click += new System.EventHandler(this.cmdEventLanded_Click);
             // 
@@ -2612,16 +2602,6 @@
             this.tsEDSMQueue.Size = new System.Drawing.Size(95, 17);
             this.tsEDSMQueue.Text = "toolStripStatusLabel1";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(352, 24);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 66;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2882,9 +2862,8 @@
         private System.Windows.Forms.ToolStripMenuItem iOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem companionToolStripMenuItem;
         private System.Windows.Forms.Button cmdEventLanded;
-        private System.Windows.Forms.Button cmdEventMarketData;
         private System.Windows.Forms.GroupBox gbEvents;
-        public System.Windows.Forms.TextBox txtEventInfo;
+        public System.Windows.Forms.ComboBox txtEventInfo;
         private System.Windows.Forms.ToolStripMenuItem eDDNToolStripMenuItem;
         private System.Windows.Forms.Label label6;
         public System.Windows.Forms.TextBox txtRestTime;
@@ -2909,7 +2888,6 @@
         private System.Windows.Forms.PictureBox pbStatus_ShipyardData;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox cbEDDNOverride;
         private System.Windows.Forms.PictureBox pbStatus_MarketDataEDDN;
         private System.Windows.Forms.PictureBox pbStatus_ShipyardDataEDDN;
         private System.Windows.Forms.PictureBox pbStatus_OutfittingDataEDDN;
@@ -2927,7 +2905,7 @@
         private System.Windows.Forms.ToolStripMenuItem eDSMToolStripMenuItem;
         private System.Windows.Forms.StatusStrip StatusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tsEDSMQueue;
-        private System.Windows.Forms.Button button1;
+        public System.Windows.Forms.CheckBox cbEDDNOverride;
     }
 }
 

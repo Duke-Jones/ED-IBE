@@ -20,10 +20,13 @@ todo:
 
 *************************************************************************************
 
+
 done:
 
-
-
+  * journal scanner optimized
+     - added events: Fileheader, Location, Docked, Undocked, FSDJump, Died, Resurrect
+  * avoid sending data to EDDN/EDSM when running a beta version of E:D
+-------------------------------------------------------------------------------------         
   * optimized journal scanner
 -------------------------------------------------------------------------------------         
   * journal scanner optimized

@@ -264,7 +264,10 @@ namespace IBE.SQL
                                                             "tbpowerstate", 
                                                             "tblanguage", 
                                                             "tbtrustedsenders",
-                                                            "tbdnmap_commodity"};
+                                                            "tbdnmap_commodity",
+                                                            "tbcommoditybase",
+                                                            "tboutfittingbase",
+                                                            "tbshipyardbase"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Data;
 using IBE.Enums_and_Utility_Classes;
+using Newtonsoft.Json.Linq;
 
 namespace IBE
 {
@@ -12,12 +13,13 @@ namespace IBE
     /// </summary>
     public class Condition
     {
-        private Point3Dbl _Coordinates;
-        public const String        DB_GROUPNAME                     = "Condition";
-        private const string       STR_CurrentSystem_ID             = "CurrentSystem";
-        private const string       STR_CurrentStation_ID            = "CurrentStation";
-        private const string       STR_CurrentSystemCoords          = "CurrentCoordinates";
-        private MemoryCache        m_DataCache                      = MemoryCache.Default;
+        private Point3Dbl                           _Coordinates;
+        public const String                         DB_GROUPNAME                     = "Condition";
+        private const string                        STR_CurrentSystem_ID             = "CurrentSystem";
+        private const string                        STR_CurrentStation_ID            = "CurrentStation";
+        private const string                        STR_CurrentSystemCoords          = "CurrentCoordinates";
+        private MemoryCache                         m_DataCache                      = MemoryCache.Default;
+        private FileScanner.EDJournalScanner        m_JournalScanner = null;
 
         public Condition()
         {
@@ -147,6 +149,65 @@ namespace IBE
                 return retValue;
             }
         }
+
+        public void RegisterJournalScanner(FileScanner.EDJournalScanner journalScanner)
+        {
+            try
+            {
+                if(m_JournalScanner == null)
+                { 
+                    m_JournalScanner = journalScanner;
+                    m_JournalScanner.JournalEventRecieved += JournalEventRecieved;
+                }
+                else 
+                    throw new Exception("LogfileScanner already registered");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while registering the LogfileScanner", ex);
+            }
+        }
+
+        /// <summary>
+        /// event-worker for JournalEventRecieved-event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
+        {
+            try
+            {
+                switch (e.EventType)
+                {
+                    case FileScanner.EDJournalScanner.JournalEvent.Fileheader:
+                        JournalHeader = (JObject)e.Data;
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+            }
+        }
+
+        public JObject JournalHeader { get; set; }
+
+
+
+        /// <summary>
+        /// returns if the active E:D version is a beta or not
+        /// </summary>
+        public Boolean GameversionIsBeta
+        {
+            get
+            {
+                return JournalHeader.SelectToken("gameversion").ToString().ToLower().Contains("beta");
+            }
+        }
+
+        
 
     }
 }

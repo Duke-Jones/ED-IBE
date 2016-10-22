@@ -569,9 +569,18 @@ namespace IBE.IBECompanion
                         RestTimeReset();
                         SetDocked(true);
 
-                        var t = new Task(() => GetData(e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName")));
-                        t.Start();
-                        await t;                        
+                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
+                           (!Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                        {
+                            var t = new Task(() => RefreshAndImport(e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName")));
+                            t.Start();
+                            await t;
+                        }
+
+                        break;
+
+                    case  FileScanner.EDJournalScanner.JournalEvent.Undocked:
+                        SetDocked(false);
 
                         break;
 
@@ -584,6 +593,8 @@ namespace IBE.IBECompanion
 
                         break;
 
+
+
                 }
             }
             catch (Exception ex)
@@ -592,7 +603,7 @@ namespace IBE.IBECompanion
             }
         }
 
-        private void GetData(String systemName, String stationName)
+        public void RefreshAndImport(String systemName, String stationName)
         {
             String extSystem    = "";
             String extStation   = "";
@@ -613,32 +624,28 @@ namespace IBE.IBECompanion
                         extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
                         extStation = Program.CompanionIO.GetValue("lastStarport.name");
 
-                        if(!systemName.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase))
+                        if(!systemName.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && (!Program.actualCondition.GameversionIsBeta))
                         {
-                            //MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
-                            //                                                        "Confirm even so ?", "Unexpected system retrieved !",
-                            //                                                        MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                            Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "external recieved system does not correspond to the system from the jounal !");
                         }
                         else
                         {
-                            Program.CompanionIO.ConfirmLocation(extSystem, extStation);
-                            //txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
-
                             if(Program.CompanionIO.StationHasMarketData())
                             {
                                 Int32 count = Program.CompanionIO.ImportMarketData();
-
-                                if(false) // && cbEDDNOverride.Checked)
+                                
+                                if(Program.MainForm.cbEDDNOverride.Checked)
                                 {
                                     Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
                                 }
 
-                                //if(count > 0)
-                                //    txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
-                                //else
-                                //    txtEventInfo.Text             = String.Format("getting market data...no market data available !");                        
+                                if(count > 0)
+                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("getting market data...{0} prices collected", count));                        
+                                else
+                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("getting market data...no market data available !"));        
+                                                
                             }
-                            
+                            Program.MainForm.SetQuickDecisionSwitch();
 
                             if(Program.CompanionIO.StationHasShipyardData())
                             {
@@ -657,17 +664,16 @@ namespace IBE.IBECompanion
                     }
                     else
                     { 
-                        //txtEventInfo.Text             = "You're not docked";                        
+                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "You're not docked");                        
                     }
 
                 }
                 else
                 {
-                    //MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    //txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
+                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Can't comply, companion interface not ready !");                        
                 }
 
-                //ShowStatus();
+                Program.MainForm.ShowStatus();
 
             }
             catch (Exception ex)

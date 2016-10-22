@@ -76,10 +76,11 @@ namespace IBE
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
 
-
                         Init();
 
-                        Application.Run(new Form1());
+                        Program.MainForm = new Form1();
+
+                        Application.Run(Program.MainForm);
 
                         Cleanup();
                     }
@@ -257,7 +258,6 @@ namespace IBE
 
         public static GUIColors                             Colors;
         public static IBECompanion.CompanionData            CompanionIO;
-//        public static ExternalDataInterface                 ExternalData;
         public static DBConnector                           DBCon = null;
         public static STA.Settings.INIFile                  IniFile;
         private static DBProcess                            EliteDBProcess;
@@ -271,6 +271,8 @@ namespace IBE
         public static EDSM.EDStarmapInterface               EDSMComm;
         public static PlausibiltyChecker                    PlausibiltyCheck;
         public static GameSettings                          GameSettings;
+        public static Form1                                 MainForm;
+
 #if useVNC 
         public static VncServer                             VNCAppServer;
 #endif
@@ -403,6 +405,9 @@ namespace IBE
                     PriceAnalysis.registerExternalTool(CompanionIO);
 
                     EDSMComm.registerJournalScanner(JournalScanner);
+
+                    actualCondition.RegisterJournalScanner(JournalScanner);
+                    
 
                     // Plausibility-Checker
                     PlausibiltyCheck = new PlausibiltyChecker();

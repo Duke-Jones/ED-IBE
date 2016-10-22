@@ -1260,6 +1260,64 @@ namespace IBE
             }
         }
 
+        private static void UpdateTo_0_5_0(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.0...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                // add changes to the database
+                sqlString = "-- MySQL Workbench Synchronization \n" +
+                            "-- Generated: 2016-10-05 21:13 \n" +
+                            "                                                                                                                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (13, 'Resurrect');                           \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (14, 'Died');                                \n";
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.0...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.4.0", ex);
+            }
+        }
+
+        
+
         static void sqlScript_ScriptCompleted(object sender, EventArgs e)
         {
             m_MREvent.Set();   

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using IBE.SQL;
 using IBE.SQL.Datasets;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace IBE.MTCommandersLog
 {
@@ -718,10 +719,92 @@ namespace IBE.MTCommandersLog
                 switch (e.EventType)
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
-                        SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
+
+                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
+                           (!Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                            SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
+
+                        else if(e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2))) != null)
+                        {
+                            var resurrectEvent = e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2)));
+
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      e.Data.Value<String>("StarSystem"), 
+                                      e.Data.Value<String>("StationName"), 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Resurrect", 
+                                      String.Format("option: {0}\ncost: {1} cr.\nbankrupt = {2}", 
+                                                    resurrectEvent.Data.Value<String>("Option"), 
+                                                    resurrectEvent.Data.Value<Int32>("Cost"), 
+                                                    resurrectEvent.Data.Value<Boolean>("Bankrupt") ? "yes" : "no"));
+
+                        }
+                        
                         break;
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
-                        SaveEvent(e.Data.Value<DateTime>("timestamp"), e.Data.Value<String>("StarSystem"), "", "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Jumped To", "", e.Data.Value<Double>("JumpDist"));
+                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                  e.Data.Value<String>("StarSystem"),
+                                  "", 
+                                  "", 
+                                  "", 
+                                  0, 
+                                  0, 
+                                  Program.CompanionIO.SGetCreditsTotal(), 
+                                  "Jumped To", 
+                                  "", 
+                                  e.Data.Value<Double>("JumpDist"));
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Died:
+                        String killInfo= "";
+                        IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
+
+                        if(e.Data.Value<String>("KillerName") != null)
+                        {
+                            
+                            killInfo =  String.Format("killed by \t: {0}\n" +
+                                                      "ship \t: {1}\n" +
+                                                      "rank \t: {2}", 
+                                                      (e.Data.Value<String>("KillerName_Localised") != null) ? e.Data.Value<String>("KillerName_Localised") : e.Data.Value<String>("KillerName"), 
+                                                      cmpConverter.GetShipNameFromSymbol(Program.Data.BaseData.tbshipyardbase, e.Data.Value<String>("KillerShip")), 
+                                                      e.Data.Value<String>("KillerRank")); 
+
+
+                        }
+                        else if(e.Data.Value<Object>("Killers") != null)
+                        {
+                            killInfo = "killed by wing:\n";
+                            Int32 counter = 1;
+                            foreach (JToken killerData in e.Data.SelectTokens("Killers.[*]"))
+                            {
+
+                                killInfo +=  String.Format("{4}{3}. \t{0}, \t{1}, \t{2}", 
+                                                           killerData.Value<String>("Name"), 
+                                                           cmpConverter.GetShipNameFromSymbol(Program.Data.BaseData.tbshipyardbase, killerData.Value<String>("Ship")), 
+                                                           killerData.Value<String>("Rank"), 
+                                                           counter, 
+                                                           counter > 1 ? "\n":""); 
+                                counter++;
+                            }
+                        }
+
+                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                  Program.actualCondition.System, 
+                                  "", 
+                                  "", 
+                                  "", 
+                                  0, 
+                                  0, 
+                                  Program.CompanionIO.SGetCreditsTotal(), 
+                                  "Died", 
+                                  killInfo);
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Resurrect:
                         break;
                 }
 

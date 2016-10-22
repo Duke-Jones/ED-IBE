@@ -1193,6 +1193,23 @@ namespace IBE
                 Destination.Text = newText;
         }
 
+        private delegate void del_AddComboboxLine(ComboBox Destination, String newText, Int32 position, Int32 maxLength);
+
+        public void AddComboboxLine(ComboBox Destination, String newText, Int32 position=0, Int32 maxLength=10)
+        {
+            if(Destination.InvokeRequired)
+                Destination.Invoke(new del_AddComboboxLine(AddComboboxLine), Destination, newText, position, maxLength);
+            else
+            {
+                Destination.Items.Insert(position, newText);
+
+                Destination.SelectedIndex = 0;
+
+                while (Destination.Items.Count > maxLength)
+                    Destination.Items.RemoveAt(Destination.Items.Count-1);
+            }
+        }
+
         #region Help button handlers
         private void ShowOcrHelpClick(object sender, EventArgs e)
         {
@@ -1308,8 +1325,6 @@ namespace IBE
 
                 SetQuickDecisionSwitch();
 
-                cbEDDNOverride.CheckedChanged += cbEDDNOverride_CheckedChanged;
-
                 Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
                 st.Start();
 
@@ -1352,6 +1367,7 @@ namespace IBE
 
                 this.Enabled = true;
 
+                Program.JournalScanner.Start();
                 Program.StartVNCServer(this);
                 
             }
@@ -1365,7 +1381,7 @@ namespace IBE
         /// <summary>
         /// sets the "Quick Decision Checkbox" value in dependance of the settings
         /// </summary>
-        private void SetQuickDecisionSwitch()
+        public void SetQuickDecisionSwitch()
         {
             try
             { 
@@ -1407,18 +1423,6 @@ namespace IBE
             catch (Exception ex)
             {
                 throw new Exception("Error while setting the quick decision switch", ex);
-            }
-        }
-
-        void cbEDDNOverride_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", cbEDDNOverride.Checked.ToString());
-            }
-            catch (Exception ex)
-            {
-                CErr.processError(ex, "Error in cbEDDNOverride_CheckedChanged");
             }
         }
 
@@ -3231,7 +3235,13 @@ namespace IBE
                 switch (e.EventType)
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Location:
-                        setText(txtEventInfo,             "got new location");
+                        
+                        if(Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem")) && 
+                           Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName")))
+                            AddComboboxLine(txtEventInfo,             "current location confirmed");
+                        else
+                            AddComboboxLine(txtEventInfo,             "got new location");
+
 
                         Program.actualCondition.System          = e.Data.Value<String>("StarSystem");
                         Program.actualCondition.Coordinates     = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
@@ -3254,7 +3264,7 @@ namespace IBE
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
-                        setText(txtEventInfo,             "...jump recognized...");
+                        AddComboboxLine(txtEventInfo,             "...jump recognized...");
 
                         Program.actualCondition.Location = "";
 
@@ -3263,6 +3273,32 @@ namespace IBE
 
                         Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
                         Program.actualCondition.Coordinates = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
+
+                        ShowLocationData();
+                        ShowStatus();
+                        
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Docked:
+                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
+                           (!Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                        {
+                            AddComboboxLine(txtEventInfo,       "...docked...");
+
+                            Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
+                            Program.actualCondition.Location    = e.Data.Value<String>("StationName");
+
+                            ShowLocationData();
+                            ShowStatus();
+                        }
+
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Undocked:
+
+                        AddComboboxLine(txtEventInfo,       "...undocked...");
+
+                        Program.actualCondition.Location    = "";
 
                         ShowLocationData();
                         ShowStatus();
@@ -3414,75 +3450,9 @@ namespace IBE
 
         private void cmdEventLanded_Click(object sender, EventArgs e)
         {
-            String extSystem    = "";
-            String extStation   = "";
-            DialogResult MBResult;
-
             try
             {
-                if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
-                { 
-                    Cursor = Cursors.WaitCursor;
-
-                    MBResult = System.Windows.Forms.DialogResult.OK;
-
-                    txtEventInfo.Text = "checking for current station...";
-                    txtEventInfo.Refresh();
-
-                    // allow refresh of companion data
-                    Program.CompanionIO.GetProfileData(false);
-
-                    if(Program.CompanionIO.IsLanded())
-                    {
-                        extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
-                        extStation = Program.CompanionIO.GetValue("lastStarport.name");
-
-                        if(!Program.actualCondition.System.Equals(extSystem))
-                        {
-                            MBResult = MessageBox.Show(this, "The external recieved system does not correspond to the system from the logfile!\n" +
-                                                                                    "Confirm even so ?", "Unexpected system retrieved !",
-                                                                                    MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
-                        }
-
-                        if(MBResult == System.Windows.Forms.DialogResult.OK)
-                        {
-                            Program.CompanionIO.ConfirmLocation(extSystem, extStation);
-                            txtEventInfo.Text             = String.Format("landed on '{1}' in '{0}'", extSystem, extStation);                        
-
-                            if(Program.CompanionIO.StationHasShipyardData())
-                            {
-                                Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
-                            }
-                            else if(Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Location_ID))
-                            {
-                                // probably companion error, try once again in 5 seconds
-                                Program.CompanionIO.ReGet_StationData();                                
-                            }
-
-                            if(Program.CompanionIO.StationHasOutfittingData())
-                                Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
-                            
-                        }
-                        else
-                        {
-                            txtEventInfo.Text             = String.Format("location '{1}' in '{0}' not confirmed !", extSystem, extStation);                        
-                        }
-                    }
-                    else
-                    { 
-                        txtEventInfo.Text             = "You're not docked";                        
-                    }
-
-                    Cursor = Cursors.Default;
-                }
-                else
-                {
-                    MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
-                }
-
-                ShowStatus();
-
+                Program.CompanionIO.RefreshAndImport(Program.actualCondition.System, Program.actualCondition.Location);
             }
             catch (Exception ex)
             {
@@ -3584,15 +3554,22 @@ namespace IBE
             this.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Program.JournalScanner.Start();
+
+        }
+
+        private void txtEventInfo_DropDownClosed(object sender, EventArgs e)
+        {
+            txtEventInfo.SelectedIndex = 0;
+            tabCtrlMain.Select();
+            //cmdEventLanded.Select();
         }
 
         /// <summary>
         /// update the status information of companion io
         /// </summary>
-        private void ShowStatus()
+        public void ShowStatus()
         {
             try
             {
@@ -3663,8 +3640,6 @@ namespace IBE
                         else
                             pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_off;
 
-                        // can only collect market data if landed andn confirmed
-                        cmdEventMarketData.Enabled = (Program.actualCondition.Location_ID != null);
                     }
                     else if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok))
                     { 
@@ -3677,7 +3652,6 @@ namespace IBE
                         pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
                         pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
 
-                        cmdEventMarketData.Enabled      = false;
                     }
                     else
                     { 
@@ -3690,60 +3664,21 @@ namespace IBE
                         pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
                         pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
 
-                        txtEventInfo.Text                   = "No data recieved, servers may in maintenance mode !";
+                        AddComboboxLine(txtEventInfo, "No data recieved, servers may in maintenance mode !");
 
-                        cmdEventMarketData.Enabled      = false;
                     }
+
+                    // can only collect market data if landed andn confirmed
+                    cmdEventLanded.Enabled = (Program.actualCondition.Location_ID != null);
                 }
-            }
-        catch (Exception ex)
-        {
-            throw new Exception("Error while showing status infos", ex);
-        }
-    }
-
-        private void cmdEventMarketData_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
-                { 
-                    txtEventInfo.Text             = "getting market data...";                        
-
-                    if(Program.CompanionIO.StationHasMarketData())
-                    { 
-                        Int32 count = Program.CompanionIO.ImportMarketData();
-
-                        if(cbEDDNOverride.Checked)
-                        {
-                            Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
-                        }
-
-                        if(count > 0)
-                            txtEventInfo.Text             = String.Format("getting market data...{0} prices collected", count);                        
-                        else
-                            txtEventInfo.Text             = String.Format("getting market data...no market data available !");                        
-                    }
-                    else
-                        txtEventInfo.Text             = String.Format("...no market data available !");                        
-                    
-                }
-                else
-                {
-                    MessageBox.Show(this, "Can't comply, companion interface not ready !", "Companion IO", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    txtEventInfo.Text = "Can't comply, companion interface not ready !";                        
-                }
-
-                SetQuickDecisionSwitch();
-
-                ShowStatus();
-
             }
             catch (Exception ex)
             {
-                CErr.processError(ex, "Error in cmdEventMarketData_Click");
+                throw new Exception("Error while showing status infos", ex);
             }
         }
+
+
 
         private void tmrRefresh_Tick(object sender, EventArgs e)
         {

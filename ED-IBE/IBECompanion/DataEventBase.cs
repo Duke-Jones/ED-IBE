@@ -97,58 +97,6 @@ namespace IBE.IBECompanion
         #endregion
 
         /// <summary>
-        /// confirms the last retrieved location
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ConfirmLocation(String system, String station)
-        {
-            String OldSystemString          = "";
-            String OldLocationString        = "";
-            enExternalDataEvents ChangedIs  = enExternalDataEvents.None;
-
-            try
-            {
-                if(!Program.actualCondition.System.Equals(system) || !Program.actualCondition.Location.Equals(station))
-                {
-                    OldSystemString     = Program.actualCondition.System;
-                    OldLocationString   = Program.actualCondition.Location;
-
-                    ChangedIs = enExternalDataEvents.Landed;
-
-                    if(!Program.actualCondition.System.Equals(system))
-                        ChangedIs |= enExternalDataEvents.System;
-
-                    if(!Program.actualCondition.Location.Equals(station))
-                        ChangedIs |= enExternalDataEvents.Location;
-                }
-
-                Program.actualCondition.System   = system;
-                Program.actualCondition.Location = station;
-
-                if(ChangedIs != enExternalDataEvents.None)
-                { 
-                    // something has changed -> fire events
-                    var LI = new LocationInfoEventArgs() { System        = Program.actualCondition.System,  
-                                                           Location      = Program.actualCondition.Location};
-                    LocationInfo.Raise(this, LI);
-
-
-                    var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
-                                                              Location      = Program.actualCondition.Location,
-                                                              OldSystem     = OldSystemString,  
-                                                              OldLocation   = OldLocationString,
-                                                              Changed       = ChangedIs};
-                    ExternalDataEvent.Raise(this, EA);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while confirming retrieved location", ex);
-            }
-        }
-
-        /// <summary>
         /// collects the marketdata from a external tool
         /// </summary>
         public Int32 ImportMarketData()

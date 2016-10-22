@@ -727,127 +727,6 @@ bool disposed = false;
             SendingReset();
         }
 
-#if false
-
-        /// these functions should not used anymore
-
-        /// <summary>
-        /// register everything for sending with this function.
-        /// 2 seconds after the last registration all data will be sent automatically
-        /// </summary>
-        /// <param name="stationData"></param>
-        public void SendMarketData(CsvRow CommodityData, enInterface usedInterface)
-        {
-            if(m_SenderIsActivated && 
-               Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString()) &&
-                ((Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false) && (usedInterface == enInterface.API)) || 
-                 (Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",       true.ToString(), false) && (usedInterface == enInterface.OCR))))
-            {
-
-                // register next data row
-                if(usedInterface == enInterface.API)
-                {
-                    if((m_ID_of_Commodity_Station.Item1 != (CommodityData.SystemName + "|" + CommodityData.StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
-                    { 
-                        _Send_MarketData_API.Enqueue(CommodityData);
-
-                        // here we get only the id, the time will be set after sending
-                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(CommodityData.SystemName + "|" + CommodityData.StationName, DateTime.Now - new TimeSpan(0,65,0));
-
-                        // reset the timer
-                        _SendDelayTimer_Market.Start();
-
-                    }
-                }
-                else
-                { 
-                    _Send_MarketData_OCR.Enqueue(CommodityData);
-
-                    // reset the timer
-                    _SendDelayTimer_Market.Start();
-                }
-
-
-            }
-        }
-
-        /// <summary>
-        /// register everything for sending with this function.
-        /// 2 seconds after the last registration all data will be sent automatically
-        /// </summary>
-        /// <param name="stationData"></param>
-        public void SendMarketData(List<CsvRow> csvRowList, enInterface usedInterface)
-        {
-            if(m_SenderIsActivated && 
-               Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString()) &&
-                ((Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false) && (usedInterface == enInterface.API)) || 
-                 (Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",       true.ToString(), false) && (usedInterface == enInterface.OCR))))
-            {
-                if((m_ID_of_Commodity_Station.Item1 != (csvRowList[0].SystemName + "|" + csvRowList[0].StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60) || (usedInterface == enInterface.OCR))
-                { 
-                    // reset the timer
-                    _SendDelayTimer_Market.Start();
-
-                    // register rows
-                    foreach (CsvRow csvRowListItem in csvRowList)
-                        if(usedInterface == enInterface.API)
-                            _Send_MarketData_API.Enqueue(csvRowListItem);
-                        else
-                            _Send_MarketData_OCR.Enqueue(csvRowListItem);
-
-                    // reset the timer
-                    _SendDelayTimer_Market.Start();
-
-                    if(usedInterface == enInterface.API)
-                    { 
-                        // here we get only the id, the time will be set after sending
-                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(csvRowList[0].SystemName + "|" + csvRowList[0].StationName, DateTime.Now - new TimeSpan(0,65,0));
-                    }
-
-                }
-            }
-        }
-
-        /// <summary>
-        /// register everything for sending with this function.
-        /// 2 seconds after the last registration all data will be sent automatically
-        /// </summary>
-        /// <param name="stationData"></param>
-        public void SendMarketData(String[] csv_Strings, enInterface usedInterface)
-        {
-            if(m_SenderIsActivated && 
-               Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString()) &&
-                ((Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false) && (usedInterface == enInterface.API)) || 
-                 (Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOCRData",       true.ToString(), false) && (usedInterface == enInterface.OCR))))
-            {
-                CsvRow testRow = new CsvRow(csv_Strings[0]);
-
-                if((m_ID_of_Commodity_Station.Item1 != (testRow.SystemName + "|" + testRow.StationName)) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60) || (usedInterface == enInterface.OCR))
-                { 
-                    // reset the timer
-                    _SendDelayTimer_Market.Start();
-
-                    // register rows
-                    foreach (String csvRowString in csv_Strings)
-                        if(usedInterface == enInterface.API)
-                            _Send_MarketData_API.Enqueue(new CsvRow(csvRowString));
-                        else
-                            _Send_MarketData_OCR.Enqueue(new CsvRow(csvRowString));
-
-                    // reset the timer
-                    _SendDelayTimer_Market.Start();
-
-                    if(usedInterface == enInterface.API)
-                    { 
-                        // here we get only the id, the time will be set after sending
-                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(testRow.SystemName + "|" + testRow.StationName, DateTime.Now - new TimeSpan(0,65,0));
-                    }
-
-                }
-            }
-        }
-
-#endif
         /// <summary>
         /// send the commodity data of this station
         /// </summary>
@@ -1217,7 +1096,7 @@ bool disposed = false;
                     Data        = new EDDNCommodity_v3();
 
                     // test or real ?
-                    if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                    if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                     else
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3";
@@ -1374,7 +1253,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2";
@@ -1467,7 +1346,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/commodity/3";
@@ -1559,7 +1438,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if(Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test")
+                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2";

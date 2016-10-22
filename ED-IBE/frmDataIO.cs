@@ -1587,7 +1587,11 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while initiating the download of files", ex);
+                if(!ex.GetBaseException().Message.Contains("'api.github.com'"))
+                {
+                    throw new Exception("Error while initiating the download of files", ex);
+                }
+                
             }
         }
 

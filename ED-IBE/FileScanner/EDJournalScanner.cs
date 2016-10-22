@@ -30,6 +30,8 @@ namespace IBE.FileScanner
             Liftoff,
             Touchdown,
             FSDJump,
+            Died,
+            Resurrect,
             SupercruiseEntry,
             SupercruiseExit
         }
@@ -58,8 +60,9 @@ namespace IBE.FileScanner
                 Data        = null;
             }
 
-            public JournalEvent EventType    { get; set; }
-            public JToken       Data         { get; set; }
+            public JournalEvent                 EventType    { get; set; }
+            public JToken                       Data         { get; set; }
+            public List<JournalEventArgs>       History         { get; set; }
         }
 
 #endregion
@@ -229,8 +232,10 @@ namespace IBE.FileScanner
             Boolean isFirstRun = true;
             Boolean gotLatestEvent = false;
             JToken latestLocationEvent = null;
+            JToken latestFileHeader = null;
             String lastEvent = "";
             DateTime lastEventTime = DateTime.MinValue;
+            List<JournalEventArgs> history = new List<JournalEventArgs>();
 
             m_NewFileDetected = false;
 
@@ -332,6 +337,9 @@ namespace IBE.FileScanner
                             rawEventName = journalEntry.Value<String>("event");
                             rawTimeStamp = journalEntry.Value<DateTime>("timestamp");
 
+                            if(rawEventName == JournalEvent.Died.ToString())
+                                Debug.Print("here");
+
                             if ((rawEventName != null) && (rawTimeStamp != null))
                             {
                                 if(!Enum.TryParse<JournalEvent>(rawEventName, out eventName))
@@ -348,28 +356,45 @@ namespace IBE.FileScanner
                                 if(gotLatestEvent)
                                 {
                                     // every recognized event is accepted as new
-                                    lastEvent       = rawEventName;
-                                    lastEventTime   = rawTimeStamp;
+                                    lastEvent = rawEventName;
+                                    lastEventTime = rawTimeStamp;
 
-                                    if(latestLocationEvent != null)
-                                    {
-                                        // always inform about the latest location information
-                                        JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Location, Data = latestLocationEvent });
-                                        latestLocationEvent = null;
-                                    }
+                                    SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader);
 
                                     // switch what to do
                                     switch (eventName)
                                     {
                                         case JournalEvent.Fileheader:
-                                        case JournalEvent.Docked:
                                         case JournalEvent.Location:
+
+                                        case JournalEvent.Docked:
+                                        case JournalEvent.Undocked:
+
+                                        case JournalEvent.Liftoff:
+                                        case JournalEvent.Touchdown:
+
+                                        case JournalEvent.FSDJump:
+
+                                        case JournalEvent.Died:
+                                        case JournalEvent.Resurrect:
+
+                                            if(eventName == JournalEvent.Docked)
+                                                Debug.Print("stop");
+
                                             Debug.Print("accepted : " + eventName.ToString());
-                                            JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = eventName, Data = journalEntry });
+                                            JournalEventArgs newJournalArgItem = new JournalEventArgs() { EventType = eventName, Data = journalEntry, History = history };
+
+                                            JournalEventRecieved.Raise(this, newJournalArgItem);
+
+                                            newJournalArgItem.History = null;
+                                            history.Insert(0, newJournalArgItem);
+                                            if(history.Count > 5)
+                                                history.RemoveAt(5);
+
                                             break;
 
                                         default:
-                                            Debug.Print("ignored : <" + rawEventName + ">");
+                                            Debug.Print("ignored (contact): <" + rawEventName + ">");
 
                                             break;
                                     }
@@ -379,12 +404,47 @@ namespace IBE.FileScanner
                                     // switch what to do
                                     switch (eventName)
                                     {
+                                        case JournalEvent.Fileheader:
+                                            latestFileHeader = journalEntry;
+                                            break;
+
                                         case JournalEvent.Location:
                                             latestLocationEvent = journalEntry;
                                             break;
 
+                                        case JournalEvent.FSDJump:
+                                            if(latestLocationEvent != null)
+                                            {
+                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                latestLocationEvent["StationName"]  = "";
+                                                latestLocationEvent["Docked"]       = "false";
+                                                latestLocationEvent["StarPos"]      = journalEntry["StarPos"];
+                                                latestLocationEvent["Body"]         = "";
+                                                latestLocationEvent["Faction"]      = journalEntry["Faction"];
+                                                latestLocationEvent["Allegiance"]   = journalEntry["Allegiance"];
+                                                latestLocationEvent["Economy"]      = journalEntry["Economy"];
+                                                latestLocationEvent["Government"]   = journalEntry["Government"];
+                                                latestLocationEvent["Security"]     = journalEntry["Security"];
+
+                                                latestLocationEvent["BodyType"]     = "";
+                                                latestLocationEvent["StationType"]  = "";
+                                            }
+                                            
+                                            break;
+
+                                        case JournalEvent.Docked:
+                                            if(latestLocationEvent != null)
+                                            {
+                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                latestLocationEvent["StationName"]  = journalEntry["StationName"];
+                                                latestLocationEvent["Docked"]       = "true";
+                                                latestLocationEvent["StationType"]  = journalEntry["StationType"];;
+                                            }
+
+                                            break;
+
                                         default:
-                                            Debug.Print("ignored : <" + rawEventName + ">");
+                                            Debug.Print("ignored (seeking) : <" + rawEventName + ">");
                                             break;
                                     }
                                 }
@@ -411,13 +471,8 @@ namespace IBE.FileScanner
                             lastEventTime = DateTime.MinValue;
                         }
 
-
-                        if(latestLocationEvent != null)
-                        {
-                            // always inform about the latest location information
-                            JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Location, Data = latestLocationEvent });
-                            latestLocationEvent = null;
-                        }
+                        if(gotLatestEvent)
+                            SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader);
 
                         if(newFiles.Count > 0)
                         {
@@ -475,6 +530,30 @@ namespace IBE.FileScanner
 
             if(journalStreamReader != null)
                 journalStreamReader.Dispose();
+        }
+
+        private void SubmitReferenceEvents(ref JToken latestLocationEvent, ref JToken latestFileHeader)
+        {
+            try
+            {
+                if (latestFileHeader != null)
+                {
+                    // memorize the latest header
+                    JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Fileheader, Data = latestFileHeader });
+                    latestFileHeader = null;
+                }
+
+                if (latestLocationEvent != null)
+                {
+                    // always inform about the latest location information
+                    JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Location, Data = latestLocationEvent });
+                    latestLocationEvent = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing reference events", ex);
+            }
         }
 
         /// <summary>

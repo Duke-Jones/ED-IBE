@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using IBE.Enums_and_Utility_Classes;
 using System.Diagnostics;
+using IBE.SQL.Datasets;
+using System.Data;
 
 namespace IBE.IBECompanion
 {
@@ -165,5 +167,24 @@ namespace IBE.IBECompanion
             return null;
         }
 
+        /// <summary>
+        /// returns the name of a ship from it's symbolname
+        /// </summary>
+        /// <param name="tbshipyardbase"></param>
+        /// <param name="symbolName"></param>
+        /// <returns></returns>
+        internal String GetShipNameFromSymbol(dsEliteDB.tbshipyardbaseDataTable tbshipyardbase, String symbolName)
+        {   
+            DataRow[] found = tbshipyardbase.Select("symbol = " + SQL.DBConnector.SQLAString(symbolName));
+
+            if(found.Count() > 0)
+            {
+                return (String)(found[0]["name"]);
+            }
+            else
+            {
+                return symbolName;
+            }
+        }
     }
 }

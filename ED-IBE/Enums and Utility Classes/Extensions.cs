@@ -159,6 +159,23 @@ namespace IBE.Enums_and_Utility_Classes
         /// </summary>
         /// <param name="thisString">a string or null</param>
         /// <returns></returns>
+        public static Boolean EqualsNullOrEmpty(this string thisString, String otherString)
+        {
+            if (string.IsNullOrEmpty(thisString))
+            {
+                return string.IsNullOrEmpty(otherString);
+            }
+            else
+            {
+                return string.Equals(thisString, otherString);
+            }
+        }
+
+        /// <summary>
+        /// converts a string that can be null to a string that represents null as a string ("undefined")
+        /// </summary>
+        /// <param name="thisString">a string or null</param>
+        /// <returns></returns>
         public static string NToString(this string thisString, String NullString)
         {
             if(thisString == null)

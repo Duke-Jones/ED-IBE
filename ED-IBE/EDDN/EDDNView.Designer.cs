@@ -250,6 +250,7 @@
             this.toolTip1.SetToolTip(this.cbPostOCRData, "If not checked you will never send OCR-ed market data to EDDN.\r\nIf checked, sendi" +
         "ng depends in general on the \"Quick Decision CheckBox\"");
             this.cbPostOCRData.UseVisualStyleBackColor = true;
+            this.cbPostOCRData.Visible = false;
             this.cbPostOCRData.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // cbPostCompanionData

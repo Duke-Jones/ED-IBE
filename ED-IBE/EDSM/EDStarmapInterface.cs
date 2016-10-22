@@ -167,7 +167,7 @@ namespace IBE.EDSM
             try
             {
                 if(e.EventType == FileScanner.EDJournalScanner.JournalEvent.FSDJump) 
-                    TransmitVisit(e.Data.Value<String>("StarSystem"), (Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][0], e.Data.Value<DateTime>("timestamp"));
+                    TransmitVisit(e.Data.Value<String>("StarSystem"), (Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2], e.Data.Value<DateTime>("timestamp"));
 
             }
             catch (Exception ex)
@@ -342,7 +342,7 @@ namespace IBE.EDSM
                     {
                         currentData     = m_SendQueue.Dequeue();
 
-                        if(m_GUIInterface.GetIniValue<Boolean>("SendToEDSM", true.ToString(), false))
+                        if(m_GUIInterface.GetIniValue<Boolean>("SendToEDSM", true.ToString(), false) && (!Program.actualCondition.GameversionIsBeta))
                         {
                             switch (currentData.TType)
                             {
