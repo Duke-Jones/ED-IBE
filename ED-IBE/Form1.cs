@@ -95,6 +95,7 @@ namespace IBE
         private String _AppPath                                         = string.Empty;
         private String _oldSystemName                                   = null;
         private String _oldStationName                                  = null;
+        private DateTime lastUpdateCheck                                = DateTime.MinValue;                // last time checked for a update
 
         public tabOCR cOcrCaptureAndCorrect               =  new tabOCR();
 
@@ -1239,23 +1240,7 @@ namespace IBE
                 st.Start();
 
                 Program.SplashScreen.InfoAdd("checking for updates");
-
-                if (Updater.CheckVersion(out newVersion, out newInfo))
-                {
-                    lblUpdateInfo.Text = "newer version of ED-IBE found!";
-                    lblUpdateInfo.ForeColor = Color.Black;
-                    lblUpdateInfo.BackColor = Color.Yellow;
-
-                    lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
-                }
-                else 
-                {
-                    lblUpdateInfo.Text = "you have the latest version of ED-IBE";
-                    lblUpdateInfo.ForeColor = Color.DarkGreen;
-
-                    if (newVersion != new Version(0,0,0,0))
-                        lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
-                }
+                CheckUpdateExists(out newVersion, out newInfo);
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Debug.Print("Zeit (2) : " + st.ElapsedMilliseconds);
@@ -1308,7 +1293,7 @@ namespace IBE
 
                 Debug.Print("Zeit (9) : " + st.ElapsedMilliseconds);
                 st.Start();
-                
+
                 // *******************************************************************
                 await Updater.DoSpecial(this);
                 // *******************************************************************
@@ -1320,7 +1305,7 @@ namespace IBE
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
-                if(Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", true.ToString(), false))
+                if (Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", true.ToString(), false))
                     Program.EDDNComm.ActivateSender();
 
                 SetQuickDecisionSwitch();
@@ -1328,7 +1313,7 @@ namespace IBE
                 Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
                 st.Start();
 
-                if(Program.DBCon.getIniValue<Boolean>(frmDataIO.DB_GROUPNAME, "AutoImportEDCDData", true.ToString(), false))
+                if (Program.DBCon.getIniValue<Boolean>(frmDataIO.DB_GROUPNAME, "AutoImportEDCDData", true.ToString(), false))
                 {
                     // import new edcd data if available
                     var DataIO = new frmDataIO();
@@ -1347,21 +1332,21 @@ namespace IBE
 
                 Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);
                 st.Start();
-                
+
                 /// last preparations for companion io 
                 ShowStatus();
                 Program.CompanionIO.AsyncDataRecievedEvent += CompanionIO_AsyncDataRecievedEvent;
-                if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok) && (!Program.CompanionIO.StationHasShipyardData()))
+                if ((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok) && (!Program.CompanionIO.StationHasShipyardData()))
                 {
                     int? stationID = Program.actualCondition.Location_ID;
 
-                    if((stationID != null) && Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + stationID))
+                    if ((stationID != null) && Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + stationID))
                     {
                         // probably companion error, try once again in 5 seconds
                         Program.CompanionIO.ReGet_StationData();
                     }
                 }
-                
+
                 // inform GUI from EDSM
                 Program.EDSMComm.DataTransmittedEvent += EDSMComm_DataTransmittedEvent;
 
@@ -1369,7 +1354,7 @@ namespace IBE
 
                 Program.JournalScanner.Start();
                 Program.StartVNCServer(this);
-                
+
             }
             catch (Exception ex)
             {
@@ -1377,6 +1362,39 @@ namespace IBE
                 CErr.processError(ex, "Error in Form_Shown");
             }
         }
+        private Boolean CheckUpdateExists(out Version newVersion, out string newInfo, Boolean onlyConsiderNew = false)
+        {
+            Boolean retValue = false;
+            try
+            {
+                if (Updater.CheckVersion(out newVersion, out newInfo))
+                {
+                    lblUpdateInfo.Text = "newer version of ED-IBE found!";
+                    lblUpdateInfo.ForeColor = Color.Black;
+                    lblUpdateInfo.BackColor = Color.Yellow;
+
+                    lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
+
+                    retValue = true;
+                }
+                else if(!onlyConsiderNew)
+                {
+                    lblUpdateInfo.Text = "you have the latest version of ED-IBE";
+                    lblUpdateInfo.ForeColor = Color.DarkGreen;
+
+                    if (newVersion != new Version(0, 0, 0, 0))
+                        lblUpdateDetail.Text = String.Format("ED-IBE v{0} :\r\n{1}", newVersion.ToString(), newInfo);
+                }
+
+                return retValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro while checking for updates", ex);
+            }
+        }
+
+
 
         /// <summary>
         /// sets the "Quick Decision Checkbox" value in dependance of the settings
@@ -3702,7 +3720,6 @@ namespace IBE
         }
 
 
-
         private void tmrRefresh_Tick(object sender, EventArgs e)
         {
             try
@@ -3710,11 +3727,31 @@ namespace IBE
                 TimeSpan rest = Program.CompanionIO.RestTime();
 
                 txtRestTime.Text = rest.TotalSeconds.ToString("00");
+
+                if((DateTime.Now - lastUpdateCheck).TotalHours > 1)
+                {
+                    Version newVersion  = null;
+                    String newInfo      = null;
+
+                    if(CheckUpdateExists(out newVersion, out newInfo, true))
+                    {
+                        // show update hint
+                        tabCtrlMain.SelectTab(0); 
+
+                        // next hint after 24 hours
+                        lastUpdateCheck = (DateTime.Now + new TimeSpan(23, 0, 0));
+                    }
+                    else
+                    {
+                        // next check after one hour
+                        lastUpdateCheck = DateTime.Now;
+                    }
+                }
             }
             catch (Exception)
             {
+                lastUpdateCheck = DateTime.Now;
             }
-
         }
 
         private void commodityMappingsToolStripMenuItem_Click(object sender, EventArgs e)

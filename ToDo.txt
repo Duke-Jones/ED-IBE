@@ -22,7 +22,9 @@ todo:
 
 done:
 
-
+  * added update hint even if ED-IBE is already running
+  * updated sql script for v0.5.0
+-------------------------------------------------------------------------------------         
   * Commander's Log is filled with data from the journal events
   * journal scanner optimized
      - added events: SupercruiseEntry, SupercruiseExit, Liftoff, Touchdown:

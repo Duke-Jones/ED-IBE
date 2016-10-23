@@ -144,6 +144,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 4, 0))
                         UpdateTo_0_4_0(ref foundError);
                     
+                    if (dbVersion < new Version(0, 5, 0))
+                        UpdateTo_0_5_0(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
