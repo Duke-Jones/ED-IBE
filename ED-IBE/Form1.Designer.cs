@@ -243,6 +243,8 @@
             this.txtPosition_Z = new System.Windows.Forms.TextBox();
             this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbCurrentBodyinfoFromLogs = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -831,7 +833,7 @@
             // cmdLoadCurrentSystem
             // 
             this.cmdLoadCurrentSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(1010, 69);
+            this.cmdLoadCurrentSystem.Location = new System.Drawing.Point(1010, 92);
             this.cmdLoadCurrentSystem.Name = "cmdLoadCurrentSystem";
             this.cmdLoadCurrentSystem.Size = new System.Drawing.Size(148, 21);
             this.cmdLoadCurrentSystem.TabIndex = 60;
@@ -888,11 +890,11 @@
             // 
             this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(806, 52);
+            this.label45.Location = new System.Drawing.Point(843, 52);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(91, 13);
+            this.label45.Size = new System.Drawing.Size(54, 13);
             this.label45.TabIndex = 10;
-            this.label45.Text = "Current Location :";
+            this.label45.Text = "Location :";
             // 
             // tbCurrentStationinfoFromLogs
             // 
@@ -907,11 +909,11 @@
             // 
             this.label37.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(816, 31);
+            this.label37.Location = new System.Drawing.Point(853, 31);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(81, 13);
+            this.label37.Size = new System.Drawing.Size(44, 13);
             this.label37.TabIndex = 8;
-            this.label37.Text = "Current System:";
+            this.label37.Text = "System:";
             // 
             // tbCurrentSystemFromLogs
             // 
@@ -2524,7 +2526,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(821, 73);
+            this.label4.Location = new System.Drawing.Point(821, 96);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 67;
@@ -2534,7 +2536,7 @@
             // txtPosition_X
             // 
             this.txtPosition_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_X.Location = new System.Drawing.Point(903, 70);
+            this.txtPosition_X.Location = new System.Drawing.Point(903, 93);
             this.txtPosition_X.Name = "txtPosition_X";
             this.txtPosition_X.ReadOnly = true;
             this.txtPosition_X.Size = new System.Drawing.Size(86, 20);
@@ -2546,7 +2548,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(880, 95);
+            this.label5.Location = new System.Drawing.Point(880, 118);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(17, 13);
             this.label5.TabIndex = 69;
@@ -2556,7 +2558,7 @@
             // txtPosition_Y
             // 
             this.txtPosition_Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_Y.Location = new System.Drawing.Point(903, 92);
+            this.txtPosition_Y.Location = new System.Drawing.Point(903, 115);
             this.txtPosition_Y.Name = "txtPosition_Y";
             this.txtPosition_Y.ReadOnly = true;
             this.txtPosition_Y.Size = new System.Drawing.Size(86, 20);
@@ -2568,7 +2570,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(880, 117);
+            this.label7.Location = new System.Drawing.Point(880, 140);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(17, 13);
             this.label7.TabIndex = 71;
@@ -2578,7 +2580,7 @@
             // txtPosition_Z
             // 
             this.txtPosition_Z.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPosition_Z.Location = new System.Drawing.Point(903, 114);
+            this.txtPosition_Z.Location = new System.Drawing.Point(903, 137);
             this.txtPosition_Z.Name = "txtPosition_Z";
             this.txtPosition_Z.ReadOnly = true;
             this.txtPosition_Z.Size = new System.Drawing.Size(86, 20);
@@ -2602,12 +2604,33 @@
             this.tsEDSMQueue.Size = new System.Drawing.Size(95, 17);
             this.tsEDSMQueue.Text = "toolStripStatusLabel1";
             // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(860, 73);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(37, 13);
+            this.label8.TabIndex = 77;
+            this.label8.Text = "Body :";
+            // 
+            // tbCurrentBodyinfoFromLogs
+            // 
+            this.tbCurrentBodyinfoFromLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbCurrentBodyinfoFromLogs.Location = new System.Drawing.Point(903, 70);
+            this.tbCurrentBodyinfoFromLogs.Name = "tbCurrentBodyinfoFromLogs";
+            this.tbCurrentBodyinfoFromLogs.ReadOnly = true;
+            this.tbCurrentBodyinfoFromLogs.Size = new System.Drawing.Size(255, 20);
+            this.tbCurrentBodyinfoFromLogs.TabIndex = 76;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 746);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.tbCurrentBodyinfoFromLogs);
             this.Controls.Add(this.StatusStrip1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtPosition_Z);
@@ -2906,6 +2929,8 @@
         private System.Windows.Forms.StatusStrip StatusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tsEDSMQueue;
         public System.Windows.Forms.CheckBox cbEDDNOverride;
+        private System.Windows.Forms.Label label8;
+        public System.Windows.Forms.TextBox tbCurrentBodyinfoFromLogs;
     }
 }
 

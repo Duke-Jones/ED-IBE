@@ -12,7 +12,6 @@ todo:
 * avoid resizing of fonts
 * VoiceAttack interface
 
-* new interface for E:D-2.2-eventlog 
 * hint for problems with long installation paths
 * hint "how to update"
 * rise MessageBox when found a new version 
@@ -23,6 +22,13 @@ todo:
 
 done:
 
+
+  * Commander's Log is filled with data from the journal events
+  * journal scanner optimized
+     - added events: SupercruiseEntry, SupercruiseExit, Liftoff, Touchdown:
+  * switched EDDB path to new v5
+  * make journal path selectable in settings 
+-------------------------------------------------------------------------------------         
   * journal scanner optimized
      - added events: Fileheader, Location, Docked, Undocked, FSDJump, Died, Resurrect
   * avoid sending data to EDDN/EDSM when running a beta version of E:D

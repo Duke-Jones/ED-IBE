@@ -570,7 +570,7 @@ namespace IBE.IBECompanion
                         SetDocked(true);
 
                         if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
                         {
                             var t = new Task(() => RefreshAndImport(e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName")));
                             t.Start();

@@ -1263,7 +1263,7 @@ namespace IBE
 
                 Program.SplashScreen.InfoAdd("load system data...");
                 loadSystemData(Program.actualCondition.System);
-                loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
+                loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
                 Debug.Print("Zeit (3) : " + st.ElapsedMilliseconds);
@@ -1642,7 +1642,7 @@ namespace IBE
         {
 
             loadSystemData(Program.actualCondition.System);
-            loadStationData(Program.actualCondition.System, Program.actualCondition.Location);
+            loadStationData(Program.actualCondition.System, Program.actualCondition.Station);
 
             tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
 
@@ -2579,7 +2579,7 @@ namespace IBE
             _oldSystemName  = m_currentSystemdata.Name;
             _oldStationName = m_currentStationdata.Name;
 
-            string newStationname = Program.actualCondition.Location;
+            string newStationname = Program.actualCondition.Station;
 
             throw new NotImplementedException();
             EDStation existing = null; //_Milkyway.getStations(EDMilkyway.enDataType.Data_Merged).Find(x => (x.Name.Equals(newStationname, StringComparison.InvariantCultureIgnoreCase)) && 
@@ -3237,7 +3237,7 @@ namespace IBE
                     case FileScanner.EDJournalScanner.JournalEvent.Location:
                         
                         if(Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem")) && 
-                           Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName")))
+                           Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName")))
                             AddComboboxLine(txtEventInfo,             "current location confirmed");
                         else
                             AddComboboxLine(txtEventInfo,             "got new location");
@@ -3246,17 +3246,21 @@ namespace IBE
                         Program.actualCondition.System          = e.Data.Value<String>("StarSystem");
                         Program.actualCondition.Coordinates     = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
 
+
                         if(e.Data.Value<Boolean>("Docked"))
                         {
-                            Program.actualCondition.Location    = e.Data.Value<String>("StationName");
+                            Program.actualCondition.Station    = e.Data.Value<String>("StationName");
 
                             // from now it is allowed to send data to eddn immediately again
                             Program.EDDNComm.SendingReset();
                         }
                         else
                         {
-                            Program.actualCondition.Location    = "";
+                            Program.actualCondition.Station    = "";
                         }
+
+                        Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
+                        Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
 
                         ShowLocationData();
                         ShowStatus();
@@ -3266,13 +3270,16 @@ namespace IBE
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
                         AddComboboxLine(txtEventInfo,             "...jump recognized...");
 
-                        Program.actualCondition.Location = "";
+                        Program.actualCondition.Station = "";
 
                         // from now it is allowed to send data to eddn immediately again
                         Program.EDDNComm.SendingReset();
 
                         Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
                         Program.actualCondition.Coordinates = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
+
+                        Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
+                        Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
 
                         ShowLocationData();
                         ShowStatus();
@@ -3281,12 +3288,12 @@ namespace IBE
 
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
                         if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
                         {
                             AddComboboxLine(txtEventInfo,       "...docked...");
 
                             Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
-                            Program.actualCondition.Location    = e.Data.Value<String>("StationName");
+                            Program.actualCondition.Station    = e.Data.Value<String>("StationName");
 
                             ShowLocationData();
                             ShowStatus();
@@ -3298,7 +3305,18 @@ namespace IBE
 
                         AddComboboxLine(txtEventInfo,       "...undocked...");
 
-                        Program.actualCondition.Location    = "";
+                        Program.actualCondition.Station    = "";
+
+                        ShowLocationData();
+                        ShowStatus();
+                        
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.SupercruiseEntry:
+                    case FileScanner.EDJournalScanner.JournalEvent.SupercruiseExit:
+
+                        Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
+                        Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
 
                         ShowLocationData();
                         ShowStatus();
@@ -3452,7 +3470,7 @@ namespace IBE
         {
             try
             {
-                Program.CompanionIO.RefreshAndImport(Program.actualCondition.System, Program.actualCondition.Location);
+                Program.CompanionIO.RefreshAndImport(Program.actualCondition.System, Program.actualCondition.Station);
             }
             catch (Exception ex)
             {
@@ -3507,10 +3525,15 @@ namespace IBE
                 {
                     Point3Dbl coords        = new Point3Dbl();
                     String currentSystem    = Program.actualCondition.System;
-                    String currentLocation  = Program.actualCondition.Location;
+                    String currentLocation  = Program.actualCondition.Station;
 
                     this.tbCurrentSystemFromLogs.Text       = currentSystem;
                     this.tbCurrentStationinfoFromLogs.Text  = currentLocation;
+                    this.tbCurrentBodyinfoFromLogs.Text = Program.actualCondition.Body;
+                    if(!String.IsNullOrWhiteSpace(Program.actualCondition.BodyType))
+                    {
+                        this.tbCurrentBodyinfoFromLogs.Text += "      (" + Program.actualCondition.BodyType + ")";
+                    }
 
                     coords = Program.actualCondition.Coordinates;
                     if(coords.Valid)

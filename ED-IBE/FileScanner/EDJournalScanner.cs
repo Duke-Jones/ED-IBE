@@ -147,16 +147,25 @@ namespace IBE.FileScanner
             {
                 if (m_JournalScanner_Thread == null)
                 {
-                    if (SHGetKnownFolderPath(SAVED_GAMES, 0, IntPtr.Zero, out m_SavedgamesPath) != 0)
-                        m_SavedgamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games");
+                    m_SavedgamesPath = Program.DBCon.getIniValue<String>(IBESettingsView.DB_GROUPNAME, "JournalPath", "");
 
-                    if(Directory.Exists(m_SavedgamesPath))
-                        m_SavedgamesPath = Path.Combine(m_SavedgamesPath, @"Frontier Developments\Elite Dangerous");
-
-                    if(!Directory.Exists(m_SavedgamesPath))
+                    if(String.IsNullOrWhiteSpace(m_SavedgamesPath) || (!Directory.Exists(m_SavedgamesPath)))
                     {
-                        m_SavedgamesPath = null;
-                        throw new Exception("ED-IBE can't find the \"Saved Games\" path to access the E:D journal file");
+                        if (SHGetKnownFolderPath(SAVED_GAMES, 0, IntPtr.Zero, out m_SavedgamesPath) != 0)
+                            m_SavedgamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games");
+
+                        if(Directory.Exists(m_SavedgamesPath))
+                            m_SavedgamesPath = Path.Combine(m_SavedgamesPath, @"Frontier Developments\Elite Dangerous");
+
+                        if(!Directory.Exists(m_SavedgamesPath))
+                        {
+                            m_SavedgamesPath = null;
+                            throw new Exception("ED-IBE can't find the \"Saved Games\" path to access the E:D journal file");
+                        }
+                        else
+                        {
+                            Program.DBCon.setIniValue(IBESettingsView.DB_GROUPNAME, "JournalPath", m_SavedgamesPath);
+                        }
                     }
 
                     m_Stop = false;
@@ -370,6 +379,9 @@ namespace IBE.FileScanner
                                         case JournalEvent.Docked:
                                         case JournalEvent.Undocked:
 
+                                        case JournalEvent.SupercruiseEntry:
+                                        case JournalEvent.SupercruiseExit:
+
                                         case JournalEvent.Liftoff:
                                         case JournalEvent.Touchdown:
 
@@ -377,6 +389,7 @@ namespace IBE.FileScanner
 
                                         case JournalEvent.Died:
                                         case JournalEvent.Resurrect:
+
 
                                             if(eventName == JournalEvent.Docked)
                                                 Debug.Print("stop");
@@ -412,6 +425,28 @@ namespace IBE.FileScanner
                                             latestLocationEvent = journalEntry;
                                             break;
 
+                                        case JournalEvent.SupercruiseExit:
+                                            if(latestLocationEvent != null)
+                                            {
+                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                latestLocationEvent["Body"]         = journalEntry["Body"];
+                                                latestLocationEvent["BodyType"]     = journalEntry["BodyType"];
+                                            }
+                                            break;
+
+                                        case JournalEvent.SupercruiseEntry:
+                                            if(latestLocationEvent != null)
+                                            {
+                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                latestLocationEvent["StationName"]  = "";
+                                                latestLocationEvent["Docked"]       = "false";
+                                                latestLocationEvent["Body"]         = "";
+                                                latestLocationEvent["BodyType"]     = "";
+                                                latestLocationEvent["StationType"]  = "";
+                                            }
+
+                                            break;
+
                                         case JournalEvent.FSDJump:
                                             if(latestLocationEvent != null)
                                             {
@@ -419,14 +454,15 @@ namespace IBE.FileScanner
                                                 latestLocationEvent["StationName"]  = "";
                                                 latestLocationEvent["Docked"]       = "false";
                                                 latestLocationEvent["StarPos"]      = journalEntry["StarPos"];
-                                                latestLocationEvent["Body"]         = "";
+                                                latestLocationEvent["Body"]         = journalEntry["Body"];
+                                                latestLocationEvent["BodyType"]     = journalEntry["BodyType"];
                                                 latestLocationEvent["Faction"]      = journalEntry["Faction"];
                                                 latestLocationEvent["Allegiance"]   = journalEntry["Allegiance"];
                                                 latestLocationEvent["Economy"]      = journalEntry["Economy"];
                                                 latestLocationEvent["Government"]   = journalEntry["Government"];
                                                 latestLocationEvent["Security"]     = journalEntry["Security"];
 
-                                                latestLocationEvent["BodyType"]     = "";
+                                                
                                                 latestLocationEvent["StationType"]  = "";
                                             }
                                             
@@ -549,6 +585,7 @@ namespace IBE.FileScanner
                     JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Location, Data = latestLocationEvent });
                     latestLocationEvent = null;
                 }
+
             }
             catch (Exception ex)
             {

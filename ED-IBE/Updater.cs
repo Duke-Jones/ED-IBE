@@ -1276,8 +1276,9 @@ namespace IBE
                             "-- Generated: 2016-10-05 21:13 \n" +
                             "                                                                                                                    \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (13, 'Resurrect');                           \n" +
-                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (14, 'Died');                                \n";
-
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (14, 'Died');                                \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (15, 'Touchdown');                           \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (16, 'Liftoff');                             \n";
 
                 var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
                 sqlScript.Query = sqlString;

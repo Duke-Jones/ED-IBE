@@ -352,7 +352,7 @@ namespace IBE.MTCommandersLog
                 cbLogEventType.SelectedValue    = (Int32)12;
                 dtpLogEventDate.Value           = (DateTime)DateTime.UtcNow;
                 cbLogSystemName.Text            = Program.actualCondition.System;
-                cbLogStationName.Text           = Program.actualCondition.Location;
+                cbLogStationName.Text           = Program.actualCondition.Station;
                 nbTransactionAmount.Text        = "0";
                 nbCurrentCredits.Text           = Program.CompanionIO.SGetCreditsTotal().ToString();
                 cbLogCargoName.Text             = "";

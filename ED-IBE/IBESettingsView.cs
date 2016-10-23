@@ -586,6 +586,47 @@ namespace IBE
             return result;
         }
 
+        /// <summary>
+        /// selects another journal path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmdJournalPath_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SelectJournalPath();
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmdJournalPath_Click");
+            }
+        }
+
+        public DialogResult SelectJournalPath()
+        {
+            FolderBrowserDialog BrwsDlg = new FolderBrowserDialog();
+            DialogResult result;
+
+            BrwsDlg.Description  = @"Please select manually your active journal path. (default is C:\Users\<USER>\Saved Games\Frontier Developments\Elite Dangerous\)";
+            BrwsDlg.SelectedPath = Program.DBCon.getIniValue(DB_GROUPNAME, "JournalPath");
+
+            result = BrwsDlg.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                txtJournalPath.Text = BrwsDlg.SelectedPath;
+                m_GUIInterface.saveSetting(txtJournalPath);
+
+                Program.DBCon.setIniValue(DB_GROUPNAME, "JournalPath", BrwsDlg.SelectedPath);
+
+                MessageBox.Show("Path changed. Please restart ED-IBE", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+            }
+
+            return result;
+        }
+
         private void cmdChangeSQLPort_Click(object sender, EventArgs e)
         {
             try

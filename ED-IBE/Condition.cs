@@ -18,6 +18,8 @@ namespace IBE
         private const string                        STR_CurrentSystem_ID             = "CurrentSystem";
         private const string                        STR_CurrentStation_ID            = "CurrentStation";
         private const string                        STR_CurrentSystemCoords          = "CurrentCoordinates";
+        private const string                        STR_CurrentLocation              = "CurrentLocation";
+        private const string                        STR_CurrentLocationType          = "CurrentLocationType";
         private MemoryCache                         m_DataCache                      = MemoryCache.Default;
         private FileScanner.EDJournalScanner        m_JournalScanner = null;
 
@@ -46,9 +48,9 @@ namespace IBE
         }
 
         /// <summary>
-        /// the actual location (if existing)
+        /// the actual station (if existing)
         /// </summary>
-        public String Location
+        public String Station
         {
             get
             {
@@ -61,6 +63,36 @@ namespace IBE
                     Program.Data.checkPotentiallyNewSystemOrStation(System, value);
 
                 m_DataCache.Remove(STR_CurrentStation_ID);
+            }
+        }
+
+        /// <summary>
+        /// the actual location (if existing)
+        /// </summary>
+        public String Body
+        {
+            get
+            {
+                return Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentLocation, "");
+            }
+            set
+            {
+                Program.DBCon.setIniValue(DB_GROUPNAME, STR_CurrentLocation, value);
+            }
+        }
+
+        /// <summary>
+        /// the actual location type (if existing)
+        /// </summary>
+        public String BodyType
+        {
+            get
+            {
+                return Program.DBCon.getIniValue(DB_GROUPNAME, STR_CurrentLocationType, "");
+            }
+            set
+            {
+                Program.DBCon.setIniValue(DB_GROUPNAME, STR_CurrentLocationType, value);
             }
         }
 
@@ -129,7 +161,7 @@ namespace IBE
                     String sqlString    = "select St.ID from tbSystems Sy, tbStations St" +
                                           " where Sy.ID = St. System_ID" +
                                           " and   Sy.Systemname  = " + SQL.DBConnector.SQLAEscape(this.System) +
-                                          " and   St.Stationname = " + SQL.DBConnector.SQLAEscape(this.Location);
+                                          " and   St.Stationname = " + SQL.DBConnector.SQLAEscape(this.Station);
 
                     DataTable Data      = new DataTable();
 
@@ -181,8 +213,9 @@ namespace IBE
                 switch (e.EventType)
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Fileheader:
-                        JournalHeader = (JObject)e.Data;
+                        JournalHeaderObject = (JObject)e.Data;
                         break;
+
                 }
 
             }
@@ -192,8 +225,8 @@ namespace IBE
             }
         }
 
-        public JObject JournalHeader { get; set; }
-
+        public JObject JournalHeaderObject { get; set; }
+        public JObject SupercruiseExitObject { get; set; }
 
 
         /// <summary>
@@ -203,7 +236,7 @@ namespace IBE
         {
             get
             {
-                return JournalHeader.SelectToken("gameversion").ToString().ToLower().Contains("beta");
+                return JournalHeaderObject.SelectToken("gameversion").ToString().ToLower().Contains("beta");
             }
         }
 

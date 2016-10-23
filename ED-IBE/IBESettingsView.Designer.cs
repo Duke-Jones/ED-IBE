@@ -84,6 +84,9 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtGamePath = new System.Windows.Forms.TextBox();
             this.cmdGamePath = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtJournalPath = new System.Windows.Forms.TextBox();
+            this.cmdJournalPath = new System.Windows.Forms.Button();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -99,6 +102,7 @@
             this.groupBox5.SuspendLayout();
             this.gbDataInterface.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox6
@@ -401,9 +405,9 @@
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(650, 457);
+            this.groupBox12.Location = new System.Drawing.Point(650, 528);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(502, 220);
+            this.groupBox12.Size = new System.Drawing.Size(502, 149);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -437,7 +441,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 168);
+            this.button6.Location = new System.Drawing.Point(32, 97);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -740,10 +744,45 @@
             this.cmdGamePath.UseVisualStyleBackColor = true;
             this.cmdGamePath.Click += new System.EventHandler(this.cmdGamePath_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.txtJournalPath);
+            this.groupBox2.Controls.Add(this.cmdJournalPath);
+            this.groupBox2.Location = new System.Drawing.Point(652, 457);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(500, 65);
+            this.groupBox2.TabIndex = 70;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Active Journal Path ";
+            // 
+            // txtJournalPath
+            // 
+            this.txtJournalPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtJournalPath.Location = new System.Drawing.Point(13, 14);
+            this.txtJournalPath.Name = "txtJournalPath";
+            this.txtJournalPath.ReadOnly = true;
+            this.txtJournalPath.Size = new System.Drawing.Size(473, 20);
+            this.txtJournalPath.TabIndex = 68;
+            this.txtJournalPath.Tag = "JournalPath;";
+            // 
+            // cmdJournalPath
+            // 
+            this.cmdJournalPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdJournalPath.Location = new System.Drawing.Point(384, 36);
+            this.cmdJournalPath.Name = "cmdJournalPath";
+            this.cmdJournalPath.Size = new System.Drawing.Size(102, 23);
+            this.cmdJournalPath.TabIndex = 67;
+            this.cmdJournalPath.Text = "Select";
+            this.cmdJournalPath.UseVisualStyleBackColor = true;
+            this.cmdJournalPath.Click += new System.EventHandler(this.cmdJournalPath_Click);
+            // 
             // IBESettingsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1164, 689);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbVNCTest);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -783,6 +822,8 @@
             this.gbDataInterface.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -843,6 +884,8 @@
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.GroupBox gbVNCTest;
         private System.Windows.Forms.CheckBox cbActivateVNC;
-
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox txtJournalPath;
+        private System.Windows.Forms.Button cmdJournalPath;
     }
 }

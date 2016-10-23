@@ -721,7 +721,7 @@ namespace IBE.MTCommandersLog
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
 
                         if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Location.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
                             SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
 
                         else if(e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2))) != null)
@@ -806,6 +806,46 @@ namespace IBE.MTCommandersLog
 
                     case FileScanner.EDJournalScanner.JournalEvent.Resurrect:
                         break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Touchdown:
+                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                  Program.actualCondition.System,
+                                  "", 
+                                  "", 
+                                  "", 
+                                  0, 
+                                  0, 
+                                  Program.CompanionIO.SGetCreditsTotal(), 
+                                  "Touchdown", 
+                                  String.Format("landed on {0}{1}\n" +
+                                                "long: {3}\n" +
+                                                "lat : {2}",
+                                                Program.actualCondition.Body, 
+                                                String.IsNullOrWhiteSpace(Program.actualCondition.BodyType) ? "" : " (" + Program.actualCondition.BodyType + ")",
+                                                e.Data.Value<Double>("Latitude"), 
+                                                e.Data.Value<Double>("Longitude")));
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Liftoff:
+                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                  Program.actualCondition.System,
+                                  "", 
+                                  "", 
+                                  "", 
+                                  0, 
+                                  0, 
+                                  Program.CompanionIO.SGetCreditsTotal(), 
+                                  "Liftoff", 
+                                  String.Format("liftoff from {0}{1}\n" +
+                                                "long: {3}\n" +
+                                                "lat : {2}",
+                                                Program.actualCondition.Body, 
+                                                String.IsNullOrWhiteSpace(Program.actualCondition.BodyType) ? "" : " (" + Program.actualCondition.BodyType + ")",
+                                                e.Data.Value<Double>("Latitude"), 
+                                                e.Data.Value<Double>("Longitude")));
+                        break;
+
+
                 }
 
             }
@@ -870,7 +910,7 @@ namespace IBE.MTCommandersLog
                             {
                                 // add new
                                 Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
-                                                                Program.actualCondition.Location, "", "", 0, 0, 0, 
+                                                                Program.actualCondition.Station, "", "", 0, 0, 0, 
                                                                 "Market Data Collected", "");
                             }
                         }
@@ -879,7 +919,7 @@ namespace IBE.MTCommandersLog
                     {
                         // add new
                         Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
-                                                        Program.actualCondition.Location, "", "", 0, 0, 0, 
+                                                        Program.actualCondition.Station, "", "", 0, 0, 0, 
                                                         "Market Data Collected", "");
                     }
                 }

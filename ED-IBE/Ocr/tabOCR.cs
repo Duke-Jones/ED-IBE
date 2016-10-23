@@ -917,8 +917,8 @@ namespace IBE.Ocr
 
                 Program.Data.ImportPricesFromCSVStrings(CSVStrings, EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromIBE_OCR);
 
-                if (Program.actualCondition.Location.Equals("", StringComparison.InvariantCultureIgnoreCase))
-                    Program.actualCondition.Location = tbOcrStationName.Text;
+                if (Program.actualCondition.Station.Equals("", StringComparison.InvariantCultureIgnoreCase))
+                    Program.actualCondition.Station = tbOcrStationName.Text;
 
                 Program.CommandersLog.createMarketdataCollectedEvent();
 

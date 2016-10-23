@@ -920,7 +920,8 @@ namespace IBE
         {
             try
             {
-                String baseUrl = "https://eddb.io/archive/v4/";
+                String baseUrl = Program.DBCon.getIniValue<String>(DB_GROUPNAME, "EDDBDumpLocation", @"https://eddb.io/archive/v5/", false);
+                                                                                                       
                 String savePrefix = "";
                 String infoString = "connecting to eddb.io...";
                 List<String> filesList;

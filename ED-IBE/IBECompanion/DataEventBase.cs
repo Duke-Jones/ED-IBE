@@ -109,9 +109,9 @@ namespace IBE.IBECompanion
 
                 // something has changed -> fire event
                 var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
-                                                          Location      = Program.actualCondition.Location,
+                                                          Location      = Program.actualCondition.Station,
                                                           OldSystem     = Program.actualCondition.System,  
-                                                          OldLocation   = Program.actualCondition.Location,
+                                                          OldLocation   = Program.actualCondition.Station,
                                                           Changed       = enExternalDataEvents.DataCollected,
                                                           Amount        = DataCount};
                 ExternalDataEvent.Raise(this, EA);

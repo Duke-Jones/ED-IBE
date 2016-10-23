@@ -224,10 +224,10 @@ namespace IBE.Ocr
 
             string[] StationsInSystem = Program.Data.getStations(SystemAtTimeOfScreenshot);
 
-            if(Program.actualCondition.Location.Equals("", StringComparison.InvariantCultureIgnoreCase))
+            if(Program.actualCondition.Station.Equals("", StringComparison.InvariantCultureIgnoreCase))
                 StationameAnalysisBase = Stationname_OCR;
             else
-                StationameAnalysisBase = Program.actualCondition.Location;
+                StationameAnalysisBase = Program.actualCondition.Station;
 
             string headerResult_temp = StationsInSystem.FirstOrDefault(x => x.Equals(StationameAnalysisBase, StringComparison.InvariantCultureIgnoreCase));
 
