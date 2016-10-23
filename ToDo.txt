@@ -12,16 +12,17 @@ todo:
 * avoid resizing of fonts
 * VoiceAttack interface
 
-* hint for problems with long installation paths
 * hint "how to update"
-* rise MessageBox when found a new version 
 
 
 *************************************************************************************
 
-
 done:
 
+
+  * fixed bug when holding multiple EDDN messages in send queue
+  * now also sending journal messages to EDDN
+-------------------------------------------------------------------------------------         
   * added update hint even if ED-IBE is already running
   * updated sql script for v0.5.0
 -------------------------------------------------------------------------------------         

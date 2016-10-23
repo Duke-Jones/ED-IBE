@@ -156,7 +156,8 @@ bool disposed = false;
         {
             Commodity_V3        =  0,
             Shipyard_V1         =  1,
-            Outfitting_V2       =  2    
+            Outfitting_V2       =  2, 
+            Journal_V1          =  3        
         }
 
         public enum enTransmittedStates
@@ -171,16 +172,19 @@ bool disposed = false;
         private Thread                              _Spool2EDDN_Commodity;   
         private Thread                              _Spool2EDDN_Outfitting;   
         private Thread                              _Spool2EDDN_Shipyard;   
+        private Thread                              _Spool2EDDN_Journal;   
         private Queue                               _Send_MarketData_API     = new Queue(100,10);
         private Queue                               _Send_MarketData_OCR     = new Queue(100,10);
         private Queue                               _Send_Commodity         = new Queue(100,10);
         private Queue                               _Send_Outfitting         = new Queue(100,10);
         private Queue                               _Send_Shipyard           = new Queue(100,10);
+        private Queue                               _Send_Journal            = new Queue(100,10);
         private SingleThreadLogger                  _logger;
         private System.Timers.Timer                 _SendDelayTimer_Commodity;
         private System.Timers.Timer                 _SendDelayTimer_Market;
         private System.Timers.Timer                 _SendDelayTimer_Outfitting;
         private System.Timers.Timer                 _SendDelayTimer_Shipyard;
+        private System.Timers.Timer                 _SendDelayTimer_Journal;
         private StreamWriter                        m_EDDNSpooler = null;
         private Dictionary<String, EDDNStatistics>  m_StatisticDataSW = new Dictionary<String, EDDNStatistics>();
         private Dictionary<String, EDDNStatistics>  m_StatisticDataRL = new Dictionary<String, EDDNStatistics>();
@@ -191,16 +195,19 @@ bool disposed = false;
         private EDDNDuplicateFilter                 m_DuplicateFilter       = new EDDNDuplicateFilter(new TimeSpan(0,5,0));
         private EDDNDuplicateFilter                 m_DuplicateRelayFilter  = new EDDNDuplicateFilter(new TimeSpan(0,0,30));
         private Dictionary<String, EDDNReciever>    m_Reciever;
+        private FileScanner.EDJournalScanner        m_JournalScanner = null;
         private List<String>                        m_Relays    = new List<string>() { "tcp://eddn-relay.elite-markets.net:9500", 
                                                                                        "tcp://eddn-relay.ed-td.space:9500"};
 
         private Tuple<String, DateTime>             m_ID_of_Commodity_Station = new Tuple<String, DateTime>("", new DateTime());
         private Tuple<String, DateTime>             m_ID_of_Outfitting_Station = new Tuple<String, DateTime>("", new DateTime());
         private Tuple<String, DateTime>             m_ID_of_Shipyard_Station = new Tuple<String, DateTime>("", new DateTime());
+        private Tuple<String, DateTime>             m_ID_of_Journal_Station = new Tuple<String, DateTime>("", new DateTime());
 
         private Boolean                             m_CommoditySendingError { get; set; }
         private Boolean                             m_OutfittingSendingError { get; set; }
         private Boolean                             m_ShipyardSendingError { get; set; }
+        private Boolean                             m_JournalSendingError { get; set; }
   
 
 
@@ -225,6 +232,10 @@ bool disposed = false;
             _SendDelayTimer_Shipyard.AutoReset    = false;
             _SendDelayTimer_Shipyard.Elapsed      += new System.Timers.ElapsedEventHandler(this.SendDelayTimerShipyard_Elapsed);
 
+            _SendDelayTimer_Journal               = new System.Timers.Timer(2000);
+            _SendDelayTimer_Journal.AutoReset     = false;
+            _SendDelayTimer_Journal.Elapsed       += new System.Timers.ElapsedEventHandler(this.SendDelayTimerJournal_Elapsed);
+                                                  
             _logger                     = new SingleThreadLogger(ThreadLoggerType.EddnSubscriber);
 
             m_RejectedData              = new List<String>();
@@ -1072,6 +1083,95 @@ bool disposed = false;
             }
         }
 
+        /// <summary>
+        /// send the journal data 
+        /// </summary>
+        /// <param name="stationData">json object with journal data</param>
+        public void SendJournalData(JObject dataObject)
+        {
+            //Int32 objectCount = 0;
+            //Boolean writeToFile = false;
+            //StreamWriter writer = null;
+            //String debugFile = @"C:\temp\journal_ibe.csv";
+            //SQL.Datasets.dsEliteDB.tbshipyardbaseDataTable baseData;
+
+            try
+            {
+                if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostJournalData", true.ToString(), false))
+                {
+
+                    StringBuilder journalStringEDDN = new StringBuilder();
+                    journalStringEDDN.Append(String.Format("\"message\": {{"));
+                    
+                    journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}Z\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                    journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
+
+                    if(dataObject.SelectToken("StarSystem") == null)
+                        journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", Program.actualCondition.System));
+                    else
+                        journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", dataObject.SelectToken("StarSystem").ToString()));
+                        
+                    if(dataObject.SelectToken("StarPos") == null)
+                        journalStringEDDN.Append(String.Format("\"StarPos\":[{0},{1},{2}], ", SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.X.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Y.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Z.Value)));
+                    else
+                        journalStringEDDN.Append(String.Format("\"StarPos\":{0}, ",    dataObject.SelectToken("StarPos")));
+
+                    System.Text.RegularExpressions.Regex forbiddenPattern   = new System.Text.RegularExpressions.Regex("(CockpitBreach|BoostUsed|FuelLevel|FuelUsed|JumpDist|_Localised$|timestamp|event|StarSystem|StarPos)");
+                    List<String> typeList = new List<String>() { "array", "boolean", "integer", "float", "double", "object", "string" };
+
+                    
+                    foreach (JToken dataItem in dataObject.SelectTokens("*"))
+                    {
+                        if(!forbiddenPattern.IsMatch(dataItem.Path))
+                        {
+                            if(typeList.Contains(dataItem.Type.ToString().ToLower()))
+                            {
+                                Debug.Print("allowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
+
+                                switch (dataItem.Type.ToString().ToLower())
+                                {
+                                    case "string":
+                                        journalStringEDDN.Append(String.Format("\"{0}\":\"{1}\", ",    dataItem.Path, dataItem));    
+                                        break;
+
+                                    case "float":
+                                    case "double":
+                                        journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, SQL.DBConnector.SQLDecimal((double)dataItem)));    
+                                        break;
+
+                                    case "boolean":
+                                        journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem.ToString().ToLower()));
+                                        break;
+
+                                    default:
+                                        journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem));
+                                        break;
+                                }
+                            }
+                            else
+                                Debug.Print("disallowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
+
+                            
+                        }
+                        else
+                            Debug.Print("disallowed : " + dataItem.Path);
+                    }
+
+                    journalStringEDDN.Remove(journalStringEDDN.Length-2, 2);
+                    journalStringEDDN.Append("}");
+
+
+                    _Send_Journal.Enqueue(journalStringEDDN);
+                    _SendDelayTimer_Journal.Start();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while extracting journal data for eddn", ex);
+            }
+        }
+
 
         /// <summary>
         /// internal send routine for registered data:
@@ -1258,57 +1358,60 @@ bool disposed = false;
                 else
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2";
 
-                // create full message
-                outfittingMessage.Append(String.Format("{{" +
-                                                       " \"header\" : {0}," +
-                                                       " \"$schemaRef\": \"{1}\","+
-                                                       " {2}" +
-                                                       "}}", 
-                                                       JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
-                                                       schema,
-                                                       _Send_Outfitting.Dequeue().ToString()));
-
-
-                using (var client = new WebClient())
+                do
                 {
-                    try
+                    // create full message
+                    outfittingMessage.Clear();
+                    outfittingMessage.Append(String.Format("{{" +
+                                                           " \"header\" : {0}," +
+                                                           " \"$schemaRef\": \"{1}\","+
+                                                           " {2}" +
+                                                           "}}", 
+                                                           JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
+                                                           schema,
+                                                           _Send_Outfitting.Dequeue().ToString()));
+
+
+                    using (var client = new WebClient())
                     {
-                        Debug.Print(outfittingMessage.ToString());
-
-                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
-
-                        m_OutfittingSendingError = false;
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Sent));
-                    }
-                    catch (WebException ex)
-                    {
-                        _logger.Log("Error uploading json (outfitting)");
-                        _logger.Log(ex.ToString());
-                        _logger.Log(ex.Message);
-                        _logger.Log(ex.StackTrace);
-                        if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString());
-
-                        using (WebResponse response = ex.Response)
+                        try
                         {
-                            using (Stream data = response.GetResponseStream())
+                            Debug.Print(outfittingMessage.ToString());
+
+                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
+
+                            m_OutfittingSendingError = false;
+                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Sent));
+                        }
+                        catch (WebException ex)
+                        {
+                            _logger.Log("Error uploading json (outfitting)");
+                            _logger.Log(ex.ToString());
+                            _logger.Log(ex.Message);
+                            _logger.Log(ex.StackTrace);
+                            if (ex.InnerException != null)
+                                _logger.Log(ex.InnerException.ToString());
+
+                            using (WebResponse response = ex.Response)
                             {
-                                if (data != null)
+                                using (Stream data = response.GetResponseStream())
                                 {
-                                    StreamReader sr = new StreamReader(data);
-                                    m_OutfittingSendingError = true;
-                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Error));
-                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
+                                    if (data != null)
+                                    {
+                                        StreamReader sr = new StreamReader(data);
+                                        m_OutfittingSendingError = true;
+                                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Error));
+                                        _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
+                                    }
                                 }
                             }
                         }
+                        finally
+                        {
+                            client.Dispose();
+                        }
                     }
-                    finally
-                    {
-                        client.Dispose();
-                    }
-                }
-
+                } while (_Send_Outfitting.Count > 0);
             }
             catch (Exception ex)
             {
@@ -1416,6 +1519,7 @@ bool disposed = false;
             }
 
         }
+
         /// <summary>
         /// internal send routine for registered data:
         /// It's called by the delay-timer "_SendDelayTimer_Commodity"
@@ -1443,57 +1547,60 @@ bool disposed = false;
                 else
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2";
 
-                // create full message
-                shipyardMessage.Append(String.Format("{{" +
-                                                       " \"header\" : {0}," +
-                                                       " \"$schemaRef\": \"{1}\","+
-                                                       " {2}" +
-                                                       "}}", 
-                                                       JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
-                                                       schema,
-                                                       _Send_Shipyard.Dequeue().ToString()));
-
-
-                using (var client = new WebClient())
+                do
                 {
-                    try
+                    // create full message
+                    shipyardMessage.Clear();
+                    shipyardMessage.Append(String.Format("{{" +
+                                                           " \"header\" : {0}," +
+                                                           " \"$schemaRef\": \"{1}\","+
+                                                           " {2}" +
+                                                           "}}", 
+                                                           JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
+                                                           schema,
+                                                           _Send_Shipyard.Dequeue().ToString()));
+
+
+                    using (var client = new WebClient())
                     {
-                        Debug.Print(shipyardMessage.ToString());
-
-                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", shipyardMessage.ToString());
-
-                        m_ShipyardSendingError   = false;
-                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Sent));
-                    }
-                    catch (WebException ex)
-                    {
-                        _logger.Log("Error uploading json (shipyard)");
-                        _logger.Log(ex.ToString());
-                        _logger.Log(ex.Message);
-                        _logger.Log(ex.StackTrace);
-                        if (ex.InnerException != null)
-                            _logger.Log(ex.InnerException.ToString());
-
-                        using (WebResponse response = ex.Response)
+                        try
                         {
-                            using (Stream data = response.GetResponseStream())
+                            Debug.Print(shipyardMessage.ToString());
+
+                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", shipyardMessage.ToString());
+
+                            m_ShipyardSendingError   = false;
+                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Sent));
+                        }
+                        catch (WebException ex)
+                        {
+                            _logger.Log("Error uploading json (shipyard)");
+                            _logger.Log(ex.ToString());
+                            _logger.Log(ex.Message);
+                            _logger.Log(ex.StackTrace);
+                            if (ex.InnerException != null)
+                                _logger.Log(ex.InnerException.ToString());
+
+                            using (WebResponse response = ex.Response)
                             {
-                                if (data != null)
+                                using (Stream data = response.GetResponseStream())
                                 {
-                                    StreamReader sr = new StreamReader(data);
-                                    m_ShipyardSendingError   = true;
-                                    DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Error));
-                                    _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
+                                    if (data != null)
+                                    {
+                                        StreamReader sr = new StreamReader(data);
+                                        m_ShipyardSendingError   = true;
+                                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Error));
+                                        _logger.Log("Error while uploading outfitting data to EDDN : " + sr.ReadToEnd());
+                                    }
                                 }
                             }
                         }
+                        finally
+                        {
+                            client.Dispose();
+                        }
                     }
-                    finally
-                    {
-                        client.Dispose();
-                    }
-                }
-
+                } while (_Send_Shipyard.Count > 0);
             }
             catch (Exception ex)
             {
@@ -1505,6 +1612,104 @@ bool disposed = false;
                     _logger.Log(ex.InnerException.ToString());
 
                 CErr.processError(ex, "Error in EDDN-Sending-Thread (shipyard)");
+            }
+
+        }
+
+
+        /// <summary>
+        /// internal send routine for registered data:
+        /// It's called by the delay-timer "_SendDelayTimer_Commodity"
+        /// </summary>
+        private void SendJournalData_i()
+        {
+            try
+            {
+                MessageHeader header;
+                String schema;
+                StringBuilder journalMessage = new StringBuilder();
+
+                // fill the header
+                header = new MessageHeader()
+                {
+                    SoftwareName        = "ED-IBE (API)",
+                    SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
+                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    UploaderID          = UserIdentification()
+                };
+
+                // fill the schema : test or real ?
+                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                    schema = "http://schemas.elite-markets.net/eddn/journal/1/test";
+                else
+                    schema = "http://schemas.elite-markets.net/eddn/journal/1";
+
+                do
+                {
+                    // create full message
+                    journalMessage.Clear();
+                    journalMessage.Append(String.Format("{{" +
+                                                           " \"header\" : {0}," +
+                                                           " \"$schemaRef\": \"{1}\","+
+                                                           " {2}" +
+                                                           "}}", 
+                                                           JsonConvert.SerializeObject(header, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }),
+                                                           schema,
+                                                           _Send_Journal.Dequeue().ToString()));
+
+
+                    using (var client = new WebClient())
+                    {
+                        try
+                        {
+                            Debug.Print(journalMessage.ToString());
+
+                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", journalMessage.ToString());
+
+                            m_JournalSendingError   = false;
+                            DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Journal_V1, enTransmittedStates.Sent));
+                        }
+                        catch (WebException ex)
+                        {
+                            _logger.Log("Error uploading json (journal)");
+                            _logger.Log(ex.ToString());
+                            _logger.Log(ex.Message);
+                            _logger.Log(ex.StackTrace);
+                            if (ex.InnerException != null)
+                                _logger.Log(ex.InnerException.ToString());
+
+                            using (WebResponse response = ex.Response)
+                            {
+                                using (Stream data = response.GetResponseStream())
+                                {
+                                    if (data != null)
+                                    {
+                                        StreamReader sr = new StreamReader(data);
+                                        m_JournalSendingError   = true;
+                                        DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Journal_V1, enTransmittedStates.Error));
+                                        _logger.Log("Error while uploading journal data to EDDN : " + sr.ReadToEnd());
+                                    }
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            client.Dispose();
+                        }
+                    }
+                } while (_Send_Journal.Count > 0);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Error uploading Json (journal)");
+                _logger.Log(ex.ToString());
+                _logger.Log(ex.Message);
+                _logger.Log(ex.StackTrace);
+                if (ex.InnerException != null)
+                    _logger.Log(ex.InnerException.ToString());
+
+                CErr.processError(ex, "Error in EDDN-Sending-Thread (journal)");
             }
 
         }
@@ -1607,6 +1812,30 @@ bool disposed = false;
         }
 
         /// <summary>
+        /// timer routine for sending all registered data to EDDN
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void SendDelayTimerJournal_Elapsed(object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+
+                // it's time to start the EDDN transmission
+                _Spool2EDDN_Journal = new Thread(new ThreadStart(SendJournalData_i));
+                _Spool2EDDN_Journal.Name = "Spool2EDDN Journal";
+                _Spool2EDDN_Journal.IsBackground = true;
+
+                _Spool2EDDN_Journal.Start();
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while sending EDDN data (journal)");
+            }
+        }
+
+        /// <summary>
         /// checks and gets the EDDN id
         /// </summary>
         public String UserIdentification()
@@ -1648,11 +1877,60 @@ bool disposed = false;
             m_ID_of_Commodity_Station  =  new Tuple<String, DateTime>("", new DateTime());
             m_ID_of_Outfitting_Station =  new Tuple<String, DateTime>("", new DateTime());
             m_ID_of_Shipyard_Station   = new Tuple<String, DateTime>("", new DateTime());
+            m_ID_of_Journal_Station   = new Tuple<String, DateTime>("", new DateTime());
 
             m_CommoditySendingError  = false;
             m_OutfittingSendingError = false;
             m_ShipyardSendingError   = false;
+            m_JournalSendingError   = false;
+
         }
+
+
+        public void RegisterJournalScanner(FileScanner.EDJournalScanner journalScanner)
+        {
+            try
+            {
+                if(m_JournalScanner == null)
+                { 
+                    m_JournalScanner = journalScanner;
+                    m_JournalScanner.JournalEventRecieved += JournalEventRecieved;
+                }
+                else 
+                    throw new Exception("LogfileScanner already registered");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while registering the LogfileScanner", ex);
+            }
+        }
+
+        /// <summary>
+        /// event-worker for JournalEventRecieved-event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void JournalEventRecieved(object sender, FileScanner.EDJournalScanner.JournalEventArgs e)
+        {
+            try
+            {
+                switch (e.EventType)
+                {
+                    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
+                    case FileScanner.EDJournalScanner.JournalEvent.Docked:
+                    case FileScanner.EDJournalScanner.JournalEvent.Scan:
+                        SendJournalData((JObject)e.Data);
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+            }
+        }
+
 #endregion
 
         public enum SendingState

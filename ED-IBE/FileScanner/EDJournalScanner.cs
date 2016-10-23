@@ -33,7 +33,8 @@ namespace IBE.FileScanner
             Died,
             Resurrect,
             SupercruiseEntry,
-            SupercruiseExit
+            SupercruiseExit, 
+            Scan
         }
 
 #endregion
@@ -336,7 +337,7 @@ namespace IBE.FileScanner
                             journalStreamReader   = new StreamReader(journalFileStream);
                         }
 
-                        while (!journalStreamReader.EndOfStream)
+                         while (!journalStreamReader.EndOfStream)
                         {
                             // get json object
                             dataLine     = journalStreamReader.ReadLine();
@@ -389,6 +390,8 @@ namespace IBE.FileScanner
 
                                         case JournalEvent.Died:
                                         case JournalEvent.Resurrect:
+
+                                        case JournalEvent.Scan:
 
 
                                             if(eventName == JournalEvent.Docked)

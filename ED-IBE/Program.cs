@@ -407,6 +407,7 @@ namespace IBE
                     EDSMComm.registerJournalScanner(JournalScanner);
 
                     actualCondition.RegisterJournalScanner(JournalScanner);
+                    EDDNComm.RegisterJournalScanner(JournalScanner);
                     
 
                     // Plausibility-Checker

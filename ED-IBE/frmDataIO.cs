@@ -187,7 +187,6 @@ namespace IBE
                     ImportDataAsync(null, importFlags, null, m_DataPath, false, null);
 
                     Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Info="importing new ids from EDCD...<OK>", ForceRefresh = true});
-
                 }
                 else
                 {
@@ -816,6 +815,8 @@ namespace IBE
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportEDCDData(enImportTypes.EDCD_Outfitting, Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables("tboutfittingbase");
+
                             }
                             else
                             {
@@ -830,6 +831,8 @@ namespace IBE
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportEDCDData(enImportTypes.EDCD_Shipyard, Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables("tbshipyardbase");
+
                             }
                             else
                             {
@@ -844,6 +847,7 @@ namespace IBE
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportEDCDData(enImportTypes.EDCD_Commodity, Path.Combine(sourcePath, FileName));
+                                Program.Data.PrepareBaseTables("tbcommoditybase");
                             }
                             else
                             {
