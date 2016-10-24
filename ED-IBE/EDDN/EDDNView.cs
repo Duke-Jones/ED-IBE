@@ -191,8 +191,27 @@ namespace IBE.EDDN
                     {
                         if(((CheckBox)sender).Name.Equals("cbEDDNAutoListen") && cbEDDNAutoListen.Checked && (!cbEDDNAutoSend.Checked))
                         {
-                            if(MessageBox.Show(this, "The EDDN/EDDB lives from the data. If you want to receive data permanently, it would be fair in return also to send data.\r\n" +
-                                                     "Shall I activate sending of market data for you?", 
+                            if(MessageBox.Show(this, "The EDDN/EDDB lives from the data and it would be nice if you decide to feed the stream.\r\n" +
+                                                     "Shall I activate sending of EDDN data for you?\r\n\r\n" + 
+                                                     "If you don't want to share market data you should at least allow sending journal/outfitting and shipyard data.\r\n" + 
+                                                     "You can decide for each data type independently.", 
+                                                     "EDDN Network", 
+                                                     MessageBoxButtons.YesNo, 
+                                                     MessageBoxIcon.Question, 
+                                                     MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                cbEDDNAutoSend.Checked = true;
+
+                                if(!m_Communicator.SenderIsActivated)
+                                    m_Communicator.ActivateSender();
+                            }
+                        }
+                        else if(((CheckBox)sender).Name.Equals("cbEDDNAutoSend") && (!cbEDDNAutoSend.Checked))
+                        {
+                            if(MessageBox.Show(this, "The EDDN/EDDB lives from the data and it would be nice if you decide to feed the stream.\r\n" +
+                                                     "Shall I activate sending of EDDN data for you?\r\n\r\n" + 
+                                                     "If you don't want to share market data you should at least allow sending journal/outfitting and shipyard data.\r\n" + 
+                                                     "You can decide for each data type independently.", 
                                                      "EDDN Network", 
                                                      MessageBoxButtons.YesNo, 
                                                      MessageBoxIcon.Question, 

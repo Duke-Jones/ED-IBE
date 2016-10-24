@@ -1383,6 +1383,7 @@ namespace IBE
                         Program.Colors.SetColor(GUIColors.ColorNames.Default_BackColor, backGround);
 
                     }
+                   
                 }
 
 
@@ -1565,6 +1566,28 @@ namespace IBE
 
                         Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...<OK>");
                     }
+
+                    if (m_NewDBVersion == new Version(0,5,0,0))
+                    {
+                        if (!Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", true.ToString(), false))
+                        {
+                            Program.DBCon.setIniValue("EDDN", "AutoSend", true.ToString());
+
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = false;
+
+                            MessageBox.Show(parent, "EDDN sender activated once, please check if not wanted.", 
+                                                       "EDDN Network", 
+                                                       MessageBoxButtons.OK, 
+                                                       MessageBoxIcon.Question);
+
+                            if(!Program.SplashScreen.IsDisposed)
+                                Program.SplashScreen.TopMost = true;
+
+
+                        }
+                    }
+
                 }
             }
             catch (Exception ex)

@@ -890,7 +890,7 @@ namespace IBE.MTCommandersLog
                         if(Program.DBCon.Execute(sqlString, Data) == 1)
                         {
                             if(((Int32)Data.Rows[0]["system_id"]  == Program.actualCondition.System_ID) && 
-                               ((System.Convert.IsDBNull(Data.Rows[0]["station_id"]) ? null : (int?)Data.Rows[0]["station_id"])  == Program.actualCondition.Location_ID) && 
+                               ((System.Convert.IsDBNull(Data.Rows[0]["station_id"]) ? null : (int?)Data.Rows[0]["station_id"])  == Program.actualCondition.Station_ID) && 
                                ((Int32)Data.Rows[0]["event_id"]   == (Int32)Program.Data.BaseTableNameToID("EventType", "Visited")))
                             {
                                 // change existing

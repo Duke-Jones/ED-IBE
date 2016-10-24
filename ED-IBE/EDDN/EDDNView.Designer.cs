@@ -90,6 +90,8 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox4.SuspendLayout();
             this.gbSendingDefault.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -109,6 +111,7 @@
             this.tabByMessageType.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).BeginInit();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // tmrRefresh
@@ -166,7 +169,7 @@
             this.cbPostOutfittingData.TabIndex = 47;
             this.cbPostOutfittingData.Tag = "EDDNPostOutfittingData;true";
             this.cbPostOutfittingData.Text = "Outfitting Data";
-            this.toolTip1.SetToolTip(this.cbPostOutfittingData, "Check to send outfitting data to EDDN");
+            this.toolTip1.SetToolTip(this.cbPostOutfittingData, "Check to send outfitting data to EDDN if you land on a station.");
             this.cbPostOutfittingData.UseVisualStyleBackColor = true;
             this.cbPostOutfittingData.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -179,7 +182,7 @@
             this.checkBox2.TabIndex = 48;
             this.checkBox2.Tag = "EDDNPostShipyardData;true";
             this.checkBox2.Text = "Shipyard Data";
-            this.toolTip1.SetToolTip(this.checkBox2, "Check to send shipyard data to EDDN");
+            this.toolTip1.SetToolTip(this.checkBox2, "Check to send shipyard data to EDDN if you land on a station");
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -263,7 +266,7 @@
             this.cbPostCompanionData.Tag = "EDDNPostCompanionData;true";
             this.cbPostCompanionData.Text = "Market Data From Companion API ";
             this.toolTip1.SetToolTip(this.cbPostCompanionData, "If not checked you will never send market data from companion IO to EDDN.\r\nIf che" +
-        "cked, sending depends in general on the \"Quick Decision CheckBox\"\r\n");
+        "cked, sending depends in general on the \"Quick Decision CheckBox\".\r\n\r\n");
             this.cbPostCompanionData.UseVisualStyleBackColor = true;
             this.cbPostCompanionData.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -420,17 +423,17 @@
             // 
             this.lbEDDNInfo.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lbEDDNInfo.AutoSize = true;
-            this.lbEDDNInfo.Font = new System.Drawing.Font("Cooper Black", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbEDDNInfo.Font = new System.Drawing.Font("Cooper Black", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbEDDNInfo.ForeColor = System.Drawing.Color.Crimson;
-            this.lbEDDNInfo.Location = new System.Drawing.Point(160, 371);
+            this.lbEDDNInfo.Location = new System.Drawing.Point(67, 397);
             this.lbEDDNInfo.Name = "lbEDDNInfo";
-            this.lbEDDNInfo.Size = new System.Drawing.Size(709, 180);
+            this.lbEDDNInfo.Size = new System.Drawing.Size(917, 217);
             this.lbEDDNInfo.TabIndex = 49;
-            this.lbEDDNInfo.Text = "Have in mind:\r\n\r\nThe EDDN/EDDB lives from the data. \r\nIf you want to receive data" +
-    " permanently, \r\nit would be fair in return also to send data.";
+            this.lbEDDNInfo.Text = resources.GetString("lbEDDNInfo.Text");
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.groupBox8);
             this.groupBox3.Controls.Add(this.groupBox7);
             this.groupBox3.Controls.Add(this.groupBox6);
             this.groupBox3.Controls.Add(this.lblSenderStatus);
@@ -441,7 +444,7 @@
             this.groupBox3.Controls.Add(this.cbEDDNAutoSend);
             this.groupBox3.Location = new System.Drawing.Point(8, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(457, 297);
+            this.groupBox3.Size = new System.Drawing.Size(457, 362);
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Post Data To EDDN";
@@ -452,7 +455,7 @@
             this.groupBox7.Controls.Add(this.checkBox2);
             this.groupBox7.Location = new System.Drawing.Point(192, 210);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(252, 74);
+            this.groupBox7.Size = new System.Drawing.Size(252, 73);
             this.groupBox7.TabIndex = 54;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Outfitting / Shipyard  Data";
@@ -822,6 +825,28 @@
             this.tbEDDNOutput.Size = new System.Drawing.Size(479, 224);
             this.tbEDDNOutput.TabIndex = 3;
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.checkBox1);
+            this.groupBox8.Location = new System.Drawing.Point(192, 289);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(252, 50);
+            this.groupBox8.TabIndex = 55;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Other";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(14, 21);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(86, 17);
+            this.checkBox1.TabIndex = 47;
+            this.checkBox1.Tag = "EDDNPostJournalData;true";
+            this.checkBox1.Text = "Journal Data";
+            this.toolTip1.SetToolTip(this.checkBox1, resources.GetString("checkBox1.ToolTip"));
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // EDDNView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -864,6 +889,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).EndInit();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -930,5 +957,7 @@
         private System.Windows.Forms.RadioButton rbMarketDefault_Send;
         private System.Windows.Forms.CheckBox cbPostOCRData;
         private System.Windows.Forms.CheckBox cbPostCompanionData;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

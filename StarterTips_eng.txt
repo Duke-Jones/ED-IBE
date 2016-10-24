@@ -8,7 +8,7 @@ Content:
 	* Prerequisites
 	
 	* Quick Guide / Starter Tips
-		1. Installation
+		1. Installation / Update
 		2. Start
 		3. First steps and results
 			3.1. enter your own data
@@ -50,7 +50,7 @@ Prerequisites:
 Quick Guide / Starter Tips:
 
 _________________________________________________________________________
-1. Installation
+1. Installation / Update
 By default, the program installs to half in the Programs
 directory (C:\Program Files\ED-IBE) and the other half in the data directory
 (C:\Users\{USER}\AppData\Local\ED-IBE). These paths can during installation
@@ -61,6 +61,9 @@ During this time the database structure is created. If this window does not appe
 something is wrong. Possibly try re-installing in another destination directory.
 A log of this action can be found in the data directory, if you experience problems.
 (.\ED-IBE\Database\install.log).
+
+To update ED-IBE to a newer version simply start the installer of the new version.
+All existing data will be taken over automatically.
 
 If you perform an update the setup routine recognizes an existing 
 database by the existence of the file ".\ED-IBE\Database\data\ibdata1".
@@ -87,6 +90,17 @@ import in your own language OCR-ed data !
 _________________________________________________________________________
 3. First steps and results
 
+Since version 2.2 Elite Dangerous generates a journal. In this journal file all important events will be written.
+(default path is "C:\Users\<Username>\Saved Games\Frontier Developments\Elite Dangerous\").
+ED-IBE scans this journal in background and reacts to different events.
+As example the "Docked" event is used to initiate the automatic collection of data from the Companion interface
+like market data, shipyard and outfitting data. Many of these events are also written
+into ED-IBEs "Commander's Log".
+
+Following events are used by ED-IBE at the moment:
+Fileheader, Location, Docked, Undocked, SupercruiseEntry, SupercruiseExit, Liftoff, 
+Touchdown, FSDJump, Died, Resurrect, Scan
+
 3.1. enter your own data
 After IBE runs and also the right system in the "Current Location" displays
 firstly activate the Companion interface. For this go to the login mask 
@@ -95,22 +109,18 @@ firstly activate the Companion interface. For this go to the login mask
 in the appropriate field and press "Verify". After a few seconds you should
 see in the lower status bar a message about the operating readiness of the interface.
 
-Now you can deal with the interface by pressing "Landed" to get your current location
-or "Market Data" to import the current prices.
+Now you can deal with the interface by landing your ship on a station
+ - or if you want to re-collect some data - by pressing "Re-collect station data".
 
-* "Landed/Station Data"   - recieves the data from the FD servers
-                          - creates a "Landed"-Event in the Commander's Log
-						  - send outfitting and shipyard data to the EDDN (if activated)
-						  
-* "Market Data"           - creates a "Market Data Collected"-Event in the Commander's Log
-                          - integrates the market data of the current station to your local database
-						  - sends market data to the EDDN if "Send To EDDN" is checked
+If landing
+- you recieve the data from the FD servers
+- a "Visited" or "Market Data Collected"-Event is written in the Commander's Log
+- the market data of the current station is added to your local database
+- ED-IBE will send outfitting and shipyard data to the EDDN (if activated)
+- ED-IBE will send market data to the EDDN (if activated) 
 
 The "cached" timer shows how long you will get the data from a internal cache of the interface.
-The next request to the ED server will not send until the timer is 0 again. For example 
-you can press "Landed" and you will get the whole bunch of data from the server.
-After this (while the timer is counting) you press "Market Data".
-Conclusion: Even if the counter is running you have cached data and need not to wait.
+The next request to the ED server will not send until the timer is 0 again. 
 
 3.1.1 what do the leds mean
 * Docked: IBE knows that you are docked
@@ -293,6 +303,11 @@ in "IO"->"EDDN Interface". To receive EDDN data automatically at the next start 
 To filter out garbage the time window of valid data is +- 5 minutes. 
 The time of your own computer should therefore be well adjusted. 
 Multiple incoming data from EDDN  is also be filtered within a 5-minute period.
+
+ED-IBE also sends data about star systems, stations and planets into the EDDN 
+(by the events "Docked", "FSDJump" and "Scan", see http://edcodex.info/?m=doc). 
+This data is used by different locations, as example z.B. EDDB (www.eddb.io), 
+to collect data from the ED universe and to provide the information to the community.
 
 _________________________________________________________________________
 10. EDSM

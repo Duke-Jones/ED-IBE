@@ -4,7 +4,7 @@ Inhalt:
    * Voraussetzungen
 
    * Kurzanleitung/Starter-Tipps
-		1. Installation 
+		1. Installation / Update 
 		2. Starten
 		3. Erste Schritte und Ergebnisse
 			3.1. eigene Daten erfassen
@@ -42,7 +42,7 @@ Voraussetzungen:
 
 Kurzanleitung/Starter-Tipps
 _________________________________________________________________________
-1. Installation 
+1. Installation / Update
 Standardmäßig installiert sich das Programm zu Hälfte in das Programme-
 verzeichnis (C:\Program Files\ED-IBE) und zur Hälfte in das Data-Verzeichnis
 (C:\Users\{USER}\AppData\Local\ED-IBE). Diese Pfade können während der Installation 
@@ -56,7 +56,10 @@ stimmt etwas nicht. Evtl. die Installation in einem anderen Zielverzeichnis erne
 Ein Log hiervon ist im Data-Verzeichnis zu finden, falls hierbei Probleme auftreten.
 (ED-IBE\Database\install.log). 
 
-Sollte eine erneute Installation durchgeführt werden (z.B. bei einem Update) erkennt 
+Um auf eine neuere Version von ED-IBE zu aktualisieren einfach den Installer der neuen Version aufrufen.
+Die alte Installation wird automatisch erkannt und bestehende Daten werden übernommen.
+
+Sollte eine erneute Installation oder ein Update durchgeführt werden erkennt 
 die Installationsroutine eine bestehende Datenbank anhand der Existenz der Datei "\ED-IBE\Database\data\ibdata1".
 Die Datenbank wird dann unverändert beibehalten, solange bei der Installation nicht explizit 
 das "Löschen und Neuerstellen" ausgewählt wird. 
@@ -80,6 +83,17 @@ auch OCR-Ergebnisse in der eigenen Sprache zu importieren.
 _________________________________________________________________________
 3. Erste Schritte und Ergebnisse
 
+Ab Elite Dangerous 2.2 erzeugt das Spiel ein Journal, in das alle wichtigen Events
+reingeschrieben werden (Standard-Pfad ist C:\Users\<Username>\Saved Games\Frontier Developments\Elite Dangerous\).
+ED-IBE scannt dieses Journal im Hintergrund und reagiert auf verschiedene Ereignisse.
+So wird zum Beispiel das "Docked"-Ereignis genutzt, um automatisch Daten der Station über 
+die Companion-Schnittstelle abzurufen(Markpreise, Werftinformationen und Schiffsausstattungen).
+Viele der Ereignisse erzeugen auch automatisch Einträge im Commander's Log.
+
+Folgende Ereignisse werden derzeit von ED-IBE genutzt:
+Fileheader, Location, Docked, Undocked, SupercruiseEntry, SupercruiseExit, Liftoff, 
+Touchdown, FSDJump, Died, Resurrect, Scan
+
 3.1. eigene Daten erfassen
 Nachdem IBE läuft und auch das richtige System im Feld "Current System" anzeigt
 am besten erst mal das Companion Interface in Betrieb nehmen. Dazu die Anmeldemaske
@@ -90,22 +104,20 @@ Diesen in das betreffende Feld eingeben und mit "Verify absenden.
 Einen Augenblick später sollte die untere Statuszeile die Bereitschaft der 
 Schnittstelle melden.
 
-Jetzt sollte man auf mit den Tasten ""Landed/Station Data" und "Market Data" die aktuellen 
-Daten der Station erfassen können.
+Jetzt werden durch das Landen auf einer Station automatisch die lokalen Daten über das 
+Companion-Interface abgerufen. Durch "Re-collect station data" können die Daten (z. B. 
+am nächsten Tag) erneut abgerufen und aktualisiert werden.
 
-* "Landed/Station Data"   - empfängt die Daten von den FD-Servern 
-                          - erzeugt ein "Landed"-Event im Commander's Log
-						  - sendet Schiffwerft- und Austattungsdaten in das EDDN (wenn aktiv)
-						  
-* "Market Data"           - erzeugt gleichzeitig ein "Market Data Collected"-Event im Commander's Log
-                          - lädt die aktuellen Markpreise der Station in die lokale Datenbank
-						  - sendet die Marktdaten in das EDDN, wenn der Haken bei "Send To EDDN" gesetzt ist
+Durch das Landen 
+- empfängt ED-IBE die Daten von den FD-Servern 
+- erzeugt ED-IBE ein "Visited" oder "Market Data Collected"-Event im Commander's Log
+- sendet ED-IBE Schiffwerft- und Austattungsdaten in das EDDN (wenn aktiv)
+- lädt ED-IBE die aktuellen Markpreise der Station in die lokale Datenbank
+- sendet ED-IBE die Marktdaten in das EDDN, wenn der Haken bei "Send To EDDN" gesetzt ist
 
 Der "cached"-Timer zeigt an, wie lange weitere Datenanfragen noch aus einem Cache 
 bedient werden. Erst wenn der Timer wieder auf 0 steht werden die internen Daten bei der 
-nächsten Anfrage aktualisiert. So wird zum Beispiel nach einem Klick auf "Landed"
-der kurz darauf folgende Klick auf "Market Data" mit den selben Daten bedient, die bereits 
-beim Klick auf "Landed" von den ED-Servern abgefragt wurden.
+nächsten Anfrage aktualisiert.
 
 3.1.1 was sind das für LED-anzeigen
 * Docked: zeigt an, das IBE das Schiff als gelandet ansieht
@@ -295,6 +307,11 @@ Das Empfangen der Daten aus dem EDDN ist standardmäßig ausgeschaltet, kann abe
 Um Datenmüll auszufiltern beträgt das Zeitfenster für gültige EDDN-Daten +- 5 Minuten - 
 die Uhrzeit des eigenen Rechners sollte also einigermaßen stimmen. Mehrfach eingehende
 Daten (Station+Ware) vom EDDN werden innerhalb eines 5-Minuten-Zeitraumes ebenfalls gefiltert.
+
+ED-IBE sendet auch Daten über Sternen-Systeme, gescannte Planeten/Himmelskörper und Stationen
+in das EDDN (über die Events "Docked", "FSDJump" und "Scan", siehe auch http://edcodex.info/?m=doc). 
+Diese Daten werden von verschiedenen Stellen genutzt, z.B. EDDB (www.eddb.io) um die ED-Spielewelt 
+zu erfassen und für die Community verfügbar zu machen.
 
 _________________________________________________________________________
 10. EDSM

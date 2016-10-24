@@ -128,10 +128,18 @@ namespace IBE.FileScanner
         {
             try
             {
-                m_LastScan_JournalFile                  = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "LastScan_JournalFile",  "", true);
-                m_LastScan_Event                        = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "LastScan_Event",        "", true);
-                m_LastScan_Timestamp                    = Program.DBCon.getIniValue<DateTime>(DB_GROUPNAME, "LastScan_TimeStamp",    new DateTime(2000, 1, 1).ToString(), false);
-
+                if(true)
+                {
+                    m_LastScan_JournalFile                  = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "LastScan_JournalFile",  "", true);
+                    m_LastScan_Event                        = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "LastScan_Event",        "", true);
+                    m_LastScan_Timestamp                    = Program.DBCon.getIniValue<DateTime>(DB_GROUPNAME, "LastScan_TimeStamp",    new DateTime(2000, 1, 1).ToString(), false);
+                }
+                else
+                {
+                    m_LastScan_JournalFile                  = "";
+                    m_LastScan_Event                        = "";
+                    m_LastScan_Timestamp                    = DateTime.MinValue;
+                }
             }
             catch (Exception ex)
             {
@@ -246,7 +254,7 @@ namespace IBE.FileScanner
             String lastEvent = "";
             DateTime lastEventTime = DateTime.MinValue;
             List<JournalEventArgs> history = new List<JournalEventArgs>();
-
+            Boolean isZeroRun = false;
             m_NewFileDetected = false;
 
             do
@@ -262,7 +270,8 @@ namespace IBE.FileScanner
                         if ((journals.Count() > 0) && (GetTimeValueFromFilename(journals.ElementAt<String>(0)) > 0))
                             m_LastScan_JournalFile  = journals.ElementAt<String>(0);
 
-                        gotLatestEvent = true;
+                        if(isFirstRun)
+                            isZeroRun = true;
                     }
                     else if(m_NewFileDetected || isFirstRun)
                     {
@@ -357,7 +366,7 @@ namespace IBE.FileScanner
                                     eventName = JournalEvent.Not_Supported;
                                 }
 
-                                if((!gotLatestEvent) && (rawTimeStamp > m_LastScan_Timestamp))
+                                if((!gotLatestEvent) && (!isZeroRun) && (rawTimeStamp > m_LastScan_Timestamp))
                                 {
                                     // jumped over the searched, process this one and all following will be processed
                                     gotLatestEvent = true;
@@ -417,6 +426,13 @@ namespace IBE.FileScanner
                                 }
                                 else
                                 {
+                                    if(isZeroRun)
+                                    { 
+                                        // every recognized event is accepted as new
+                                        lastEvent       = rawEventName;
+                                        lastEventTime   = rawTimeStamp;
+                                    }
+
                                     // switch what to do
                                     switch (eventName)
                                     {
@@ -489,7 +505,7 @@ namespace IBE.FileScanner
                                 }
 
 
-                                if(!gotLatestEvent)
+                                if((!isZeroRun) && (!gotLatestEvent))
                                 {
                                     // do we get the latest event now ?
                                     if((rawTimeStamp == m_LastScan_Timestamp) && (rawEventName == m_LastScan_Event))
@@ -509,6 +525,10 @@ namespace IBE.FileScanner
 
                             lastEventTime = DateTime.MinValue;
                         }
+
+                        if(isZeroRun)
+                            gotLatestEvent = true;
+
 
                         if(gotLatestEvent)
                             SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader);
@@ -533,6 +553,8 @@ namespace IBE.FileScanner
                             gotLatestEvent = true;
                         }
                     }
+
+                    isZeroRun = false;
                 }
                 catch (Exception ex)
                 {

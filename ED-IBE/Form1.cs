@@ -1338,7 +1338,7 @@ namespace IBE
                 Program.CompanionIO.AsyncDataRecievedEvent += CompanionIO_AsyncDataRecievedEvent;
                 if ((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok) && (!Program.CompanionIO.StationHasShipyardData()))
                 {
-                    int? stationID = Program.actualCondition.Location_ID;
+                    int? stationID = Program.actualCondition.Station_ID;
 
                     if ((stationID != null) && Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + stationID))
                     {
@@ -3620,7 +3620,7 @@ namespace IBE
                 {
                     if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok) && Program.CompanionIO.IsLanded())
                     {
-                        int? stationID = Program.actualCondition.Location_ID;
+                        int? stationID = Program.actualCondition.Station_ID;
 
                         if(stationID == null)
                         {
@@ -3710,7 +3710,7 @@ namespace IBE
                     }
 
                     // can only collect market data if landed andn confirmed
-                    cmdEventLanded.Enabled = (Program.actualCondition.Location_ID != null);
+                    cmdEventLanded.Enabled = (Program.actualCondition.Station_ID != null);
                 }
             }
             catch (Exception ex)

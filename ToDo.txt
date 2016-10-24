@@ -12,14 +12,19 @@ todo:
 * avoid resizing of fonts
 * VoiceAttack interface
 
-* hint "how to update"
-
+* background start
 
 *************************************************************************************
 
 done:
 
 
+  * fixed crash reason when starting and no station id is registered
+  * fixed crash reason when scan journal for the first time
+  * fixed bug when calculating number of system to import
+  * updated startertips files
+  * one-time reactivation of EDDN with hint
+-------------------------------------------------------------------------------------         
   * fixed bug when holding multiple EDDN messages in send queue
   * now also sending journal messages to EDDN
 -------------------------------------------------------------------------------------         

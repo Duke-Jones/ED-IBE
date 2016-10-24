@@ -1089,17 +1089,10 @@ bool disposed = false;
         /// <param name="stationData">json object with journal data</param>
         public void SendJournalData(JObject dataObject)
         {
-            //Int32 objectCount = 0;
-            //Boolean writeToFile = false;
-            //StreamWriter writer = null;
-            //String debugFile = @"C:\temp\journal_ibe.csv";
-            //SQL.Datasets.dsEliteDB.tbshipyardbaseDataTable baseData;
-
             try
             {
                 if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostJournalData", true.ToString(), false))
-                {
-
+                {                                                                                             
                     StringBuilder journalStringEDDN = new StringBuilder();
                     journalStringEDDN.Append(String.Format("\"message\": {{"));
                     

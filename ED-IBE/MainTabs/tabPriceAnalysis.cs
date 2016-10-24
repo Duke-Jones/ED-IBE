@@ -1848,7 +1848,7 @@ namespace IBE.MTPriceAnalysis
                     detailCommodity.Text  = commodityInfo.Commodity;
                     detailProfit.Text     = commodityInfo.Profit.ToString();
 
-                    if(stationInfo[0].StationID == (Program.actualCondition.Location_ID ?? 0))
+                    if(stationInfo[0].StationID == (Program.actualCondition.Station_ID ?? 0))
                     {
                         Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_ForeColor1, GUIColors.ColorNames.Marked_BackColor1, true);
                     }
@@ -1917,7 +1917,7 @@ namespace IBE.MTPriceAnalysis
                         commodityInfo = (SQL.Datasets.dsEliteDB.tmpa_s2s_stationdataRow)((DataRowView)currentDGV.CurrentRow.DataBoundItem).Row;
                         stationInfo   = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])Program.Data.BaseData.visystemsandstations.Select("StationID=" + commodityInfo.Station_ID);
 
-                        if(stationInfo[0].StationID == (Program.actualCondition.Location_ID ?? 0))
+                        if(stationInfo[0].StationID == (Program.actualCondition.Station_ID ?? 0))
                         {
                             Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Marked_ForeColor1, GUIColors.ColorNames.Marked_BackColor1, true);
                         }
@@ -1954,7 +1954,7 @@ namespace IBE.MTPriceAnalysis
                     }
                     else if(e.ColumnIndex == dgvStationToStationRoutes.Columns["stationName1DataGridViewTextBoxColumn"].Index)
                     {
-                        if(Program.actualCondition.Location_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["stationID1DataGridViewTextBoxColumn"].Value)
+                        if(Program.actualCondition.Station_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["stationID1DataGridViewTextBoxColumn"].Value)
                         {
                             e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
                             e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);
@@ -1970,7 +1970,7 @@ namespace IBE.MTPriceAnalysis
                     }
                     else if(e.ColumnIndex == dgvStationToStationRoutes.Columns["stationName2DataGridViewTextBoxColumn"].Index)
                     {
-                        if(Program.actualCondition.Location_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["stationID2DataGridViewTextBoxColumn"].Value)
+                        if(Program.actualCondition.Station_ID == (int?)dgvStationToStationRoutes.Rows[e.RowIndex].Cells["stationID2DataGridViewTextBoxColumn"].Value)
                         {
                             e.CellStyle.ForeColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor1);
                             e.CellStyle.BackColor = Program.Colors.GetColor(GUIColors.ColorNames.Marked_ForeColor);

@@ -148,9 +148,9 @@ namespace IBE
         }
 
         /// <summary>
-        /// returns the id of the actual location if existing
+        /// returns the id of the actual station if existing
         /// </summary>
-        public int? Location_ID
+        public int? Station_ID
         {
             get
             {

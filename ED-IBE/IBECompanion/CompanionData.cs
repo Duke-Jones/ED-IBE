@@ -651,7 +651,7 @@ namespace IBE.IBECompanion
                             {
                                 Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
                             }
-                            else if(Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Location_ID))
+                            else if((Program.actualCondition.Station_ID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Station_ID)))
                             {
                                 // probably companion error, try once again in 5 seconds
                                 Program.CompanionIO.ReGet_StationData();                                
