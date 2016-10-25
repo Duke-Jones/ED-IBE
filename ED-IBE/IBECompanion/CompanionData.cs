@@ -440,7 +440,8 @@ namespace IBE.IBECompanion
         {
             try
             {
-                m_joCompanion["commander"]["docked"] = isLanded;
+                if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
+                    m_joCompanion["commander"]["docked"] = isLanded;
             }
             catch (Exception ex)
             {
