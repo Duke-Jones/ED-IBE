@@ -106,10 +106,26 @@ namespace IBE.IBECompanion
                                 txtStatus.BackColor = Color.Red;
 
                                 cmdVerify.Enabled   = false;
-                                txtStatus.Text =  "Unknown Error !";
+                                txtStatus.Text =  "Unknown Error ! (" + response.HttpStatusCode + ")";
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.HttpError:
+                                cmdConnect.Enabled  = true;
+                                txtStatus.ForeColor = Color.Black;
+                                txtStatus.BackColor = Color.Red;
+
+                                cmdVerify.Enabled   = false;
+                                txtStatus.Text =  "Http Error ! (" + response.HttpStatusCode + ")";
                                 break;
                             case EDCompanionAPI.Models.LoginStatus.NotAccessible:
                                 txtStatus.Text =  "No data recieved, servers may in maintenance mode !";
+                                txtStatus.ForeColor = Color.Black;
+                                txtStatus.BackColor = Color.FromArgb(0xFF, 0xFF, 0xCC);
+                                cmdConnect.Enabled  = false;
+                                cmdVerify.Enabled   = false;
+
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.TooManyRequests:
+                                txtStatus.Text =  "Too many requests, servers are overloaded !";
                                 txtStatus.ForeColor = Color.Black;
                                 txtStatus.BackColor = Color.FromArgb(0xFF, 0xFF, 0xCC);
                                 cmdConnect.Enabled  = false;

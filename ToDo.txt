@@ -18,7 +18,10 @@ todo:
 
 done:
 
-
+v0.5.0
+  * optimized behaviour of journal scanner when starting
+  * fixed crash when companion servers are overloaded and not responsive
+-------------------------------------------------------------------------------------         
   * fixed crash reason when starting and no station id is registered
   * fixed crash reason when scan journal for the first time
   * fixed bug when calculating number of system to import
