@@ -179,37 +179,68 @@ namespace EDCompanionAPI
                 { "password", password }
             };
 
-            using (var response = _Http.Post(Constants.URL_LOGIN, data, true))
+            try
             {
-                loginResponse.HttpStatusCode = response.StatusCode;
-                if (response.StatusCode == HttpStatusCode.Found || response.StatusCode == HttpStatusCode.MovedPermanently)
+                using (var response = _Http.Post(Constants.URL_LOGIN, data, true))
                 {
-                    //Response redirected
-                    var redirect = response.Headers[HttpResponseHeader.Location];
-                    if (!String.IsNullOrEmpty(redirect))
+                    loginResponse.HttpStatusCode = response.StatusCode;
+                    if (response.StatusCode == HttpStatusCode.Found || response.StatusCode == HttpStatusCode.MovedPermanently)
                     {
-                        //Redirect to verification?
-                        if (redirect.TrimEnd('/').Equals(Constants.VERIFICATION_REDIRECT_PATH, StringComparison.CurrentCultureIgnoreCase))
+                        //Response redirected
+                        var redirect = response.Headers[HttpResponseHeader.Location];
+                        if (!String.IsNullOrEmpty(redirect))
                         {
-                            loginResponse.Status = LoginStatus.PendingVerification;
+                            //Redirect to verification?
+                            if (redirect.TrimEnd('/').Equals(Constants.VERIFICATION_REDIRECT_PATH, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                loginResponse.Status = LoginStatus.PendingVerification;
+                            }
+                            //Redirect home?
+                            else if (redirect.Equals("/"))
+                            {
+                                loginResponse.Status = LoginStatus.Ok;
+                            }
                         }
-                        //Redirect home?
-                        else if (redirect.Equals("/"))
-                        {
-                            loginResponse.Status = LoginStatus.Ok;
-                        }
-                    }
 
+                    }
+                    else if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        //No redirect on login, probably wrong password
+                        loginResponse.Status = LoginStatus.IncorrectCredentials;
+                    }
+                    else
+                    {
+                        //Other response code
+                        loginResponse.Status = LoginStatus.UnknownError;
+                    }
                 }
-                else if (response.StatusCode == HttpStatusCode.OK)
+            }
+            catch (Exception ex)
+            {
+                if(ex.GetBaseException().Message.Contains("(429)"))
                 {
-                    //No redirect on login, probably wrong password
-                    loginResponse.Status = LoginStatus.IncorrectCredentials;
+                    loginResponse.Status = LoginStatus.TooManyRequests;
+                    loginResponse.HttpStatusCode = (HttpStatusCode)(429);
+
                 }
                 else
                 {
-                    //Other response code
-                    loginResponse.Status = LoginStatus.UnknownError;
+                    System.Text.RegularExpressions.Regex httpPattern = new System.Text.RegularExpressions.Regex(@"\([0-9]{3}\)");
+                    if(httpPattern.IsMatch(ex.GetBaseException().Message))
+                    {
+
+                        loginResponse.Status            = LoginStatus.HttpError;
+
+                        Int32 errNumber = 0;
+                        if(Int32.TryParse(httpPattern.Match(ex.GetBaseException().Message).Value.Substring(1,3), out errNumber))
+                            loginResponse.HttpStatusCode    = (HttpStatusCode)(errNumber);
+
+                    }
+                    else
+                    {
+                        loginResponse.Status = LoginStatus.UnknownError;
+                        throw new Exception("Error while logging comapanion IO on to FD servers", ex);
+                    }
                 }
             }
 

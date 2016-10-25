@@ -7,6 +7,8 @@
         Ok                      =  0,
         PendingVerification     =  1,
         IncorrectCredentials    =  2,
-        UnknownError            =  3
+        UnknownError            =  3,
+        TooManyRequests         =  4,
+        HttpError               =  5
     }
 }
