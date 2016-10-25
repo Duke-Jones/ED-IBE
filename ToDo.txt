@@ -19,6 +19,7 @@ todo:
 done:
 
 v0.5.0
+  * fixed crash when landing/starting without ready companion interface
   * optimized behaviour of journal scanner when starting
   * fixed crash when companion servers are overloaded and not responsive
 -------------------------------------------------------------------------------------         
