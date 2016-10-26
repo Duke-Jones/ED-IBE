@@ -277,19 +277,22 @@ namespace IBE.MTCommandersLog
                 }
                 else
                 {
-                    // force refresh
-                    m_DataSource.Retriever.MemoryCache.Clear();
-                    dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount(true);
-                    dgvCommandersLog.Invalidate();
-                    
-
-                    // jump to the new row
-                    if ((currentRow != null) && (dgvCommandersLog.RowCount > currentRow))
                     try
                     {
-                        dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow.Value];
+                        // force refresh
+                        m_DataSource.Retriever.MemoryCache.Clear();
+                        dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount(true);
+                        dgvCommandersLog.Invalidate();
+                    
+
+                        // jump to the new row
+                        if ((currentRow != null) && (dgvCommandersLog.RowCount > currentRow))
+                            dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow.Value];
                     }
-                    catch{}
+                    catch (Exception ex)
+                    {
+                        CErr.processError(ex, "You possibly caught the mysterious bug ! Please send the dump file to the developer of ED-IBE. Thanks :) ");
+                    }
                 }
             }
             catch (Exception ex)
