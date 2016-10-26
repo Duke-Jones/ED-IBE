@@ -3333,6 +3333,14 @@ namespace IBE
 
                         AddComboboxLine(txtEventInfo,       "Supercruise");
 
+                        Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
+                        Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
+
+                        ShowLocationData();
+                        ShowStatus();
+                        
+                        break;
+
                     case FileScanner.EDJournalScanner.JournalEvent.SupercruiseExit:
 
                         AddComboboxLine(txtEventInfo,       "Normal flight");

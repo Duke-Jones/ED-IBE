@@ -144,11 +144,22 @@ namespace IBE.Enums_and_Utility_Classes
             {
                 // Retrieve the row count from the database.
                 m_Command.CommandText = "SELECT COUNT(*) FROM " + m_BaseTableName;
-                result = m_Command.ExecuteScalar();
-                if (result != null)
-                    m_rowCountCache = Convert.ToInt32(result);
 
-                m_Pt.startMeasuring();
+                try
+                {
+                    result = m_Command.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        m_rowCountCache = Convert.ToInt32(result);
+                        m_Pt.startMeasuring();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // ignore this, sometimes this happens
+                    Debug.Print("doh");
+                }
             }
 
             return m_rowCountCache;
