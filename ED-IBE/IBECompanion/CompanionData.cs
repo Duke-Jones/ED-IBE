@@ -573,7 +573,7 @@ namespace IBE.IBECompanion
                         if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
                            (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
                         {
-                            var t = new Task(() => RefreshAndImport(e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName")));
+                            var t = new Task(() => RefreshAndImport());
                             t.Start();
                             await t;
                         }
@@ -604,7 +604,7 @@ namespace IBE.IBECompanion
             }
         }
 
-        public void RefreshAndImport(String systemName, String stationName)
+        public void RefreshAndImport()
         {
             String extSystem    = "";
             String extStation   = "";
@@ -625,43 +625,36 @@ namespace IBE.IBECompanion
                         extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
                         extStation = Program.CompanionIO.GetValue("lastStarport.name");
 
-                        if(!systemName.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && (!Program.actualCondition.GameversionIsBeta))
+                        if(Program.CompanionIO.StationHasMarketData())
                         {
-                            Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "external recieved system does not correspond to the system from the jounal !");
-                        }
-                        else
-                        {
-                            if(Program.CompanionIO.StationHasMarketData())
-                            {
-                                Int32 count = Program.CompanionIO.ImportMarketData();
+                            Int32 count = Program.CompanionIO.ImportMarketData();
                                 
-                                if(Program.MainForm.cbEDDNOverride.Checked)
-                                {
-                                    Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
-                                }
+                            if(Program.MainForm.cbEDDNOverride.Checked)
+                            {
+                                Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
+                            }
 
-                                if(count > 0)
-                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("getting market data...{0} prices collected", count));                        
-                                else
-                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("getting market data...no market data available !"));        
+                            if(count > 0)
+                                Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...{0} prices collected", count));                        
+                            else
+                                Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...no market data available !"));        
                                                 
-                            }
-                            Program.MainForm.SetQuickDecisionSwitch();
-
-                            if(Program.CompanionIO.StationHasShipyardData())
-                            {
-                                Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
-                            }
-                            else if((Program.actualCondition.Station_ID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Station_ID)))
-                            {
-                                // probably companion error, try once again in 5 seconds
-                                Program.CompanionIO.ReGet_StationData();                                
-                            }
-
-                            if(Program.CompanionIO.StationHasOutfittingData())
-                                Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
-                            
                         }
+                        Program.MainForm.SetQuickDecisionSwitch();
+
+                        if(Program.CompanionIO.StationHasShipyardData())
+                        {
+                            Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                        }
+                        else if((Program.actualCondition.Station_ID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Station_ID)))
+                        {
+                            // probably companion error, try once again in 5 seconds
+                            Program.CompanionIO.ReGet_StationData();                                
+                        }
+
+                        if(Program.CompanionIO.StationHasOutfittingData())
+                            Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+
                     }
                     else
                     { 

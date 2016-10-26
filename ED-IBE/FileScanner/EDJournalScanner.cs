@@ -256,11 +256,18 @@ namespace IBE.FileScanner
             List<JournalEventArgs> history = new List<JournalEventArgs>();
             Boolean isZeroRun = false;
             m_NewFileDetected = false;
+            Boolean missingMessagePossible = true;
 
             do
             {
                 try
                 {
+                    if(!isFirstRun && missingMessagePossible && String.IsNullOrWhiteSpace(m_LastScan_JournalFile))
+                    {
+                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Can't find E:D journal file!");                        
+                        missingMessagePossible = false;
+                    }
+
                     // new files needed or notified ?
                     if(String.IsNullOrWhiteSpace(m_LastScan_JournalFile) && (newFiles.Count == 0))
                     {
@@ -336,6 +343,9 @@ namespace IBE.FileScanner
 
                     if (!String.IsNullOrWhiteSpace(m_LastScan_JournalFile))
                     {
+
+                        missingMessagePossible = false;
+
                         // we still have a current file
                         if(journalFileStream == null)
                         {
@@ -431,6 +441,7 @@ namespace IBE.FileScanner
                                     {
                                         case JournalEvent.Fileheader:
                                             latestFileHeader = journalEntry;
+                                            Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Initial fileheader found");                        
                                             break;
 
                                         case JournalEvent.Location:
@@ -540,8 +551,19 @@ namespace IBE.FileScanner
                 }
                 catch (Exception ex)
                 {
+                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Error while parsing E:D journal !");  
+                                          
                     Debug.Print("AnalyseError");
                     logger.Log(ex.Message + "\n" + ex.StackTrace + "\n\n");
+
+                    if (lastEventTime > DateTime.MinValue)
+                    {
+                        // only rewrite if we've got a new event
+                        Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_Event",     lastEvent);
+                        Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_TimeStamp", lastEventTime.ToString());
+
+                        lastEventTime = DateTime.MinValue;
+                    }
 
                     // prepare switching to next file
                     if(journalFileStream != null)

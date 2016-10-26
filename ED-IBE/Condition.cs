@@ -236,7 +236,16 @@ namespace IBE
         {
             get
             {
-                return JournalHeaderObject.SelectToken("gameversion").ToString().ToLower().Contains("beta");
+                if((JournalHeaderObject != null) && (JournalHeaderObject.Values("gameversion") != null))
+                {
+                    // now we're sure we have a object
+                    return JournalHeaderObject.SelectToken("gameversion").ToString().ToLower().Contains("beta");
+                }
+                else
+                {
+                    // we have no object  -> moral issue, decided for "no" beta
+                    return false;
+                }
             }
         }
 

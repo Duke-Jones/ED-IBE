@@ -171,7 +171,7 @@ namespace IBE.MTPriceAnalysis
             {
                 if(m_ExternalDataInterface == null)
                 { 
-                    m_ExternalDataInterface                    = ExternalDataInterface;
+                    m_ExternalDataInterface                    = ExternalDataInterface; 
                     m_ExternalDataInterface.ExternalDataEvent += m_ExternalDataInterface_ExternalDataEvent;
                 }
                 else 
@@ -257,11 +257,6 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
-                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) > 0)
-                {
-                  
-                }
-
                 if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.DataCollected) > 0)
                 {
                     GUI.setFilterHasChanged(true);

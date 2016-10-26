@@ -14,10 +14,6 @@ namespace IBE.IBECompanion
         [Flags] public enum enExternalDataEvents
         {
             None         = 0,
-            System          = 1,
-            Location        = 2,
-            Jump            = 4,
-            Landed          = 8,
             DataCollected   = 16
         }
 
@@ -57,15 +53,8 @@ namespace IBE.IBECompanion
             public LocationChangedEventArgs()
             {
                 Changed     = enExternalDataEvents.None;
-                System      = "";
-                Location    = "";
-                
             }
 
-            public String System                    { get; set; }
-            public String Location                  { get; set; }
-            public String OldSystem                 { get; set; }
-            public String OldLocation               { get; set; }
             public enExternalDataEvents Changed     { get; set; }
             public Int32 Amount                     { get; set; }
         }
@@ -108,11 +97,7 @@ namespace IBE.IBECompanion
                 DataCount = ImportPrices();
 
                 // something has changed -> fire event
-                var EA = new LocationChangedEventArgs() { System        = Program.actualCondition.System,  
-                                                          Location      = Program.actualCondition.Station,
-                                                          OldSystem     = Program.actualCondition.System,  
-                                                          OldLocation   = Program.actualCondition.Station,
-                                                          Changed       = enExternalDataEvents.DataCollected,
+                var EA = new LocationChangedEventArgs() { Changed       = enExternalDataEvents.DataCollected,
                                                           Amount        = DataCount};
                 ExternalDataEvent.Raise(this, EA);
 

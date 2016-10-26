@@ -245,6 +245,8 @@
             this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
             this.label8 = new System.Windows.Forms.Label();
             this.tbCurrentBodyinfoFromLogs = new System.Windows.Forms.TextBox();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.exportListOfVisitedSystemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -385,12 +387,12 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copySystenmameToClipboardToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(66, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(68, 26);
             // 
             // copySystenmameToClipboardToolStripMenuItem
             // 
             this.copySystenmameToClipboardToolStripMenuItem.Name = "copySystenmameToClipboardToolStripMenuItem";
-            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(65, 22);
+            this.copySystenmameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(67, 22);
             // 
             // contextMenuStrip2
             // 
@@ -398,18 +400,18 @@
             this.toolStripMenuItem1,
             this.removeEconomyToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(149, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(168, 48);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
             this.toolStripMenuItem1.Text = "add Economy";
             // 
             // removeEconomyToolStripMenuItem
             // 
             this.removeEconomyToolStripMenuItem.Name = "removeEconomyToolStripMenuItem";
-            this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.removeEconomyToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.removeEconomyToolStripMenuItem.Text = "remove Economy";
             // 
             // dsCommodities
@@ -714,13 +716,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(85, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -732,48 +734,50 @@
             this.commodityMappingsToolStripMenuItem,
             this.toolStripMenuItem2,
             this.directDBAccessToolStripMenuItem,
-            this.testToolStripMenuItem});
+            this.testToolStripMenuItem,
+            this.toolStripMenuItem3,
+            this.exportListOfVisitedSystemsToolStripMenuItem});
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
-            this.dataToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.dataToolStripMenuItem.Text = "&Data";
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.importToolStripMenuItem.Text = "&Import && Export";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // editLocalizationsToolStripMenuItem
             // 
             this.editLocalizationsToolStripMenuItem.Name = "editLocalizationsToolStripMenuItem";
-            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.editLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.editLocalizationsToolStripMenuItem.Text = "Edit Localizations";
             this.editLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.editLocalizationsToolStripMenuItem_Click);
             // 
             // commodityMappingsToolStripMenuItem
             // 
             this.commodityMappingsToolStripMenuItem.Name = "commodityMappingsToolStripMenuItem";
-            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.commodityMappingsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.commodityMappingsToolStripMenuItem.Text = "Commodity Mappings";
             this.commodityMappingsToolStripMenuItem.Click += new System.EventHandler(this.commodityMappingsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(166, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(218, 6);
             // 
             // directDBAccessToolStripMenuItem
             // 
             this.directDBAccessToolStripMenuItem.Name = "directDBAccessToolStripMenuItem";
-            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.directDBAccessToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.directDBAccessToolStripMenuItem.Text = "Direct DB Access";
             this.directDBAccessToolStripMenuItem.Click += new System.EventHandler(this.directDBAccessToolStripMenuItem_Click);
             // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.testToolStripMenuItem.Text = "Test";
             // 
             // settingsToolStripMenuItem
@@ -782,20 +786,20 @@
             this.settingsToolStripMenuItem1,
             this.colorsToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
             // 
             // colorsToolStripMenuItem
             // 
             this.colorsToolStripMenuItem.Name = "colorsToolStripMenuItem";
-            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.colorsToolStripMenuItem.Text = "Colors";
             this.colorsToolStripMenuItem.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click);
             // 
@@ -806,27 +810,27 @@
             this.eDDNToolStripMenuItem,
             this.eDSMToolStripMenuItem});
             this.iOToolStripMenuItem.Name = "iOToolStripMenuItem";
-            this.iOToolStripMenuItem.Size = new System.Drawing.Size(28, 20);
+            this.iOToolStripMenuItem.Size = new System.Drawing.Size(31, 20);
             this.iOToolStripMenuItem.Text = "IO";
             // 
             // companionToolStripMenuItem
             // 
             this.companionToolStripMenuItem.Name = "companionToolStripMenuItem";
-            this.companionToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.companionToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.companionToolStripMenuItem.Text = "E:D Companion (Frontier Data Interface)";
             this.companionToolStripMenuItem.Click += new System.EventHandler(this.companionToolStripMenuItem_Click);
             // 
             // eDDNToolStripMenuItem
             // 
             this.eDDNToolStripMenuItem.Name = "eDDNToolStripMenuItem";
-            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.eDDNToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.eDDNToolStripMenuItem.Text = "EDDN (E:D Data Network)";
             this.eDDNToolStripMenuItem.Click += new System.EventHandler(this.eDDNInterfaceToolStripMenuItem_Click);
             // 
             // eDSMToolStripMenuItem
             // 
             this.eDSMToolStripMenuItem.Name = "eDSMToolStripMenuItem";
-            this.eDSMToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.eDSMToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
             this.eDSMToolStripMenuItem.Text = "EDSM (E.D Starmap)";
             this.eDSMToolStripMenuItem.Click += new System.EventHandler(this.eDSMToolStripMenuItem_Click);
             // 
@@ -2601,7 +2605,7 @@
             // tsEDSMQueue
             // 
             this.tsEDSMQueue.Name = "tsEDSMQueue";
-            this.tsEDSMQueue.Size = new System.Drawing.Size(95, 17);
+            this.tsEDSMQueue.Size = new System.Drawing.Size(118, 17);
             this.tsEDSMQueue.Text = "toolStripStatusLabel1";
             // 
             // label8
@@ -2622,6 +2626,18 @@
             this.tbCurrentBodyinfoFromLogs.ReadOnly = true;
             this.tbCurrentBodyinfoFromLogs.Size = new System.Drawing.Size(255, 20);
             this.tbCurrentBodyinfoFromLogs.TabIndex = 76;
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(218, 6);
+            // 
+            // exportListOfVisitedSystemsToolStripMenuItem
+            // 
+            this.exportListOfVisitedSystemsToolStripMenuItem.Name = "exportListOfVisitedSystemsToolStripMenuItem";
+            this.exportListOfVisitedSystemsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.exportListOfVisitedSystemsToolStripMenuItem.Text = "Export list of visited systems";
+            this.exportListOfVisitedSystemsToolStripMenuItem.Click += new System.EventHandler(this.exportListOfVisitedSystemsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -2931,6 +2947,8 @@
         public System.Windows.Forms.CheckBox cbEDDNOverride;
         private System.Windows.Forms.Label label8;
         public System.Windows.Forms.TextBox tbCurrentBodyinfoFromLogs;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem exportListOfVisitedSystemsToolStripMenuItem;
     }
 }
 

@@ -14,10 +14,18 @@ todo:
 
 * background start
 
+* direct selection of the local station
+
 *************************************************************************************
 
 done:
 
+
+  * export of visited star systems for adding them to E:D cache
+    (--> https://forums.frontier.co.uk/showthread.php/291643-The-Visited-Stars-cache)
+  * removed unnecessary code
+  * fixed various crash reasons when journal scanner gets no data on program start
+-------------------------------------------------------------------------------------         
 v0.5.0
   * fixed crash when landing/starting without ready companion interface
   * optimized behaviour of journal scanner when starting

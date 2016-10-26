@@ -258,7 +258,6 @@ namespace IBE
                 // register events for getting new location- and data infos for the gui
                 Program.JournalScanner.JournalEventRecieved += JournalEventRecieved;
                 
-                Program.CompanionIO.ExternalDataEvent       += ExternalDataInterface_ExternalDataEvent;
                 Program.EDDNComm.DataChangedEvent           += EDDNComm_DataChangedEvent;
                 Program.EDDNComm.DataTransmittedEvent       += EDDNComm_DataTransmittedEvent;
 
@@ -3256,9 +3255,9 @@ namespace IBE
                         
                         if(Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem")) && 
                            Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName")))
-                            AddComboboxLine(txtEventInfo,             "current location confirmed");
+                            AddComboboxLine(txtEventInfo,             "Current location confirmed");
                         else
-                            AddComboboxLine(txtEventInfo,             "got new location");
+                            AddComboboxLine(txtEventInfo,             "Got new location");
 
 
                         Program.actualCondition.System          = e.Data.Value<String>("StarSystem");
@@ -3286,7 +3285,7 @@ namespace IBE
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
-                        AddComboboxLine(txtEventInfo,             "...jump recognized...");
+                        AddComboboxLine(txtEventInfo,             "FSD jump recognized");
 
                         Program.actualCondition.Station = "";
 
@@ -3308,7 +3307,7 @@ namespace IBE
                         if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
                            (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
                         {
-                            AddComboboxLine(txtEventInfo,       "...docked...");
+                            AddComboboxLine(txtEventInfo,       "Docked");
 
                             Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
                             Program.actualCondition.Station    = e.Data.Value<String>("StationName");
@@ -3321,7 +3320,7 @@ namespace IBE
 
                     case FileScanner.EDJournalScanner.JournalEvent.Undocked:
 
-                        AddComboboxLine(txtEventInfo,       "...undocked...");
+                        AddComboboxLine(txtEventInfo,       "Undocked");
 
                         Program.actualCondition.Station    = "";
 
@@ -3331,7 +3330,12 @@ namespace IBE
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.SupercruiseEntry:
+
+                        AddComboboxLine(txtEventInfo,       "Supercruise");
+
                     case FileScanner.EDJournalScanner.JournalEvent.SupercruiseExit:
+
+                        AddComboboxLine(txtEventInfo,       "Normal flight");
 
                         Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
                         Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
@@ -3348,22 +3352,6 @@ namespace IBE
             catch (Exception ex)
             {
                 throw new Exception("Error in m_LogfileScanner_LocationChanged", ex);
-            }
-        }
-
-        void ExternalDataInterface_ExternalDataEvent(object sender, IBE.IBECompanion.DataEventBase.LocationChangedEventArgs e)
-        {
-            try
-            {
-                if((e.Changed & IBE.IBECompanion.DataEventBase.enExternalDataEvents.Landed) != 0)
-                {
-                    ShowLocationData();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while processing the LocationChanged-event", ex);
             }
         }
 
@@ -3488,7 +3476,7 @@ namespace IBE
         {
             try
             {
-                Program.CompanionIO.RefreshAndImport(Program.actualCondition.System, Program.actualCondition.Station);
+                Program.CompanionIO.RefreshAndImport();
             }
             catch (Exception ex)
             {
@@ -3600,11 +3588,78 @@ namespace IBE
 
         }
 
+        private void exportListOfVisitedSystemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog saveFileDialog1;
+            Int32 systemCounter = 0;
+
+            try
+            {
+                saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+
+                saveFileDialog1.Filter              = "All files (*.*)|*.*";
+                saveFileDialog1.DefaultExt          = "txt";
+                saveFileDialog1.Title               = "Export list of visited systems from ED-IBE to Elite Dangerous\nRestart E:D after export to import.";
+                saveFileDialog1.OverwritePrompt     = true;
+
+                saveFileDialog1.InitialDirectory    = "C:";
+                saveFileDialog1.FileName            = "ImportStars.txt";
+
+                if (Directory.Exists(Environment.GetEnvironmentVariable("LOCALAPPDATA")))
+                {
+                    saveFileDialog1.InitialDirectory = Environment.GetEnvironmentVariable("LOCALAPPDATA");
+                    if(Directory.Exists(Path.Combine(saveFileDialog1.InitialDirectory, @"Frontier Developments\Elite Dangerous")))
+                    {
+                        saveFileDialog1.InitialDirectory = Path.Combine(saveFileDialog1.InitialDirectory, @"Frontier Developments\Elite Dangerous");
+
+                        IEnumerable<string> foundFiles = Directory.EnumerateFiles(saveFileDialog1.InitialDirectory, "VisitedStarsCache.dat", SearchOption.AllDirectories);
+
+                        if(foundFiles.Count() > 0)
+                        {
+                            saveFileDialog1.InitialDirectory = Path.GetDirectoryName(foundFiles.First());
+                        }
+                    }
+                }
+
+                System.Windows.Forms.DialogResult result = saveFileDialog1.ShowDialog(this);
+
+		        if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    String sqlString = "select SystemName from tbVisitedSystems v, tbsystems s" +
+                                       " where v.system_id = s.id;";
+                    System.Data.DataTable data = new System.Data.DataTable();
+
+                    if (Program.DBCon.Execute(sqlString, data) > 0)
+                    {
+                        StreamWriter file = new StreamWriter(saveFileDialog1.FileName);
+
+                        foreach (System.Data.DataRow system in data.Rows)
+                        {
+                            file.WriteLine(system[0]);
+                            systemCounter++;
+                        }
+
+                        file.Close();
+
+                        MessageBox.Show(this, String.Format("{0} names of visited systems exported", systemCounter), "ED-IBE data export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                        MessageBox.Show(this, "No visited systems found in database !", "ED-IBE data export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while exporting the list of visited systems");
+            }
+        }
+
         private void txtEventInfo_DropDownClosed(object sender, EventArgs e)
         {
-            txtEventInfo.SelectedIndex = 0;
+            if(txtEventInfo.Items.Count > 0)
+                txtEventInfo.SelectedIndex = 0;
+
             tabCtrlMain.Select();
-            //cmdEventLanded.Select();
         }
 
         /// <summary>
