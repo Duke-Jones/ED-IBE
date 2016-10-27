@@ -19,6 +19,7 @@ Content:
 			3.5. find profitable route "extended" (eg. for Trading-CGs)
 			     (station and commodity filter)
 		4. Export and import of data (menu item "Data" -> "Import&Export")
+			4.1 Export a list of visited systems for import into E:D
 		5. Translations
 			5.1 Groupbox "Assign self-added items to EDDB items"
 			5.2 Groupbox "Correct misspelled commodities"
@@ -215,6 +216,12 @@ This filtering will be done automatically  after every price import for a statio
 The identification of data from and to the EDDN is now based on the ids, coming from the companion interface.
 To get the latest version you can download and import these here.
 This update will be done automatically on every start of ED-IBE, if you have checked the box.
+
+4.1 Export a list of visited systems for import into E:D
+Since v2.2 Elite Dangerous offers the possibilty to import a list of visited systems.
+ED-IBE can export it's own list of visited systems and provide this list for E:D. 
+(Menu "Data"->"Export list of visited systems")
+More information can be found here: https://forums.frontier.co.uk/showthread.php/291643-The-Visited-Stars-cache
 
 _________________________________________________________________________
 5. Translations

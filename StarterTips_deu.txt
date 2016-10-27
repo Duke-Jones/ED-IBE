@@ -15,6 +15,7 @@ Inhalt:
 			3.5. profitable Route finden "extended" (z. für Trading-CGs)
 			     (Station-Filter + Commodity-Filter)
 		4. Ex-/Import von Daten
+			4.1 Export der besuchten System zum Import in E:D
 		5. Übersetzungen
 			5.1 Gruppenfeld "Assign self-added items to EDDB items"
 			5.2 Gruppenfeld "Correct misspelled commodities"
@@ -221,6 +222,11 @@ sondern über die IDs des Companion-Interfaces statt. Die von ED-IBE benötigten
 Seite https://github.com/EDCD/FDevIDs heruntergeladen und aktualisiert werden. 
 Optional kann diese Aktualisierung beim Programmstart automatisch erfolgen.
 
+4.1 Export der besuchten System zum Import in E:D
+Elite Dangerous biete seit v2.2 die Möglichkeit, seine bereits besuchten System zu importieren.
+ED-IBE kann die gesammelten Daten aus der Historie des Commander's Logs exportieren und zum Import 
+in E:D bereitstellen (Menü "Data"->"Export list of visited systems")
+Weitere Informationen hier: https://forums.frontier.co.uk/showthread.php/291643-The-Visited-Stars-cache
 
 _________________________________________________________________________
 5. Übersetzungen
