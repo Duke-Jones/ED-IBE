@@ -189,7 +189,8 @@ namespace IBE
                 if(m_JournalScanner == null)
                 { 
                     m_JournalScanner = journalScanner;
-                    m_JournalScanner.JournalEventRecieved += JournalEventRecieved;
+                    m_JournalScanner.JournalEventRecieved  += JournalEventRecieved;
+                    m_JournalScanner.BasedataEventRecieved += BasedataEventRecieved;
                 }
                 else 
                     throw new Exception("LogfileScanner already registered");
@@ -215,7 +216,29 @@ namespace IBE
                     case FileScanner.EDJournalScanner.JournalEvent.Fileheader:
                         JournalHeaderObject = (JObject)e.Data;
                         break;
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+            }
+        }
+
+        /// <summary>
+        /// event-worker for BasedataEventRecieved-event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void BasedataEventRecieved(object sender, FileScanner.EDJournalScanner.BasedataEventArgs e)
+        {
+            try
+            {
+                switch (e.EventType)
+                {
+                    case FileScanner.EDJournalScanner.JournalEvent.Basedata:
+                        Program.Data.checkPotentiallyNewSystemOrStation(e.System, e.Station, e.Coordinates);
+                        break;
                 }
 
             }

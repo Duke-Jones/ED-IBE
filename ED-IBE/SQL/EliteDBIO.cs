@@ -3960,7 +3960,7 @@ namespace IBE.SQL
                     if((coordinates != null) && (coordinates.Valid))
                     {
                         sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = now()" +
-                                                  " where (x<>{0} or y<>{1} or z<>{2}) and id = {3}", 
+                                                  " where ((ABS(x-{0}) > 0.005) or (ABS(y-{1}) > 0.005) or (ABS(z-{2}) > 0.005)) and id = {3}", 
                                                   DBConnector.SQLDecimal(coordinates.X.Value), 
                                                   DBConnector.SQLDecimal(coordinates.Y.Value), 
                                                   DBConnector.SQLDecimal(coordinates.Z.Value), 

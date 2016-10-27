@@ -34,13 +34,50 @@ namespace IBE.FileScanner
             Resurrect,
             SupercruiseEntry,
             SupercruiseExit, 
-            Scan
+            Scan,
+            Basedata
         }
 
 #endregion
 
 #region event handler
 
+
+        // "basedata" event
+        [System.ComponentModel.Browsable(true)]
+        public event EventHandler<BasedataEventArgs> BasedataEventRecieved;
+
+        protected virtual void OnBasedataEventRecieved(BasedataEventArgs e)
+        {
+            EventHandler<BasedataEventArgs> myEvent = BasedataEventRecieved;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class BasedataEventArgs : EventArgs
+        {
+            public BasedataEventArgs()
+            {
+                EventType   = JournalEvent.Undefined;
+                Coordinates = new Point3Dbl();
+            }
+
+            public JournalEvent                 EventType    { get; set; }
+
+            public String                       System       { get; set; }
+
+            public Point3Dbl                    Coordinates  { get; set; }
+
+            public String                       Station      { get; set; }
+
+
+            
+        }
+
+
+        // "event recieved" event
         [System.ComponentModel.Browsable(true)]
         public event EventHandler<JournalEventArgs> JournalEventRecieved;
 
@@ -63,7 +100,7 @@ namespace IBE.FileScanner
 
             public JournalEvent                 EventType    { get; set; }
             public JToken                       Data         { get; set; }
-            public List<JournalEventArgs>       History         { get; set; }
+            public List<JournalEventArgs>       History      { get; set; }
         }
 
 #endregion
@@ -383,6 +420,34 @@ namespace IBE.FileScanner
 
                                     SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader);
 
+                                    // pre-check for base data which is currently not in the database.
+                                    switch (eventName)
+                                    {
+                                        case JournalEvent.Location:
+                                        case JournalEvent.Docked:
+                                        case JournalEvent.FSDJump:
+                                        case JournalEvent.Resurrect:
+
+                                            Debug.Print("accepted (pre) : " + eventName.ToString());
+
+                                            BasedataEventArgs newBasedataArgItem = new BasedataEventArgs() {
+                                                                                              EventType = JournalEvent.Basedata,
+                                                                                              System    = journalEntry.Value<String>("StarSystem").NToString(""),
+                                                                                              Station   = journalEntry.Value<String>("StationName").NToString("")
+                                                                                            };
+
+                                            if(journalEntry.Value<Object>("StarPos") != null)
+                                            {
+                                                newBasedataArgItem.Coordinates   = new Point3Dbl((Double)journalEntry["StarPos"][0], 
+                                                                                                 (Double)journalEntry["StarPos"][1], 
+                                                                                                 (Double)journalEntry["StarPos"][2]);
+                                            }
+
+                                            BasedataEventRecieved.Raise(this, newBasedataArgItem);
+
+                                            break;
+                                    }
+
                                     // switch what to do
                                     switch (eventName)
                                     {
@@ -610,6 +675,23 @@ namespace IBE.FileScanner
 
                 if (latestLocationEvent != null)
                 {
+                    // pre-check for base data which is currently not in the database.
+                    BasedataEventArgs newBasedataArgItem = new BasedataEventArgs() {
+                                                                        EventType = JournalEvent.Basedata,
+                                                                        System    = latestLocationEvent.Value<String>("StarSystem").NToString(""),
+                                                                        Station   = latestLocationEvent.Value<String>("StationName").NToString("")
+                                                                    };
+
+                    if(latestLocationEvent.Value<Object>("StarPos") != null)
+                    {
+                        newBasedataArgItem.Coordinates   = new Point3Dbl((Double)latestLocationEvent["StarPos"][0], 
+                                                                         (Double)latestLocationEvent["StarPos"][1], 
+                                                                         (Double)latestLocationEvent["StarPos"][2]);
+                    }
+
+                    BasedataEventRecieved.Raise(this, newBasedataArgItem);
+
+
                     // always inform about the latest location information
                     JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Location, Data = latestLocationEvent });
                     latestLocationEvent = null;
