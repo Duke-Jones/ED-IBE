@@ -20,6 +20,10 @@ todo:
 
 done:
 
+
+
+  * accelerated check of possible not existing systems
+-------------------------------------------------------------------------------------         
 v0.5.1
   * Explorer's fix: even if unknown before, jump events should get now the correct 
     system in the Commander's Log

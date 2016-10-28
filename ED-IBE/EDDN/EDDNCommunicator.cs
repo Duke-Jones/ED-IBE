@@ -329,7 +329,7 @@ bool disposed = false;
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v1_Recieved:
 
                         UpdateStatisticDataMsg(enMessageTypes.Commodity_V1);
-                        Debug.Print("recieved commodity message ignored");
+                        //Debug.Print("recieved commodity message ignored");
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
                         break;
@@ -337,7 +337,7 @@ bool disposed = false;
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Commodity_v2_Recieved:
 
                         UpdateStatisticDataMsg(enMessageTypes.Commodity_V2);
-                        Debug.Print("recieved commodity message ignored");
+                        //Debug.Print("recieved commodity message ignored");
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
 
                         break;
@@ -357,7 +357,7 @@ bool disposed = false;
 
                             if (ownSchema == dataSchema)
                             {
-                                Debug.Print("handle v3 message");
+                                //Debug.Print("handle v3 message");
 
                                 // Don't import our own uploads...
                                 if (dataJObject.SelectToken("header.uploaderID").ToString() != UserIdentification())
@@ -367,48 +367,48 @@ bool disposed = false;
                                     name = String.Format("{0}", dataJObject.SelectToken("header.softwareName"));
                                     uploaderID = dataJObject.SelectToken("header.uploaderID").ToString();
                                 }
-                                else
-                                    Debug.Print("handle v3 rejected (it's our own message)");
+                                //else
+                                    //Debug.Print("handle v3 rejected (it's our own message)");
                             }
-                            else
-                                Debug.Print("handle v3 rejected (wrong schema)");
+                            //else
+                                //Debug.Print("handle v3 rejected (wrong schema)");
                         }
-                        else
-                            Debug.Print("handle v3 rejected (double recieved)");
+                        //else
+                            //Debug.Print("handle v3 rejected (double recieved)");
 
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v1_Recieved:
                         UpdateStatisticDataMsg(enMessageTypes.Outfitting_V1);
                         //UpdateRawData("recieved outfitting message ignored (coming feature)");
-                        Debug.Print("recieved outfitting message ignored");
+                        //Debug.Print("recieved outfitting message ignored");
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Outfitting_v2_Recieved:
                         UpdateStatisticDataMsg(enMessageTypes.Outfitting_V2);
                         //UpdateRawData("recieved outfitting message ignored (coming feature)");
-                        Debug.Print("recieved outfitting message ignored");
+                        //Debug.Print("recieved outfitting message ignored");
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v1_Recieved:
                         UpdateStatisticDataMsg(enMessageTypes.Shipyard_V1);
                         //UpdateRawData("recieved shipyard message ignored (coming feature)");
-                        Debug.Print("recieved shipyard message ignored");
+                        //Debug.Print("recieved shipyard message ignored");
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.Shipyard_v2_Recieved:
                         UpdateStatisticDataMsg(enMessageTypes.Shipyard_V2);
                         //UpdateRawData("recieved shipyard message ignored (coming feature)");
-                        Debug.Print("recieved shipyard message ignored");
+                        //Debug.Print("recieved shipyard message ignored");
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.UnknownData:
                         UpdateStatisticDataMsg(enMessageTypes.unknown);
                         UpdateRawData(String.Format("{0}\r\n(from {2})\r\n{1}", e.Message, e.RawData, e.Adress));
                         UpdateRawData("Recieved a unknown EDDN message:" + Environment.NewLine + e.Message + Environment.NewLine + e.RawData);
-                        Debug.Print("handle unkown message");
+                        //Debug.Print("handle unkown message");
                         break;
 
                     case EDDN.EDDNRecievedArgs.enMessageInfo.ParseError:

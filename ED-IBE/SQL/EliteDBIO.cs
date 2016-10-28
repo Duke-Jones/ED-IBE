@@ -2985,7 +2985,7 @@ namespace IBE.SQL
                                else
                                { 
                                       // system is in the bubble - set as visited
-                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, null, true, false);
+                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, null, true);
                                }
 
                                eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize-i, TotalValue=initialSize };
@@ -3905,135 +3905,222 @@ namespace IBE.SQL
         /// Checks if the system is existing and adds it, if not.
         /// Also sets the visited-flag if not set.
         /// </summary>
-        /// <param name="System"></param>
-        /// <param name="Station"></param>
+        /// <param name="newSystemName"></param>
+        /// <param name="newStationName"></param>
         /// <param name="setVisitedFlag"></param>
         /// <param name="name"></param>
-        public void checkPotentiallyNewSystemOrStation(String System, String Station, Point3Dbl coordinates = null, Boolean setVisitedFlag = true, Boolean refreshBasetables = true)
+        public void checkPotentiallyNewSystemOrStation(String newSystemName, String newStationName, Point3Dbl coordinates = null, Boolean setVisitedFlag = true)
         {
             String sqlString;
-            Int32 SystemID;
-            Int32 LocationID;
+            Int32 systemID = 0;
+            Int32 stationID = 0;
             Boolean systemFirstTimeVisited = false;
             Boolean stationFirstTimeVisited = false;
-            Boolean isNewSystem = false;
-            Boolean isNewStation = false;
             DataTable Data = new DataTable();
             Boolean Visited;
+            PerformanceTimer pt = new PerformanceTimer();
 
             try
             {
-                System = System.Trim();
-                Station = Station.Trim();
+                pt.startMeasuring();
 
-                if (!String.IsNullOrEmpty(System))
+                newSystemName = newSystemName.Trim();
+                newStationName = newStationName.Trim();
+
+                if (!String.IsNullOrEmpty(newSystemName))
                 {
-                    sqlString = "select id, visited from tbSystems where Systemname = " + DBConnector.SQLAEscape(System);
+                    sqlString = "select id, visited from tbSystems where Systemname = " + DBConnector.SQLAEscape(newSystemName);
                     if (Program.DBCon.Execute(sqlString, Data) > 0)
                     {
-                        // check or update the visited-flag
-                        SystemID = (Int32)(Data.Rows[0]["ID"]);
-                        Visited = (Boolean)(Data.Rows[0]["visited"]);
+                        // system is existing, check or update the visited-flag
+                        systemID    = (Int32)(Data.Rows[0]["ID"]);
+                        Visited     = (Boolean)(Data.Rows[0]["visited"]);
 
-                        if (!Visited)
+                        if (!Visited && setVisitedFlag)
                         {
-                            sqlString = String.Format("insert ignore into tbVisitedSystems(system_id, time) values" +
-                                                      " ({0},{1})", SystemID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
+                            sqlString = String.Format("update tbSystems set visited = 1 where id = {0};" +
+                                                      "insert ignore into tbVisitedSystems(system_id, time) values" +
+                                                      " ({0},{1});", 
+                                                      systemID.ToString(), 
+                                                      DBConnector.SQLDateTime(DateTime.UtcNow));
+
                             Program.DBCon.Execute(sqlString);
-                            systemFirstTimeVisited = true;
+
+                            // set flag in the memory table
+                            Program.Data.BaseData.tbsystems.FindByid(systemID).visited = setVisitedFlag;
+
+                            systemFirstTimeVisited = setVisitedFlag;
+                        }
+
+                        if((coordinates != null) && (coordinates.Valid))
+                        {
+                            dsEliteDB.tbsystemsRow system = Program.Data.BaseData.tbsystems.FindByid(systemID);
+
+                            if((system.x == null) || (Math.Abs(system.x - coordinates.X.Value) > 0.001) ||
+                               (system.y == null) || (Math.Abs(system.y - coordinates.Y.Value) > 0.001) ||
+                               (system.z == null) || (Math.Abs(system.z - coordinates.Z.Value) > 0.001))
+                            {
+                                sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = UTC_TIMESTAMP()" +
+                                                          " where ((ABS(x-{0}) > 0.001) or (ABS(y-{1}) > 0.001) or (ABS(z-{2}) > 0.001)) and id = {3}", 
+                                                          DBConnector.SQLDecimal(coordinates.X.Value), 
+                                                          DBConnector.SQLDecimal(coordinates.Y.Value), 
+                                                          DBConnector.SQLDecimal(coordinates.Z.Value), 
+                                                          systemID);
+
+                                if(Program.DBCon.Execute(sqlString)>0)
+                                {
+                                    system.x = coordinates.X.Value;
+                                    system.y = coordinates.Y.Value;
+                                    system.z = coordinates.Z.Value;
+                                }
+                            }
                         }
                     }
                     else
                     {
                         // add a new system
-                        EDSystem newSystem = new EDSystem();
-                        newSystem.Name = System;
+                        Program.DBCon.TransBegin();
 
-                        var systemIDs = ImportSystems_Own(newSystem, true, setVisitedFlag);
+                        try
+                        {
+                            systemID = Program.DBCon.Execute<Int32>("select min(ID)-1 from tbsystems");
+                        
+                            sqlString = String.Format("insert into tbSystems(id, systemname, x, y, z, updated_at, visited) values ({0},{1},{2},{3},{4},{5},{6});" +
+                                                      "insert ignore into tbVisitedsystems(system_id, time) values ({0},{5});",
+                                                      systemID, 
+                                                      DBConnector.SQLAEscape(newSystemName), 
+                                                      coordinates.Valid ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
+                                                      coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
+                                                      coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
+                                                      DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                      "1"); 
+                            Program.DBCon.Execute(sqlString);
+                            Program.DBCon.TransCommit();
+                        }
+                        catch (Exception ex)
+                        {
+                                Program.DBCon.TransRollback();
+                                throw new Exception("Error while inserting a new system");
+                        }
 
-                        SystemID = newSystem.Id;
 
-                        isNewSystem = true;
-                        systemFirstTimeVisited = true;
+                        systemFirstTimeVisited = setVisitedFlag;
+
+                        dsEliteDB.tbsystemsRow newSystemRow = (dsEliteDB.tbsystemsRow)Program.Data.BaseData.tbsystems.NewRow();
+
+                        newSystemRow.id         = systemID;
+                        newSystemRow.systemname = DBConnector.SQLAEscape(newSystemName);
+                        if(coordinates.Valid)
+                        {
+                            newSystemRow.x          = coordinates.X.Value;
+                            newSystemRow.y          = coordinates.X.Value;
+                            newSystemRow.z          = coordinates.X.Value;
+                        }
+                        newSystemRow.updated_at = DateTime.UtcNow;
+                        newSystemRow.visited    = setVisitedFlag;
+
+                        Program.Data.BaseData.tbsystems.Rows.Add(newSystemRow);
                     }
 
-                    if((coordinates != null) && (coordinates.Valid))
-                    {
-                        sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = now()" +
-                                                  " where ((ABS(x-{0}) > 0.005) or (ABS(y-{1}) > 0.005) or (ABS(z-{2}) > 0.005)) and id = {3}", 
-                                                  DBConnector.SQLDecimal(coordinates.X.Value), 
-                                                  DBConnector.SQLDecimal(coordinates.Y.Value), 
-                                                  DBConnector.SQLDecimal(coordinates.Z.Value), 
-                                                  SystemID);
-                        if(Program.DBCon.Execute(sqlString)>0)
-                            Debug.Print("system coordinates updated");
-                    }
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-                    if (!String.IsNullOrEmpty(Station))
+                    if (!String.IsNullOrEmpty(newStationName))
                     {
                         Data.Clear();
 
                         sqlString = "select St.ID, St.visited from tbSystems Sy, tbStations St" +
                                        " where Sy.ID = St. System_ID" +
-                                       " and   Sy.ID          = " + SystemID +
-                                       " and   St.Stationname = " + DBConnector.SQLAEscape(Station);
+                                       " and   Sy.ID          = " + systemID +
+                                       " and   St.Stationname = " + DBConnector.SQLAEscape(newStationName);
 
                         if (Program.DBCon.Execute(sqlString, Data) > 0)
                         {
-                            // check or update the visited-flag
-                            LocationID = (Int32)(Data.Rows[0]["ID"]);
+                            // station is existing, check or update the visited-flag
+                            stationID = (Int32)(Data.Rows[0]["ID"]);
                             Visited = (Boolean)(Data.Rows[0]["visited"]);
 
-                            if (!Visited)
+                            if (!Visited && setVisitedFlag)
                             {
-                                sqlString = String.Format("insert ignore into tbVisitedStations(station_id, time) values" +
-                                                          " ({0},{1})", LocationID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
+                                sqlString = String.Format("update tbStations set visited = 1 where id = {0};" +
+                                                          "insert ignore into tbVisitedStations(station_id, time) values" +
+                                                          " ({0},{1});", stationID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
                                 Program.DBCon.Execute(sqlString);
-                                stationFirstTimeVisited = true;
+
+                                // set flag in the memory table
+                                Program.Data.BaseData.tbstations.FindByid(stationID).visited = setVisitedFlag;
+
+                                stationFirstTimeVisited = setVisitedFlag;
                             }
                         }
                         else
                         {
                             // add a new station
-                            EDStation newStation = new EDStation();
-                            newStation.Name = Station;
-                            newStation.SystemId = SystemID;
+                            Program.DBCon.TransBegin();
+                            try
+                            {
+                                stationID = Program.DBCon.Execute<Int32>("select min(ID)-1 from tbStations");
 
-                            ImportStations_Own(newStation, true, setVisitedFlag);
+                                sqlString = String.Format("insert into tbStations(id, stationname, system_id, updated_at, visited) values ({0},{1},{2},{3},{4});" +
+                                                          "insert ignore into tbVisitedstations(station_id, time) values ({0},{3});",
+                                                          stationID, 
+                                                          DBConnector.SQLAEscape(newSystemName), 
+                                                          systemID, 
+                                                          DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                          "1"); 
+                                Program.DBCon.Execute(sqlString);
+                                Program.DBCon.TransCommit();
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.DBCon.TransRollback();
+                                throw new Exception("Error while inserting a new station");
+                            }
 
-                            isNewStation = true;
-                            stationFirstTimeVisited = true;
+                            stationFirstTimeVisited = setVisitedFlag;
+
+                            dsEliteDB.tbstationsRow newStationRow = (dsEliteDB.tbstationsRow)Program.Data.BaseData.tbstations.NewRow();
+
+                            newStationRow.id            = stationID;
+                            newStationRow.system_id     = systemID;
+                            newStationRow.stationname   = DBConnector.SQLAEscape(newStationName);
+                            newStationRow.updated_at    = DateTime.UtcNow;
+                            newStationRow.visited       = setVisitedFlag;
+
+                            Program.Data.BaseData.tbstations.Rows.Add(newStationRow);
+
                         }
                     }
 
 
-                    if (refreshBasetables)
+                    if(systemFirstTimeVisited)
                     {
-                        if (systemFirstTimeVisited || stationFirstTimeVisited)
-                        {
-                            // if there's a new visitedflag set in the visited-tables
-                            // then update the maintables
-                            Program.Data.updateVisitedFlagsFromBase(systemFirstTimeVisited, stationFirstTimeVisited);
+                        dsEliteDB.tbvisitedsystemsRow newVisSystemRow = (dsEliteDB.tbvisitedsystemsRow)Program.Data.BaseData.tbvisitedsystems.NewRow();
+                        newVisSystemRow.system_id   = systemID;
+                        newVisSystemRow.time        = DateTime.UtcNow;
+                        Program.Data.BaseData.tbvisitedsystems.Rows.Add(newVisSystemRow);
+                    }
+                    if(stationFirstTimeVisited)
+                    {
+                        dsEliteDB.tbvisitedstationsRow newVisStationRow = (dsEliteDB.tbvisitedstationsRow)Program.Data.BaseData.tbvisitedstations.NewRow();
+                        newVisStationRow.station_id  = stationID;
+                        newVisStationRow.time        = DateTime.UtcNow;
+                        Program.Data.BaseData.tbvisitedstations.Rows.Add(newVisStationRow);
+                    }
 
-                            // last but not least reload the BaseTables with the new visited-information
-                            if (systemFirstTimeVisited)
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-
-                            if (stationFirstTimeVisited)
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                        }
-
-                        if (isNewSystem || isNewStation)
-                        {
-                            Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
-                        }
+                    if (((systemFirstTimeVisited) || (stationFirstTimeVisited)) && (stationID != 0))
+                    {
+                        dsEliteDB.visystemsandstationsRow newVisStationRow = (dsEliteDB.visystemsandstationsRow)Program.Data.BaseData.visystemsandstations.NewRow();
+                        newVisStationRow.SystemName = newSystemName;
+                        newVisStationRow.SystemID = systemID;
+                        newVisStationRow.StationName = newStationName;
+                        newVisStationRow.StationID = stationID;
+                        Program.Data.BaseData.visystemsandstations.Rows.Add(newVisStationRow);
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while setting a visited flag", ex);
+                throw new Exception("Error while checking for potentially new system or station", ex);
             }
         }
 

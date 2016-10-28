@@ -1187,7 +1187,7 @@ namespace IBE.MTPriceAnalysis
                                           " and   Cd.Commodity_ID = {0}", Commodity_ID);
   
                 m_lDBCon.Execute(sqlString, Data);
-
+                Debug.Print("Commodity ID = " + Commodity_ID);
             }
             catch (Exception ex)
             {
