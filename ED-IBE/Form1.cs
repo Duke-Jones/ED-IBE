@@ -1230,6 +1230,9 @@ namespace IBE
         {
             try
             {
+                enableToolStripMenuItem.Checked = Program.DBCon.getIniValue<Boolean>("Debug",   "extLog_Journal", false.ToString(), false);
+                debugToolStripMenuItem.Visible = enableToolStripMenuItem.Checked;
+
                 Stopwatch st = new Stopwatch();
                 st.Start();
                 Version newVersion;
@@ -3660,6 +3663,21 @@ namespace IBE
             {
                 CErr.processError(ex, "Error while exporting the list of visited systems");
             }
+        }
+
+        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void enableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.DBCon.setIniValue("Debug",   "extLog_Journal", enableToolStripMenuItem.Checked.ToString());
+        }
+
+        private void pbStatus_IsLanded_DoubleClick(object sender, EventArgs e)
+        {
+            debugToolStripMenuItem.Visible = true;
         }
 
         private void txtEventInfo_DropDownClosed(object sender, EventArgs e)

@@ -20,8 +20,8 @@ todo:
 
 done:
 
-
-
+v0.5.2
+  * inbuilt verbose logging for debug journal scan issues
   * accelerated check of possible not existing systems
 -------------------------------------------------------------------------------------         
 v0.5.1

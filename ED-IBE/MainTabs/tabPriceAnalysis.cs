@@ -361,6 +361,7 @@ namespace IBE.MTPriceAnalysis
 
                         if (!m_IsRefreshed["tpByCommodity"])
                         { 
+                            loadCommoditiesForByCommodity();
                             Refresh_ByCommodity();                        
 
                             m_IsRefreshed["tpByCommodity"] = true;

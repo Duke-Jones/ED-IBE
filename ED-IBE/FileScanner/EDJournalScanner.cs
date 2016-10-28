@@ -156,7 +156,7 @@ namespace IBE.FileScanner
         private Boolean                     m_Stop;
         private Boolean                     m_NewFileDetected;
         private FileSystemWatcher           m_FileWatcher;
-
+        private Boolean                     m_extLogging = false;
 
         /// <summary>
         /// create a new LogFileScanner-object
@@ -170,6 +170,8 @@ namespace IBE.FileScanner
                     m_LastScan_JournalFile                  = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "LastScan_JournalFile",  "", true);
                     m_LastScan_Event                        = Program.DBCon.getIniValue<String>(DB_GROUPNAME,   "LastScan_Event",        "", true);
                     m_LastScan_Timestamp                    = Program.DBCon.getIniValue<DateTime>(DB_GROUPNAME, "LastScan_TimeStamp",    new DateTime(2000, 1, 1).ToString(), false);
+
+                    m_extLogging = Program.DBCon.getIniValue<Boolean>("Debug",   "extLog_Journal", false.ToString(), false);
                 }
                 else
                 {
@@ -295,12 +297,15 @@ namespace IBE.FileScanner
             m_NewFileDetected = false;
             Boolean missingMessagePossible = true;
 
+            if(m_extLogging) logger.Log("scanning started");
+
             do
             {
                 try
                 {
                     if(!isFirstRun && missingMessagePossible && String.IsNullOrWhiteSpace(m_LastScan_JournalFile))
                     {
+                        if(m_extLogging) logger.Log("Can't find E:D journal file!");
                         Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Can't find E:D journal file!");                        
                         missingMessagePossible = false;
                     }
@@ -308,6 +313,7 @@ namespace IBE.FileScanner
                     // new files needed or notified ?
                     if(String.IsNullOrWhiteSpace(m_LastScan_JournalFile) && (newFiles.Count == 0))
                     {
+                        if(m_extLogging) logger.Log("new files");
                         // get jounal for the first time, get only the latest
                         IOrderedEnumerable<string> journals = Directory.EnumerateFiles(m_SavedgamesPath, "Journal.*.log", SearchOption.TopDirectoryOnly).OrderByDescending(x => x);
 
@@ -319,6 +325,8 @@ namespace IBE.FileScanner
                     }
                     else if(m_NewFileDetected || isFirstRun)
                     {
+                        if(m_extLogging) logger.Log("first run");
+
                         // check for new files
                         m_NewFileDetected = false;
 
@@ -354,6 +362,7 @@ namespace IBE.FileScanner
                     {
                         if(!File.Exists(m_LastScan_JournalFile))
                         {
+                            if(m_extLogging) logger.Log("file not existing : " + m_LastScan_JournalFile);
                             m_LastScan_JournalFile = "";
                         }
                     }
@@ -380,6 +389,7 @@ namespace IBE.FileScanner
 
                     if (!String.IsNullOrWhiteSpace(m_LastScan_JournalFile))
                     {
+                        if(m_extLogging) logger.Log("check file for new events : " +  Path.GetFileName(m_LastScan_JournalFile) + " (" + gotLatestEvent +")");
 
                         missingMessagePossible = false;
 
@@ -396,6 +406,9 @@ namespace IBE.FileScanner
                         {
                             // get json object
                             dataLine     = journalStreamReader.ReadLine();
+
+                            if(m_extLogging) logger.Log("new line from : " + Path.GetFileName(m_LastScan_JournalFile) + " : " + dataLine);
+
                             journalEntry = JsonConvert.DeserializeObject<JToken>(dataLine);
 
                             // identify the event
@@ -418,7 +431,7 @@ namespace IBE.FileScanner
                                     lastEvent = rawEventName;
                                     lastEventTime = rawTimeStamp;
 
-                                    SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader);
+                                    SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader, ref logger);
 
                                     // pre-check for base data which is currently not in the database.
                                     switch (eventName)
@@ -428,6 +441,7 @@ namespace IBE.FileScanner
                                         case JournalEvent.FSDJump:
                                         case JournalEvent.Resurrect:
 
+                                            if(m_extLogging) logger.Log("accepted (pre) : " + eventName.ToString());
                                             Debug.Print("accepted (pre) : " + eventName.ToString());
 
                                             BasedataEventArgs newBasedataArgItem = new BasedataEventArgs() {
@@ -474,6 +488,7 @@ namespace IBE.FileScanner
                                             if(eventName == JournalEvent.Docked)
                                                 Debug.Print("stop");
 
+                                            if(m_extLogging) logger.Log("accepted : " + eventName.ToString());
                                             Debug.Print("accepted : " + eventName.ToString());
                                             JournalEventArgs newJournalArgItem = new JournalEventArgs() { EventType = eventName, Data = journalEntry, History = history };
 
@@ -577,6 +592,7 @@ namespace IBE.FileScanner
 
                         if(lastEventTime > DateTime.MinValue)
                         {
+                            if(m_extLogging) logger.Log("write new time");
                             // only rewrite if we've got a new event
                             Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_Event",     lastEvent);
                             Program.DBCon.setIniValue(DB_GROUPNAME, "LastScan_TimeStamp", lastEventTime.ToString());
@@ -589,6 +605,8 @@ namespace IBE.FileScanner
 
                         if(newFiles.Count > 0)
                         {
+                            if(m_extLogging) logger.Log("still have new files");
+
                             // prepare switching to next file
                             if(journalFileStream != null)
                                 journalFileStream.Dispose();
@@ -605,10 +623,11 @@ namespace IBE.FileScanner
                         {
                             // it's the end of the actual file -> so we found the latest item
                             gotLatestEvent = true;
+                            if(m_extLogging) logger.Log("force latest event");
                         }
 
                         if(gotLatestEvent)
-                            SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader);
+                            SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader, ref logger);
 
                     }
 
@@ -660,14 +679,17 @@ namespace IBE.FileScanner
 
             if(journalStreamReader != null)
                 journalStreamReader.Dispose();
+
+            if(m_extLogging) logger.Log("stopped !");
         }
 
-        private void SubmitReferenceEvents(ref JToken latestLocationEvent, ref JToken latestFileHeader)
+        private void SubmitReferenceEvents(ref JToken latestLocationEvent, ref JToken latestFileHeader, ref SingleThreadLogger logger)
         {
             try
             {
                 if (latestFileHeader != null)
                 {
+                    logger.Log("submit ref event : latestFileHeader");
                     // memorize the latest header
                     JournalEventRecieved.Raise(this, new JournalEventArgs() { EventType = JournalEvent.Fileheader, Data = latestFileHeader });
                     latestFileHeader = null;
@@ -675,6 +697,8 @@ namespace IBE.FileScanner
 
                 if (latestLocationEvent != null)
                 {
+                    logger.Log("submit ref event : latestLocationEvent");
+
                     // pre-check for base data which is currently not in the database.
                     BasedataEventArgs newBasedataArgItem = new BasedataEventArgs() {
                                                                         EventType = JournalEvent.Basedata,
