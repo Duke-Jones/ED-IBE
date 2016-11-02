@@ -1,4 +1,16 @@
 Commodity_ID;Language;Name
+-4;eng;Diagnostic Sensor
+-4;ger;Diagnostic Sensor
+-4;fra;Diagnostic Sensor
+-3;eng;H N Shock Mount
+-3;ger;H N Shock Mount
+-3;fra;H N Shock Mount
+-2;eng;C M M Composite
+-2;ger;CMM-Komposit
+-2;fra;C M M Composite
+-1;eng;Animalmeat
+-1;ger;Animalmeat
+-1;fra;Animalmeat
 1;eng;Explosives
 1;ger;Sprengstoffe
 1;fra;Explosifs
@@ -339,7 +351,7 @@ Commodity_ID;Language;Name
 114;ger;Meta-Legierungen
 114;fra;Meta-Alloys
 115;eng;Ceramic Composites
-115;ger;Keramische Verbundwerkstoffe
+115;ger;Keramik-Verbundwerkstoffe
 115;fra;Ceramic Composites
 116;eng;Evacuation Shelter
 116;ger;Evakuierungsschutz
@@ -378,7 +390,7 @@ Commodity_ID;Language;Name
 128;ger;Ancient Artefact
 128;fra;Ancient Artefact
 129;eng;Rare Artwork
-129;ger;Rare Artwork
+129;ger;Seltenes Kunstwerk
 129;fra;Rare Artwork
 130;eng;Experimental Chemicals
 130;ger;Experimental Chemicals
@@ -690,7 +702,7 @@ Commodity_ID;Language;Name
 232;ger;Pantaa Prayer Sticks
 232;fra;Pantaa Prayer Sticks
 233;eng;Fujin Tea
-233;ger;Fujin Tea
+233;ger;Fujin Tee
 233;fra;Fujin Tea
 234;eng;Chameleon Cloth
 234;ger;Chameleon Cloth
@@ -777,7 +789,7 @@ Commodity_ID;Language;Name
 261;ger;Political Prisoner
 261;fra;Political Prisoner
 262;eng;Hostage
-262;ger;Hostage
+262;ger;Geisel
 262;fra;Hostage
 263;eng;Geological Samples
 263;ger;Geological Samples
@@ -803,3 +815,141 @@ Commodity_ID;Language;Name
 270;eng;Occupied Escape Pod
 270;ger;Occupied Escape Pod
 270;fra;Occupied Escape Pod
+271;eng;Water
+271;ger;Wasser
+271;fra;Water
+272;eng;Onionhead Beta Strain
+272;ger;Onionhead Beta Strain
+272;fra;Onionhead Beta Strain
+273;eng;Praseodymium
+273;ger;Praseodymium
+273;fra;Praseodymium
+274;eng;Bromellite
+274;ger;Bromellite
+274;fra;Bromellite
+275;eng;Samarium
+275;ger;Samarium
+275;fra;Samarium
+276;eng;Low Temperature Diamond
+276;ger;Niedertemperaturdiamanten
+276;fra;Low Temperature Diamond
+277;eng;Hydrogen Peroxide
+277;ger;Wasserstoffperoxid
+277;fra;Hydrogen Peroxide
+278;eng;Liquid Oxygen
+278;ger;Flüssiger Sauerstoff
+278;fra;Liquid Oxygen
+279;eng;Methanol Monohydrate Crystals
+279;ger;Methanol-Monohydrat-Kristalle
+279;fra;Methanol Monohydrate Crystals
+280;eng;Lithium Hydroxide
+280;ger;Lithiumhydroxid
+280;fra;Lithium Hydroxide
+281;eng;Methane Clathrate
+281;ger;Methanklathrat
+281;fra;Methane Clathrate
+282;eng;Insulating Membrane
+282;ger;Isoliermembran
+282;fra;Insulating Membrane
+283;eng;CMM Composite
+283;ger;CMM-Komposit
+283;fra;CMM Composite
+284;eng;Cooling Hoses
+284;ger;Cooling Hoses
+284;fra;Cooling Hoses
+285;eng;Neofabric Insulation
+285;ger;Neofabric Insulation
+285;fra;Neofabric Insulation
+286;eng;Articulation Motors
+286;ger;Articulation Motors
+286;fra;Articulation Motors
+287;eng;HN Shock Mount
+287;ger;HN-Dämpferaufhängung
+287;fra;HN Shock Mount
+288;eng;Emergency Power Cells
+288;ger;Emergency Power Cells
+288;fra;Emergency Power Cells
+289;eng;Power Converter
+289;ger;Energiekonverter
+289;fra;Power Converter
+290;eng;Power Grid Assembly
+290;ger;Energienetz-Gruppe
+290;fra;Power Grid Assembly
+291;eng;Power Transfer Bus
+291;ger;Energietransferbus
+291;fra;Power Transfer Conduits
+292;eng;Radiation Baffle
+292;ger;Radiation Baffle
+292;fra;Radiation Baffle
+293;eng;Exhaust Manifold
+293;ger;Exhaust Manifold
+293;fra;Exhaust Manifold
+294;eng;Reinforced Mounting Plate
+294;ger;Reinforced Mounting Plate
+294;fra;Reinforced Mounting Plate
+295;eng;Heatsink Interlink
+295;ger;Kühlkörperverbinder
+295;fra;Heatsink Interlink
+296;eng;Magnetic Emitter Coil
+296;ger;Magnetische Emitterspule
+296;fra;Magnetic Emitter Coil
+297;eng;Modular Terminals
+297;ger;Modular Terminals
+297;fra;Modular Terminals
+298;eng;Nanobreakers
+298;ger;Nanobreakers
+298;fra;Nanobreakers
+299;eng;Telemetry Suite
+299;ger;Telemetry Suite
+299;fra;Telemetry Suite
+300;eng;Micro Controllers
+300;ger;Microcontroller
+300;fra;Micro Controllers
+301;eng;Ion Distributor
+301;ger;Ionenverteiler
+301;fra;Ion Distributor
+302;eng;Hardware Diagnostic Sensor
+302;ger;Hardware-Diagnostiksensor
+302;fra;Hardware Diagnostic Sensor
+303;eng;Conductive Fabrics
+303;ger;Leitfähige Stoffe
+303;fra;Conductive Fabrics
+304;eng;Military Grade Fabrics
+304;ger;Military Grade Fabrics
+304;fra;Military Grade Fabrics
+305;eng;Advanced Medicines
+305;ger;Fortschrittliche Medikamente
+305;fra;Advanced Medicines
+306;eng;Medical Diagnostic Equipment
+306;ger;Medical Diagnostic Equipment
+306;fra;Medical Diagnostic Equipment
+307;eng;Survival Equipment
+307;ger;Überlebensausrüstung
+307;fra;Survival Equipment
+308;eng;Data Core
+308;ger;Data Core
+308;fra;Data Core
+309;eng;Galactic Travel Guide
+309;ger;Galactic Travel Guide
+309;fra;Galactic Travel Guide
+310;eng;Mysterious Idol
+310;ger;Mysterious Idol
+310;fra;Mysterious Idol
+311;eng;Prohibited Research Materials
+311;ger;Prohibited Research Materials
+311;fra;Prohibited Research Materials
+312;eng;Antimatter Containment Unit
+312;ger;Antimatter Containment Unit
+312;fra;Antimatter Containment Unit
+313;eng;Space Pioneer Relics
+313;ger;Space Pioneer Relics
+313;fra;Space Pioneer Relics
+314;eng;Fossil Remnants
+314;ger;Fossil Remnants
+314;fra;Fossil Remnants
+315;eng;Unknown Probe
+315;ger;Unknown Probe
+315;fra;Unknown Probe
+316;eng;Precious Gems
+316;ger;Precious Gems
+316;fra;Precious Gems

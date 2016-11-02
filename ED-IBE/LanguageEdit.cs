@@ -26,6 +26,7 @@ namespace IBE
         private Dictionary<Int32, Int32>                m_ChangedIDs;
         private Dictionary<Int32, Int32>                m_MisspelledIDs;
         private List<Int32>                             m_DeletedIDs;
+        private DBConnector                             m_DBCon;
 
 
         public LanguageEdit()
@@ -38,6 +39,7 @@ namespace IBE
             try
             {
                 Program.Data.AddMissingLocalizationEntries();
+                m_DBCon = new DBConnector(Program.DBCon.ConfigData, true);
                 Init();
             }
             catch (Exception ex)
@@ -59,7 +61,7 @@ namespace IBE
                 m_MisspelledIDs = new Dictionary<Int32, Int32>();
                 m_DeletedIDs    = new List<Int32>();
 
-                currentLanguage = Program.DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
+                currentLanguage = m_DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
                 clbLanguageFilter.Items.Clear();
                 foreach (SQL.Datasets.dsEliteDB.tblanguageRow langRow in Program.Data.BaseData.tblanguage.Rows)
                 {
@@ -109,7 +111,7 @@ namespace IBE
                         Debug.Print("unknown");
                 }
 
-                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
+                m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(m_DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
                 rbCommodities.CheckedChanged   += rbType_CheckedChanged;
@@ -148,13 +150,21 @@ namespace IBE
 
                 m_ChangedIDs.Clear();
                 cmdSave.Enabled             = false;
-                m_DataAdapter[dgvData]      = null;
-                m_DataAdapter[dgvDataOwn]   = null;
+                if(m_DataAdapter[dgvData] != null)
+                {
+                    m_DataAdapter[dgvData].Dispose();
+                    m_DataAdapter[dgvData] = null;
+                }
+                if(m_DataAdapter[dgvDataOwn] != null)
+                {
+                    m_DataAdapter[dgvDataOwn].Dispose();
+                    m_DataAdapter[dgvDataOwn] = null;
+                }
 
                 m_MainDataset.Clear();
 
                 parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
-                activeSetting = Program.DBCon.getIniValue(DB_GROUPNAME, parameterName, "Commodity", false);
+                activeSetting = m_DBCon.getIniValue(DB_GROUPNAME, parameterName, "Commodity", false);
 
                 if (clbLanguageFilter.CheckedItems.Count > 0)
                 {
@@ -180,11 +190,11 @@ namespace IBE
                     }
 
                     DataAdapter = m_DataAdapter[dgvData];
-                    Program.DBCon.TableRead(sqlString1, dgvData.Name, m_MainDataset, ref DataAdapter);
+                    m_DBCon.TableRead(sqlString1, dgvData.Name, m_MainDataset, ref DataAdapter);
                     m_DataAdapter[dgvData] = DataAdapter;
 
                     DataAdapter = m_DataAdapter[dgvDataOwn];
-                    Program.DBCon.TableRead(sqlString2, dgvDataOwn.Name, m_MainDataset, ref DataAdapter);
+                    m_DBCon.TableRead(sqlString2, dgvDataOwn.Name, m_MainDataset, ref DataAdapter);
                     m_DataAdapter[dgvDataOwn] = DataAdapter;
                 }
 
@@ -241,7 +251,7 @@ namespace IBE
             try
             {
                 parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
-                activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
+                activeSetting = m_DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
 
                 if((m_MisspelledIDs.Count > 0) && (activeSetting == EliteDBIO.enLocalizationType.Commodity))
                 {
@@ -251,11 +261,11 @@ namespace IBE
                                                                     MessageBoxIcon.Question);
                 }
 
-                Program.DBCon.TransBegin();
+                m_DBCon.TransBegin();
                 
-                Program.DBCon.TableUpdate(dgvData.Name, m_MainDataset, m_DataAdapter[dgvData]);
+                m_DBCon.TableUpdate(dgvData.Name, m_MainDataset, m_DataAdapter[dgvData]);
 
-                Program.DBCon.TableUpdate(dgvDataOwn.Name, m_MainDataset, m_DataAdapter[dgvDataOwn]);
+                m_DBCon.TableUpdate(dgvDataOwn.Name, m_MainDataset, m_DataAdapter[dgvDataOwn]);
 
                 // entries which have to be deleted
                 foreach (Int32 delID in m_DeletedIDs)
@@ -265,7 +275,7 @@ namespace IBE
                         sqlString = String.Format("delete from tbCommodity" +
                                                     " where id = {0}", 
                                                     delID);
-                        Program.DBCon.Execute(sqlString);
+                        m_DBCon.Execute(sqlString);
                         deletedIDs.Add(delID);
                     }
                 }
@@ -282,14 +292,14 @@ namespace IBE
                                                       " where commodity_id = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbPriceHistory" +
                                                       " set   commodity_id = {1}" +
                                                       " where commodity_id = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             // delete entry from tbCommodity, the ForeigenKeys will delete the 
                             // entries from the other affected tables
@@ -297,7 +307,7 @@ namespace IBE
                             sqlString = String.Format("delete from tbCommodity" +
                                                       " where id = {0}", 
                                                       changedValuePair.Key);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             break;
 
@@ -308,14 +318,14 @@ namespace IBE
                                                       " where category_id = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             // delete entry from tbCategory, the ForeigenKeys will delete the 
                             // entries from the other affected tables
                             sqlString = String.Format("delete from tbCategory" +
                                                       " where id = {0}", 
                                                       changedValuePair.Key);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             break;
                         case EliteDBIO.enLocalizationType.Economylevel:
@@ -325,35 +335,35 @@ namespace IBE
                                                       " where DemandLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbCommodityData" +
                                                       " set   SupplyLevel = {1}" +
                                                       " where SupplyLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbPriceHistory" +
                                                       " set   DemandLevel = {1}" +
                                                       " where DemandLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbPriceHistory" +
                                                       " set   SupplyLevel = {1}" +
                                                       " where SupplyLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                         // delete entry from tbCategory, the ForeigenKeys will delete the 
                             // entries from the other affected tables
                             sqlString = String.Format("delete from tbEconomyLevel" +
                                                       " where id = {0}", 
                                                       changedValuePair.Key);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             break;
                         default:
@@ -376,14 +386,14 @@ namespace IBE
                                                       " where commodity_id = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbPriceHistory" +
                                                       " set   commodity_id = {1}" +
                                                       " where commodity_id = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             // extend mapping table
                             if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
@@ -396,7 +406,7 @@ namespace IBE
                                                           "    (select commodity from tbCommodity where id = {1}) c2",
                                                           changedValuePair.Key, 
                                                           changedValuePair.Value);
-                                Program.DBCon.Execute(sqlString);
+                                m_DBCon.Execute(sqlString);
                             }
 
                             // delete entry from tbCommodity, the ForeigenKeys will delete the 
@@ -405,7 +415,7 @@ namespace IBE
                             sqlString = String.Format("delete from tbCommodity" +
                                                       " where id = {0}", 
                                                       changedValuePair.Key);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
 
                             break;
@@ -417,14 +427,14 @@ namespace IBE
                                                       " where category_id = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             // delete entry from tbCategory, the ForeigenKeys will delete the 
                             // entries from the other affected tables
                             sqlString = String.Format("delete from tbCategory" +
                                                       " where id = {0}", 
                                                       changedValuePair.Key);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             break;
 
@@ -435,35 +445,35 @@ namespace IBE
                                                       " where DemandLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbCommodityData" +
                                                       " set   SupplyLevel = {1}" +
                                                       " where SupplyLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbPriceHistory" +
                                                       " set   DemandLevel = {1}" +
                                                       " where DemandLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             sqlString = String.Format("update tbPriceHistory" +
                                                       " set   SupplyLevel = {1}" +
                                                       " where SupplyLevel = {0}", 
                                                       changedValuePair.Key, 
                                                       changedValuePair.Value);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                         // delete entry from tbCategory, the ForeigenKeys will delete the 
                             // entries from the other affected tables
                             sqlString = String.Format("delete from tbEconomyLevel" +
                                                       " where id = {0}", 
                                                       changedValuePair.Key);
-                            Program.DBCon.Execute(sqlString);
+                            m_DBCon.Execute(sqlString);
 
                             break;
                         default:
@@ -473,7 +483,7 @@ namespace IBE
                     collectorID.Add(changedValuePair.Value);
                 }
 
-                Program.DBCon.TransCommit();
+                m_DBCon.TransCommit();
 
                 if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
                     Program.Data.PrepareBaseTables("tbdnmap_commodity");
@@ -493,8 +503,8 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                if(Program.DBCon.TransActive())
-                    Program.DBCon.TransRollback();
+                if(m_DBCon.TransActive())
+                    m_DBCon.TransRollback();
 
                 throw new Exception("Error while saving data", ex);
             }
@@ -562,7 +572,7 @@ namespace IBE
         {
             try
             {
-                Program.DBCon.setIniValue(DB_GROUPNAME, clbLanguageFilter.Items[e.Index].ToString(),e.NewValue == CheckState.Checked ? true.ToString() : false.ToString());
+                m_DBCon.setIniValue(DB_GROUPNAME, clbLanguageFilter.Items[e.Index].ToString(),e.NewValue == CheckState.Checked ? true.ToString() : false.ToString());
                 this.BeginInvoke((MethodInvoker) (() => FilterData()));
             }
             catch (Exception ex)
@@ -638,6 +648,20 @@ namespace IBE
                     Program.Data.PrepareBaseTables("tbeconomylevel");
                 }
 
+                foreach (KeyValuePair<object, MySqlDataAdapter> bs in m_DataAdapter)
+                {
+                    ((MySqlDataAdapter)bs.Value).SelectCommand.Dispose();
+                    ((MySqlDataAdapter)bs.Value).Dispose();
+                }
+                
+                foreach (KeyValuePair<object, BindingSource> bs in m_BindingSources)
+                    bs.Value.Dispose();
+
+                foreach (KeyValuePair<object, DataTable> bs in m_DGVTables)
+                    bs.Value.Dispose();
+                
+                m_DBCon.Dispose();
+                
                 Cursor = Cursors.Default;
             }
             catch (Exception ex)
@@ -758,7 +782,7 @@ namespace IBE
 
             try
             {
-                currentLanguage = Program.DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
+                currentLanguage = m_DBCon.getIniValue(IBE.IBESettingsView.DB_GROUPNAME, "Language");
 
                 currentBaseItem = m_DGVTables[dgvData   ].Select(string.Format("id1 = {0} and id2 = 0", dgvData.SelectedRows[0].Cells[0].Value));
                 ownBaseItem     = m_DGVTables[dgvDataOwn].Select(string.Format("id1 = {0} and id2 = 0", dgvDataOwn.SelectedRows[0].Cells[0].Value));
@@ -857,7 +881,7 @@ namespace IBE
             try
             {
                 parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
-                activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
+                activeSetting = m_DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
 
                 switch (activeSetting)
                 {
@@ -880,7 +904,7 @@ namespace IBE
                 saveFileDialog1.DefaultExt          = "csv";
                 saveFileDialog1.Title               = infoString;
                 saveFileDialog1.OverwritePrompt     = true;
-                saveFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                saveFileDialog1.InitialDirectory    = m_DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
 
 	            DialogResult result = saveFileDialog1.ShowDialog();
 
@@ -916,7 +940,7 @@ namespace IBE
             try
             {
                 parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
-                activeSetting = Program.DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
+                activeSetting = m_DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
 
                 if(rbImportOnlyNew.Checked)
                     importType = EliteDBIO.enLocalisationImportType.onlyNew;
@@ -946,7 +970,7 @@ namespace IBE
                 openFileDialog1.Filter              = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
                 openFileDialog1.DefaultExt          = "csv";
                 openFileDialog1.Title               = infoString;
-                openFileDialog1.InitialDirectory    = Program.DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
+                openFileDialog1.InitialDirectory    = m_DBCon.getIniValue("General", "Path_Import", Program.GetDataPath("data"), false);
 
 	            DialogResult result = openFileDialog1.ShowDialog();
 

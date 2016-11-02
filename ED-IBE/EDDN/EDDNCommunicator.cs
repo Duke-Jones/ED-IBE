@@ -72,6 +72,8 @@ bool disposed = false;
                 if (m_DuplicateRelayFilter != null)
                     m_DuplicateRelayFilter.Dispose(); 
 
+                m_lDBCon.Dispose();
+
                 m_DuplicateRelayFilter = null;
             }
 
@@ -208,12 +210,13 @@ bool disposed = false;
         private Boolean                             m_OutfittingSendingError { get; set; }
         private Boolean                             m_ShipyardSendingError { get; set; }
         private Boolean                             m_JournalSendingError { get; set; }
-  
+        private SQL.DBConnector                     m_lDBCon;
 
 
         public EDDNCommunicator()
         {
-
+            m_lDBCon = new SQL.DBConnector(Program.DBCon.ConfigData, true);
+            
             m_Reciever = new Dictionary<String, EDDNReciever>();
 
             _SendDelayTimer_Market                = new System.Timers.Timer(2000);
@@ -309,7 +312,7 @@ bool disposed = false;
             try
             {
 
-                if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
+                if (m_lDBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
                 {
                     if (m_EDDNSpooler == null)
                     {
@@ -321,7 +324,7 @@ bool disposed = false;
                     m_EDDNSpooler.WriteLine(e.RawData);
                 }
 
-                ownSchema = Program.DBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
+                ownSchema = m_lDBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
 
                 switch (e.InfoType)
                 {
@@ -437,7 +440,7 @@ bool disposed = false;
                             {
 
                                 // import is wanted ?
-                                if (Program.DBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
+                                if (m_lDBCon.getIniValue<Boolean>("EDDN", "ImportEDDN", false.ToString(), false))
                                 {
                                     // collect importable data
                                     Debug.Print("import :" + DataRow);
@@ -453,7 +456,7 @@ bool disposed = false;
 
                                 UpdateRejectedData(InfoString);
 
-                                if (Program.DBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false))
+                                if (m_lDBCon.getIniValue<Boolean>("EDDN", "SpoolImplausibleToFile", false.ToString(), false))
                                 {
 
                                     FileStream LogFileStream = null;
@@ -753,7 +756,7 @@ bool disposed = false;
             try
             {
                 if(m_SenderIsActivated && 
-                   Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false))
+                   m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
                     String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
@@ -788,7 +791,7 @@ bool disposed = false;
                         }
 
                         baseData = new SQL.Datasets.dsEliteDB.tbcommoditybaseDataTable();
-                        Program.DBCon.Execute("select * from tbcommodityBase;", (System.Data.DataTable)baseData);
+                        m_lDBCon.Execute("select * from tbcommodityBase;", (System.Data.DataTable)baseData);
 
                         foreach (JToken commodityItem in dataObject.SelectTokens("lastStarport.commodities[*]"))
                         {
@@ -897,7 +900,7 @@ bool disposed = false;
 
             try
             {
-                if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOutfittingData", true.ToString(), false))
+                if(m_SenderIsActivated && m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOutfittingData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
                     String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
@@ -932,7 +935,7 @@ bool disposed = false;
                         }
 
                         baseData = new SQL.Datasets.dsEliteDB.tboutfittingbaseDataTable();
-                        Program.DBCon.Execute("select * from tbOutfittingBase;", (System.Data.DataTable)baseData);
+                        m_lDBCon.Execute("select * from tbOutfittingBase;", (System.Data.DataTable)baseData);
                         
 
                         foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
@@ -1001,7 +1004,7 @@ bool disposed = false;
 
             try
             {
-                if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostShipyardData", true.ToString(), false))
+                if(m_SenderIsActivated && m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostShipyardData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
 
@@ -1032,7 +1035,7 @@ bool disposed = false;
                         if(dataObject.SelectToken("lastStarport.ships", false) != null)
                         { 
                             baseData = new SQL.Datasets.dsEliteDB.tbshipyardbaseDataTable();
-                            Program.DBCon.Execute("select * from tbShipyardBase;", (System.Data.DataTable)baseData);
+                            m_lDBCon.Execute("select * from tbShipyardBase;", (System.Data.DataTable)baseData);
 
                             List<JToken> allShips = dataObject.SelectTokens("lastStarport.ships.shipyard_list.*").ToList();
                             allShips.AddRange(dataObject.SelectTokens("lastStarport.ships.unavailable_list.[*]").ToList());
@@ -1091,7 +1094,7 @@ bool disposed = false;
         {
             try
             {
-                if(m_SenderIsActivated && Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostJournalData", true.ToString(), false))
+                if(m_SenderIsActivated && m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostJournalData", true.ToString(), false))
                 {                                                                                             
                     StringBuilder journalStringEDDN = new StringBuilder();
                     journalStringEDDN.Append(String.Format("\"message\": {{"));
@@ -1189,7 +1192,7 @@ bool disposed = false;
                     Data        = new EDDNCommodity_v3();
 
                     // test or real ?
-                    if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                    if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                     else
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3";
@@ -1346,7 +1349,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2";
@@ -1442,7 +1445,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/commodity/3";
@@ -1535,7 +1538,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2";
@@ -1632,7 +1635,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
                     schema = "http://schemas.elite-markets.net/eddn/journal/1/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/journal/1";
@@ -1839,20 +1842,20 @@ bool disposed = false;
 
             try
             {
-                retValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID");
+                retValue = m_lDBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID");
 
                 if((!Guid.TryParse(retValue, out parsedGUID)) || (!parsedGUID.ToString().Equals(retValue)))
                 {
                     retValue = Guid.NewGuid().ToString();
-                    Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID", retValue);
+                    m_lDBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserID", retValue);
                 }
                     
-                if (Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserName") == "useUserName")
+                if (m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserName") == "useUserName")
                 {
-                    userName = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName");
+                    userName = m_lDBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName");
 
                     if (String.IsNullOrWhiteSpace(userName))
-                        Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserID");
+                        m_lDBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserID");
                     else
                         retValue = userName;
                 }
@@ -1920,7 +1923,7 @@ bool disposed = false;
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+                CErr.processError(ex, "Error while processing the JournalEventRecieved-event");
             }
         }
 

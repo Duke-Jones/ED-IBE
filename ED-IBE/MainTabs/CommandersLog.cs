@@ -13,6 +13,7 @@ using IBE.SQL;
 using IBE.SQL.Datasets;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
 
 namespace IBE.MTCommandersLog
 {
@@ -436,7 +437,7 @@ namespace IBE.MTCommandersLog
                                             ChangedData.cargovolume,
                                             ChangedData.credits_transaction,
                                             ChangedData.credits_total,
-                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes)),
+                                            ChangedData.notes.Trim() == String.Empty ? "null" : String.Format("'{0}'", DBConnector.SQLEscape(ChangedData.notes, true)),
                                             nDistance == null ? "null" : DBConnector.SQLDecimal(nDistance.Value));
 
                 Program.DBCon.Execute(sqlString); 
@@ -459,165 +460,6 @@ namespace IBE.MTCommandersLog
                 throw new Exception("Error while saving Commanders Log to DB", ex);
             }
         }
-
-        //private void setLocationInfo(string Systemname, string Locationname, Boolean ForceChangedLocation)
-        //{
-
-        //    //bool Jumped_To      = false;
-        //    bool systemFirstTimeVisited      = false;
-        //    bool newLocation    = false;
-        //    bool InitialRun     = false;
-
-        //    if(!String.IsNullOrEmpty(Systemname))
-        //    { 
-        //        // system info found
-        //        if(!Program.actualCondition.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase))
-        //        { 
-        //            // it's a new system
-        //            Debug.Print("tbCurrentSystemFromLogs=" + tbCurrentSystemFromLogs);
-        //            Program.actualCondition.System = Systemname;
-        //            systemFirstTimeVisited = true;
-        //        }
-
-        //        // system info found
-        //        if(!_LoggedSystem.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase))
-        //        { 
-        //            // system is not logged yet
-
-        //            // update Cmdr's Log ?
-        //            if(_LoggedSystem != ID_NOT_SET)
-        //            { 
-        //                // it's not the first run, create a event if wanted
-        //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false, true))
-        //                {
-        //                    // create event is enabled
-        //                    CommandersLog_CreateJumpedToEvent(Systemname);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                InitialRun = true;
-        //            }
-                    
-        //            //Jumped_To = true;
-        //            _LoggedSystem = Systemname;
-        //        }
-
-        //    }
-
-        //    if(!String.IsNullOrEmpty(Locationname))
-        //    { 
-        //        // system info found
-        //        if(!Program.actualCondition.Location.Equals(Locationname, StringComparison.InvariantCultureIgnoreCase))
-        //        { 
-        //            // it's a new location
-        //            Program.actualCondition.Location = Locationname;
-        //            newLocation = true;
-
-        //            throw new NotImplementedException();
-        //            List<EDStation> SystemStations = null; // _Milkyway.getStations(Systemname);
-
-        //            if((SystemStations != null) && (SystemStations.Find(x => x.Name.Equals(Locationname, StringComparison.InvariantCultureIgnoreCase)) != null))
-        //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true))
-        //                {
-        //                    // create event is enabled
-        //                    CommandersLog_StationVisitedEvent(Systemname, Locationname);
-        //                }
-
-        //            _LoggedLocation = Locationname;
-
-        //            _LoggedMarketData = "";
-        //            _LoggedVisited = "";
-
-        //        }
-        //    }else if(systemFirstTimeVisited || ForceChangedLocation)
-        //        Program.actualCondition.Location = Condition.STR_Scanning;
-            
-
-        //    if((systemFirstTimeVisited || newLocation) && (!InitialRun))
-        //    { 
-        //        loadSystemData(_LoggedSystem);
-        //        loadStationData(_LoggedSystem, _LoggedLocation);
-
-        //        if(Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoActivateSystemTab", true.ToString(), false, true))
-        //            tabCtrlMain.SelectedTab = tabCtrlMain.TabPages["tabSystemData"];
-        //    }
-
-        //    tbCurrentSystemFromLogs.Text        = Program.actualCondition.System;
-        //    tbCurrentStationinfoFromLogs.Text   = Program.actualCondition.Location;
-
-        //}
-
-        //private void CommandersLog_StationVisitedEvent(string Systemname, string StationName)
-        //{
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke(new del_EventLocationInfo(CommandersLog_StationVisitedEvent), Systemname, StationName);
-        //    }
-        //    else
-        //    {
-        //        if (!_LoggedVisited.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
-        //        {
-        //            bool noLogging = _LoggedVisited.Equals(ID_NOT_SET);
-
-        //            _LoggedVisited = Systemname + "|" + StationName;
-
-        //            if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false, true) && !noLogging)
-        //            {
-        //                Program.CommandersLog.SaveEvent(DateTime.UtcNow, Systemname, StationName, "", "", 0, 0, 0, "Visited", "");
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private void CommandersLog_MarketDataCollectedEvent(string Systemname, string StationName)
-        //{
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke(new del_EventLocationInfo(CommandersLog_MarketDataCollectedEvent), Systemname, StationName);
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            if (!_LoggedMarketData.Equals(Systemname + "|" + StationName, StringComparison.InvariantCultureIgnoreCase))
-        //            {
-        //                _LoggedMarketData = Systemname + "|" + StationName;
-
-        //                if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_Marketdata", true.ToString(), false, true))
-        //                {
-        //                    if (Program.DBCon.getIniValue<Boolean>(IBESettings.DB_GROUPNAME, "AutoAdd_ReplaceVisited", true.ToString(), false, true))
-        //                    {
-        //                        //object logEvent = Program.CommandersLog.LogEvents.SingleOrDefault(x => x.EventID == _CmdrsLog_LastAutoEventID);
-
-        //                        //if (logEvent != null &&
-        //                        //   logEvent.System.Equals(Systemname, StringComparison.InvariantCultureIgnoreCase) &&
-        //                        //   logEvent.Location.Equals(StationName, StringComparison.InvariantCultureIgnoreCase) &&
-        //                        //   logEvent.EventType.Equals("Visited", StringComparison.InvariantCultureIgnoreCase))
-        //                        //{
-        //                        //    logEvent.EventType = "Market m_BaseData Collected";
-        //                        //    Program.CommandersLog.UpdateCommandersLogListView();
-        //                        //}
-        //                        //else
-        //                        //{
-        //                        //    _CmdrsLog_LastAutoEventID = Program.CommandersLog.SaveEvent("Market m_BaseData Collected", StationName, Systemname, "", "", 0, "", DateTime.UtcNow);
-        //                        //    setActiveItem(_CmdrsLog_LastAutoEventID);
-        //                        //}
-        //                    }
-        //                    else
-        //                    {
-        //                        Program.CommandersLog.SaveEvent(DateTime.Now, Systemname, StationName, "", "", 0, 0, 0, "Market Data Collected", "");
-        //                    }
-
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// register the LogfileScanner in the CommandersLog for the DataEvent
@@ -722,8 +564,10 @@ namespace IBE.MTCommandersLog
 
                         if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
                            (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
-                            SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
-
+                        {
+                            if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false))
+                                SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
+                        }
                         else if(e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2))) != null)
                         {
                             var resurrectEvent = e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2)));
@@ -746,20 +590,24 @@ namespace IBE.MTCommandersLog
                         
                         break;
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
-                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
-                                  e.Data.Value<String>("StarSystem"),
-                                  "", 
-                                  "", 
-                                  "", 
-                                  0, 
-                                  0, 
-                                  Program.CompanionIO.SGetCreditsTotal(), 
-                                  "Jumped To", 
-                                  "", 
-                                  e.Data.Value<Double>("JumpDist"));
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false))
+                        {
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      e.Data.Value<String>("StarSystem"),
+                                      "", 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Jumped To", 
+                                      "", 
+                                      e.Data.Value<Double>("JumpDist"));
+                        }
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.Died:
+
                         String killInfo= "";
                         IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
 
@@ -808,41 +656,139 @@ namespace IBE.MTCommandersLog
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.Touchdown:
-                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
-                                  Program.actualCondition.System,
-                                  "", 
-                                  "", 
-                                  "", 
-                                  0, 
-                                  0, 
-                                  Program.CompanionIO.SGetCreditsTotal(), 
-                                  "Touchdown", 
-                                  String.Format("landed on {0}{1}\n" +
-                                                "long: {3}\n" +
-                                                "lat : {2}",
-                                                Program.actualCondition.Body, 
-                                                String.IsNullOrWhiteSpace(Program.actualCondition.BodyType) ? "" : " (" + Program.actualCondition.BodyType + ")",
-                                                e.Data.Value<Double>("Latitude"), 
-                                                e.Data.Value<Double>("Longitude")));
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_TouchDown", true.ToString(), false))
+                        {
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      "", 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Touchdown", 
+                                      String.Format("landed on {0}{1}\n" +
+                                                    "long: {3}\n" +
+                                                    "lat : {2}",
+                                                    Program.actualCondition.Body, 
+                                                    String.IsNullOrWhiteSpace(Program.actualCondition.BodyType) ? "" : " (" + Program.actualCondition.BodyType + ")",
+                                                    e.Data.Value<Double>("Latitude"), 
+                                                    e.Data.Value<Double>("Longitude")));
+                        }
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.Liftoff:
-                        SaveEvent(e.Data.Value<DateTime>("timestamp"), 
-                                  Program.actualCondition.System,
-                                  "", 
-                                  "", 
-                                  "", 
-                                  0, 
-                                  0, 
-                                  Program.CompanionIO.SGetCreditsTotal(), 
-                                  "Liftoff", 
-                                  String.Format("liftoff from {0}{1}\n" +
-                                                "long: {3}\n" +
-                                                "lat : {2}",
-                                                Program.actualCondition.Body, 
-                                                String.IsNullOrWhiteSpace(Program.actualCondition.BodyType) ? "" : " (" + Program.actualCondition.BodyType + ")",
-                                                e.Data.Value<Double>("Latitude"), 
-                                                e.Data.Value<Double>("Longitude")));
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_Liftoff", true.ToString(), false))
+                        {
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      "", 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Liftoff", 
+                                      String.Format("liftoff from {0}{1}\n" +
+                                                    "long: {3}\n" +
+                                                    "lat : {2}",
+                                                    Program.actualCondition.Body, 
+                                                    String.IsNullOrWhiteSpace(Program.actualCondition.BodyType) ? "" : " (" + Program.actualCondition.BodyType + ")",
+                                                    e.Data.Value<Double>("Latitude"), 
+                                                    e.Data.Value<Double>("Longitude")));
+                        }
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Scan:
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_Scan", true.ToString(), false))
+                        {
+                            TextHelper txtHelp = new TextHelper();
+
+                            Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                            System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                            System.Text.StringBuilder rings = new System.Text.StringBuilder();
+                         
+                            Int32 fullLength = 170;
+
+                            if(e.Data.Value<Object>("StarType") != null)
+                            {
+                                data.AppendLine(String.Format("{0} :   {1}   (Star)", txtHelp.FixedLength("Name", usedFont, fullLength),  e.Data.Value<String>("BodyName")));
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Type", usedFont, fullLength),  e.Data.Value<String>("StarType")));
+                                data.AppendLine(String.Format("{0} :   {1:N1} ls", txtHelp.FixedLength("Distance", usedFont, fullLength),  e.Data.Value<Double>("DistanceFromArrivalLS")));
+
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Radius")))
+                                    data.AppendLine(String.Format("{0} :   {1:N1} km", txtHelp.FixedLength("Radius", usedFont, fullLength),  e.Data.Value<Double>("Radius")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("StellarMass")))
+                                    data.AppendLine(String.Format("{0} :   {1:N1} stellar masses", txtHelp.FixedLength("Mass", usedFont, fullLength),  e.Data.Value<Double>("StellarMass")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Age_MY")))
+                                    data.AppendLine(String.Format("{0} :   {1:N1} my", txtHelp.FixedLength("Age", usedFont, fullLength),  e.Data.Value<Double>("Age_MY")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("SurfaceTemperature")))
+                                    data.AppendLine(String.Format("{0} :   {1:N1}°K  ( {2:N1}°C )", txtHelp.FixedLength("Temp.", usedFont, fullLength),  e.Data.Value<Double>("SurfaceTemperature"), e.Data.Value<Double>("SurfaceTemperature") - 273.15));
+                            }
+                            else
+                            {
+                                System.Text.StringBuilder materials = new System.Text.StringBuilder();
+
+                                data.AppendLine(String.Format("{0} :   {1}   (Planet/Moon)", txtHelp.FixedLength("Name", usedFont, fullLength),  e.Data.Value<String>("BodyName")));
+                                data.AppendLine(String.Format("{0} :   {1:N1} ls", txtHelp.FixedLength("Distance", usedFont, fullLength),  e.Data.Value<Double>("DistanceFromArrivalLS")));
+
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TerraformState")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Terraform", usedFont, fullLength),  e.Data.Value<String>("TerraformState")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("PlanetClass")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Class", usedFont, fullLength),  e.Data.Value<String>("PlanetClass")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Atmosphere")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Atmosphere", usedFont, fullLength),  e.Data.Value<String>("Atmosphere")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Volcanism")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Volcanism", usedFont, fullLength),  e.Data.Value<String>("Volcanism")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("SurfaceGravity")))
+                                    data.AppendLine(String.Format("{0} :   {1:N2} g", txtHelp.FixedLength("Gravity", usedFont, fullLength),  e.Data.Value<Double>("SurfaceGravity")/10.0));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("SurfaceTemperature")))
+                                    data.AppendLine(String.Format("{0} :   {1:N1}°K  ( {2:N1}°C )", txtHelp.FixedLength("Temp.", usedFont, fullLength),  e.Data.Value<Double>("SurfaceTemperature"), e.Data.Value<Double>("SurfaceTemperature") - 273.15));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("SurfacePressure")))
+                                    data.AppendLine(String.Format("{0} :   {1:N1} atm", txtHelp.FixedLength("Pressure", usedFont, fullLength),  e.Data.Value<Double>("SurfacePressure") / 100000.0));
+                                if((!String.IsNullOrWhiteSpace(e.Data.Value<String>("Landable"))) && e.Data.Value<Boolean>("Landable"))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Landable", usedFont, fullLength),  e.Data.Value<Boolean>("Landable") ? "yes" : "no"));
+
+                                if (e.Data.Value<Object>("Materials") != null)
+                                {
+                                    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+                                    foreach (JProperty  material in e.Data.SelectToken("Materials"))
+                                    {
+                                        if(materials.Length == 0)
+                                            materials.AppendFormat(String.Format("\n{0} :   ", txtHelp.FixedLength("Materials", usedFont, fullLength)));
+                                        else
+                                            materials.AppendFormat(", ");
+                                        materials.AppendFormat("{0} : {1:N1}%", textInfo.ToTitleCase(material.Name), (Double)material.Value);
+                                    }
+                                    data.AppendLine(materials.ToString());
+                                }
+                            }
+
+                            if(e.Data.Value<Object>("Rings") != null)
+                            {
+                                foreach (JObject ring in e.Data.SelectTokens("Rings.[*]"))
+                                {
+                                    if(rings.Length == 0)
+                                        rings.AppendLine(String.Format("\n{0} • {1} ({2})", txtHelp.FixedLength("Belts", usedFont, 100), ring.Value<String>("Name"), ring.Value<String>("RingClass")));
+                                    else
+                                        rings.AppendLine(String.Format("{0} • {1} ({2})", txtHelp.FixedLength("", usedFont, 100), ring.Value<String>("Name"), ring.Value<String>("RingClass")));
+                                }
+
+                                data.Append(rings);
+                            }
+
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      "", 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Scan", 
+                                      data.ToString());
+                        }
                         break;
 
 
@@ -851,9 +797,10 @@ namespace IBE.MTCommandersLog
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+                CErr.processError(ex, "Error while processing the JournalEventRecieved-event");
             }
         }
+
 
         void m_ExternalDataInterface_ExternalDataEvent(object sender, IBE.IBECompanion.DataEventBase.LocationChangedEventArgs e)
         {

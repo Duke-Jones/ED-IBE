@@ -463,6 +463,9 @@ namespace IBE
                     EliteDBProcess = null;
                 }
 
+                Data.Dispose();
+
+
 #if useVNC 
                 if(VNCAppServer != null)
                     VNCAppServer.Stop();

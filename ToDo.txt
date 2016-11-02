@@ -15,11 +15,16 @@ todo:
 * background start
 
 * direct selection of the local station
+* call EDSM/EDDB directly
 
 *************************************************************************************
 
 done:
 
+  * many stability fixes
+  * added version info to exception logger
+  * added scan data to Commander's Log
+-------------------------------------------------------------------------------------         
 v0.5.2
   * inbuilt verbose logging for debug journal scan issues
   * accelerated check of possible not existing systems

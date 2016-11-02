@@ -147,6 +147,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 5, 0))
                         UpdateTo_0_5_0(ref foundError);
 
+                    if (dbVersion < new Version(0, 5, 3))
+                        UpdateTo_0_5_3(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -1316,7 +1319,61 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while updating to v0.4.0", ex);
+                throw new Exception("Error while updating to v0.5.0", ex);
+            }
+        }
+        
+        private static void UpdateTo_0_5_3(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.3...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                // add changes to the database
+                sqlString = "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (17, 'Scan');                                       \n" +
+                            "           \n" +
+                            "           \n" +
+                            "           \n";
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 3)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.3...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.5.3", ex);
             }
         }
 

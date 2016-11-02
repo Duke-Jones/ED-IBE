@@ -11,10 +11,38 @@ using System.Globalization;
 using IBE.SQL.Datasets;
 using System.Collections.Generic;
 
-namespace IBE.SQL
+namespace IBE.SQL 
 {
-    public class EliteDBIO
+
+    public class EliteDBIO  : IDisposable
     {
+        #region IDisposable Support
+        private bool disposedValue = false; // Dient zur Erkennung redundanter Aufrufe.
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    foreach (KeyValuePair<DataTable, DBConnector> kvPair in m_BaseData_Connector)
+                    {
+                        kvPair.Value.Dispose();
+                        kvPair.Key.Dispose();
+                    }
+                    
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
 
 #region "enums"
 
@@ -469,6 +497,7 @@ namespace IBE.SQL
             }
         }
 
+
         /// <summary>
         /// imports the data from the list
         /// (only newer data will be imported)
@@ -580,6 +609,7 @@ namespace IBE.SQL
         /// </summary>
         internal void ImportCommodityLocalizations(DataSet DataNames, enLocalisationImportType importType = enLocalisationImportType.onlyNew)
         {
+            DBConnector               lDBCon = null;
             dsEliteDB                 Data;
             Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
             String                    sqlString;
@@ -591,10 +621,10 @@ namespace IBE.SQL
 
             Data      = new dsEliteDB();
 
-            DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
-
             try
             {
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
+
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
@@ -735,10 +765,6 @@ namespace IBE.SQL
                 // submit changes
                 lDBCon.TableUpdate(Data.tbcommoditylocalization);
 
-                lDBCon.TableReadRemove(Data.tblanguage);
-                lDBCon.TableReadRemove(Data.tbcommoditylocalization);
-                lDBCon.TableReadRemove(Data.tbcommodity);
-
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
@@ -747,18 +773,17 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                try
+                if(lDBCon != null)
                 {
-                    // reset freaky performance
-                    lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                    try
+                    {
+                        // reset freaky performance
+                        lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                    }
+                    catch (Exception) { }
+
+                    lDBCon.Dispose();
                 }
-                catch (Exception) { }
-
-                lDBCon.TableReadRemove(Data.tblanguage);
-                lDBCon.TableReadRemove(Data.tbcommoditylocalization);
-                lDBCon.TableReadRemove(Data.tbcommodity);
-
-                lDBCon.Dispose();
 
                 throw new Exception("Error while loading commodity names", ex);
             }
@@ -769,7 +794,8 @@ namespace IBE.SQL
         /// loads the localized economy level names and check
         /// </summary>
         internal void ImportEconomyLevelLocalizations(String Filename)
-        {
+        {   
+            DBConnector               lDBCon = null;
             dsEliteDB                 Data;
             DataSet                   DataNames;
             Dictionary<String, Int32> foundLanguagesFromFile     = new Dictionary<String, Int32>();
@@ -780,12 +806,13 @@ namespace IBE.SQL
 
             try
             {
+                lDBCon = new DBConnector(lDBCon.ConfigData, true);
 
                 DataNames.ReadXml(Filename);
 
-                Program.DBCon.TableRead("select * from tbLanguage", Data.tblanguage);
-                Program.DBCon.TableRead("select * from tbLevelLocalization", Data.tblevellocalization);
-                Program.DBCon.TableRead("select * from tbEconomyLevel", Data.tbeconomylevel);
+                lDBCon.TableRead("select * from tbLanguage", Data.tblanguage);
+                lDBCon.TableRead("select * from tbLevelLocalization", Data.tblevellocalization);
+                lDBCon.TableRead("select * from tbEconomyLevel", Data.tbeconomylevel);
 
                 if(DataNames.Tables["Levels"] != null)
                 { 
@@ -821,7 +848,7 @@ namespace IBE.SQL
                     }
                 
                     // submit changes (tbLanguage)
-                    Program.DBCon.TableUpdate(Data.tblanguage);
+                    lDBCon.TableUpdate(Data.tblanguage);
 
                     // compare and add the localized names
                     foreach (DataRow LocalizationFromFile in DataNames.Tables["Levels"].AsEnumerable())
@@ -852,18 +879,14 @@ namespace IBE.SQL
                     }
                 }
                 // submit changes
-                Program.DBCon.TableUpdate(Data.tblevellocalization);
+                lDBCon.TableUpdate(Data.tblevellocalization);
 
-                Program.DBCon.TableReadRemove(Data.tblanguage);
-                Program.DBCon.TableReadRemove(Data.tblevellocalization);
-                Program.DBCon.TableReadRemove(Data.tbeconomylevel);
-
+                lDBCon.Dispose();
             }
             catch (Exception ex)
             {
-                Program.DBCon.TableReadRemove(Data.tblanguage);
-                Program.DBCon.TableReadRemove(Data.tblevellocalization);
-                Program.DBCon.TableReadRemove(Data.tbeconomylevel);
+                if(lDBCon != null)
+                    lDBCon.Dispose();
 
                 throw new Exception("Error while loading commodity names", ex);
             }
@@ -875,6 +898,7 @@ namespace IBE.SQL
         /// </summary>
         internal void ImportCommodityPriceWarnLevels(String Filename)
         {
+            DBConnector               lDBCon = null;
             dsEliteDB                         Data;
             List<EDCommoditiesWarningLevels>  WarnLevels;
             Int32 Counter = 0;
@@ -884,9 +908,9 @@ namespace IBE.SQL
 
             try
             {
-                
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
 
-                Program.DBCon.TableRead("select * from tbCommodity", Data.tbcommodity);
+                lDBCon.TableRead("select * from tbCommodity", Data.tbcommodity);
 
                 sendProgressEvent(new ProgressEventArgs() {Info="import warnlevels", CurrentValue=Counter, TotalValue=WarnLevels.Count });
 
@@ -912,14 +936,15 @@ namespace IBE.SQL
                 }
                 
                 // submit changes (tbLanguage)
-                Program.DBCon.TableUpdate(Data.tbcommodity);
+                lDBCon.TableUpdate(Data.tbcommodity);
 
-                Program.DBCon.TableReadRemove(Data.tbcommodity);
+                lDBCon.Dispose();
 
             }
             catch (Exception ex)
             {
-                Program.DBCon.TableReadRemove(Data.tbcommodity);
+                if(lDBCon != null)
+                    lDBCon.Dispose();
 
                 throw new Exception("Error while loading commodity names", ex);
             }
@@ -1020,6 +1045,7 @@ namespace IBE.SQL
         /// <param name="fileName"></param>
         public void ImportSystems(String Filename)
         {
+            DBConnector               lDBCon = null;
             String sqlString;
             List<EDSystem> Systems;
             EDSystem importSystem;
@@ -1030,7 +1056,7 @@ namespace IBE.SQL
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<Int32, Int32>();
             dsEliteDB localDataSet;
             Int32 counter = 0;
-            DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
+            
             Boolean dataChanged;
             localDataSet = new dsEliteDB();
             Int32 updated = 0;
@@ -1041,6 +1067,8 @@ namespace IBE.SQL
 
             try
             {
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
+
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
                 StreamReader rawDataStream;
@@ -1189,20 +1217,19 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                if (lDBCon.TransActive())
-                    lDBCon.TransRollback();
-
-                try
+                if(lDBCon != null)
                 {
-                    // reset freaky performance
-                    lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                    if (lDBCon.TransActive())
+                        lDBCon.TransRollback();
 
-                    lDBCon.TableReadRemove(Program.Data.BaseData.tbsystems);
-                    lDBCon.TableReadRemove(Program.Data.BaseData.tbsystems_org);
-
-                    lDBCon.Dispose();
+                    try
+                    {
+                        // reset freaky performance
+                        lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                        lDBCon.Dispose();
+                    }
+                    catch (Exception) { }
                 }
-                catch (Exception) { }
 
                 throw new Exception("Error while importing system data", ex);
             }
@@ -1248,6 +1275,7 @@ namespace IBE.SQL
         /// <param name="fileName"></param>
         public Dictionary<Int32, Int32> ImportSystems_Own(ref List<EDSystem> Systems, Boolean OnlyAddUnknown = false, Boolean setVisitedFlag = false)
         {
+            DBConnector               lDBCon = null;
             String sqlString;
             dsEliteDB.tbsystemsRow[] FoundRows;
             DateTime Timestamp_new, Timestamp_old;
@@ -1257,10 +1285,11 @@ namespace IBE.SQL
             dsEliteDB Data;
             Int32 Counter = 0;
 
-            DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
+            
 
             try
             {
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
 
                 Data = new dsEliteDB();
 
@@ -1363,8 +1392,8 @@ namespace IBE.SQL
                 }
 
                 // save changes
-                lDBCon.TableUpdate(Data.tbsystems, true);
-                lDBCon.TableUpdate(Data.tbsystems_org, true);
+                lDBCon.TableUpdate(Data.tbsystems);
+                lDBCon.TableUpdate(Data.tbsystems_org);
 
                 lDBCon.TransCommit();
 
@@ -1378,21 +1407,20 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                if (lDBCon.TransActive())
-                    lDBCon.TransRollback();
-
-                try
+                if(lDBCon != null)
                 {
-                    // reset freaky performance
-                    lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                    if (lDBCon.TransActive())
+                        lDBCon.TransRollback();
+                    try
+                    {
+                        // reset freaky performance
+                        lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
-                    lDBCon.TableReadRemove("tbSystems");
-                    lDBCon.TableReadRemove("tbSystems_org");
-
-                    lDBCon.Dispose();
+                        lDBCon.Dispose();
+                    }
+                    catch (Exception)
+                    { }
                 }
-                catch (Exception)
-                { }
 
                 throw new Exception("Error while importing system data", ex);
             }
@@ -1480,6 +1508,7 @@ namespace IBE.SQL
         /// <param name="fileName"></param>
         public void ImportStations(String Filename, Boolean addPrices)
         {
+            DBConnector               lDBCon = null;
             String sqlString;
             List<EDStation> Stations;
             dsEliteDB.tbstations_orgRow[] FoundRows_org;
@@ -1495,10 +1524,9 @@ namespace IBE.SQL
 
             Data = new dsEliteDB();
 
-            DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
-
             try
             {
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
 
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -1644,12 +1672,12 @@ namespace IBE.SQL
                 }
 
                 // save changes
-                lDBCon.TableUpdate(Data.tbstations, true);
-                lDBCon.TableUpdate(Data.tbstations_org, true);
-                lDBCon.TableUpdate(Data.tbstationeconomy, true);
-                lDBCon.TableUpdate(Data.tbcommodityclassification, true);
-                lDBCon.TableUpdate(Data.tbcommodity_has_attribute, true);
-                lDBCon.TableUpdate(Data.tbattribute, true);
+                lDBCon.TableUpdate(Data.tbstations);
+                lDBCon.TableUpdate(Data.tbstations_org);
+                lDBCon.TableUpdate(Data.tbstationeconomy);
+                lDBCon.TableUpdate(Data.tbcommodityclassification);
+                lDBCon.TableUpdate(Data.tbcommodity_has_attribute);
+                lDBCon.TableUpdate(Data.tbattribute);
 
                 lDBCon.TransCommit();
 
@@ -1667,24 +1695,20 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                if (lDBCon.TransActive())
-                    lDBCon.TransRollback();
-
-                try
+                if(lDBCon != null)
                 {
-                    // reset freaky performance
-                    lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                    if (lDBCon.TransActive())
+                        lDBCon.TransRollback();
 
-                    lDBCon.TableReadRemove(Data.tbstations);
-                    lDBCon.TableReadRemove(Data.tbstations_org);
-                    lDBCon.TableReadRemove(Data.tbstationeconomy);
-                    lDBCon.TableReadRemove(Data.tbcommodityclassification);
-                    lDBCon.TableReadRemove(Data.tbcommodity_has_attribute);
-                    lDBCon.TableReadRemove(Data.tbattribute);
+                    try
+                    {
+                        // reset freaky performance
+                        lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
-                    lDBCon.Dispose();
+                        lDBCon.Dispose();
+                    }
+                    catch (Exception) { }
                 }
-                catch (Exception) { }
 
                 throw new Exception("Error while importing Station data", ex);
             }
@@ -1744,6 +1768,7 @@ namespace IBE.SQL
         /// <param name="fileName"></param>
         public void ImportStations_Own(List<EDStation> Stations, Dictionary<Int32, Int32> changedSystemIDs, Boolean OnlyAddUnknown = false, Boolean setVisitedFlag = false)
         {
+            DBConnector               lDBCon = null;
             String sqlString;
             dsEliteDB.tbstationsRow[] FoundRows;
             dsEliteDB.tbsystemsRow[] FoundSysRows;
@@ -1753,10 +1778,9 @@ namespace IBE.SQL
             dsEliteDB Data = new dsEliteDB();
             Int32 Counter = 0;
 
-            DBConnector lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
-
             try
             {
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
 
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -1896,9 +1920,9 @@ namespace IBE.SQL
                 }
 
                 // save changes
-                lDBCon.TableUpdate(Data.tbstations, true);
-                lDBCon.TableUpdate(Data.tbstations_org, true);
-                lDBCon.TableUpdate(Data.tbstationeconomy, true);
+                lDBCon.TableUpdate(Data.tbstations);
+                lDBCon.TableUpdate(Data.tbstations_org);
+                lDBCon.TableUpdate(Data.tbstationeconomy);
 
                 lDBCon.TransCommit();
 
@@ -1909,22 +1933,22 @@ namespace IBE.SQL
             }
             catch (Exception ex)
             {
-                if (lDBCon.TransActive())
-                    lDBCon.TransRollback();
-
-                try
+                if(lDBCon != null)
                 {
-                    // reset freaky performance
-                    lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+                    if (lDBCon.TransActive())
+                        lDBCon.TransRollback();
 
-                    lDBCon.TableReadRemove(Data.tbstations);
-                    lDBCon.TableReadRemove(Data.tbstations_org);
-                    lDBCon.TableReadRemove(Data.tbstationeconomy);
+                    try
+                    {
 
-                    lDBCon.Dispose();
+	                    lDBCon.Dispose();
+                        // reset freaky performance
+                        lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
+
+                        lDBCon.Dispose();
+                    }
+                    catch (Exception) { }
                 }
-                catch (Exception) { }
-
 
                 throw new Exception("Error while importing Station data", ex);
             }
@@ -4092,14 +4116,14 @@ namespace IBE.SQL
                     }
 
 
-                    if(systemFirstTimeVisited)
+                    if(systemFirstTimeVisited && (Program.Data.BaseData.tbvisitedsystems.Select("System_ID = " + systemID).Count() == 0))
                     {
                         dsEliteDB.tbvisitedsystemsRow newVisSystemRow = (dsEliteDB.tbvisitedsystemsRow)Program.Data.BaseData.tbvisitedsystems.NewRow();
                         newVisSystemRow.system_id   = systemID;
                         newVisSystemRow.time        = DateTime.UtcNow;
                         Program.Data.BaseData.tbvisitedsystems.Rows.Add(newVisSystemRow);
                     }
-                    if(stationFirstTimeVisited)
+                    if(stationFirstTimeVisited && (Program.Data.BaseData.tbvisitedstations.Select("Station_ID = " + stationID).Count() == 0))
                     {
                         dsEliteDB.tbvisitedstationsRow newVisStationRow = (dsEliteDB.tbvisitedstationsRow)Program.Data.BaseData.tbvisitedstations.NewRow();
                         newVisStationRow.station_id  = stationID;
@@ -4107,7 +4131,9 @@ namespace IBE.SQL
                         Program.Data.BaseData.tbvisitedstations.Rows.Add(newVisStationRow);
                     }
 
-                    if (((systemFirstTimeVisited) || (stationFirstTimeVisited)) && (stationID != 0))
+                    if (((systemFirstTimeVisited) || (stationFirstTimeVisited)) && 
+                        (stationID != 0) && 
+                        (Program.Data.BaseData.visystemsandstations.Select("SystemID = " + systemID + " and StationID = " + stationID).Count() == 0))
                     {
                         dsEliteDB.visystemsandstationsRow newVisStationRow = (dsEliteDB.visystemsandstationsRow)Program.Data.BaseData.visystemsandstations.NewRow();
                         newVisStationRow.SystemName = newSystemName;

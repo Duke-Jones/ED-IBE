@@ -3362,7 +3362,7 @@ namespace IBE
             }
             catch (Exception ex)
             {
-                throw new Exception("Error in m_LogfileScanner_LocationChanged", ex);
+                CErr.processError(ex, "Error in m_LogfileScanner_LocationChanged");
             }
         }
 

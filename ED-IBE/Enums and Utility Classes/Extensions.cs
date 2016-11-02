@@ -244,7 +244,6 @@ namespace IBE.Enums_and_Utility_Classes
                     return defaultValue.ToNInt();
         }
 
-
     }
 
     static class Extensions_Object

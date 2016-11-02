@@ -296,6 +296,7 @@ namespace IBE.FileScanner
             Boolean isZeroRun = false;
             m_NewFileDetected = false;
             Boolean missingMessagePossible = true;
+            Int32 errorCount = 0;
 
             if(m_extLogging) logger.Log("scanning started");
 
@@ -632,13 +633,20 @@ namespace IBE.FileScanner
                     }
 
                     isZeroRun = false;
+                    errorCount = 0;
+
                 }
                 catch (Exception ex)
                 {
+                    errorCount++;
+
                     Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Error while parsing E:D journal !");  
                                           
                     Debug.Print("AnalyseError");
-                    logger.Log(ex.Message + "\n" + ex.StackTrace + "\n\n");
+                    
+                    String msg = "Error in the journal scanner main routine";
+
+                    logger.Log(ErrorViewer.GetErrorMessage(ref msg, ex));
 
                     if (lastEventTime > DateTime.MinValue)
                     {
@@ -649,15 +657,19 @@ namespace IBE.FileScanner
                         lastEventTime = DateTime.MinValue;
                     }
 
-                    // prepare switching to next file
-                    if(journalFileStream != null)
-                        journalFileStream.Dispose();
+                    if(errorCount > 1)
+                    {
+                        // prepare switching to next file
+                        if(journalFileStream != null)
+                            journalFileStream.Dispose();
 
-                    if(journalStreamReader != null)
-                        journalStreamReader.Dispose();
+                        if(journalStreamReader != null)
+                            journalStreamReader.Dispose();
 
-                    journalFileStream = null;
-                    journalStreamReader = null;
+                        journalFileStream   = null;
+                        journalStreamReader = null;
+                        gotLatestEvent      = false;
+                    }
                 }
 
                 if (newFiles.Count == 0)

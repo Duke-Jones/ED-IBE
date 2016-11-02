@@ -19,5 +19,10 @@ namespace IBE
             ErrorViewer errViewer = new ErrorViewer();
             errViewer.ShowDialog(ex, Infotext);
         }
+
+        internal static string getErrorString(Exception ex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

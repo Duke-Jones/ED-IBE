@@ -26,14 +26,43 @@ namespace IBE
         {
             string Info;
             Boolean oldValue = true;
-            StringBuilder errorMessage = new StringBuilder();
             _LogPath = Program.GetDataPath("Logs");
             SingleThreadLogger _logger = new SingleThreadLogger(ThreadLoggerType.Exception, _LogPath, true);
             Exception currentException = ex;
 
+            String errorMessage = GetErrorMessage(ref infotext, currentException);
+
+            _logger.Log(errorMessage);
+
+            txtErrorDetail.Text = errorMessage;
+            lblErrorInfo.Text = infotext;
+            lblLogDestination.Text = string.Format("(Logfile : {0})", _logger.logPathName);
+            txtErrorDetail.SelectionStart = 0;
+            txtErrorDetail.SelectionLength = 0;
+
+            if (!Program.SplashScreen.IsDisposed)
+            {
+                oldValue = Program.SplashScreen.TopMost;
+                Program.SplashScreen.TopMost = false;
+            }
+
+            this.ShowDialog();
+
+
+            if (!Program.SplashScreen.IsDisposed)
+            {
+                Program.SplashScreen.TopMost = oldValue;
+            }
+        }
+
+        public static String GetErrorMessage(ref string infotext, Exception currentException)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+
+            errorMessage.AppendLine(String.Format("{0:dd.MM.yyyy HH:mm:ss} : ED-IBE v{1}", DateTime.UtcNow, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version));
             errorMessage.AppendLine(String.Format("{0:dd.MM.yyyy HH:mm:ss} : {1}", DateTime.UtcNow, infotext));
 
-            if(String.IsNullOrEmpty(infotext))
+            if (String.IsNullOrEmpty(infotext))
                 infotext = currentException.Message;
 
             do
@@ -42,7 +71,7 @@ namespace IBE
                 errorMessage.AppendLine(String.Format("{0:dd.MM.yyyy HH:mm:ss} : {1}", DateTime.UtcNow, currentException.Message));
                 errorMessage.AppendLine(String.Format("{0:dd.MM.yyyy HH:mm:ss} : {1}", DateTime.UtcNow, currentException.StackTrace));
 
-                if((currentException.InnerException == null) && (infotext != currentException.Message))
+                if ((currentException.InnerException == null) && (infotext != currentException.Message))
                     infotext += "\r\n -> " + currentException.Message;
 
                 currentException = currentException.InnerException;
@@ -53,27 +82,7 @@ namespace IBE
             errorMessage.AppendLine("********************************************************************************");
             errorMessage.AppendLine("");
 
-            _logger.Log(errorMessage.ToString());
-
-            txtErrorDetail.Text = errorMessage.ToString();
-            lblErrorInfo.Text = infotext;
-            lblLogDestination.Text = string.Format("(Logfile : {0})", _logger.logPathName);
-            txtErrorDetail.SelectionStart = 0;
-            txtErrorDetail.SelectionLength = 0;
-
-            if(!Program.SplashScreen.IsDisposed)
-            {
-                oldValue = Program.SplashScreen.TopMost;
-                Program.SplashScreen.TopMost = false;
-            }
-            
-            this.ShowDialog();    
-
-
-            if(!Program.SplashScreen.IsDisposed)
-            {
-                Program.SplashScreen.TopMost = oldValue;
-            }
+            return errorMessage.ToString();
         }
 
         private void cmdDumpfile_Click(object sender, EventArgs e)

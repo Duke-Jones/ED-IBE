@@ -87,6 +87,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtJournalPath = new System.Windows.Forms.TextBox();
             this.cmdJournalPath = new System.Windows.Forms.Button();
+            this.cbAutoAdd_Scan = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_Touchdown = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_Liftoff = new System.Windows.Forms.CheckBox();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -110,9 +113,9 @@
             this.groupBox6.Controls.Add(this.gbTesseract);
             this.groupBox6.Controls.Add(this.groupBox9);
             this.groupBox6.Controls.Add(this.groupBox11);
-            this.groupBox6.Location = new System.Drawing.Point(16, 61);
+            this.groupBox6.Location = new System.Drawing.Point(6, 19);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(600, 428);
+            this.groupBox6.Size = new System.Drawing.Size(91, 46);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "OCR-Settings";
@@ -293,16 +296,17 @@
             // 
             // groupBox10
             // 
-            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox10.Controls.Add(this.cbAutoAdd_Liftoff);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_Touchdown);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_Scan);
             this.groupBox10.Controls.Add(this.cbAutoAdd_ReplaceVisited);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Marketdata);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Visited);
             this.groupBox10.Controls.Add(this.label49);
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
-            this.groupBox10.Location = new System.Drawing.Point(650, 12);
+            this.groupBox10.Location = new System.Drawing.Point(12, 12);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(502, 142);
+            this.groupBox10.Size = new System.Drawing.Size(385, 499);
             this.groupBox10.TabIndex = 12;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
@@ -366,13 +370,11 @@
             // 
             // groupBox8
             // 
-            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox8.Controls.Add(this.label48);
             this.groupBox8.Controls.Add(this.cmbLanguage);
-            this.groupBox8.Location = new System.Drawing.Point(650, 160);
+            this.groupBox8.Location = new System.Drawing.Point(403, 12);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(502, 45);
+            this.groupBox8.Size = new System.Drawing.Size(501, 45);
             this.groupBox8.TabIndex = 13;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Language";
@@ -399,15 +401,12 @@
             // 
             // groupBox12
             // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(650, 528);
+            this.groupBox12.Location = new System.Drawing.Point(403, 380);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(502, 149);
+            this.groupBox12.Size = new System.Drawing.Size(501, 132);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -441,7 +440,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Location = new System.Drawing.Point(32, 97);
+            this.button6.Location = new System.Drawing.Point(32, 80);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -497,14 +496,12 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox4.Controls.Add(this.cmdChangeSQLPort);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
-            this.groupBox4.Location = new System.Drawing.Point(9, 542);
+            this.groupBox4.Location = new System.Drawing.Point(12, 517);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(329, 135);
+            this.groupBox4.Size = new System.Drawing.Size(329, 63);
             this.groupBox4.TabIndex = 71;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "SQL-Server";
@@ -534,12 +531,10 @@
             // 
             // gbVNCTest
             // 
-            this.gbVNCTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.gbVNCTest.Controls.Add(this.cbActivateVNC);
-            this.gbVNCTest.Location = new System.Drawing.Point(344, 542);
+            this.gbVNCTest.Location = new System.Drawing.Point(414, 544);
             this.gbVNCTest.Name = "gbVNCTest";
-            this.gbVNCTest.Size = new System.Drawing.Size(300, 135);
+            this.gbVNCTest.Size = new System.Drawing.Size(97, 17);
             this.gbVNCTest.TabIndex = 72;
             this.gbVNCTest.TabStop = false;
             this.gbVNCTest.Text = "NVC-Server";
@@ -562,17 +557,15 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.groupBox13);
             this.groupBox1.Controls.Add(this.groupBox7);
             this.groupBox1.Controls.Add(this.groupBox5);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cmbVisitedFilter);
             this.groupBox1.Controls.Add(this.label25);
-            this.groupBox1.Location = new System.Drawing.Point(650, 211);
+            this.groupBox1.Location = new System.Drawing.Point(403, 63);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(502, 169);
+            this.groupBox1.Size = new System.Drawing.Size(501, 169);
             this.groupBox1.TabIndex = 65;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datafilter";
@@ -703,22 +696,21 @@
             // gbDataInterface
             // 
             this.gbDataInterface.Controls.Add(this.groupBox6);
-            this.gbDataInterface.Location = new System.Drawing.Point(12, 12);
+            this.gbDataInterface.Location = new System.Drawing.Point(517, 544);
             this.gbDataInterface.Name = "gbDataInterface";
-            this.gbDataInterface.Size = new System.Drawing.Size(632, 524);
+            this.gbDataInterface.Size = new System.Drawing.Size(100, 18);
             this.gbDataInterface.TabIndex = 68;
             this.gbDataInterface.TabStop = false;
             this.gbDataInterface.Text = "Data Interface";
+            this.gbDataInterface.Visible = false;
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.txtGamePath);
             this.groupBox3.Controls.Add(this.cmdGamePath);
-            this.groupBox3.Location = new System.Drawing.Point(652, 386);
+            this.groupBox3.Location = new System.Drawing.Point(405, 238);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(500, 65);
+            this.groupBox3.Size = new System.Drawing.Size(499, 65);
             this.groupBox3.TabIndex = 69;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Active Game Path (for analysing ED-logfiles)";
@@ -726,7 +718,7 @@
             // txtGamePath
             // 
             this.txtGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGamePath.Location = new System.Drawing.Point(13, 14);
+            this.txtGamePath.Location = new System.Drawing.Point(12, 14);
             this.txtGamePath.Name = "txtGamePath";
             this.txtGamePath.ReadOnly = true;
             this.txtGamePath.Size = new System.Drawing.Size(473, 20);
@@ -736,7 +728,7 @@
             // cmdGamePath
             // 
             this.cmdGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdGamePath.Location = new System.Drawing.Point(384, 36);
+            this.cmdGamePath.Location = new System.Drawing.Point(383, 36);
             this.cmdGamePath.Name = "cmdGamePath";
             this.cmdGamePath.Size = new System.Drawing.Size(102, 23);
             this.cmdGamePath.TabIndex = 67;
@@ -746,13 +738,11 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.txtJournalPath);
             this.groupBox2.Controls.Add(this.cmdJournalPath);
-            this.groupBox2.Location = new System.Drawing.Point(652, 457);
+            this.groupBox2.Location = new System.Drawing.Point(405, 309);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(500, 65);
+            this.groupBox2.Size = new System.Drawing.Size(499, 65);
             this.groupBox2.TabIndex = 70;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Active Journal Path ";
@@ -760,7 +750,7 @@
             // txtJournalPath
             // 
             this.txtJournalPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtJournalPath.Location = new System.Drawing.Point(13, 14);
+            this.txtJournalPath.Location = new System.Drawing.Point(12, 14);
             this.txtJournalPath.Name = "txtJournalPath";
             this.txtJournalPath.ReadOnly = true;
             this.txtJournalPath.Size = new System.Drawing.Size(473, 20);
@@ -770,7 +760,7 @@
             // cmdJournalPath
             // 
             this.cmdJournalPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdJournalPath.Location = new System.Drawing.Point(384, 36);
+            this.cmdJournalPath.Location = new System.Drawing.Point(383, 36);
             this.cmdJournalPath.Name = "cmdJournalPath";
             this.cmdJournalPath.Size = new System.Drawing.Size(102, 23);
             this.cmdJournalPath.TabIndex = 67;
@@ -778,20 +768,60 @@
             this.cmdJournalPath.UseVisualStyleBackColor = true;
             this.cmdJournalPath.Click += new System.EventHandler(this.cmdJournalPath_Click);
             // 
+            // cbAutoAdd_Scan
+            // 
+            this.cbAutoAdd_Scan.AutoSize = true;
+            this.cbAutoAdd_Scan.Location = new System.Drawing.Point(32, 134);
+            this.cbAutoAdd_Scan.Name = "cbAutoAdd_Scan";
+            this.cbAutoAdd_Scan.Size = new System.Drawing.Size(92, 17);
+            this.cbAutoAdd_Scan.TabIndex = 5;
+            this.cbAutoAdd_Scan.Tag = "AutoAdd_Scan;true";
+            this.cbAutoAdd_Scan.Text = "\"Scan\"-Event";
+            this.cbAutoAdd_Scan.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Scan.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
+            // 
+            // cbAutoAdd_Touchdown
+            // 
+            this.cbAutoAdd_Touchdown.AutoSize = true;
+            this.cbAutoAdd_Touchdown.Location = new System.Drawing.Point(32, 157);
+            this.cbAutoAdd_Touchdown.Name = "cbAutoAdd_Touchdown";
+            this.cbAutoAdd_Touchdown.Size = new System.Drawing.Size(124, 17);
+            this.cbAutoAdd_Touchdown.TabIndex = 6;
+            this.cbAutoAdd_Touchdown.Tag = "AutoAdd_Touchdown;true";
+            this.cbAutoAdd_Touchdown.Text = "\"Touchdown\"-Event";
+            this.cbAutoAdd_Touchdown.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Touchdown.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
+            // 
+            // cbAutoAdd_Liftoff
+            // 
+            this.cbAutoAdd_Liftoff.AutoSize = true;
+            this.cbAutoAdd_Liftoff.Location = new System.Drawing.Point(32, 180);
+            this.cbAutoAdd_Liftoff.Name = "cbAutoAdd_Liftoff";
+            this.cbAutoAdd_Liftoff.Size = new System.Drawing.Size(93, 17);
+            this.cbAutoAdd_Liftoff.TabIndex = 7;
+            this.cbAutoAdd_Liftoff.Tag = "AutoAdd_Liftoff;true";
+            this.cbAutoAdd_Liftoff.Text = "\"Liftoff\"-Event";
+            this.cbAutoAdd_Liftoff.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Liftoff.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
+            // 
             // IBESettingsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1164, 689);
+            this.ClientSize = new System.Drawing.Size(911, 586);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbVNCTest);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.gbDataInterface);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(927, 624);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(927, 624);
             this.Name = "IBESettingsView";
             this.Load += new System.EventHandler(this.IBESettings_Load);
             this.groupBox6.ResumeLayout(false);
@@ -887,5 +917,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtJournalPath;
         private System.Windows.Forms.Button cmdJournalPath;
+        private System.Windows.Forms.CheckBox cbAutoAdd_Scan;
+        private System.Windows.Forms.CheckBox cbAutoAdd_Liftoff;
+        private System.Windows.Forms.CheckBox cbAutoAdd_Touchdown;
     }
 }

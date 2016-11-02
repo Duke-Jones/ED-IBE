@@ -338,6 +338,12 @@ namespace EDCompanionAPI
                     using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                     {
                         profileResponse.Json = sr.ReadToEnd();
+
+                        if(profileResponse.Json.ToLower().Equals("profile unavailable"))
+                        {
+                            profileResponse.LoginStatus = LoginStatus.UnknownError;
+                            profileResponse.Json        = "{}";
+                        }
                     }
                 }
                 else

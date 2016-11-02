@@ -156,6 +156,7 @@
     <Compile Include="EDSM\ServerStatus.cs" />
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
+    <Compile Include="Enums and Utility Classes\TextHelper.cs" />
     <Compile Include="ErrorHandling\ErrorViewer.cs">
       <SubType>Form</SubType>
     </Compile>

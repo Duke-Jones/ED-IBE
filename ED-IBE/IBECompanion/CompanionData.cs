@@ -600,7 +600,7 @@ namespace IBE.IBECompanion
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while processing the JournalEventRecieved-event", ex);
+                CErr.processError(ex, "Error while processing the JournalEventRecieved-event");
             }
         }
 

@@ -87,3 +87,8 @@ RegulatedNoise/Data/stations_own.json
 /.cr/Settings.xml
 /.vs/config/applicationhost.config
 /RNDatabase/Database/install.log
+/Data/commodities.json
+/Data/listings.csv
+/Data/stations.json
+/Data/systems_populated.json
+/Fehler.txt
