@@ -806,7 +806,7 @@ namespace IBE.SQL
 
             try
             {
-                lDBCon = new DBConnector(lDBCon.ConfigData, true);
+                lDBCon = new DBConnector(Program.DBCon.ConfigData, true);
 
                 DataNames.ReadXml(Filename);
 
@@ -3971,31 +3971,35 @@ namespace IBE.SQL
                             Program.DBCon.Execute(sqlString);
 
                             // set flag in the memory table
-                            Program.Data.BaseData.tbsystems.FindByid(systemID).visited = setVisitedFlag;
+                            var system = Program.Data.BaseData.tbsystems.FindByid(systemID);
+                            if(system != null)
+                                system.visited = setVisitedFlag;
 
                             systemFirstTimeVisited = setVisitedFlag;
                         }
 
                         if((coordinates != null) && (coordinates.Valid))
                         {
-                            dsEliteDB.tbsystemsRow system = Program.Data.BaseData.tbsystems.FindByid(systemID);
-
-                            if((system.x == null) || (Math.Abs(system.x - coordinates.X.Value) > 0.001) ||
-                               (system.y == null) || (Math.Abs(system.y - coordinates.Y.Value) > 0.001) ||
-                               (system.z == null) || (Math.Abs(system.z - coordinates.Z.Value) > 0.001))
+                            var system = Program.Data.BaseData.tbsystems.FindByid(systemID);
+                            if(system != null)
                             {
-                                sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = UTC_TIMESTAMP()" +
-                                                          " where ((ABS(x-{0}) > 0.001) or (ABS(y-{1}) > 0.001) or (ABS(z-{2}) > 0.001)) and id = {3}", 
-                                                          DBConnector.SQLDecimal(coordinates.X.Value), 
-                                                          DBConnector.SQLDecimal(coordinates.Y.Value), 
-                                                          DBConnector.SQLDecimal(coordinates.Z.Value), 
-                                                          systemID);
-
-                                if(Program.DBCon.Execute(sqlString)>0)
+                                if((system.x == null) || (Math.Abs(system.x - coordinates.X.Value) > 0.001) ||
+                                   (system.y == null) || (Math.Abs(system.y - coordinates.Y.Value) > 0.001) ||
+                                   (system.z == null) || (Math.Abs(system.z - coordinates.Z.Value) > 0.001))
                                 {
-                                    system.x = coordinates.X.Value;
-                                    system.y = coordinates.Y.Value;
-                                    system.z = coordinates.Z.Value;
+                                    sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = UTC_TIMESTAMP()" +
+                                                              " where ((ABS(x-{0}) > 0.001) or (ABS(y-{1}) > 0.001) or (ABS(z-{2}) > 0.001)) and id = {3}", 
+                                                              DBConnector.SQLDecimal(coordinates.X.Value), 
+                                                              DBConnector.SQLDecimal(coordinates.Y.Value), 
+                                                              DBConnector.SQLDecimal(coordinates.Z.Value), 
+                                                              systemID);
+
+                                    if(Program.DBCon.Execute(sqlString)>0)
+                                    {
+                                        system.x = coordinates.X.Value;
+                                        system.y = coordinates.Y.Value;
+                                        system.z = coordinates.Z.Value;
+                                    }
                                 }
                             }
                         }
@@ -4071,7 +4075,9 @@ namespace IBE.SQL
                                 Program.DBCon.Execute(sqlString);
 
                                 // set flag in the memory table
-                                Program.Data.BaseData.tbstations.FindByid(stationID).visited = setVisitedFlag;
+                                var station = Program.Data.BaseData.tbstations.FindByid(stationID);
+                                if(station != null)
+                                    station.visited = setVisitedFlag;
 
                                 stationFirstTimeVisited = setVisitedFlag;
                             }

@@ -1329,9 +1329,6 @@ namespace IBE
 
                 }
 
-                Program.SplashScreen.InfoAdd("init sequence finished !");
-                Program.SplashScreen.CloseDelayed();
-
                 Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);
                 st.Start();
 
@@ -1357,11 +1354,15 @@ namespace IBE
                 Program.JournalScanner.Start();
                 Program.StartVNCServer(this);
 
+                Program.SplashScreen.InfoAdd("init sequence finished !");
+                Program.SplashScreen.CloseDelayed();
+
             }
             catch (Exception ex)
             {
                 this.Enabled = true;
                 CErr.processError(ex, "Error in Form_Shown");
+                Program.SplashScreen.Close();
             }
         }
         private Boolean CheckUpdateExists(out Version newVersion, out string newInfo, Boolean onlyConsiderNew = false)

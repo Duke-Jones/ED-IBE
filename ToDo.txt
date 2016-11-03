@@ -21,6 +21,9 @@ todo:
 
 done:
 
+  * fixed issue with empty but now allowed values from init table 
+  * fixed import bugs
+-------------------------------------------------------------------------------------         
   * many stability fixes
   * added version info to exception logger
   * added scan data to Commander's Log

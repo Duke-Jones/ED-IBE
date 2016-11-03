@@ -430,7 +430,7 @@ namespace IBE.SQL
                         if(Parts.DefaultValue.Equals("EMPTY"))
                             cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, "");
                         else
-                            cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, false, true);
+                            cbSender.Text          = m_DBCon.getIniValue<String>(m_InitGroup, Parts.IDString, Parts.DefaultValue, String.IsNullOrWhiteSpace(Parts.DefaultValue), true);
                         m_currentLoadingObject = null;
                     }
                 }
