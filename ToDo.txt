@@ -21,6 +21,9 @@ todo:
 
 done:
 
+v0.5.4
+  * catch crashes due to illegal escape sequences in the json string from ED journal file
+-------------------------------------------------------------------------------------         
 v0.5.3
 -------------------------------------------------------------------------------------         
   * fixed issue with empty but now allowed values from init table 

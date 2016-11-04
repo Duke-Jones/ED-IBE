@@ -284,7 +284,7 @@ namespace IBE.FileScanner
             String rawEventName;
             DateTime rawTimeStamp;
             string dataLine;
-            JToken journalEntry;
+            JToken journalEntry = "";
             List<String> newFiles = new List<string>();
             Boolean isFirstRun = true;
             Boolean gotLatestEvent = false;
@@ -297,6 +297,7 @@ namespace IBE.FileScanner
             m_NewFileDetected = false;
             Boolean missingMessagePossible = true;
             Int32 errorCount = 0;
+            Boolean parsingError = false;
 
             if(m_extLogging) logger.Log("scanning started");
 
@@ -410,182 +411,196 @@ namespace IBE.FileScanner
 
                             if(m_extLogging) logger.Log("new line from : " + Path.GetFileName(m_LastScan_JournalFile) + " : " + dataLine);
 
-                            journalEntry = JsonConvert.DeserializeObject<JToken>(dataLine);
+                            parsingError = false;
 
-                            // identify the event
-                            rawEventName = journalEntry.Value<String>("event");
-                            rawTimeStamp = journalEntry.Value<DateTime>("timestamp");
-
-                            if(rawEventName == JournalEvent.Died.ToString())
-                                Debug.Print("here");
-
-                            if ((rawEventName != null) && (rawTimeStamp != null))
+                            try
                             {
-                                if(!Enum.TryParse<JournalEvent>(rawEventName, out eventName))
+                                journalEntry = JsonConvert.DeserializeObject<JToken>(dataLine);
+                            }
+                            catch (Exception ex)
+                            {
+                                parsingError = true;
+                                String msg = "Error while parsing json string from file '" + Path.GetFileName(m_LastScan_JournalFile) + "' : \n<" + dataLine + ">";
+                                logger.Log(ErrorViewer.GetErrorMessage(ref msg, ex));
+                            }
+
+                            if(!parsingError)
+                            {
+                                // identify the event
+                                rawEventName = journalEntry.Value<String>("event");
+                                rawTimeStamp = journalEntry.Value<DateTime>("timestamp");
+
+                                if(rawEventName == JournalEvent.Died.ToString())
+                                    Debug.Print("here");
+
+                                if ((rawEventName != null) && (rawTimeStamp != null))
                                 {
-                                    eventName = JournalEvent.Not_Supported;
-                                }
-
-                                if(gotLatestEvent)
-                                {
-                                    // every recognized event is accepted as new
-                                    lastEvent = rawEventName;
-                                    lastEventTime = rawTimeStamp;
-
-                                    SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader, ref logger);
-
-                                    // pre-check for base data which is currently not in the database.
-                                    switch (eventName)
+                                    if(!Enum.TryParse<JournalEvent>(rawEventName, out eventName))
                                     {
-                                        case JournalEvent.Location:
-                                        case JournalEvent.Docked:
-                                        case JournalEvent.FSDJump:
-                                        case JournalEvent.Resurrect:
-
-                                            if(m_extLogging) logger.Log("accepted (pre) : " + eventName.ToString());
-                                            Debug.Print("accepted (pre) : " + eventName.ToString());
-
-                                            BasedataEventArgs newBasedataArgItem = new BasedataEventArgs() {
-                                                                                              EventType = JournalEvent.Basedata,
-                                                                                              System    = journalEntry.Value<String>("StarSystem").NToString(""),
-                                                                                              Station   = journalEntry.Value<String>("StationName").NToString("")
-                                                                                            };
-
-                                            if(journalEntry.Value<Object>("StarPos") != null)
-                                            {
-                                                newBasedataArgItem.Coordinates   = new Point3Dbl((Double)journalEntry["StarPos"][0], 
-                                                                                                 (Double)journalEntry["StarPos"][1], 
-                                                                                                 (Double)journalEntry["StarPos"][2]);
-                                            }
-
-                                            BasedataEventRecieved.Raise(this, newBasedataArgItem);
-
-                                            break;
+                                        eventName = JournalEvent.Not_Supported;
                                     }
 
-                                    // switch what to do
-                                    switch (eventName)
+                                    if(gotLatestEvent)
                                     {
-                                        case JournalEvent.Fileheader:
-                                        case JournalEvent.Location:
-
-                                        case JournalEvent.Docked:
-                                        case JournalEvent.Undocked:
-
-                                        case JournalEvent.SupercruiseEntry:
-                                        case JournalEvent.SupercruiseExit:
-
-                                        case JournalEvent.Liftoff:
-                                        case JournalEvent.Touchdown:
-
-                                        case JournalEvent.FSDJump:
-
-                                        case JournalEvent.Died:
-                                        case JournalEvent.Resurrect:
-
-                                        case JournalEvent.Scan:
-
-
-                                            if(eventName == JournalEvent.Docked)
-                                                Debug.Print("stop");
-
-                                            if(m_extLogging) logger.Log("accepted : " + eventName.ToString());
-                                            Debug.Print("accepted : " + eventName.ToString());
-                                            JournalEventArgs newJournalArgItem = new JournalEventArgs() { EventType = eventName, Data = journalEntry, History = history };
-
-                                            JournalEventRecieved.Raise(this, newJournalArgItem);
-
-                                            newJournalArgItem.History = null;
-                                            history.Insert(0, newJournalArgItem);
-                                            if(history.Count > 5)
-                                                history.RemoveAt(5);
-
-                                            break;
-
-                                        default:
-                                            Debug.Print("ignored (contact): <" + rawEventName + ">");
-
-                                            break;
-                                    }
-                                }
-                                else
-                                {
-                                    if(isZeroRun)
-                                    { 
                                         // every recognized event is accepted as new
-                                        lastEvent       = rawEventName;
-                                        lastEventTime   = rawTimeStamp;
+                                        lastEvent = rawEventName;
+                                        lastEventTime = rawTimeStamp;
+
+                                        SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader, ref logger);
+
+                                        // pre-check for base data which is currently not in the database.
+                                        switch (eventName)
+                                        {
+                                            case JournalEvent.Location:
+                                            case JournalEvent.Docked:
+                                            case JournalEvent.FSDJump:
+                                            case JournalEvent.Resurrect:
+
+                                                if(m_extLogging) logger.Log("accepted (pre) : " + eventName.ToString());
+                                                Debug.Print("accepted (pre) : " + eventName.ToString());
+
+                                                BasedataEventArgs newBasedataArgItem = new BasedataEventArgs() {
+                                                                                                  EventType = JournalEvent.Basedata,
+                                                                                                  System    = journalEntry.Value<String>("StarSystem").NToString(""),
+                                                                                                  Station   = journalEntry.Value<String>("StationName").NToString("")
+                                                                                                };
+
+                                                if(journalEntry.Value<Object>("StarPos") != null)
+                                                {
+                                                    newBasedataArgItem.Coordinates   = new Point3Dbl((Double)journalEntry["StarPos"][0], 
+                                                                                                     (Double)journalEntry["StarPos"][1], 
+                                                                                                     (Double)journalEntry["StarPos"][2]);
+                                                }
+
+                                                BasedataEventRecieved.Raise(this, newBasedataArgItem);
+
+                                                break;
+                                        }
+
+                                        // switch what to do
+                                        switch (eventName)
+                                        {
+                                            case JournalEvent.Fileheader:
+                                            case JournalEvent.Location:
+
+                                            case JournalEvent.Docked:
+                                            case JournalEvent.Undocked:
+
+                                            case JournalEvent.SupercruiseEntry:
+                                            case JournalEvent.SupercruiseExit:
+
+                                            case JournalEvent.Liftoff:
+                                            case JournalEvent.Touchdown:
+
+                                            case JournalEvent.FSDJump:
+
+                                            case JournalEvent.Died:
+                                            case JournalEvent.Resurrect:
+
+                                            case JournalEvent.Scan:
+
+
+                                                if(eventName == JournalEvent.Docked)
+                                                    Debug.Print("stop");
+
+                                                if(m_extLogging) logger.Log("accepted : " + eventName.ToString());
+                                                Debug.Print("accepted : " + eventName.ToString());
+                                                JournalEventArgs newJournalArgItem = new JournalEventArgs() { EventType = eventName, Data = journalEntry, History = history };
+
+                                                JournalEventRecieved.Raise(this, newJournalArgItem);
+
+                                                newJournalArgItem.History = null;
+                                                history.Insert(0, newJournalArgItem);
+                                                if(history.Count > 5)
+                                                    history.RemoveAt(5);
+
+                                                break;
+
+                                            default:
+                                                Debug.Print("ignored (contact): <" + rawEventName + ">");
+
+                                                break;
+                                        }
                                     }
-
-                                    // switch what to do
-                                    switch (eventName)
+                                    else
                                     {
-                                        case JournalEvent.Fileheader:
-                                            latestFileHeader = journalEntry;
-                                            Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Initial fileheader found");                        
-                                            break;
+                                        if(isZeroRun)
+                                        { 
+                                            // every recognized event is accepted as new
+                                            lastEvent       = rawEventName;
+                                            lastEventTime   = rawTimeStamp;
+                                        }
 
-                                        case JournalEvent.Location:
-                                            latestLocationEvent = journalEntry;
-                                            break;
+                                        // switch what to do
+                                        switch (eventName)
+                                        {
+                                            case JournalEvent.Fileheader:
+                                                latestFileHeader = journalEntry;
+                                                Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Initial fileheader found");                        
+                                                break;
 
-                                        case JournalEvent.SupercruiseExit:
-                                            if(latestLocationEvent != null)
-                                            {
-                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
-                                                latestLocationEvent["Body"]         = journalEntry["Body"];
-                                                latestLocationEvent["BodyType"]     = journalEntry["BodyType"];
-                                            }
-                                            break;
+                                            case JournalEvent.Location:
+                                                latestLocationEvent = journalEntry;
+                                                break;
 
-                                        case JournalEvent.SupercruiseEntry:
-                                            if(latestLocationEvent != null)
-                                            {
-                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
-                                                latestLocationEvent["StationName"]  = "";
-                                                latestLocationEvent["Docked"]       = "false";
-                                                latestLocationEvent["Body"]         = "";
-                                                latestLocationEvent["BodyType"]     = "";
-                                                latestLocationEvent["StationType"]  = "";
-                                            }
+                                            case JournalEvent.SupercruiseExit:
+                                                if(latestLocationEvent != null)
+                                                {
+                                                    latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                    latestLocationEvent["Body"]         = journalEntry["Body"];
+                                                    latestLocationEvent["BodyType"]     = journalEntry["BodyType"];
+                                                }
+                                                break;
 
-                                            break;
+                                            case JournalEvent.SupercruiseEntry:
+                                                if(latestLocationEvent != null)
+                                                {
+                                                    latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                    latestLocationEvent["StationName"]  = "";
+                                                    latestLocationEvent["Docked"]       = "false";
+                                                    latestLocationEvent["Body"]         = "";
+                                                    latestLocationEvent["BodyType"]     = "";
+                                                    latestLocationEvent["StationType"]  = "";
+                                                }
 
-                                        case JournalEvent.FSDJump:
-                                            if(latestLocationEvent != null)
-                                            {
-                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
-                                                latestLocationEvent["StationName"]  = "";
-                                                latestLocationEvent["Docked"]       = "false";
-                                                latestLocationEvent["StarPos"]      = journalEntry["StarPos"];
-                                                latestLocationEvent["Body"]         = journalEntry["Body"];
-                                                latestLocationEvent["BodyType"]     = journalEntry["BodyType"];
-                                                latestLocationEvent["Faction"]      = journalEntry["Faction"];
-                                                latestLocationEvent["Allegiance"]   = journalEntry["Allegiance"];
-                                                latestLocationEvent["Economy"]      = journalEntry["Economy"];
-                                                latestLocationEvent["Government"]   = journalEntry["Government"];
-                                                latestLocationEvent["Security"]     = journalEntry["Security"];
+                                                break;
+
+                                            case JournalEvent.FSDJump:
+                                                if(latestLocationEvent != null)
+                                                {
+                                                    latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                    latestLocationEvent["StationName"]  = "";
+                                                    latestLocationEvent["Docked"]       = "false";
+                                                    latestLocationEvent["StarPos"]      = journalEntry["StarPos"];
+                                                    latestLocationEvent["Body"]         = journalEntry["Body"];
+                                                    latestLocationEvent["BodyType"]     = journalEntry["BodyType"];
+                                                    latestLocationEvent["Faction"]      = journalEntry["Faction"];
+                                                    latestLocationEvent["Allegiance"]   = journalEntry["Allegiance"];
+                                                    latestLocationEvent["Economy"]      = journalEntry["Economy"];
+                                                    latestLocationEvent["Government"]   = journalEntry["Government"];
+                                                    latestLocationEvent["Security"]     = journalEntry["Security"];
 
                                                 
-                                                latestLocationEvent["StationType"]  = "";
-                                            }
+                                                    latestLocationEvent["StationType"]  = "";
+                                                }
                                             
-                                            break;
+                                                break;
 
-                                        case JournalEvent.Docked:
-                                            if(latestLocationEvent != null)
-                                            {
-                                                latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
-                                                latestLocationEvent["StationName"]  = journalEntry["StationName"];
-                                                latestLocationEvent["Docked"]       = "true";
-                                                latestLocationEvent["StationType"]  = journalEntry["StationType"];;
-                                            }
+                                            case JournalEvent.Docked:
+                                                if(latestLocationEvent != null)
+                                                {
+                                                    latestLocationEvent["StarSystem"]   = journalEntry["StarSystem"];
+                                                    latestLocationEvent["StationName"]  = journalEntry["StationName"];
+                                                    latestLocationEvent["Docked"]       = "true";
+                                                    latestLocationEvent["StationType"]  = journalEntry["StationType"];;
+                                                }
 
-                                            break;
+                                                break;
 
-                                        default:
-                                            Debug.Print("ignored (seeking) : <" + rawEventName + ">");
-                                            break;
+                                            default:
+                                                Debug.Print("ignored (seeking) : <" + rawEventName + ">");
+                                                break;
+                                        }
                                     }
                                 }
                             }
