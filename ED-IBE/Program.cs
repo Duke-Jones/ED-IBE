@@ -117,7 +117,7 @@ namespace IBE
 
         private static void HandleException(Exception ex)
         {
-            String FileName = String.Format("ed-ibe-dump-v{0}.dmp", VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3)).Replace(".", "_");
+            String FileName = String.Format("ed-ibe-dump-v{0}.dmp", VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3).Replace(".", "_"));
             if (ex == null)
                 return;
 

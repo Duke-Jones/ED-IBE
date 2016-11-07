@@ -13,14 +13,17 @@ namespace IBE
     {
         private AppConfig AppConfigGlobal;
         private AppConfig AppConfigLocal;
-
         private EdDisplayConfig m_Display;
+        private SQL.DBConnector m_lDBCon;
         private DateTime lastTry_Displaydata = DateTime.Now - new TimeSpan(1,0,0);
 
         public GameSettings()
         {
             try
             {
+
+                m_lDBCon = new SQL.DBConnector(Program.DBCon.ConfigData, true);
+
                 //Load DisplaySettings from AppData
                 LoadDisplaySettings();
 
@@ -32,11 +35,12 @@ namespace IBE
                 WatcherDisplaySettings();
                 WatcherAppDataSettings(); //Currently disabled as we only check Verbose logging and that cant be changed from the game
 
-                if((AppConfigGlobal.Network.VerboseLogging != 1) && ((AppConfigLocal == null) || (AppConfigLocal.Network.VerboseLogging != 1)))
-                { 
-                    //Check and Request for Verbose Logging
-                    AppConfigLocal = CheckAndRequestVerboseLogging("AppConfigLocal.xml", AppConfigLocal);
-                }
+                // not more necessary since E:D 2.2 (journal)
+                //if((AppConfigGlobal.Network.VerboseLogging != 1) && ((AppConfigLocal == null) || (AppConfigLocal.Network.VerboseLogging != 1)))
+                //{ 
+                //    //Check and Request for Verbose Logging
+                //    AppConfigLocal = CheckAndRequestVerboseLogging("AppConfigLocal.xml", AppConfigLocal);
+                //}
             }
             catch (Exception ex)
             {
@@ -72,7 +76,7 @@ namespace IBE
 
                     if (setLog == DialogResult.Yes)
                     {
-                        var appConfigFilePath = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "GamePath"), fileName);
+                        var appConfigFilePath = Path.Combine(m_lDBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "GamePath"), fileName);
                         var doc = new XmlDocument();
 
                         //Make backup
@@ -148,7 +152,7 @@ namespace IBE
 
             try
             {
-                string configFile = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "GamePath"), fileName);
+                string configFile = Path.Combine(m_lDBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "GamePath"), fileName);
                 XmlSerializer serializer; 
 
                 do{
@@ -202,7 +206,7 @@ namespace IBE
                 DialogResult MBResult = DialogResult.Ignore;
                 EdDisplayConfig locDisplay;
 
-                var configFile = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ProductAppData"), "Graphics" ,"DisplaySettings.xml");
+                var configFile = Path.Combine(m_lDBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ProductAppData"), "Graphics" ,"DisplaySettings.xml");
                 if (!File.Exists(configFile))
                 {
                     return;
@@ -274,7 +278,7 @@ namespace IBE
         private readonly FileSystemWatcher _displayWatcher = new FileSystemWatcher();
         void WatcherDisplaySettings()
         {
-            var path = Path.Combine(Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ProductAppData"), "Graphics");
+            var path = Path.Combine(m_lDBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "ProductAppData"), "Graphics");
             if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "DisplaySettings.xml")))
                 return;
 
@@ -288,7 +292,7 @@ namespace IBE
         private readonly FileSystemWatcher _appdataWatcher = new FileSystemWatcher();
         void WatcherAppDataSettings()
         {
-            _appdataWatcher.Path = Program.DBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "GamePath");
+            _appdataWatcher.Path = m_lDBCon.getIniValue<String>(IBE.IBESettingsView.DB_GROUPNAME, "GamePath");
             _appdataWatcher.Filter = "AppConfig.xml";
             _appdataWatcher.NotifyFilter = NotifyFilters.LastWrite;
             _appdataWatcher.Changed += AppData_Changed;

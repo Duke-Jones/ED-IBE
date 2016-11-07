@@ -17,10 +17,17 @@ todo:
 * direct selection of the local station
 * call EDSM/EDDB directly
 
+
 *************************************************************************************
 
 done:
 
+
+  * corrected name of rings when showing scan data in Cmdr's Log
+  * class GameSettings got it's own DBConnector
+  * ED-IBE do not force VerboseLogging anymore
+  * fixed a bug when writing a dump file
+-------------------------------------------------------------------------------------         
 v0.5.4
   * catch crashes due to illegal escape sequences in the json string from ED journal file
 -------------------------------------------------------------------------------------         
