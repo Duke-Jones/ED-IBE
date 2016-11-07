@@ -154,6 +154,8 @@
       <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
     </Compile>
     <Compile Include="EDSM\ServerStatus.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterColumnHeaderCell.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="Enums and Utility Classes\TextHelper.cs" />
