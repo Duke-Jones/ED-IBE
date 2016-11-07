@@ -11,6 +11,7 @@ using IBE.SQL;
 using System.Diagnostics;
 using IBE.SQL.Datasets;
 using IBE.Enums_and_Utility_Classes;
+using DataGridViewAutoFilter;
 
 namespace IBE.MTCommandersLog
 {
@@ -112,7 +113,9 @@ namespace IBE.MTCommandersLog
                 dgvCommandersLog.AllowUserToOrderColumns  = false;
 
                 dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
-
+                ((DataGridViewAutoFilterColumnHeaderCell)dgvCommandersLog.Columns["eevent"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterColumnHeaderCell)dgvCommandersLog.Columns["eevent"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype As eevent";
+                
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
                 dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
@@ -913,5 +916,24 @@ namespace IBE.MTCommandersLog
             }
         }
 
+        // Displays the drop-down list when the user presses 
+        // ALT+DOWN ARROW or ALT+UP ARROW.
+        private void dgvCommandersLog_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Alt && (e.KeyCode == Keys.Down || e.KeyCode == Keys.Up))
+            {
+                if(dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell.GetType().Equals(typeof(DataGridViewAutoFilterColumnHeaderCell)))
+                {
+
+
+                }
+                DataGridViewAutoFilterColumnHeaderCell filterCell = (DataGridViewAutoFilterColumnHeaderCell)dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell;
+                if (filterCell != null)
+                {
+                    filterCell.ShowDropDownList();
+                    e.Handled = true;
+                }
+            }
+        }
     }
 }

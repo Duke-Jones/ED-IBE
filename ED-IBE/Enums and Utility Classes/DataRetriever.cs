@@ -21,7 +21,8 @@ namespace IBE.Enums_and_Utility_Classes
     public class DataRetriever : IDataPageRetriever
     {
         private string                      m_BaseTableName;
-        private string                      m_DataStatement;
+        private string                      m_ColumnStatement;
+        private string                      m_BaseStatement;
         private MySqlCommand                m_Command;
         private DataRetrieverCache          m_MemoryCache;
         private List<String>                m_PrimaryKey;
@@ -36,6 +37,7 @@ namespace IBE.Enums_and_Utility_Classes
         private SQL.DBConnector             m_DBCon;
         private PerformanceTimer            m_Pt = new PerformanceTimer();
         private Int32                       m_rowCountCache = 0;
+        internal readonly Dictionary<String, String> Filter = new Dictionary<string, string>();
 
 
         /// <summary>
@@ -47,11 +49,12 @@ namespace IBE.Enums_and_Utility_Classes
         /// <param name="SortByColumn">column for sorting (must be existingClassification in the base table (m_BaseTableName) and in the 'DataStement')</param>
         /// <param name="SortOrder">sort oder</param>
         /// <param name="SortOrder">optional blueprint for typed tables</param>
-        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, String DataStatement, String SortByColumn, DBConnector.SQLSortOrder SortOrder, DataTable TypeTable = null)
+        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, string columnStatement, String baseStatement, String SortByColumn, DBConnector.SQLSortOrder SortOrder, DataTable TypeTable = null)
         {
             m_Command                = ((MySqlConnection)DBCon.Connection).CreateCommand();
             m_BaseTableName          = BaseTableName;
-            m_DataStatement          = DataStatement;
+            m_ColumnStatement        = columnStatement;
+            m_BaseStatement          = baseStatement;
             m_ColumnToSortBy         = SortByColumn;
             m_ColumnSortOrder        = SortOrder;
             m_PrimaryKey             = DBCon.getPrimaryKey(this.m_BaseTableName);
@@ -96,7 +99,7 @@ namespace IBE.Enums_and_Utility_Classes
 
                 // Retrieve the column information from the database.
 
-                m_Command.CommandText       = m_DataStatement;
+                m_Command.CommandText       = m_ColumnStatement + m_BaseStatement + GetWhereStatement();
                 MySqlDataAdapter adapter    = new MySqlDataAdapter();
                 adapter.SelectCommand       = m_Command;
                 DataTable table             = GetDataTable();
@@ -110,6 +113,53 @@ namespace IBE.Enums_and_Utility_Classes
             }
         }
 
+        public string BaseStatement
+        {
+            get
+            {
+                return m_BaseStatement;
+            }
+
+            set
+            {
+                m_BaseStatement = value;
+            }
+        }
+
+
+        public String GetWhereStatement(string ignoreFilter = "")
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (KeyValuePair<String, String> definedFilter in Filter)
+            {
+                if(definedFilter.Key != ignoreFilter)
+                {
+                    if(sb.Length > 0)
+                        sb.Append(" and ");
+                    sb.Append("(" + definedFilter.Value + ")");
+                }
+            }
+
+            if(sb.Length > 0)
+                return " where (" + sb.ToString() + ")";
+            else
+                return "";
+        }
+
+        public string ColumnStatement
+        {
+            get
+            {
+                return m_ColumnStatement;
+            }
+
+            set
+            {
+                m_ColumnStatement = value;
+            }
+        }
+
         public DataTable SupplyPageOfData(int lowerPageBoundary, int rowsPerPage)
         {
             Debug.Print("retrieve Page " + lowerPageBoundary + " (" + rowsPerPage + ")");
@@ -120,7 +170,7 @@ namespace IBE.Enums_and_Utility_Classes
                                                 "                         select {6} from ({0}) L3 order by L3.{3} {5} limit {4}" +
                                                 "                       ) L2 on L1.{6} = L2.{6}" +
                                                 " where L2.{6} is null order by L1.{3} {5} limit {1}", 
-                                                m_DataStatement, 
+                                                m_ColumnStatement + m_BaseStatement + GetWhereStatement(), 
                                                 rowsPerPage, 
                                                 m_BaseTableName, 
                                                 m_ColumnToSortBy, 
@@ -143,7 +193,7 @@ namespace IBE.Enums_and_Utility_Classes
             if ((m_Pt.currentMeasuring() >= 60000) || (!m_Pt.isStarted) || refresh)
             {
                 // Retrieve the row count from the database.
-                m_Command.CommandText = "SELECT COUNT(*) FROM " + m_BaseTableName;
+                m_Command.CommandText = "select count(*) " + m_BaseStatement + GetWhereStatement(); 
 
                 try
                 {

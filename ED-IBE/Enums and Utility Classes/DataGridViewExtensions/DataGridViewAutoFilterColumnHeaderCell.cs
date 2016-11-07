@@ -53,6 +53,8 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private Boolean filtered;
 
+        List<String> m_FilterValues = new List<string>();
+
         /// <summary>
         /// Initializes a new instance of the DataGridViewColumnHeaderCell 
         /// class and sets its property values to the property values of the 
@@ -833,6 +835,31 @@ namespace DataGridViewAutoFilter
 
             UpdateFilter();
             HideDropDownList();
+
+            RefreshDGV(0);
+        }
+
+        /// <summary>
+        /// forces refreshing this tab
+        /// </summary>
+        private void RefreshDGV(int? currentRow)
+        {
+            if(Retriever != null)
+            {
+                // force refresh
+                Retriever.MemoryCache.Clear();
+                this.DataGridView.RowCount  = Retriever.RowCount(true);
+                this.DataGridView.Invalidate();
+                    
+
+                // jump to the new row
+                if ((currentRow != null) && (this.DataGridView.RowCount > currentRow))
+                //try
+                //{
+                        this.DataGridView.CurrentCell = this.DataGridView[1, currentRow.Value];
+                //}
+                //catch{}
+            }
         }
 
         /// <summary>
@@ -890,6 +917,11 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private void PopulateFilters()
         {
+            ArrayList list = null;
+            Boolean containsBlanks;
+            Boolean containsNonBlanks;
+            String oldFilter = "";
+             
             // Continue only if there is a DataGridView.
             if (this.DataGridView == null)
             {
@@ -899,89 +931,108 @@ namespace DataGridViewAutoFilter
             // Cast the data source to a BindingSource. 
             BindingSource data = this.DataGridView.DataSource as BindingSource;
 
-            Debug.Assert(data != null && data.SupportsFiltering && OwningColumn != null,
+            Debug.Assert((data != null && data.SupportsFiltering && OwningColumn != null) || (Retriever != null),
                 "DataSource is not a BindingSource, or does not support filtering, or OwningColumn is null");
 
-            // Prevent the data source from notifying the DataGridView of changes. 
-            data.RaiseListChangedEvents = false;
-
-            // Cache the current BindingSource.Filter value and then change 
-            // the Filter property to temporarily remove any filter for the 
-            // current column. 
-            String oldFilter = data.Filter;
-            data.Filter = FilterWithoutCurrentColumn(oldFilter);
+            containsBlanks = false;
+            containsNonBlanks = false;
 
             // Reset the filters dictionary and initialize some flags
             // to track whether special filter options are needed. 
             filters.Clear();
-            Boolean containsBlanks = false;
-            Boolean containsNonBlanks = false;
 
-            // Initialize an ArrayList to store the values in their original
-            // types. This enables the values to be sorted appropriately.  
-            ArrayList list = new ArrayList(data.Count);
-
-            // Retrieve each value and add it to the ArrayList if it isn't
-            // already present. 
-            foreach (Object item in data)
+            if (data != null)
             {
-                Object value = null;
+                // Prevent the data source from notifying the DataGridView of changes. 
+                data.RaiseListChangedEvents = false;
 
-                // Use the ICustomTypeDescriptor interface to retrieve properties
-                // if it is available; otherwise, use reflection. The 
-                // ICustomTypeDescriptor interface is useful to customize 
-                // which values are exposed as properties. For example, the 
-                // DataRowView class implements ICustomTypeDescriptor to expose 
-                // cell values as property values.                
-                // 
-                // Iterate through the property names to find a case-insensitive
-                // match with the DataGridViewColumn.DataPropertyName value.
-                // This is necessary because DataPropertyName is case-
-                // insensitive, but the GetProperties and GetProperty methods
-                // used below are case-sensitive.
-                ICustomTypeDescriptor ictd = item as ICustomTypeDescriptor;
-                if (ictd != null)
+                // Cache the current BindingSource.Filter value and then change 
+                // the Filter property to temporarily remove any filter for the 
+                // current column. 
+                
+                oldFilter = data.Filter;
+                data.Filter = FilterWithoutCurrentColumn(oldFilter);
+
+                // Initialize an ArrayList to store the values in their original
+                // types. This enables the values to be sorted appropriately.  
+                list = new ArrayList(data.Count);
+
+                // Retrieve each value and add it to the ArrayList if it isn't
+                // already present. 
+                foreach (Object item in data)
                 {
-                    PropertyDescriptorCollection properties = ictd.GetProperties();
-                    foreach (PropertyDescriptor property in properties)
+                    Object value = null;
+
+                    // Use the ICustomTypeDescriptor interface to retrieve properties
+                    // if it is available; otherwise, use reflection. The 
+                    // ICustomTypeDescriptor interface is useful to customize 
+                    // which values are exposed as properties. For example, the 
+                    // DataRowView class implements ICustomTypeDescriptor to expose 
+                    // cell values as property values.                
+                    // 
+                    // Iterate through the property names to find a case-insensitive
+                    // match with the DataGridViewColumn.DataPropertyName value.
+                    // This is necessary because DataPropertyName is case-
+                    // insensitive, but the GetProperties and GetProperty methods
+                    // used below are case-sensitive.
+                    ICustomTypeDescriptor ictd = item as ICustomTypeDescriptor;
+                    if (ictd != null)
                     {
-                        if (String.Compare(this.OwningColumn.DataPropertyName,
-                            property.Name, true /*case insensitive*/,
-                            System.Globalization.CultureInfo.InvariantCulture) == 0)
+                        PropertyDescriptorCollection properties = ictd.GetProperties();
+                        foreach (PropertyDescriptor property in properties)
                         {
-                            value = property.GetValue(item);
-                            break;
+                            if (String.Compare(this.OwningColumn.DataPropertyName,
+                                property.Name, true /*case insensitive*/,
+                                System.Globalization.CultureInfo.InvariantCulture) == 0)
+                            {
+                                value = property.GetValue(item);
+                                break;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    PropertyInfo[] properties = item.GetType().GetProperties(
-                        BindingFlags.Public | BindingFlags.Instance);
-                    foreach (PropertyInfo property in properties)
+                    else
                     {
-                        if (String.Compare(this.OwningColumn.DataPropertyName,
-                            property.Name, true /*case insensitive*/,
-                            System.Globalization.CultureInfo.InvariantCulture) == 0)
+                        PropertyInfo[] properties = item.GetType().GetProperties(
+                            BindingFlags.Public | BindingFlags.Instance);
+                        foreach (PropertyInfo property in properties)
                         {
-                            value = property.GetValue(item, null /*property index*/);
-                            break;
+                            if (String.Compare(this.OwningColumn.DataPropertyName,
+                                property.Name, true /*case insensitive*/,
+                                System.Globalization.CultureInfo.InvariantCulture) == 0)
+                            {
+                                value = property.GetValue(item, null /*property index*/);
+                                break;
+                            }
                         }
                     }
-                }
 
-                // Skip empty values, but note that they are present. 
-                if (value == null || value == DBNull.Value)
-                {
-                    containsBlanks = true;
-                    continue;
-                }
+                    // Skip empty values, but note that they are present. 
+                    if (value == null || value == DBNull.Value)
+                    {
+                        containsBlanks = true;
+                        continue;
+                    }
 
-                // Add values to the ArrayList if they are not already there.
-                if (!list.Contains(value))
-                {
-                    list.Add(value);
+                    // Add values to the ArrayList if they are not already there.
+                    if (!list.Contains(value))
+                    {
+                        list.Add(value);
+                    }
                 }
+            }
+            else
+            {
+                // Initialize an ArrayList to store the values in their original
+                // types. This enables the values to be sorted appropriately.  
+                
+                DataTable dataTable = new DataTable();
+
+                IBE.Program.DBCon.Execute(String.Format("{0} {1} {2}", RetrieverSQLSelect, Retriever.BaseStatement, Retriever.GetWhereStatement(this.OwningColumn.Name)), dataTable);
+
+                list = new ArrayList(dataTable.Rows.Count);
+
+                foreach (DataRow selectableItem in dataTable.Rows)
+                    list.Add(selectableItem[0]);
             }
 
             // Sort the ArrayList. The default Sort method uses the IComparable 
@@ -1019,10 +1070,13 @@ namespace DataGridViewAutoFilter
                 }
             }
 
-            // Restore the filter to the cached filter string and 
-            // re-enable data source change notifications. 
-            if (oldFilter != null) data.Filter = oldFilter;
-            data.RaiseListChangedEvents = true;
+            if (data != null)
+            {
+                // Restore the filter to the cached filter string and 
+                // re-enable data source change notifications. 
+                if (oldFilter != null) data.Filter = oldFilter;
+                data.RaiseListChangedEvents = true;
+            }
 
             // Add special filter options to the filters dictionary
             // along with null values, since unformatted representations
@@ -1100,81 +1154,103 @@ namespace DataGridViewAutoFilter
             IBindingListView data = 
                 this.DataGridView.DataSource as IBindingListView;
 
-            Debug.Assert(data != null && data.SupportsFiltering,
+            Debug.Assert((data != null && data.SupportsFiltering) || (Retriever != null),
                 "DataSource is not an IBindingListView or does not support filtering");
 
-            // If the user selection is (All), remove any filter currently 
-            // in effect for the column. 
-            if (selectedFilterValue.Equals("(All)"))
+            if(data != null)
             {
-                data.Filter = FilterWithoutCurrentColumn(data.Filter);
-                filtered = false;
-                currentColumnFilter = String.Empty;
-                return;
-            }
+                // If the user selection is (All), remove any filter currently 
+                // in effect for the column. 
+                if (selectedFilterValue.Equals("(All)"))
+                {
+                    data.Filter = FilterWithoutCurrentColumn(data.Filter);
+                    filtered = false;
+                    currentColumnFilter = String.Empty;
+                    return;
+                }
 
-            // Declare a variable to store the filter string for this column.
-            String newColumnFilter = null;
+                // Declare a variable to store the filter string for this column.
+                String newColumnFilter = null;
 
-            // Store the column name in a form acceptable to the Filter property, 
-            // using a backslash to escape any closing square brackets. 
-            String columnProperty = 
-                OwningColumn.DataPropertyName.Replace("]", @"\]");
+                // Store the column name in a form acceptable to the Filter property, 
+                // using a backslash to escape any closing square brackets. 
+                String columnProperty = 
+                    OwningColumn.DataPropertyName.Replace("]", @"\]");
 
-            // Determine the column filter string based on the user selection.
-            // For (Blanks) and (NonBlanks), the filter string determines whether
-            // the column value is null or an empty string. Otherwise, the filter
-            // string determines whether the column value is the selected value. 
-            switch (selectedFilterValue)
-            {
-                case "(Blanks)":
-                    newColumnFilter = String.Format(
-                        "LEN(ISNULL(CONVERT([{0}],'System.String'),''))=0",
-                        columnProperty);
-                    break;
-                case "(NonBlanks)":
-                    newColumnFilter = String.Format(
-                        "LEN(ISNULL(CONVERT([{0}],'System.String'),''))>0",
-                        columnProperty);
-                    break;
-                default:
-                    newColumnFilter = String.Format("[{0}]='{1}'",
-                        columnProperty,
-                        ((String)filters[selectedFilterValue])
-                        .Replace("'", "''"));  
-                    break;
-            }
+                // Determine the column filter string based on the user selection.
+                // For (Blanks) and (NonBlanks), the filter string determines whether
+                // the column value is null or an empty string. Otherwise, the filter
+                // string determines whether the column value is the selected value. 
+                switch (selectedFilterValue)
+                {
+                    case "(Blanks)":
+                        newColumnFilter = String.Format(
+                            "LEN(ISNULL(CONVERT([{0}],'System.String'),''))=0",
+                            columnProperty);
+                        break;
+                    case "(NonBlanks)":
+                        newColumnFilter = String.Format(
+                            "LEN(ISNULL(CONVERT([{0}],'System.String'),''))>0",
+                            columnProperty);
+                        break;
+                    default:
+                        newColumnFilter = String.Format("[{0}]='{1}'",
+                            columnProperty,
+                            ((String)filters[selectedFilterValue])
+                            .Replace("'", "''"));  
+                        break;
+                }
 
-            // Determine the new filter string by removing the previous column 
-            // filter string from the BindingSource.Filter value, then appending 
-            // the new column filter string, using " AND " as appropriate. 
-            String newFilter = FilterWithoutCurrentColumn(data.Filter);
-            if (String.IsNullOrEmpty(newFilter))
-            {
-                newFilter += newColumnFilter;
+                // Determine the new filter string by removing the previous column 
+                // filter string from the BindingSource.Filter value, then appending 
+                // the new column filter string, using " AND " as appropriate. 
+                String newFilter = FilterWithoutCurrentColumn(data.Filter);
+                if (String.IsNullOrEmpty(newFilter))
+                {
+                    newFilter += newColumnFilter;
+                }
+                else
+                {
+                    newFilter += " AND " + newColumnFilter;
+                }
+
+
+                // Set the filter to the new value.
+                try
+                {
+                    data.Filter = newFilter;
+                }
+                catch (InvalidExpressionException ex)
+                {
+                    throw new NotSupportedException(
+                        "Invalid expression: " + newFilter, ex);
+                }
+
+                // Indicate that the column is currently filtered
+                // and store the new column filter for use by subsequent
+                // calls to the FilterWithoutCurrentColumn method. 
+                filtered = true;
+                currentColumnFilter = newColumnFilter;
             }
             else
             {
-                newFilter += " AND " + newColumnFilter;
-            }
 
+                if (selectedFilterValue.Equals("(All)"))
+                {
+                   if(Retriever.Filter.ContainsKey(this.OwningColumn.Name))
+                        Retriever.Filter.Remove(this.OwningColumn.Name);
 
-            // Set the filter to the new value.
-            try
-            {
-                data.Filter = newFilter;
-            }
-            catch (InvalidExpressionException ex)
-            {
-                throw new NotSupportedException(
-                    "Invalid expression: " + newFilter, ex);
-            }
+                    return;
+                }
 
-            // Indicate that the column is currently filtered
-            // and store the new column filter for use by subsequent
-            // calls to the FilterWithoutCurrentColumn method. 
-            filtered = true;
-            currentColumnFilter = newColumnFilter;
+                String filterString = String.Format("{0} = '{1}'",this.OwningColumn.DataPropertyName, selectedFilterValue);
+
+                if(Retriever.Filter.ContainsKey(this.OwningColumn.Name))
+                    Retriever.Filter[this.OwningColumn.Name] = filterString;
+                else
+                    Retriever.Filter.Add(this.OwningColumn.Name, filterString);
+
+            }
         }
 
         /// <summary>
@@ -1494,10 +1570,16 @@ namespace DataGridViewAutoFilter
             }
         }
 
+        
+
         /// <summary>
         /// The maximum number of lines in the drop-down list. 
         /// </summary>
-        private Int32 dropDownListBoxMaxLinesValue = 20; 
+        private Int32 dropDownListBoxMaxLinesValue = 20;
+
+        public IBE.Enums_and_Utility_Classes.DataRetriever Retriever { get; set; }
+        public string RetrieverSQLSelect { get; set; }
+
 
         /// <summary>
         /// Gets or sets the maximum number of lines to display in the drop-down filter list. 

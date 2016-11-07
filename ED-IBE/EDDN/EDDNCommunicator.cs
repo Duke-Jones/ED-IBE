@@ -369,6 +369,9 @@ bool disposed = false;
                                     nameAndVersion = String.Format("{0} / {1}", dataJObject.SelectToken("header.softwareName"), dataJObject.SelectToken("header.softwareVersion"));
                                     name = String.Format("{0}", dataJObject.SelectToken("header.softwareName"));
                                     uploaderID = dataJObject.SelectToken("header.uploaderID").ToString();
+
+                                    if(name == "ED-IBE (API)")
+                                        Debug.Print("handle v3 ^recieved : " + name);
                                 }
                                 //else
                                     //Debug.Print("handle v3 rejected (it's our own message)");

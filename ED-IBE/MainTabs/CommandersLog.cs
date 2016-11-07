@@ -54,24 +54,23 @@ namespace IBE.MTCommandersLog
         /// <summary>
         /// main selection string for the data from the database
         /// </summary>
-        // private const String _sqlString = "select L.time, S.systemname, St.stationname, E.event As eevent, C.action," + 
-        //                                   "       Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes" +
-        //                                   " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
-        //                                   "              left join tbCargoAction C on L.cargoaction_id = C.id" +
-        //                                   "              left join tbSystems S     on L.system_id      = S.id" +
-        //                                   "              left join tbStations St   on L.station_id     = St.id" +
-        //                                   "              left join tbCommodity Co  on L.commodity_id   = Co.id";
-        //
-        // ^^^^^^^^^^ replaced by view "viLog" vvvvvvvvvvvvvvv
-        private const String _sqlString = "select * from viLog";
+         private const String _sqlColumnString = "select L.time, S.systemname, St.stationname, E.eventtype, C.cargoaction," + 
+                                                 "       Co.loccommodity, L.cargovolume, L.credits_transaction, L.credits_total, L.notes, L.distance";
 
+        private const String _sqlBaseString = " from tbLog L left join tbEventType E   on L.event_id       = E.id" + 
+                                              "              left join tbCargoAction C on L.cargoaction_id = C.id" +
+                                              "              left join tbSystems S     on L.system_id      = S.id" +
+                                              "              left join tbStations St   on L.station_id     = St.id" +
+                                              "              left join tbCommodity Co  on L.commodity_id   = Co.id";
+
+        private const String _sqlWhereString = "";
+        
         private dsEliteDB                               m_BaseData;
         public tabCommandersLog                         m_GUI;
         private BindingSource                           m_BindingSource;
         private DataTable                               m_Datatable;
         private DataRetriever                           retriever;
         private Boolean                                 m_NoGuiNotifyAfterSave;
-        //private FileScanner.EDLogfileScanner            m_LogfileScanner;
         private FileScanner.EDJournalScanner             m_JournalScanner;
         private IBE.IBECompanion.DataEventBase          m_DataEventObject;
         private Dictionary<Object, BindingSource>       m_BindingSources;
@@ -102,7 +101,7 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlString, "time", DBConnector.SQLSortOrder.desc, new dsEliteDB.vilogDataTable());
+                retriever = new DataRetriever(Program.DBCon, table, _sqlColumnString, _sqlBaseString, "time", DBConnector.SQLSortOrder.desc, new dsEliteDB.vilogDataTable());
 
                 return retriever.RowCount(true);
             }
@@ -325,11 +324,11 @@ namespace IBE.MTCommandersLog
                 TempRow.systemname          = Event.System;
                 TempRow.stationname         = Event.Station;
                 TempRow.loccommodity        = Event.Cargo;
-                TempRow.action              = Event.CargoAction;
+                TempRow.cargoaction         = Event.CargoAction;
                 TempRow.cargovolume         = (Int32)Event.CargoVolume;
                 TempRow.credits_transaction = (Int32)Event.TransactionAmount;
                 TempRow.credits_total       = (Int32)Event.Credits;
-                TempRow.eevent              = Event.EventType;
+                TempRow.eventtype           = Event.EventType;
                 TempRow.notes               = Event.Notes;
 
                 SaveEvent(TempRow);
@@ -359,11 +358,11 @@ namespace IBE.MTCommandersLog
                 TempRow.systemname          = System;
                 TempRow.stationname         = Station;
                 TempRow.loccommodity        = Cargo;
-                TempRow.action              = CargoAction;
+                TempRow.cargoaction         = CargoAction;
                 TempRow.cargovolume         = CargoVolume;
                 TempRow.credits_transaction = CreditsTransAction;
                 TempRow.credits_total       = Credits_Total;
-                TempRow.eevent              = EventType;
+                TempRow.eventtype           = EventType;
                 TempRow.notes               = Notes;
 
                 if(Distance.HasValue)
@@ -431,9 +430,9 @@ namespace IBE.MTCommandersLog
                                             DBConnector.SQLDateTime(ChangedData.time),
                                             DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.systemname)),
                                             DBConnector.SQLAString(DBConnector.SQLEscape(ChangedData.stationname)),
-                                            DBConnector.SQLAString(ChangedData.eevent),
+                                            DBConnector.SQLAString(ChangedData.eventtype),
                                             DBConnector.SQLAString(ChangedData.loccommodity),
-                                            DBConnector.SQLAString(ChangedData.action),
+                                            DBConnector.SQLAString(ChangedData.cargoaction),
                                             ChangedData.cargovolume,
                                             ChangedData.credits_transaction,
                                             ChangedData.credits_total,
@@ -769,10 +768,14 @@ namespace IBE.MTCommandersLog
                             {
                                 foreach (JObject ring in e.Data.SelectTokens("Rings.[*]"))
                                 {
+                                    String classname = ring.Value<String>("RingClass").Replace("eRingClass_","")
+                                                                                      .Replace("Rich"," Rich")
+                                                                                      .Replace("Metal","Metall");
+
                                     if(rings.Length == 0)
-                                        rings.AppendLine(String.Format("\n{0} • {1} ({2})", txtHelp.FixedLength("Belts", usedFont, 100), ring.Value<String>("Name"), ring.Value<String>("RingClass")));
+                                        rings.AppendLine(String.Format("\n{0} • {1} (Type: {2})", txtHelp.FixedLength("Belts", usedFont, 100), ring.Value<String>("Name"), classname));
                                     else
-                                        rings.AppendLine(String.Format("{0} • {1} ({2})", txtHelp.FixedLength("", usedFont, 100), ring.Value<String>("Name"), ring.Value<String>("RingClass")));
+                                        rings.AppendLine(String.Format("{0} • {1} (Type: {2})", txtHelp.FixedLength("", usedFont, 100), ring.Value<String>("Name"), classname));
                                 }
 
                                 data.Append(rings);

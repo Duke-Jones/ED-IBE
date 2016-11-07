@@ -180,6 +180,9 @@ namespace IBE.EDDN
             try
             {
                 EDDNRecievedArgs ArgsObject;
+                
+                if (RawData.Contains(@"ED-IBE"))
+                    Debug.Print("here");
 
                 if (RawData.Contains(@"commodity/1"))
                 {
