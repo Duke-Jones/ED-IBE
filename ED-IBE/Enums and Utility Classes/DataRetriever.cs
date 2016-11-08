@@ -246,6 +246,22 @@ namespace IBE.Enums_and_Utility_Classes
 
             return m_CommaSeparatedListOfColumnNamesValue;
         }
+
+        internal void SetFilter(string name, string filterString)
+        {
+            if(String.IsNullOrWhiteSpace(filterString))
+            {
+                if(Filter.ContainsKey(name))
+                    Filter.Remove(name);
+            }
+            else
+            {
+                if(Filter.ContainsKey(name))
+                    Filter[name] = filterString;
+                else
+                    Filter.Add(name, filterString);
+            }
+        }
     }
 
     /// <summary>

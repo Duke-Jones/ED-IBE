@@ -1,12 +1,3 @@
-//---------------------------------------------------------------------
-//  Copyright (C) Microsoft Corporation.  All rights reserved.
-// 
-//THIS CODE AND INFORMATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY
-//KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-//IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-//PARTICULAR PURPOSE.
-//---------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,14 +9,16 @@ namespace DataGridViewAutoFilter
     /// <summary>
     /// Represents a DataGridViewTextBoxColumn with a drop-down filter list accessible from the header cell.  
     /// </summary>
-    public class DataGridViewAutoFilterTextBoxColumn : DataGridViewTextBoxColumn
+    public class DataGridViewAutoFilterSingleTextBoxColumn : DataGridViewTextBoxColumn
     {
+        public int MyProperty { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the DataGridViewAutoFilterTextBoxColumn class.
         /// </summary>
-        public DataGridViewAutoFilterTextBoxColumn() : base()
+        public DataGridViewAutoFilterSingleTextBoxColumn() : base()
         {
-            base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterColumnHeaderCell);
+            base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterSingleColumnHeaderCell);
             base.SortMode = DataGridViewColumnSortMode.Programmatic;
         }
 
@@ -43,7 +36,7 @@ namespace DataGridViewAutoFilter
         {
             get
             {
-                return typeof(DataGridViewAutoFilterColumnHeaderCell);
+                return typeof(DataGridViewAutoFilterSingleColumnHeaderCell);
             }
         }
 
@@ -91,13 +84,13 @@ namespace DataGridViewAutoFilter
             get
             {
                 // Return the header-cell value.
-                return ((DataGridViewAutoFilterColumnHeaderCell)HeaderCell)
+                return ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
                     .FilteringEnabled;
             }
             set
             {
                 // Set the header-cell property. 
-                ((DataGridViewAutoFilterColumnHeaderCell)HeaderCell)
+                ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
                     .FilteringEnabled = value;
             }
         }
@@ -111,13 +104,13 @@ namespace DataGridViewAutoFilter
             get
             {
                 // Return the header-cell value.
-                return ((DataGridViewAutoFilterColumnHeaderCell)HeaderCell)
+                return ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
                     .AutomaticSortingEnabled;
             }
             set
             {
                 // Set the header-cell property.
-                ((DataGridViewAutoFilterColumnHeaderCell)HeaderCell)
+                ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
                     .AutomaticSortingEnabled = value;
             }
         }
@@ -131,13 +124,13 @@ namespace DataGridViewAutoFilter
             get
             {
                 // Return the header-cell value.
-                return ((DataGridViewAutoFilterColumnHeaderCell)HeaderCell)
+                return ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
                     .DropDownListBoxMaxLines;
             }
             set
             {
                 // Set the header-cell property.
-                ((DataGridViewAutoFilterColumnHeaderCell)HeaderCell)
+                ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
                     .DropDownListBoxMaxLines = value;
             }
         }
@@ -152,7 +145,7 @@ namespace DataGridViewAutoFilter
         /// <param name="dataGridView">The DataGridView bound to the BindingSource to unfilter.</param>
         public static void RemoveFilter(DataGridView dataGridView)
         {
-            DataGridViewAutoFilterColumnHeaderCell.RemoveFilter(dataGridView);
+            DataGridViewAutoFilterSingleColumnHeaderCell.RemoveFilter(dataGridView);
         }
 
         /// <summary>
@@ -167,7 +160,7 @@ namespace DataGridViewAutoFilter
         /// available, or String.Empty if all rows are currently displayed.</returns>
         public static String GetFilterStatus(DataGridView dataGridView)
         {
-            return DataGridViewAutoFilterColumnHeaderCell.GetFilterStatus(dataGridView);
+            return DataGridViewAutoFilterSingleColumnHeaderCell.GetFilterStatus(dataGridView);
         }
 
         #endregion

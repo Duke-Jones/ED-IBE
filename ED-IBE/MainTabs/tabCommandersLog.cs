@@ -113,8 +113,8 @@ namespace IBE.MTCommandersLog
                 dgvCommandersLog.AllowUserToOrderColumns  = false;
 
                 dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
-                ((DataGridViewAutoFilterColumnHeaderCell)dgvCommandersLog.Columns["eevent"].HeaderCell).Retriever = m_DataSource.Retriever;
-                ((DataGridViewAutoFilterColumnHeaderCell)dgvCommandersLog.Columns["eevent"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype As eevent";
+                ((DataGridViewAutoFilterMultiColumnHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterMultiColumnHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype";
                 
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
@@ -413,7 +413,7 @@ namespace IBE.MTCommandersLog
 
                 //dgvCommandersLog.Rows.Add()
                 // put the changed data into the DataGridView (this will fire the "CellValuePushed"-event)
-                currentRow.Cells["eevent"].Value              = cbLogEventType.Text;
+                currentRow.Cells["eventtype"].Value           = cbLogEventType.Text;
                 currentRow.Cells["time"].Value                = dtpLogEventDate.Value;
                 currentRow.Cells["systemname"].Value          = cbLogSystemName.Text;
                 currentRow.Cells["stationname"].Value         = cbLogStationName.Text;
@@ -479,7 +479,7 @@ namespace IBE.MTCommandersLog
                 {
                     var currentRow = dgvCommandersLog.Rows[e.RowIndex];
 
-                    cbLogEventType.Text             = (String)currentRow.Cells["eevent"].Value.ToString();
+                    cbLogEventType.Text             = (String)currentRow.Cells["eventtype"].Value.ToString();
                     dtpLogEventDate.Value           = (DateTime)currentRow.Cells["time"].Value;
                     cbLogSystemName.Text            = (String)currentRow.Cells["systemname"].Value.ToString();
                     cbLogSystemName.TextBox_ro.Text = (String)currentRow.Cells["systemname"].Value.ToString();
@@ -922,18 +922,39 @@ namespace IBE.MTCommandersLog
         {
             if (e.Alt && (e.KeyCode == Keys.Down || e.KeyCode == Keys.Up))
             {
-                if(dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell.GetType().Equals(typeof(DataGridViewAutoFilterColumnHeaderCell)))
+                if(dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell.GetType().Equals(typeof(DataGridViewAutoFilterSingleColumnHeaderCell)))
                 {
 
 
                 }
-                DataGridViewAutoFilterColumnHeaderCell filterCell = (DataGridViewAutoFilterColumnHeaderCell)dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell;
+                DataGridViewAutoFilterSingleColumnHeaderCell filterCell = (DataGridViewAutoFilterSingleColumnHeaderCell)dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell;
                 if (filterCell != null)
                 {
                     filterCell.ShowDropDownList();
                     e.Handled = true;
                 }
             }
+        }
+
+        private void multiSelectHeaderList1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        MultiSelectHeaderList ml;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            if(ml != null)
+                ml.Dispose();
+
+           ml =  new MultiSelectHeaderList();
+
+            ml.Parent = this.dgvCommandersLog;
+
+            ml.Location = new Point(10,10);
+
         }
     }
 }

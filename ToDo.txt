@@ -16,13 +16,13 @@ todo:
 
 * direct selection of the local station
 * call EDSM/EDDB directly
-
+* unhandled exception always shuts down
 
 *************************************************************************************
 
 done:
 
-
+  * column event can be filtered by multiple values
 -------------------------------------------------------------------------------------         
   * column event can be filtered (single value)
 -------------------------------------------------------------------------------------         

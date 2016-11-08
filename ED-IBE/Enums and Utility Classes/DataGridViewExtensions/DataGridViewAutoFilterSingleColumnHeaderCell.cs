@@ -1,12 +1,3 @@
-//---------------------------------------------------------------------
-//  Copyright (C) Microsoft Corporation.  All rights reserved.
-// 
-//THIS CODE AND INFORMATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY
-//KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-//IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-//PARTICULAR PURPOSE.
-//---------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +15,7 @@ namespace DataGridViewAutoFilter
     /// <summary>
     /// Provides a drop-down filter list in a DataGridViewColumnHeaderCell.
     /// </summary>
-    public class DataGridViewAutoFilterColumnHeaderCell : DataGridViewColumnHeaderCell
+    public class DataGridViewAutoFilterSingleColumnHeaderCell : DataGridViewColumnHeaderCell
     {
         /// <summary>
         /// The ListBox used for all drop-down lists. 
@@ -61,7 +52,7 @@ namespace DataGridViewAutoFilter
         /// specified DataGridViewColumnHeaderCell.
         /// </summary>
         /// <param name="oldHeaderCell">The DataGridViewColumnHeaderCell to copy property values from.</param>
-        public DataGridViewAutoFilterColumnHeaderCell(DataGridViewColumnHeaderCell oldHeaderCell)
+        public DataGridViewAutoFilterSingleColumnHeaderCell(DataGridViewColumnHeaderCell oldHeaderCell)
         {
             this.ContextMenuStrip = oldHeaderCell.ContextMenuStrip;
             this.ErrorText = oldHeaderCell.ErrorText;
@@ -79,8 +70,8 @@ namespace DataGridViewAutoFilter
 
             // Copy this type's properties if the old cell is an auto-filter cell. 
             // This enables the Clone method to reuse this constructor. 
-            DataGridViewAutoFilterColumnHeaderCell filterCell =
-                oldHeaderCell as DataGridViewAutoFilterColumnHeaderCell;
+            DataGridViewAutoFilterSingleColumnHeaderCell filterCell =
+                oldHeaderCell as DataGridViewAutoFilterSingleColumnHeaderCell;
             if (filterCell != null)
             {
                 this.FilteringEnabled = filterCell.FilteringEnabled;
@@ -95,7 +86,7 @@ namespace DataGridViewAutoFilter
         /// Initializes a new instance of the DataGridViewColumnHeaderCell 
         /// class. 
         /// </summary>
-        public DataGridViewAutoFilterColumnHeaderCell()
+        public DataGridViewAutoFilterSingleColumnHeaderCell()
         {
         }
 
@@ -105,7 +96,7 @@ namespace DataGridViewAutoFilter
         /// <returns>An object that represents the cloned DataGridViewAutoFilterColumnHeaderCell.</returns>
         public override object Clone()
         {
-            return new DataGridViewAutoFilterColumnHeaderCell(this);
+            return new DataGridViewAutoFilterSingleColumnHeaderCell(this);
         }
 
         /// <summary>

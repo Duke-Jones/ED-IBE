@@ -322,4 +322,32 @@ namespace IBE.Enums_and_Utility_Classes
             return dateTime.AddTicks(-(dateTime.Ticks % timeSpan.Ticks));
         }
     }
+
+    static class Extensions_IEnumerable
+    {
+        public static bool ContentEquals<T>(this IEnumerable<T> list1, IEnumerable<T> list2)
+        {
+
+            var cnt = new Dictionary<T, int>();
+
+            foreach (T s in list1)
+            {
+                if (cnt.ContainsKey(s))
+                    cnt[s]++;
+                else
+                    cnt.Add(s, 1);
+            }
+
+            foreach (T s in list2)
+            {
+                if (cnt.ContainsKey(s))
+                    cnt[s]--;
+                else
+                    return false;
+            }
+
+            return cnt.Values.All(c => c == 0);
+        }
+    }
+
 }

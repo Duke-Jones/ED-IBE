@@ -154,8 +154,16 @@
       <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
     </Compile>
     <Compile Include="EDSM\ServerStatus.cs" />
-    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterColumnHeaderCell.cs" />
-    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterTextBoxColumn.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterMultiColumnHeaderCell.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterMultiTextBoxColumn.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterSingleColumnHeaderCell.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterSingleTextBoxColumn.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\MultiSelectHeaderList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\MultiSelectHeaderList.Designer.cs">
+      <DependentUpon>MultiSelectHeaderList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="Enums and Utility Classes\TextHelper.cs" />
@@ -471,6 +479,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EDSM\EDStarmapInterfaceView.resx">
       <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Enums and Utility Classes\DataGridViewExtensions\MultiSelectHeaderList.resx">
+      <DependentUpon>MultiSelectHeaderList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ErrorHandling\ErrorViewer.resx">
       <DependentUpon>ErrorViewer.cs</DependentUpon>
