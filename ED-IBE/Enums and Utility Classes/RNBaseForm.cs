@@ -108,10 +108,9 @@ namespace IBE.Enums_and_Utility_Classes
 
         private void Form_Shown(object sender, System.EventArgs e)
         {
-            if (!RNBaseForm.IsDesignMode(this))
+            if (!this.IsDesignMode())
             { 
                 loadWindowPosition();
-                Retheme();
             }
 
             this.Icon = Properties.Resources.IBE;
@@ -129,181 +128,13 @@ namespace IBE.Enums_and_Utility_Classes
             this.BringToFront();
         }
 
-        // Recurse controls on form
-        public IEnumerable<Control> GetAll(Control control)
+        private void RNBaseForm_Load(object sender, EventArgs e)
         {
-            var controls = control.Controls.Cast<Control>();
-
-            return controls.SelectMany(ctrl => GetAll(ctrl))
-                                      .Concat(controls);
-        }
-
-        /// <summary>
-        /// Checks whether a control or its parent is in design mode.
-        /// </summary>
-        /// <param name="c">The control to check.</param>
-        /// <returns>Returns TRUE if in design mode, false otherwise.</returns>
-        public static bool IsDesignMode(Control c )
-        {
-          if ( c == null )
-          {
-            return false;
-          }
-          else
-          {
-            while ( c != null )
-            {
-              if ( c.Site != null && c.Site.DesignMode )
-              {
-                return true;
-              }
-              else
-              {
-                c = c.Parent;
-              }
-            }
- 
-            return false;
-          }
-        }
-
-        protected void Retheme()
-        {
-            bool noBackColor = false;
-
-            Dictionary<String, Boolean> ignoreList = new Dictionary<string, bool>() {{"lblDonate", false},
-                                                                                   {"lbEDDNInfo", false}};
-
-            try
-            {
-                if (!Program.Colors.UseColors) return;
-
-                var x = GetAll(this);
-
-                var f = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
-                var b = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
-
-                foreach (Control c in x)
-                {
-                    if (!ignoreList.ContainsKey(c.Name))
-                    {
-                        noBackColor = SetControlColors(c, f, b);
-                    }
-                }
-
-                //if(!noBackColor)
-                BackColor = b;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in retheming-function", ex);
-            }
-        }
-
-        public static bool SetControlColors(Control controlObject, Color newForeColor, Color newBackColor, Boolean reset = false)
-        {
-            bool noBackColor;
-            var props = controlObject.GetType().GetProperties().Select(y => y.Name);
-
-            noBackColor = false;
-
-            controlObject.BackColor = newBackColor;
-            controlObject.ForeColor = newForeColor;
-
-            if (props.Contains("FlatStyle"))
-            {
-                var prop = controlObject.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                if(reset)
-                    prop.SetValue(controlObject, FlatStyle.Standard);
-                else
-                    prop.SetValue(controlObject, FlatStyle.Flat);
+            if (!this.IsDesignMode())
+            { 
+                this.Retheme();
             }
 
-            if (props.Contains("FlatStyle"))
-            {
-                var prop = controlObject.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                prop.SetValue(controlObject, FlatStyle.Flat);
-            }
-            if (props.Contains("BorderStyle") && controlObject.GetType() != typeof(Label))
-            {
-                var prop = controlObject.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                prop.SetValue(controlObject, BorderStyle.FixedSingle);
-            }
-            if (props.Contains("LinkColor"))
-            {
-                var prop = controlObject.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
-
-                prop.SetValue(controlObject, newForeColor);
-            }
-            if (props.Contains("BackColor_ro"))
-            {
-                var prop = controlObject.GetType().GetProperty("BackColor_ro", BindingFlags.Public | BindingFlags.Instance);
-                prop.SetValue(controlObject, newBackColor);
-            }
-            if (props.Contains("ForeColor_ro"))
-            {
-                var prop = controlObject.GetType().GetProperty("ForeColor_ro", BindingFlags.Public | BindingFlags.Instance);
-                prop.SetValue(controlObject, newForeColor);
-            }
-            if (props.Contains("BackgroundColor"))
-            {
-                var prop = controlObject.GetType().GetProperty("BackgroundColor", BindingFlags.Public | BindingFlags.Instance);
-                prop.SetValue(controlObject, newBackColor);
-            }
-            if (props.Contains("GridColor"))
-            {
-                var prop = controlObject.GetType().GetProperty("GridColor", BindingFlags.Public | BindingFlags.Instance);
-                prop.SetValue(controlObject, newForeColor);
-            }
-            if (props.Contains("DefaultCellStyle"))
-            {
-                // DataGridView
-                var prop = controlObject.GetType().GetProperty("DefaultCellStyle", BindingFlags.Public | BindingFlags.Instance);
-
-                var propsCellStyle = prop.GetType().GetProperties().Select(y => y.Name);
-
-                if (propsCellStyle.Contains("BackColor"))
-                {
-                    var prop2 = propsCellStyle.GetType().GetProperty("BackColor", BindingFlags.Public | BindingFlags.Instance);
-                    prop2.SetValue(controlObject, newBackColor);
-                }
-                if (propsCellStyle.Contains("ForeColor"))
-                {
-                    var prop2 = propsCellStyle.GetType().GetProperty("ForeColor", BindingFlags.Public | BindingFlags.Instance);
-                    prop2.SetValue(controlObject, newForeColor);
-                }
-            }
-            if (props.Contains("Columns") && controlObject.GetType() == typeof(DataGridViewExt))
-            {
-
-                DataGridViewExt dgv = (DataGridViewExt)controlObject;
-
-                dgv.EnableHeadersVisualStyles = false;
-
-                dgv.RowHeadersDefaultCellStyle.BackColor = newForeColor;
-                dgv.RowHeadersDefaultCellStyle.ForeColor = newBackColor;
-
-                dgv.ColumnHeadersDefaultCellStyle.BackColor = newForeColor;
-                dgv.ColumnHeadersDefaultCellStyle.ForeColor = newBackColor;
-
-
-                // DataGridView
-                var prop = controlObject.GetType().GetProperty("Columns", BindingFlags.Public | BindingFlags.Instance);
-
-                var propValues = (DataGridViewColumnCollection)prop.GetValue(controlObject, null);
-
-                foreach (DataGridViewColumn propValue in propValues)
-                {
-                    propValue.DefaultCellStyle.ForeColor = newForeColor;
-                    propValue.DefaultCellStyle.BackColor = newBackColor;
-                    propValue.HeaderCell.Style.BackColor = newForeColor;
-                    propValue.HeaderCell.Style.ForeColor = newBackColor;
-                }
-            }
-            return noBackColor;
         }
     }
 }

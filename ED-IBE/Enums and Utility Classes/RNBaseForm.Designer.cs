@@ -37,10 +37,11 @@
             this.ClientSize = new System.Drawing.Size(270, 121);
             this.Name = "RNBaseForm";
             this.Text = "RNBaseForm";
-            this.ResumeLayout(false);
+            this.Load += new System.EventHandler(this.RNBaseForm_Load);
+            this.Shown += new System.EventHandler(this.Form_Shown);
             this.ResizeEnd += new System.EventHandler(this.Form_ResizeEnd);
             this.Resize += new System.EventHandler(this.Form_Resize);
-            this.Shown += new System.EventHandler(this.Form_Shown);
+            this.ResumeLayout(false);
 
         }
 

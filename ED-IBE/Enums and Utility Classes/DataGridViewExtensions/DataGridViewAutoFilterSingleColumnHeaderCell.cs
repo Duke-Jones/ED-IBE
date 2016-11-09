@@ -1228,18 +1228,13 @@ namespace DataGridViewAutoFilter
 
                 if (selectedFilterValue.Equals("(All)"))
                 {
-                   if(Retriever.Filter.ContainsKey(this.OwningColumn.Name))
-                        Retriever.Filter.Remove(this.OwningColumn.Name);
-
+                    Retriever.SetFilter(this.OwningColumn.Name, "");
+                    filtered = false;
                     return;
                 }
 
-                String filterString = String.Format("{0} = '{1}'",this.OwningColumn.DataPropertyName, selectedFilterValue);
-
-                if(Retriever.Filter.ContainsKey(this.OwningColumn.Name))
-                    Retriever.Filter[this.OwningColumn.Name] = filterString;
-                else
-                    Retriever.Filter.Add(this.OwningColumn.Name, filterString);
+                filtered = true;
+                Retriever.SetFilter(this.OwningColumn.Name, String.Format("{0} = '{1}'",this.OwningColumn.DataPropertyName, selectedFilterValue));
 
             }
         }

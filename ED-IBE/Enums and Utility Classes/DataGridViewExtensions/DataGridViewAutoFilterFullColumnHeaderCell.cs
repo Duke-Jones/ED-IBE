@@ -17,12 +17,12 @@ namespace DataGridViewAutoFilter
     /// <summary>
     /// Provides a drop-down filter list in a DataGridViewColumnHeaderCell.
     /// </summary>
-    public class DataGridViewAutoFilterMultiColumnHeaderCell : DataGridViewColumnHeaderCell
+    public class DataGridViewAutoFilterFullColumnHeaderCell : DataGridViewColumnHeaderCell
     {
         /// <summary>
         /// The ListBox used for all drop-down lists. 
         /// </summary>
-        private static MultiSelectHeaderList multiSelectBox;
+        private static FullTextHeader textSelectBox = new FullTextHeader();
 
         /// <summary>
         /// A list of filters available for the owning column stored as 
@@ -31,10 +31,10 @@ namespace DataGridViewAutoFilter
         private System.Collections.Specialized.OrderedDictionary filters =
             new System.Collections.Specialized.OrderedDictionary();
 
-        /// <summary>
-        /// The drop-down list filter value currently in effect for the owning column. 
-        /// </summary>
-        private List<string> selectedFilterValue = new List<string>();
+        ///// <summary>
+        ///// The drop-down list filter value currently in effect for the owning column. 
+        ///// </summary>
+        //private List<string> selectedFilterValue = new List<string>();
 
         /// <summary>
         /// The complete filter string currently in effect for the owning column. 
@@ -46,7 +46,17 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private Boolean filtered;
 
-        List<String> m_FilterValues = new List<string>();
+        internal enum ConstraintValues
+        {
+            cv_filter_off = 0,
+            cv_equals = 1,
+            cv_contains = 2,
+            cv_starts_with = 3,
+            cv_ends_with = 4
+        }
+
+        String m_FilterText                 = "";
+        ConstraintValues m_ConstraintIndex  = ConstraintValues.cv_filter_off;
 
         /// <summary>
         /// Initializes a new instance of the DataGridViewColumnHeaderCell 
@@ -54,7 +64,7 @@ namespace DataGridViewAutoFilter
         /// specified DataGridViewColumnHeaderCell.
         /// </summary>
         /// <param name="oldHeaderCell">The DataGridViewColumnHeaderCell to copy property values from.</param>
-        public DataGridViewAutoFilterMultiColumnHeaderCell(DataGridViewColumnHeaderCell oldHeaderCell)
+        public DataGridViewAutoFilterFullColumnHeaderCell(DataGridViewColumnHeaderCell oldHeaderCell)
         {
             this.ContextMenuStrip = oldHeaderCell.ContextMenuStrip;
             this.ErrorText = oldHeaderCell.ErrorText;
@@ -72,8 +82,8 @@ namespace DataGridViewAutoFilter
 
             // Copy this type's properties if the old cell is an auto-filter cell. 
             // This enables the Clone method to reuse this constructor. 
-            DataGridViewAutoFilterMultiColumnHeaderCell filterCell =
-                oldHeaderCell as DataGridViewAutoFilterMultiColumnHeaderCell;
+            DataGridViewAutoFilterFullColumnHeaderCell filterCell =
+                oldHeaderCell as DataGridViewAutoFilterFullColumnHeaderCell;
             if (filterCell != null)
             {
                 this.FilteringEnabled = filterCell.FilteringEnabled;
@@ -88,17 +98,17 @@ namespace DataGridViewAutoFilter
         /// Initializes a new instance of the DataGridViewColumnHeaderCell 
         /// class. 
         /// </summary>
-        public DataGridViewAutoFilterMultiColumnHeaderCell()
+        public DataGridViewAutoFilterFullColumnHeaderCell()
         {
         }
 
         /// <summary>
         /// Creates an exact copy of this cell.
         /// </summary>
-        /// <returns>An object that represents the cloned DataGridViewAutoFilterMultiColumnHeaderCell.</returns>
+        /// <returns>An object that represents the cloned DataGridViewAutoFilterFullColumnHeaderCell.</returns>
         public override object Clone()
         {
-            return new DataGridViewAutoFilterMultiColumnHeaderCell(this);
+            return new DataGridViewAutoFilterFullColumnHeaderCell(this);
         }
 
         /// <summary>
@@ -291,9 +301,9 @@ namespace DataGridViewAutoFilter
         private void ResetDropDown()
         {
             InvalidateDropDownButtonBounds();
-            if (dropDownListBoxShowing)
+            if (filterControlShowing)
             {
-                HideDropDownList();
+                HideFilterControl();
             }
         }
 
@@ -307,7 +317,9 @@ namespace DataGridViewAutoFilter
             if (source == null || String.IsNullOrEmpty(source.Filter))
             {
                 filtered = false;
-                selectedFilterValue.Clear();
+                m_ConstraintIndex = ConstraintValues.cv_filter_off;
+                m_FilterText      = "";
+                //selectedFilterValue.Clear();
                 //currentColumnFilter.Clear();
             }
         }
@@ -324,7 +336,7 @@ namespace DataGridViewAutoFilter
             {
                 throw new InvalidOperationException(
                     "A SortMode value of Automatic is incompatible with " +
-                    "the DataGridViewAutoFilterMultiColumnHeaderCell type. " +
+                    "the DataGridViewAutoFilterFullColumnHeaderCell type. " +
                     "Use the AutomaticSortingEnabled property instead.");
             }
         }
@@ -380,7 +392,7 @@ namespace DataGridViewAutoFilter
             {
                 ComboBoxState state = ComboBoxState.Normal;
 
-                if (dropDownListBoxShowing)
+                if (filterControlShowing)
                 {
                     state = ComboBoxState.Pressed;
                 }
@@ -390,6 +402,8 @@ namespace DataGridViewAutoFilter
                 }
                 ComboBoxRenderer.DrawDropDownButton(
                     graphics, buttonBounds, state);
+
+                Debug.Print("repaint as " + state.ToString());
             }
             else
             {
@@ -397,7 +411,7 @@ namespace DataGridViewAutoFilter
                 // correctly and to offset the down arrow. 
                 Int32 pressedOffset = 0;
                 PushButtonState state = PushButtonState.Normal;
-                if (dropDownListBoxShowing)
+                if (filterControlShowing)
                 {
                     state = PushButtonState.Pressed;
                     pressedOffset = 1;
@@ -562,7 +576,7 @@ namespace DataGridViewAutoFilter
         /// Indicates whether dropDownListBox.FilterListBox is currently displayed 
         /// for this header cell. 
         /// </summary>
-        private bool dropDownListBoxShowing;
+        private bool filterControlShowing;
 
         /// <summary>
         /// Displays the drop-down filter list. 
@@ -571,10 +585,21 @@ namespace DataGridViewAutoFilter
         {
             try
             {
-                if(dropDownListBoxShowing)
+                if(filterControlShowing)
                 {
-                    HideDropDownList();
+                    HideFilterControl();
                     return;
+                }
+
+                // Cast the data source to a BindingSource. 
+                BindingSource data = this.DataGridView.DataSource as BindingSource;
+
+                Debug.Assert((data != null && data.SupportsFiltering && OwningColumn != null) || (Retriever != null),
+                    "DataSource is not a BindingSource, or does not support filtering, or OwningColumn is null");
+
+                if (data != null)
+                {
+                    throw new NotImplementedException();
                 }
 
                 Debug.Assert(this.DataGridView != null, "DataGridView is null");
@@ -591,19 +616,13 @@ namespace DataGridViewAutoFilter
                 // Populate the filters dictionary, then copy the filter values 
                 // from the filters.Keys collection into the ListBox.Items collection, 
                 // selecting the current filter if there is one in effect. 
-                PopulateFilters();
+                //PopulateFilters();
 
-                String[] filterArray = new String[filters.Count];
-                filters.Keys.CopyTo(filterArray, 0);
+                //String[] filterArray = new String[filters.Count];
+                //filters.Keys.CopyTo(filterArray, 0);
 
-                if(selectedFilterValue.Count == 0)
-                    selectedFilterValue.AddRange(filterArray);
-
-                multiSelectBox = new MultiSelectHeaderList();
-                multiSelectBox.FilterListBox.Items.Clear();
-                multiSelectBox.FilterListBox.Items.AddRange(filterArray);
-                multiSelectBox.SelectedValues = selectedFilterValue;
-                multiSelectBox.Parent = this.DataGridView;
+                //if(selectedFilterValue.Count == 0)
+                //    selectedFilterValue.AddRange(filterArray);
 
                 // Add handlers to dropDownListBox.FilterListBox events. 
                 HandleDropDownListBoxEvents();
@@ -611,12 +630,13 @@ namespace DataGridViewAutoFilter
                 // Set the size and location of dropDownListBox.FilterListBox, then display it. 
                 SetDropDownListBoxBounds();
 
-                //multiSelectBox.Visible = true;
-                //multiSelectBox.Show();
-                dropDownListBoxShowing = true;
+                textSelectBox.Parent = this.DataGridView;
+
+                textSelectBox.Visible = true;
+                filterControlShowing = true;
 
                 // Set the input focus to dropDownListBox.FilterListBox. 
-                multiSelectBox.FilterListBox.Focus();
+                textSelectBox.cmbConstraint.Focus();
          
                 // Invalidate the cell so that the drop-down button will repaint
                 // in the pressed state. 
@@ -631,7 +651,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Hides the drop-down filter list. 
         /// </summary>
-        public void HideDropDownList()
+        public void HideFilterControl()
         {
             Debug.Assert(this.DataGridView != null, "DataGridView is null");
 
@@ -639,10 +659,8 @@ namespace DataGridViewAutoFilter
             // it from the DataGridView control. 
             UnhandleDropDownListBoxEvents();
 
-            dropDownListBoxShowing = false;
-            multiSelectBox.Visible = false;
-            multiSelectBox.Dispose();
-            multiSelectBox = null;
+            filterControlShowing = false;
+            textSelectBox.Visible = false;
 
             //this.DataGridView.Controls.Remove(multiSelectBox);
 
@@ -658,54 +676,54 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private void SetDropDownListBoxBounds()
         {
-            Debug.Assert(filters.Count > 0, "filters.Count <= 0");
+            //Debug.Assert(filters.Count > 0, "filters.Count <= 0");
 
             // Declare variables that will be used in the calculation, 
             // initializing dropDownListBoxHeight to account for the 
             // ListBox borders.
-            Int32 dropDownListBoxHeight = 2;
-            Int32 currentWidth = 0;
-            Int32 dropDownListBoxWidth = 0;
+            Int32 dropDownListBoxHeight = textSelectBox.Height;
+            //Int32 currentWidth = textSelectBox.Width;
+            Int32 dropDownListBoxWidth = textSelectBox.Width;
             Int32 dropDownListBoxLeft = 0;
 
-            // For each formatted value in the filters dictionary Keys collection,
-            // add its height to dropDownListBoxHeight and, if it is wider than 
-            // all previous values, set dropDownListBoxWidth to its width.
-            using (Graphics graphics = multiSelectBox.FilterListBox.CreateGraphics())
-            {
-                foreach (String filter in filters.Keys)
-                {
-                    SizeF stringSizeF = graphics.MeasureString(
-                        filter, multiSelectBox.FilterListBox.Font);
-                    dropDownListBoxHeight += (Int32)stringSizeF.Height;
-                    currentWidth = (Int32)stringSizeF.Width;
-                    if (dropDownListBoxWidth < currentWidth)
-                    {
-                        dropDownListBoxWidth = currentWidth;
-                    }
-                }
-                dropDownListBoxWidth += (Int32)(CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.CheckedNormal).Width * 2.0);
-            }
+            //// For each formatted value in the filters dictionary Keys collection,
+            //// add its height to dropDownListBoxHeight and, if it is wider than 
+            //// all previous values, set dropDownListBoxWidth to its width.
+            //using (Graphics graphics = textSelectBox.FilterListBox.CreateGraphics())
+            //{
+            //    foreach (String filter in filters.Keys)
+            //    {
+            //        SizeF stringSizeF = graphics.MeasureString(
+            //            filter, textSelectBox.FilterListBox.Font);
+            //        dropDownListBoxHeight += (Int32)stringSizeF.Height;
+            //        currentWidth = (Int32)stringSizeF.Width;
+            //        if (dropDownListBoxWidth < currentWidth)
+            //        {
+            //            dropDownListBoxWidth = currentWidth;
+            //        }
+            //    }
+            //    dropDownListBoxWidth += (Int32)(CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.CheckedNormal).Width * 2.0);
+            //}
 
-            // Increase the width to allow for horizontal margins and borders. 
-            dropDownListBoxWidth += 6;
+            //// Increase the width to allow for horizontal margins and borders. 
+            //dropDownListBoxWidth += 6;
 
-            // Increase the width and height to take care of the width/height difference between CheckedListBox and UserControl 
-            dropDownListBoxWidth += 6;
-            dropDownListBoxHeight += 56;
+            //// Increase the width and height to take care of the width/height difference between CheckedListBox and UserControl 
+            //dropDownListBoxWidth += 6;
+            //dropDownListBoxHeight += 56;
  
-            // Constrain the dropDownListBox.FilterListBox height to the 
-            // DropDownListBoxMaxHeightInternal value, which is based on 
-            // the DropDownListBoxMaxLines property value but constrained by
-            // the maximum height available in the DataGridView control.
-            if (dropDownListBoxHeight > DropDownListBoxMaxHeightInternal)
-            {
-                dropDownListBoxHeight = DropDownListBoxMaxHeightInternal;
+            //// Constrain the dropDownListBox.FilterListBox height to the 
+            //// DropDownListBoxMaxHeightInternal value, which is based on 
+            //// the DropDownListBoxMaxLines property value but constrained by
+            //// the maximum height available in the DataGridView control.
+            //if (dropDownListBoxHeight > DropDownListBoxMaxHeightInternal)
+            //{
+            //    dropDownListBoxHeight = DropDownListBoxMaxHeightInternal;
 
-                // If the preferred height is greater than the available height,
-                // adjust the width to accommodate the vertical scroll bar. 
-                dropDownListBoxWidth += SystemInformation.VerticalScrollBarWidth;
-            }
+            //    // If the preferred height is greater than the available height,
+            //    // adjust the width to accommodate the vertical scroll bar. 
+            //    dropDownListBoxWidth += SystemInformation.VerticalScrollBarWidth;
+            //}
 
             // Calculate the ideal location of the left edge of dropDownListBox.FilterListBox 
             // based on the location of the drop-down button and taking the 
@@ -724,18 +742,6 @@ namespace DataGridViewAutoFilter
             // width of the DataGridView control. 
             Int32 clientLeft = 1;
             Int32 clientRight = this.DataGridView.ClientRectangle.Right;
-            if (this.DataGridView.DisplayedRowCount(false) < 
-                this.DataGridView.RowCount)
-            {
-                if (this.DataGridView.RightToLeft == RightToLeft.Yes)
-                {
-                    clientLeft += SystemInformation.VerticalScrollBarWidth;
-                }
-                else
-                {
-                    clientRight -= SystemInformation.VerticalScrollBarWidth;
-                }
-            }
 
             // Adjust the dropDownListBox.FilterListBox location and/or width if it would
             // otherwise overlap the left or right edge of the DataGridView.
@@ -765,7 +771,7 @@ namespace DataGridViewAutoFilter
             }
 
             // Set the ListBox.Bounds property using the calculated values. 
-            multiSelectBox.Bounds = new Rectangle(dropDownListBoxLeft,
+            textSelectBox.Bounds = new Rectangle(dropDownListBoxLeft,
                 DropDownButtonBounds.Bottom, // top of drop-down list box
                 dropDownListBoxWidth, dropDownListBoxHeight);
         }
@@ -776,38 +782,38 @@ namespace DataGridViewAutoFilter
         /// property value, but is limited to the available height of the 
         /// DataGridView control. 
         /// </summary>
-        protected Int32 DropDownListBoxMaxHeightInternal
-        {
-            get
-            {
-                // Calculate the height of the available client area
-                // in the DataGridView control, taking the horizontal
-                // scroll bar into consideration and leaving room
-                // for the ListBox bottom border. 
-                Int32 dataGridViewMaxHeight = this.DataGridView.Height -
-                    this.DataGridView.ColumnHeadersHeight - 1;
-                if (this.DataGridView.DisplayedColumnCount(false) <
-                    this.DataGridView.ColumnCount)
-                {
-                    dataGridViewMaxHeight -=
-                        SystemInformation.HorizontalScrollBarHeight;
-                }
+        //protected Int32 DropDownListBoxMaxHeightInternal
+        //{
+        //    get
+        //    {
+        //        // Calculate the height of the available client area
+        //        // in the DataGridView control, taking the horizontal
+        //        // scroll bar into consideration and leaving room
+        //        // for the ListBox bottom border. 
+        //        Int32 dataGridViewMaxHeight = this.DataGridView.Height -
+        //            this.DataGridView.ColumnHeadersHeight - 1;
+        //        if (this.DataGridView.DisplayedColumnCount(false) <
+        //            this.DataGridView.ColumnCount)
+        //        {
+        //            dataGridViewMaxHeight -=
+        //                SystemInformation.HorizontalScrollBarHeight;
+        //        }
 
-                // Calculate the height of the list box, using the combined 
-                // height of all items plus 2 for the top and bottom border. 
-                Int32 listMaxHeight = dropDownListBoxMaxLinesValue * multiSelectBox.FilterListBox.ItemHeight + 2;
+        //        // Calculate the height of the list box, using the combined 
+        //        // height of all items plus 2 for the top and bottom border. 
+        //        //Int32 listMaxHeight = dropDownListBoxMaxLinesValue * textSelectBox.FilterListBox.ItemHeight + 2;
 
-                // Return the smaller of the two values. 
-                if (listMaxHeight < dataGridViewMaxHeight)
-                {
-                    return listMaxHeight;
-                }
-                else
-                {
-                    return dataGridViewMaxHeight;
-                }
-            }
-        }
+        //        // Return the smaller of the two values. 
+        //        if (listMaxHeight < dataGridViewMaxHeight)
+        //        {
+        //            return listMaxHeight;
+        //        }
+        //        else
+        //        {
+        //            return dataGridViewMaxHeight;
+        //        }
+        //    }
+        //}
 
         #endregion drop-down list
 
@@ -820,9 +826,10 @@ namespace DataGridViewAutoFilter
         private void HandleDropDownListBoxEvents()
         {
             //dropDownListBox.FilterListBox.MouseClick += new MouseEventHandler(DropDownListBox_MouseClick);
-            multiSelectBox.LostFocus += new EventHandler(DropDownListBox_LostFocus);
-            multiSelectBox.KeyDown += new KeyEventHandler(DropDownListBox_KeyDown);
-            multiSelectBox.cmdOk.Click += CmdOk_Click;
+            textSelectBox.LostFocus += new EventHandler(DropDownListBox_LostFocus);
+            textSelectBox.KeyDown += new KeyEventHandler(DropDownListBox_KeyDown);
+            textSelectBox.cmdOk.Click += CmdOk_Click;
+            
         }
 
 
@@ -832,17 +839,22 @@ namespace DataGridViewAutoFilter
         private void UnhandleDropDownListBoxEvents()
         {
             //dropDownListBox.FilterListBox.MouseClick -= new MouseEventHandler(DropDownListBox_MouseClick);
-            multiSelectBox.LostFocus -= new EventHandler(DropDownListBox_LostFocus);
-            multiSelectBox.KeyDown -= new KeyEventHandler(DropDownListBox_KeyDown);
-            multiSelectBox.cmdOk.Click -= CmdOk_Click;
+            textSelectBox.LostFocus -= new EventHandler(DropDownListBox_LostFocus);
+            textSelectBox.KeyDown -= new KeyEventHandler(DropDownListBox_KeyDown);
+            textSelectBox.cmdOk.Click -= CmdOk_Click;
         }
 
         private void CmdOk_Click(object sender, EventArgs e)
         {
             try
             {
+                if(textSelectBox.cmbConstraint.SelectedIndex == (Int32)ConstraintValues.cv_filter_off)
+                {
+                    textSelectBox.txtFilterText.Text = "";
+                }
+
                 UpdateFilter();
-                HideDropDownList();
+                HideFilterControl();
 
                 RefreshDGV(0);
             }
@@ -932,7 +944,7 @@ namespace DataGridViewAutoFilter
             {
                 lostFocusOnDropDownButtonClick = true;
             }
-            HideDropDownList();
+            HideFilterControl();
         }
 
         /// <summary>
@@ -946,10 +958,10 @@ namespace DataGridViewAutoFilter
             {
                 case Keys.Enter:
                     UpdateFilter();
-                    HideDropDownList();
+                    HideFilterControl();
                     break;
                 case Keys.Escape:
-                    HideDropDownList();
+                    HideFilterControl();
                     break;
             }
         }
@@ -991,6 +1003,8 @@ namespace DataGridViewAutoFilter
 
             if (data != null)
             {
+                throw new NotImplementedException();
+
                 // Prevent the data source from notifying the DataGridView of changes. 
                 data.RaiseListChangedEvents = false;
 
@@ -1189,13 +1203,15 @@ namespace DataGridViewAutoFilter
         private void UpdateFilter()
         {
             // Continue only if the selection has changed.
-            if( multiSelectBox.SelectedValues.ContentEquals(selectedFilterValue))
+            if((textSelectBox.cmbConstraint.SelectedIndex == (Int32)m_ConstraintIndex) && 
+               (textSelectBox.txtFilterText.Text.Equals(m_FilterText, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return;
             }
 
-            // Store the new selection value. 
-            selectedFilterValue = multiSelectBox.SelectedValues;
+            // Store the new filter value
+            m_ConstraintIndex = (ConstraintValues)textSelectBox.cmbConstraint.SelectedIndex;
+            m_FilterText =  textSelectBox.txtFilterText.Text;
 
             // Cast the data source to an IBindingListView.
             IBindingListView data = 
@@ -1206,15 +1222,16 @@ namespace DataGridViewAutoFilter
 
             if(data != null)
             {
+                throw new NotImplementedException();
                 // If the user selection is (All), remove any filter currently 
                 // in effect for the column. 
-                if(selectedFilterValue.Count == filters.Count)
-                {
-                    //data.Filter = FilterWithoutCurrentColumn(data.Filter);
-                    filtered = false;
-                    //currentColumnFilter.Clear();
-                    return;
-                }
+                //if(selectedFilterValue.Count == filters.Count)
+                //{
+                //    //data.Filter = FilterWithoutCurrentColumn(data.Filter);
+                //    filtered = false;
+                //    //currentColumnFilter.Clear();
+                //    return;
+                //}
 
                 // Declare a variable to store the filter string for this column.
                 //List<String> newColumnFilter = new List<string>();
@@ -1282,27 +1299,38 @@ namespace DataGridViewAutoFilter
             else
             {
 
-                if((selectedFilterValue.Count == filters.Count) || (selectedFilterValue.Count == 0))
-                {
-                    Retriever.SetFilter(this.OwningColumn.Name, "");
-                    selectedFilterValue.Clear();
-                    filtered = false;
-                    return;
-                }
-
                 StringBuilder filterString = new StringBuilder();
 
-                foreach (String filterValue in selectedFilterValue)
+                switch (m_ConstraintIndex)
                 {
-                    if(filterString.Length != 0)
-                        filterString.Append(" or ");
+                    case ConstraintValues.cv_filter_off:
+                        // leave the string empty
+                        filtered = false;
+                        break;
 
-                    filterString.AppendFormat("({0} = {1})",this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLAEscape(filterValue));
+                    case ConstraintValues.cv_equals:
+                        filterString.AppendFormat("({0} = {1})",this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLAEscape(m_FilterText));
+                        filtered = true;
+
+                        break;
+                    case ConstraintValues.cv_contains:
+                        filterString.AppendFormat("({0} like '%{1}%')",this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_FilterText));
+                        filtered = true;
+
+                        break;
+                    case ConstraintValues.cv_starts_with:
+                        filterString.AppendFormat("({0} like '{1}%')",this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_FilterText));
+                        filtered = true;
+
+                        break;
+                    case ConstraintValues.cv_ends_with:
+                        filterString.AppendFormat("({0} like '%{1}')",this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_FilterText));
+                        filtered = true;
+
+                        break;
                 }
-                
-                Retriever.SetFilter(this.OwningColumn.Name, filterString.ToString());
 
-                filtered = true;
+                Retriever.SetFilter(this.OwningColumn.Name, filterString.ToString());
             }
         }
 

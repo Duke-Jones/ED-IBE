@@ -47,6 +47,7 @@ namespace IBE.MTCommandersLog
             InitializeComponent();
             Dock        = DockStyle.Fill;
             this.Name   = "tabCommandersLog";
+            this.Retheme();
         }
 
         /// <summary>
@@ -115,6 +116,10 @@ namespace IBE.MTCommandersLog
                 dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
                 ((DataGridViewAutoFilterMultiColumnHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterMultiColumnHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype";
+                ((DataGridViewAutoFilterFullColumnHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterFullColumnHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).RetrieverSQLSelect = "select distinct E.systemname";
+                ((DataGridViewAutoFilterFullColumnHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterFullColumnHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).RetrieverSQLSelect = "select distinct E.stationname";
                 
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;

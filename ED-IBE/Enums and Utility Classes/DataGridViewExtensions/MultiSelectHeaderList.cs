@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using IBE.Enums_and_Utility_Classes;
 
 namespace DataGridViewAutoFilter
 {
@@ -16,6 +17,7 @@ namespace DataGridViewAutoFilter
         public MultiSelectHeaderList()
         {
             InitializeComponent();
+            ((Control)this).Retheme();
         }
 
         private void cmdInvert_Click(object sender, EventArgs e)

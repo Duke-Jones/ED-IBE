@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IBE;
+using System.Reflection;
 
 namespace IBE.Enums_and_Utility_Classes
 {
@@ -292,6 +293,154 @@ namespace IBE.Enums_and_Utility_Classes
                 }
 
                 return false;
+            }
+        }
+
+        public static bool SetControlColors(this Control controlObject, System.Drawing.Color newForeColor, System.Drawing.Color newBackColor, Boolean reset = false)
+        {
+            bool noBackColor;
+            var props = controlObject.GetType().GetProperties().Select(y => y.Name);
+
+            noBackColor = false;
+
+            controlObject.BackColor = newBackColor;
+            controlObject.ForeColor = newForeColor;
+
+            if (props.Contains("FlatStyle"))
+            {
+                var prop = controlObject.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                if(reset)
+                    prop.SetValue(controlObject, FlatStyle.Standard);
+                else
+                    prop.SetValue(controlObject, FlatStyle.Flat);
+            }
+
+            if (props.Contains("FlatStyle"))
+            {
+                var prop = controlObject.GetType().GetProperty("FlatStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                prop.SetValue(controlObject, FlatStyle.Flat);
+            }
+            if (props.Contains("BorderStyle") && controlObject.GetType() != typeof(Label))
+            {
+                var prop = controlObject.GetType().GetProperty("BorderStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                prop.SetValue(controlObject, BorderStyle.FixedSingle);
+            }
+            if (props.Contains("LinkColor"))
+            {
+                var prop = controlObject.GetType().GetProperty("LinkColor", BindingFlags.Public | BindingFlags.Instance);
+
+                prop.SetValue(controlObject, newForeColor);
+            }
+            if (props.Contains("BackColor_ro"))
+            {
+                var prop = controlObject.GetType().GetProperty("BackColor_ro", BindingFlags.Public | BindingFlags.Instance);
+                prop.SetValue(controlObject, newBackColor);
+            }
+            if (props.Contains("ForeColor_ro"))
+            {
+                var prop = controlObject.GetType().GetProperty("ForeColor_ro", BindingFlags.Public | BindingFlags.Instance);
+                prop.SetValue(controlObject, newForeColor);
+            }
+            if (props.Contains("BackgroundColor"))
+            {
+                var prop = controlObject.GetType().GetProperty("BackgroundColor", BindingFlags.Public | BindingFlags.Instance);
+                prop.SetValue(controlObject, newBackColor);
+            }
+            if (props.Contains("GridColor"))
+            {
+                var prop = controlObject.GetType().GetProperty("GridColor", BindingFlags.Public | BindingFlags.Instance);
+                prop.SetValue(controlObject, newForeColor);
+            }
+            if (props.Contains("DefaultCellStyle"))
+            {
+                // DataGridView
+                var prop = controlObject.GetType().GetProperty("DefaultCellStyle", BindingFlags.Public | BindingFlags.Instance);
+
+                var propsCellStyle = prop.GetType().GetProperties().Select(y => y.Name);
+
+                if (propsCellStyle.Contains("BackColor"))
+                {
+                    var prop2 = propsCellStyle.GetType().GetProperty("BackColor", BindingFlags.Public | BindingFlags.Instance);
+                    prop2.SetValue(controlObject, newBackColor);
+                }
+                if (propsCellStyle.Contains("ForeColor"))
+                {
+                    var prop2 = propsCellStyle.GetType().GetProperty("ForeColor", BindingFlags.Public | BindingFlags.Instance);
+                    prop2.SetValue(controlObject, newForeColor);
+                }
+            }
+            if (props.Contains("Columns") && controlObject.GetType() == typeof(DataGridViewExt))
+            {
+
+                DataGridViewExt dgv = (DataGridViewExt)controlObject;
+
+                dgv.EnableHeadersVisualStyles = false;
+
+                dgv.RowHeadersDefaultCellStyle.BackColor = newForeColor;
+                dgv.RowHeadersDefaultCellStyle.ForeColor = newBackColor;
+
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = newForeColor;
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor = newBackColor;
+
+
+                // DataGridView
+                var prop = controlObject.GetType().GetProperty("Columns", BindingFlags.Public | BindingFlags.Instance);
+
+                var propValues = (DataGridViewColumnCollection)prop.GetValue(controlObject, null);
+
+                foreach (DataGridViewColumn propValue in propValues)
+                {
+                    propValue.DefaultCellStyle.ForeColor = newForeColor;
+                    propValue.DefaultCellStyle.BackColor = newBackColor;
+                    propValue.HeaderCell.Style.BackColor = newForeColor;
+                    propValue.HeaderCell.Style.ForeColor = newBackColor;
+                }
+            }
+            return noBackColor;
+        }
+
+        // Recurse controls on form
+        public static IEnumerable<Control> GetAllControls(this Control control)
+        {
+            var controls = control.Controls.Cast<Control>();
+
+            return controls.SelectMany(ctrl => GetAllControls(ctrl))
+                                      .Concat(controls);
+        }
+
+        public static void Retheme(this Control controlObject)
+        {
+            bool noBackColor = false;
+
+            Dictionary<String, Boolean> ignoreList = new Dictionary<string, bool>() {{"lblDonate", false},
+                                                                                     {"lbEDDNInfo", false}};
+
+            try
+            {
+                if (!Program.Colors.UseColors) return;
+
+                var x = controlObject.GetAllControls();
+
+                var f = Program.Colors.GetColor(GUIColors.ColorNames.Default_ForeColor);
+                var b = Program.Colors.GetColor(GUIColors.ColorNames.Default_BackColor);
+
+                foreach (Control c in x)
+                {
+                    if (!ignoreList.ContainsKey(c.Name))
+                    {
+                        noBackColor = c.SetControlColors(f, b);
+                    }
+                }
+
+                //if(!noBackColor)
+                controlObject.BackColor = b;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in retheming-function", ex);
             }
         }
     }

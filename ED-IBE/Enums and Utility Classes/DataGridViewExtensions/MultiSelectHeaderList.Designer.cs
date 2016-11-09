@@ -43,15 +43,15 @@
             this.FilterListBox.FormattingEnabled = true;
             this.FilterListBox.Location = new System.Drawing.Point(3, 3);
             this.FilterListBox.Name = "FilterListBox";
-            this.FilterListBox.Size = new System.Drawing.Size(144, 124);
+            this.FilterListBox.Size = new System.Drawing.Size(142, 109);
             this.FilterListBox.TabIndex = 0;
             // 
             // cmdOk
             // 
             this.cmdOk.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdOk.Location = new System.Drawing.Point(101, 128);
+            this.cmdOk.Location = new System.Drawing.Point(102, 112);
             this.cmdOk.Name = "cmdOk";
-            this.cmdOk.Size = new System.Drawing.Size(46, 20);
+            this.cmdOk.Size = new System.Drawing.Size(42, 22);
             this.cmdOk.TabIndex = 1;
             this.cmdOk.Text = "Ok";
             this.cmdOk.UseVisualStyleBackColor = true;
@@ -59,10 +59,10 @@
             // cmdInvert
             // 
             this.cmdInvert.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdInvert.Location = new System.Drawing.Point(3, 128);
+            this.cmdInvert.Location = new System.Drawing.Point(4, 112);
             this.cmdInvert.Name = "cmdInvert";
-            this.cmdInvert.Size = new System.Drawing.Size(46, 20);
-            this.cmdInvert.TabIndex = 2;
+            this.cmdInvert.Size = new System.Drawing.Size(42, 22);
+            this.cmdInvert.TabIndex = 3;
             this.cmdInvert.Text = "Invert";
             this.cmdInvert.UseVisualStyleBackColor = true;
             this.cmdInvert.Click += new System.EventHandler(this.cmdInvert_Click);
@@ -70,10 +70,10 @@
             // cmdAll
             // 
             this.cmdAll.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdAll.Location = new System.Drawing.Point(52, 128);
+            this.cmdAll.Location = new System.Drawing.Point(53, 112);
             this.cmdAll.Name = "cmdAll";
-            this.cmdAll.Size = new System.Drawing.Size(46, 20);
-            this.cmdAll.TabIndex = 3;
+            this.cmdAll.Size = new System.Drawing.Size(42, 22);
+            this.cmdAll.TabIndex = 2;
             this.cmdAll.Text = "All";
             this.cmdAll.UseVisualStyleBackColor = true;
             this.cmdAll.Click += new System.EventHandler(this.cmdAll_Click);
@@ -82,11 +82,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.cmdAll);
             this.Controls.Add(this.cmdInvert);
             this.Controls.Add(this.cmdOk);
             this.Controls.Add(this.FilterListBox);
             this.Name = "MultiSelectHeaderList";
+            this.Size = new System.Drawing.Size(148, 139);
             this.ResumeLayout(false);
 
         }

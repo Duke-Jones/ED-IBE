@@ -22,11 +22,14 @@ todo:
 
 done:
 
-  * column event can be filtered by multiple values
+  * reorganized re-theme functions for better access
+  * added a fulltext filter to the system and station columns (Cmdr's Log)
 -------------------------------------------------------------------------------------         
-  * column event can be filtered (single value)
+  * column event can be filtered by multiple values (Cmdr's Log)
 -------------------------------------------------------------------------------------         
-  * add autofilter objects for DataGridView
+  * column event can be filtered (single value) (Cmdr's Log)
+-------------------------------------------------------------------------------------         
+  * add autofilter objects for DataGridView 
 -------------------------------------------------------------------------------------         
   * corrected name of rings when showing scan data in Cmdr's Log
   * class GameSettings got it's own DBConnector

@@ -54,6 +54,7 @@ namespace IBE.MTPriceAnalysis
             Dock            = DockStyle.Fill;
             this.Name       = "tabPriceAnalysis";
             m_ActiveCounter = 0;
+            this.Retheme();
         }
 
         /// <summary>

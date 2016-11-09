@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.Caching;
+using IBE.Enums_and_Utility_Classes;
 
 namespace IBE
 {
@@ -210,7 +211,7 @@ namespace IBE
         {
             try
             {
-                IBE.Enums_and_Utility_Classes.RNBaseForm.SetControlColors(guiObject, foreColor, backColor, guiReset);
+                guiObject.SetControlColors(foreColor, backColor, guiReset);
 
                 if(recursive)
                 {

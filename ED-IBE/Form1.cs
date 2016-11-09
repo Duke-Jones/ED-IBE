@@ -266,8 +266,6 @@ namespace IBE
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabSystemData"]);
                 tabCtrlMain.TabPages.Remove(tabCtrlMain.TabPages["tabWebserver"]);
 
-                Retheme();
-
                 Cursor = Cursors.Default;
                 _InitDone = true;
 
@@ -3860,7 +3858,7 @@ namespace IBE
 
                 if(ToolForm.DialogResult == System.Windows.Forms.DialogResult.OK)
                 {
-                    Retheme();
+                    this.Retheme();
                 }
                 
             }
