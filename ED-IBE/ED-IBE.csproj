@@ -155,11 +155,10 @@
     </Compile>
     <Compile Include="EDSM\ServerStatus.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterFullColumnHeaderCell.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterMultiColumnHeaderCell.cs" />
-    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterFullTextBoxColumn.cs" />
-    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterMultiTextBoxColumn.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterSingleColumnHeaderCell.cs" />
-    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterSingleTextBoxColumn.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\FullTextHeader.cs">
       <SubType>UserControl</SubType>
     </Compile>

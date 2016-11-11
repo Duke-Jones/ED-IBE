@@ -6,19 +6,64 @@ using System.ComponentModel;
 
 namespace DataGridViewAutoFilter
 {
+    class DataGridViewAutoFilterSingleTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    {
+        /// <summary>
+        /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
+        /// </summary>
+        public DataGridViewAutoFilterSingleTextBoxColumn() : base(ColumnFilterTypes.SingleSelect)
+        {
+
+        }
+    }
+
+    class DataGridViewAutoFilterMultiTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    {
+        /// <summary>
+        /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
+        /// </summary>
+        public DataGridViewAutoFilterMultiTextBoxColumn() : base(ColumnFilterTypes.MultiSelect)
+        {
+
+        }
+    }
+
+    class DataGridViewAutoFilterFullTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    {
+        /// <summary>
+        /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
+        /// </summary>
+        public DataGridViewAutoFilterFullTextBoxColumn() : base(ColumnFilterTypes.FullText)
+        {
+
+        }
+    }
+
     /// <summary>
     /// Represents a DataGridViewTextBoxColumn with a drop-down filter list accessible from the header cell.  
     /// </summary>
-    public class DataGridViewAutoFilterSingleTextBoxColumn : DataGridViewTextBoxColumn
+    public class DataGridViewAutoFilterTextBoxColumn : DataGridViewTextBoxColumn
     {
-        public int MyProperty { get; set; }
-
         /// <summary>
         /// Initializes a new instance of the DataGridViewAutoFilterTextBoxColumn class.
         /// </summary>
-        public DataGridViewAutoFilterSingleTextBoxColumn() : base()
+        public DataGridViewAutoFilterTextBoxColumn(ColumnFilterTypes filterType) : base()
         {
-            base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterSingleColumnHeaderCell);
+            m_ColumnFilterType = filterType;
+
+            switch (ColumnFilterType)
+            {
+                case ColumnFilterTypes.SingleSelect:
+                    base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterSingleColumnHeaderCell);        
+                    break;
+                case ColumnFilterTypes.MultiSelect:
+                    base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterMultiColumnHeaderCell);
+                    break;
+                case ColumnFilterTypes.FullText:
+                    base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterFullColumnHeaderCell);
+                    break;
+            }
+            
             base.SortMode = DataGridViewColumnSortMode.Programmatic;
         }
 
@@ -36,7 +81,7 @@ namespace DataGridViewAutoFilter
         {
             get
             {
-                return typeof(DataGridViewAutoFilterSingleColumnHeaderCell);
+                return typeof(DataGridViewAutoFilterHeaderCell);
             }
         }
 
@@ -84,13 +129,13 @@ namespace DataGridViewAutoFilter
             get
             {
                 // Return the header-cell value.
-                return ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
+                return ((DataGridViewAutoFilterHeaderCell)HeaderCell)
                     .FilteringEnabled;
             }
             set
             {
                 // Set the header-cell property. 
-                ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
+                ((DataGridViewAutoFilterHeaderCell)HeaderCell)
                     .FilteringEnabled = value;
             }
         }
@@ -104,14 +149,31 @@ namespace DataGridViewAutoFilter
             get
             {
                 // Return the header-cell value.
-                return ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
+                return ((DataGridViewAutoFilterHeaderCell)HeaderCell)
                     .AutomaticSortingEnabled;
             }
             set
             {
                 // Set the header-cell property.
-                ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
+                ((DataGridViewAutoFilterHeaderCell)HeaderCell)
                     .AutomaticSortingEnabled = value;
+            }
+        }
+
+        public enum ColumnFilterTypes
+        {
+            SingleSelect,
+            MultiSelect,
+            FullText
+        }
+
+        ColumnFilterTypes m_ColumnFilterType;
+
+        public ColumnFilterTypes ColumnFilterType
+        {
+            get
+            {
+                return m_ColumnFilterType;
             }
         }
 
@@ -124,13 +186,13 @@ namespace DataGridViewAutoFilter
             get
             {
                 // Return the header-cell value.
-                return ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
+                return ((DataGridViewAutoFilterHeaderCell)HeaderCell)
                     .DropDownListBoxMaxLines;
             }
             set
             {
                 // Set the header-cell property.
-                ((DataGridViewAutoFilterSingleColumnHeaderCell)HeaderCell)
+                ((DataGridViewAutoFilterHeaderCell)HeaderCell)
                     .DropDownListBoxMaxLines = value;
             }
         }
@@ -139,29 +201,29 @@ namespace DataGridViewAutoFilter
 
         #region public, static, convenience methods: RemoveFilter and GetFilterStatus
 
-        /// <summary>
-        /// Removes the filter from the BindingSource bound to the specified DataGridView. 
-        /// </summary>
-        /// <param name="dataGridView">The DataGridView bound to the BindingSource to unfilter.</param>
-        public static void RemoveFilter(DataGridView dataGridView)
-        {
-            DataGridViewAutoFilterSingleColumnHeaderCell.RemoveFilter(dataGridView);
-        }
+        ///// <summary>
+        ///// Removes the filter from the BindingSource bound to the specified DataGridView. 
+        ///// </summary>
+        ///// <param name="dataGridView">The DataGridView bound to the BindingSource to unfilter.</param>
+        //public static void RemoveFilter(DataGridView dataGridView)
+        //{
+        //    DataGridViewAutoFilterHeaderCell.RemoveFilter(dataGridView);
+        //}
 
-        /// <summary>
-        /// Gets a status string for the specified DataGridView indicating the 
-        /// number of visible rows in the bound, filtered BindingSource, or 
-        /// String.Empty if all rows are currently visible. 
-        /// </summary>
-        /// <param name="dataGridView">The DataGridView bound to the 
-        /// BindingSource to return the filter status for.</param>
-        /// <returns>A string in the format "x of y records found" where x is 
-        /// the number of rows currently displayed and y is the number of rows 
-        /// available, or String.Empty if all rows are currently displayed.</returns>
-        public static String GetFilterStatus(DataGridView dataGridView)
-        {
-            return DataGridViewAutoFilterSingleColumnHeaderCell.GetFilterStatus(dataGridView);
-        }
+        ///// <summary>
+        ///// Gets a status string for the specified DataGridView indicating the 
+        ///// number of visible rows in the bound, filtered BindingSource, or 
+        ///// String.Empty if all rows are currently visible. 
+        ///// </summary>
+        ///// <param name="dataGridView">The DataGridView bound to the 
+        ///// BindingSource to return the filter status for.</param>
+        ///// <returns>A string in the format "x of y records found" where x is 
+        ///// the number of rows currently displayed and y is the number of rows 
+        ///// available, or String.Empty if all rows are currently displayed.</returns>
+        //public static String GetFilterStatus(DataGridView dataGridView)
+        //{
+        //    return DataGridViewAutoFilterHeaderCell.GetFilterStatus(dataGridView);
+        //}
 
         #endregion
     }

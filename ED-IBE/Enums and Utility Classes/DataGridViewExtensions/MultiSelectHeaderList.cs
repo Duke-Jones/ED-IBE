@@ -17,7 +17,8 @@ namespace DataGridViewAutoFilter
         public MultiSelectHeaderList()
         {
             InitializeComponent();
-            ((Control)this).Retheme();
+            if (!((Control)this).IsDesignMode())
+                ((Control)this).Retheme();
         }
 
         private void cmdInvert_Click(object sender, EventArgs e)

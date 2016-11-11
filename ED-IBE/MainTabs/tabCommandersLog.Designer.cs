@@ -599,7 +599,6 @@
             this.systemname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.systemname.DataPropertyName = "systemname";
             this.systemname.HeaderText = "System";
-            this.systemname.MyProperty = 0;
             this.systemname.Name = "systemname";
             this.systemname.ReadOnly = true;
             this.systemname.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -609,7 +608,6 @@
             this.stationname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.stationname.DataPropertyName = "stationname";
             this.stationname.HeaderText = "Station";
-            this.stationname.MyProperty = 0;
             this.stationname.Name = "stationname";
             this.stationname.ReadOnly = true;
             this.stationname.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -618,7 +616,6 @@
             // 
             this.eventtype.DataPropertyName = "eventtype";
             this.eventtype.HeaderText = "Event";
-            this.eventtype.MyProperty = 0;
             this.eventtype.Name = "eventtype";
             this.eventtype.ReadOnly = true;
             this.eventtype.Resizable = System.Windows.Forms.DataGridViewTriState.True;

@@ -22,6 +22,8 @@ todo:
 
 done:
 
+  * changed structure of columnfilter objects from "flat" to "hierarchical"
+-------------------------------------------------------------------------------------         
   * reorganized re-theme functions for better access
   * added a fulltext filter to the system and station columns (Cmdr's Log)
 -------------------------------------------------------------------------------------         

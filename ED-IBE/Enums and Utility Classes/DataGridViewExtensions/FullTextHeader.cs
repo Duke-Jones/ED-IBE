@@ -18,7 +18,8 @@ namespace DataGridViewAutoFilter
         {
             InitializeComponent();
 
-            ((Control)this).Retheme();
+            if(!((Control)this).IsDesignMode())
+                ((Control)this).Retheme();
 
             cmbConstraint.SelectedIndex = 0;
             txtFilterText.Text          = "";
