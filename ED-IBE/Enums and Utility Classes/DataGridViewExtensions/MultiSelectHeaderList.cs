@@ -60,19 +60,5 @@ namespace DataGridViewAutoFilter
             }
         }
 
-        private void MultiSelectHeaderList_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            switch (e.KeyChar)
-            {
-                case (char)Keys.Return:
-                    this.cmdOk.PerformClick();
-                    e.Handled = true;
-                    break;
-                case (char)Keys.Escape:
-                    this.Close();
-                    e.Handled = true;
-                    break;
-            }
-        }
     }
 }

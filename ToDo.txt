@@ -22,6 +22,11 @@ todo:
 
 done:
 
+* on open set last settings on filter form
+
+
+  * added navigation bar on Commander's Log
+-------------------------------------------------------------------------------------         
   * bugfixing/optimization on ColumnFilter
 -------------------------------------------------------------------------------------         
   * changed structure of columnfilter objects from "flat" to "hierarchical"

@@ -52,7 +52,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "SingleSelectHeaderList";
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SingleSelectHeaderList_KeyPress);
             this.ResumeLayout(false);
 
         }

@@ -44,16 +44,5 @@ namespace DataGridViewAutoFilter
         {
             return ProcessKeyEventArgs(ref m);
         }
-
-        private void SingleSelectHeaderList_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            switch (e.KeyChar)
-            {
-                case (char)Keys.Escape:
-                    this.Close();
-                    e.Handled = true;
-                    break;
-            }
-        }
     }
 }

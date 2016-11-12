@@ -54,7 +54,6 @@
             this.cmdClear.Text = "Clear";
             this.cmdClear.UseVisualStyleBackColor = true;
             this.cmdClear.Click += new System.EventHandler(this.cmdClear_Click);
-            this.cmdClear.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Control_KeyPress);
             // 
             // cmbConstraint
             // 
@@ -70,7 +69,6 @@
             this.cmbConstraint.Name = "cmbConstraint";
             this.cmbConstraint.Size = new System.Drawing.Size(144, 21);
             this.cmbConstraint.TabIndex = 0;
-            this.cmbConstraint.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Control_KeyPress);
             // 
             // txtFilterText
             // 
@@ -78,7 +76,6 @@
             this.txtFilterText.Name = "txtFilterText";
             this.txtFilterText.Size = new System.Drawing.Size(144, 20);
             this.txtFilterText.TabIndex = 1;
-            this.txtFilterText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Control_KeyPress);
             // 
             // FullTextHeader
             // 
@@ -92,7 +89,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "FullTextHeader";
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Control_KeyPress);
             this.ResumeLayout(false);
             this.PerformLayout();
 

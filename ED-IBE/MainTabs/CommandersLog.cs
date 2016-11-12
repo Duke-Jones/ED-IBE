@@ -101,7 +101,7 @@ namespace IBE.MTCommandersLog
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlColumnString, _sqlBaseString, "time", DBConnector.SQLSortOrder.desc, new dsEliteDB.vilogDataTable());
+                retriever = new DataRetriever(Program.DBCon, table, _sqlColumnString, _sqlBaseString, "time", DBConnector.SQLSortOrder.desc, m_GUI.bindNavCmdrsLog, new dsEliteDB.vilogDataTable());
 
                 return retriever.RowCount(true);
             }

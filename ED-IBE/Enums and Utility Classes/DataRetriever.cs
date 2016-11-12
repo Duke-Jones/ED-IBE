@@ -38,6 +38,7 @@ namespace IBE.Enums_and_Utility_Classes
         private PerformanceTimer            m_Pt = new PerformanceTimer();
         private Int32                       m_rowCountCache = 0;
         internal readonly Dictionary<String, String> Filter = new Dictionary<string, string>();
+        private System.Windows.Forms.BindingNavigator m_BindingNavigator = null;
 
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace IBE.Enums_and_Utility_Classes
         /// <param name="SortByColumn">column for sorting (must be existingClassification in the base table (m_BaseTableName) and in the 'DataStement')</param>
         /// <param name="SortOrder">sort oder</param>
         /// <param name="SortOrder">optional blueprint for typed tables</param>
-        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, string columnStatement, String baseStatement, String SortByColumn, DBConnector.SQLSortOrder SortOrder, DataTable TypeTable = null)
+        public DataRetriever(SQL.DBConnector DBCon, string BaseTableName, string columnStatement, String baseStatement, String SortByColumn, DBConnector.SQLSortOrder SortOrder, System.Windows.Forms.BindingNavigator bindingNavigator, DataTable TypeTable = null)
         {
             m_Command                = ((MySqlConnection)DBCon.Connection).CreateCommand();
             m_BaseTableName          = BaseTableName;
@@ -60,6 +61,7 @@ namespace IBE.Enums_and_Utility_Classes
             m_PrimaryKey             = DBCon.getPrimaryKey(this.m_BaseTableName);
             m_TableType              = TypeTable;
             m_DBCon                  = DBCon;
+            m_BindingNavigator       = bindingNavigator;
 
             if(this.m_PrimaryKey.Count != 1)
                 throw new Exception("Length of primary key is not '1' (table '" + BaseTableName + "')");
@@ -193,6 +195,7 @@ namespace IBE.Enums_and_Utility_Classes
             if ((m_Pt.currentMeasuring() >= 60000) || (!m_Pt.isStarted) || refresh)
             {
                 // Retrieve the row count from the database.
+
                 m_Command.CommandText = "select count(*) " + m_BaseStatement + GetWhereStatement(); 
 
                 try
@@ -202,6 +205,7 @@ namespace IBE.Enums_and_Utility_Classes
                     if (result != null)
                     {
                         m_rowCountCache = Convert.ToInt32(result);
+                        m_BindingNavigator.CountItem.Text = String.Format(m_BindingNavigator.CountItemFormat, m_rowCountCache);
                         m_Pt.startMeasuring();
                     }
                 }

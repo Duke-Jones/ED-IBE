@@ -31,6 +31,7 @@ namespace IBE.MTCommandersLog
         private enCLAction          m_CL_State;                     // current gui state
 
         private Int32               m_InitialTopOfGrid;
+        private Int32               m_OffsetBindingNavigator;
         private Int32               m_InitialTopOfEditGroupBox;
 
         private Boolean             m_CellValueNeededIsRegistered   = false;        // true if the event is already registred
@@ -91,6 +92,7 @@ namespace IBE.MTCommandersLog
 
                 m_InitialTopOfGrid                      = dgvCommandersLog.Top;
                 m_InitialTopOfEditGroupBox              = gbCL_LogEdit.Top;
+                m_OffsetBindingNavigator                = dgvCommandersLog.Top - bindNavCmdrsLog.Top;
                 m_CL_State                              = enCLAction.None;
 
                 cbLogSystemName.SelectedIndexChanged += cbLogSystemName_SelectedIndexChanged;
@@ -130,6 +132,10 @@ namespace IBE.MTCommandersLog
 
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
+
+                bindNavCmdrsLog.CountItem.Enabled           = true;
+                bindNavCmdrsLog.PositionItem.Enabled        = true;
+
 
                 Cursor = oldCursor;
             }
@@ -301,6 +307,8 @@ namespace IBE.MTCommandersLog
                         dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow.Value];
                     }
                     catch{}
+
+                    SetNavigatorButtons(currentRow.Value);
                 }
             }
             catch (Exception ex)
@@ -505,6 +513,10 @@ namespace IBE.MTCommandersLog
                     tbLogNotes.Text             = (String)currentRow.Cells["notes"].Value.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
                     txtLogDistance.Value        =  currentRow.Cells["distance"].Value;
                     
+                    bindNavCmdrsLog.PositionItem.Text = (e.RowIndex + 1).ToString();  
+
+                    SetNavigatorButtons(e.RowIndex);
+
                 }
                 else
                 {
@@ -519,6 +531,8 @@ namespace IBE.MTCommandersLog
                     nbLogQuantity.Value         = (Int32)0;
                     tbLogNotes.Text             = (String)"";
                     txtLogDistance.Text         = (String)"";
+
+                    bindNavCmdrsLog.PositionItem.Text = "-";  
                 }
 
                 setCLFieldsEditable(false);
@@ -595,10 +609,12 @@ namespace IBE.MTCommandersLog
                     gbCL_LogEdit.Visible     = true;
                     dgvCommandersLog.Top     = m_InitialTopOfGrid;
                     dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
+                    bindNavCmdrsLog.Top      = m_InitialTopOfGrid - m_OffsetBindingNavigator;
                 }
                 else
                 {
-                    dgvCommandersLog.Top     = gbCL_LogEdit.Top;
+                    dgvCommandersLog.Top     = gbCL_LogEdit.Top + m_OffsetBindingNavigator;
+                    bindNavCmdrsLog.Top      = gbCL_LogEdit.Top;
                     dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
                     gbCL_LogEdit.Visible     = false;
                 }
@@ -952,15 +968,77 @@ namespace IBE.MTCommandersLog
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if(ml != null)
-                ml.Dispose();
 
-           ml =  new MultiSelectHeaderList();
+           // if(ml != null)
+           //     ml.Dispose();
 
-            ml.Parent = this.dgvCommandersLog;
 
-            ml.Location = new Point(10,10);
+           //ml =  new MultiSelectHeaderList();
+
+           // ml.Parent = this.dgvCommandersLog;
+
+           // ml.Location = new Point(10,10);
 
         }
+
+        private void bindingNavigatorMovePreviousItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if ((dgvCommandersLog.CurrentCell != null) && (dgvCommandersLog.CurrentCell.RowIndex > 0))
+                    dgvCommandersLog.CurrentCell = dgvCommandersLog[1, dgvCommandersLog.CurrentCell.RowIndex - 1];
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in bindingNavigatorMovePreviousItem_Click");
+            }
+        }
+
+        private void bindingNavigatorMoveNextItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if ((dgvCommandersLog.CurrentCell != null) && (dgvCommandersLog.CurrentCell.RowIndex < (dgvCommandersLog.RowCount-1)))
+                    dgvCommandersLog.CurrentCell = dgvCommandersLog[1, dgvCommandersLog.CurrentCell.RowIndex + 1];
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in bindingNavigatorMoveNextItem_Click");
+            }
+        }
+
+        private void bindingNavigatorMoveFirstItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvCommandersLog.RowCount > 0)
+                    dgvCommandersLog.CurrentCell = dgvCommandersLog[1, 0];
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in bindingNavigatorMoveFirstItem_Click");
+            }
+        }
+
+        private void bindingNavigatorMoveLastItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvCommandersLog.RowCount > 0)
+                    dgvCommandersLog.CurrentCell = dgvCommandersLog[1, dgvCommandersLog.RowCount-1];
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in bindingNavigatorMoveLastItem_Click");
+            }
+        }
+        private void SetNavigatorButtons(Int32 rowIndex)
+        {
+            bindNavCmdrsLog.MovePreviousItem.Enabled    = (rowIndex > 0);
+            bindNavCmdrsLog.MoveFirstItem.Enabled       = (rowIndex > 0);
+            bindNavCmdrsLog.MoveLastItem.Enabled        = (rowIndex < (dgvCommandersLog.RowCount-1));
+            bindNavCmdrsLog.MoveNextItem.Enabled        = (rowIndex < (dgvCommandersLog.RowCount-1));
+        }
+
     }
 }

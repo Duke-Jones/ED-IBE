@@ -544,6 +544,9 @@ namespace DataGridViewAutoFilter
         {
             if(Retriever != null)
             {
+                Cursor oldCursor = this.DataGridView.Cursor;
+                this.DataGridView.Cursor = Cursors.WaitCursor;
+
                 // force refresh
                 Retriever.MemoryCache.Clear();
                 this.DataGridView.RowCount  = Retriever.RowCount(true);
@@ -557,6 +560,10 @@ namespace DataGridViewAutoFilter
                         this.DataGridView.CurrentCell = this.DataGridView[1, currentRow.Value];
                 //}
                 //catch{}
+
+                wie komme ich von hier zum zentralen DGV Refresh ? (wegen SetButtons von BindingNav)
+
+                this.DataGridView.Cursor = oldCursor;
             }
         }
 

@@ -90,7 +90,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "MultiSelectHeaderList";
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MultiSelectHeaderList_KeyPress);
             this.ResumeLayout(false);
 
         }
