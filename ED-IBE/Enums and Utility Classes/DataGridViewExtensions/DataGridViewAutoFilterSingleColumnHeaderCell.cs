@@ -20,7 +20,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// The ListBox used for all drop-down lists. 
         /// </summary>
-        private static FilterListBox dropDownListBox = new FilterListBox();
+        private SingleSelectHeaderList filterWindow;
 
         /// <summary>
         /// A list of filters available for the owning column stored as 
@@ -116,6 +116,12 @@ namespace DataGridViewAutoFilter
         /// </summary>
         override public void ShowDropDownList()
         {
+            if(filterControlShowing)
+            {
+                HideFilterControl();
+                return;
+            }
+
             Debug.Assert(this.DataGridView != null, "DataGridView is null");
 
             // Ensure that the current row is not the row for new records.
@@ -127,6 +133,14 @@ namespace DataGridViewAutoFilter
                 this.DataGridView.CurrentCell = null;
             }
 
+            if (filterWindow != null)
+            {
+                this.DataGridView.Controls.Remove(filterWindow);
+                filterWindow.Dispose();
+            }
+
+            filterWindow = new SingleSelectHeaderList();
+
             // Populate the filters dictionary, then copy the filter values 
             // from the filters.Keys collection into the ListBox.Items collection, 
             // selecting the current filter if there is one in effect. 
@@ -134,26 +148,19 @@ namespace DataGridViewAutoFilter
 
             String[] filterArray = new String[filters.Count];
             filters.Keys.CopyTo(filterArray, 0);
-            dropDownListBox.Items.Clear();
-            dropDownListBox.Items.AddRange(filterArray);
-            dropDownListBox.SelectedItem = selectedFilterValue;
+            filterWindow.FilterListBox.Items.Clear();
+            filterWindow.FilterListBox.Items.AddRange(filterArray);
+            filterWindow.FilterListBox.SelectedItem = selectedFilterValue;
 
-            // Add handlers to dropDownListBox events. 
+            // Add handlers to dropDownListBox.FilterListBox events. 
             HandleDropDownListBoxEvents();
+
+            //textSelectBox.Visible = true;
+            filterControlShowing = true;
+            filterWindow.Show(this.DataGridView);
 
             // Set the size and location of dropDownListBox, then display it. 
             SetDropDownListBoxBounds();
-            dropDownListBox.Visible = true;
-            dropDownListBoxShowing = true;
-
-            Debug.Assert(dropDownListBox.Parent == null, 
-                "ShowDropDownListBox has been called multiple times before HideDropDownListBox");
-
-            // Add dropDownListBox to the DataGridView. 
-            this.DataGridView.Controls.Add(dropDownListBox);
-
-            // Set the input focus to dropDownListBox. 
-            dropDownListBox.Focus();
 
             // Invalidate the cell so that the drop-down button will repaint
             // in the pressed state. 
@@ -165,18 +172,24 @@ namespace DataGridViewAutoFilter
         /// </summary>
         override protected void HideFilterControl()
         {
-            Debug.Assert(this.DataGridView != null, "DataGridView is null");
+            if(filterControlShowing)
+            {
+                filterControlShowing = false;
 
-            // Hide dropDownListBox, remove handlers from its events, and remove 
-            // it from the DataGridView control. 
-            dropDownListBoxShowing = false;
-            dropDownListBox.Visible = false;
-            UnhandleDropDownListBoxEvents();
-            this.DataGridView.Controls.Remove(dropDownListBox);
+                Debug.Assert(this.DataGridView != null, "DataGridView is null");
 
-            // Invalidate the cell so that the drop-down button will repaint
-            // in the unpressed state. 
-            this.DataGridView.InvalidateCell(this);
+                // Hide dropDownListBox, remove handlers from its events, and remove 
+                // it from the DataGridView control. 
+                UnhandleDropDownListBoxEvents();
+
+                filterWindow.Visible = false;
+                filterWindow.Dispose();
+                filterWindow = null;
+
+                // Invalidate the cell so that the drop-down button will repaint
+                // in the unpressed state. 
+                this.DataGridView.InvalidateCell(this);
+            }
         }
 
         /// <summary>
@@ -199,12 +212,12 @@ namespace DataGridViewAutoFilter
             // For each formatted value in the filters dictionary Keys collection,
             // add its height to dropDownListBoxHeight and, if it is wider than 
             // all previous values, set dropDownListBoxWidth to its width.
-            using (Graphics graphics = dropDownListBox.CreateGraphics())
+            using (Graphics graphics = filterWindow.FilterListBox.CreateGraphics())
             {
                 foreach (String filter in filters.Keys)
                 {
                     SizeF stringSizeF = graphics.MeasureString(
-                        filter, dropDownListBox.Font);
+                        filter, filterWindow.FilterListBox.Font);
                     dropDownListBoxHeight += (Int32)stringSizeF.Height;
                     currentWidth = (Int32)stringSizeF.Width;
                     if (dropDownListBoxWidth < currentWidth)
@@ -287,10 +300,11 @@ namespace DataGridViewAutoFilter
                 }
             }
 
-            // Set the ListBox.Bounds property using the calculated values. 
-            dropDownListBox.Bounds = new Rectangle(dropDownListBoxLeft,
-                DropDownButtonBounds.Bottom, // top of drop-down list box
-                dropDownListBoxWidth, dropDownListBoxHeight);
+            filterWindow.Bounds = this.DataGridView.RectangleToScreen(
+                                            new Rectangle(dropDownListBoxLeft,
+                                                          DropDownButtonBounds.Bottom, 
+                                                          dropDownListBoxWidth, 
+                                                          dropDownListBoxHeight));
         }
 
         /// <summary>
@@ -318,7 +332,7 @@ namespace DataGridViewAutoFilter
 
                 // Calculate the height of the list box, using the combined 
                 // height of all items plus 2 for the top and bottom border. 
-                Int32 listMaxHeight = dropDownListBoxMaxLinesValue * dropDownListBox.ItemHeight + 2;
+                Int32 listMaxHeight = dropDownListBoxMaxLinesValue * filterWindow.FilterListBox.ItemHeight + 2;
 
                 // Return the smaller of the two values. 
                 if (listMaxHeight < dataGridViewMaxHeight)
@@ -342,9 +356,10 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private void HandleDropDownListBoxEvents()
         {
-            dropDownListBox.MouseClick += new MouseEventHandler(DropDownListBox_MouseClick);
-            dropDownListBox.LostFocus += new EventHandler(DropDownListBox_LostFocus);
-            dropDownListBox.KeyDown += new KeyEventHandler(DropDownListBox_KeyDown);
+            filterWindow.MouseClick += new MouseEventHandler(DropDownListBox_MouseClick);
+            filterWindow.LostFocus += new EventHandler(DropDownListBox_LostFocus);
+            filterWindow.Deactivate += FilterWindow_Deactivate;
+            filterWindow.KeyDown += new KeyEventHandler(DropDownListBox_KeyDown);
         }
 
         /// <summary>
@@ -352,9 +367,10 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private void UnhandleDropDownListBoxEvents()
         {
-            dropDownListBox.MouseClick -= new MouseEventHandler(DropDownListBox_MouseClick);
-            dropDownListBox.LostFocus -= new EventHandler(DropDownListBox_LostFocus);
-            dropDownListBox.KeyDown -= new KeyEventHandler(DropDownListBox_KeyDown);
+            filterWindow.MouseClick -= new MouseEventHandler(DropDownListBox_MouseClick);
+            filterWindow.LostFocus -= new EventHandler(DropDownListBox_LostFocus);
+            filterWindow.Deactivate -= FilterWindow_Deactivate;
+            filterWindow.KeyDown -= new KeyEventHandler(DropDownListBox_KeyDown);
         }
 
         /// <summary>
@@ -368,7 +384,7 @@ namespace DataGridViewAutoFilter
 
             // Continue only if the mouse click was in the content area
             // and not on the scroll bar. 
-            if (!dropDownListBox.DisplayRectangle.Contains(e.X, e.Y))
+            if (!filterWindow.DisplayRectangle.Contains(e.X, e.Y))
             {
                 return;
             }
@@ -615,13 +631,13 @@ namespace DataGridViewAutoFilter
         override protected void UpdateFilter()
         {
             // Continue only if the selection has changed.
-            if (dropDownListBox.SelectedItem.ToString().Equals(selectedFilterValue))
+            if (filterWindow.FilterListBox.SelectedItem.ToString().Equals(selectedFilterValue))
             {
                 return;
             }
 
             // Store the new selection value. 
-            selectedFilterValue = dropDownListBox.SelectedItem.ToString();
+            selectedFilterValue = filterWindow.FilterListBox.SelectedItem.ToString();
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =
@@ -814,50 +830,6 @@ namespace DataGridViewAutoFilter
         }
 
         #endregion filtering
-
-        /// <summary>
-        /// Represents a ListBox control used as a drop-down filter list
-        /// in a DataGridView control.
-        /// </summary>
-        private class FilterListBox : ListBox
-        {
-            /// <summary>
-            /// Initializes a new instance of the FilterListBox class.
-            /// </summary>
-            public FilterListBox()
-            {
-                Visible = false;
-                IntegralHeight = true;
-                BorderStyle = BorderStyle.FixedSingle;
-                TabStop = false;
-            }
-
-            /// <summary>
-            /// Indicates that the FilterListBox will handle (or ignore) all 
-            /// keystrokes that are not handled by the operating system. 
-            /// </summary>
-            /// <param name="keyData">A Keys value that represents the keyboard input.</param>
-            /// <returns>true in all cases.</returns>
-            protected override bool IsInputKey(Keys keyData)
-            {
-                return true;
-            }
-
-            /// <summary>
-            /// Processes a keyboard message directly, preventing it from being
-            /// intercepted by the parent DataGridView control.
-            /// </summary>
-            /// <param name="m">A Message, passed by reference, that 
-            /// represents the window message to process.</param>
-            /// <returns>true if the message was processed by the control;
-            /// otherwise, false.</returns>
-            protected override bool ProcessKeyMessage(ref Message m)
-            {
-                return ProcessKeyEventArgs(ref m);
-            }
-
-        }
-
     }
 
 }

@@ -37,7 +37,7 @@
             // cmdOk
             // 
             this.cmdOk.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdOk.Location = new System.Drawing.Point(99, 52);
+            this.cmdOk.Location = new System.Drawing.Point(99, 55);
             this.cmdOk.Name = "cmdOk";
             this.cmdOk.Size = new System.Drawing.Size(46, 22);
             this.cmdOk.TabIndex = 2;
@@ -47,7 +47,7 @@
             // cmdClear
             // 
             this.cmdClear.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdClear.Location = new System.Drawing.Point(47, 52);
+            this.cmdClear.Location = new System.Drawing.Point(47, 55);
             this.cmdClear.Name = "cmdClear";
             this.cmdClear.Size = new System.Drawing.Size(46, 22);
             this.cmdClear.TabIndex = 3;
@@ -84,13 +84,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ClientSize = new System.Drawing.Size(150, 82);
             this.Controls.Add(this.txtFilterText);
             this.Controls.Add(this.cmbConstraint);
             this.Controls.Add(this.cmdClear);
             this.Controls.Add(this.cmdOk);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
             this.Name = "FullTextHeader";
-            this.Size = new System.Drawing.Size(150, 77);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Control_KeyPress);
             this.ResumeLayout(false);
             this.PerformLayout();

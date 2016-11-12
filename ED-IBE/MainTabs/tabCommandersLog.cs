@@ -121,9 +121,8 @@ namespace IBE.MTCommandersLog
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype";
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).Retriever = m_DataSource.Retriever;
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).RetrieverSQLSelect = "select distinct S.systemname";
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).Retriever = m_DataSource.Retriever;
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).RetrieverSQLSelect = "select distinct St.stationname";
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).Retriever = m_DataSource.Retriever;
                 
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
@@ -929,18 +928,16 @@ namespace IBE.MTCommandersLog
         // ALT+DOWN ARROW or ALT+UP ARROW.
         private void dgvCommandersLog_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Alt && (e.KeyCode == Keys.Down || e.KeyCode == Keys.Up))
             {
-                if(dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell.GetType().Equals(typeof(DataGridViewAutoFilterSingleColumnHeaderCell)))
+            if (e.Alt && (e.KeyCode == Keys.Down || e.KeyCode == Keys.Up))
+                if(dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell.GetType().BaseType.Equals(typeof(DataGridViewAutoFilterHeaderCell)))
                 {
-
-
-                }
-                DataGridViewAutoFilterSingleColumnHeaderCell filterCell = (DataGridViewAutoFilterSingleColumnHeaderCell)dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell;
-                if (filterCell != null)
-                {
-                    filterCell.ShowDropDownList();
-                    e.Handled = true;
+                    DataGridViewAutoFilterHeaderCell filterCell = (DataGridViewAutoFilterHeaderCell)dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell;
+                    if (filterCell != null)
+                    {
+                        filterCell.ShowDropDownList();
+                        e.Handled = true;
+                    }
                 }
             }
         }

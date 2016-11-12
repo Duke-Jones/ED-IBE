@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace DataGridViewAutoFilter
 {
-    class DataGridViewAutoFilterSingleTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    public class DataGridViewAutoFilterSingleTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
     {
         /// <summary>
         /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
@@ -17,7 +17,7 @@ namespace DataGridViewAutoFilter
         }
     }
 
-    class DataGridViewAutoFilterMultiTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    public class DataGridViewAutoFilterMultiTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
     {
         /// <summary>
         /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
@@ -28,7 +28,7 @@ namespace DataGridViewAutoFilter
         }
     }
 
-    class DataGridViewAutoFilterFullTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    public class DataGridViewAutoFilterFullTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
     {
         /// <summary>
         /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.

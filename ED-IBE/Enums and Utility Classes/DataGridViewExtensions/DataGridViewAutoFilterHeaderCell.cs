@@ -266,7 +266,7 @@ namespace DataGridViewAutoFilter
         protected void ResetDropDown()
         {
             InvalidateDropDownButtonBounds();
-            if (dropDownListBoxShowing)
+            if (filterControlShowing)
             {
                 HideFilterControl();
             }
@@ -348,7 +348,7 @@ namespace DataGridViewAutoFilter
             {
                 ComboBoxState state = ComboBoxState.Normal;
 
-                if (dropDownListBoxShowing)
+                if (filterControlShowing)
                 {
                     state = ComboBoxState.Pressed;
                 }
@@ -365,7 +365,7 @@ namespace DataGridViewAutoFilter
                 // correctly and to offset the down arrow. 
                 Int32 pressedOffset = 0;
                 PushButtonState state = PushButtonState.Normal;
-                if (dropDownListBoxShowing)
+                if (filterControlShowing)
                 {
                     state = PushButtonState.Pressed;
                     pressedOffset = 1;
@@ -530,7 +530,7 @@ namespace DataGridViewAutoFilter
         /// Indicates whether dropDownListBox is currently displayed 
         /// for this header cell. 
         /// </summary>
-        protected bool dropDownListBoxShowing;
+        protected bool filterControlShowing;
 
         #endregion drop-down list
 
@@ -585,6 +585,20 @@ namespace DataGridViewAutoFilter
             HideFilterControl();
         }
 
+        protected void FilterWindow_Deactivate(object sender, EventArgs e)
+        {
+            // If the focus was lost because the user clicked the drop-down
+            // button, store a value that prevents the subsequent OnMouseDown
+            // call from displaying the drop-down list again. 
+            if (DropDownButtonBounds.Contains(
+                this.DataGridView.PointToClient(new Point(
+                Control.MousePosition.X, Control.MousePosition.Y))))
+            {
+                lostFocusOnDropDownButtonClick = true;
+            }
+            HideFilterControl();
+        }
+
         /// <summary>
         /// Handles the ENTER and ESC keys.
         /// </summary>
@@ -597,6 +611,7 @@ namespace DataGridViewAutoFilter
                 case Keys.Enter:
                     UpdateFilter();
                     HideFilterControl();
+                    RefreshDGV(0);
                     break;
                 case Keys.Escape:
                     HideFilterControl();

@@ -22,7 +22,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// The ListBox used for all drop-down lists. 
         /// </summary>
-        private FullTextHeader textSelectBox;
+        private FullTextHeader filterWindow;
 
         /// <summary>
         /// A list of filters available for the owning column stored as 
@@ -106,7 +106,7 @@ namespace DataGridViewAutoFilter
         {
             try
             {
-                if(dropDownListBoxShowing)
+                if(filterControlShowing)
                 {
                     HideFilterControl();
                     return;
@@ -134,35 +134,25 @@ namespace DataGridViewAutoFilter
                     this.DataGridView.CurrentCell = null;
                 }
 
-                // Populate the filters dictionary, then copy the filter values 
-                // from the filters.Keys collection into the ListBox.Items collection, 
-                // selecting the current filter if there is one in effect. 
-                //PopulateFilters();
+                if (filterWindow != null)
+                {
+                    this.DataGridView.Controls.Remove(filterWindow);
+                    filterWindow.Dispose();
+                }
 
-                //String[] filterArray = new String[filters.Count];
-                //filters.Keys.CopyTo(filterArray, 0);
-
-                //if(selectedFilterValue.Count == 0)
-                //    selectedFilterValue.AddRange(filterArray);
+                filterWindow = new FullTextHeader();
+                //this.DataGridView.Controls.Add(textSelectBox);
+                //textSelectBox.Parent = this.DataGridView;
 
                 // Add handlers to dropDownListBox.FilterListBox events. 
                 HandleDropDownListBoxEvents();
 
-                // Set the size and location of dropDownListBox.FilterListBox, then display it. 
+                //textSelectBox.Visible = true;
+                filterControlShowing = true;
+                filterWindow.Show(this.DataGridView);
+
+                // Set the size and location of dropDownListBox, then display it. 
                 SetDropDownListBoxBounds();
-
-                if(textSelectBox != null)
-                    textSelectBox.Dispose();
-
-                textSelectBox = new FullTextHeader();
-
-                textSelectBox.Parent = this.DataGridView;
-
-                textSelectBox.Visible = true;
-                dropDownListBoxShowing = true;
-
-                // Set the input focus to dropDownListBox.FilterListBox. 
-                textSelectBox.cmbConstraint.Focus();
 
                 // Invalidate the cell so that the drop-down button will repaint
                 // in the pressed state. 
@@ -170,7 +160,6 @@ namespace DataGridViewAutoFilter
             }
             catch (Exception ex)
             {
-                throw ex;
                 CErr.processError(ex, "Error while showing the column filter setting (" +  this.OwningColumn.Name + ")");
             }
         }
@@ -180,22 +169,26 @@ namespace DataGridViewAutoFilter
         /// </summary>
         override protected void HideFilterControl()
         {
-            Debug.Assert(this.DataGridView != null, "DataGridView is null");
+            if(filterControlShowing)
+            {
+                filterControlShowing = false;
 
-            // Hide dropDownListBox.FilterListBox, remove handlers from its events, and remove 
-            // it from the DataGridView control. 
-            UnhandleDropDownListBoxEvents();
+                Debug.Assert(this.DataGridView != null, "DataGridView is null");
 
-            dropDownListBoxShowing = false;
-            textSelectBox.Visible = false;
-            textSelectBox.Dispose();
-            textSelectBox = null;
+                // Hide dropDownListBox.FilterListBox, remove handlers from its events, and remove 
+                // it from the DataGridView control. 
+                UnhandleDropDownListBoxEvents();
 
-            //this.DataGridView.Controls.Remove(multiSelectBox);
+                filterWindow.Visible = false;
+                filterWindow.Dispose();
+                filterWindow = null;
 
-            // Invalidate the cell so that the drop-down button will repaint
-            // in the unpressed state. 
-            this.DataGridView.InvalidateCell(this);
+                //this.DataGridView.Controls.Remove(multiSelectBox);
+
+                // Invalidate the cell so that the drop-down button will repaint
+                // in the unpressed state. 
+                this.DataGridView.InvalidateCell(this);
+            }
         }
 
         /// <summary>
@@ -210,8 +203,8 @@ namespace DataGridViewAutoFilter
             // Declare variables that will be used in the calculation, 
             // initializing dropDownListBoxHeight to account for the 
             // ListBox borders.
-            Int32 dropDownListBoxHeight = textSelectBox.Height;
-            Int32 dropDownListBoxWidth = textSelectBox.Width;
+            Int32 dropDownListBoxHeight = filterWindow.Height;
+            Int32 dropDownListBoxWidth = filterWindow.Width;
             Int32 dropDownListBoxLeft = 0;
 
             // Calculate the ideal location of the left edge of dropDownListBox.FilterListBox 
@@ -260,9 +253,12 @@ namespace DataGridViewAutoFilter
             }
 
             // Set the ListBox.Bounds property using the calculated values. 
-            textSelectBox.Bounds = new Rectangle(dropDownListBoxLeft,
-                DropDownButtonBounds.Bottom, // top of drop-down list box
-                dropDownListBoxWidth, dropDownListBoxHeight);
+            
+            filterWindow.Bounds = this.DataGridView.RectangleToScreen(
+                        new Rectangle(dropDownListBoxLeft,
+                                      DropDownButtonBounds.Bottom, 
+                                      dropDownListBoxWidth, 
+                                      dropDownListBoxHeight));
         }
 
         #endregion drop-down list
@@ -276,9 +272,10 @@ namespace DataGridViewAutoFilter
         private void HandleDropDownListBoxEvents()
         {
             //dropDownListBox.FilterListBox.MouseClick += new MouseEventHandler(DropDownListBox_MouseClick);
-            textSelectBox.LostFocus += new EventHandler(DropDownListBox_LostFocus);
-            textSelectBox.KeyDown += new KeyEventHandler(DropDownListBox_KeyDown);
-            textSelectBox.cmdOk.Click += CmdOk_Click;
+            filterWindow.LostFocus += new EventHandler(DropDownListBox_LostFocus);
+            filterWindow.KeyDown += new KeyEventHandler(DropDownListBox_KeyDown);
+            filterWindow.Deactivate += FilterWindow_Deactivate;
+            filterWindow.cmdOk.Click += CmdOk_Click;
 
         }
 
@@ -289,18 +286,19 @@ namespace DataGridViewAutoFilter
         private void UnhandleDropDownListBoxEvents()
         {
             //dropDownListBox.FilterListBox.MouseClick -= new MouseEventHandler(DropDownListBox_MouseClick);
-            textSelectBox.LostFocus -= new EventHandler(DropDownListBox_LostFocus);
-            textSelectBox.KeyDown -= new KeyEventHandler(DropDownListBox_KeyDown);
-            textSelectBox.cmdOk.Click -= CmdOk_Click;
+            filterWindow.LostFocus -= new EventHandler(DropDownListBox_LostFocus);
+            filterWindow.KeyDown -= new KeyEventHandler(DropDownListBox_KeyDown);
+            filterWindow.Deactivate -= FilterWindow_Deactivate;
+            filterWindow.cmdOk.Click -= CmdOk_Click;
         }
 
         private void CmdOk_Click(object sender, EventArgs e)
         {
             try
             {
-                if (textSelectBox.cmbConstraint.SelectedIndex == (Int32)ConstraintValues.cv_filter_off)
+                if (filterWindow.cmbConstraint.SelectedIndex == (Int32)ConstraintValues.cv_filter_off)
                 {
-                    textSelectBox.txtFilterText.Text = "";
+                    filterWindow.txtFilterText.Text = "";
                 }
 
                 UpdateFilter();
@@ -310,7 +308,6 @@ namespace DataGridViewAutoFilter
             }
             catch (Exception ex)
             {
-                throw ex;
                 CErr.processError(ex, "Error while confirming the column filter setting (" + this.OwningColumn.Name + ")");
             }
         }
@@ -318,186 +315,6 @@ namespace DataGridViewAutoFilter
         #endregion ListBox events
 
         #region filtering: PopulateFilters, FilterWithoutCurrentColumn, UpdateFilter, RemoveFilter, AvoidNewRowWhenFiltering, GetFilterStatus
-
-        /// <summary>
-        /// Populates the filters dictionary with formatted and unformatted string
-        /// representations of each unique value in the column, accounting for all 
-        /// filters except the current column's. Also adds special filter options. 
-        /// </summary>
-        private void PopulateFilters()
-        {
-            ArrayList list = null;
-            Boolean containsBlanks;
-            Boolean containsNonBlanks;
-            String oldFilter = "";
-
-            // Continue only if there is a DataGridView.
-            if (this.DataGridView == null)
-            {
-                return;
-            }
-
-            // Cast the data source to a BindingSource. 
-            BindingSource data = this.DataGridView.DataSource as BindingSource;
-
-            Debug.Assert((data != null && data.SupportsFiltering && OwningColumn != null) || (Retriever != null),
-                "DataSource is not a BindingSource, or does not support filtering, or OwningColumn is null");
-
-            containsBlanks = false;
-            containsNonBlanks = false;
-
-            // Reset the filters dictionary and initialize some flags
-            // to track whether special filter options are needed. 
-            filters.Clear();
-
-            if (data != null)
-            {
-                throw new NotImplementedException();
-
-                // Prevent the data source from notifying the DataGridView of changes. 
-                data.RaiseListChangedEvents = false;
-
-                // Cache the current BindingSource.Filter value and then change 
-                // the Filter property to temporarily remove any filter for the 
-                // current column. 
-
-                oldFilter = data.Filter;
-                //data.Filter = FilterWithoutCurrentColumn(oldFilter);
-
-                // Initialize an ArrayList to store the values in their original
-                // types. This enables the values to be sorted appropriately.  
-                list = new ArrayList(data.Count);
-
-                // Retrieve each value and add it to the ArrayList if it isn't
-                // already present. 
-                foreach (Object item in data)
-                {
-                    Object value = null;
-
-                    // Use the ICustomTypeDescriptor interface to retrieve properties
-                    // if it is available; otherwise, use reflection. The 
-                    // ICustomTypeDescriptor interface is useful to customize 
-                    // which values are exposed as properties. For example, the 
-                    // DataRowView class implements ICustomTypeDescriptor to expose 
-                    // cell values as property values.                
-                    // 
-                    // Iterate through the property names to find a case-insensitive
-                    // match with the DataGridViewColumn.DataPropertyName value.
-                    // This is necessary because DataPropertyName is case-
-                    // insensitive, but the GetProperties and GetProperty methods
-                    // used below are case-sensitive.
-                    ICustomTypeDescriptor ictd = item as ICustomTypeDescriptor;
-                    if (ictd != null)
-                    {
-                        PropertyDescriptorCollection properties = ictd.GetProperties();
-                        foreach (PropertyDescriptor property in properties)
-                        {
-                            if (String.Compare(this.OwningColumn.DataPropertyName,
-                                property.Name, true /*case insensitive*/,
-                                System.Globalization.CultureInfo.InvariantCulture) == 0)
-                            {
-                                value = property.GetValue(item);
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        PropertyInfo[] properties = item.GetType().GetProperties(
-                            BindingFlags.Public | BindingFlags.Instance);
-                        foreach (PropertyInfo property in properties)
-                        {
-                            if (String.Compare(this.OwningColumn.DataPropertyName,
-                                property.Name, true /*case insensitive*/,
-                                System.Globalization.CultureInfo.InvariantCulture) == 0)
-                            {
-                                value = property.GetValue(item, null /*property index*/);
-                                break;
-                            }
-                        }
-                    }
-
-                    // Skip empty values, but note that they are present. 
-                    if (value == null || value == DBNull.Value)
-                    {
-                        containsBlanks = true;
-                        continue;
-                    }
-
-                    // Add values to the ArrayList if they are not already there.
-                    if (!list.Contains(value))
-                    {
-                        list.Add(value);
-                    }
-                }
-            }
-            else
-            {
-                // Initialize an ArrayList to store the values in their original
-                // types. This enables the values to be sorted appropriately.  
-
-                DataTable dataTable = new DataTable();
-
-                IBE.Program.DBCon.Execute(String.Format("{0} {1}", RetrieverSQLSelect, Retriever.BaseStatement), dataTable);
-
-                list = new ArrayList(dataTable.Rows.Count);
-
-                foreach (DataRow selectableItem in dataTable.Rows)
-                    list.Add(selectableItem[0]);
-            }
-
-            // Sort the ArrayList. The default Sort method uses the IComparable 
-            // implementation of the stored values so that string, numeric, and 
-            // date values will all be sorted correctly. 
-            list.Sort();
-
-            // Convert each value in the ArrayList to its formatted representation
-            // and store both the formatted and unformatted string representations
-            // in the filters dictionary. 
-            foreach (Object value in list)
-            {
-                // Use the cell's GetFormattedValue method with the column's
-                // InheritedStyle property so that the dropDownListBox.FilterListBox format
-                // will match the display format used for the column's cells. 
-                String formattedValue = null;
-                DataGridViewCellStyle style = OwningColumn.InheritedStyle;
-                formattedValue = (String)GetFormattedValue(value, -1, ref style,
-                    null, null, DataGridViewDataErrorContexts.Formatting);
-
-                if (String.IsNullOrEmpty(formattedValue))
-                {
-                    // Skip empty values, but note that they are present.
-                    containsBlanks = true;
-                }
-                else if (!filters.Contains(formattedValue))
-                {
-                    // Note whether non-empty values are present. 
-                    containsNonBlanks = true;
-
-                    // For all non-empty values, add the formatted and 
-                    // unformatted string representations to the filters 
-                    // dictionary.
-                    filters.Add(formattedValue, value.ToString());
-                }
-            }
-
-            if (data != null)
-            {
-                // Restore the filter to the cached filter string and 
-                // re-enable data source change notifications. 
-                if (oldFilter != null) data.Filter = oldFilter;
-                data.RaiseListChangedEvents = true;
-            }
-
-            // Add special filter options to the filters dictionary
-            // along with null values, since unformatted representations
-            // are not needed. 
-            if (containsBlanks && containsNonBlanks)
-            {
-                filters.Add("(Blanks)", null);
-                filters.Add("(NonBlanks)", null);
-            }
-        }
 
         ///// <summary>
         ///// Returns a copy of the specified filter string after removing the part that filters the current column, if present. 
@@ -552,15 +369,15 @@ namespace DataGridViewAutoFilter
         override protected void UpdateFilter()
         {
             // Continue only if the selection has changed.
-            if ((textSelectBox.cmbConstraint.SelectedIndex == (Int32)m_ConstraintIndex) &&
-               (textSelectBox.txtFilterText.Text.Equals(m_FilterText, StringComparison.InvariantCultureIgnoreCase)))
+            if ((filterWindow.cmbConstraint.SelectedIndex == (Int32)m_ConstraintIndex) &&
+               (filterWindow.txtFilterText.Text.Equals(m_FilterText, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return;
             }
 
             // Store the new filter value
-            m_ConstraintIndex = (ConstraintValues)textSelectBox.cmbConstraint.SelectedIndex;
-            m_FilterText = textSelectBox.txtFilterText.Text;
+            m_ConstraintIndex = (ConstraintValues)filterWindow.cmbConstraint.SelectedIndex;
+            m_FilterText = filterWindow.txtFilterText.Text;
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =

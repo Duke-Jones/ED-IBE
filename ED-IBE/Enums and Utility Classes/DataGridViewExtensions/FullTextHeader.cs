@@ -12,7 +12,7 @@ using IBE.Enums_and_Utility_Classes;
 
 namespace DataGridViewAutoFilter
 {
-    public partial class FullTextHeader : UserControl
+    public partial class FullTextHeader : Form
     {
         public FullTextHeader()
         {
@@ -34,11 +34,17 @@ namespace DataGridViewAutoFilter
 
         private void Control_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Return)
+            switch (e.KeyChar)
             {
-                this.cmdOk.PerformClick();
+                case (char)Keys.Return:
+                    this.cmdOk.PerformClick();
+                    e.Handled = true;
+                    break;
+                case (char)Keys.Escape:
+                    this.Close();
+                    e.Handled = true;
+                    break;
             }
-            
         }
     }
 }

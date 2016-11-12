@@ -12,7 +12,7 @@ using IBE.Enums_and_Utility_Classes;
 
 namespace DataGridViewAutoFilter
 {
-    public partial class MultiSelectHeaderList : UserControl
+    public partial class MultiSelectHeaderList : Form
     {
         public MultiSelectHeaderList()
         {
@@ -57,6 +57,21 @@ namespace DataGridViewAutoFilter
             for (int i = 0; i < FilterListBox.Items.Count; i++)
             {
                 FilterListBox.SetItemChecked(i, true);
+            }
+        }
+
+        private void MultiSelectHeaderList_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case (char)Keys.Return:
+                    this.cmdOk.PerformClick();
+                    e.Handled = true;
+                    break;
+                case (char)Keys.Escape:
+                    this.Close();
+                    e.Handled = true;
+                    break;
             }
         }
     }

@@ -160,16 +160,22 @@
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterSingleColumnHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\FullTextHeader.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\FullTextHeader.Designer.cs">
       <DependentUpon>FullTextHeader.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\MultiSelectHeaderList.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\MultiSelectHeaderList.Designer.cs">
       <DependentUpon>MultiSelectHeaderList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\SingleSelectHeaderList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\SingleSelectHeaderList.designer.cs">
+      <DependentUpon>SingleSelectHeaderList.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
@@ -492,6 +498,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\DataGridViewExtensions\MultiSelectHeaderList.resx">
       <DependentUpon>MultiSelectHeaderList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Enums and Utility Classes\DataGridViewExtensions\SingleSelectHeaderList.resx">
+      <DependentUpon>SingleSelectHeaderList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ErrorHandling\ErrorViewer.resx">
       <DependentUpon>ErrorViewer.cs</DependentUpon>

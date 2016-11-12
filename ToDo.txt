@@ -22,6 +22,8 @@ todo:
 
 done:
 
+  * bugfixing/optimization on ColumnFilter
+-------------------------------------------------------------------------------------         
   * changed structure of columnfilter objects from "flat" to "hierarchical"
 -------------------------------------------------------------------------------------         
   * reorganized re-theme functions for better access

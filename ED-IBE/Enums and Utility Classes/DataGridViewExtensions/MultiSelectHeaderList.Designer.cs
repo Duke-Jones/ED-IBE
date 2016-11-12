@@ -82,13 +82,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ClientSize = new System.Drawing.Size(148, 139);
             this.Controls.Add(this.cmdAll);
             this.Controls.Add(this.cmdInvert);
             this.Controls.Add(this.cmdOk);
             this.Controls.Add(this.FilterListBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
             this.Name = "MultiSelectHeaderList";
-            this.Size = new System.Drawing.Size(148, 139);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MultiSelectHeaderList_KeyPress);
             this.ResumeLayout(false);
 
         }
