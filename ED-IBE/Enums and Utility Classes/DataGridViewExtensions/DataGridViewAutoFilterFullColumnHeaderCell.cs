@@ -32,11 +32,6 @@ namespace DataGridViewAutoFilter
             new System.Collections.Specialized.OrderedDictionary();
 
         /// <summary>
-        /// The drop-down list filter value currently in effect for the owning column. 
-        /// </summary>
-        private List<string> selectedFilterValue = new List<string>();
-
-        /// <summary>
         /// The complete filter string currently in effect for the owning column. 
         /// </summary>
         private List<String> currentColumnFilter = new List<String>();
@@ -50,8 +45,8 @@ namespace DataGridViewAutoFilter
             cv_ends_with = 4
         }
 
-        String m_FilterText                 = "";
-        ConstraintValues m_ConstraintIndex  = ConstraintValues.cv_filter_off;
+        String m_SelectedFilterText                 = "";
+        ConstraintValues m_SelectedConstraintIndex  = ConstraintValues.cv_filter_off;
 
         /// <summary>
         /// Initializes a new instance of the DataGridViewColumnHeaderCell 
@@ -90,7 +85,6 @@ namespace DataGridViewAutoFilter
             if (source == null || String.IsNullOrEmpty(source.Filter))
             {
                 filtered = false;
-                selectedFilterValue.Clear();
                 currentColumnFilter.Clear();
             }
         }
@@ -102,7 +96,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Displays the drop-down filter list. 
         /// </summary>
-        override public void ShowDropDownList()
+        override public void ShowColumnFilter()
         {
             try
             {
@@ -141,8 +135,9 @@ namespace DataGridViewAutoFilter
                 }
 
                 filterWindow = new FullTextHeader();
-                //this.DataGridView.Controls.Add(textSelectBox);
-                //textSelectBox.Parent = this.DataGridView;
+
+                filterWindow.txtFilterText.Text             = m_SelectedFilterText;
+                filterWindow.cmbConstraint.SelectedIndex    = (Int32)m_SelectedConstraintIndex;
 
                 // Add handlers to dropDownListBox.FilterListBox events. 
                 HandleDropDownListBoxEvents();
@@ -188,6 +183,7 @@ namespace DataGridViewAutoFilter
                 // Invalidate the cell so that the drop-down button will repaint
                 // in the unpressed state. 
                 this.DataGridView.InvalidateCell(this);
+                this.DataGridView.Focus();
             }
         }
 
@@ -304,7 +300,7 @@ namespace DataGridViewAutoFilter
                 UpdateFilter();
                 HideFilterControl();
 
-                RefreshDGV(0);
+                RaiseDataChangedEvent();
             }
             catch (Exception ex)
             {
@@ -369,15 +365,15 @@ namespace DataGridViewAutoFilter
         override protected void UpdateFilter()
         {
             // Continue only if the selection has changed.
-            if ((filterWindow.cmbConstraint.SelectedIndex == (Int32)m_ConstraintIndex) &&
-               (filterWindow.txtFilterText.Text.Equals(m_FilterText, StringComparison.InvariantCultureIgnoreCase)))
+            if ((filterWindow.cmbConstraint.SelectedIndex == (Int32)m_SelectedConstraintIndex) &&
+               (filterWindow.txtFilterText.Text.Equals(m_SelectedFilterText, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return;
             }
 
             // Store the new filter value
-            m_ConstraintIndex = (ConstraintValues)filterWindow.cmbConstraint.SelectedIndex;
-            m_FilterText = filterWindow.txtFilterText.Text;
+            m_SelectedConstraintIndex = (ConstraintValues)filterWindow.cmbConstraint.SelectedIndex;
+            m_SelectedFilterText = filterWindow.txtFilterText.Text;
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =
@@ -467,7 +463,7 @@ namespace DataGridViewAutoFilter
 
                 StringBuilder filterString = new StringBuilder();
 
-                switch (m_ConstraintIndex)
+                switch (m_SelectedConstraintIndex)
                 {
                     case ConstraintValues.cv_filter_off:
                         // leave the string empty
@@ -475,22 +471,22 @@ namespace DataGridViewAutoFilter
                         break;
 
                     case ConstraintValues.cv_equals:
-                        filterString.AppendFormat("({0} = {1})", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLAEscape(m_FilterText));
+                        filterString.AppendFormat("({0} = {1})", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLAEscape(m_SelectedFilterText));
                         filtered = true;
 
                         break;
                     case ConstraintValues.cv_contains:
-                        filterString.AppendFormat("({0} like '%{1}%')", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_FilterText));
+                        filterString.AppendFormat("({0} like '%{1}%')", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_SelectedFilterText));
                         filtered = true;
 
                         break;
                     case ConstraintValues.cv_starts_with:
-                        filterString.AppendFormat("({0} like '{1}%')", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_FilterText));
+                        filterString.AppendFormat("({0} like '{1}%')", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_SelectedFilterText));
                         filtered = true;
 
                         break;
                     case ConstraintValues.cv_ends_with:
-                        filterString.AppendFormat("({0} like '%{1}')", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_FilterText));
+                        filterString.AppendFormat("({0} like '%{1}')", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLEscape(m_SelectedFilterText));
                         filtered = true;
 
                         break;

@@ -53,9 +53,6 @@ namespace DataGridViewAutoFilter
 
             switch (ColumnFilterType)
             {
-                case ColumnFilterTypes.SingleSelect:
-                    base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterSingleColumnHeaderCell);        
-                    break;
                 case ColumnFilterTypes.MultiSelect:
                     base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterMultiColumnHeaderCell);
                     break;

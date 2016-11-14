@@ -90,6 +90,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "MultiSelectHeaderList";
+            this.ShowInTaskbar = false;
             this.ResumeLayout(false);
 
         }

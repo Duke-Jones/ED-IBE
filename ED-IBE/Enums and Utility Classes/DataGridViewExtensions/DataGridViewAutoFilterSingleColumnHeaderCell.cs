@@ -114,7 +114,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Displays the drop-down filter list. 
         /// </summary>
-        override public void ShowDropDownList()
+        override public void ShowColumnFilter()
         {
             if(filterControlShowing)
             {
@@ -189,6 +189,7 @@ namespace DataGridViewAutoFilter
                 // Invalidate the cell so that the drop-down button will repaint
                 // in the unpressed state. 
                 this.DataGridView.InvalidateCell(this);
+                this.DataGridView.Focus();
             }
         }
 
@@ -392,7 +393,7 @@ namespace DataGridViewAutoFilter
             UpdateFilter();
             HideFilterControl();
 
-            RefreshDGV(0);
+            RaiseDataChangedEvent();
         }
 
         #endregion ListBox events

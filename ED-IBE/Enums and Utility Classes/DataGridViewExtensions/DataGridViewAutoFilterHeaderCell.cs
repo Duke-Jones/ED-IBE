@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.Collections;
 using System.Reflection;
+using IBE.Enums_and_Utility_Classes;
+using IBE;
 
 namespace DataGridViewAutoFilter
 {
@@ -17,6 +19,25 @@ namespace DataGridViewAutoFilter
     /// </summary>
     public class DataGridViewAutoFilterHeaderCell : DataGridViewColumnHeaderCell
     {
+
+#region event handler
+
+        public event EventHandler<DataChangedEventArgs> FilterChanged;
+
+        protected virtual void OnDataChanged(DataChangedEventArgs e)
+        {
+            EventHandler<DataChangedEventArgs> myEvent = FilterChanged;
+            if (myEvent != null)
+            {
+                myEvent(this, e);
+            }
+        }
+
+        public class DataChangedEventArgs : EventArgs
+        {
+        }
+
+#endregion
 
         /// <summary>
         /// Indicates whether the DataGridView is currently filtered by the owning column.  
@@ -486,7 +507,7 @@ namespace DataGridViewAutoFilter
                         source.EndEdit();
                     }
                 }
-                ShowDropDownList();
+                ShowColumnFilter();
             }
             else if (AutomaticSortingEnabled &&
                 this.DataGridView.SelectionMode != 
@@ -540,29 +561,19 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// forces refreshing this tab
         /// </summary>
-        protected void RefreshDGV(int? currentRow)
+        protected void RaiseDataChangedEvent()
         {
-            if(Retriever != null)
+            Cursor oldCursor = this.DataGridView.Cursor;
+            this.DataGridView.Cursor = Cursors.WaitCursor;
+            try
             {
-                Cursor oldCursor = this.DataGridView.Cursor;
-                this.DataGridView.Cursor = Cursors.WaitCursor;
+                FilterChanged.Raise(this, new DataChangedEventArgs());
 
-                // force refresh
-                Retriever.MemoryCache.Clear();
-                this.DataGridView.RowCount  = Retriever.RowCount(true);
-                this.DataGridView.Invalidate();
-                    
-
-                // jump to the new row
-                if ((currentRow != null) && (this.DataGridView.RowCount > currentRow))
-                //try
-                //{
-                        this.DataGridView.CurrentCell = this.DataGridView[1, currentRow.Value];
-                //}
-                //catch{}
-
-                wie komme ich von hier zum zentralen DGV Refresh ? (wegen SetButtons von BindingNav)
-
+                this.DataGridView.Cursor = oldCursor;
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while raising filter changed event");
                 this.DataGridView.Cursor = oldCursor;
             }
         }
@@ -618,7 +629,8 @@ namespace DataGridViewAutoFilter
                 case Keys.Enter:
                     UpdateFilter();
                     HideFilterControl();
-                    RefreshDGV(0);
+
+                    FilterChanged.Raise(this, new DataChangedEventArgs());
                     break;
                 case Keys.Escape:
                     HideFilterControl();
@@ -638,7 +650,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Displays the drop-down filter list. 
         /// </summary>
-        virtual public void ShowDropDownList()
+        virtual public void ShowColumnFilter()
         {
             throw new NotImplementedException("ShowDropDownList() missing");
         }

@@ -52,6 +52,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "SingleSelectHeaderList";
+            this.ShowInTaskbar = false;
             this.ResumeLayout(false);
 
         }

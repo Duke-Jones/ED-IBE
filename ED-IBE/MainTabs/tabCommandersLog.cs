@@ -122,9 +122,16 @@ namespace IBE.MTCommandersLog
 
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype";
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).FilterChanged += FilterChanged_Event;
+
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).FilterChanged += FilterChanged_Event;
+
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).FilterChanged += FilterChanged_Event;
+
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).FilterChanged += FilterChanged_Event;
                 
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
@@ -145,6 +152,11 @@ namespace IBE.MTCommandersLog
                 throw new Exception("Error during initialization the commanders log tab", ex);
             }
 
+        }
+
+        private void FilterChanged_Event(object sender, DataGridViewAutoFilterHeaderCell.DataChangedEventArgs e)
+        {
+            RefreshData();
         }
 
         /// <summary>
@@ -951,7 +963,7 @@ namespace IBE.MTCommandersLog
                     DataGridViewAutoFilterHeaderCell filterCell = (DataGridViewAutoFilterHeaderCell)dgvCommandersLog.CurrentCell.OwningColumn.HeaderCell;
                     if (filterCell != null)
                     {
-                        filterCell.ShowDropDownList();
+                        filterCell.ShowColumnFilter();
                         e.Handled = true;
                     }
                 }
@@ -987,6 +999,8 @@ namespace IBE.MTCommandersLog
             {
                 if ((dgvCommandersLog.CurrentCell != null) && (dgvCommandersLog.CurrentCell.RowIndex > 0))
                     dgvCommandersLog.CurrentCell = dgvCommandersLog[1, dgvCommandersLog.CurrentCell.RowIndex - 1];
+
+                SetNavigatorButtons(dgvCommandersLog.CurrentCell.RowIndex);
             }
             catch (Exception ex)
             {
@@ -1000,6 +1014,8 @@ namespace IBE.MTCommandersLog
             {
                 if ((dgvCommandersLog.CurrentCell != null) && (dgvCommandersLog.CurrentCell.RowIndex < (dgvCommandersLog.RowCount-1)))
                     dgvCommandersLog.CurrentCell = dgvCommandersLog[1, dgvCommandersLog.CurrentCell.RowIndex + 1];
+
+                SetNavigatorButtons(dgvCommandersLog.CurrentCell.RowIndex);
             }
             catch (Exception ex)
             {
@@ -1013,6 +1029,8 @@ namespace IBE.MTCommandersLog
             {
                 if (dgvCommandersLog.RowCount > 0)
                     dgvCommandersLog.CurrentCell = dgvCommandersLog[1, 0];
+
+                SetNavigatorButtons(dgvCommandersLog.CurrentCell.RowIndex);
             }
             catch (Exception ex)
             {
@@ -1026,6 +1044,8 @@ namespace IBE.MTCommandersLog
             {
                 if (dgvCommandersLog.RowCount > 0)
                     dgvCommandersLog.CurrentCell = dgvCommandersLog[1, dgvCommandersLog.RowCount-1];
+
+                SetNavigatorButtons(dgvCommandersLog.CurrentCell.RowIndex);
             }
             catch (Exception ex)
             {

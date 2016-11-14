@@ -41,8 +41,6 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private List<String> currentColumnFilter = new List<String>();
 
-        List<String> m_FilterValues = new List<string>();
-
          /// <summary>
          /// Initializes a new instance of the DataGridViewColumnHeaderCell 
          /// class and sets its property values to the property values of the 
@@ -116,7 +114,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Displays the drop-down filter list. 
         /// </summary>
-        override public void ShowDropDownList()
+        override public void ShowColumnFilter()
         {
             try
             {
@@ -197,6 +195,7 @@ namespace DataGridViewAutoFilter
                 // Invalidate the cell so that the drop-down button will repaint
                 // in the unpressed state. 
                 this.DataGridView.InvalidateCell(this);
+                this.DataGridView.Focus();
             }
         }
 
@@ -397,7 +396,7 @@ namespace DataGridViewAutoFilter
                 UpdateFilter();
                 HideFilterControl();
 
-                RefreshDGV(0);
+                RaiseDataChangedEvent();
             }
             catch (Exception ex)
             {

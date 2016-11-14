@@ -22,9 +22,9 @@ todo:
 
 done:
 
-* on open set last settings on filter form
 
-
+  * bugfixing/optimization on ColumnFilter
+-------------------------------------------------------------------------------------         
   * added navigation bar on Commander's Log
 -------------------------------------------------------------------------------------         
   * bugfixing/optimization on ColumnFilter
