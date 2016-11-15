@@ -49,9 +49,9 @@
             // cmdOk
             // 
             this.cmdOk.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdOk.Location = new System.Drawing.Point(102, 112);
+            this.cmdOk.Location = new System.Drawing.Point(100, 112);
             this.cmdOk.Name = "cmdOk";
-            this.cmdOk.Size = new System.Drawing.Size(42, 22);
+            this.cmdOk.Size = new System.Drawing.Size(44, 22);
             this.cmdOk.TabIndex = 1;
             this.cmdOk.Text = "Ok";
             this.cmdOk.UseVisualStyleBackColor = true;
@@ -61,7 +61,7 @@
             this.cmdInvert.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.cmdInvert.Location = new System.Drawing.Point(4, 112);
             this.cmdInvert.Name = "cmdInvert";
-            this.cmdInvert.Size = new System.Drawing.Size(42, 22);
+            this.cmdInvert.Size = new System.Drawing.Size(44, 22);
             this.cmdInvert.TabIndex = 3;
             this.cmdInvert.Text = "Invert";
             this.cmdInvert.UseVisualStyleBackColor = true;
@@ -70,9 +70,9 @@
             // cmdAll
             // 
             this.cmdAll.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cmdAll.Location = new System.Drawing.Point(53, 112);
+            this.cmdAll.Location = new System.Drawing.Point(52, 112);
             this.cmdAll.Name = "cmdAll";
-            this.cmdAll.Size = new System.Drawing.Size(42, 22);
+            this.cmdAll.Size = new System.Drawing.Size(44, 22);
             this.cmdAll.TabIndex = 2;
             this.cmdAll.Text = "All";
             this.cmdAll.UseVisualStyleBackColor = true;

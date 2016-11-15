@@ -20,7 +20,7 @@ namespace DataGridViewAutoFilter
     public class DataGridViewAutoFilterMultiTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
     {
         /// <summary>
-        /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
+        /// Initializes a new instance of the DataGridViewAutoFilterMultiTextBoxColumn class.
         /// </summary>
         public DataGridViewAutoFilterMultiTextBoxColumn() : base(ColumnFilterTypes.MultiSelect)
         {
@@ -31,9 +31,20 @@ namespace DataGridViewAutoFilter
     public class DataGridViewAutoFilterFullTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
     {
         /// <summary>
-        /// Initializes a new instance of the DataGridViewAutoFilterSingleTextBoxColumn class.
+        /// Initializes a new instance of the DataGridViewAutoFilterFullTextBoxColumn class.
         /// </summary>
-        public DataGridViewAutoFilterFullTextBoxColumn() : base(ColumnFilterTypes.FullText)
+        public DataGridViewAutoFilterFullTextBoxColumn() : base(ColumnFilterTypes.FullTextSelect)
+        {
+
+        }
+    }
+
+    public class DataGridViewAutoFilterDateTimeTextBoxColumn : DataGridViewAutoFilterTextBoxColumn
+    {
+        /// <summary>
+        /// Initializes a new instance of the DataGridViewAutoFilterDateTimeTextBoxColumn class.
+        /// </summary>
+        public DataGridViewAutoFilterDateTimeTextBoxColumn() : base(ColumnFilterTypes.DateTimeSelect)
         {
 
         }
@@ -53,11 +64,17 @@ namespace DataGridViewAutoFilter
 
             switch (ColumnFilterType)
             {
+                case ColumnFilterTypes.SingleSelect:
+                    base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterSingleColumnHeaderCell);
+                    break;
                 case ColumnFilterTypes.MultiSelect:
                     base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterMultiColumnHeaderCell);
                     break;
-                case ColumnFilterTypes.FullText:
+                case ColumnFilterTypes.FullTextSelect:
                     base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterFullColumnHeaderCell);
+                    break;
+                case ColumnFilterTypes.DateTimeSelect:
+                    base.DefaultHeaderCellType = typeof(DataGridViewAutoFilterDateTimeColumnHeaderCell);
                     break;
             }
             
@@ -161,7 +178,8 @@ namespace DataGridViewAutoFilter
         {
             SingleSelect,
             MultiSelect,
-            FullText
+            FullTextSelect,
+            DateTimeSelect
         }
 
         ColumnFilterTypes m_ColumnFilterType;

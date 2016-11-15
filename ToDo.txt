@@ -23,6 +23,8 @@ todo:
 done:
 
 
+  * added filter to column 'time' in Commander's Log
+-------------------------------------------------------------------------------------         
   * bugfixing/optimization on ColumnFilter
 -------------------------------------------------------------------------------------         
   * added navigation bar on Commander's Log

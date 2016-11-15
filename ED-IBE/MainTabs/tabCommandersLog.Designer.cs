@@ -91,7 +91,7 @@
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.dgvCommandersLog = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
-            this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.time = new DataGridViewAutoFilter.DataGridViewAutoFilterDateTimeTextBoxColumn();
             this.systemname = new DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn();
             this.stationname = new DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn();
             this.eventtype = new DataGridViewAutoFilter.DataGridViewAutoFilterMultiTextBoxColumn();
@@ -582,7 +582,7 @@
             this.bindNavCmdrsLog.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindNavCmdrsLog.Name = "bindNavCmdrsLog";
             this.bindNavCmdrsLog.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindNavCmdrsLog.Size = new System.Drawing.Size(279, 25);
+            this.bindNavCmdrsLog.Size = new System.Drawing.Size(202, 25);
             this.bindNavCmdrsLog.TabIndex = 51;
             this.bindNavCmdrsLog.Text = "bindingNavigator1";
             // 
@@ -729,6 +729,7 @@
             this.time.HeaderText = "Time";
             this.time.Name = "time";
             this.time.ReadOnly = true;
+            this.time.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.time.Width = 70;
             // 
             // systemname
@@ -895,17 +896,6 @@
         private System.Windows.Forms.ToolStripStatusLabel filterStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel showAllLabel;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn time;
-        private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn systemname;
-        private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn stationname;
-        private DataGridViewAutoFilter.DataGridViewAutoFilterMultiTextBoxColumn eventtype;
-        private System.Windows.Forms.DataGridViewTextBoxColumn action;
-        private System.Windows.Forms.DataGridViewTextBoxColumn loccommodity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cargovolume;
-        private System.Windows.Forms.DataGridViewTextBoxColumn credits_transaction;
-        private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
-        private System.Windows.Forms.DataGridViewTextBoxColumn distance;
-        private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn notes;
         internal System.Windows.Forms.BindingNavigator bindNavCmdrsLog;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
@@ -918,5 +908,16 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
+        private DataGridViewAutoFilter.DataGridViewAutoFilterDateTimeTextBoxColumn time;
+        private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn systemname;
+        private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn stationname;
+        private DataGridViewAutoFilter.DataGridViewAutoFilterMultiTextBoxColumn eventtype;
+        private System.Windows.Forms.DataGridViewTextBoxColumn action;
+        private System.Windows.Forms.DataGridViewTextBoxColumn loccommodity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cargovolume;
+        private System.Windows.Forms.DataGridViewTextBoxColumn credits_transaction;
+        private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
+        private System.Windows.Forms.DataGridViewTextBoxColumn distance;
+        private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn notes;
     }
 }

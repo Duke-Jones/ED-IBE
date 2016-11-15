@@ -133,6 +133,10 @@ namespace IBE.MTCommandersLog
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).FilterChanged += FilterChanged_Event;
                 
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).Retriever = m_DataSource.Retriever;
+                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).FilterChanged += FilterChanged_Event;
+                ((DataGridViewAutoFilterDateTimeColumnHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).DtpAfter.Value = Program.DBCon.Execute<DateTime>("select min(time) from tbLog").Date;
+
                 dgvCommandersLog.RowEnter                += dgvCommandersLog_RowEnter;
                 dgvCommandersLog.RowPrePaint             += dgvCommandersLog_RowPrePaint;
                 dgvCommandersLog.Paint                   += dgvCommandersLog_Paint;
@@ -320,7 +324,7 @@ namespace IBE.MTCommandersLog
                     }
                     catch{}
 
-                    SetNavigatorButtons(currentRow.Value);
+                    SetNavigatorButtons(currentRow);
                 }
             }
             catch (Exception ex)
@@ -1052,12 +1056,29 @@ namespace IBE.MTCommandersLog
                 CErr.processError(ex, "Error in bindingNavigatorMoveLastItem_Click");
             }
         }
-        private void SetNavigatorButtons(Int32 rowIndex)
+        private void SetNavigatorButtons(int? rowIndex)
         {
-            bindNavCmdrsLog.MovePreviousItem.Enabled    = (rowIndex > 0);
-            bindNavCmdrsLog.MoveFirstItem.Enabled       = (rowIndex > 0);
-            bindNavCmdrsLog.MoveLastItem.Enabled        = (rowIndex < (dgvCommandersLog.RowCount-1));
-            bindNavCmdrsLog.MoveNextItem.Enabled        = (rowIndex < (dgvCommandersLog.RowCount-1));
+            try
+            {
+                if(rowIndex != null)
+                {
+                    bindNavCmdrsLog.MovePreviousItem.Enabled    = (rowIndex > 0);
+                    bindNavCmdrsLog.MoveFirstItem.Enabled       = (rowIndex > 0);
+                    bindNavCmdrsLog.MoveLastItem.Enabled        = (rowIndex < (dgvCommandersLog.RowCount-1));
+                    bindNavCmdrsLog.MoveNextItem.Enabled        = (rowIndex < (dgvCommandersLog.RowCount-1));
+                }
+                else
+                {
+                    bindNavCmdrsLog.MovePreviousItem.Enabled    = false;
+                    bindNavCmdrsLog.MoveFirstItem.Enabled       = false;
+                    bindNavCmdrsLog.MoveLastItem.Enabled        = false;
+                    bindNavCmdrsLog.MoveNextItem.Enabled        = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while setting navigator buttons", ex);
+            }
         }
 
     }

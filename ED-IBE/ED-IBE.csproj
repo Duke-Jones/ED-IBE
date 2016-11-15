@@ -154,11 +154,18 @@
       <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
     </Compile>
     <Compile Include="EDSM\ServerStatus.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterDateTimeColumnHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterFullColumnHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterMultiColumnHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterSingleColumnHeaderCell.cs" />
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DataGridViewAutoFilterTextBoxColumn.cs" />
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DateTimeHeader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Enums and Utility Classes\DataGridViewExtensions\DateTimeHeader.Designer.cs">
+      <DependentUpon>DateTimeHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\FullTextHeader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -492,6 +499,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EDSM\EDStarmapInterfaceView.resx">
       <DependentUpon>EDStarmapInterfaceView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Enums and Utility Classes\DataGridViewExtensions\DateTimeHeader.resx">
+      <DependentUpon>DateTimeHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Enums and Utility Classes\DataGridViewExtensions\FullTextHeader.resx">
       <DependentUpon>FullTextHeader.cs</DependentUpon>
