@@ -118,22 +118,15 @@ namespace IBE.MTCommandersLog
                 dgvCommandersLog.AllowUserToAddRows       = false;
                 dgvCommandersLog.AllowUserToOrderColumns  = false;
 
-                dgvCommandersLog.RowCount                 = m_DataSource.InitRetriever();
-
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).RetrieverSQLSelect = "select distinct E.eventtype";
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).FilterChanged += FilterChanged_Event;
 
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).FilterChanged += FilterChanged_Event;
 
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).FilterChanged += FilterChanged_Event;
 
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).Retriever = m_DataSource.Retriever;
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).FilterChanged += FilterChanged_Event;
-                
-                ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).Retriever = m_DataSource.Retriever;
+
                 ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).FilterChanged += FilterChanged_Event;
                 ((DataGridViewAutoFilterDateTimeColumnHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).DtpAfter.Value = Program.DBCon.Execute<DateTime>("select min(time) from tbLog").Date;
 
@@ -146,7 +139,6 @@ namespace IBE.MTCommandersLog
 
                 bindNavCmdrsLog.CountItem.Enabled           = true;
                 bindNavCmdrsLog.PositionItem.Enabled        = true;
-
 
                 Cursor = oldCursor;
             }
@@ -170,17 +162,38 @@ namespace IBE.MTCommandersLog
         /// <param name="e"></param>
         void dgvCommandersLog_Paint(object sender, PaintEventArgs e)
         {
+            var oldCursor = Program.MainForm.Cursor;
+
             try
             {
                 if(!m_FirstRowShown)
                 { 
+                    
+                    
+                    Program.MainForm.Cursor = Cursors.WaitCursor;
+
+                    dgvCommandersLog.RowCount = 0;
+                    dgvCommandersLog.RowCount = m_DataSource.InitRetriever();
+
+                    ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
+                    ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["systemname"].HeaderCell).Retriever = m_DataSource.Retriever;
+                    ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["stationname"].HeaderCell).Retriever = m_DataSource.Retriever;
+                    ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).Retriever = m_DataSource.Retriever;
+                    ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).Retriever = m_DataSource.Retriever;
+
                     showRowInFields(new DataGridViewCellEventArgs(0,0));
+
+                    SetNavigatorButtons(0);
+
                     m_FirstRowShown = true;
+
+                    Program.MainForm.Cursor = oldCursor;
                 }
             }
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error in dgvCommandersLog_Paint");
+                Program.MainForm.Cursor = oldCursor;
             }
         }
 
@@ -311,20 +324,24 @@ namespace IBE.MTCommandersLog
                 else
                 {
                     // force refresh
-                    m_DataSource.Retriever.MemoryCache.Clear();
-                    dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount(true);
-                    dgvCommandersLog.Invalidate();
+                    if(m_FirstRowShown)
+                    {
+                        m_DataSource.Retriever.MemoryCache.Clear();
+                        dgvCommandersLog.RowCount  = 0;
+                        dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount(true);
+                        dgvCommandersLog.Invalidate();
                     
 
-                    // jump to the new row
-                    if ((currentRow != null) && (dgvCommandersLog.RowCount > currentRow))
-                    try
-                    {
-                        dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow.Value];
-                    }
-                    catch{}
+                        // jump to the new row
+                        if ((currentRow != null) && (dgvCommandersLog.RowCount > currentRow))
+                        try
+                        {
+                            dgvCommandersLog.CurrentCell = dgvCommandersLog[1, currentRow.Value];
+                        }
+                        catch{}
 
-                    SetNavigatorButtons(currentRow);
+                        SetNavigatorButtons(currentRow);
+                    }
                 }
             }
             catch (Exception ex)

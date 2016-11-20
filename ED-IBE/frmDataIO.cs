@@ -141,6 +141,7 @@ namespace IBE
 
                     nudPurgeOldDataDays.Enabled                     = (Boolean)o;
                     nudPurgeNotMoreExistingDataDays.Enabled         = (Boolean)o;
+                    cmdDeleteUnusedSystemData.Enabled               = (Boolean)o;
 
 
                 }), setEnabled);
@@ -1898,6 +1899,39 @@ namespace IBE
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error in CheckBox_CheckedChanged");
+            }
+        }
+
+        private async void cmdDeleteUnusedSystemData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(MessageBox.Show(String.Format("Start cleanup ?"), "Delete unused system data...", MessageBoxButtons.OKCancel, MessageBoxIcon.Question ) == System.Windows.Forms.DialogResult.OK)
+                {
+                    Data_Progress(this, new EliteDBIO.ProgressEventArgs() { Clear=true });
+
+                    SetButtons(false);
+
+                    Program.Data.Progress += Data_Progress;
+
+                    var t = new Task(() => Program.Data.DeleteUnusedSystemData());
+                    t.Start();
+                    await t;
+
+                    Program.Data.Progress -= Data_Progress;
+
+                    if(m_CancelAction)
+                        MessageBox.Show(this, "Deleting cancelled !", "Delete unused system data...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    else
+                        MessageBox.Show(this, "All unused systems deleted !", "Delete unused system data...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    SetButtons(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetButtons(true);
+                CErr.processError(ex, "Error in cmdDeleteUnusedSystemData_Click");
             }
         }
     }

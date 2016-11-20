@@ -4426,12 +4426,119 @@ namespace IBE.SQL
 	        }
         }
 
+        public void DeleteUnusedSystemData()
+        {
+            Int32 startPos  = 0;
+            Int32 endPos    = 0;
+            Int32 total     = 0;
+            Int32 current   = 0;
+            ProgressEventArgs eva;
+
+            try
+            {
+
+                eva = new ProgressEventArgs() { Info="deleting unneeded system data..."};
+                sendProgressEvent(eva);
+
+                Program.DBCon.Execute("DROP TABLE IF EXISTS `elite_db`.`tmpToDeleteSystems`;");
+                Program.DBCon.Execute("CREATE  TABLE IF NOT EXISTS `elite_db`.`tmpToDeleteSystems` ( " +
+                                      "   `id` INT NOT NULL, " +
+                                      "   PRIMARY KEY (`id`), " +
+                                      "   CONSTRAINT `fk_tbSystems_tmpToDeleteSystems` " +
+                                      "     FOREIGN KEY (`id`) " +
+                                      "     REFERENCES `elite_db`.`tbSystems` (`id`) " +
+                                      "     ON DELETE CASCADE " +
+                                      "     ON UPDATE CASCADE   " +
+                                      " ) " +
+                                      " ENGINE = InnoDB; ");
+
+                eva = new ProgressEventArgs() { Info="deleting unneeded system data, analyzing data...", ForceRefresh = true};
+                sendProgressEvent(eva);
+
+                Program.DBCon.Execute("insert into tmpToDeleteSystems" +
+                                      " select Sy.ID from (tbSystems Sy left join tbStations St On Sy.id = St.System_id) left join tbLog L on Sy.ID = L.system_ID left join tbVisitedSystems Vs on Sy.ID = Vs.System_ID" +
+                                      " where St.ID is null and L.time is null and Vs.System_ID is null;");
+
+                total = Program.DBCon.Execute<Int32>("SELECT count(*) FROM tmpToDeleteSystems;");
+
+                if(total > 0)
+                {
+                    startPos = Program.DBCon.Execute<Int32>("SELECT @a := MIN(id) FROM tmpToDeleteSystems;");
+                    endPos   = Program.DBCon.Execute<Int32>("SELECT @z := id FROM tmpToDeleteSystems WHERE id >= @a ORDER BY id LIMIT 1000,1;");
+
+                    while (endPos > startPos)
+                    {
+
+                        Program.DBCon.Execute("DELETE FROM tbSystems " +
+                                                "   where EXISTS (select ID from tmpToDeleteSystems " +
+					                            "                  where id >= @a " +
+					                            "                  AND   id <  @z  " +
+                                                "                  and   id = tbSystems.ID); ");
+
+                        current += 1000;
+
+                        eva = new ProgressEventArgs() { Info="deleting unneeded system data...", CurrentValue = current, TotalValue = total};
+                        sendProgressEvent(eva);
+
+                        if(eva.Cancelled)
+                            break;
+
+                        startPos = Program.DBCon.Execute<Int32>("select @a := @z");
+                        endPos   = Program.DBCon.Execute<Int32>("SELECT @z := id FROM tmpToDeleteSystems WHERE id >= @a ORDER BY id LIMIT 1000,1;");
+
+                        if((eva != null) && eva.Cancelled)
+                            break;
+
+                    }
+
+                    if(eva.Cancelled)
+                    {
+                        Program.DBCon.Execute("DROP TABLE IF EXISTS `elite_db`.`tmpToDeleteSystems`;");
+                    }
+                    else
+                    {
+                        Program.DBCon.Execute("DELETE FROM tbSystems " +
+                                                " where EXISTS (select ID from tmpToDeleteSystems " +
+	                                            " 				where id >= @a " +
+                                                "                and   id = tbSystems.ID); ");
+       
+                        Program.DBCon.Execute("DROP TABLE IF EXISTS `elite_db`.`tmpToDeleteSystems`;");
+
+                        eva = new ProgressEventArgs() { Info="deleting unneeded system data...", CurrentValue = total, TotalValue = total, ForceRefresh = true};
+                        sendProgressEvent(eva);
+                    }
+
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 0, TotalValue = 3, NewLine = true};
+                    sendProgressEvent(eva);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 1, TotalValue = 3, ForceRefresh = true};
+                    sendProgressEvent(eva);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 2, TotalValue = 3, ForceRefresh = true};
+                    sendProgressEvent(eva);
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 3, TotalValue = 3, ForceRefresh = true};
+                    sendProgressEvent(eva);
+                }
+                else
+                {
+                    Program.DBCon.Execute("DROP TABLE IF EXISTS `elite_db`.`tmpToDeleteSystems`;");
+
+                    eva = new ProgressEventArgs() { Info="no unneeded system data found !", NewLine = true};
+                    sendProgressEvent(eva);
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while deleting unused systems");
+            }
+        }
 
 
 
         #endregion
 
-#region handling of EDCD data
+        #region handling of EDCD data
 
         public void ImportEDCDData(frmDataIO.enImportTypes enImportTypes, String importFile)
         {

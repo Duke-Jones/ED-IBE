@@ -598,7 +598,7 @@ namespace IBE.FileScanner
                                                 break;
 
                                             default:
-                                                Debug.Print("ignored (seeking) : <" + rawEventName + ">");
+                                                //Debug.Print("ignored (seeking) : <" + rawEventName + ">");
                                                 break;
                                         }
                                     }

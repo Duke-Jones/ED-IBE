@@ -1013,7 +1013,7 @@ USE `elite_db` ;
 -- -----------------------------------------------------
 -- Placeholder table for view `elite_db`.`vilog`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `elite_db`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eevent` INT, `action` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `distance` INT, `notes` INT);
+CREATE TABLE IF NOT EXISTS `elite_db`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eventtype` INT, `cargoaction` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `distance` INT, `notes` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `elite_db`.`viSystemsAndStations`
@@ -1026,8 +1026,8 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`viSystemsAndStations` (`SystemID` INT, `S
 DROP TABLE IF EXISTS `elite_db`.`vilog`;
 USE `elite_db`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS 
-select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eevent`,`c`.`cargoaction` 
-AS `action`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` 
+select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eventtype`,`c`.`cargoaction` 
+AS `cargoaction`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` 
 AS `credits_transaction`,`l`.`credits_total` AS `credits_total`, `l`.`distance` AS `distance`, `l`.`notes` AS `notes` from (((((`tblog` `l` 
 left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) 
 left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) 
@@ -1245,7 +1245,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.4');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.5');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;

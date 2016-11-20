@@ -150,6 +150,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 5, 3))
                         UpdateTo_0_5_3(ref foundError);
 
+                    if (dbVersion < new Version(0, 5, 5))
+                        UpdateTo_0_5_5(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -1377,6 +1380,91 @@ namespace IBE
             }
         }
 
+        private static void UpdateTo_0_5_5(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.5...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                // add changes to the database
+                sqlString = "-- MySQL Workbench Synchronization                                                                                                                   \n" +
+                            "-- Generated: 2016-11-20 16:10                                                                                                                       \n" + 
+                            "-- Model: New Model                                                                                                                                  \n" +
+                            "-- Version: 1.0                                                                                                                                      \n" +
+                            "-- Project: Name of the project                                                                                                                      \n" +
+                            "-- Author: Duke                                                                                                                                      \n" +
+                            "                                                                                                                                                     \n" +
+                            "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                             \n" +
+                            "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                              \n" +
+                            "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                            \n" +
+                            "                                                                                                                                                     \n" +
+                            "-- -----------------------------------------------------                                                                                             \n" +
+                            "-- Placeholder table for view `elite_db`.`vilog`                                                                                                     \n" +
+                            "-- -----------------------------------------------------                                                                                             \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eventtype` INT,                                     \n" +
+                            " `cargoaction` INT, `loccommodity` INT, `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `distance` INT, `notes` INT);             \n" +
+                            "                                                                                                                                                     \n" + 
+                            "USE `elite_db`;                                                                                                                                      \n" +
+                            "                                                                                                                                                     \n" +
+                            "-- -----------------------------------------------------                                                                                             \n" +
+                            "-- View `elite_db`.`vilog`                                                                                                                           \n" +
+                            "-- -----------------------------------------------------                                                                                             \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`vilog`;                                                                                                             \n" +
+                            "USE `elite_db`;                                                                                                                                      \n" +
+                            "CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS                                               \n" +
+                            "select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eventtype`,`c`.`cargoaction`    \n" +
+                            "AS `cargoaction`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction`                                  \n" +
+                            "AS `credits_transaction`,`l`.`credits_total` AS `credits_total`, `l`.`distance` AS `distance`, `l`.`notes` AS `notes` from (((((`tblog` `l`          \n" +
+                            "left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`)))                    \n" +
+                            "left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`)))                          \n" +
+                            "left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));                                                                                  \n" +
+                            "                                                                                                                                                     \n" +
+                            "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                          \n" +
+                            "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                      \n" +
+                            "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                \n";
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.5...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.5.5", ex);
+            }
+        }
         
 
         static void sqlScript_ScriptCompleted(object sender, EventArgs e)
@@ -1643,6 +1731,22 @@ namespace IBE
 
 
                         }
+                    }
+
+                    if (m_NewDBVersion == new Version(0,5,5,0))
+                    {
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = false;
+
+                        MessageBox.Show(parent, "In 'Data->Import&Export' you will find a new button 'Delete unused system data' in the lower right corner.\n" +
+                                                "I recommend to use this function at least one time (especially if you already used ED-IBE before v0.5.0)", 
+                                                "v0.5.5 performance hint !!!", 
+                                                MessageBoxButtons.OK, 
+                                                MessageBoxIcon.Information);
+
+                        if(!Program.SplashScreen.IsDisposed)
+                            Program.SplashScreen.TopMost = true;
+
                     }
 
                 }

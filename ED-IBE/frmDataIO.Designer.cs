@@ -54,6 +54,8 @@
             this.label89 = new System.Windows.Forms.Label();
             this.nudPurgeOldDataDays = new System.Windows.Forms.NumericUpDown();
             this.cmdPurgeNotMoreExistingDataDays = new System.Windows.Forms.Button();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.cmdDeleteUnusedSystemData = new System.Windows.Forms.Button();
             this.ofdFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cmdExit = new System.Windows.Forms.Button();
@@ -81,6 +83,7 @@
             this.gbPriceImport.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).BeginInit();
+            this.groupBox9.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -402,6 +405,31 @@
             this.cmdPurgeNotMoreExistingDataDays.UseVisualStyleBackColor = true;
             this.cmdPurgeNotMoreExistingDataDays.Click += new System.EventHandler(this.cmdPurgeNotMoreExistingDataDays_Click);
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.cmdDeleteUnusedSystemData);
+            this.groupBox9.Location = new System.Drawing.Point(714, 505);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(516, 82);
+            this.groupBox9.TabIndex = 68;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Remove all unused systems to reduce database and speedup start sequence";
+            this.ttToolTip.SetToolTip(this.groupBox9, "Only unused data will be deleted. Recommended  (especially for pre v0.5.0 users) " +
+        "to do this one time.");
+            // 
+            // cmdDeleteUnusedSystemData
+            // 
+            this.cmdDeleteUnusedSystemData.Location = new System.Drawing.Point(32, 21);
+            this.cmdDeleteUnusedSystemData.Name = "cmdDeleteUnusedSystemData";
+            this.cmdDeleteUnusedSystemData.Size = new System.Drawing.Size(348, 55);
+            this.cmdDeleteUnusedSystemData.TabIndex = 63;
+            this.cmdDeleteUnusedSystemData.Text = "Delete unused system data \r\n(recommended to do at least one time, to be sure that" +
+    " there\'s no garbage in the database)";
+            this.ttToolTip.SetToolTip(this.cmdDeleteUnusedSystemData, "Only unused data will be deleted. Recommended to do this at least one time (espec" +
+        "ially for pre-v0.5.0 users)");
+            this.cmdDeleteUnusedSystemData.UseVisualStyleBackColor = true;
+            this.cmdDeleteUnusedSystemData.Click += new System.EventHandler(this.cmdDeleteUnusedSystemData_Click);
+            // 
             // ofdFileDialog
             // 
             this.ofdFileDialog.FileName = "openFileDialog1";
@@ -647,7 +675,8 @@
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1238, 506);
+            this.ClientSize = new System.Drawing.Size(1238, 599);
+            this.Controls.Add(this.groupBox9);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.cmdCancel);
             this.Controls.Add(this.groupBox8);
@@ -673,6 +702,7 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPurgeOldDataDays)).EndInit();
+            this.groupBox9.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -739,5 +769,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudPurgeNotMoreExistingDataDays;
         private System.Windows.Forms.CheckBox cbAutoImportEDCD;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Button cmdDeleteUnusedSystemData;
     }
 }
