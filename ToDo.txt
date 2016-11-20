@@ -22,9 +22,12 @@ todo:
 
 done:
 
+v0.5.5
+  * bugfixing
+-------------------------------------------------------------------------------------         
   * service function for delete unneeded systems (results in speeding up the start sequence again)
   * speed up start sequence when initializing Commander's Log
-  -------------------------------------------------------------------------------------         
+-------------------------------------------------------------------------------------         
   * added filter to column 'time' in Commander's Log
 -------------------------------------------------------------------------------------         
   * bugfixing/optimization on ColumnFilter

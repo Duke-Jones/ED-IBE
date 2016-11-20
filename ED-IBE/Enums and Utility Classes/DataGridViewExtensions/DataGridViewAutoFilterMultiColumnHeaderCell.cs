@@ -143,6 +143,9 @@ namespace DataGridViewAutoFilter
                 String[] filterArray = new String[filters.Count];
                 filters.Keys.CopyTo(filterArray, 0);
 
+                if(filterArray.GetUpperBound(0) == -1)
+                    return;
+
                 if(selectedFilterValue.Count == 0)
                     selectedFilterValue.AddRange(filterArray);
 
@@ -525,12 +528,18 @@ namespace DataGridViewAutoFilter
 
                 DataTable dataTable = new DataTable();
 
-                IBE.Program.DBCon.Execute(String.Format("{0} {1}", RetrieverSQLSelect, Retriever.BaseStatement), dataTable);
+                try
+                {
+                    IBE.Program.DBCon.Execute(String.Format("{0} {1}", RetrieverSQLSelect, Retriever.BaseStatement), dataTable);
+                    list = new ArrayList(dataTable.Rows.Count);
 
-                list = new ArrayList(dataTable.Rows.Count);
-
-                foreach (DataRow selectableItem in dataTable.Rows)
-                    list.Add(selectableItem[0]);
+                    foreach (DataRow selectableItem in dataTable.Rows)
+                        list.Add(selectableItem[0]);
+                }
+                catch (Exception)
+                {
+                    list = new ArrayList();
+                }
             }
 
             // Sort the ArrayList. The default Sort method uses the IComparable 

@@ -454,9 +454,14 @@ namespace IBE.SQL
 
             if (typeof(T) == typeof(String))
                 retValue = (T)Convert.ChangeType("", typeof(T));
+            else if (typeof(T) == typeof(DateTime))
+            {
+                retValue = (T)Convert.ChangeType(new DateTime(2016, 11, 01), typeof(T));
+            }
             else
                 retValue = Activator.CreateInstance<T>();
             
+
 
             Object DataObject = null;
 
