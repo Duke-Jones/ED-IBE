@@ -3785,7 +3785,32 @@ namespace IBE
                         pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
                         pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
 
-                        AddComboboxLine(txtEventInfo, "No data recieved, servers may in maintenance mode !");
+                        switch (Program.CompanionIO.CompanionStatus)
+                        {
+                            case EDCompanionAPI.Models.LoginStatus.NotAccessible:
+                                AddComboboxLine(txtEventInfo, "Companion IO: server not accessible !");
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.NotSet:
+                                AddComboboxLine(txtEventInfo, "Companion IO: no verified login credentials !");
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.PendingVerification:
+                                AddComboboxLine(txtEventInfo, "Companion IO: pending verification !");
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.IncorrectCredentials:
+                                AddComboboxLine(txtEventInfo, "Companion IO: incorrect credentials !");
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.UnknownError:
+                                AddComboboxLine(txtEventInfo, "Companion IO: unknown error !");
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.TooManyRequests:
+                                AddComboboxLine(txtEventInfo, "Companion IO: server reports too many request !");
+                                break;
+                            case EDCompanionAPI.Models.LoginStatus.HttpError:
+                                AddComboboxLine(txtEventInfo, "Companion IO: Http error when trying to connect !");
+                                break;
+                        }
+                        
+                        
 
                     }
 

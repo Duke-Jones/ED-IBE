@@ -482,16 +482,16 @@ namespace IBE.MTPriceAnalysis
                 switch (Sorting)
                 {
                     case "systemname":
-                        cmbStation1.DisplayMember   = "StationSystem";
-                        cmbStation2.DisplayMember   = "StationSystem";
-                        cmbByStation.DisplayMember  = "StationSystem";
+                        cmbStation1.DisplayMember   = "SystemStation";
+                        cmbStation2.DisplayMember   = "SystemStation";
+                        cmbByStation.DisplayMember  = "SystemStation";
 
                         ((BindingSource)(cmbStation1.DataSource)).Sort = "SystemName";
                         break;
                     case "stationname":
-                        cmbStation1.DisplayMember   = "SystemStation";
-                        cmbStation2.DisplayMember   = "SystemStation";
-                        cmbByStation.DisplayMember  = "SystemStation";
+                        cmbStation1.DisplayMember   = "StationSystem";
+                        cmbStation2.DisplayMember   = "StationSystem";
+                        cmbByStation.DisplayMember  = "StationSystem";
 
                         ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
                         break;
@@ -583,14 +583,21 @@ namespace IBE.MTPriceAnalysis
                                 "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
                                 "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
                                 "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
-                                "       Fs.Distance" +
+                                "       Fs.Distance, '' As StationSystem2, '' As SystemStation2, '' As SystemDistance2" +
                                 " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
                                 " where FS.Station_ID = St.ID" +
                                 " and   St.System_ID  = Sy.ID;";
 
 
                     Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
-                
+
+                    //foreach (DataRow dRow in m_DGVTables[cmbByStation.Name].Rows)
+                    //{
+                    //    System.Drawing.Graphics.MeasureString(dRow["SystemName"].ToString(), cmbStation1.Font).Width;
+                    //}
+
+
+
                     if(cmbStation1.ValueMember == "")
                     { 
                         // prepare functional settings of the comboboxes

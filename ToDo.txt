@@ -18,10 +18,18 @@ todo:
 * call EDSM/EDDB directly
 * unhandled exception always shuts down
 
+* unclear state when connecting to fd-servers without valid data and error (see forum) 
+* preset today/7 days for date filter cmdrs log
+* save filter settings
+* font is too small in navigation bar
+* 
+
 *************************************************************************************
 
 done:
-
+  * corrected order of combobox entries ("system - station" / "station - system")
+  * added more informative texts for showing problems with companion interface
+-------------------------------------------------------------------------------------         
 v0.5.5
   * bugfixing
 -------------------------------------------------------------------------------------         
