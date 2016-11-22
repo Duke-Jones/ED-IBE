@@ -27,6 +27,9 @@ todo:
 *************************************************************************************
 
 done:
+
+  * dropdown boxes on PriceAnalysis tab now have a well formated and readable design
+-------------------------------------------------------------------------------------         
   * corrected order of combobox entries ("system - station" / "station - system")
   * added more informative texts for showing problems with companion interface
 -------------------------------------------------------------------------------------         

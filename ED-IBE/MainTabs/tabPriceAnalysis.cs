@@ -150,11 +150,25 @@ namespace IBE.MTPriceAnalysis
                         ((DataGridViewExt)DGV_Object).AutoGenerateColumns   = false;
                         ((DataGridViewExt)DGV_Object).DataSource            = currentKVP.Value;
                     }
-                    else if(DGV_Object.GetType().Equals(typeof(ComboBox)))
+                    else if((DGV_Object.GetType().Equals(typeof(ComboBox))) || (DGV_Object.GetType().BaseType.Equals(typeof(ComboBox))))
                         ((ComboBox)DGV_Object).DataSource           = currentKVP.Value;
                     else
                         Debug.Print("unknown");
                 }
+                cmbStation1.Separator = "-";
+                cmbStation1.DropDownWidth = 375;
+                cmbStation1.ColumnWidths.AddRange(new List<Int32>() {40,3,40,17});
+                cmbStation1.DrawMode  = DrawMode.OwnerDrawFixed;
+
+                cmbStation2.Separator = "-";
+                cmbStation2.DropDownWidth = 375;
+                cmbStation2.ColumnWidths.AddRange(new List<Int32>() {40,3,40,17});
+                cmbStation2.DrawMode  = DrawMode.OwnerDrawFixed;
+
+                cmbByStation.Separator = "-";
+                cmbByStation.DropDownWidth = 375;
+                cmbByStation.ColumnWidths.AddRange(new List<Int32>() {40,3,40,17});
+                cmbByStation.DrawMode  = DrawMode.OwnerDrawFixed;
 
                 cmbStation1.SelectedIndex       = -1;
                 cmbStation2.SelectedIndex       = -1;
@@ -482,23 +496,70 @@ namespace IBE.MTPriceAnalysis
                 switch (Sorting)
                 {
                     case "systemname":
+                        cmbStation1.DisplayMembers.Clear();
+                        cmbStation1.DisplayMembers.Add("SystemName");
+                        cmbStation1.DisplayMembers.Add("<SEP>;-");
+                        cmbStation1.DisplayMembers.Add("StationName");
+                        cmbStation1.DisplayMembers.Add("Distance; ({0:f1} ly)");
                         cmbStation1.DisplayMember   = "SystemStation";
+
+                        cmbStation2.DisplayMembers.Clear();
+                        cmbStation2.DisplayMembers.Add("SystemName");
+                        cmbStation2.DisplayMembers.Add("<SEP>;-");
+                        cmbStation2.DisplayMembers.Add("StationName");
+                        cmbStation2.DisplayMembers.Add("Distance; ({0:f1} ly)");
                         cmbStation2.DisplayMember   = "SystemStation";
-                        cmbByStation.DisplayMember  = "SystemStation";
+
+                        cmbByStation.DisplayMembers.Clear();
+                        cmbByStation.DisplayMembers.Add("SystemName");
+                        cmbByStation.DisplayMembers.Add("<SEP>;-");
+                        cmbByStation.DisplayMembers.Add("StationName");
+                        cmbByStation.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbByStation.DisplayMember   = "SystemStation";
 
                         ((BindingSource)(cmbStation1.DataSource)).Sort = "SystemName";
                         break;
                     case "stationname":
-                        cmbStation1.DisplayMember   = "StationSystem";
-                        cmbStation2.DisplayMember   = "StationSystem";
-                        cmbByStation.DisplayMember  = "StationSystem";
+                        cmbStation1.DisplayMembers.Clear();
+                        cmbStation1.DisplayMembers.Add("StationName");
+                        cmbStation1.DisplayMembers.Add("<SEP>;-");
+                        cmbStation1.DisplayMembers.Add("SystemName");
+                        cmbStation1.DisplayMembers.Add("Distance; ({0:f1} ly)");
+
+                        cmbStation2.DisplayMembers.Clear();
+                        cmbStation2.DisplayMembers.Add("StationName");
+                        cmbStation2.DisplayMembers.Add("<SEP>;-");
+                        cmbStation2.DisplayMembers.Add("SystemName");
+                        cmbStation2.DisplayMembers.Add("Distance; ({0:f1} ly)");
+
+                        cmbByStation.DisplayMembers.Clear();
+                        cmbByStation.DisplayMembers.Add("StationName");
+                        cmbByStation.DisplayMembers.Add("<SEP>;-");
+                        cmbByStation.DisplayMembers.Add("SystemName");
+                        cmbByStation.DisplayMembers.Add("Distance; ({0:f1} ly)");
 
                         ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
                         break;
                     case "distance":
-                        cmbStation1.DisplayMember   = "SystemDistance";
-                        cmbStation2.DisplayMember   = "SystemDistance";
-                        cmbByStation.DisplayMember  = "SystemDistance";
+                        cmbStation1.DisplayMembers.Clear();
+                        cmbStation1.DisplayMembers.Add("SystemName");
+                        cmbStation1.DisplayMembers.Add("<SEP>;-");
+                        cmbStation1.DisplayMembers.Add("StationName");
+                        cmbStation1.DisplayMembers.Add("Distance; ({0:f1} ly)");
+
+                        cmbStation2.DisplayMembers.Clear();
+                        cmbStation2.DisplayMembers.Add("SystemName");
+                        cmbStation2.DisplayMembers.Add("<SEP>;-");
+                        cmbStation2.DisplayMembers.Add("StationName");
+                        cmbStation2.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbStation2.DisplayMember   = "SystemStation";
+
+                        cmbByStation.DisplayMembers.Clear();
+                        cmbByStation.DisplayMembers.Add("SystemName");
+                        cmbByStation.DisplayMembers.Add("<SEP>;-");
+                        cmbByStation.DisplayMembers.Add("StationName");
+                        cmbByStation.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbByStation.DisplayMember   = "SystemStation";
 
                         ((BindingSource)(cmbStation1.DataSource)).Sort = "Distance";
                         break;
@@ -580,10 +641,10 @@ namespace IBE.MTPriceAnalysis
                     lblStationsFound.Text = StationCount.ToString();
 
                     sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," +
-                                "       concat(St.StationName, '    -   ', Sy.SystemName,  '     (', Round(Distance,1), ' ly)') As StationSystem," +
-                                "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemStation," +
-                                "       concat(Sy.SystemName,  '    -   ', St.StationName, '     (', Round(Distance,1), ' ly)') As SystemDistance," +
-                                "       Fs.Distance, '' As StationSystem2, '' As SystemStation2, '' As SystemDistance2" +
+                                "       concat(St.StationName, ' - ', Sy.SystemName,  ' (', Round(Distance,1), ' ly)') As StationSystem," +
+                                "       concat(Sy.SystemName,  ' - ', St.StationName, ' (', Round(Distance,1), ' ly)') As SystemStation," +
+                                "       concat(Sy.SystemName,  ' - ', St.StationName, ' (', Round(Distance,1), ' ly)') As SystemDistance," +
+                                "       Fs.Distance" +
                                 " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
                                 " where FS.Station_ID = St.ID" +
                                 " and   St.System_ID  = Sy.ID;";

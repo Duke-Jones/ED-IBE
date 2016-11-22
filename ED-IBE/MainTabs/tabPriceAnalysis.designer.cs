@@ -142,7 +142,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.cmbByStation = new System.Windows.Forms.ComboBox();
+            this.cmbByStation = new MultiColumnComboBox.ComboBoxMC();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tpByStation = new System.Windows.Forms.TabPage();
@@ -252,8 +252,8 @@
             this.cmdSwitchStations = new System.Windows.Forms.Button();
             this.label23 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
-            this.cmbStation2 = new System.Windows.Forms.ComboBox();
-            this.cmbStation1 = new System.Windows.Forms.ComboBox();
+            this.cmbStation2 = new MultiColumnComboBox.ComboBoxMC();
+            this.cmbStation1 = new MultiColumnComboBox.ComboBoxMC();
             this.button14 = new System.Windows.Forms.Button();
             this.tpStationToStation = new System.Windows.Forms.TabPage();
             this.cmdClearCommodityFilters = new System.Windows.Forms.Button();
@@ -313,6 +313,7 @@
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.copysellStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.tpAllCommodities.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scAllCommodities_1)).BeginInit();
@@ -1510,8 +1511,8 @@
             // scStationToStation_2.Panel2
             // 
             this.scStationToStation_2.Panel2.Controls.Add(this.dgvStation2);
-            this.scStationToStation_2.Size = new System.Drawing.Size(584, 333);
-            this.scStationToStation_2.SplitterDistance = 149;
+            this.scStationToStation_2.Size = new System.Drawing.Size(583, 331);
+            this.scStationToStation_2.SplitterDistance = 148;
             this.scStationToStation_2.TabIndex = 19;
             this.scStationToStation_2.Tag = "SplitterStationToStation_2;50";
             this.scStationToStation_2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.Splittercontainer_SplitterMoved);
@@ -1552,7 +1553,7 @@
             this.dgvStation1.ReadOnly = true;
             this.dgvStation1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvStation1.RowTemplate.Height = 33;
-            this.dgvStation1.Size = new System.Drawing.Size(584, 149);
+            this.dgvStation1.Size = new System.Drawing.Size(583, 148);
             this.dgvStation1.TabIndex = 47;
             this.dgvStation1.Tag = "Station1;1";
             this.dgvStation1.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
@@ -1722,7 +1723,7 @@
             this.dgvStation2.ReadOnly = true;
             this.dgvStation2.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvStation2.RowTemplate.Height = 33;
-            this.dgvStation2.Size = new System.Drawing.Size(584, 180);
+            this.dgvStation2.Size = new System.Drawing.Size(583, 179);
             this.dgvStation2.TabIndex = 48;
             this.dgvStation2.Tag = "Station2;1";
             this.dgvStation2.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
@@ -1897,7 +1898,7 @@
             this.groupBox3.Controls.Add(this.cmdRoundTripCaclulation);
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(588, 397);
+            this.groupBox3.Size = new System.Drawing.Size(587, 395);
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "100 best round-trips";
@@ -1943,7 +1944,7 @@
             this.dgvStationToStationRoutes.ReadOnly = true;
             this.dgvStationToStationRoutes.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvStationToStationRoutes.RowTemplate.Height = 33;
-            this.dgvStationToStationRoutes.Size = new System.Drawing.Size(576, 339);
+            this.dgvStationToStationRoutes.Size = new System.Drawing.Size(575, 337);
             this.dgvStationToStationRoutes.TabIndex = 47;
             this.dgvStationToStationRoutes.Tag = "StationToStationRoutes;12";
             this.dgvStationToStationRoutes.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.DataGridView_ColumnSorted);
@@ -2172,10 +2173,12 @@
             // 
             this.cmbStation1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cmbStation1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStation1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cmbStation1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStation1.FormattingEnabled = true;
             this.cmbStation1.Location = new System.Drawing.Point(23, 19);
             this.cmbStation1.Name = "cmbStation1";
+            this.cmbStation1.Separator = null;
             this.cmbStation1.Size = new System.Drawing.Size(250, 21);
             this.cmbStation1.TabIndex = 5;
             // 
@@ -2190,6 +2193,8 @@
             // 
             // tpStationToStation
             // 
+            this.tpStationToStation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tpStationToStation.Controls.Add(this.listBox1);
             this.tpStationToStation.Controls.Add(this.cmdClearCommodityFilters);
             this.tpStationToStation.Controls.Add(this.cmdCommodityFilter2);
             this.tpStationToStation.Controls.Add(this.cmdCommodityFilter1);
@@ -2267,8 +2272,8 @@
             // scStationToStation_1.Panel2
             // 
             this.scStationToStation_1.Panel2.Controls.Add(this.groupBox3);
-            this.scStationToStation_1.Size = new System.Drawing.Size(1188, 403);
-            this.scStationToStation_1.SplitterDistance = 590;
+            this.scStationToStation_1.Size = new System.Drawing.Size(1186, 401);
+            this.scStationToStation_1.SplitterDistance = 589;
             this.scStationToStation_1.TabIndex = 20;
             this.scStationToStation_1.Tag = "SplitterStationToStation_1;50";
             this.scStationToStation_1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.Splittercontainer_SplitterMoved);
@@ -2290,7 +2295,7 @@
             this.paResultDetail.Name = "paResultDetail";
             this.paResultDetail.RowCount = 1;
             this.paResultDetail.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.paResultDetail.Size = new System.Drawing.Size(590, 64);
+            this.paResultDetail.Size = new System.Drawing.Size(589, 64);
             this.paResultDetail.TabIndex = 48;
             // 
             // paStationDetail1
@@ -2370,7 +2375,7 @@
             this.paStationDetail2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.paStationDetail2.Location = new System.Drawing.Point(395, 3);
             this.paStationDetail2.Name = "paStationDetail2";
-            this.paStationDetail2.Size = new System.Drawing.Size(192, 58);
+            this.paStationDetail2.Size = new System.Drawing.Size(191, 58);
             this.paStationDetail2.TabIndex = 1;
             // 
             // lbDetailStation2
@@ -2379,7 +2384,7 @@
             this.lbDetailStation2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbDetailStation2.Location = new System.Drawing.Point(5, 7);
             this.lbDetailStation2.Name = "lbDetailStation2";
-            this.lbDetailStation2.Size = new System.Drawing.Size(182, 17);
+            this.lbDetailStation2.Size = new System.Drawing.Size(181, 17);
             this.lbDetailStation2.TabIndex = 18;
             this.lbDetailStation2.Text = "Eravate / Bla Dock";
             this.lbDetailStation2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -2390,7 +2395,7 @@
             this.lbDetailCommodity2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbDetailCommodity2.Location = new System.Drawing.Point(5, 21);
             this.lbDetailCommodity2.Name = "lbDetailCommodity2";
-            this.lbDetailCommodity2.Size = new System.Drawing.Size(175, 18);
+            this.lbDetailCommodity2.Size = new System.Drawing.Size(174, 18);
             this.lbDetailCommodity2.TabIndex = 27;
             this.lbDetailCommodity2.Text = "Gold";
             this.lbDetailCommodity2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2399,7 +2404,7 @@
             // 
             this.label28.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(126, 41);
+            this.label28.Location = new System.Drawing.Point(125, 41);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(24, 13);
             this.label28.TabIndex = 30;
@@ -2409,7 +2414,7 @@
             // 
             this.label31.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(48, 41);
+            this.label31.Location = new System.Drawing.Point(47, 41);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(37, 13);
             this.label31.TabIndex = 28;
@@ -2420,7 +2425,7 @@
             this.lbDetailProfit2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lbDetailProfit2.AutoSize = true;
             this.lbDetailProfit2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDetailProfit2.Location = new System.Drawing.Point(85, 41);
+            this.lbDetailProfit2.Location = new System.Drawing.Point(84, 41);
             this.lbDetailProfit2.Name = "lbDetailProfit2";
             this.lbDetailProfit2.Size = new System.Drawing.Size(35, 13);
             this.lbDetailProfit2.TabIndex = 29;
@@ -2797,7 +2802,7 @@
             this.toolStripMenuItem3,
             this.copysellStationnameToClipboardToolStripMenuItem});
             this.contextMenuStrip3.Name = "contextMenuStrip1";
-            this.contextMenuStrip3.Size = new System.Drawing.Size(232, 120);
+            this.contextMenuStrip3.Size = new System.Drawing.Size(232, 98);
             // 
             // toolStripMenuItem2
             // 
@@ -2835,6 +2840,14 @@
             this.copysellStationnameToClipboardToolStripMenuItem.Tag = "2";
             this.copysellStationnameToClipboardToolStripMenuItem.Text = "Copy \'sell\' stationname to clipboard";
             this.copysellStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(715, -38);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(120, 95);
+            this.listBox1.TabIndex = 51;
             // 
             // tabPriceAnalysis
             // 
@@ -2938,7 +2951,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.ComboBox cmbByStation;
+        private MultiColumnComboBox.ComboBoxMC cmbByStation;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TabPage tpByStation;
@@ -2971,8 +2984,8 @@
         private System.Windows.Forms.Button cmdSwitchStations;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.ComboBox cmbStation2;
-        private System.Windows.Forms.ComboBox cmbStation1;
+        private MultiColumnComboBox.ComboBoxMC cmbStation2;
+        private MultiColumnComboBox.ComboBoxMC cmbStation1;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.TabPage tpStationToStation;
         private System.Windows.Forms.TabControl tabPriceSubTabs;
@@ -3130,5 +3143,6 @@
         private System.Windows.Forms.ToolStripMenuItem copybuyStationnameToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem copysellStationnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
